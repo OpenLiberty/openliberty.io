@@ -1,0 +1,30 @@
+---
+layout: default
+---
+
+<div style="height: 120px; background-color: #131427; margin-bottom: 60px;">
+</div>
+
+
+
+<div class="container" style="margin-bottom: 60px;">
+    <div class="row">
+        <div class="col-sm-3">
+            <a href="/guides">All Guides</a>
+            <h3>Contents</h3>
+            <br>
+            {{ page.document | tocify_asciidoc }}
+            <br>
+            <h3>Tags</h3>
+            {% for tag in page.tags %}
+                {{ tag }}
+            {% endfor %}
+
+
+        </div>
+
+        <div class="col-sm-9">
+            {{ content }}
+        </div>
+    </div>
+</div>
