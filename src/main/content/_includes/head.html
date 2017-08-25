@@ -12,6 +12,9 @@
   {% for css in page.css %}
     <link rel="stylesheet" href="{{ "/css/" | append: css | append: '.css' | relative_url }}">
   {% endfor %}
+  {% for css in layout.css %}
+    <link rel="stylesheet" href="{{ "/css/" | append: css | append: '.css' | relative_url }}">
+  {% endfor %}
 
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
