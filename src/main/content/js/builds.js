@@ -7,36 +7,6 @@ let developer_tools_development_builds = [];
 
 
 
-/* TEMPORARY CODE - START */
-
-for(let i = 0; i < 1; i++) {
-    let developer_build = {};
-    developer_build.date = Date.now() + Math.floor(Math.random() * 1000000) + 1;
-    developer_build.zip_url = 'http://www.google.com';
-    runtime_releases.push(developer_build);
-    developer_tools_releases.push(developer_build);
-}
-
-for(let i = 0; i < 10; i++) {
-    let developer_build = {};
-    developer_build.date = Date.now() + Math.floor(Math.random() * 1000000) + 1;            
-    developer_build.zip_url = 'http://www.google.com';
-    developer_build.total_tests = 100;
-    developer_build.tests_passed = Math.floor(Math.random() * 100) + 1;
-    developer_build.log_url = 'http://www.yahoo.com';
-    developer_build.tests_url = 'http://www.ibm.com';
-    runtime_development_builds.push(developer_build);
-    developer_tools_development_builds.push(developer_build);
-}
-
-builds['runtime_releases'] = runtime_releases;
-builds['runtime_development_builds'] = runtime_development_builds;
-builds['developer_tools_releases'] = developer_tools_releases;
-builds['developer_tools_development_builds'] = developer_tools_development_builds;
-
-/* TEMPORARY CODE - END */
-
-
 function render_builds(builds, parent) {
 
     parent.empty();
@@ -45,7 +15,7 @@ function render_builds(builds, parent) {
 
         let date = new Date(build.date);
         let year = date.getUTCFullYear();
-        let month = date.getUTCMonth() + 1;
+        let month = date.getUTCMonth();
         let day = date.getUTCDate();
         let hour = date.getUTCHours();
         let minute = date.getUTCMinutes();
@@ -55,14 +25,14 @@ function render_builds(builds, parent) {
         let row = $('<tr></tr>');
         row.append(date_column);
         
-        if(build.tests_passed) {
-            let tests_column = $('<td><a href="' +  build.tests_url +'" class="tests_passed_link">' + build.tests_passed + ' / ' + build.total_tests + '</a></td>');
-            let log_column = $('<td><a href="' + build.log_url + '" class="view_logs_link">View logs</a></td>');
+        if(!parent.hasClass('release_table_body') && build.test_passed) {
+            let tests_column = $('<td><a href="' +  build.tests_log +'" class="tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
+            let log_column = $('<td><a href="' + build.build_log + '" class="view_logs_link">View logs</a></td>');
             row.append(tests_column);
             row.append(log_column);
         }
         
-        let zip_column = $('<td><a href="' + build.zip_url + '" class="build_download_button">Download (.zip)</a></td>');
+        let zip_column = $('<td><a href="' + build.driver_location + '" class="build_download_button">Download (.zip)</a></td>');
         
         row.append(zip_column);
 
@@ -144,6 +114,29 @@ $(document).ready(function() {
 
 
     /* TEMPORARY CODE - START */
+
+    // let response_text = '{"runtime_releases":[{"build_log":"https://dl.bintray.com/enterprise-d/open-liberty/release-builds/2017-08-21_1512/gradle.log","driver_location":"https://dl.bintray.com/enterprise-d/open-liberty/release-builds/2017-08-21_1512/openliberty-2017.7.0.0-201708211512.zip","test_passed":"400","date":"2017-08-21_1512","total_tests":"500","tests_log":"https://dl.bintray.com/enterprise-d/open-liberty/release-builds/2017-08-21_1512/squirrel.report.zip"}],"runtime_nightly_builds":[{"build_log":"https://dl.bintray.com/enterprise-d/open-liberty/nightly-builds/2017-08-21_1511/gradle.log","driver_location":"https://dl.bintray.com/enterprise-d/open-liberty/nightly-builds/2017-08-21_1511/openliberty-2017.7.0.0-201708211511.zip","test_passed":"400","date":"2017-08-21_1511","total_tests":"500","tests_log":"https://dl.bintray.com/enterprise-d/open-liberty/nightly-builds/2017-08-21_1511/squirrel.report.zip"},{"build_log":"https://dl.bintray.com/enterprise-d/open-liberty/nightly-builds/2017-08-21_1510/gradle.log","driver_location":"https://dl.bintray.com/enterprise-d/open-liberty/nightly-builds/2017-08-21_1510/openliberty-2017.7.0.0-201708211510.zip","test_passed":"400","date":"2017-08-21_1510","total_tests":"500","tests_log":"https://dl.bintray.com/enterprise-d/open-liberty/nightly-builds/2017-08-21_1510/squirrel.report.zip"}]}';
+    // let response_json = JSON.parse(response_text);
+
+    // runtime_releases = formatBuilds(response_json.runtime_releases);
+    // //developer_tools_releases = formatBuilds(response_json.runtime_releases); //TODO: update
+    // runtime_development_builds = formatBuilds(response_json.runtime_nightly_builds);
+    // // developer_tools_development_builds = formatBuilds(response_json.runtime_nightly_builds); //TODO: update
+
+    // function formatBuilds(builds_from_response) {
+    //     for(let i = 0; i < builds_from_response.length; i++) {
+    //         let date_string = builds_from_response[i].date;
+    //         let date = new Date(date_string.substr(0, 4), date_string.substr(5, 2), date_string.substr(8, 2), date_string.substr(11, 2), date_string.substr(13, 2));
+    //         builds_from_response[i].date = date.getTime();
+    //     }
+    //     return builds_from_response;
+    // }
+
+
+    builds['runtime_releases'] = runtime_releases;
+    builds['runtime_development_builds'] = runtime_development_builds;
+    builds['developer_tools_releases'] = developer_tools_releases;
+    builds['developer_tools_development_builds'] = developer_tools_development_builds;
 
     sort_builds(runtime_releases, 'date', true);
     render_builds(runtime_releases, $('table[data-builds-id="runtime_releases"] tbody'));
