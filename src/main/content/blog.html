@@ -33,8 +33,8 @@ permalink: /blog/
         <div class="row blog_post_row">
             <div class="col-xs-12 blog_post_column">
                 <div class="blog_post_container">
-                    <div class="blog_post_content_image_container hidden-xs">
-                        <img src="{{ " /img/blog1.png " | relative }}" class="center-block blog_post_image">
+                    <div class="blog_post_content_image_container hidden-sm hidden-xs">
+                        <img src="{{ " /img/blog1.png " | relative }}" class="blog_post_image">
                     </div>
                     <div class="blog_post_content">
                         <h2 class="blog_post_title">{{ post.title | escape }}</h2>
@@ -44,7 +44,7 @@ permalink: /blog/
                             <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
                         </div>
                         <p class="blog_post_paragraph">
-                            {{ post.content | strip_html | truncatewords: 70 }}
+                            {{ post.content | strip_html | truncatewords: 60 }}
                         </p>
                         <div class="text-right">
                             <a href="{{ post.url | relative_url }}" class="large_link line_link blue_link_light_background"><span class="line"></span> Keep reading</a>

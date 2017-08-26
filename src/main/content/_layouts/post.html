@@ -11,19 +11,21 @@ css: post
         <div class="col-xs-12">
             <div id="article_container">
                 <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-                    <header class="post-header">                        
-                        <img src="{{ page.author_picture }}" id="author_image">
-                        <div id="post_information">
-                            <div id="author_name">{{ page.author }}</div>
-                            <div id="post_date">
-                                <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
-                                    {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %} {{ page.date | date: date_format }}
-                                </time>
+                    <header>                        
+                        <div class="post_information_container">
+                            <img src="{{ page.author_picture }}" id="author_image">
+                            <div id="post_information">
+                                <div id="author_name">{{ page.author }}</div>
+                                <div id="post_date">
+                                    <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+                                        {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %} {{ page.date | date: date_format }}
+                                    </time>
+                                </div>
                             </div>
                         </div>
                         <h1 itemprop="name headline">{{ page.title | escape }}</h1>
                     </header>
-                    <div class="post-content" itemprop="articleBody">
+                    <div itemprop="articleBody">
                         {{ content }}
                     </div>
                     {% if site.disqus.shortname %} {% include disqus_comments.html %} {% endif %}
