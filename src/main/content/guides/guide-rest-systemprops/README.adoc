@@ -1,0 +1,192 @@
+---
+layout: guide
+duration: 15 minutes
+description: This is the description for the REST service guide
+tags:
+ - rest
+ - liberty
+ - JSON
+ - Getting started
+permalink: /guides/rest-service-guide
+---
+
+= Creating a RESTful web service
+
+Learn how to create a REST service with JAX-RS, JSON-P, and Open Liberty.
+
+== What you'll learn
+
+You will learn how to build and test a simple REST service with JAX-RS and JSON-P that will expose the JVM's System properties. The REST service will respond to GET requests made to the URL:
+
+----
+http://localhost:9080/LibertyProject/System/properties
+----
+
+The service responds to a `GET` request with a JSON representation of the system properties, where each property is a field in a JSON object like this:
+
+[source,json]
+----
+{
+  "os.name":"Mac",
+  "java.version": "1.8"
+}
+----
+
+When you create a new REST application the design of the API is important. The JAX-RS APIs could be used to create JSON-RPC, or XML-RPC APIs, but wouldn't be a RESTful service. A good RESTful service is designed around the resources that are exposed, and how to create, read, update, and delete the resources.
+
+The service responds to `GET` requests to the `/System/properties` path. The `GET` request should return a `200 OK` response that contains all of the JVM's system properties.
+
+include::guides/guide-rest-systemprops/common/gitclone.adoc[]
+
+== Creating a JAX-RS application
+
+JAX-RS has two key concepts for creating REST APIs. The most obvious is the resource itself, which is modeled as a class. The second is a JAX-RS application. A JAX-RS application is a grouping of resources that are exposed in a common URL path. Having a single JAX-RS application is common, although multiple are possible.
+
+Create the JAX-RS application class in the `src/main/java/io/openliberty/guides/rest/SystemApplication.java` file.
+[source,java]
+----
+include::guides/guide-rest-systemprops/finish/src/main/java/io/openliberty/guides/rest/SystemApplication.java[tags=**;*]
+----
+The `SystemApplication` class extends the `Application` class which, by default, associates all JAX-RS resource classes in the WAR file with this JAX-RS application. The `@ApplicationPath` annotation has a value that indicates the path within the WAR that the JAX-RS application sound be accepts requests from.
+
+== Creating the JAX-RS resource
+
+In JAX-RS, a single class should represent a single resource, or a group of resources of the same type. A resource might be a system property, or a set of system properties. It is easy to have a single class handle multiple different resources, but keeping a clean separation between types of resources helps with maintainability in the long run.
+
+Create the JAX-RS resource class in the `src/main/java/io/openliberty/guides/rest/PropertiesResource.java` file.
+[source,java]
+----
+include::guides/guide-rest-systemprops/finish/src/main/java/io/openliberty/guides/rest/PropertiesResource.java[tags=**;*]
+----
+
+This resource class has quite a bit of code in it, so let's break it down into manageable chunks.
+
+The `@Path` annotation on the class indicates that this resource responds to the `properties` path in the JAX-RS application. The `@ApplicationPath` annotation in the application class together with the `@Path` annotation in this class indicates that the resource is be available at `System/properties` path.
+[source,java]
+----
+include::guides/guide-rest-systemprops/finish/src/main/java/io/openliberty/guides/rest/PropertiesResource.java[tags=class]
+----
+
+JAX-RS maps the HTTP methods on the URL to the methods on the class. The method to call is determined by the annotations specified on the methods. In the application you are building, an HTTP `GET` request to the `System/properties` path results in the system properties being returned:
+
+[source,java,indent=0]
+----
+include::guides/guide-rest-systemprops/finish/src/main/java/io/openliberty/guides/rest/PropertiesResource.java[tags=getProperties]
+----
+
+The `@GET` annotation on the method indicates that this method it to be called for the HTTP `GET` method. The `@Produces` annotation indicates the format of the content that will be returned, the value of the `@Produces` annotation will be specified in the HTTP `Content-Type` response header. For this application a JSON structure is to be returned. The desired `Content-Type` for a JSON response is `application/json`, but using `MediaType.APPLICATION_JSON` instead of the `String` literal is better because in the event of a spelling error a compile failure will occur.
+
+JAX-RS supports a number of ways to marshal JSON. The JAX-RS 2.0 specification mandates JSON-Processing (JSON-P) and JAX-B. Most JAX-RS implementations also support a Java POJO-to-JSON conversion, which allows the `Properties` object to be returned instead. Although this conversion would allow for a simpler implementation, it limits code portability as POJO-to-JSON conversion is non-standard. This gap in the specification will be fixed in Java EE 8 with the inclusion of JSON-B.
+
+The method body does the following:
+
+. Creates a `JsonObjectBuilder` object using the `Json` class. The `JsonObjectBuilder` is then used to populate a `JsonObject` with values.
+. Call the `getProperties` method on the `System` class to get a `Properties` object that contains all the system properties.
+. Call the `entrySet` method on the `Properties` object to get a `Set` of all the entries.
+. Convert the `Set` to a `Stream` (new in Java SE 8) by calling the `stream` method. Streams make working through all the entries in a list very simple.
+. Call the `forEach` method on the `Stream` passing in a function that will be invoked for each entry in the `Stream`. The function passed in will call the `add` method on the `JsonObjectBuilder` for every entry in the stream. The key and value for the `JsonObject` will be obtained by calling the `getKey` and `getValue` methods on the `Map.Entry` objects in the stream.
+. Return the a `JsonObject` by calling the `build` method on the `JsonObjectBuilder`.
+
+include::guides/guide-rest-systemprops/common/mvnbuild.adoc[]
+
+== Testing the service
+
+You can test this service by pointing a web browser at the `http://localhost:9080/LibertyProject/System/properties' URL. Automated tests are a much better approach because they will trigger a failure if a change introduces a bug. JUnit and the JAX-RS Client API provide a very simple environment to test the application.
+
+You can write tests for the individual units of code outside of a running application server, or they can be written to call the application server directly. In this example you will create a test that does the latter.
+
+Create the test class in the `src/test/java/it/io/openliberty/guides/rest/EndpointTest.java` file.
+
+[source,java]
+----
+include::guides/guide-rest-systemprops/finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=**;*]
+----
+
+This test class has more lines of code than the resource implementation. This situation is common. The test method is indicated with the `@Test` annotation.
+
+The test code needs to know some information about the application in order to make requests. The server port and the application context root are key, and are dictated by the server configuration. While this information can be hardcoded, it is better to specify it in a single place like the Maven `pom.xml` file:
+
+[source,xml,indent=0]
+----
+include::guides/guide-rest-systemprops/finish/pom.xml[lines=15..17]
+----
+
+These Maven properties can then be passed to the Java test program as a series of system properties:
+
+[source,xml,indent=0]
+----
+include::guides/guide-rest-systemprops/finish/pom.xml[lines=179..182]
+----
+
+Getting the values to then create a representation of the URL is then simple:
+[source,java,indent=0]
+----
+include::guides/guide-rest-systemprops/finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=systemProperties]
+----
+
+The JAX-RS client can be used to make the REST call and convert the payload to and from a JSON-P representation. To get the JAX-RS client to do the conversion the client needs to have the `JsrJsonpProvider` class registered with it by calling the `register` method and providing the `Class` object for the `JsrJsonpProvider` class:
+
+[source,java,indent=0]
+----
+include::guides/guide-rest-systemprops/finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=clientSetup]
+----
+
+To call the JAX-RS service using the JAX-RS client you first create a `WebTarget` object by calling the `target` method providing the URL. To cause the HTTP request to occur first the `request` method on `WebTarget` and then the `get` method on the returned object need to be called. The `get` method call is a synchronous call that blocks until a response is received. This call returns a `Response` object which can be interrogated to determine whether the request was successful:
+
+[source,java,indent=0]
+----
+include::guides/guide-rest-systemprops/finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=request]
+----
+
+The first thing to check is that a `200` response was received. The JUnit `assertEquals` method can be used for this. The first parameter is the error message that indicates why the test failed. The second parameter is the expected response code, and the third is the actual response code. It is important to associate the expected response code with the second parameter and the actual response with the third parameter. Otherwise, the error messages from JUnit will claim that the actual response is the expected one, which can cause confusion:
+
+[source,java,indent=0]
+----
+include::guides/guide-rest-systemprops/finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=response]
+----
+
+Check the response body to ensure it returned the right information. Since the client and the server are running on the same machine, it is reasonable to expect that the system properties for the local and remote JVM would be the same. In this case, an assertion is made that the `os.name` system property for both JVM's is the same. You could write additional assertions to check for more values:
+
+[source,java,indent=0]
+----
+include::guides/guide-rest-systemprops/finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=body]
+----
+
+To get the service running the Liberty server needs to be correctly configured.
+
+Create the `finish/src/main/liberty/config/server.xml` file.
+[source,xml]
+----
+include::guides/guide-rest-systemprops/finish/src/main/liberty/config/server.xml[]
+----
+The configuration does the following:
+. Configures the server to support both JAX-RS 2.0 and JSON-P 1.0. This is specified in the `featureManager` element.
+. Configures the server to pick up the HTTP port numbers from variables which are then specified in the Maven `pom.xml` file. This is specified in the `httpEndpoint` element. Variables use the syntax `${variableName}`.
+. Configures the server to run the produced Web application on a context root specified in the Maven `pom.xml` file. This is specified in the `webApplication` element.
+
+The variables being used in the `server.xml` file are provided by the following Maven `pom.xml` snippet:
+
+[source,xml,indent=0]
+----
+include::guides/guide-rest-systemprops/finish/pom.xml[lines=111..115]
+----
+
+To rebuild, run the tests, and see that the test passes, run the command: `mvn install`. The Maven build takes a little longer than before the test existed, but expect to see the following information in the output:
+
+----
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.rest.EndpointTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.884 sec - in it.io.openliberty.guides.rest.EndpointTest
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+----
+
++To see whether the tests detect a failure, add an assertion that you know fails, or change the existing assertion to a constant value that doesn't match the os.name system property.
+
+== Congratulations! You're done!
+
+You developed a REST service by using JAX-RS, JSON-P, and Liberty.

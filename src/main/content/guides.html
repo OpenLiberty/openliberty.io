@@ -1,0 +1,54 @@
+---
+layout: default
+title: Guides
+css: guides
+js: guides
+permalink: /guides/
+---
+
+<!-- INTRO -->
+<div id="guids_intro_background" class="black_blue_gradient_background">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5 text-center">
+                <p>Guides</p>
+            </div>
+            <div class="col-sm-7">
+                <p id="contribute_intro_paragraph_1">
+                    Paragraph
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="guides_information_container" class="container">
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <input id="guide_search_input" type="text" placeholder="Search all guides">
+        </div>
+        <div class="col-xs-12">
+            <h2 id="guide_counter_title">All Open Liberty guides</h2>
+            <p id="guide_sort_message">Most recent guides shown first</p>
+        </div>
+    </div>
+</div>
+
+<div id="guides_container" class="container">       
+    <div class="row">
+        {% assign pages = site.pages | sort: 'date' | reverse %}
+        {% for page in pages %}
+            {% if page.path contains 'guides/' and page.layout == 'guide' %}
+                <div class="guide_column col-xs-12 col-sm-6 col-md-4">
+                    <a href="{{ page.url }}" class="guide_item" data-title="{{ page.title | downcase }}" data-description="{{ page.description | downcase }}" data-tags="{{ page.tags | join: ' ' | downcase }}">
+                        <div class="guide_title_and_description_container">
+                            <h3 class="guide_title">{{page.title}}</h3>
+                            <p class="guide_description">{{page.description}}</p>
+                        </div>
+                        <span class="guide_duration">{{page.duration}}</span>
+                    </a>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>    
+</div>

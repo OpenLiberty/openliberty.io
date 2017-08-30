@@ -1,0 +1,24 @@
+////
+ Copyright (c) 2017 IBM Corporation and others.
+ Licensed under Creative Commons Attribution-NoDerivatives
+ 4.0 International (CC BY-ND 4.0)
+   https://creativecommons.org/licenses/by-nd/4.0/
+
+ Contributors:
+     IBM Corporation
+////
+== Building the application
+
+To build the application, run the following command:
+
+  mvn install
+
+This command builds the application and creates a .war file in the target directory. The command also configures and installs Liberty into the target/liberty/wlp directory. After the Maven build completes, you can use the server script in that Liberty installation. You can also start and stop the server by using the Maven goals of liberty:start-server and liberty:stop-server.
+
+If the server is running, then running the installation can cause issues because the installation attempts to start a server. You can instead run the following command:
+
+    mvn package
+
+This command rebuilds the application, and the running Liberty server automatically picks up the changes.
+
+If you use a tool that does incremental updates, like Eclipse, then you can bypass the application build.

@@ -1,0 +1,12 @@
+<server description="Sample Liberty server">
+
+  <featureManager>
+      <feature>jaxrs-2.0</feature>
+      <feature>jsonp-1.0</feature>
+  </featureManager>
+
+  <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
+      id="defaultHttpEndpoint" host="*" />
+
+  <webApplication location="rest.war" contextRoot="${app.context.root}"/>
+</server>

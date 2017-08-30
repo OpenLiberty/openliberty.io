@@ -1,30 +1,42 @@
 ---
 layout: default
+css:
+ - guide
 ---
 
-<div style="height: 120px; background-color: #131427; margin-bottom: 60px;">
-</div>
-
-
-
-<div class="container" style="margin-bottom: 60px;">
-    <div class="row">
-        <div class="col-sm-3">
-            <a href="/guides">All Guides</a>
-            <h3>Contents</h3>
-            <br>
-            {{ page.document | tocify_asciidoc }}
-            <br>
-            <h3>Tags</h3>
-            {% for tag in page.tags %}
-                {{ tag }}
-            {% endfor %}
-
-
+<div id="background_container" class="black_blue_gradient_background">
+    <div class="container">
+        <div id="title_row" class="row">
+            <div class="col-xs-12">
+                Guides
+            </div>
         </div>
-
-        <div class="col-sm-9">
-            {{ content }}
+        <div class="row">
+            <div class="col-sm-3">
+                <a id="all_guides_link" href="/guides">All Guides</a>
+                {% assign toc = page.document | tocify_asciidoc %}
+                {% if toc %}
+                <h3 id="toc_title">Contents</h3>
+                <div id="toc_container">
+                    {{ toc }}
+                </div>
+                {% endif %}
+                {% if page.tags %}
+                    <h3 id="tag_title">Tags</h3>
+                    <div id="tags_container">
+                        {% for tag in page.tags %}
+                            <a href="/guides?search={{ tag }}&key=tag">{{ tag }}</a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div id="guide_column" class="col-sm-9">
+                <div id="guide_content">
+                    <h1 id="guide_title">{{ page.title }}</h1>
+                    <div id="guide_duration">{{ page.duration }}</div>
+                    {{ content }}
+                </div>
+            </div>
         </div>
     </div>
 </div>
