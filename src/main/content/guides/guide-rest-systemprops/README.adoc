@@ -36,7 +36,7 @@ When you create a new REST application the design of the API is important. The J
 
 The service responds to `GET` requests to the `/System/properties` path. The `GET` request should return a `200 OK` response that contains all of the JVM's system properties.
 
-include::guides/guide-rest-systemprops/common/gitclone.adoc[]
+include::common/gitclone.adoc[]
 
 == Creating a JAX-RS application
 
@@ -45,7 +45,7 @@ JAX-RS has two key concepts for creating REST APIs. The most obvious is the reso
 Create the JAX-RS application class in the `src/main/java/io/openliberty/guides/rest/SystemApplication.java` file.
 [source,java]
 ----
-include::guides/guide-rest-systemprops/finish/src/main/java/io/openliberty/guides/rest/SystemApplication.java[tags=**;*]
+include::finish/src/main/java/io/openliberty/guides/rest/SystemApplication.java[tags=**;*]
 ----
 The `SystemApplication` class extends the `Application` class which, by default, associates all JAX-RS resource classes in the WAR file with this JAX-RS application. The `@ApplicationPath` annotation has a value that indicates the path within the WAR that the JAX-RS application sound be accepts requests from.
 
@@ -56,7 +56,7 @@ In JAX-RS, a single class should represent a single resource, or a group of reso
 Create the JAX-RS resource class in the `src/main/java/io/openliberty/guides/rest/PropertiesResource.java` file.
 [source,java]
 ----
-include::guides/guide-rest-systemprops/finish/src/main/java/io/openliberty/guides/rest/PropertiesResource.java[tags=**;*]
+include::finish/src/main/java/io/openliberty/guides/rest/PropertiesResource.java[tags=**;*]
 ----
 
 This resource class has quite a bit of code in it, so let's break it down into manageable chunks.
@@ -64,14 +64,14 @@ This resource class has quite a bit of code in it, so let's break it down into m
 The `@Path` annotation on the class indicates that this resource responds to the `properties` path in the JAX-RS application. The `@ApplicationPath` annotation in the application class together with the `@Path` annotation in this class indicates that the resource is be available at `System/properties` path.
 [source,java]
 ----
-include::guides/guide-rest-systemprops/finish/src/main/java/io/openliberty/guides/rest/PropertiesResource.java[tags=class]
+include::finish/src/main/java/io/openliberty/guides/rest/PropertiesResource.java[tags=class]
 ----
 
 JAX-RS maps the HTTP methods on the URL to the methods on the class. The method to call is determined by the annotations specified on the methods. In the application you are building, an HTTP `GET` request to the `System/properties` path results in the system properties being returned:
 
 [source,java,indent=0]
 ----
-include::guides/guide-rest-systemprops/finish/src/main/java/io/openliberty/guides/rest/PropertiesResource.java[tags=getProperties]
+include::finish/src/main/java/io/openliberty/guides/rest/PropertiesResource.java[tags=getProperties]
 ----
 
 The `@GET` annotation on the method indicates that this method it to be called for the HTTP `GET` method. The `@Produces` annotation indicates the format of the content that will be returned, the value of the `@Produces` annotation will be specified in the HTTP `Content-Type` response header. For this application a JSON structure is to be returned. The desired `Content-Type` for a JSON response is `application/json`, but using `MediaType.APPLICATION_JSON` instead of the `String` literal is better because in the event of a spelling error a compile failure will occur.
@@ -87,7 +87,7 @@ The method body does the following:
 . Call the `forEach` method on the `Stream` passing in a function that will be invoked for each entry in the `Stream`. The function passed in will call the `add` method on the `JsonObjectBuilder` for every entry in the stream. The key and value for the `JsonObject` will be obtained by calling the `getKey` and `getValue` methods on the `Map.Entry` objects in the stream.
 . Return the a `JsonObject` by calling the `build` method on the `JsonObjectBuilder`.
 
-include::guides/guide-rest-systemprops/common/mvnbuild.adoc[]
+include::common/mvnbuild.adoc[]
 
 == Testing the service
 
@@ -99,7 +99,7 @@ Create the test class in the `src/test/java/it/io/openliberty/guides/rest/Endpoi
 
 [source,java]
 ----
-include::guides/guide-rest-systemprops/finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=**;*]
+include::finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=**;*]
 ----
 
 This test class has more lines of code than the resource implementation. This situation is common. The test method is indicated with the `@Test` annotation.
@@ -108,48 +108,48 @@ The test code needs to know some information about the application in order to m
 
 [source,xml,indent=0]
 ----
-include::guides/guide-rest-systemprops/finish/pom.xml[lines=15..17]
+include::finish/pom.xml[lines=15..17]
 ----
 
 These Maven properties can then be passed to the Java test program as a series of system properties:
 
 [source,xml,indent=0]
 ----
-include::guides/guide-rest-systemprops/finish/pom.xml[lines=179..182]
+include::finish/pom.xml[lines=179..182]
 ----
 
 Getting the values to then create a representation of the URL is then simple:
 [source,java,indent=0]
 ----
-include::guides/guide-rest-systemprops/finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=systemProperties]
+include::finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=systemProperties]
 ----
 
 The JAX-RS client can be used to make the REST call and convert the payload to and from a JSON-P representation. To get the JAX-RS client to do the conversion the client needs to have the `JsrJsonpProvider` class registered with it by calling the `register` method and providing the `Class` object for the `JsrJsonpProvider` class:
 
 [source,java,indent=0]
 ----
-include::guides/guide-rest-systemprops/finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=clientSetup]
+include::finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=clientSetup]
 ----
 
 To call the JAX-RS service using the JAX-RS client you first create a `WebTarget` object by calling the `target` method providing the URL. To cause the HTTP request to occur first the `request` method on `WebTarget` and then the `get` method on the returned object need to be called. The `get` method call is a synchronous call that blocks until a response is received. This call returns a `Response` object which can be interrogated to determine whether the request was successful:
 
 [source,java,indent=0]
 ----
-include::guides/guide-rest-systemprops/finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=request]
+include::finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=request]
 ----
 
 The first thing to check is that a `200` response was received. The JUnit `assertEquals` method can be used for this. The first parameter is the error message that indicates why the test failed. The second parameter is the expected response code, and the third is the actual response code. It is important to associate the expected response code with the second parameter and the actual response with the third parameter. Otherwise, the error messages from JUnit will claim that the actual response is the expected one, which can cause confusion:
 
 [source,java,indent=0]
 ----
-include::guides/guide-rest-systemprops/finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=response]
+include::finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=response]
 ----
 
 Check the response body to ensure it returned the right information. Since the client and the server are running on the same machine, it is reasonable to expect that the system properties for the local and remote JVM would be the same. In this case, an assertion is made that the `os.name` system property for both JVM's is the same. You could write additional assertions to check for more values:
 
 [source,java,indent=0]
 ----
-include::guides/guide-rest-systemprops/finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=body]
+include::finish/src/test/java/it/io/openliberty/guides/rest/EndpointTest.java[tags=body]
 ----
 
 To get the service running the Liberty server needs to be correctly configured.
@@ -157,7 +157,7 @@ To get the service running the Liberty server needs to be correctly configured.
 Create the `finish/src/main/liberty/config/server.xml` file.
 [source,xml]
 ----
-include::guides/guide-rest-systemprops/finish/src/main/liberty/config/server.xml[]
+include::finish/src/main/liberty/config/server.xml[]
 ----
 The configuration does the following:
 . Configures the server to support both JAX-RS 2.0 and JSON-P 1.0. This is specified in the `featureManager` element.
@@ -168,7 +168,7 @@ The variables being used in the `server.xml` file are provided by the following 
 
 [source,xml,indent=0]
 ----
-include::guides/guide-rest-systemprops/finish/pom.xml[lines=111..115]
+include::finish/pom.xml[lines=111..115]
 ----
 
 To rebuild, run the tests, and see that the test passes, run the command: `mvn install`. The Maven build takes a little longer than before the test existed, but expect to see the following information in the output:
