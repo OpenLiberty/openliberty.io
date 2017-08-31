@@ -21,6 +21,9 @@
     {% for js in page.js %}
       <script src="{{ "/js/" | append: js | append: '.js' | relative_url }}"></script>
     {% endfor %}
+    {% for js in layout.js %}
+      <script src="{{ "/js/" | append: js | append: '.js' | relative_url }}"></script>
+    {% endfor %}
 
     {% if jekyll.environment == 'production' and site.google_tag_manager %}
     {% include google_tag_manager_body.html %}

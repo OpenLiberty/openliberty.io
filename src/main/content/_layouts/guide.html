@@ -1,7 +1,7 @@
 ---
 layout: default
-css:
- - guide
+css: guide
+js: guide
 ---
 
 <div id="background_container" class="black_blue_gradient_background">
@@ -30,13 +30,16 @@ css:
                     </div>
                 {% endif %}
             </div>
-            <div id="guide_column" class="col-sm-9">
+            <div id="guide_column" class="col-sm-9 position_relative">
                 <div id="guide_content">
                     <h1 id="guide_title">{{ page.title }}</h1>
                     <div id="guide_duration">{{ page.duration }}</div>
                     {{ content }}
                 </div>
+                <div id="copied_to_clipboard_confirmation" style="display: none;">Copied to clipboard</div>
+                <a id="copy_to_clipboard" href="" style="display: none;"></a>
             </div>
         </div>
     </div>
 </div>
+
