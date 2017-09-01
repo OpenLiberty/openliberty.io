@@ -15,8 +15,8 @@ $(document).ready(function() {
         target_width = current_target_object.outerWidth();
         target_height = current_target_object.outerHeight();
         $('#copy_to_clipboard').css({
-            top: target_position.top + 20,
-            right: 73
+            top: target_position.top + 8,
+            right: 61
         });
         $('#copy_to_clipboard').stop().fadeIn();
 
@@ -43,7 +43,7 @@ $(document).ready(function() {
             let current_target_object = $(event.currentTarget);
             let position = current_target_object.position();
             $('#copied_to_clipboard_confirmation').css({
-                top: position.top - 36,
+                top: position.top - 25,
                 right: 50
             }).stop().fadeIn().delay(3500).fadeOut();
         } else {
