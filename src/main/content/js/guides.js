@@ -52,7 +52,7 @@ $(document).ready(function() {
             }
         }
         if(search_value) {
-            let input_text = search_key? search_key + ':' + search_value : search_value;
+            let input_text = search_key? search_key + ': ' + search_value : search_value;
             $('#guide_search_input').val(input_text).keyup();
         }
     }
