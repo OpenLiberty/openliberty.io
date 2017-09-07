@@ -46,5 +46,7 @@ public interface Constants {
 	String BINTRAY_VERSIONS_URL = "https://api.bintray.com/packages/{0}/{1}/{2}";
 	String BINTRAY_FILE_URL = "https://dl.bintray.com/{0}/{1}/{2}/{3}/{4}";
 	
+	String GITHUB_ISSUES_URL = "https://api.github.com/repos/OpenLiberty/open-liberty/issues?sort=update";
+	String PAT_ENV_VARIABLE_NAME = "PAT";
 
 }

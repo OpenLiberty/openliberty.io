@@ -29,4 +29,10 @@ public class OpenLibertyEndpoint extends Application {
     	return buildsManager.updateBuilds().toString();
     }
 
+    @GET
+    @Path("/github/issues")
+    public String githubIssues() {
+    	return GitHubIssues.getInstance().getIssues();
+    }
+
 }

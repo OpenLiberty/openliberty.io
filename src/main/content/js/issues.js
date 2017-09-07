@@ -1,8 +1,7 @@
 let issues = [];
 let focus_issue_index = 0;
 let scroll_in_progress = false;
-let issues_url = 'https://github.ibm.com/api/v3/repos/was-liberty/open-liberty/issues?sort=updated';
-let issues_token = 'MDc2NzE0M2I3MTY4MDQ3Njk5OTA4YzczZTE2OTA2YjQ3YTc1MzA4MQ==';
+let issues_url = '/api/github/issues';
 
 $('#issues_up_arrow').click(function(event) {
     event.preventDefault();
@@ -121,8 +120,7 @@ function create_issue_element(index, ui_position) {
 function retrieve_github_issues() {
     let deferred = new $.Deferred();
     $.ajax({
-        url: issues_url,
-        headers: {'Authorization': 'Basic ' + issues_token}
+        url: issues_url
     }).done(function(data) {
         issues = data;
         deferred.resolve();
