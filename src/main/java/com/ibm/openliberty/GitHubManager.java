@@ -28,7 +28,8 @@ public class GitHubManager {
 		Builder builder = target.request("application/json");
     	builder.header("Authorization", "Basic " +  System.getenv(Constants.PAT_ENV_VARIABLE_NAME));
     	Response response = builder.get();
-    	return response.readEntity(String.class);
+    	//return response.readEntity(String.class);
+        return ">>" + System.getenv(Constants.PAT_ENV_VARIABLE_NAME).length();
 	}
 	
 }

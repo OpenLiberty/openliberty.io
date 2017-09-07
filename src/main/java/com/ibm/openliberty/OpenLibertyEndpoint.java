@@ -30,7 +30,7 @@ public class OpenLibertyEndpoint extends Application {
     }
 
     @GET
-    @Path("/github/issues")
+    @Path("github/issues")
     public String githubIssues() {
     	return GitHubManager.getInstance().getIssues();
     }
