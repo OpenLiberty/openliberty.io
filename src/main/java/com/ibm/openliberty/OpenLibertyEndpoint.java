@@ -7,23 +7,25 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Application;
 
 @ApplicationPath("api")
-@Path("/builds")
+
 public class OpenLibertyEndpoint extends Application {
 
     @GET
+    @Path("builds")
     public String status() {
     	BuildsManager buildsManager = BuildsManager.getInstance();
     	return buildsManager.getStatus().toString();
     }
     
     @GET
-    @Path("data")
+    @Path("builds/data")
     public String builds() {
     	BuildsManager buildsManager = BuildsManager.getInstance();
     	return buildsManager.getBuilds().toString().replaceAll("\\\\", "");
     }
     
     @PUT
+    @Path("builds")
     public String update() {
     	BuildsManager buildsManager = BuildsManager.getInstance();    	
     	return buildsManager.updateBuilds().toString();
