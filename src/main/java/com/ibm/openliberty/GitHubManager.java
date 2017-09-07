@@ -1,4 +1,4 @@
-package test;
+package com.ibm.openliberty;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
