@@ -7,6 +7,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 
+import com.ibm.json.java.JSONObject;
+
 @ApplicationPath("api")
 @Path("/")
 public class OpenLibertyEndpoint extends Application {
@@ -24,7 +26,18 @@ public class OpenLibertyEndpoint extends Application {
     @Produces({"application/json"})
     public String builds() {
     	BuildsManager buildsManager = BuildsManager.getInstance();
-    	return buildsManager.getBuilds().toString().replaceAll("\\\\", "");
+    	JSONObject data = new JSONObject();
+    	data.put(Constants.LATEST_RELEASES, buildsManager.getLatestReleases());
+    	data.put(Constants.BUILDS, buildsManager.getBuilds());
+    	return data.toString().replaceAll("\\\\", "");
+    }
+    
+    @GET
+    @Path("builds/latest")
+    @Produces({"application/json"})
+    public String latestsReleases() {
+    	BuildsManager buildsManager = BuildsManager.getInstance();
+    	return buildsManager.getLatestReleases().toString().replaceAll("\\\\", "");
     }
     
     @PUT
