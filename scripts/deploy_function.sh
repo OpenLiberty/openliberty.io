@@ -1,6 +1,6 @@
 #!/bin/bash
 function pushApp {
-  cf push "${CF_APP}" --no-start --hostname openliberty-test
+  cf push "${CF_APP}" --no-start
   cf set-env "${CF_APP}" PAT "${PAT}"
   if [[ -z $CURRENT_STATE ]]
   then
