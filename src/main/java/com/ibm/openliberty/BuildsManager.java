@@ -1,7 +1,6 @@
 package com.ibm.openliberty;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -13,7 +12,6 @@ import javax.ws.rs.core.Response;
 
 import com.ibm.json.java.JSONArray;
 import com.ibm.json.java.JSONObject;
-import com.ibm.xml.crypto.util.Base64;
 
 public class BuildsManager {
 	
@@ -23,6 +21,7 @@ public class BuildsManager {
 	private Date lastUpdateAttempt = null;
 	
 	private JSONObject builds = new JSONObject();
+	private JSONObject latestReleases = new JSONObject();
 	
 	private Client client = null;
 	
@@ -33,39 +32,25 @@ public class BuildsManager {
 		return instance;
 	}
 	
+	
 	private BuildsManager() {
 		client = ClientBuilder.newClient();
 	}
 	
+	
 	public JSONObject getBuilds() {
+		if(lastSuccessfulUpdate == null) {
+			updateBuilds();
+		}
 		return builds;
 	}
 	
-	public JSONObject updateBuilds() {
-		lastUpdateAttempt = new Date();
-		
-		JSONObject updatedBuilds = new JSONObject();
-		
-		JSONArray updatedRuntimeReleases = retrieveBuildData(Constants.RUNTIME_BINTRAY_ORGANIZATION, Constants.RUNTIME_BINTRAY_REPOSITORY, Constants.RUNTIME_BINTRAY_PACKAGE_RELEASES, Constants.RUNTIME_BINTRAY_USER, Constants.RUNTIME_BINTRAY_API_KEY);
-		JSONArray updatedRuntimeNightlyBuilds = retrieveBuildData(Constants.RUNTIME_BINTRAY_ORGANIZATION, Constants.RUNTIME_BINTRAY_REPOSITORY, Constants.RUNTIME_BINTRAY_PACKAGE_NIGHTLY_BUILDS, Constants.RUNTIME_BINTRAY_USER, Constants.RUNTIME_BINTRAY_API_KEY);
-		
-		//JSONArray updatedToolsReleases = retrieveBuildData(Constants.TOOLS_BINTRAY_ORGANIZATION, Constants.TOOLS_BINTRAY_REPOSITORY, Constants.TOOLS_BINTRAY_PACKAGE_RELEASES, Constants.TOOLS_BINTRAY_USER, Constants.TOOLS_BINTRAY_API_KEY);
-		//JSONArray updatedToolsNightlyBuilds = retrieveBuildData(Constants.TOOLS_BINTRAY_ORGANIZATION, Constants.TOOLS_BINTRAY_REPOSITORY, Constants.TOOLS_BINTRAY_PACKAGE_NIGHTLY_BUILDS, Constants.TOOLS_BINTRAY_USER, Constants.TOOLS_BINTRAY_API_KEY);
-		
-		//if(updatedRuntimeReleases != null && updatedRuntimeNightlyBuilds != null && updatedToolsReleases != null && updatedToolsNightlyBuilds != null) {
-		if(updatedRuntimeReleases != null && updatedRuntimeNightlyBuilds != null) {
-
-			updatedBuilds.put(Constants.RUNTIME_RELEASES, updatedRuntimeReleases);
-			updatedBuilds.put(Constants.RUNTIME_NIGHTLY_BUILDS, updatedRuntimeNightlyBuilds);
-			
-			//updatedBuilds.put(Constants.TOOLS_RELEASES, updatedRuntimeReleases);
-			//updatedBuilds.put(Constants.TOOLS_NIGHTLY_BUILDS, updatedRuntimeNightlyBuilds);
-			
-			lastSuccessfulUpdate = lastUpdateAttempt;
-			builds = updatedBuilds;
+	
+	public JSONObject getLatestReleases() {
+		if(lastSuccessfulUpdate == null) {
+			updateBuilds();
 		}
-		
-    	return getStatus();
+		return latestReleases;
 	}
 	
 	
@@ -77,62 +62,109 @@ public class BuildsManager {
 	}
 	
 	
-	private JSONArray retrieveBuildData(String organization, String repository, String bintrayPackage, String user, String apiKey) {
-		String builds = MessageFormat.format(Constants.BINTRAY_VERSIONS_URL, organization, repository, bintrayPackage);
-		JSONObject versionsJSONObject = retrieveData(builds, user, apiKey);
-		if(versionsJSONObject != null) {
-			JSONArray jsonArray = new JSONArray();
-			Object versionsJSONArray = versionsJSONObject.get(Constants.BINTRAY_VERSIONS);
-			if(versionsJSONArray instanceof JSONArray) {
-				JSONArray buildsArray = (JSONArray) versionsJSONArray;
-				Iterator<?> iterator = buildsArray.iterator();
-				while(iterator.hasNext()) {
-					Object object = iterator.next();
-					if(object instanceof String) {
-						String version = (String)object;
-						String url = MessageFormat.format(Constants.BINTRAY_FILE_URL, organization, repository, bintrayPackage, version, Constants.INFORMATION_JSON_FILE);
-						JSONObject versionData = retrieveData(url, user, apiKey);
-						versionData.put(Constants.DATE_TIME, version);
-						
-						Object buildLogObject = versionData.get(Constants.BUILD_LOG);
-						if(buildLogObject instanceof String) {
-							String buildLog = (String)buildLogObject;
-							String newBuildLog = MessageFormat.format(Constants.BINTRAY_FILE_URL, organization, repository, bintrayPackage, version, buildLog);
-							versionData.put(Constants.BUILD_LOG, newBuildLog);
-						}
-						
-						Object testLogObject = versionData.get(Constants.TESTS_LOG);
-						if(testLogObject instanceof String) {
-							String testsLog = (String)testLogObject;
-							String newTestsLog = MessageFormat.format(Constants.BINTRAY_FILE_URL, organization, repository, bintrayPackage, version, testsLog);
-							versionData.put(Constants.TESTS_LOG, newTestsLog);
-						}
-						
-						Object driverLocationObject = versionData.get(Constants.DRIVER_LOCATION);
-						if(driverLocationObject != null) {
-							String driverLocation = (String)driverLocationObject;
-							String newDrvierLocation = MessageFormat.format(Constants.BINTRAY_FILE_URL, organization, repository, bintrayPackage, version, driverLocation);
-							versionData.put(Constants.DRIVER_LOCATION, newDrvierLocation);
-						}
+	public synchronized JSONObject updateBuilds() {
+		lastUpdateAttempt = new Date();
+		JSONObject updatedBuilds = new JSONObject();
+		JSONArray updatedRuntimeReleases = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT, Constants.DHE_RELEASE_PATH_SEGMENT);
+		JSONArray updatedRuntimeNightlyBuilds = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT, Constants.DHE_NIGHTLY_PATH_SEGMENT);
+		JSONArray updatedToolsReleases = retrieveBuildData(Constants.DHE_TOOLS_PATH_SEGMENT, Constants.DHE_RELEASE_PATH_SEGMENT);
+		JSONArray updatedToolsNightlyBuilds = retrieveBuildData(Constants.DHE_TOOLS_PATH_SEGMENT, Constants.DHE_NIGHTLY_PATH_SEGMENT);
+		if(updatedRuntimeReleases != null && updatedRuntimeNightlyBuilds != null && updatedToolsReleases != null && updatedToolsNightlyBuilds != null) {
+			JSONObject latestRuntimeRelease = getLatestBuild(updatedRuntimeReleases);
+			JSONObject latestToolsRelease = getLatestBuild(updatedToolsReleases);
+			if(latestRuntimeRelease != null &&  latestToolsRelease != null) {
+				latestReleases.put(Constants.RUNTIME, latestRuntimeRelease);
+				latestReleases.put(Constants.TOOLS, latestToolsRelease);
+				updatedBuilds.put(Constants.RUNTIME_RELEASES, updatedRuntimeReleases);
+				updatedBuilds.put(Constants.RUNTIME_NIGHTLY_BUILDS, updatedRuntimeNightlyBuilds);
+				updatedBuilds.put(Constants.TOOLS_RELEASES, updatedToolsReleases);
+				updatedBuilds.put(Constants.TOOLS_NIGHTLY_BUILDS, updatedToolsNightlyBuilds);
+				lastSuccessfulUpdate = lastUpdateAttempt;
+				builds = updatedBuilds;
+			}
+		}
+		return getStatus();
+	}
 
-						jsonArray.add(versionData);
+	
+	private JSONObject getLatestBuild(JSONArray buildsArray) {	
+		JSONObject latest = null;
+		Iterator<?> iterator = buildsArray.iterator();
+		while(iterator.hasNext()) {
+			Object releaseObject = iterator.next();
+			if(releaseObject instanceof JSONObject) {
+				JSONObject releaseJSONObject = (JSONObject) releaseObject;
+				Object dateObject = releaseJSONObject.get(Constants.DATE);
+				if(dateObject instanceof String) {
+					String dateString = (String) dateObject;
+					if(latest == null || dateString.compareTo((String) latest.get(Constants.DATE)) > 0) {
+						latest = releaseJSONObject;
 					}
 				}
-			} else {
-				return null;
+			}
+		}		
+		return latest;
+	}
+	
+	
+	private JSONArray retrieveBuildData(String artifactPath, String buildTypePath) {
+		JSONObject versions = retrieveJSON(Constants.DHE_URL + artifactPath + buildTypePath + Constants.DHE_INFO_JSON_FILE_NAME);
+		if(versions != null) {
+			JSONArray jsonArray = new JSONArray();
+			Object versionsObject = versions.get(Constants.VERSIONS);
+			if(versionsObject instanceof JSONArray) {
+				JSONArray versionsJSONArray = (JSONArray) versionsObject;
+				Iterator<?> iterator = versionsJSONArray.iterator();
+				while(iterator.hasNext()) {
+					Object versionObject = iterator.next();
+					if(versionObject instanceof String) {
+						String version = (String) versionObject;	
+						String versionPath = version + '/';
+						String informationFileURL = Constants.DHE_URL + artifactPath + buildTypePath + versionPath + Constants.DHE_INFO_JSON_FILE_NAME;
+						JSONObject buildInformation = retrieveJSON(informationFileURL);
+						if(buildInformation != null) {
+							buildInformation.put(Constants.DATE, version);
+							
+							Object buildLogObject = buildInformation.get(Constants.BUILD_LOG);
+							if(buildLogObject instanceof String) {
+								String buildLog = (String)buildLogObject;
+								String newBuildLog = Constants.DHE_URL + artifactPath + buildTypePath + versionPath + buildLog;
+								buildInformation.put(Constants.BUILD_LOG, newBuildLog);
+							}
+							
+							Object testLogObject = buildInformation.get(Constants.TESTS_LOG);
+							if(testLogObject instanceof String) {
+								String testsLog = (String)testLogObject;
+								String newTestsLog = Constants.DHE_URL + artifactPath + buildTypePath + versionPath + testsLog;
+								buildInformation.put(Constants.TESTS_LOG, newTestsLog);
+							}
+							
+							Object driverLocationObject = buildInformation.get(Constants.DRIVER_LOCATION);
+							if(driverLocationObject != null) {
+								String driverLocation = (String)driverLocationObject;
+								String newDrvierLocation = Constants.DHE_URL + artifactPath + buildTypePath + versionPath + driverLocation;
+								buildInformation.put(Constants.DRIVER_LOCATION, newDrvierLocation);
+								
+								String size = retrieveSize(newDrvierLocation);
+								if(size != null) {
+									buildInformation.put(Constants.SIZE_IN_BYTES, size);
+								}
+							}
+							
+							jsonArray.add(buildInformation);
+						}
+					}
+				}
 			}
 			return jsonArray;
 		}
 		return null;
 	}
-
 	
-	private JSONObject retrieveData(String url, String user, String password) {
-		
+	
+	private JSONObject retrieveJSON(String url) {	
 		WebTarget target = client.target(url);
     	Builder builder = target.request("application/json");
-    	//builder.header("Authorization", "Basic " +  java.util.Base64.getEncoder().encodeToString((user + ':' + password).getBytes()));
-    	builder.header("Authorization", "Basic " +  Base64.encode((user + ':' + password).getBytes()));
     	Response response = builder.get();
     	if(response.getStatus() == 200) {
     		String entity = response.readEntity(String.class);
@@ -144,5 +176,17 @@ public class BuildsManager {
     	}   	
 		return null;
 	}
+	
+	
+	private String retrieveSize(String url) {
+		WebTarget target = client.target(url);
+    	Builder builder = target.request();
+    	Response response = builder.head();
+    	if(response.getStatus() == 200) {
+    		return response.getHeaderString(Constants.CONTENT_LENGTH);
+    	}
+    	return null;
+	}
+	
 
 }

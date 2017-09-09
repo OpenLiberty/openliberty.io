@@ -2,30 +2,19 @@ package com.ibm.openliberty;
 
 public interface Constants {
 	
-	// BINTRAY
-	
-	// RUNTIME
-	String RUNTIME_BINTRAY_USER = "jeanlucpicard";
-	String RUNTIME_BINTRAY_API_KEY = "83313886df9a977e50332e24f76d89e4727829a0";
-	String RUNTIME_BINTRAY_ORGANIZATION = "enterprise-d";
-	String RUNTIME_BINTRAY_REPOSITORY = "open-liberty";
-	String RUNTIME_BINTRAY_PACKAGE_RELEASES = "release-builds";
-	String RUNTIME_BINTRAY_PACKAGE_NIGHTLY_BUILDS = "nightly-builds";
-	
-	// TOOLS
-	String TOOLS_BINTRAY_USER = "";
-	String TOOLS_BINTRAY_API_KEY = "";
-	String TOOLS_BINTRAY_ORGANIZATION = "tetchell";
-	String TOOLS_BINTRAY_REPOSITORY = "olt-sandbox";
-	String TOOLS_BINTRAY_PACKAGE_RELEASES = "otc-ci";
-	String TOOLS_BINTRAY_PACKAGE_NIGHTLY_BUILDS = "olt-nightly";
+	// URL
+	String DHE_URL = "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/";
+	String DHE_RUNTIME_PATH_SEGMENT = "runtime/";
+	String DHE_TOOLS_PATH_SEGMENT = "tools/";
+	String DHE_RELEASE_PATH_SEGMENT = "release/";
+	String DHE_NIGHTLY_PATH_SEGMENT = "nightly/";
+	String DHE_INFO_JSON_FILE_NAME = "info.json";
 	
 	// JSON
 	String LAST_UPDATE_ATTEMPT = "last_update_attempt";
 	String LAST_SUCCESSFULL_UPDATE = "last_successful_update";
 	String NEVER_ATTEMPTED = "never_attempted";
 	String NEVER_UPDATED = "never_updated";
-	String BINTRAY_VERSIONS = "versions";
 	String TESTS_PASSED = "test_passed";
 	String TOTAL_TESTS = "total_tests";
 	String BUILD_LOG = "build_log";
@@ -35,16 +24,19 @@ public interface Constants {
 	String RUNTIME_NIGHTLY_BUILDS = "runtime_nightly_builds";
 	String TOOLS_RELEASES = "tools_releases";
 	String TOOLS_NIGHTLY_BUILDS = "tools_nightly_builds";
-	String DATE_TIME = "date_time";
+	String DATE = "date_time";
+	String VERSIONS = "versions";
+	String SIZE_IN_BYTES = "size_in_bytes";
+	String RUNTIME = "runtime";
+	String TOOLS = "tools";
+	String BUILDS = "builds";
+	String LATEST_RELEASES = "latest_releases";
 	
-	// FILES
-	String INFORMATION_JSON_FILE = "info.json";
+	// HTTP
+	String CONTENT_LENGTH = "Content-Length";
 	
-	
-	//String TOOLS_BINTRAY_VERSIONS_URL = "https://api.bintray.com/packages/tetchell/olt-sandbox/olt-nightly";
-	
-	String BINTRAY_VERSIONS_URL = "https://api.bintray.com/packages/{0}/{1}/{2}";
-	String BINTRAY_FILE_URL = "https://dl.bintray.com/{0}/{1}/{2}/{3}/{4}";
-	
+	// GITHUB
+	String GITHUB_ISSUES_URL = "https://api.github.com/repos/OpenLiberty/open-liberty/issues?sort=update";
+	String PAT_ENV_VARIABLE_NAME = "PAT";
 
 }
