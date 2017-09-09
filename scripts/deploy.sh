@@ -1,5 +1,6 @@
 #!/bin/bash
-source deploy_function.sh
+SCRIPT_DIR=$(dirname $0)
+source $SCRIPT_DIR/deploy_function.sh
 
 APPS="$(cf apps | grep openliberty- || true)"
 echo "$APPS"
