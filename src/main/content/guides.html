@@ -22,13 +22,15 @@ permalink: /guides/
     </div>
 </div>
 
+{% assign guides = site.pages | where:'layout', 'guide' | sort: 'date' | reverse %}
+
 <div id="guides_information_container" class="container">
     <div class="row">
         <div class="col-xs-12 text-center">
             <input id="guide_search_input" type="text" placeholder="Search all guides">
         </div>
         <div class="col-xs-12">
-            <h2 id="guide_counter_title">All Open Liberty guides</h2>
+            <h2 id="guide_counter_title">All Open Liberty guides ({{ guides.size}})</h2>
             <p id="guide_sort_message">Most recent guides shown first</p>
         </div>
     </div>
@@ -36,20 +38,17 @@ permalink: /guides/
 
 <div id="guides_container" class="container">       
     <div class="row">
-        {% assign pages = site.pages | sort: 'date' | reverse %}
-        {% for page in pages %}
-            {% if page.path contains 'guides/' and page.layout == 'guide' %}
-                <div class="guide_column col-xs-12 col-sm-6 col-md-4">
-                    <a href="{{ page.url }}.html" class="guide_item" data-title="{{ page.title | downcase }}" data-description="{{ page.description | downcase }}" data-tags="{{ page.tags | join: ' ' | downcase }}">
-                        <div class="guide_title_and_description_container">
-                            <h3 class="guide_title">{{page.title}}</h3>
-                            <p class="guide_description">{{page.description}}</p>
-                        </div>
-                        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg">
-                        <span class="guide_duration">{{page.duration}}</span>
-                    </a>
-                </div>
-            {% endif %}
+        {% for guide in guides %}
+            <div class="guide_column col-xs-12 col-sm-6 col-md-4">
+                <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}">
+                    <div class="guide_title_and_description_container">
+                        <h3 class="guide_title">{{guide.title}}</h3>
+                        <p class="guide_description">{{guide.description}}</p>
+                    </div>
+                    <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg">
+                    <span class="guide_duration">{{guide.duration}}</span>
+                </a>
+            </div>
         {% endfor %}
     </div>    
 </div>
