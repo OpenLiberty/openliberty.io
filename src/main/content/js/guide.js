@@ -14,9 +14,10 @@ $(document).ready(function() {
         target_position = current_target_object.position();
         target_width = current_target_object.outerWidth();
         target_height = current_target_object.outerHeight();
+
         $('#copy_to_clipboard').css({
             top: target_position.top + 8,
-            right: 61
+            right: parseInt($('#guide_column').css('padding-right')) + 11
         });
         $('#copy_to_clipboard').stop().fadeIn();
 
