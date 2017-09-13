@@ -16,5 +16,4 @@ git clone "https://contbld:$PAT@github.com/OpenLiberty/guide-microprofile-intro.
 mkdir target
 mkdir target/jekyll-webapp
 jekyll build --source src/main/content --destination target/jekyll-webapp
-cp -R target/jekyll-webapp/ src/main/webapp
 mvn -B package
