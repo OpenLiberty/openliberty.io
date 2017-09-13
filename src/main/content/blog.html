@@ -9,46 +9,33 @@ permalink: /blog/
 <div id="background_container" class="black_blue_gradient_background">
     <div id="blog_container" class="container">
         <div id="blog_row_1" class="row">
-            <div class="col-sm-4 text-center">
-                <img id="intro_logo" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-responsive center-block">
+            <div class="col-sm-4">
+                <img id="intro_logo" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-responsive">
             </div>
             <div class="col-sm-8">
-                <p>
+                <p id="page_intro_paragraph">
                     The Open Liberty Blog is your source for official Open Liberty announcements, hot open source topics, and user-generated content,
-                    all in an easily digestible form! Follow <a href="" class="light_green_link_dark_background">@OpenLibertyAS</a> and never miss a new post! 
+                    all in an easily digestible form! Follow <a href="https://twitter.com/OpenLibertyIO" class="light_green_link_dark_background">@OpenLibertyIO</a> and never miss a new post! 
                 </p>
-            </div>
-        </div>
-        <div id="blog_row_2" class="row">
-            <div class="col-xs-12">
-                <div id="blog_line"></div>
-                <span id="tags_label">TAGS:</span>
-                <a href="" class="tag_link">ANNOUNCEMENTS</a><a href="" class="tag_link">NEW RELEASES</a><a href="" class="tag_link">USER SUBMITTED</a>
-                <a id="blog_search_link" href="">SEARCH ALL POSTS</a>
             </div>
         </div>
 
         {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
         {% for post in site.posts %}
         <div class="row blog_post_row">
-            <div class="col-xs-12 blog_post_column">
-                <div class="blog_post_container">
-                    <div class="blog_post_content_image_container hidden-sm hidden-xs">
-                        <img src="{{ " /img/blog1.png " | relative }}" class="blog_post_image">
+            <div class="col-lg-8 col-lg-offset-2 col-xs-12 blog_post_column">
+                <div class="blog_post_content">
+                    <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
+                    <div class="blog_post_author_data_container">
+                        <img src="{{ post.author_picture }}" class="blog_post_author_image">
+                        <span class="blog_post_author_name">{{ post.author }}</span>
+                        <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
                     </div>
-                    <div class="blog_post_content">
-                        <h2 class="blog_post_title">{{ post.title | escape }}</h2>
-                        <div class="blog_post_author_data_container">
-                            <img src="{{ post.author_picture }}" class="blog_post_author_image">
-                            <span class="blog_post_author_name">{{ post.author }}</span>
-                            <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
-                        </div>
-                        <p class="blog_post_paragraph">
-                            {{ post.content | strip_html | truncatewords: 60 }}
-                        </p>
-                        <div class="text-right">
-                            <a href="{{ post.url | relative_url }}" class="large_link line_link blue_link_light_background"><span class="line"></span> Keep reading</a>
-                        </div>
+                    <p class="blog_post_paragraph">
+                        {{ post.content | strip_html | truncatewords: 60 }}
+                    </p>
+                    <div class="text-right">
+                        <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
                     </div>
                 </div>
             </div>

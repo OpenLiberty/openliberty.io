@@ -23,12 +23,14 @@ $('#issues_content').on('webkitTransitionEnd otransitionend oTransitionEnd msTra
 
 
 $('#issues_content').on('mousewheel wheel DOMMouseScroll', function(event) {
-    event.preventDefault();
-    if(event.originalEvent.deltaY < 0 || event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
-        scroll(true);
-    }
-    else {
-        scroll();
+    if(issues.length > 0) {
+        event.preventDefault();
+        if(event.originalEvent.deltaY < 0 || event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
+            scroll(true);
+        }
+        else {
+            scroll();
+        }
     }
 });
 

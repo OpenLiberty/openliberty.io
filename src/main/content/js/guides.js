@@ -4,7 +4,6 @@ $(document).ready(function() {
     let description_key = 2;
     let tags_key = 4;
 
-
     function filter_guides(key, search_value) {
         $('.guide_item').each(function(index, element) {
             
@@ -24,10 +23,12 @@ $(document).ready(function() {
         });
     }
 
+
     $('#guide_search_input').keyup(function(event) {
         let input_value = event.currentTarget.value.toLowerCase();
         if(input_value.length == 0) {
             $('.guide_column').removeClass('hidden');
+            $('#guide_counter_title').text('All Open Liberty guides (' + $('.guide_column').size() + ')');
         } else {
             if(input_value.startsWith('tag:')) {
                 let search_value = input_value.substring(4).trim();
@@ -35,8 +36,10 @@ $(document).ready(function() {
             } else {
                 filter_guides(title_key | description_key | tags_key, input_value);
             }
+            $('#guide_counter_title').text('Search results (' + $('.guide_column:visible').size() + ')');
         }
     });
+
 
     let query_string = location.search;
     if(query_string.length > 0) {
@@ -44,7 +47,6 @@ $(document).ready(function() {
         let search_value = false;
         let search_key = false;
         for(let i = 0; i < parameters.length; i++) {
-
             if(parameters[i].startsWith('search=')) {
                 search_value = parameters[i].substring(7);
             } else if (parameters[i].startsWith('key=')) {
