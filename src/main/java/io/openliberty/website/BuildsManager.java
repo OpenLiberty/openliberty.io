@@ -181,9 +181,9 @@ public class BuildsManager {
     	Builder builder = target.request("application/json");
     	Response response = builder.get();
     	if(response.getStatus() == 200) {
-			if (response.getMediaType() == MediaType.APPLICATION_JSON_TYPE) {
+			if (MediaType.APPLICATION_JSON_TYPE.equals(response.getMediaType())) {
 	    		return response.readEntity(JsonObject.class);
-			} else if (response.getMediaType() == MediaType.TEXT_PLAIN_TYPE) {
+			} else if (MediaType.TEXT_PLAIN_TYPE.equals(response.getMediaType())) {
 				String responseBody = response.readEntity(String.class);
 				return Json.createReader(new StringReader(responseBody)).readObject();
 			}
