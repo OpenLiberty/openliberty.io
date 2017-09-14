@@ -16,44 +16,44 @@ public class OpenLibertyEndpoint extends Application {
 
     @GET
     @Path("builds")
-    @Produces({"application/json"})
+    @Produces({ "application/json" })
     public JsonObject status() {
-    	BuildsManager buildsManager = BuildsManager.getInstance();
-    	return buildsManager.getStatus();
+        BuildsManager buildsManager = BuildsManager.getInstance();
+        return buildsManager.getStatus();
     }
 
     @GET
     @Path("builds/data")
-    @Produces({"application/json"})
+    @Produces({ "application/json" })
     public JsonObject builds() {
-    	BuildsManager buildsManager = BuildsManager.getInstance();
-    	JsonObjectBuilder data = Json.createObjectBuilder();
-    	data.add(Constants.LATEST_RELEASES, buildsManager.getLatestReleases());
-    	data.add(Constants.BUILDS, buildsManager.getBuilds());
-    	return data.build();
+        BuildsManager buildsManager = BuildsManager.getInstance();
+        JsonObjectBuilder data = Json.createObjectBuilder();
+        data.add(Constants.LATEST_RELEASES, buildsManager.getLatestReleases());
+        data.add(Constants.BUILDS, buildsManager.getBuilds());
+        return data.build();
     }
 
     @GET
     @Path("builds/latest")
-    @Produces({"application/json"})
+    @Produces({ "application/json" })
     public JsonObject latestsReleases() {
-    	BuildsManager buildsManager = BuildsManager.getInstance();
-    	return buildsManager.getLatestReleases();
+        BuildsManager buildsManager = BuildsManager.getInstance();
+        return buildsManager.getLatestReleases();
     }
 
     @PUT
     @Path("builds")
-    @Produces({"application/json"})
+    @Produces({ "application/json" })
     public JsonObject update() {
-    	BuildsManager buildsManager = BuildsManager.getInstance();
-    	return buildsManager.updateBuilds();
+        BuildsManager buildsManager = BuildsManager.getInstance();
+        return buildsManager.updateBuilds();
     }
 
     @GET
     @Path("github/issues")
-    @Produces({"application/json"})
+    @Produces({ "application/json" })
     public String githubIssues() {
-    	return GitHubManager.getInstance().getIssues();
+        return GitHubManager.getInstance().getIssues();
     }
 
 }

@@ -11,20 +11,22 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 public class StickyRouting implements Filter {
-   public void destroy() {
-     System.err.println("destroy");
-   }
-   public void init(FilterConfig cfg) {
-     System.err.println("init");
-   }
+    public void destroy() {
+        System.err.println("destroy");
+    }
 
-   public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
+    public void init(FilterConfig cfg) {
+        System.err.println("init");
+    }
 
-     if (req instanceof HttpServletRequest) {
-       System.err.println("Creating session");
-       ((HttpServletRequest)req).getSession();
-     }
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
+            throws IOException, ServletException {
 
-     chain.doFilter(req, resp);
-   }
+        if (req instanceof HttpServletRequest) {
+            System.err.println("Creating session");
+            ((HttpServletRequest) req).getSession();
+        }
+
+        chain.doFilter(req, resp);
+    }
 }
