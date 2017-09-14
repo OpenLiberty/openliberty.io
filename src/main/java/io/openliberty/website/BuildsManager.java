@@ -1,6 +1,7 @@
 package io.openliberty.website;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
@@ -17,6 +18,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 public class BuildsManager {
@@ -179,7 +181,12 @@ public class BuildsManager {
     	Builder builder = target.request("application/json");
     	Response response = builder.get();
     	if(response.getStatus() == 200) {
-    		return response.readEntity(JsonObject.class);
+			if (response.getMediaType() == MediaType.APPLICATION_JSON_TYPE) {
+	    		return response.readEntity(JsonObject.class);
+			} else if (response.getMediaType() == MediaType.TEXT_PLAIN_TYPE) {
+				String responseBody = response.readEntity(String.class);
+				return Json.createReader(new StringReader(responseBody)).readObject();
+			}
     	}
 		return null;
 	}
