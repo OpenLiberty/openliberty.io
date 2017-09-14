@@ -119,7 +119,6 @@ $(document).ready(function() {
 
         $('#runtime_download_link').attr("href", data.latest_releases.runtime.driver_location);
         $('#eclipse_developer_tools_download_link').attr("href", data.latest_releases.tools.driver_location);
-        $('#runtime_download_link_size_label').text(Math.ceil(data.latest_releases.runtime.size_in_bytes / 1048576) + ' (MB)');
 
         runtime_releases = formatBuilds(data.builds.runtime_releases);
         developer_tools_releases = formatBuilds(data.builds.tools_releases);
