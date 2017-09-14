@@ -1,7 +1,7 @@
-package com.ibm.openliberty;
+package io.openliberty.website;
 
 public interface Constants {
-	
+
 	// URL
 	String DHE_URL = "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/";
 	String DHE_RUNTIME_PATH_SEGMENT = "runtime/";
@@ -9,7 +9,7 @@ public interface Constants {
 	String DHE_RELEASE_PATH_SEGMENT = "release/";
 	String DHE_NIGHTLY_PATH_SEGMENT = "nightly/";
 	String DHE_INFO_JSON_FILE_NAME = "info.json";
-	
+
 	// JSON
 	String LAST_UPDATE_ATTEMPT = "last_update_attempt";
 	String LAST_SUCCESSFULL_UPDATE = "last_successful_update";
@@ -31,10 +31,10 @@ public interface Constants {
 	String TOOLS = "tools";
 	String BUILDS = "builds";
 	String LATEST_RELEASES = "latest_releases";
-	
+
 	// HTTP
 	String CONTENT_LENGTH = "Content-Length";
-	
+
 	// GITHUB
 	String GITHUB_ISSUES_URL = "https://api.github.com/repos/OpenLiberty/open-liberty/issues?sort=update";
 	String PAT_ENV_VARIABLE_NAME = "PAT";

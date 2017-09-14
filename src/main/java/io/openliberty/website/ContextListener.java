@@ -1,4 +1,4 @@
-package com.ibm.openliberty;
+package io.openliberty.website;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
