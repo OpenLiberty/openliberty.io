@@ -16,14 +16,12 @@ public class StickyRouting implements Filter {
     }
 
     public void init(FilterConfig cfg) {
-        System.err.println("init");
     }
 
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
             throws IOException, ServletException {
 
         if (req instanceof HttpServletRequest) {
-            System.err.println("Creating session");
             ((HttpServletRequest) req).getSession();
         }
 

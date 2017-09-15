@@ -22,11 +22,11 @@ public class BuildsManager {
 
     private static BuildsManager instance = null;
 
-    private Date lastSuccessfulUpdate = null;
-    private Date lastUpdateAttempt = null;
+    private volatile Date lastSuccessfulUpdate = null;
+    private volatile Date lastUpdateAttempt = null;
 
-    private JsonObjectBuilder builds = Json.createObjectBuilder();
-    private JsonObjectBuilder latestReleases = Json.createObjectBuilder();
+    private volatile JsonObject builds = Json.createObjectBuilder().build();
+    private volatile JsonObject latestReleases = Json.createObjectBuilder().build();
 
     private Client client = null;
 
@@ -45,14 +45,14 @@ public class BuildsManager {
         if (lastSuccessfulUpdate == null) {
             updateBuilds();
         }
-        return builds.build();
+        return builds;
     }
 
     public JsonObject getLatestReleases() {
         if (lastSuccessfulUpdate == null) {
             updateBuilds();
         }
-        return latestReleases.build();
+        return latestReleases;
     }
 
     public JsonObject getStatus() {
@@ -67,6 +67,7 @@ public class BuildsManager {
     public synchronized JsonObject updateBuilds() {
         lastUpdateAttempt = new Date();
         JsonObjectBuilder updatedBuilds = Json.createObjectBuilder();
+        JsonObjectBuilder updatedReleases = Json.createObjectBuilder();
         JsonArray updatedRuntimeReleases = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
                 Constants.DHE_RELEASE_PATH_SEGMENT);
         JsonArray updatedRuntimeNightlyBuilds = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
@@ -80,14 +81,15 @@ public class BuildsManager {
             JsonObject latestRuntimeRelease = getLatestBuild(updatedRuntimeReleases);
             JsonObject latestToolsRelease = getLatestBuild(updatedToolsReleases);
             if (latestRuntimeRelease != null && latestToolsRelease != null) {
-                latestReleases.add(Constants.RUNTIME, latestRuntimeRelease);
-                latestReleases.add(Constants.TOOLS, latestToolsRelease);
+                updatedReleases.add(Constants.RUNTIME, latestRuntimeRelease);
+                updatedReleases.add(Constants.TOOLS, latestToolsRelease);
                 updatedBuilds.add(Constants.RUNTIME_RELEASES, updatedRuntimeReleases);
                 updatedBuilds.add(Constants.RUNTIME_NIGHTLY_BUILDS, updatedRuntimeNightlyBuilds);
                 updatedBuilds.add(Constants.TOOLS_RELEASES, updatedToolsReleases);
                 updatedBuilds.add(Constants.TOOLS_NIGHTLY_BUILDS, updatedToolsNightlyBuilds);
                 lastSuccessfulUpdate = lastUpdateAttempt;
-                builds = updatedBuilds;
+                builds = updatedBuilds.build();
+                latestReleases = updatedReleases.build();
             }
         }
         return getStatus();
@@ -158,7 +160,7 @@ public class BuildsManager {
                                 }
                             }
 
-                            jsonArray.add(buildInformation);
+                            jsonArray.add(buildInformation.build());
                         }
                     }
                 }
@@ -169,6 +171,8 @@ public class BuildsManager {
     }
 
     private JsonObjectBuilder toJsonObjectBuilder(JsonObject obj) {
+        if (obj == null) return null;
+        
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
         for (Map.Entry<String, JsonValue> entry : obj.entrySet()) {
