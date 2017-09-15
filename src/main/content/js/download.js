@@ -7,7 +7,7 @@ $(document).ready(function() {
     }).done(function(data) {
 
         $('#download_link').attr("href", data.runtime.driver_location);
-        $('#download_link_size_label').text(Math.ceil(data.runtime.size_in_bytes / 1048576) + ' (MB)');
+        $('#download_link_size_label').text(Math.floor(data.runtime.size_in_bytes / 1048576) + ' (MB)');
 
     });
 });
