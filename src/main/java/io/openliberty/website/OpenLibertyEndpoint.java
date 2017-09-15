@@ -10,6 +10,8 @@
  *******************************************************************************/
 package io.openliberty.website;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -22,13 +24,16 @@ import javax.ws.rs.core.Application;
 
 @ApplicationPath("api")
 @Path("/")
+@RequestScoped
 public class OpenLibertyEndpoint extends Application {
 
+    @Inject private BuildsManager buildsManager;
+    @Inject private GitHubManager githubManager;
+    
     @GET
     @Path("builds")
     @Produces({ "application/json" })
     public JsonObject status() {
-        BuildsManager buildsManager = BuildsManager.getInstance();
         return buildsManager.getStatus();
     }
 
@@ -36,7 +41,6 @@ public class OpenLibertyEndpoint extends Application {
     @Path("builds/data")
     @Produces({ "application/json" })
     public JsonObject builds() {
-        BuildsManager buildsManager = BuildsManager.getInstance();
         JsonObjectBuilder data = Json.createObjectBuilder();
         data.add(Constants.LATEST_RELEASES, buildsManager.getLatestReleases());
         data.add(Constants.BUILDS, buildsManager.getBuilds());
@@ -47,7 +51,6 @@ public class OpenLibertyEndpoint extends Application {
     @Path("builds/latest")
     @Produces({ "application/json" })
     public JsonObject latestsReleases() {
-        BuildsManager buildsManager = BuildsManager.getInstance();
         return buildsManager.getLatestReleases();
     }
 
@@ -55,7 +58,6 @@ public class OpenLibertyEndpoint extends Application {
     @Path("builds")
     @Produces({ "application/json" })
     public JsonObject update() {
-        BuildsManager buildsManager = BuildsManager.getInstance();
         return buildsManager.updateBuilds();
     }
 
@@ -63,7 +65,7 @@ public class OpenLibertyEndpoint extends Application {
     @Path("github/issues")
     @Produces({ "application/json" })
     public String githubIssues() {
-        return GitHubManager.getInstance().getIssues();
+        return githubManager.getIssues();
     }
 
 }

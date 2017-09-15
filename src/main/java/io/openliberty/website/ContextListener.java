@@ -10,6 +10,8 @@
  *******************************************************************************/
 package io.openliberty.website;
 
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.CDI;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -17,7 +19,10 @@ public class ContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        BuildsManager.getInstance().updateBuilds();
+        Instance<BuildsManager> mgr = CDI.current().select(BuildsManager.class);
+        if (!mgr.isUnsatisfied()) {
+            mgr.get().updateBuilds();
+        }
     }
 
     @Override

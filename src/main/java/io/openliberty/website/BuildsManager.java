@@ -14,6 +14,7 @@ import java.io.StringReader;
 import java.util.Date;
 import java.util.Map;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -28,9 +29,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+@ApplicationScoped
 public class BuildsManager {
-
-    private static BuildsManager instance = null;
 
     private volatile Date lastSuccessfulUpdate = null;
     private volatile Date lastUpdateAttempt = null;
@@ -40,14 +40,7 @@ public class BuildsManager {
 
     private Client client = null;
 
-    public static synchronized BuildsManager getInstance() {
-        if (instance == null) {
-            instance = new BuildsManager();
-        }
-        return instance;
-    }
-
-    private BuildsManager() {
+    public BuildsManager() {
         client = ClientBuilder.newClient();
     }
 

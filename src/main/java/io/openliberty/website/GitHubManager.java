@@ -10,26 +10,19 @@
  *******************************************************************************/
 package io.openliberty.website;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
+@ApplicationScoped
 public class GitHubManager {
-
-    private static GitHubManager instance = null;
 
     private Client client = null;
 
-    public static synchronized GitHubManager getInstance() {
-        if (instance == null) {
-            instance = new GitHubManager();
-        }
-        return instance;
-    }
-
-    private GitHubManager() {
+    public GitHubManager() {
         client = ClientBuilder.newClient();
     }
 
