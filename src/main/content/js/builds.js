@@ -28,13 +28,13 @@ function render_builds(builds, parent) {
         row.append(date_column);
         
         if(!parent.hasClass('release_table_body')) {
-            let tests_column = $('<td><a href="' +  build.tests_log +'" target="new" class="' + analytics_class_name + 'tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
-            let log_column = $('<td><a href="' + build.build_log + '" target="new" class="' + analytics_class_name + 'view_logs_link">View logs</a></td>');
+            let tests_column = $('<td><a href="' +  build.tests_log +'" target="new" class="' + analytics_class_name + ' tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
+            let log_column = $('<td><a href="' + build.build_log + '" target="new" class="' + analytics_class_name + ' view_logs_link">View logs</a></td>');
             row.append(tests_column);
             row.append(log_column);
         }
         
-        let zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + 'build_download_button">Download (.zip)</a></td>');
+        let zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' build_download_button">Download (.zip)</a></td>');
         
         row.append(zip_column);
 
