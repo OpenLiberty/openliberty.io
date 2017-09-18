@@ -83,7 +83,8 @@ public class BuildsManager {
                 && updatedToolsNightlyBuilds != null) {
             JsonObject latestRuntimeRelease = getLatestBuild(updatedRuntimeReleases);
             JsonObject latestToolsRelease = getLatestBuild(updatedToolsReleases);
-            if (latestRuntimeRelease != null && latestToolsRelease != null) {
+            //if (latestRuntimeRelease != null && latestToolsRelease != null) {
+            if (latestRuntimeRelease != null) {
                 updatedReleases.add(Constants.RUNTIME, latestRuntimeRelease);
                 updatedReleases.add(Constants.TOOLS, latestToolsRelease);
                 updatedBuilds.add(Constants.RUNTIME_RELEASES, updatedRuntimeReleases);
