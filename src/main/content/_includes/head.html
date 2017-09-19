@@ -12,6 +12,11 @@
   {% for css in page.css %}
     <link rel="stylesheet" href="{{ "/css/" | append: css | append: '.css' | relative_url }}">
   {% endfor %}
+
+  {% for css in page.guides-css %}
+  <link rel="stylesheet" href="{{ "/guides/" | append: css | append: '.css' }}">
+  {% endfor %}
+
   {% for css in layout.css %}
     <link rel="stylesheet" href="{{ "/css/" | append: css | append: '.css' | relative_url }}">
   {% endfor %}
