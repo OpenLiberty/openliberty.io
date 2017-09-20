@@ -21,6 +21,11 @@
     {% for js in page.js %}
       <script src="{{ "/js/" | append: js | append: '.js' | relative_url }}"></script>
     {% endfor %}
+    
+    {% for js in page.guides-js %}
+      <script src="{{ "/guides/" | append: js | append: '.js' }}"></script>
+    {% endfor %}
+
     {% for js in layout.js %}
       <script src="{{ "/js/" | append: js | append: '.js' | relative_url }}"></script>
     {% endfor %}

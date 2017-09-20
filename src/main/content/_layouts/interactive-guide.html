@@ -1,0 +1,34 @@
+---
+layout: default
+css: guide
+js: guide
+---
+
+<div id="background_container" class="black_blue_gradient_background">
+    <div class="container">
+        <div id="title_row" class="row">
+            <div class="col-xs-12">
+                <img id="intro_logo" src="{{ "/img/guides_page_title_small.svg" | relative }}" alt="Guides">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <a id="all_guides_link" href="/guides">All Guides</a>
+                <h3 id="toc_title"></h3>
+                <div id="toc_container">
+                </div>
+                    <h3 id="tag_title">Tags</h3>
+                    <div id="tags_container">
+                        {% for tag in page.tags %}
+                            <a href="/guides?search={{ tag }}&key=tag">{{ tag }}</a>
+                        {% endfor %}
+                    </div>
+            </div>
+            <div id="guide_column" class="col-sm-9 position_relative">
+                <div id="guide_content">
+                    {{ content }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
