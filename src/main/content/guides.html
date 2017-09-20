@@ -22,8 +22,9 @@ permalink: /guides/
     </div>
 </div>
 
-{% assign guides = site.pages | where:'layout', 'guide' | sort: 'date' | reverse %}
-
+{% assign static-guides = site.pages | where: 'layout', 'guide' %}
+{% assign interactive-guides = site.pages | where: 'layout', 'interactive-guide'%}
+{% assign guides = static-guides | concat: interactive-guides | sort: 'date' | reverse %}
 <div id="guides_information_container" class="container">
     <div class="row">
         <div class="col-xs-12 text-center">
@@ -45,6 +46,9 @@ permalink: /guides/
                         <h3 class="guide_title">{{guide.title}}</h3>
                         <p class="guide_description">{{guide.description}}</p>
                     </div>
+                    {% if guide.layout == 'interactive-guide' %}
+                    <img class="duration_clock_icon" src="/img/guide_lightningbolt.svg" title="Interactive Guide" alt="Interactive Guide">
+                    {% endif %}
                     <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
                     <span class="guide_duration">{{guide.duration}}</span>
                 </a>

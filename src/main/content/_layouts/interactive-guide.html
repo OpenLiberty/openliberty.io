@@ -1,0 +1,52 @@
+---
+layout: default
+css: guide
+js: guide
+---
+
+<div id="background_container" class="black_blue_gradient_background">
+    <div class="container">
+        <div id="title_row" class="row">
+            <div class="col-xs-12">
+                <img id="intro_logo" src="{{ "/img/guides_page_title_small.svg" | relative }}" alt="Guides">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <a id="all_guides_link" href="/guides">All Guides</a>
+                <h3 id="toc_guide_title">{{ page.title }}</h3>
+                <h3 id="toc_title">Contents</h3>
+                <div id="toc_container">
+                </div>
+                {% if page.tags %}
+                <h3 id="tag_title">Tags</h3>
+                <div id="tags_container">
+                    {% for tag in page.tags %}
+                        <a href="/guides?search={{ tag }}&key=tag">{{ tag }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div id="guide_column" class="col-sm-9">
+                <div id="guide_content">
+                    <div id="first_step_header">
+                        <h1 id="guide_title">{{ page.title }}</h1>
+                        <div id="duration_container">
+                            <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+                            <span id="guide_duration">{{ page.duration }}</span>
+                        </div>
+                        <p>{{ page.description }}</p>
+                    </div>
+                    <div id="blueprint_title" aria-label="">{{ page.title }}</div>
+                    {{ content }}
+                </div>
+                <div class="col-sm-12" id="page_nav_buttons" role="group">
+                    <button id="prev_button" class="btn navButton">
+                    </button>
+                    <button id="next_button" class="btn navButton">
+                    </button>
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>
