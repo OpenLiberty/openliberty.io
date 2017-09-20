@@ -124,7 +124,7 @@ function retrieve_github_issues() {
     $.ajax({
         url: issues_url
     }).done(function(data) {
-        issues = data;
+        issues = data.filter(function(value){return !value.hasOwnProperty('pull_request')});
         deferred.resolve();
     }).fail(function() {
         deferred.reject();
