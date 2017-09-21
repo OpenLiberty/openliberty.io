@@ -8,7 +8,6 @@ rvm install 2.4.1
 rvm use 2.4.1 --default
 sudo apt-get -y install nodejs
 gem install jekyll bundler jekyll-feed jekyll-asciidoc coderay
-export JEKYLL_ENV=production
 git clone "https://contbld:$PAT@github.com/OpenLiberty/guides-common.git" src/main/content/guides/guides-common
 git clone "https://contbld:$PAT@github.com/OpenLiberty/guide-rest-intro.git" src/main/content/guides/guide_rest_intro
 git clone "https://contbld:$PAT@github.com/OpenLiberty/guide-maven-intro.git" src/main/content/guides/guide_maven_intro
