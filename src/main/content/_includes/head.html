@@ -13,13 +13,14 @@
   <meta name="twitter:image" content="https://openliberty.io/img/twitter_card.jpg" />
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{{ "/css/openliberty.css" | relative_url }}">
+  {% css openliberty %}
 
-  {% for css in page.css %}
-    <link rel="stylesheet" href="{{ "/css/" | append: css | append: '.css' | relative_url }}">
+  {% for css_name in page.css %}
+    {% css {{css_name}} %}
   {% endfor %}
-  {% for css in layout.css %}
-    <link rel="stylesheet" href="{{ "/css/" | append: css | append: '.css' | relative_url }}">
+  
+  {% for css_name in layout.css %}
+    {% css {{css_name}} %}
   {% endfor %}
 
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
