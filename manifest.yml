@@ -1,17 +1,17 @@
+memory: 512M
+instances: 1
+disk_quota: 1024
+path: target/openliberty.war
+
 applications:
-- path: target/openliberty.war
-  memory: 512M
-  instances: 1
+- name: openliberty-blue
   domain: openliberty.io
-  name: openliberty
   host: www
-  disk_quota: 1024M
-- path: target/openliberty.war
-  memory: 512M
-  instances: 1
+- name: openliberty-green
+  domain: openliberty.io
+  host: www
+- name: openlibertydev
   domain: mybluemix.net
-  name: openlibertydev
   host: openlibertydev
-  disk_quota: 1024M
 env:
   JBP_CONFIG_LIBERTY: 'app_archive: {features: ["microProfile-1.0","webCache-1.0"]}'
