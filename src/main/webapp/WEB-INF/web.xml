@@ -11,12 +11,20 @@
         </listener-class>
    </listener>
 
-  <filter> 
+  <filter>
     <filter-name>StickyRouting</filter-name>
-    <filter-class>io.openliberty.website.StickyRouting</filter-class> 
-  </filter> 
-  <filter-mapping> 
+    <filter-class>io.openliberty.website.StickyRouting</filter-class>
+  </filter>
+  <filter-mapping>
     <filter-name>StickyRouting</filter-name>
-    <url-pattern>/*</url-pattern> 
-  </filter-mapping> 
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>TLSFilter</filter-name>
+    <filter-class>io.openliberty.website.TLSFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>TLSFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 </web-app>
