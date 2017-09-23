@@ -1,16 +1,16 @@
 $(document).ready(function() {
 
-    let offset;
-    let target;
-    let target_position;
-    let target_width;
-    let target_height;
+    var offset;
+    var target;
+    var target_position;
+    var target_width;
+    var target_height;
 
     $('#guide_content pre').hover(function(event) {
 
         offset = $('#guide_column').position();
         target = event.currentTarget;
-        let current_target_object = $(event.currentTarget);
+        var current_target_object = $(event.currentTarget);
         target_position = current_target_object.position();
         target_width = current_target_object.outerWidth();
         target_height = current_target_object.outerHeight();
@@ -23,8 +23,8 @@ $(document).ready(function() {
 
     }, function(event) {
 
-        let x = event.clientX - offset.left;
-        let y = event.clientY - offset.top + $(window).scrollTop();
+        var x = event.clientX - offset.left;
+        var y = event.clientY - offset.top + $(window).scrollTop();
         if(!(x > target_position.left
         && x < target_position.left + target_width
         && y > target_position.top
@@ -41,8 +41,8 @@ $(document).ready(function() {
         window.getSelection().selectAllChildren(target);
         if(document.execCommand('copy')) {
             window.getSelection().removeAllRanges();
-            let current_target_object = $(event.currentTarget);
-            let position = current_target_object.position();
+            var current_target_object = $(event.currentTarget);
+            var position = current_target_object.position();
             $('#copied_to_clipboard_confirmation').css({
                 top: position.top - 25,
                 right: 50

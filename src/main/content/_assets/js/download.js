@@ -1,4 +1,4 @@
-let latest_release_url = '/api/builds/latest';
+var latest_release_url = '/api/builds/latest';
 
 $(document).ready(function() {
 
