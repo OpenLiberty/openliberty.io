@@ -1,7 +1,7 @@
-let issues = [];
-let focus_issue_index = 0;
-let scroll_in_progress = false;
-let issues_url = '/api/github/issues';
+var issues = [];
+var focus_issue_index = 0;
+var scroll_in_progress = false;
+var issues_url = '/api/github/issues';
 
 $('#issues_up_arrow').click(function(event) {
     event.preventDefault();
@@ -41,11 +41,11 @@ function scroll(up) {
         scroll_in_progress = true;
         if(up) {
             if(issues.length > 4 || (issues.length == 4 && focus_issue_index == 3)) {
-                let offset = (issues.length + focus_issue_index) - 3;
+                var offset = (issues.length + focus_issue_index) - 3;
                 if(offset + 1 > issues.length) {
                     offset = offset - issues.length;
                 }
-                let new_issue_element = create_issue_element(offset, 0);
+                var new_issue_element = create_issue_element(offset, 0);
                 $('#issues_content').prepend(new_issue_element);
             }
             if(issues.length > 4 || focus_issue_index > 0) {
@@ -62,13 +62,13 @@ function scroll(up) {
                 }
             }
         } else {
-            let offset = focus_issue_index + 3;
+            var offset = focus_issue_index + 3;
             if(issues.length > offset) {
-                let new_issue_element = create_issue_element(offset, 6);
+                var new_issue_element = create_issue_element(offset, 6);
                 $('#issues_content').prepend(new_issue_element);
             } else if(issues.length > 4) {
-                let offset = (focus_issue_index - issues.length) + 3;
-                let new_issue_element = create_issue_element(offset, 6);
+                var offset = (focus_issue_index - issues.length) + 3;
+                var new_issue_element = create_issue_element(offset, 6);
                 $('#issues_content').prepend(new_issue_element);
             }
             if(issues.length > 4 || focus_issue_index + 1 < issues.length) {
@@ -102,13 +102,13 @@ function update_tab_index() {
 
 
 function create_issue_element(index, ui_position) {
-    let issue = issues[index];
-    let issue_element = $('<a href="' + issue.html_url + '" target="new" class="issue issue_' + ui_position + ' clearfix center-block"</a>');
-    let bar_element = $('<div class="issue_green_bar"></div>');
-    let title_element = $('<h3 class="truncate">' + issue.title + '</h3>');
-    let date_element = $('<p class="pull-left">' + new Date(issue.updated_at).toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'}) + '</p>');
-    let index_element = $('<p class="pull-right">' + (index + 1) + ' / ' + issues.length + '</p>');
-    let shadow_element = $('<div class="shadow"></div>');
+    var issue = issues[index];
+    var issue_element = $('<a href="' + issue.html_url + '" target="new" class="issue issue_' + ui_position + ' clearfix center-block"</a>');
+    var bar_element = $('<div class="issue_green_bar"></div>');
+    var title_element = $('<h3 class="truncate">' + issue.title + '</h3>');
+    var date_element = $('<p class="pull-left">' + new Date(issue.updated_at).toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'}) + '</p>');
+    var index_element = $('<p class="pull-right">' + (index + 1) + ' / ' + issues.length + '</p>');
+    var shadow_element = $('<div class="shadow"></div>');
     issue_element.append(bar_element);
     issue_element.append(title_element);
     issue_element.append(date_element);
@@ -120,7 +120,7 @@ function create_issue_element(index, ui_position) {
 
 
 function retrieve_github_issues() {
-    let deferred = new $.Deferred();
+    var deferred = new $.Deferred();
     $.ajax({
         url: issues_url
     }).done(function(data) {
@@ -140,15 +140,15 @@ function initialize_issues() {
         
         show_issues_message();
 
-        for(let i = 0; i < issues.length && i < 3; i++) {
-            let issue_element = create_issue_element(i, i + 3);
+        for(var i = 0; i < issues.length && i < 3; i++) {
+            var issue_element = create_issue_element(i, i + 3);
             $('#issues_content').append(issue_element);
         }
 
         if(issues.length > 4) {
-            let issue_element_2 = create_issue_element(issues.length - 1, 2);
+            var issue_element_2 = create_issue_element(issues.length - 1, 2);
             $('#issues_content').prepend(issue_element_2);
-            let issue_element_1 = create_issue_element(issues.length - 2, 1);
+            var issue_element_1 = create_issue_element(issues.length - 2, 1);
             $('#issues_content').prepend(issue_element_1);
         }
 
@@ -162,7 +162,7 @@ function initialize_issues() {
 
 
 function show_issues_message(message) {
-    let message_container = $('#issues_message');
+    var message_container = $('#issues_message');
     message_container.text(message);
     if(!message) {
         message_container.addClass('hidden');
