@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public class TLSFilter implements Filter {
     public void destroy() {
-        System.err.println("destroy");
     }
 
     public void init(FilterConfig cfg) {
