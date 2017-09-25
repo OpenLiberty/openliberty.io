@@ -39,7 +39,7 @@ public class TLSFilter implements Filter {
           response.setHeader("Strict-Transport-Security", "max-age=3600");
 
           String uri = ((HttpServletRequest)req).getRequestURI();
-          if(uri.startsWith("/img")) {
+          if(uri.startsWith("/img/")) {
         	  response.setHeader("Cache-Control", "max-age=604800");
           } else {
         	  response.setHeader("Cache-Control", "no-cache");
