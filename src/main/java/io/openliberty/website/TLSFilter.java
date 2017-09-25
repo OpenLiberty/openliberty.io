@@ -37,13 +37,18 @@ public class TLSFilter implements Filter {
           response.setHeader("Location", ((HttpServletRequest)req).getRequestURL().replace(0, 4, "https").toString());
         } else if ("https".equals(req.getScheme())) {
           response.setHeader("Strict-Transport-Security", "max-age=3600");
-          if(((HttpServletRequest)req).getRequestURI().startsWith("/api/")) {
-        	  response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+
+          String uri = ((HttpServletRequest)req).getRequestURI();
+          if(uri.startsWith("/img")) {
+        	  response.setHeader("Cache-Control", "max-age=604800");
           } else {
-        	  response.setHeader("Cache-Control", "public, max-age=600");
+        	  response.setHeader("Cache-Control", "no-cache");
           }
+
         }
 
         chain.doFilter(req, resp);
     }
 }
+
+
