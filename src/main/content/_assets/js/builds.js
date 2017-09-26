@@ -119,8 +119,8 @@ $(document).ready(function() {
         url: builds_url
     }).done(function(data) {
 
-        $('#runtime_download_link').attr("href", data.latest_releases.runtime.driver_location);
-        $('#eclipse_developer_tools_download_link').attr("href", data.latest_releases.tools.driver_location);
+        $('#runtime_download_link').attr('href', data.latest_releases.runtime.driver_location);
+        $('#eclipse_developer_tools_download_link').attr('href', data.latest_releases.tools.driver_location);
 
         runtime_releases = formatBuilds(data.builds.runtime_releases);
         developer_tools_releases = formatBuilds(data.builds.tools_releases);
