@@ -44,9 +44,14 @@ public interface Constants {
 
     // HTTP
     String CONTENT_LENGTH = "Content-Length";
+    String API_SERVLET_PATH = "/api";
 
     // GITHUB
     String GITHUB_ISSUES_URL = "https://api.github.com/repos/OpenLiberty/open-liberty/issues?sort=update";
     String PAT_ENV_VARIABLE_NAME = "PAT";
+    
+    // BLUEMIX
+    String OPEN_LIBERTY_GREEN_APP_NAME = "openliberty-green";
+    String OPEN_LIBERTY_BLUE_APP_NAME = "openliberty-blue";
 
 }
