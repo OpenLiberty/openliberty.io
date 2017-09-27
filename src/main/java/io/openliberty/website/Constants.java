@@ -52,6 +52,6 @@ public interface Constants {
     
     // BLUEMIX
     String OPEN_LIBERTY_GREEN_APP_HOST = "openliberty-green.mybluemix.net";
-    String OPEN_LIBERTY_BLUE_APP_HOST = "openliberty-green.mybluemix.net";
+    String OPEN_LIBERTY_BLUE_APP_HOST = "openliberty-blue.mybluemix.net";
 
 }

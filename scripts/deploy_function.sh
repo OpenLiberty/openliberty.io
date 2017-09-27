@@ -8,4 +8,5 @@ function pushApp {
   fi
   cf start "${CF_APP}"
   cf set-env "${CF_APP}" LAST_DEPLOY_NUMBER "${BUILD_NUMBER}"
+  cf map-route "${CF_APP}" mybluemix.net --hostname "${CF_APP}"
 }
