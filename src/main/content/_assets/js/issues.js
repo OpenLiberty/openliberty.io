@@ -62,13 +62,13 @@ function scroll(up) {
                 }
             }
         } else {
-            var offset = focus_issue_index + 3;
+            offset = focus_issue_index + 3;
             if(issues.length > offset) {
-                var new_issue_element = create_issue_element(offset, 6);
+                new_issue_element = create_issue_element(offset, 6);
                 $('#issues_content').prepend(new_issue_element);
             } else if(issues.length > 4) {
-                var offset = (focus_issue_index - issues.length) + 3;
-                var new_issue_element = create_issue_element(offset, 6);
+                offset = (focus_issue_index - issues.length) + 3;
+                new_issue_element = create_issue_element(offset, 6);
                 $('#issues_content').prepend(new_issue_element);
             }
             if(issues.length > 4 || focus_issue_index + 1 < issues.length) {
