@@ -36,7 +36,7 @@ public class TLSFilter implements Filter {
         String servletPath = ((HttpServletRequest)req).getServletPath();
         String serverName = req.getServerName();
         
-        if(Constants.API_SERVLET_PATH.equals(servletPath) &&
+        if(!Constants.API_SERVLET_PATH.equals(servletPath) &&
         		(serverName.equals(Constants.OPEN_LIBERTY_GREEN_APP_HOST)
 				 || serverName.equals(Constants.OPEN_LIBERTY_BLUE_APP_HOST))) {   
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
