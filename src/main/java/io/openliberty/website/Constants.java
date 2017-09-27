@@ -51,7 +51,7 @@ public interface Constants {
     String PAT_ENV_VARIABLE_NAME = "PAT";
     
     // BLUEMIX
-    String OPEN_LIBERTY_GREEN_APP_NAME = "openliberty-green";
-    String OPEN_LIBERTY_BLUE_APP_NAME = "openliberty-blue";
+    String OPEN_LIBERTY_GREEN_APP_HOST = "openliberty-green.mybluemix.net";
+    String OPEN_LIBERTY_BLUE_APP_HOST = "openliberty-green.mybluemix.net";
 
 }
