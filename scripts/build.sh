@@ -13,6 +13,14 @@ git clone "https://github.com/OpenLiberty/guide-rest-intro.git" src/main/content
 git clone "https://github.com/OpenLiberty/guide-maven-intro.git" src/main/content/guides/guide_maven_intro
 git clone "https://github.com/OpenLiberty/guide-microprofile-intro.git" src/main/content/guides/guide_microprofile_intro
 git clone "https://github.com/OpenLiberty/guide-rest-hateoas.git" src/main/content/guides/guide_rest_hateoas
+
+# Clone the circuit breaker interactive guide. 
+git clone "https://github.com/OpenLiberty/iguides-common" src/main/content/guides/iguides-common
+git clone "https://github.com/OpenLiberty/iguide-circuit-breaker" src/main/content/guides/iguide-circuit-breaker
+# Move any js/css files from guides to the _assets folder for jekyll-assets minification.
+find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
+find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
+
 mkdir target
 mkdir target/jekyll-webapp
 jekyll build --source src/main/content --destination target/jekyll-webapp
