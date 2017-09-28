@@ -32,7 +32,15 @@ public class TLSFilter implements Filter {
             throws IOException, ServletException {
 
         HttpServletResponse response = ((HttpServletResponse)resp);
-        if ("http".equals(req.getScheme())) {
+
+        String servletPath = ((HttpServletRequest)req).getServletPath();
+        String serverName = req.getServerName();
+        
+        if(!Constants.API_SERVLET_PATH.equals(servletPath) &&
+        		(serverName.equals(Constants.OPEN_LIBERTY_GREEN_APP_HOST)
+				 || serverName.equals(Constants.OPEN_LIBERTY_BLUE_APP_HOST))) {   
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        } else if ("http".equals(req.getScheme())) {
           response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
           response.setHeader("Location", ((HttpServletRequest)req).getRequestURL().replace(0, 4, "https").toString());
         } else if ("https".equals(req.getScheme())) {
