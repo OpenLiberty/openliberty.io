@@ -15,17 +15,22 @@ function render_builds(builds, parent) {
 
     builds.forEach(function(build) {
 
-        var date = new Date(build.date);
-        var year = date.getUTCFullYear();
-        var month = date.getUTCMonth();
-        var day = date.getUTCDate();
-        var hour = date.getUTCHours();
-        var minute = date.getUTCMinutes();
+        var row = $('<tr></tr>');        
+        
+        if(parent.hasClass('key_by_version')) {
+            var version_column = $('<td><span class="table_date">' + build.version + '</span></td>');
+            row.append(version_column);
 
-        var date_column = $('<td><span class="table_date">' + year + '-' + add_lead_zero(month) + '-' + add_lead_zero(day) + ', ' + add_lead_zero(hour) + ':' + add_lead_zero(minute) + '</span></td>');
-       
-        var row = $('<tr></tr>');
-        row.append(date_column);
+        } else {
+            var date = new Date(build.date);
+            var year = date.getUTCFullYear();
+            var month = date.getUTCMonth();
+            var day = date.getUTCDate();
+            var hour = date.getUTCHours();
+            var minute = date.getUTCMinutes();
+            var date_column = $('<td><span class="table_date">' + year + '-' + add_lead_zero(month) + '-' + add_lead_zero(day) + ', ' + add_lead_zero(hour) + ':' + add_lead_zero(minute) + '</span></td>');
+            row.append(date_column);
+        }
         
         if(!parent.hasClass('release_table_body')) {
             var tests_column = $('<td><a href="' +  build.tests_log +'" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
@@ -141,7 +146,9 @@ $(document).ready(function() {
         builds['developer_tools_releases'] = developer_tools_releases;
         builds['developer_tools_development_builds'] = developer_tools_development_builds;
 
-        sort_builds(runtime_releases, 'date', true);
+        $('#runtime_download_button_version').text(data.latest_releases.runtime.version);
+
+        sort_builds(runtime_releases, 'version', true);
         render_builds(runtime_releases, $('table[data-builds-id="runtime_releases"] tbody'));
 
         sort_builds(runtime_development_builds, 'date', true);
