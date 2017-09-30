@@ -121,7 +121,7 @@ $(document).ready(function() {
 
 
     $.ajax({
-        url: 'builds_url'
+        url: builds_url
     }).done(function(data) {
 
         $('#runtime_download_button_version').text(data.latest_releases.runtime.version);     
