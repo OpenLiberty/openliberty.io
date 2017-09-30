@@ -124,6 +124,8 @@ $(document).ready(function() {
         url: builds_url
     }).done(function(data) {
 
+        $('#runtime_download_button_version').text(data.latest_releases.runtime.version);     
+
         $('#runtime_download_link').attr('href', data.latest_releases.runtime.driver_location);
         $('#eclipse_developer_tools_download_link').attr('href', data.latest_releases.tools.driver_location);
 
@@ -145,8 +147,6 @@ $(document).ready(function() {
         builds['runtime_development_builds'] = runtime_development_builds;
         builds['developer_tools_releases'] = developer_tools_releases;
         builds['developer_tools_development_builds'] = developer_tools_development_builds;
-
-        $('#runtime_download_button_version').text(data.latest_releases.runtime.version);
 
         sort_builds(runtime_releases, 'version', true);
         render_builds(runtime_releases, $('table[data-builds-id="runtime_releases"] tbody'));
