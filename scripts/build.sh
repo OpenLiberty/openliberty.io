@@ -13,6 +13,7 @@ git clone "https://github.com/OpenLiberty/guide-rest-intro.git" src/main/content
 git clone "https://github.com/OpenLiberty/guide-maven-intro.git" src/main/content/guides/guide_maven_intro
 git clone "https://github.com/OpenLiberty/guide-microprofile-intro.git" src/main/content/guides/guide_microprofile_intro
 git clone "https://github.com/OpenLiberty/guide-rest-hateoas.git" src/main/content/guides/guide_rest_hateoas
+git clone "https://github.com/OpenLiberty/guide-rest-client-java" src/main/content/guides/guide_rest_client-java
 
 # Clone the circuit breaker interactive guide. 
 git clone "https://github.com/OpenLiberty/iguides-common" src/main/content/guides/iguides-common
