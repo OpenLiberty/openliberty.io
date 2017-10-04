@@ -4,6 +4,10 @@
   {% include head.html %}
 
   <body>
+    
+    {% if jekyll.environment == 'production' and site.google_tag_manager %}
+      {% include google_tag_manager_body.html %}
+    {% endif %}
 
     {% include header.html %}
 
@@ -26,10 +30,6 @@
     {% for js_name in layout.js %}
       {% js {{js_name}} %}
     {% endfor %}
-
-    {% if jekyll.environment == 'production' and site.google_tag_manager %}
-    {% include google_tag_manager_body.html %}
-    {% endif %}
 
   </body>
 
