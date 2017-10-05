@@ -20,7 +20,7 @@ Well, this is exciting! Our first proper release of Open Liberty! You can now ht
 </dependency>
 ----
 
-In Open Liberty 17.0.0.3, you'll find our completed implementation of MicroProfile 1.2, as well as new and improved developer tools:
+In Open Liberty 17.0.0.3, you'll find our completed implementation of MicroProfile 1.2, as well as new and improved build tools:
 
 * MicroProfile 1.2 new features
 ** <<mp-fault,MicroProfile Fault Tolerance>>
@@ -28,7 +28,7 @@ In Open Liberty 17.0.0.3, you'll find our completed implementation of MicroProfi
 ** <<mp-metrics,MicroProfile Metrics>>
 ** <<mp-health,MicroProfile Health>>
 ** <<mp-jwt,MicroProfile JSON Web Token>>
-* Developer tools
+* Build tools updates
 ** <<gradle,Liberty Gradle plugin>>
 ** <<maven,Maven enhancements in Open Liberty Tools>>
 * Non-API features
@@ -37,7 +37,7 @@ In Open Liberty 17.0.0.3, you'll find our completed implementation of MicroProfi
 
 ## MicroProfile 1.2
 
-Open Liberty already had JAX-RS 2.0, CDI 1.2, and JSON-P 1.0. With our first release, we complete the MicroProfile 1.2 set with these other MicroProfile features.
+Open Liberty already implemented Eclipse MicroProfile 1.0 with JAX-RS 2.0, CDI 1.2, and JSON-P 1.0. That was easy. I mean, pity the Java EE application server that can't do that. Now we've completed the MicroProfile 1.2 set with all these other MicroProfile features...
 
 To enable all the MicroProfile 1.2 features, add this definition to your `server.xml`:
 
@@ -83,7 +83,7 @@ The MicroProfile Configuration specification provides a single way to view and a
 
 When your applications are deployed as microservices, having a single place to update the configuration data of multiple microservices is useful for several reasons. Building systems as collections of independent microservices increases the number of services that need to be managed. Different stages in the pipeline often use different configuration sources for a single piece of configuration data and a given component needs updating as it moves through the pipeline. Containerisation of services means that even while a component is ‘live’ in production, the environment it is running in might be more dynamic and the components need configuration updates without being restarted.
 
-The Eclipse MicroProfile initiative exists for ‘Optimizing Enterprise Java for a microservices architecture’ and, after the initial base platform of existing services was defined, the Microprofile Config 1.1 API was released. More information about this MicroProfile Config 1.1 can be found here (https://github.com/eclipse/microprofile-config/releases/tag/1.1). The API allows for a consistent means to access configuration data from pluggable configuration sources. Configuration properties can be injected using Java CDI in a form that is easy to consume. Data values and sources can vary across the devOps pipeline without code change or repackaging, and dynamic and fully typed data is catered for.
+The Config API allows for a consistent means to access configuration data from pluggable configuration sources. Configuration properties can be injected using Java CDI in a form that is easy to consume. Data values and sources can vary across the devOps pipeline without code change or repackaging, and dynamic and fully typed data is catered for.
 
 To add just the Config API feature, update your `server.xml`:
 
@@ -131,7 +131,7 @@ Find out more about the https://github.com/eclipse/microprofile-metrics[Metrics 
 [#mp-health]
 ### MicroProfile Health
 
-This feature is an implementation of the MicroProfile Health 1.0 specification.  It defines an API for providing health check procedures in a microservice and a runtime environment for invoking installed health checks and aggregating an overall response.
+MicroProfile Health defines an API for providing health check procedures in a microservice and a runtime environment for invoking installed health checks and aggregating an overall response.
 
 MicroProfile Health specifies a standard health check API that works across any runtime supporting MicroProfile 1.2.  The feature provides a default response even when the installed microservice does not implement any health checks.  It provides a standard health check URL, allowing for a consistent way to configure service monitors (e.g., Kubernetes liveness checks).
 
@@ -169,7 +169,7 @@ To add just the MicroProfile JSON Web Token feature, update your `server.xml`:
 Find out more about the https://github.com/MicroProfileJWT/microprofile-jwt-auth[MicroProfile JSON Web Token feature in GitHub].
 
 
-## Liberty Developer Tools
+## Liberty build tools
 
 [#gradle]
 ### Liberty Gradle plugin
@@ -206,13 +206,6 @@ In addition there are:
 The Liberty Gradle plugin is used with the Gradle WAR plugin to install project WAR files and loose applications to a Liberty Server. For more details, see https://github.com/WASdev/ci.gradle/blob/master/README.md[the Liberty Gradle plugin documentation] in GitHub.
 
 
-[#maven]
-### Maven enhancements in Open Liberty Tools
-
-The https://github.com/OpenLiberty/open-liberty-tools[Open Liberty Tools] and the https://github.com/WASdev/ci.maven/[Liberty Maven plugin] have added integrated support for enterprise applications built using the Liberty Maven plugin. The plugin can now build your whole enterprise application as a loose application for easier debugging in the WDT environment. No more rebuilding your Maven EAR project for every application update. The integration between Open Liberty Tools and Maven projects allow the servers created by the Liberty Maven plugin to be managed by the tools. This support extends the Maven web application support that was already available.
-
-When importing EAR projects using the Liberty Maven plugin, Open Liberty Tools recognize the project as containing Liberty servers it can manage. For more details, see the https://github.com/WASdev/ci.maven/blob/master/README.md[Liberty Maven plugin documentation] in GitHub.
-
 ## Non-API feature
 
 [#transportsecurity]
@@ -220,5 +213,13 @@ When importing EAR projects using the Liberty Maven plugin, Open Liberty Tools r
 
 The Transport Security feature provides dynamic SSL filters. This enables administrators to configure SSL configuration to be used for outbound connections based on the host (or host and port) of the destination.  You can configure the SSL configuration without having to use direct references in individual components.
 
-On an `SSL` element a nested element called `outboundConnection` can be added that define the host or host and port.  When an outbound SSL connection is made it can be matched to a SSL configuration that is assigned to the destination host, or host and port.
+To enable an outbound SSL filter in the `server.xml`, add an element called `<outboundConnection />`.  The `<outboundConnection />` element is nested in the `<ssl />` element.   The `<outboundConnection />` element contains two attributes: `host` and `port`. The `host` attribute is required; the `port` attribute is optional.  A missing `port` attribute means any port on the configured host. When configured, and an outbound SSL connection is made, the connection can be matched to an SSL configuration that is assigned to the destination host, or host and port, that is specified in the `<outboundConnection />` element. 
 
+In the following example, the outbound SSL connection going to a machine called `testMachine` and port `9443` uses an SSL context created with information from the `<ssl />` element called `customSSLSettings`:
+
+[source,xml]
+----
+<ssl id="customSSLSettings" keyStoreRef="customKeyStore" trustStoreRef="customTrustStore" sslProtocol="TLSv1.2" clientAuthenticationSupported="true" >
+<outboundConnection host="testHostMachine" port="9443"/>
+</ssl>
+----
