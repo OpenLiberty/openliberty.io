@@ -1,15 +1,17 @@
 ---
 layout: post
-title:  "MicroProfile 1.2 and Gradle in our first Open Liberty release"
+title:  "MicroProfile 1.2 and build tools updates in our first Open Liberty release"
 date:   2017-10-04 17:30:00 +0100
 categories: news
 author_picture: https://avatars3.githubusercontent.com/u/3322532
 ---
-:description: Download a full implementation of MicroProfile 1.2 in Open Liberty 17.0.0.3. Also, Gradle support, enhanced Maven support in the Liberty tools, and more.
-= MicroProfile 1.2 and Gradle in our first Open Liberty release
+:description: Download a full implementation of MicroProfile 1.2 in Open Liberty 17.0.0.3. Also, Liberty Gradle plugin updates.
+= MicroProfile 1.2 and build tools updates in our first Open Liberty release
 Laura Cowen <http://github.com/lauracowen>
 
-Well, this is exciting! Our first proper release of Open Liberty! You can now https://openliberty.io/downloads/[download Open Liberty 17.0.0.3]. Alternatively, if you're using Maven, here are the coordinates:
+Well, this is exciting! Our first proper release of Open Liberty! You can now https://openliberty.io/downloads/[download Open Liberty 17.0.0.3].
+
+Alternatively, if you're using Maven, here are the coordinates:
 
 [source,xml]
 ----
@@ -17,7 +19,15 @@ Well, this is exciting! Our first proper release of Open Liberty! You can now ht
     <groupId>io.openliberty</groupId>
     <artifactId>openliberty-runtime</artifactId>
     <version>17.0.0.3</version>
+    <type>zip</type>
 </dependency>
+----
+
+Or if you're using Docker:
+
+[source]
+----
+docker pull openliberty/open-liberty
 ----
 
 In Open Liberty 17.0.0.3, you'll find our completed implementation of MicroProfile 1.2, as well as new and improved build tools:
@@ -168,7 +178,7 @@ To add just the MicroProfile JSON Web Token feature, update your `server.xml`:
 Find out more about the https://github.com/MicroProfileJWT/microprofile-jwt-auth[MicroProfile JSON Web Token feature in GitHub].
 
 
-## Liberty build tools
+## Build tools updates
 
 [#gradle]
 ### Liberty Gradle plugin
@@ -205,7 +215,7 @@ In addition there are:
 The Liberty Gradle plugin is used with the Gradle WAR plugin to install project WAR files and loose applications to a Liberty Server. For more details, see https://github.com/WASdev/ci.gradle/blob/master/README.md[the Liberty Gradle plugin documentation] in GitHub.
 
 
-## Non-API feature
+## Non-API features
 
 [#transportsecurity]
 ### Transport Security
