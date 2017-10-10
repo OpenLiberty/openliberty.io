@@ -12,8 +12,8 @@ git clone "https://github.com/OpenLiberty/guide-maven-multimodules" src/main/con
 git clone "https://github.com/OpenLiberty/guide-cors" src/main/content/guides/guide_cors
 
 # Clone the circuit breaker interactive guide.
-git clone "https://github.com/OpenLiberty/iguides-common" --branch master --single-branch src/main/content/guides/iguides-common
-git clone "https://github.com/OpenLiberty/iguide-circuit-breaker" --branch master --single-branch src/main/content/guides/iguide-circuit-breaker
+git clone "https://github.com/OpenLiberty/iguides-common" --branch dev --single-branch src/main/content/guides/iguides-common
+git clone "https://github.com/OpenLiberty/iguide-circuit-breaker" --branch dev --single-branch src/main/content/guides/iguide-circuit-breaker
 # Move any js/css files from guides to the _assets folder for jekyll-assets minification.
 find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
 find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
