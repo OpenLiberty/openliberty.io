@@ -16,9 +16,9 @@ git clone "https://github.com/OpenLiberty/guide-rest-hateoas.git" src/main/conte
 git clone "https://github.com/OpenLiberty/guide-rest-client-java" src/main/content/guides/guide_rest_client_java
 git clone "https://github.com/OpenLiberty/guide-maven-multimodules" src/main/content/guides/guide_maven_multimodules
 
-# Clone the circuit breaker interactive guide. 
-git clone "https://github.com/OpenLiberty/iguides-common" src/main/content/guides/iguides-common
-git clone "https://github.com/OpenLiberty/iguide-circuit-breaker" src/main/content/guides/iguide-circuit-breaker
+# Clone the circuit breaker interactive guide.
+git clone "https://github.com/OpenLiberty/iguides-common" --branch master --single-branch src/main/content/guides/iguides-common
+git clone "https://github.com/OpenLiberty/iguide-circuit-breaker" --branch master --single-branch src/main/content/guides/iguide-circuit-breaker
 # Move any js/css files from guides to the _assets folder for jekyll-assets minification.
 find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
 find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
