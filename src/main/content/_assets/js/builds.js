@@ -28,10 +28,9 @@ function render_builds(builds, parent) {
 
         var row = $('<tr></tr>');        
         
-        if(parent.hasClass('key_by_version')) {
+        if(parent.hasClass('release_table_body')) {
             var version_column = $('<td><span class="table_date">' + build.version + '</span></td>');
             row.append(version_column);
-
         } else {
             var date = new Date(build.date);
             var year = date.getFullYear();
@@ -41,15 +40,16 @@ function render_builds(builds, parent) {
             var minute = date.getMinutes();
             var date_column = $('<td><span class="table_date">' + year + '-' + add_lead_zero(month) + '-' + add_lead_zero(day) + ', ' + add_lead_zero(hour) + ':' + add_lead_zero(minute) + '</span></td>');
             row.append(date_column);
-        }
-        
-        if(!parent.hasClass('release_table_body')) {
-            var tests_column = $('<td><a href="' +  build.tests_log +'" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
-            var log_column = $('<td><a href="' + build.build_log + '" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics view_logs_link">View logs</a></td>');
+            
+            var tests_column = $('<td><a href="' +  build.tests_log +'" target="new" class="'
+             + analytics_class_name + ' skip_outbound_link_analytics tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
             row.append(tests_column);
+            
+            var log_column = $('<td><a href="' + build.build_log + '" target="new" class="'
+            + analytics_class_name + ' skip_outbound_link_analytics view_logs_link">View logs</a></td>');            
             row.append(log_column);
         }
-        
+
         var zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics build_download_button">Download (.zip)</a></td>');
         
         row.append(zip_column);
@@ -135,7 +135,8 @@ $(document).ready(function() {
         url: builds_url
     }).done(function(data) {
 
-        $('#runtime_download_button_version').text(data.latest_releases.runtime.version);     
+        $('#runtime_download_button_version').text(data.latest_releases.runtime.version);
+        $('#eclipse_developer_tools_download_link_version_text').text(data.latest_releases.tools.version);
 
         $('#runtime_download_link').attr('href', data.latest_releases.runtime.driver_location);
         $('#eclipse_developer_tools_download_link').attr('href', data.latest_releases.tools.driver_location);
@@ -165,7 +166,7 @@ $(document).ready(function() {
         sort_builds(runtime_development_builds, 'date', true);
         render_builds(runtime_development_builds, $('table[data-builds-id="runtime_development_builds"] tbody'));
 
-        sort_builds(developer_tools_releases, 'date', true);
+        sort_builds(developer_tools_releases, 'version', true);
         render_builds(developer_tools_releases, $('table[data-builds-id="developer_tools_releases"] tbody'));
 
         sort_builds(developer_tools_development_builds, 'date', true);

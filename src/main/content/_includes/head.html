@@ -1,16 +1,11 @@
 <head>
+
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>{% if page.title %}{{ page.title | append: ' - ' | append: site.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
   <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
-  
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:site" content="@OpenLibertyIO" />
-  <meta name="twitter:title" content="{{site.title}}" />
-  <meta name="twitter:description" content="{{site.description | normalize_whitespace }}" />
-  <meta name="twitter:image" content="https://openliberty.io/img/twitter_card.jpg" />
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   {% css openliberty %}
@@ -23,15 +18,24 @@
     {% css {{css_name}} %}
   {% endfor %}
 
-  <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
-  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet"> 
-  
   {% if jekyll.environment == 'production' and site.google_tag_manager %}
-  {% include google_tag_manager_head.html %}
+    {% include google_tag_manager_head.html %}
   {% endif %}
 
   {% if jekyll.environment == 'production' and site.google_analytics %}
-  {% include google_analytics.html %}
+    {% include google_analytics.html %}
   {% endif %}
+
+  <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="{{site.title}}" />
+  <meta name="twitter:description" content="{{site.description | normalize_whitespace }}" />
+  <meta name="twitter:image" content="https://openliberty.io/img/twitter_card.jpg" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
 </head>
