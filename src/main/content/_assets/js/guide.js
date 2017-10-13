@@ -17,7 +17,7 @@ $(document).ready(function() {
     var target_width;
     var target_height;
 
-    $('#guide_content pre').hover(function(event) {
+    $('#guide_content pre:not(.no_copy pre)').hover(function(event) {
 
         offset = $('#guide_column').position();
         target = event.currentTarget;
