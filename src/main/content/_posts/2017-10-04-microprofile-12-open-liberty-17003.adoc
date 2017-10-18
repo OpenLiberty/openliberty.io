@@ -1,0 +1,248 @@
+---
+layout: post
+title:  "MicroProfile 1.2 and build tools updates in our first Open Liberty release"
+date:   2017-10-04 17:30:00 +0100
+categories: news
+author_picture: https://avatars3.githubusercontent.com/u/3322532
+---
+:description: Download a full implementation of MicroProfile 1.2 in Open Liberty 17.0.0.3. Also, Liberty Gradle plugin updates.
+= MicroProfile 1.2 and build tools updates in our first Open Liberty release
+Laura Cowen <http://github.com/lauracowen>
+
+Well, this is exciting! Our first proper release of Open Liberty and the Open Liberty Tools! You can now download Open Liberty and Open Liberty Tools 17.0.0.3.
+
+[link=https://openliberty.io/downloads/]
+image::../img/blog_btn_download-ol.svg[Download Open Liberty]
+
+[link=https://stackoverflow.com/tags/open-liberty]
+image::../img/blog_btn_stack.svg[Ask a question on Stack Overflow]
+
+Alternatively, if you're using Maven, here are the coordinates:
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.openliberty</groupId>
+    <artifactId>openliberty-runtime</artifactId>
+    <version>17.0.0.3</version>
+    <type>zip</type>
+</dependency>
+----
+
+Or if you're using Docker:
+
+[source]
+----
+docker pull openliberty/open-liberty
+----
+
+In Open Liberty 17.0.0.3, you'll find our completed implementation of MicroProfile 1.2, as well as new and improved build tools:
+
+* MicroProfile 1.2 new features
+** <<mp-fault,MicroProfile Fault Tolerance>>
+** <<mp-config,MicroProfile Config API>>
+** <<mp-metrics,MicroProfile Metrics>>
+** <<mp-health,MicroProfile Health>>
+** <<mp-jwt,MicroProfile JSON Web Token>>
+* Build tools updates
+** <<gradle,Liberty Gradle plugin>>
+* Non-API features
+** <<transportsecurity,Transport security>>
+
+
+## MicroProfile 1.2
+
+Open Liberty already implemented Eclipse MicroProfile 1.0 with JAX-RS 2.0, CDI 1.2, and JSON-P 1.0. That was easy. I mean, pity the Java EE application server that can't do that. Now we've completed the MicroProfile 1.2 set with all these other MicroProfile features...
+
+To enable all the MicroProfile 1.2 features, add this definition to your `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+   <feature>microProfile-1.2</feature>
+</featureManager>
+----
+
+Alternatively, you can add the individual features as described below.
+
+[#mp-fault]
+### MicroProfile Fault Tolerance
+
+The increasing size of applications, newer architectures that are as likely to 'scale out' as to 'scale up', and the rising popularity of microservice architectures, it is increasingly important to build fault tolerance into our system architecture.
+
+Fault tolerance can be improved using a number of well-tested approaches that handle failure:
+
+* *TimeOut*: Limit the amount of time we are prepared to wait for a result
+* *RetryPolicy*: Control how much we are prepared to re-submit a request
+* *Fallback*: Specify what should we do when the primary service cannot be used successfully
+* *Bulkhead*: If calls to a service are slow (perhaps it is overloaded or we are timing out), specify what proportion of our local resources we are prepared to get involved in the traffic jam
+* *CircuitBreaker*: When a service is proving unreliable, for example timing out, we can choose to 'fail fast'  by automatically failing calls to it under control
+
+With the Microprofile Fault Tolerance specification, we can control all these aspects with easy-to-use Java annotations at a method or class level that is independent of any particular vendor or implementation library.
+
+To add just the Fault Tolerance feature, update your `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+   <feature>mpFaultTolerance-1.0</feature>
+</featureManager>
+----
+
+Find out more about the https://github.com/eclipse/microprofile-fault-tolerance[Fault Tolerance feature in GitHub].
+
+[#mp-config]
+### MicroProfile Config API 1.1
+
+The MicroProfile Configuration specification provides a single way to view and access multiple sources of configuration, such as properties files and environment variables, including bootstrap.properties, user-level properties files, registered Java classes that implement the ConfigSource API, and the Java System properties.
+
+When your applications are deployed as microservices, having a single place to update the configuration data of multiple microservices is useful for several reasons. Building systems as collections of independent microservices increases the number of services that need to be managed. Different stages in the pipeline often use different configuration sources for a single piece of configuration data and a given component needs updating as it moves through the pipeline. Containerisation of services means that even while a component is ‘live’ in production, the environment it is running in might be more dynamic and the components need configuration updates without being restarted.
+
+The Config API allows for a consistent means to access configuration data from pluggable configuration sources. Configuration properties can be injected using Java CDI in a form that is easy to consume. Data values and sources can vary across the devOps pipeline without code change or repackaging, and dynamic and fully typed data is catered for.
+
+To add just the Config API feature, update your `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+   <feature>mpConfig-1.1</feature>
+</featureManager>
+----
+
+Find out more about the https://github.com/eclipse/microprofile-config[Config API feature in GitHub].
+
+
+[#mp-metrics]
+### MicroProfile Metrics
+
+MicroProfile Metrics provides a way for developers to instrument their microservices and applications that will be portable across all MicroProfile Metrics implementations.  The API is similar to the Dropwizard Metrics API that many developers are already familiar with. Using MicroProfile Metrics avoids the need to find and include third-party metrics libraries and integrate those libraries with Liberty.
+
+For operations teams, MicroProfile Metrics provides a consistent way to access metrics from their Liberty servers through a simple REST interface.  The REST API can return output compatible with Prometheus or with any monitoring tools that can consume JSON.
+
+**Developers**: To add just the Metrics feature, update your `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+    <feature>mpMetrics-1.0</feature>
+</featureManager>
+----
+
+**Ops**: To enable the `/metrics` REST interface, add the following definition to your `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+    <feature>mpMetrics-1.0</feature>
+</featureManager>
+<quickStartSecurity userName="theUser" userPassword="thePassword"/>
+<keyStore id="defaultKeyStore" password="Liberty"/>
+----
+
+Then verify that things are set up correctly by hitting `https://yourserver:9443/metrics`
+
+Find out more about the https://github.com/eclipse/microprofile-metrics[Metrics feature in GitHub].
+
+[#mp-health]
+### MicroProfile Health
+
+MicroProfile Health defines an API for providing health check procedures in a microservice and a runtime environment for invoking installed health checks and aggregating an overall response.
+
+MicroProfile Health specifies a standard health check API that works across any runtime supporting MicroProfile 1.2.  The feature provides a default response even when the installed microservice does not implement any health checks.  It provides a standard health check URL, allowing for a consistent way to configure service monitors (e.g., Kubernetes liveness checks).
+
+Add the `mpHealth-1.0` feature to the server configuration and add zero or more health checks to the microservice.  A `/health` context is provided by the server for invoking the health checks.
+
+To add just the Health feature, update your `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+   <feature>mpHealth-1.0</feature>
+</featureManager>
+----
+
+Find out more about the https://github.com/eclipse/microprofile-health[Health feature in GitHub].
+
+
+
+[#mp-jwt]
+### MicroProfile JSON Web Token
+
+With the MicroProfile JSON Web Token feature, an administrator can configure Liberty to perform authentication and authorization based on incoming JWT without requiring a user registry.
+
+An application developer can write a JAX-RS application to programmatically authorize resource access using CDI injection or the standard JAX-RS container API in an interoperable way.
+
+To add just the MicroProfile JSON Web Token feature, update your `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+   <feature>mpJwt-1.0</feature>
+</featureManager>
+----
+
+Find out more about the https://github.com/MicroProfileJWT/microprofile-jwt-auth[MicroProfile JSON Web Token feature in GitHub].
+
+
+## Build tools updates
+
+[#gradle]
+### Liberty Gradle plugin
+
+The Liberty Gradle plugin has many improvements to help you install and manage your Liberty server. These tasks can be used to test your web application on a Liberty server more easily and for packaging your servers.  The plugin update includes enhancements to the following tasks:
+
+* `installLiberty` task:
+** Add support to install using Maven repository coordinates
+** Provide Liberty license upgrade 
+* `installFeature` task:
+** Support installing from a local folder
+* `libertyStart` task:
+** Add timeout test support
+** Add application start verification
+* new `installApps` task:
+** Improved application installation
+** Support multiple WAR file tasks for installation
+** Loose application support to make debugging faster
+* `libertyCreate` task:
+** Server configuration creation
+** Copy `server.xml`
+** Copy `server.env`, `bootstrap.properties`, `jvm.options` files
+** Create `bootstrap.properties` and `jvm.options` from inline configuration  
+** Copy a folder of configuration
+* `libertyRun` task fixes
+* new `compileJSP` task
+
+In addition there are:
+
+* Documentation improvements
+* Enhancements to the Liberty Gradle lifecycle with task dependencies
+
+
+The Liberty Gradle plugin is used with the Gradle WAR plugin to install project WAR files and loose applications to a Liberty Server. For more details, see https://github.com/WASdev/ci.gradle/blob/master/README.md[the Liberty Gradle plugin documentation] in GitHub.
+
+
+## Non-API features
+
+[#transportsecurity]
+### Transport Security
+
+The Transport Security feature provides dynamic SSL filters. This enables administrators to configure SSL configuration to be used for outbound connections based on the host (or host and port) of the destination.  You can configure the SSL configuration without having to use direct references in individual components.
+
+To enable an outbound SSL filter in the `server.xml`, add an element called `<outboundConnection />`.  The `<outboundConnection />` element is nested in the `<ssl />` element.   The `<outboundConnection />` element contains two attributes: `host` and `port`. The `host` attribute is required; the `port` attribute is optional.  A missing `port` attribute means any port on the configured host. When configured, and an outbound SSL connection is made, the connection can be matched to an SSL configuration that is assigned to the destination host, or host and port, that is specified in the `<outboundConnection />` element. 
+
+In the following example, the outbound SSL connection going to a machine called `testMachine` and port `9443` uses an SSL context created with information from the `<ssl />` element called `customSSLSettings`:
+
+[source,xml]
+----
+<ssl id="customSSLSettings" keyStoreRef="customKeyStore" trustStoreRef="customTrustStore" sslProtocol="TLSv1.2" clientAuthenticationSupported="true" >
+<outboundConnection host="testHostMachine" port="9443"/>
+</ssl>
+----
+
+
+
+[link=https://openliberty.io/downloads/]
+image::../img/blog_btn_download-ol.svg[Download Open Liberty]
+
+[link=https://stackoverflow.com/tags/open-liberty]
+image::../img/blog_btn_stack.svg[Ask a question on Stack Overflow]
