@@ -15,6 +15,12 @@ git clone "https://github.com/OpenLiberty/iguide-circuit-breaker" --branch maste
 find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
 find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
 
+# if DEVELOPMENT environment, copy robots.txt
+if [ ${ENVIRONMENT} = "DEVELOPMENT" ]; then
+    echo "Development environment - adding robots.txt"
+    cp robots.txt src/main/content/robots.txt
+fi
+
 mkdir target
 mkdir target/jekyll-webapp
 jekyll build --source src/main/content --destination target/jekyll-webapp
