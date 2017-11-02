@@ -16,7 +16,9 @@ find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/conte
 find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
 
 # if DEVELOPMENT environment, copy robots.txt
-if [ ${ENVIRONMENT} = "DEVELOPMENT" ]; then
+if [ ${ENVIRONMENT} = "PRODUCTION" ]; then
+    echo "Production environment - skipping robots.txt"
+else
     echo "Development environment - adding robots.txt"
     cp robots.txt src/main/content/robots.txt
 fi
