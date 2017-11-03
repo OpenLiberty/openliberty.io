@@ -1,4 +1,4 @@
-# Created by laura_cowen@uk.ibm.com
+# Created by laura_cowen@uk.ibm.com, Twitter/GitHub/Docker username: @lauracowen
 # 2017-11-02
 # Installing and running Jekyll based on: based on https://blog.codeship.com/a-beginners-guide-to-the-dockerfile/
 # NodeJS and NPM sections based on: https://gist.github.com/remarkablemark/aacf14c29b3f01d6900d13137b21db3a
@@ -11,10 +11,10 @@
 # see the changes when you refresh your browser.
 
 # To build this image, from the directory that contains this Dockerfile:
-# docker build --tag jekyll .
+# docker build --tag lauracowen/jekyll .
 #
 # To run a container:
-# docker run --name jekyll_site -it -d -p 4000:4000 -v <root directory of Jekyll site on host machine>:/home/jekyll jekyll
+# docker run --name jekyll -it -d -p 4000:4000 -v <root directory of Jekyll site on host machine>:/home/jekyll lauracowen/jekyll
 
 
 
@@ -79,7 +79,7 @@ COPY Gemfile.lock /home/jekyll
 RUN bundle install
 
 # Serve the site
-ENTRYPOINT ["jekyll", "serve", "--host=0.0.0.0"]
+ENTRYPOINT ["bundle", "exec", "jekyll", "serve", "--host=0.0.0.0"]
 
 # Make port 4000 available to the world outside this container
 EXPOSE 4000
