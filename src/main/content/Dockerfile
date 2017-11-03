@@ -10,7 +10,7 @@
 # When you save a changed file, the changes are automatically rebuilt by Jekyll in the container and you can almost immediately
 # see the changes when you refresh your browser.
 
-# To build this image:
+# To build this image, from the directory that contains this Dockerfile:
 # docker build --tag jekyll .
 #
 # To run a container:
@@ -63,7 +63,7 @@ RUN mkdir -p /home/jekyll \
     && groupadd -rg 1000 jekyll \
     && useradd -rg jekyll -u 1000 -d /home/jekyll jekyll \
     && chown jekyll:jekyll /home/jekyll \
-    && gem install jekyll bundler jekyll-feed jekyll-asciidoc coderay jekyll-assets uglifier octopress-minify-html
+    && gem install jekyll bundler 
 
 
 # Create a mount point where Docker can access the source files on my local system (host system)
@@ -71,6 +71,12 @@ VOLUME /home/jekyll
 
 #  Set the working directory
 WORKDIR /home/jekyll
+
+# Installs required Jekyll plugins (gems) based on the Gemfile on host machine
+# There must be a Gemfile and Gemfile.lock in the same directory as this Dockerfile
+COPY Gemfile /home/jekyll
+COPY Gemfile.lock /home/jekyll
+RUN bundle install
 
 # Serve the site
 ENTRYPOINT ["jekyll", "serve", "--host=0.0.0.0"]
