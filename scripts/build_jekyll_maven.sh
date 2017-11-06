@@ -1,3 +1,6 @@
+#  This script contains the end-to-end steps for building the website with Jekyll and using Maven to package
+#
+#
 gem install jekyll bundler jekyll-feed jekyll-asciidoc coderay jekyll-assets uglifier octopress-minify-html
 git clone "https://github.com/OpenLiberty/guides-common.git" src/main/content/guides/guides-common
 git clone "https://github.com/OpenLiberty/guide-rest-intro.git" src/main/content/guides/guide_rest_intro
@@ -24,4 +27,6 @@ fi
 mkdir target
 mkdir target/jekyll-webapp
 jekyll build --source src/main/content --destination target/jekyll-webapp
+
+# Maven packaging
 mvn -B package

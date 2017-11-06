@@ -1,3 +1,6 @@
+# These are steps needed when hosting the website on IBM Cloud (once known as IBM Bluemix)
+#
+#
 sudo apt-get update
 sudo apt-get install libgdbm-dev libncurses5-dev automake libtool bison libffi-dev -y
 gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
@@ -9,4 +12,4 @@ rvm use 2.4.1 --default
 sudo apt-get -y install nodejs
 
 SCRIPT_DIR=$(dirname $0)
-source $SCRIPT_DIR/build_jekyll.sh
+source $SCRIPT_DIR/build_jekyll_maven.sh
