@@ -22,16 +22,28 @@ permalink: /guides/
     </div>
 </div>
 
+<!-- Build one list of all the documents that have a particular layout -->
 {% assign static-guides = site.pages | where: 'layout', 'guide' %}
 {% assign interactive-guides = site.pages | where: 'layout', 'interactive-guide'%}
 {% assign guides = static-guides | concat: interactive-guides | sort: 'date' | reverse %}
+<!-- 
+    Some of the found documents are for internal use only and are not intended to be 
+    shown on the website.  Remove them from the total number of guides.
+-->
+{% assign numGuides = guides.size %}
+{% for guide in guides %}
+    {% if guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
+        {% assign numGuides = numGuides | minus: 1 %}
+    {% endif %}
+{% endfor %}
+
 <div id="guides_information_container" class="container">
     <div class="row">
         <div class="col-xs-12 text-center">
             <input id="guide_search_input" type="text" placeholder="Search all guides" aria-label="Search">
         </div>
         <div class="col-xs-12">
-            <h2 id="guide_counter_title">All Open Liberty guides ({{ guides.size}})</h2>
+            <h2 id="guide_counter_title">All Open Liberty guides ({{ numGuides }})</h2>
             <p id="guide_sort_message">Most recent guides shown first</p>
         </div>
     </div>
@@ -40,6 +52,8 @@ permalink: /guides/
 <div id="guides_container" class="container">       
     <div class="row">
         {% for guide in guides %}
+        <!-- Do not render anything from the two common guide repositories containing shared code -->
+        {% unless guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
             <div class="guide_column col-xs-12 col-sm-6 col-md-4">
                 <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}">
                     <div class="guide_title_and_description_container">
@@ -54,6 +68,7 @@ permalink: /guides/
                     {% endif %}
                 </a>
             </div>
+        {% endunless %}
         {% endfor %}
     </div>    
 </div>
