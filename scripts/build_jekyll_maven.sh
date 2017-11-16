@@ -10,7 +10,6 @@ git clone "https://github.com/OpenLiberty/guide-rest-hateoas.git" src/main/conte
 git clone "https://github.com/OpenLiberty/guide-rest-client-java" src/main/content/guides/guide_rest_client_java
 git clone "https://github.com/OpenLiberty/guide-maven-multimodules" src/main/content/guides/guide_maven_multimodules
 git clone "https://github.com/OpenLiberty/guide-cors" src/main/content/guides/guide_cors
-git clone "https://github.com/OpenLiberty/guide-microprofile-config.git" src/main/content/guides/guide_microprofile_config
 
 # Clone the circuit breaker interactive guide.
 git clone "https://github.com/OpenLiberty/iguides-common" --branch master --single-branch src/main/content/guides/iguides-common
@@ -19,10 +18,14 @@ git clone "https://github.com/OpenLiberty/iguide-circuit-breaker" --branch maste
 find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
 find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
 
-# if DEVELOPMENT environment, copy robots.txt
+# Steps only for DEVELOPMENT environments
 if [ ${ENVIRONMENT} = "DEVELOPMENT" ]; then
-    echo "Development environment - adding robots.txt"
+    echo "Development environment..."
+    echo "Adding robots.txt..."
     cp robots.txt src/main/content/robots.txt
+    
+    echo "Clone guides that are only for the test site..."
+    git clone "https://github.com/OpenLiberty/guide-microprofile-config.git" src/main/content/guides/guide_microprofile_config
 fi
 
 mkdir target
