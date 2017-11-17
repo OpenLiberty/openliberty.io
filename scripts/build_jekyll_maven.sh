@@ -18,13 +18,13 @@ git clone "https://github.com/OpenLiberty/iguide-circuit-breaker" --branch maste
 find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
 find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
 
-# Steps only for DEVELOPMENT environments
-if [ ${ENVIRONMENT} = "DEVELOPMENT" ]; then
-    echo "Development environment..."
-    echo "Adding robots.txt..."
+# Not in production environment
+if [ ${JEKYLL_ENV} != "production" ]; then
+    echo "Not in production environment..."
+    echo "Adding robots.txt"
     cp robots.txt src/main/content/robots.txt
     
-    echo "Clone guides that are only for the test site..."
+    echo "Clone guides that are only for test site..."
     git clone "https://github.com/OpenLiberty/guide-microprofile-config.git" src/main/content/guides/guide_microprofile_config
 fi
 
