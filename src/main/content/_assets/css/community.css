@@ -42,81 +42,7 @@
 
 
 
-/* SOCIAL MEDIA */
-
-#social_media_container {
-    margin-bottom: 73px;
-}
-
-.no-row-gutter {
-    margin-right: 0px;
-    margin-left: 0px;
-}
-
-#social_media_twitter_logo {
-    height: 115px;
-    width: 141px;
-    margin: 98.5px auto;
-}
-
-#social_media_stackoverflow_logo {
-    height: 166px;
-    width: 152px;
-    margin: 71.5px auto;
-}
-
-#social_media_groupsio_logo {
-    height: 115px;
-    width: 146px;
-    margin: 98px auto;
-}
-
-@media (min-width: 768px) {
-    /* DESKTOP VIEW */
-
-    #social_media_row {
-        /* 
-            This is to make the columns equal 
-            height in the row so we can align the links at 
-            the bottom of each column.
-        */
-        display: flex;
-        display: -webkit-flex;
-    }
-
-    #social_media_twitter_link,
-    #social_media_stackoverflow_link {
-        /* 
-            This is for making all the links horizontally aligned by positioning to
-            the bottom of the column.  All the columns should be the height of the tallest
-            column.  We are assuming the groupsio column is the longest
-            and the other links need to position based on the max size of the groupsio column.
-        */
-        position: absolute;
-        bottom: 0px;
-        width: 100%;
-    }
-
-    #social_media_twitter_col,
-    #social_media_stackoverflow_col {
-        /* This is the gutter between the three columns */
-        margin-right: 40px;
-    }
-}
-
-@media (max-width: 767px) {
-    /* MOBILE VIEW */
-    #social_media_container,
-    #social_media_twitter_col,
-    #social_media_stackoverflow_col {
-        margin-bottom: 60px;
-    }
-
-}
-
-
-
-/* HUSTON WE HAVE A PROBLEM */
+/* HOUSTON WE HAVE A PROBLEM */
 
 #houston_container {
     padding-top: 75px;
@@ -200,4 +126,98 @@
 #contributor_link_1 {
     margin-bottom: 79px;
     max-width: 557px;
+}
+
+/* SOCIAL MEDIA */
+#social_media_row_1 {
+    margin-bottom: 45px;
+}
+
+#social_media_title {
+    margin: 0;
+}
+.social_media_item {
+    margin-bottom: 40px;
+    height: 274px;
+    width: 485px;
+    padding-top: 34px;
+    padding-left: 31px;
+    padding-right: 32px;
+    display: block;
+    border-left: solid 14px #eeeff3;
+    box-shadow: 0 2px 4px 0 rgba(63,70,89,0.31);
+    transition: box-shadow .2s, border .2s;
+}
+
+.social_media_item:hover {
+    box-shadow: 0 2px 4px 0 rgba(63,70,89,0.59);
+    border-left: solid 14px #e6eda8;
+}
+
+.social_media_title {
+    font-size: 16px;
+    color: #24253A;
+    margin-bottom: 15px;
+}
+
+.social_media_description {
+    color: #24253A;
+    line-height: 26px;
+    font-size: 14px;
+    height: 120px;
+}
+
+.social_media_footer {
+    display: flex;
+    align-items: center;
+}
+
+.social_media_link {
+    font-size: 20px;
+}
+
+.social_media_logos {
+    margin-left: auto;
+}
+
+.social_media_orange_right_arrow {
+    background-image: url('/img/arrow_lightorange.svg');
+    background-repeat: no-repeat;
+    margin-left: 15px;
+    /* Need width and height to make the background 
+    image appear since there is no text */
+    width: 23px;
+    height: 17px;
+}
+
+.social_media_item:hover .social_media_orange_right_arrow {
+    transition: all .2s;
+    background-image: url('/img/arrow_darkorange.svg');
+    margin-left: 35px;
+}
+
+.social_media_item:hover .orange_link_light_background {
+    transition: all .2s;
+    color: #E3700D;
+}
+
+@media (max-width: 1199px) {
+    /* This is styling for when the cards are all in a single column.
+    Allow the cards to become different heights with the same widths.*/
+    .social_media_item {
+        width: 100%;
+        height: auto;
+    }
+    .social_media_description {
+        height: auto;
+    }
+}
+
+@media (max-width: 470px) {
+    .social_media_orange_right_arrow {
+        display: none;
+    }
+    .social_media_link {
+        font-size: 16px;
+    }
 }
