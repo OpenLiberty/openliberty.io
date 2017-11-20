@@ -20,7 +20,7 @@ find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/conte
 find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
 
 # Not in production environment
-if [ ${JEKYLL_ENV} != "production" ]; then
+if [ "$JEKYLL_ENV" != "production" ]; then
     echo "Not in production environment..."
     echo "Adding robots.txt"
     cp robots.txt src/main/content/robots.txt
