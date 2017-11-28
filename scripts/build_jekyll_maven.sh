@@ -1,7 +1,12 @@
 #  This script contains the end-to-end steps for building the website with Jekyll and using Maven to package
 #
 #
-gem install jekyll bundler jekyll-feed jekyll-asciidoc coderay jekyll-assets uglifier octopress-minify-html
+echo "Installing ruby packages..."
+gem install jekyll bundler jekyll-feed jekyll-asciidoc coderay uglifier octopress-minify-html
+gem install jekyll-assets -v 2.4.0
+
+# List of static guides
+echo "Cloning guides..."
 git clone "https://github.com/OpenLiberty/guides-common.git" src/main/content/guides/guides-common
 git clone "https://github.com/OpenLiberty/guide-rest-intro.git" src/main/content/guides/guide_rest_intro
 git clone "https://github.com/OpenLiberty/guide-maven-intro.git" src/main/content/guides/guide_maven_intro
@@ -12,23 +17,26 @@ git clone "https://github.com/OpenLiberty/guide-maven-multimodules" src/main/con
 git clone "https://github.com/OpenLiberty/guide-cors" src/main/content/guides/guide_cors
 git clone "https://github.com/OpenLiberty/guide-rest-client-angularjs" src/main/content/guides/guide-rest-client-angularjs
 
-# Clone the circuit breaker interactive guide.
+# List of interactive guides
 git clone "https://github.com/OpenLiberty/iguides-common" --branch master --single-branch src/main/content/guides/iguides-common
 git clone "https://github.com/OpenLiberty/iguide-circuit-breaker" --branch master --single-branch src/main/content/guides/iguide-circuit-breaker
-# Move any js/css files from guides to the _assets folder for jekyll-assets minification.
-find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
-find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
 
-# Steps only for DEVELOPMENT environments
-if [ ${ENVIRONMENT} = "DEVELOPMENT" ]; then
-    echo "Development environment..."
-    echo "Adding robots.txt..."
+# Development environment only actions
+if [ "$JEKYLL_ENV" != "production" ]; then
+    echo "Not in production environment..."
+    echo "Adding robots.txt"
     cp robots.txt src/main/content/robots.txt
     
-    echo "Clone guides that are only for the test site..."
+    echo "Clone guides that are only for test site..."
     git clone "https://github.com/OpenLiberty/guide-microprofile-config.git" src/main/content/guides/guide_microprofile_config
 fi
 
+# Move any js/css files from guides to the _assets folder for jekyll-assets minification.
+echo "Moving any js and css files..."
+find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
+find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
+
+# Jekyll build
 mkdir target
 mkdir target/jekyll-webapp
 jekyll build --source src/main/content --destination target/jekyll-webapp
