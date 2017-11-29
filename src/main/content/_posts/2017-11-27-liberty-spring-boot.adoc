@@ -1,25 +1,25 @@
 ---
 layout: post
 title:  "Open Liberty Spring Boot Starter - embedding Open Liberty into Spring Boot applications"
-date:   2017-11-27 09:00:00 -0400
+date:   2017-11-29 09:00:00 -0400
 categories: news
 author_picture: https://avatars3.githubusercontent.com/u/656475
 ---
-:description: Use the Open Liberty web container embedded in Spring Boot applications by using the Liberty Spring Boot starter.
+:description: Use the Open Liberty web container embedded in Spring Boot applications by using the Open Liberty Spring Boot starter.
 = Open Liberty Spring Boot Starter
 Thomas Watson <http://github.com/tjwatson>
 
 Now that the Open Liberty project is in full swing we are looking for more opportunities to enable developers to use Open Liberty in their own projects. It is very common for developers to create and deploy Spring applications on Open Liberty as a simple web application, but increasingly Spring developers are using Spring Boot as a faster, simpler way to create Spring applications. Spring Boot uses a set of Maven dependencies to build the applications, these dependencies are called starters and by default Spring Boot starters use Tomcat as the embedded web container. Additional starters for Jetty and Undertow are available to override Tomcat with another container implementation. So we thought it would be interesting if you could use an Open Liberty Spring Boot starter as an alternative, just like you can already do for Jetty and Undertow.
 
-We have made available a Maven repository which can be used to try out the experimental Liberty Spring Boot starter https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1[here].
+We have made available a Maven repository which can be used to try out the experimental Open Liberty Spring Boot starter https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1[here].
 
 ## Configuration
 
-In order to use the Liberty Spring Boot starter there are a few small changes that need to be made to your Spring Boot project `pom.xml` file (when using Maven) or to your `build.gradle` file (when using Gradle).
+In order to use the Open Liberty Spring Boot starter there are a few small changes that need to be made to your Spring Boot project `pom.xml` file (when using Maven) or to your `build.gradle` file (when using Gradle).
 
 ### Add the repository
 
-The experimental Liberty Spring Boot starter is available from the repository https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1[here].  This repository must be configured for your project. For Maven projects, you can do this by adding the following XML directly in your Spring Boot project's `pom.xml` file:
+The experimental Open Liberty Spring Boot starter is available from the repository https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1[here].  This repository must be configured for your project. For Maven projects, you can do this by adding the following XML directly in your Spring Boot project's `pom.xml` file:
 
 [source,xml]
 ----
@@ -88,7 +88,7 @@ dependencies {
 }
 ----
 
-### Include Liberty Spring Boot starter
+### Include the Open Liberty Spring Boot starter
 
 The final step is to add a dependency on the `liberty-spring-boot-starter` to use the Open Liberty web container. For Maven projects, you can do this by adding the following XML:
 
@@ -121,7 +121,7 @@ dependencies {
 
 ### Additional Open Liberty components
 
-Open Liberty has a modular runtime which allows developers to only enable the bits an application needs to get its job done. The `liberty-spring-boot-starter` enables only the core liberty runtime along with the web container which implements the Servlet 3.1 specification. Additional liberty components may be enabled if your application requires more. The following additional liberty features can be enabled:
+Open Liberty has a modular runtime which allows developers to only enable the bits an application needs to get its job done. The `liberty-spring-boot-starter` enables only the core Open Liberty runtime along with the web container which implements the Servlet 3.1 specification. Additional Open Liberty components may be enabled if your application requires more. The following additional Open Liberty features can be enabled:
 
 * *`liberty-boot-jsp`*: Enables JSP support.
 * *`liberty-boot-ssl`*: Enables SSL support.
