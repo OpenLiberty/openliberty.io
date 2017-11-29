@@ -9,17 +9,17 @@ author_picture: https://avatars3.githubusercontent.com/u/656475
 = Open Liberty Spring Boot Starter
 Thomas Watson <http://github.com/tjwatson>
 
-Now that the Open Liberty project is in full swing we are looking for more opportunities to enable developers to use Open Liberty in their own projects. It is very common for developers to create and deploy Spring applications on Open Liberty as a simple web application, but increasingly Spring developers are using Spring Boot as a faster, simpler way to create Spring applications. Spring Boot uses a set of maven dependencies to build the applications, these dependencies are called starters and by default Spring Boot starters use Tomcat as the embedded web container. Additional starters for Jetty and Undertow are available to override Tomcat with another container implementation. So we thought it would be interesting if you could use an Open Liberty Spring Boot starter as an alternative, just like you can already do for Jetty and Undertow.
+Now that the Open Liberty project is in full swing we are looking for more opportunities to enable developers to use Open Liberty in their own projects. It is very common for developers to create and deploy Spring applications on Open Liberty as a simple web application, but increasingly Spring developers are using Spring Boot as a faster, simpler way to create Spring applications. Spring Boot uses a set of Maven dependencies to build the applications, these dependencies are called starters and by default Spring Boot starters use Tomcat as the embedded web container. Additional starters for Jetty and Undertow are available to override Tomcat with another container implementation. So we thought it would be interesting if you could use an Open Liberty Spring Boot starter as an alternative, just like you can already do for Jetty and Undertow.
 
-We have made available a maven repository which can be used to try out the experimental Liberty Spring Boot starter https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1[here].
+We have made available a Maven repository which can be used to try out the experimental Liberty Spring Boot starter https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1[here].
 
 ## Configuration
 
-In order to use the Liberty Spring Boot starter there are a few small changes that need to be made to your Spring Boot project pom file (when using maven) or to your gradle file (when using gradle).
+In order to use the Liberty Spring Boot starter there are a few small changes that need to be made to your Spring Boot project `pom.xml` file (when using Maven) or to your `build.gradle` file (when using Gradle).
 
-### Add the Repository
+### Add the repository
 
-The experimental Liberty Spring Boot starter is available from the repository https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1[here].  This repository must be configured for your project. For maven projects this can be done directly in your Spring Boot project pom.xml with the following:
+The experimental Liberty Spring Boot starter is available from the repository https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1[here].  This repository must be configured for your project. For Maven projects, you can do this by adding the following XML directly in your Spring Boot project's `pom.xml` file:
 
 [source,xml]
 ----
@@ -35,7 +35,7 @@ The experimental Liberty Spring Boot starter is available from the repository ht
 </project>
 ----
 
-For gradle porjects this can be done directly in your Spring Boot project build.gradle with the following:
+For Gradle projects, you can do this by adding the following code directly in your Spring Boot project's `build.gradle` file:
 
 [source,gradle]
 ----
@@ -47,9 +47,9 @@ repositories {
 }
 ----
 
-### Exclude Default Tomcat Starter
+### Exclude the default Tomcat starter
 
-Many of the Spring Boot starters include the `spring-boot-starter-tomcat` starter. For example, the `spring-boot-starter-web` starter has a dependency on the `spring-boot-starter-tomcat` starter. An exclusion is needed for each starter your Spring Boot application depends on which transitively pulls in `spring-boot-starter-tomcat`. This prevents including the `spring-boot-starter-tomcat` in your application.  For maven projects this can be done with the following:
+Many of the Spring Boot starters include the `spring-boot-starter-tomcat` starter. For example, the `spring-boot-starter-web` starter has a dependency on the `spring-boot-starter-tomcat` starter. Add an exclusion for each starter that your Spring Boot application depends on that transitively pulls in `spring-boot-starter-tomcat`. This excludes the `spring-boot-starter-tomcat` from your application. For Maven projects, you can do this by adding the following XML:
 
 [source,xml]
 ----
@@ -75,7 +75,7 @@ Many of the Spring Boot starters include the `spring-boot-starter-tomcat` starte
 </project>
 ----
 
-For gradle projects this can be done with the following:
+For Gradle projects, you can do this by adding the following code:
 
 [source,gradle]
 ----
@@ -88,9 +88,9 @@ dependencies {
 }
 ----
 
-### Include Liberty Spring Boot Starter
+### Include Liberty Spring Boot starter
 
-The final step is to add a dependency on the `liberty-spring-boot-starter` to use the Open Liberty web container. For maven projects this is done with the following:
+The final step is to add a dependency on the `liberty-spring-boot-starter` to use the Open Liberty web container. For Maven projects, you can do this by adding the following XML:
 
 [source,xml]
 ----
@@ -109,7 +109,7 @@ The final step is to add a dependency on the `liberty-spring-boot-starter` to us
 </project>
 ----
 
-For gradle projects this can be done with the following:
+For Gradle projects, you can do this by adding the following code:
 
 ----
 dependencies {
@@ -119,16 +119,16 @@ dependencies {
 }
 ----
 
-### Additional Open Liberty Components
+### Additional Open Liberty components
 
-Open liberty has a modular runtime which allows developers to only enable the bits an application needs to get its job done. The `liberty-spring-boot-starter` enables only the core liberty runtime along with the web container which implements the Servlet 3.1 specification. Additional liberty components may be enabled if your application requires more. The following additional liberty features can be enabled:
+Open Liberty has a modular runtime which allows developers to only enable the bits an application needs to get its job done. The `liberty-spring-boot-starter` enables only the core liberty runtime along with the web container which implements the Servlet 3.1 specification. Additional liberty components may be enabled if your application requires more. The following additional liberty features can be enabled:
 
 * *`liberty-boot-jsp`*: Enables JSP support.
-* *`liberty-boot-ssl`*: Enables ssl support.
-* *`liberty-boot-websocket`*: Enables Websocket support.
+* *`liberty-boot-ssl`*: Enables SSL support.
+* *`liberty-boot-websocket`*: Enables WebSocket support.
 * *`liberty-boot-console`*: Enables the OSGi console for debug purposes only.
 
-These features can be enabled by including additional dependencies in your application. For example, if you need to configure `server.ssl.*` settings for your application then you will need to include a dependency on the `liberty-boot-ssl` artifact.  For maven projects this is done with the following:
+You can enable these features by including additional dependencies in your application. For example, if you need to configure `server.ssl.*` settings for your application then you will need to include a dependency on the `liberty-boot-ssl` artifact.  For Maven projects, you can do this by adding the following XML:
 
 [source,xml]
 ----
@@ -147,7 +147,7 @@ These features can be enabled by including additional dependencies in your appli
 </project>
 ----
 
-For gradle projects this can be done with the following:
+For Gradle projects, you can do this by adding the following code:
 
 [source,gradle]
 ----
@@ -158,11 +158,13 @@ dependencies {
 }
 ----
 
-### Open Liberty Specific Configuration
+### Open Liberty specific configuration
 
-There exist a small number of Liberty specific configuration properties for configuring the container. The Liberty specific configuration properties are prefixed with `server.liberty.`.  The following properties are available at this time:
+There exist a small number of Liberty-specific configuration properties for configuring the container. The Liberty specific configuration properties are prefixed with `server.liberty.`.  The following properties are available at this time:
 
-* *`server.liberty.basedir`*: `java.lang.String` - Liberty base directory. If not specified a temporary directory will be used.
+* *`server.liberty.basedir`*: `java.lang.String` - Liberty base directory. If not specified a temporary directory is used.
 * *`server.liberty.bootstrap-properties`*: `java.util.Map<java.lang.String,java.lang.String>` - Set boot strap properties for Liberty. Can be used to set any of the Liberty configuration properties that typically would go in a Liberty server bootstrap.properties file.
 
-*NOTE*: Open Liberty will create a server folder under the folder specified by the configuration `server.liberty.basedir`. This folder is used by Liberty as a persistent store while the application is running. By default the Liberty logs are stored under a folder `liberty-boot-0/wlp/usr/servers/defaultServer/logs/`. Once the application stops the base directory used by liberty will be deleted.  If you need to view the Liberty logs after the application has ended then set the `server.liberty.basedir` configuration property to a folder you want Liberty to use as the base directory.
+*NOTE*: Open Liberty will create a server folder under the folder specified by the configuration `server.liberty.basedir`. This folder is used by Liberty as a persistent store while the application is running. By default the Liberty logs are stored under the folder `liberty-boot-0/wlp/usr/servers/defaultServer/logs/`. When the application stops, the base directory used by Liberty is deleted.  If you need to view the Liberty logs after the application has ended then set the `server.liberty.basedir` configuration property to a folder you want Liberty to use as the base directory.
+
+The OSGi console will not be enabled by default when you include the `liberty-boot-console` dependency. You must also configure a port which is used to telnet into the OSGi console. You can do this by specifying the bootstrap property `server.liberty.bootstrap-properties.osgi.console`.  For example, you can set `server.liberty.bootstrap-properties.osgi.console=5678` in your `application.properties` file or you can also pass in the `osgi.console` system property when launching your application with the `-Dosgi.console=5678` JVM option.
