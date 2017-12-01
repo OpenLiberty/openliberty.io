@@ -34,7 +34,7 @@ function render_builds(builds, parent) {
         } else {
             var date = new Date(build.date);
             var year = date.getFullYear();
-            var month = date.getMonth();
+            var month = date.getMonth() + 1;
             var day = date.getDate();
             var hour = date.getHours();
             var minute = date.getMinutes();
@@ -149,7 +149,7 @@ $(document).ready(function() {
         function formatBuilds(builds_from_response) {
             for(var i = 0; i < builds_from_response.length; i++) {
                 var date_string = builds_from_response[i].date_time;
-                var date = new Date(date_string.substr(0, 4), date_string.substr(5, 2), date_string.substr(8, 2), date_string.substr(11, 2), date_string.substr(13, 2));
+                var date = new Date(date_string.substr(0, 4), date_string.substr(5, 2) - 1, date_string.substr(8, 2), date_string.substr(11, 2), date_string.substr(13, 2));
                 builds_from_response[i].date = date.getTime();
             }
             return builds_from_response;
