@@ -29,6 +29,7 @@ if [ "$JEKYLL_ENV" != "production" ]; then
     
     echo "Clone guides that are only for test site..."
     git clone "https://github.com/OpenLiberty/guide-microprofile-config.git" src/main/content/guides/guide_microprofile_config
+    git clone "https://github.com/OpenLiberty/iguide-microprofile-config" src/main/content/guides/iguide-microprofile-config
 fi
 
 # Move any js/css files from guides to the _assets folder for jekyll-assets minification.
