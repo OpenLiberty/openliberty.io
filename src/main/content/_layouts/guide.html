@@ -1,6 +1,8 @@
 ---
 layout: default
-css: guide
+css: 
+- guide-card
+- guide
 js: guide
 ---
 
@@ -12,6 +14,7 @@ js: guide
             </div>
         </div>
         <div class="row">
+            <!-- Guide's table of contents section -->
             <div class="col-sm-3">
                 <a id="all_guides_link" href="/guides">All Guides</a>
                 {% assign toc = page.document | tocify_asciidoc %}
@@ -30,14 +33,49 @@ js: guide
                     </div>
                 {% endif %}
             </div>
+            <!-- Entire guide section -->
             <div id="guide_column" class="col-sm-9 position_relative">
                 <div id="guide_content">
+                    <!-- Guide header section -->
                     <h1 id="guide_title">{{ page.title }}</h1>
                     <div id="duration_container">
                         <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
                         <span id="guide_duration">{{ page.duration }}</span>
                     </div>
+
+                    <!-- Guide content section -->
                     {{ content }}
+
+                    <!-- Related guides section -->
+                    {% if page.related-guides %}
+                    <div id="related-guides" class="row">
+                        <div id="related_guides_header" class="col-sm-12">
+                            <h2>Related guides</h2>
+                        </div>
+                        {% for related-guide in page.related-guides %}
+                            {% assign url = '/guides/' | append: related-guide %}
+                            {% assign list = site.pages | where: 'permalink', url %}
+                            {% unless list == empty %}
+								<!-- Only create a card if we find the permalink -->
+                                {% assign related-guide-metadata = list[0] %}
+                                <div class="col-sm-12 col-lg-6">
+                                    <a href="/guides/{{related-guide}}.html" class="guide_item" data-title="{{ related-guide-metadata.title | downcase }}" data-description="{{ related-guide-metadata.description | downcase }}">
+                                        <div class="guide_title_and_description_container">
+                                            <h3 class="guide_title">{{related-guide-metadata.title}}</h3>
+                                            <p class="guide_description">{{related-guide-metadata.description}}</p>
+                                        </div>
+                                        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                        <span class="guide_duration">{{related-guide-metadata.duration}}</span>
+                                        {% if related-guide-metadata.layout == 'interactive-guide' %}
+                                        <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
+                                        <span class="guide_interactive">Interactive</span>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            {% endunless %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
                 <div id="copied_to_clipboard_confirmation" style="display: none;">Copied to clipboard</div>
                 <a id="copy_to_clipboard" href="" style="display: none;"></a>
