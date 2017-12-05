@@ -1,7 +1,8 @@
 ---
 layout: default
-css: guide
-js: guide
+css:
+- guide-card
+- guide
 ---
 
 <div id="background_container" class="black_blue_gradient_background">
@@ -38,7 +39,34 @@ js: guide
                         <p>{{ page.description }}</p>
                     </div>
                     <div id="blueprint_title" aria-label="">{{ page.title }}</div>
+
                     {{ content }}
+
+                    <!-- Related guides section -->
+                    {% if page.related-guides %}
+                    <div id="related-guides" class="row hidden">
+                        {% for related-guide in page.related-guides %}
+                            {% assign url = '/guides/' | append: related-guide %}
+                            <!-- permalink are unique, should always find 1 or no match -->
+                            {% assign list = site.pages | where: 'permalink', url %}
+                            {% assign related-guide-metadata = list[0] %}
+                            <div class="col-sm-12 col-lg-6">
+                                <a href="/guides/{{related-guide}}.html" class="guide_item" data-title="{{ related-guide-metadata.title | downcase }}" data-description="{{ related-guide-metadata.description | downcase }}">
+                                    <div class="guide_title_and_description_container">
+                                        <h3 class="guide_title">{{related-guide-metadata.title}}</h3>
+                                        <p class="guide_description">{{related-guide-metadata.description}}</p>
+                                    </div>
+                                    <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                    <span class="guide_duration">{{related-guide-metadata.duration}}</span>
+                                    {% if related-guide-metadata.layout == 'interactive-guide' %}
+                                    <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
+                                    <span class="guide_interactive">Interactive</span>
+                                    {% endif %}
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
                 <div class="col-xs-12" id="page_nav_buttons" role="group">
                     <button id="prev_button" class="btn navButton">
