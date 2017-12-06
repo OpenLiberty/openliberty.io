@@ -38,6 +38,8 @@ find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/conte
 find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
 
 # Jekyll build
+echo "Building with jekyll..."
+echo `jekyll -version`
 mkdir target
 mkdir target/jekyll-webapp
 jekyll build --source src/main/content --destination target/jekyll-webapp
