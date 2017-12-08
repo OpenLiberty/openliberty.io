@@ -64,4 +64,8 @@ $(document).ready(function() {
 
     });
 
+    if( $('#related-guides').length ) {
+        // Add Related guides link to the table of contents
+        $('#toc_container ul').append('<li><a href="#related-guides">Related guides</a></li>')
+    }
 });
