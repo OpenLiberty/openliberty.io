@@ -29,7 +29,7 @@ guides = []
 json.each do |element|
     repo_name = element['name']
     if cloneDraftGuides == "draft-guide"
-        if repo_name.start_with?('draft-guide') or draftRepos.include?(repo_name)
+        if repo_name.start_with?('draft-guide') or repo_name.start_with?('draft-iguide') or draftRepos.include?(repo_name)
             # Clone guides that are still being drafted and are only for the staging website
             `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
         end
