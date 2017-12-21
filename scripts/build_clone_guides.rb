@@ -22,7 +22,7 @@ json = JSON.parse(response)
 # There are two guides that are currently still in draft mode but do not have "draft-" in their repository name.
 # To avoid unneeded trouble of renaming them, lets just mark the guides as draft with special code.
 # The end goal is this array to _always_ be empty.
-draftRepos = ["guide-microprofile-config", "iguide-microprofile-config"]
+draftRepos = ["guide-microprofile-config"]
 
 # Filter for Open Liberty guide repositories
 guides = []
