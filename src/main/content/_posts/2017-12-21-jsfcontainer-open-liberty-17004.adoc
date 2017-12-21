@@ -1,18 +1,19 @@
 ---
 layout: post
-title:  "TITLE HERE Open Liberty release"
+title:  "Bring your own JSF implementation to Open Liberty 17.0.0.4"
 date:   2017-12-21 12:05:00 +0100
 categories: news
 author_picture: https://avatars3.githubusercontent.com/u/3322532
 ---
 :description: Download updates for JSF Container, Concurrency, and distributed tracing in Open Liberty 17.0.0.4.
-
-== JSF Container and Concurrency updates in  Open Liberty 17.0.0.4
+= Bring your own JSF implementation to Open Liberty 17.0.0.4
 Laura Cowen <http://github.com/lauracowen>
 
-And, like a flash, a second release of Open Liberty (17.0.0.4) is upon us! As we don't have a full set of documentation implemented for Open Liberty yet, the items below point (where relevant) to the official documentation for WebSphere Liberty so you can find out more about them.
+And, like a flash, a second release of Open Liberty (17.0.0.4) is upon us! Fancy bringing your own JSF implementation (Mojarra or MyFaces) to Open Liberty? You can now (and benefit from CDI) with the JSF Container 2.2 feature. Also, administrators can now configure concurrency policies for managed executors (Concurrency updates), and get distributed tracing with our implementation of opentracing.io.
 
 Remember, if you're really keen, you can see what's being developed in Open Liberty in the https://openliberty.io/downloads/[nightly builds]. Feel free to https://openliberty.io/contribute/[raise or even fix a bug]. Fancy influencing the future direction of Open Liberty? Join the https://groups.io/g/openliberty[Open Liberty discussion group].
+
+As we don't have a full set of documentation implemented for Open Liberty yet, the items below point (where relevant) to the official documentation for WebSphere Liberty (which is built on Open Liberty) so you can find out more about them.
 
 You can now download Open Liberty and Open Liberty Tools 17.0.0.4.
 
@@ -48,7 +49,7 @@ In Open Liberty 17.0.0.4, you'll find :
 * <<opentracing,Distributed tracing>>
 
 [#jsfcontainer22]
-### JSF Container 2.2
+## JSF Container 2.2
 
 This feature makes it possible to bring your own JSF 2.2 implementation (either Mojarra or MyFaces) and take advantage of CDI integrations provided by the `cdi-1.2` feature.
 
@@ -66,7 +67,7 @@ For more info, see https://www.ibm.com/support/knowledgecenter/was_beta_liberty/
 
 
 [#concurrency]
-### Concurrency
+## Concurrency
 
 The administrator is now able to configure concurrency policies for managed executors for finer-grained control over concurrency constraints and other behavior.  This includes how many tasks are allowed to run in parallel, how many tasks can queue up, and what action to take when it is not possible to queue a task for execution, among other behaviors.  Different policies can be assigned for long-running tasks (identified by the `LONGRUNNING_HINT` execution property) versus normal tasks.  Managed executors continue to be backed by the Liberty global thread pool and continue to benefit from Liberty's autonomic tuning, but it is now possible to impose these constraints to individual managed executors or groups of managed executors (multiple can share a single concurrency policy).
 
@@ -88,7 +89,7 @@ Managed executors can be configured to use the concurrency policy as follows:
 For more info, see the WebSphere Liberty Knowledge Center docs on https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/com.ibm.websphere.liberty.autogen.base.doc/ae/rwlp_config_managedExecutorService.html[Configuring the managed executor service] and https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/com.ibm.websphere.liberty.autogen.base.doc/ae/rwlp_config_managedScheduledExecutorService.html[Configuring the managed scheduled executor service].
 
 [#opentracing]
-### Distributed tracing
+## Distributed tracing
 
 The `opentracing-1.0` feature, together with a user provided `io.opentracing.Tracer` implementation, enables JAX-RS applications to automatically create, propagate, and deliver distributed tracing information.
 
@@ -105,7 +106,7 @@ You can find sample source code for https://github.com/WASdev/sample.opentracing
 
 
 
-
+## Ready to give it a try?
 
 
 [link=https://openliberty.io/downloads/]
