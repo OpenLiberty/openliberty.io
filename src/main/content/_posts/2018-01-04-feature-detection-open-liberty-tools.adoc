@@ -9,14 +9,14 @@ categories: news
 
 ## How does Open Liberty Tools decide what features your application needs
 
-When you deploy an application to a Liberty server using Open Liberty Tools (OLT) it attempts to detect what features your application needs and add them to the server configuration automatically.  This applies to the entire application that is being deployed.  If you are deploying an ear project that includes several web projects in its deployment assembly then OLT looks at all of these projects.  It considers the following:
+When you deploy an application to a Liberty server using Open Liberty Tools (OLT) it attempts to detect what features your application needs and add them to the server configuration automatically.  This applies to the entire application that is being deployed.  If you are deploying an EAR project that includes several web projects in its deployment assembly then OLT looks at all of these projects.  It considers the following:
 
 * The facets that are set on the application projects.
-* For CDI, OLT inspects the beans.xml file.  It looks at the version, if specified, otherwise it looks at the schema version.
-* To decide if the jsp feature is needed, OLT checks for files with the following extensions: `.jsp`, `.jspf`, `.jsw`, `.jsv` and `.jspx`.
+* For CDI, OLT inspects the `beans.xml` file.  It looks at the version, if specified, otherwise it looks at the schema version.
+* To decide if the JSP feature is needed, OLT checks for files with the following extensions: `.jsp`, `.jspf`, `.jsw`, `.jsv` and `.jspx`.
 * For JSF, OLT looks for the existence of a `WEB-INF/faces-config.xml` file.
-* OLT looks for certain resource references in the `web.xml` to decide if the jdbc or a jms feature is needed.
-* Finally, OLT looks at all of the Java imports in all of the application projects and tries to map them to features.  For example, if there is an import for `javax.persistence` then OLT will add the jpa feature to the server configuration.
+* OLT looks for certain resource references in the `web.xml` to decide if the JDBC or a JMS feature is needed.
+* Finally, OLT looks at all of the Java imports in all of the application projects and tries to map them to features.  For example, if there is an import for `javax.persistence` then OLT will add the JPA feature to the server configuration.
 
 Some of the above have version information (such as facets) and they are given higher priority then Java imports, for example, which have no version information.  If OLT determines that a feature is needed but there is no information about which version of the feature to use it will add the latest version.
 
