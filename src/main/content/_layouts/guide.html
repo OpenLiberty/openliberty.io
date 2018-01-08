@@ -15,23 +15,25 @@ js: guide
         </div>
         <div class="row">
             <!-- Guide's table of contents section -->
-            <div class="col-sm-3">
-                <a id="all_guides_link" href="/guides">All Guides</a>
-                {% assign toc = page.document | tocify_asciidoc %}
-                {% if toc %}
-                <h3 id="toc_title">Contents</h3>
-                <div id="toc_container">
-                    {{ toc }}
-                </div>
-                {% endif %}
-                {% if page.tags %}
-                    <h3 id="tag_title">Tags</h3>
-                    <div id="tags_container">
-                        {% for tag in page.tags %}
-                            <a href="/guides?search={{ tag }}&key=tag">{{ tag }}</a>
-                        {% endfor %}
+            <div id="toc_column" class="col-sm-3">
+                <div id="toc_inner">
+                    <a id="all_guides_link" href="/guides">All Guides</a>
+                    {% assign toc = page.document | tocify_asciidoc %}
+                    {% if toc %}
+                    <h3 id="toc_title">Contents</h3>
+                    <div id="toc_container">
+                        {{ toc }}
                     </div>
-                {% endif %}
+                    {% endif %}
+                    {% if page.tags %}
+                        <h3 id="tag_title">Tags</h3>
+                        <div id="tags_container">
+                            {% for tag in page.tags %}
+                                <a href="/guides?search={{ tag }}&key=tag">{{ tag }}</a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
             </div>
             <!-- Entire guide section -->
             <div id="guide_column" class="col-sm-9 position_relative">
