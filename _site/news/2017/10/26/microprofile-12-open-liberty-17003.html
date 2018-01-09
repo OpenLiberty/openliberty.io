@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MicroProfile 1.2 and build tools updates in our first Open Liberty release - Open Liberty</title>
+  <meta name="description" content="Open Liberty is the most flexible server runtime available to Earth’s Java developers.">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link type="text/css" rel="stylesheet" href="/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/assets/coderay-custom.css">
+
+  
+  
+  
+    <link type="text/css" rel="stylesheet" href="/assets/post.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="http://localhost:4000/news/2017/10/26/microprofile-12-open-liberty-17003.html">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Open Liberty" />
+  <meta name="twitter:description" content="Open Liberty is the most flexible server runtime available to Earth’s Java developers." />
+  <meta name="twitter:image" content="https://openliberty.io/img/twitter_card.jpg" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+</head>
+
+
+  <body>
+    
+    
+
+    <header>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button id="navbar_responsive_button" class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+            <a id="navbar_home_link" class="navbar-brand" href="/" aria-label="Home"></a>
+            
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right text-right">
+                <li><a href="/about">About</a></li>
+                <li><a href="/guides">Guides</a></li>
+                <li><a href="/downloads">Downloads</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/community">Community</a></li>
+                <li><a href="/contribute">Contribute</a></li>
+                <li><a href="/docs">Docs</a></li>
+                <li class="hidden-xs"><a id="navbar_github_link" href="https://github.com/OpenLiberty" target="new" aria-label="Open Liberty GitHub Repository"></a></li>
+            </ul>
+        </div>
+    </div>
+  </nav>
+  <div class="hidden">
+    <img src="/img/small_logo_white.svg">
+    <img src="/img/github_navbar_hover.svg">
+  </div>
+</header>
+
+
+    <main aria-label="Content">
+
+      <div id="background_container" class="black_blue_gradient_background">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <img id="intro_logo" src="/img/blog_title_small.svg">
+            </div>
+            <div id="post_column" class="col-xs-12">
+                <div id="article_container">
+                    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+                        <header>                        
+                            <div class="post_information_container">
+                                <img src="https://avatars3.githubusercontent.com/u/3322532" id="author_image">
+                                <div id="post_information">
+                                    <div id="author_name">Laura Cowen</div>
+                                    <div id="post_date">
+                                        <time datetime="2017-10-26T13:05:00-05:00" itemprop="datePublished">
+                                             Oct 26, 2017
+                                        </time>
+                                    </div>
+                                </div>
+                            </div>
+                            <h1 itemprop="name headline">MicroProfile 1.2 and build tools updates in our first Open Liberty release</h1>
+                        </header>
+                        <div itemprop="articleBody" id="article_body">
+                            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Well, this is exciting! Our first proper release of Open Liberty and the Open Liberty Tools! In Open Liberty 17.0.0.3 is a full implementation of MicroProfile 1.2, some Liberty Gradle plugin updates, and some transport security updates. You might have noticed that the download actually went live some time ago but we were so caught up with <a href="https://openliberty.io/news/2017/09/29/javaone-sessions-open-liberty-team.html">JavaOne</a> and other conferences (then recovering from all the excitement) that this post got&#8230;&#8203;ahem&#8230;&#8203;slightly overlooked. Anyway, it&#8217;s here now&#8230;&#8203;read on!</p>
+</div>
+<div class="paragraph">
+<p>You can now download Open Liberty and Open Liberty Tools 17.0.0.3.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="https://openliberty.io/downloads/"><img src="/img/blog_btn_download-ol.svg" alt="Download Open Liberty"></a>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="https://stackoverflow.com/tags/open-liberty"><img src="/img/blog_btn_stack.svg" alt="Ask a question on Stack Overflow"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, if you&#8217;re using Maven, here are the coordinates:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>io.openliberty<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>openliberty-runtime<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>17.0.0.3<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;type&gt;</span>zip<span class="tag">&lt;/type&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or if you&#8217;re using Docker:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker pull openliberty/open-liberty</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In Open Liberty 17.0.0.3, you&#8217;ll find our completed implementation of MicroProfile 1.2, as well as new and improved build tools:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>MicroProfile 1.2 new features</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#mp-fault">MicroProfile Fault Tolerance</a></p>
+</li>
+<li>
+<p><a href="#mp-config">MicroProfile Config API</a></p>
+</li>
+<li>
+<p><a href="#mp-metrics">MicroProfile Metrics</a></p>
+</li>
+<li>
+<p><a href="#mp-health">MicroProfile Health</a></p>
+</li>
+<li>
+<p><a href="#mp-jwt">MicroProfile JSON Web Token</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Build tools updates</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gradle">Liberty Gradle plugin</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Non-API features</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#transportsecurity">Transport security</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="microprofile-1-2">MicroProfile 1.2</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Open Liberty already implemented Eclipse MicroProfile 1.0 with JAX-RS 2.0, CDI 1.2, and JSON-P 1.0. That was easy. I mean, pity the Java EE application server that can&#8217;t do that. Now we&#8217;ve completed the MicroProfile 1.2 set with all these other MicroProfile features&#8230;&#8203;</p>
+</div>
+<div class="paragraph">
+<p>To enable all the MicroProfile 1.2 features, add this definition to your <code>server.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;featureManager&gt;</span>
+   <span class="tag">&lt;feature&gt;</span>microProfile-1.2<span class="tag">&lt;/feature&gt;</span>
+<span class="tag">&lt;/featureManager&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can add the individual features as described below.</p>
+</div>
+<div class="sect2">
+<h3 id="mp-fault">MicroProfile Fault Tolerance</h3>
+<div class="paragraph">
+<p>The increasing size of applications, newer architectures that are as likely to 'scale out' as to 'scale up', and the rising popularity of microservice architectures, it is increasingly important to build fault tolerance into our system architecture.</p>
+</div>
+<div class="paragraph">
+<p>Fault tolerance can be improved using a number of well-tested approaches that handle failure:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>TimeOut</strong>: Limit the amount of time we are prepared to wait for a result</p>
+</li>
+<li>
+<p><strong>RetryPolicy</strong>: Control how much we are prepared to re-submit a request</p>
+</li>
+<li>
+<p><strong>Fallback</strong>: Specify what should we do when the primary service cannot be used successfully</p>
+</li>
+<li>
+<p><strong>Bulkhead</strong>: If calls to a service are slow (perhaps it is overloaded or we are timing out), specify what proportion of our local resources we are prepared to get involved in the traffic jam</p>
+</li>
+<li>
+<p><strong>CircuitBreaker</strong>: When a service is proving unreliable, for example timing out, we can choose to 'fail fast'  by automatically failing calls to it under control</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>With the Microprofile Fault Tolerance specification, we can control all these aspects with easy-to-use Java annotations at a method or class level that is independent of any particular vendor or implementation library.</p>
+</div>
+<div class="paragraph">
+<p>To add just the Fault Tolerance feature, update your <code>server.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;featureManager&gt;</span>
+   <span class="tag">&lt;feature&gt;</span>mpFaultTolerance-1.0<span class="tag">&lt;/feature&gt;</span>
+<span class="tag">&lt;/featureManager&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Find out more about the <a href="https://github.com/eclipse/microprofile-fault-tolerance">Fault Tolerance feature in GitHub</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="mp-config">MicroProfile Config API 1.1</h3>
+<div class="paragraph">
+<p>The MicroProfile Configuration specification provides a single way to view and access multiple sources of configuration, such as properties files and environment variables, including bootstrap.properties, user-level properties files, registered Java classes that implement the ConfigSource API, and the Java System properties.</p>
+</div>
+<div class="paragraph">
+<p>When your applications are deployed as microservices, having a single place to update the configuration data of multiple microservices is useful for several reasons. Building systems as collections of independent microservices increases the number of services that need to be managed. Different stages in the pipeline often use different configuration sources for a single piece of configuration data and a given component needs updating as it moves through the pipeline. Containerisation of services means that even while a component is ‘live’ in production, the environment it is running in might be more dynamic and the components need configuration updates without being restarted.</p>
+</div>
+<div class="paragraph">
+<p>The Config API allows for a consistent means to access configuration data from pluggable configuration sources. Configuration properties can be injected using Java CDI in a form that is easy to consume. Data values and sources can vary across the devOps pipeline without code change or repackaging, and dynamic and fully typed data is catered for.</p>
+</div>
+<div class="paragraph">
+<p>To add just the Config API feature, update your <code>server.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;featureManager&gt;</span>
+   <span class="tag">&lt;feature&gt;</span>mpConfig-1.1<span class="tag">&lt;/feature&gt;</span>
+<span class="tag">&lt;/featureManager&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Find out more about the <a href="https://github.com/eclipse/microprofile-config">Config API feature in GitHub</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="mp-metrics">MicroProfile Metrics</h3>
+<div class="paragraph">
+<p>MicroProfile Metrics provides a way for developers to instrument their microservices and applications that will be portable across all MicroProfile Metrics implementations.  The API is similar to the Dropwizard Metrics API that many developers are already familiar with. Using MicroProfile Metrics avoids the need to find and include third-party metrics libraries and integrate those libraries with Liberty.</p>
+</div>
+<div class="paragraph">
+<p>For operations teams, MicroProfile Metrics provides a consistent way to access metrics from their Liberty servers through a simple REST interface.  The REST API can return output compatible with Prometheus or with any monitoring tools that can consume JSON.</p>
+</div>
+<div class="paragraph">
+<p><strong>Developers</strong>: To add just the Metrics feature, update your <code>server.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;featureManager&gt;</span>
+    <span class="tag">&lt;feature&gt;</span>mpMetrics-1.0<span class="tag">&lt;/feature&gt;</span>
+<span class="tag">&lt;/featureManager&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Ops</strong>: To enable the <code>/metrics</code> REST interface, add the following definition to your <code>server.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;featureManager&gt;</span>
+    <span class="tag">&lt;feature&gt;</span>mpMetrics-1.0<span class="tag">&lt;/feature&gt;</span>
+<span class="tag">&lt;/featureManager&gt;</span>
+<span class="tag">&lt;quickStartSecurity</span> <span class="attribute-name">userName</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">theUser</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">userPassword</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">thePassword</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;keyStore</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">defaultKeyStore</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">password</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">Liberty</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then verify that things are set up correctly by hitting <code><a href="https://yourserver:9443/metrics" class="bare">https://yourserver:9443/metrics</a></code></p>
+</div>
+<div class="paragraph">
+<p>Find out more about the <a href="https://github.com/eclipse/microprofile-metrics">Metrics feature in GitHub</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="mp-health">MicroProfile Health</h3>
+<div class="paragraph">
+<p>MicroProfile Health defines an API for providing health check procedures in a microservice and a runtime environment for invoking installed health checks and aggregating an overall response.</p>
+</div>
+<div class="paragraph">
+<p>MicroProfile Health specifies a standard health check API that works across any runtime supporting MicroProfile 1.2.  The feature provides a default response even when the installed microservice does not implement any health checks.  It provides a standard health check URL, allowing for a consistent way to configure service monitors (e.g., Kubernetes liveness checks).</p>
+</div>
+<div class="paragraph">
+<p>Add the <code>mpHealth-1.0</code> feature to the server configuration and add zero or more health checks to the microservice.  A <code>/health</code> context is provided by the server for invoking the health checks.</p>
+</div>
+<div class="paragraph">
+<p>To add just the Health feature, update your <code>server.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;featureManager&gt;</span>
+   <span class="tag">&lt;feature&gt;</span>mpHealth-1.0<span class="tag">&lt;/feature&gt;</span>
+<span class="tag">&lt;/featureManager&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Find out more about the <a href="https://github.com/eclipse/microprofile-health">Health feature in GitHub</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="mp-jwt">MicroProfile JSON Web Token</h3>
+<div class="paragraph">
+<p>With the MicroProfile JSON Web Token feature, an administrator can configure Liberty to perform authentication and authorization based on incoming JWT without requiring a user registry.</p>
+</div>
+<div class="paragraph">
+<p>An application developer can write a JAX-RS application to programmatically authorize resource access using CDI injection or the standard JAX-RS container API in an interoperable way.</p>
+</div>
+<div class="paragraph">
+<p>To add just the MicroProfile JSON Web Token feature, update your <code>server.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;featureManager&gt;</span>
+   <span class="tag">&lt;feature&gt;</span>mpJwt-1.0<span class="tag">&lt;/feature&gt;</span>
+<span class="tag">&lt;/featureManager&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Find out more about the <a href="https://github.com/MicroProfileJWT/microprofile-jwt-auth">MicroProfile JSON Web Token feature in GitHub</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="build-tools-updates">Build tools updates</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="gradle">Liberty Gradle plugin</h3>
+<div class="paragraph">
+<p>The Liberty Gradle plugin has many improvements to help you install and manage your Liberty server. These tasks can be used to test your web application on a Liberty server more easily and for packaging your servers.  The plugin update includes enhancements to the following tasks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>installLiberty</code> task:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Add support to install using Maven repository coordinates</p>
+</li>
+<li>
+<p>Provide Liberty license upgrade</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>installFeature</code> task:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Support installing from a local folder</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>libertyStart</code> task:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Add timeout test support</p>
+</li>
+<li>
+<p>Add application start verification</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>new <code>installApps</code> task:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Improved application installation</p>
+</li>
+<li>
+<p>Support multiple WAR file tasks for installation</p>
+</li>
+<li>
+<p>Loose application support to make debugging faster</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>libertyCreate</code> task:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Server configuration creation</p>
+</li>
+<li>
+<p>Copy <code>server.xml</code></p>
+</li>
+<li>
+<p>Copy <code>server.env</code>, <code>bootstrap.properties</code>, <code>jvm.options</code> files</p>
+</li>
+<li>
+<p>Create <code>bootstrap.properties</code> and <code>jvm.options</code> from inline configuration</p>
+</li>
+<li>
+<p>Copy a folder of configuration</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>libertyRun</code> task fixes</p>
+</li>
+<li>
+<p>new <code>compileJSP</code> task</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In addition there are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Documentation improvements</p>
+</li>
+<li>
+<p>Enhancements to the Liberty Gradle lifecycle with task dependencies</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The Liberty Gradle plugin is used with the Gradle WAR plugin to install project WAR files and loose applications to a Liberty Server. For more details, see <a href="https://github.com/WASdev/ci.gradle/blob/master/README.md">the Liberty Gradle plugin documentation</a> in GitHub.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="non-api-features">Non-API features</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="transportsecurity">Transport Security</h3>
+<div class="paragraph">
+<p>The Transport Security feature provides dynamic SSL filters. This enables administrators to configure SSL configuration to be used for outbound connections based on the host (or host and port) of the destination.  You can configure the SSL configuration without having to use direct references in individual components.</p>
+</div>
+<div class="paragraph">
+<p>To enable an outbound SSL filter in the <code>server.xml</code>, add an element called <code>&lt;outboundConnection /&gt;</code>.  The <code>&lt;outboundConnection /&gt;</code> element is nested in the <code>&lt;ssl /&gt;</code> element.   The <code>&lt;outboundConnection /&gt;</code> element contains two attributes: <code>host</code> and <code>port</code>. The <code>host</code> attribute is required; the <code>port</code> attribute is optional.  A missing <code>port</code> attribute means any port on the configured host. When configured, and an outbound SSL connection is made, the connection can be matched to an SSL configuration that is assigned to the destination host, or host and port, that is specified in the <code>&lt;outboundConnection /&gt;</code> element.</p>
+</div>
+<div class="paragraph">
+<p>In the following example, the outbound SSL connection going to a machine called <code>testMachine</code> and port <code>9443</code> uses an SSL context created with information from the <code>&lt;ssl /&gt;</code> element called <code>customSSLSettings</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;ssl</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">customSSLSettings</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">keyStoreRef</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">customKeyStore</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">trustStoreRef</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">customTrustStore</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">sslProtocol</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">TLSv1.2</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">clientAuthenticationSupported</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span> <span class="tag">&gt;</span>
+<span class="tag">&lt;outboundConnection</span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">testHostMachine</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">port</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">9443</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/ssl&gt;</span></code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="https://openliberty.io/downloads/"><img src="/img/blog_btn_download-ol.svg" alt="Download Open Liberty"></a>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="https://stackoverflow.com/tags/open-liberty"><img src="/img/blog_btn_stack.svg" alt="Ask a question on Stack Overflow"></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+                        </div>
+                        <div id="share_post_container">
+                            Share this post:
+                            <a id="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('MicroProfile 1.2 and build tools updates in our first Open Liberty release') + '&url=' + encodeURIComponent(window.location)); return false"></a>
+                            <a id="reddit_link" href="//www.reddit.com/submit" onclick="window.open('//www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false"></a>
+                        </div>
+                        
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hidden">
+    <img src="/img/twitter_link_hover.svg">
+    <img src="/img/reddit_link_hover.svg">
+</div>
+
+    </main>
+
+    <footer>
+  <div id="footer_container" class="container">
+      <div class="row">
+          <div class="col-xs-12 text-right">
+              <div id="footer_links_container">
+                  <a href="https://github.com/OpenLiberty/open-liberty/blob/master/LICENSE" target="new" class="footer_link">License</a>
+                  <a href="https://www.ibm.com/privacy/us/en/" target="new" class="footer_link">Privacy policy</a>
+                  <a id="footer_twitter_link" href="https://twitter.com/OpenLibertyIO" target="new" aria-label="Twitter"></a>
+                  <a id="footer_github_link" href="https://github.com/OpenLiberty" target="new" aria-label="GitHub"></a>
+              </div>
+              <p id="footer_text">an IBM open source project</p>
+              <p id="footer_copyright">&copy; Copyright IBM Corp. 2017</p>
+          </div>
+      </div>
+  </div>
+  <div class="hidden">
+    <img src="/img/footer_twitter_darker.png">
+    <img src="/img/footer_github_darker.png">
+  </div>
+</footer>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    
+
+    
+
+  </body>
+
+</html>
