@@ -8,5 +8,22 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+
+function resizeJavaDocWindow() {
+    var topSection = $('#background_container').height();
+    var bottomSection = $('#footer_container').height();
+
+    var middleSectionHeight = $(window).height() - (topSection + bottomSection);
+    $('#javadoc_container').height(middleSectionHeight);
+
+    $("body").css("overflow" , "hidden");
+}
+
 $(document).ready(function() {
+
+    resizeJavaDocWindow();
+
+    $(window).on('resize', function(){
+        resizeJavaDocWindow();
+    });
 });
