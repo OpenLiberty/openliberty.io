@@ -16,7 +16,7 @@ function heightOfVisibleBackground() {
     var result;
     if(isBackgroundBottomVisible()) {
         var scrollTop = $(window).scrollTop();
-        result = getBackgroundBottomPosition() - scrollTop;
+        result = getBackgroundAbsoluteBottomPosition() - scrollTop;
     } else {
         // Assume the background is filling up the entire viewport
         result = $(window).height();
@@ -24,7 +24,9 @@ function heightOfVisibleBackground() {
     return result;
 }
 
-function getBackgroundBottomPosition() {
+// Get the absolute position of the bottom of the dark background regardless
+// of whether the bottom is in the browser's viewport
+function getBackgroundAbsoluteBottomPosition() {
     var background = $('#background_container'),
     elementTop = background.offset().top,
     elementBottomPosition = elementTop + (background.outerHeight() - backgroundSizeAdjustment);
@@ -37,7 +39,7 @@ function isBackgroundBottomVisible() {
     var background = $('#background_container'),
         currentTopPosition = $(window).scrollTop(),
         currentBottomPosition = currentTopPosition + $(window).height(),
-        elementBottomPosition = getBackgroundBottomPosition(),
+        elementBottomPosition = getBackgroundAbsoluteBottomPosition(),
         visibleBottom = currentBottomPosition > elementBottomPosition;
     return visibleBottom;
 }
@@ -60,7 +62,7 @@ function handleFloatingTableOfContent() {
             } else {
                 // The entire viewport is filled with the background, so
                 // do not need to worry about the TOC flowing out of the background.
-                $('#toc_inner').css({"position":"fixed", "top":"0"});
+                enableFloatingTOC();
             }
         } else {
             // TOC no longer needs to float,
@@ -76,6 +78,10 @@ function handleFloatingTableOfContent() {
 
 function disableFloatingTOC() {
     $('#toc_inner').width("").css({"position": "", "top": ""});
+}
+
+function enableFloatingTOC() {
+    $('#toc_inner').css({"position":"fixed", "top":"0"});
 }
 
 // Handle when the table of content (TOC) is too small to fit completely in the dark background.
