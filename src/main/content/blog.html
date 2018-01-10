@@ -32,7 +32,11 @@ permalink: /blog/
                         <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
                     </div>
                     <p class="blog_post_paragraph">
-                        {{ post.content | strip_html | truncatewords: 60 }}
+                        {% if post.blog_description %}
+                            {{ post.blog_description }}
+                        {% else %}
+                            {{ post.content | strip_html | truncatewords: 60 }}
+                        {% endif %}
                     </p>
                     <div class="text-right">
                         <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
