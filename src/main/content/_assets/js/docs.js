@@ -26,4 +26,13 @@ $(document).ready(function() {
     $(window).on('resize', function(){
         resizeJavaDocWindow();
     });
+
+    // javadocs/liberty-javaee7-javadoc/index.html
+    // javadocs/microprofile-1.2-javadoc/index.html
+    $('#liberty').on('click', function(){
+        $('#javadoc_container').prop('src', "javadocs/liberty-javaee7-javadoc/index.html");
+    });
+    $('#mp').on('click', function(){
+        $('#javadoc_container').prop('src', "javadocs/microprofile-1.2-javadoc/index.html");
+    });
 });
