@@ -22,20 +22,27 @@ json = JSON.parse(response)
 # There are two guides that are currently still in draft mode but do not have "draft-" in their repository name.
 # To avoid unneeded trouble of renaming them, lets just mark the guides as draft with special code.
 # The end goal is this array to _always_ be empty.
-draftRepos = ["guide-microprofile-config", "iguide-microprofile-config"]
+draftRepos = ["guide-microprofile-config"]
 
 # Filter for Open Liberty guide repositories
 guides = []
 json.each do |element|
     repo_name = element['name']
     if cloneDraftGuides == "draft-guide"
-        if repo_name.start_with?('draft-guide') or repo_name.start_with?('draft-iguide') or draftRepos.include?(repo_name)
-            # Clone guides that are still being drafted and are only for the staging website
+        # Clone guides that are still being drafted and are only for the staging website
+        if repo_name.start_with?('draft-iguide')
+            # Always clone the master branch for interactive guides
+            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch master --single-branch src/main/content/guides/#{repo_name}`
+        elsif repo_name.start_with?('draft-guide') or draftRepos.include?(repo_name)
             `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
         end
     else
-        if (repo_name.start_with?('guide') or repo_name.start_with?('iguide')) and not draftRepos.include?(repo_name)
-            # Clone guides that are ready to be published to openliberty.io
+        if repo_name.start_with?('iguide')
+            # Clone interactive guides that are ready to be published to openliberty.io
+            # Always clone the master branch for interactive guides
+            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch master --single-branch src/main/content/guides/#{repo_name}`
+        elsif repo_name.start_with?('guide') and not draftRepos.include?(repo_name)
+            # Clone static guides that are ready to be published to openliberty.io
             `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
         end
     end
