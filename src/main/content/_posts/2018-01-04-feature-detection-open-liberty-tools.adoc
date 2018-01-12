@@ -18,7 +18,7 @@ When you deploy an application to a Liberty server using Open Liberty Tools, it 
 * For JDBC or JMS, certain resource references in the `web.xml`.
 * All of the Java imports in all of the application projects to try to map them to features.  For example, if there is an import for `javax.persistence`, Open Liberty Tools adds the JPA feature to the server configuration.
 
-Some of the these have version information (such as facets) and they are given higher priority than Java imports which, for example, have no version information.  If Open Liberty Tools determines that a feature is needed but there is no information about which version of the feature to use, it will add the latest version.
+Some of these have version information (such as facets) and they are given higher priority than Java imports which, for example, have no version information.  If Open Liberty Tools determines that a feature is needed but there is no information about which version of the feature to use, it will add the latest version.
 
 To see what features Open Liberty Tools has detected for an application, right-click the application projects then click *Properties > Liberty > Required Features*.  A dialog shows you the features and also allows you to modify whether the feature is added to the server configuration or not. 
 
@@ -28,19 +28,19 @@ image::/img/blog_feature_detection_required_features.png[]
 
 ## Handling feature conflicts 
 
-If Open Liberty Tools adds a feature to the server configuration that conflicts with an existing feature it displays a feature conflict dialog so that you can resolve the conflict.  If, for example, your server configuration has the `servlet-3.0` feature enabled and you deploy a Web 3.1 project with a JSP file to the server, you see a dialog similar to the one below.  The `jsp-2.3` feature added by Open Liberty Tools conflicts with the existing `servlet-3.0` feature.  Select the features in the dialog to see what other features they enable and to understand how they conflict.  The `jsp-2.3` feature enables the `servlet-3.1` feature which conflicts with `servlet-3.0`.  The easiest way to fix this is to select the `servlet-3.0` feature then click *Remove*.
+If Open Liberty Tools adds a feature to the server configuration that conflicts with an existing feature, it displays a feature conflict dialog so that you can resolve the conflict.  If, for example, your server configuration has the `servlet-3.0` feature enabled and you deploy a Web 3.1 project with a JSP file to the server, you see a dialog similar to the one below.  In this example, the `jsp-2.3` feature added by Open Liberty Tools conflicts with the existing `servlet-3.0` feature.  Select the features in the dialog to see what other features they enable and to understand how they conflict.  The `jsp-2.3` feature enables the `servlet-3.1` feature which conflicts with `servlet-3.0`.  The easiest way to fix this is to select the `servlet-3.0` feature then click *Remove*.
 
 image::/img/blog_feature_detection_confict_dialog.png[]
 
 Open Liberty Tools also detects existing feature conflicts within the server configuration and shows a warning in the *Markers* view such as: `servlet-3.0 and [jsp-2.3 --> servlet-3.1] features are in conflict. Select a compatible set of features.`
 
-For more information see the WebSphere Liberty Knowledge Center doc on https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/rwlp_prog_model_supported_combos.html[supported Java EE 6 and 7 feature combinations].
+For more information, see the WebSphere Liberty Knowledge Center doc on https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/rwlp_prog_model_supported_combos.html[supported Java EE 6 and 7 feature combinations].
 
 ## Some things Open Liberty Tools does not do
 
 If Open Liberty Tools determines that more than one feature satisfies a requirement (such as more than one feature providing the same package specified in a Java import), Open Liberty Tools does not add the feature because it does not know which one to add.
 
-Open Liberty Tools cannot detect if an application has its own implementation of a feature such as its own JPA provider. It still adds the feature to the server configuration.  This is why it is useful to know how to disable feature detection when needed.
+Open Liberty Tools cannot detect if an application has its own implementation of a feature, such as its own JPA provider. It still adds the feature to the server configuration.  This is why it is useful to know how to disable feature detection when needed.
 
 ## How to disable feature detection in Open Liberty Tools
 
@@ -48,7 +48,7 @@ The required features dialog mentioned earlier can be used to prevent Open Liber
 
 To disable feature detection on a more global basis go to *Window > Preferences > Server > Liberty Server*.  Here, you can disable feature detection altogether or just change the default action from *Always add* to one of *Prompt before adding* or *Never add*.
 
-Some features have a `container` version of the feature which tells both Open Liberty and Open Liberty Tools that the implementation of the feature is provided in the application.  If `jpaContainer-2.1` is already enabled in the server configuration, for example, Open Liberty Tools does not add the `jpa-2.1` feature.  Other examples are `jsfContainer`, `jsonbContainer`, and `jsonpContainer`.
+Some features have a container version of the feature which tells both Open Liberty and Open Liberty Tools that the implementation of the feature is provided in the application.  If `jpaContainer-2.1` is already enabled in the server configuration, for example, Open Liberty Tools does not add the `jpa-2.1` feature.  Other examples are `jsfContainer`, `jsonbContainer`, and `jsonpContainer`.
 
 For more info, see the WebSphere Liberty Knowledge Center docs  https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/t_customize_auto_feat.html[Customizing automatic feature detection] and https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/t_disable_auto_feat.html[Disabling automatic feature detection].
 
