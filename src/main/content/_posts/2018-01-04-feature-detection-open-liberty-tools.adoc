@@ -24,13 +24,13 @@ To see what features Open Liberty Tools has detected for an application, right-c
 
 If you do not see any features listed in the dialog, make sure that your project is targeted to a Liberty runtime.  To check this, right-click the project then click *Properties > Targeted Runtimes*.  Make sure a Liberty runtime is selected.  Also remember that some projects, such as EARs, don't usually have any required features so the dialog can be empty for these projects as well.
 
-image::/img/blog_feature_detection_required_features.png
+image::/img/blog_feature_detection_required_features.png[]
 
 ## Handling feature conflicts 
 
 If Open Liberty Tools adds a feature to the server configuration that conflicts with an existing feature it displays a feature conflict dialog so that you can resolve the conflict.  If, for example, your server configuration has the `servlet-3.0` feature enabled and you deploy a Web 3.1 project with a JSP file to the server, you see a dialog similar to the one below.  The `jsp-2.3` feature added by Open Liberty Tools conflicts with the existing `servlet-3.0` feature.  Select the features in the dialog to see what other features they enable and to understand how they conflict.  The `jsp-2.3` feature enables the `servlet-3.1` feature which conflicts with `servlet-3.0`.  The easiest way to fix this is to select the `servlet-3.0` feature then click *Remove*.
 
-image::/img/blog_feature_detection_confict_dialog.png
+image::/img/blog_feature_detection_confict_dialog.png[]
 
 Open Liberty Tools also detects existing feature conflicts within the server configuration and shows a warning in the *Markers* view such as: `servlet-3.0 and [jsp-2.3 --> servlet-3.1] features are in conflict. Select a compatible set of features.`
 
