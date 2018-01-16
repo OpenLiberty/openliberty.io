@@ -9,7 +9,7 @@ body {
     /* background-image: linear-gradient(to bottom, #131427, #2C2D4F); */
     background-color: white;
     color:#353833;
-    font-family:'DejaVu Sans', Arial, Helvetica, sans-serif;
+    font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
     font-size:14px;
     margin:0;
     padding:0;
@@ -135,11 +135,12 @@ Document title and Copyright styles
 Navigation bar styles
 */
 .bar {
-    color:#5d6a8e;
-    padding:.8em .5em .4em .8em;
-    height:auto;/*height:1.8em;*/
-    font-size:20px;
-    margin:0;
+    font-size: 20px;
+    color: #5d6a8e;
+    border-top: 3px solid rgb(217, 217, 217);
+    padding-top: 30px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 .navPadding {
     padding-top: 107px;
@@ -157,8 +158,7 @@ Navigation bar styles
     padding:0;
     width:100%;
     clear:right;
-    height:2.8em;
-    padding-top:10px;
+    height: 52px;
     overflow:hidden;
     font-size:16px; 
 }
@@ -175,14 +175,17 @@ Navigation bar styles
     text-transform:uppercase;
 }
 ul.navList, ul.subNavList {
+    display: table;
     float:left;
     margin:0 25px 0 0;
     padding:0;
+    height: 100%;
 }
 ul.navList li{
-    list-style:none;
-    float:left;
-    padding: 5px 6px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0px 22px;
     text-transform:uppercase;
 }
 ul.navListSearch {
@@ -230,8 +233,8 @@ Page header and footer styles
 */
 .header, .footer {
     clear:both;
-    margin:0 20px;
-    padding:5px 0 0 0;
+    margin: 0 20px;
+    padding: 5px 0 0 0;
 }
 .indexNav {
     display:none;
@@ -294,6 +297,7 @@ Page layout container styles
 */
 .contentContainer, .sourceContainer, .classUseContainer, .serializedFormContainer, .constantValuesContainer {
     clear:both;
+    padding:10px 20px;
     position:relative;
 }
 .indexContainer {
@@ -530,7 +534,6 @@ Table styles
 }
 th.colFirst, th.colSecond, th.colLast, th.colConstructorName, .useSummary th, .constantsSummary th, .packagesSummary th,
 td.colFirst, td.colSecond, td.colLast, .useSummary td, .constantsSummary td {
-    vertical-align:top;
     padding-right:0px;
     padding-top:8px;
     padding-bottom:3px;
@@ -538,11 +541,11 @@ td.colFirst, td.colSecond, td.colLast, .useSummary td, .constantsSummary td {
 th.colFirst, th.colSecond, th.colLast, th.colConstructorName, .constantsSummary th, .packagesSummary th {
     background:#C8CCD8;
     text-align:left;
-    padding:8px 3px 3px 7px;
+    padding: 0px 3px 0px 7px;
 }
 td.colFirst, th.colFirst {
     white-space:nowrap;
-    font-size:13px;
+    font-size: 14px;
 }
 td.colSecond, th.colSecond, td.colLast, th.colConstructorName, th.colLast {
     font-size:13px;
@@ -563,7 +566,8 @@ td.colSecond, th.colSecond, td.colLast, th.colConstructorName, th.colLast {
 .memberSummary td.colFirst, .memberSummary th.colFirst,
 .memberSummary td.colSecond, .memberSummary th.colSecond, .memberSummary th.colConstructorName,
 .typeSummary td.colFirst {
-    vertical-align:top;
+    height: 45px;
+    padding-left: 49px;
 }
 .packagesSummary th.colLast, .packagesSummary td.colLast {
     white-space:normal;
@@ -676,6 +680,7 @@ IFRAME specific styles
     top:0;
     left:0;
     height:30%;
+    transition: height 0.5s;
 }
 .leftBottom {
     position:relative;
@@ -684,6 +689,7 @@ IFRAME specific styles
     bottom:0;
     left:0;
     height:70%;
+    transition: height 0.5s;
 }
 .rightContainer {
     position:absolute;
@@ -864,4 +870,18 @@ table.striped > tbody > tr > td, table.striped > tbody > tr > td {
 .leftFrameHeaderStyling {
     border-top: 3px solid rgb(217, 217, 217);
     padding-top: 30px;
+}
+
+/* Custom expand/collapse button */
+input[type='checkbox'] + label:before {
+    content: "+";
+}
+input[type='checkbox']:checked + label:before {
+    content: "-";
+}
+input[type='checkbox'] {
+    display: none;
+}
+label {
+    cursor: pointer;
 }
