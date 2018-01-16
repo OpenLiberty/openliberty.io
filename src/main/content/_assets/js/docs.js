@@ -23,8 +23,13 @@ function resizeJavaDocWindow() {
 }
 
 function addExpandAndCollapseToggleButtons() {
-    var javadoc_iframes = $('#javadoc_container').contents().find("iframe");
-    $( javadoc_iframes ).each(function() {
+    var javadoc_container = $('#javadoc_container').contents();
+    var iframes = javadoc_container.find("iframe");
+
+    var leftTop = javadoc_container.find(".leftTop");
+    var leftBottom = javadoc_container.find(".leftBottom");
+
+    $( iframes ).each(function() {
         // Look for the two left side iframes
         var isTopLeftPackageIFrame = $(this).attr("name") === "packageListFrame";
         var isBottomLeftPackageIFrame = $(this).attr("name") === "packageFrame";
@@ -37,9 +42,12 @@ function addExpandAndCollapseToggleButtons() {
                 // this will contain a reference to the checkbox   
                 if (this.checked) {
                     list.show();
-
+                    leftTop.css("height", "30%");
+                    leftBottom.css("height", "70%");
                 } else {
                     list.hide();
+                    leftTop.css("height", "14%");
+                    leftBottom.css("height", "86%");
                 }
             });
             header.append(toggleButton);
@@ -47,6 +55,7 @@ function addExpandAndCollapseToggleButtons() {
         }
         if(isBottomLeftPackageIFrame) {
             var list2 = $(this).contents().find('main.indexContainer');
+            var frame2 = $(this).contents().find('div.leftBottom');
 
             // I did not know how to select for text that contained whitespace.
             // example: "All Classes"
@@ -61,9 +70,10 @@ function addExpandAndCollapseToggleButtons() {
                     // this will contain a reference to the checkbox   
                     if (this.checked) {
                         list2.show();
-    
+                        leftBottom.css("height", "70%");
                     } else {
                         list2.hide();
+                        leftBottom.css("height", "14%");
                     }
                 });
                 header2.append(toggleButton2);
