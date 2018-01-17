@@ -37,7 +37,7 @@ function addExpandAndCollapseToggleButtons() {
         if(isTopLeftPackageIFrame) {
             var list = $(this).contents().find('ul[title="Packages"]');
             var header = $(this).contents().find("h2[title='Packages']");
-            var toggleButton = $('<input id="top_left_toggle" type="checkbox" checked>');
+            var toggleButton = $('<input id="top_left_toggle" style="float: right;" type="checkbox" checked>');
             toggleButton.change(function() {
                 // this will contain a reference to the checkbox   
                 if (this.checked) {
@@ -65,7 +65,7 @@ function addExpandAndCollapseToggleButtons() {
             // for string comparison.
             var header2_text = header2.text().replace('/\s/g',' ').trim();
             if(header2_text === "All Classes") {
-                var toggleButton2 = $('<input id="top_left_toggle" type="checkbox" checked>');
+                var toggleButton2 = $('<input id="top_left_toggle" style="float: right;" type="checkbox" checked>');
                 toggleButton2.change(function() {
                     // this will contain a reference to the checkbox   
                     if (this.checked) {

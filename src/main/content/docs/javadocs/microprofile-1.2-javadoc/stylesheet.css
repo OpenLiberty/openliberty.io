@@ -157,8 +157,7 @@ Navigation bar styles
     padding:0;
     width:100%;
     clear:right;
-    height:2.8em;
-    padding-top:10px;
+    height: 52px;
     overflow:hidden;
     font-size:16px; 
 }
@@ -175,14 +174,17 @@ Navigation bar styles
     text-transform:uppercase;
 }
 ul.navList, ul.subNavList {
+    display: table;
     float:left;
     margin:0 25px 0 0;
     padding:0;
+    height: 100%;
 }
 ul.navList li{
-    list-style:none;
-    float:left;
-    padding: 5px 6px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0px 22px;
     text-transform:uppercase;
 }
 ul.navListSearch {
@@ -230,7 +232,8 @@ Page header and footer styles
 */
 .header, .footer {
     clear:both;
-    margin: 0 50px;
+    margin: 0 20px;
+    padding: 5px 0 0 0;
 }
 .indexNav {
     display:none;
@@ -293,8 +296,8 @@ Page layout container styles
 */
 .contentContainer, .sourceContainer, .classUseContainer, .serializedFormContainer, .constantValuesContainer {
     clear:both;
+    padding:10px 20px;
     position:relative;
-    margin-left: 50px;
 }
 .indexContainer {
     margin:10px;
@@ -537,7 +540,7 @@ td.colFirst, td.colSecond, td.colLast, .useSummary td, .constantsSummary td {
 th.colFirst, th.colSecond, th.colLast, th.colConstructorName, .constantsSummary th, .packagesSummary th {
     background:#C8CCD8;
     text-align:left;
-    padding:8px 3px 3px 7px;
+    padding: 0px 3px 0px 7px;
 }
 td.colFirst, th.colFirst {
     white-space:nowrap;
@@ -562,9 +565,8 @@ td.colSecond, th.colSecond, td.colLast, th.colConstructorName, th.colLast {
 .memberSummary td.colFirst, .memberSummary th.colFirst,
 .memberSummary td.colSecond, .memberSummary th.colSecond, .memberSummary th.colConstructorName,
 .typeSummary td.colFirst {
-    padding-top: 24px;
-    padding-bottom: 24px;
-    vertical-align:top;
+    height: 45px;
+    padding-left: 49px;
 }
 .packagesSummary th.colLast, .packagesSummary td.colLast {
     white-space:normal;
