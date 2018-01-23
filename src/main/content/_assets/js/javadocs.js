@@ -13,8 +13,7 @@
 // browser viewport.
 function resizeJavaDocWindow() {
     var topSection = $('#background_container').height();
-    // var bottomSection = $('#footer_container').height();
-    var bottomSection = 0;
+    var bottomSection = $('#footer_container').height();
 
     var middleSectionHeight = $(window).height() - (topSection + bottomSection);
     $('#javadoc_container').height(middleSectionHeight);
@@ -37,7 +36,13 @@ function addExpandAndCollapseToggleButtons() {
         if(isTopLeftPackageIFrame) {
             var list = $(this).contents().find('ul[title="Packages"]');
             var header = $(this).contents().find("h2[title='Packages']");
-            var toggleButton = $('<input id="top_left_toggle" style="float: right;" type="checkbox" checked>');
+
+            // A empty whitespace only <p> element needs to be hidden
+            var emptyParagraphElement = $(this).contents().find("body > p");
+            emptyParagraphElement.hide();
+
+            var headerHeight = header.outerHeight(true); // true to include margins too
+            var toggleButton = $('<input id="top_left_toggle" type="checkbox" checked><label style="float: right;" for="top_left_toggle"></label>');
             toggleButton.change(function() {
                 // this will contain a reference to the checkbox   
                 if (this.checked) {
@@ -46,12 +51,13 @@ function addExpandAndCollapseToggleButtons() {
                     leftBottom.css("height", "70%");
                 } else {
                     list.hide();
-                    leftTop.css("height", "14%");
+                    leftTop.css("height", headerHeight);
+                    leftTop.css("overflow", "hidden");
                     leftBottom.css("height", "86%");
                 }
             });
             header.append(toggleButton);
-            header.addClass("leftFrameHeaderStyling");
+            // header.addClass("leftFrameHeaderStyling");
         }
         if(isBottomLeftPackageIFrame) {
             var list2 = $(this).contents().find('main.indexContainer');
@@ -60,12 +66,13 @@ function addExpandAndCollapseToggleButtons() {
             // I did not know how to select for text that contained whitespace.
             // example: "All Classes"
             var header2 = $(this).contents().find("h1:contains('Classes')");
+            var headerHeight2 = header2.outerHeight(true); // true to include margins too
 
             // .text() returns encoded spaces, convert back to normal spaces 
             // for string comparison.
             var header2_text = header2.text().replace('/\s/g',' ').trim();
             if(header2_text === "All Classes") {
-                var toggleButton2 = $('<input id="top_left_toggle" style="float: right;" type="checkbox" checked>');
+                var toggleButton2 = $('<input id="bottom_left_toggle"type="checkbox" checked><label style="float: right;" for="bottom_left_toggle"></label>');
                 toggleButton2.change(function() {
                     // this will contain a reference to the checkbox   
                     if (this.checked) {
@@ -73,11 +80,11 @@ function addExpandAndCollapseToggleButtons() {
                         leftBottom.css("height", "70%");
                     } else {
                         list2.hide();
-                        leftBottom.css("height", "14%");
+                        leftBottom.css("height", headerHeight2);
                     }
                 });
                 header2.append(toggleButton2);
-                header2.addClass("leftFrameHeaderStyling");
+                // header2.addClass("leftFrameHeaderStyling");
             }
         }
     });
@@ -107,9 +114,6 @@ $(document).ready(function() {
     });
 
     $('#javadoc_container').load(function() {
-        // After the javadocs are loaded, always apply our custom javadoc stylesheet
-        // addCustomCssToJavaDocs();
-
         addExpandAndCollapseToggleButtons();
     })
 });
