@@ -1,0 +1,91 @@
+---
+layout: default
+title: Docs and Guides
+css:
+- guide-card
+- guides
+- docsandguides
+js: guides
+permalink: /docsandguides/
+---
+
+<!-- INTRO -->
+<div id="guides_intro_background" class="black_blue_gradient_background">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <img id="intro_logo" src="{{ "/img/guides_page_title_large.svg" | relative }}" class="img-responsive" alt="Docs & Guides">
+            </div>
+            <div class="col-sm-8">
+                <p id="contribute_intro_paragraph_1">
+                    Sometimes even the best navigators need to be pointed in the right direction.  These guides are designed to make your development journey that much easier; whether you’re in need of a little help or just want to explore.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Build one list of all the documents that have a particular layout -->
+{% assign static-guides = site.pages | where: 'layout', 'guide' %}
+{% assign interactive-guides = site.pages | where: 'layout', 'interactive-guide'%}
+{% assign guides = static-guides | concat: interactive-guides | sort: 'releasedate' | reverse %}
+<!-- 
+    Some of the found documents are for internal use only and are not intended to be 
+    shown on the website.  Remove them from the total number of guides.
+-->
+{% assign numGuides = guides.size %}
+{% for guide in guides %}
+    {% if guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
+        {% assign numGuides = numGuides | minus: 1 %}
+    {% endif %}
+{% endfor %}
+
+<div id="overview_pane" class="col-md-2">
+    <div id="search_container" class="text-center">
+        <input id="guide_search_input" type="text" placeholder="Search All" aria-label="Search">
+    </div>
+    
+    <div id="getting_started"><a href="#">Getting Started</a></div>
+    <div><a href="/guides" id="all_guides_link">GUIDES</a></div>
+    
+    <div><a>REFERENCE</a></div>
+    <div><a>API</a></div>
+    <div><a>SPI</a></div>
+    <div><a>Config</a></div>
+    <div><a>Features</a></div>
+</div>
+
+<div id="content" class="col-md-10">
+    <div id="guides_container" class="container">     
+        <div class="information_container col-md-4">
+            <h2 id="guides_title">Guides</h2>
+            <p id="guide_sort_message">Open Liberty guides are your key to finding out new things about Open Liberty.</p>
+            <a href="/guides" id="all_guides"> View all guides</a>
+        </div>
+    
+        <div id="guides_content_container" class="col-md-8">
+            {% for guide in guides %}
+            <!-- Do not render anything from the two common guide repositories containing shared code -->
+            {% unless guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
+                <div class="guide_column col-xs-12 col-sm-6 col-md-6">
+                    <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}">
+                        <div class="guide_title_and_description_container">
+                            <h3 class="guide_title">{{guide.title}}</h3>
+                            <p class="guide_description" title="{{guide.description}}">{{guide.description}}</p>
+                        </div>
+                        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                        <span class="guide_duration">{{guide.duration}}</span>
+                        {% if guide.layout == 'interactive-guide' %}
+                        <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
+                        <span class="guide_interactive">Interactive</span>
+                        {% endif %}
+                    </a>
+                </div>
+            {% endunless %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+ 
+
