@@ -162,7 +162,8 @@ $(document).ready(function() {
     if( $('#related-guides').length ) {
         // Add _one_ Related guides link to the very bottom of the table of contents.
         // The assumption is that the TOC only contains one `sectlevel1` class.
-        $('#toc_container ul.sectlevel1').append('<li><a href="#related-guides">Related guides</a></li>')
+        $('#toc_container ul.sectlevel1').append('<li><a href="#related-guides">Related guides</a></li>');
+        $('#related-guides').addClass('sect1');
     }
 
     // TABLE OF CONTENT
