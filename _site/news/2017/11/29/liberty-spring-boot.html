@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Open Liberty Spring Boot Starter - Open Liberty</title>
+  <meta name="description" content="Open Liberty is the most flexible server runtime available to Earth’s Java developers.">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link type="text/css" rel="stylesheet" href="/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/assets/coderay-custom.css">
+
+  
+  
+  
+    <link type="text/css" rel="stylesheet" href="/assets/post.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="http://localhost:4000/news/2017/11/29/liberty-spring-boot.html">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Open Liberty" />
+  <meta name="twitter:description" content="Open Liberty is the most flexible server runtime available to Earth’s Java developers." />
+  <meta name="twitter:image" content="https://openliberty.io/img/twitter_card.jpg" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+</head>
+
+
+  <body>
+    
+    
+
+    <header>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button id="navbar_responsive_button" class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+            <a id="navbar_home_link" class="navbar-brand" href="/" aria-label="Home"></a>
+            
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right text-right">
+                <li><a href="/about">About</a></li>
+                <li><a href="/guides">Guides</a></li>
+                <li><a href="/downloads">Downloads</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/community">Community</a></li>
+                <li><a href="/contribute">Contribute</a></li>
+                <li><a href="/docs">Docs</a></li>
+                <li class="hidden-xs"><a id="navbar_github_link" href="https://github.com/OpenLiberty" target="new" aria-label="Open Liberty GitHub Repository"></a></li>
+            </ul>
+        </div>
+    </div>
+  </nav>
+  <div class="hidden">
+    <img src="/img/small_logo_white.svg">
+    <img src="/img/github_navbar_hover.svg">
+  </div>
+</header>
+
+
+    <main aria-label="Content">
+
+      <div id="background_container" class="black_blue_gradient_background">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <img id="intro_logo" src="/img/blog_title_small.svg">
+            </div>
+            <div id="post_column" class="col-xs-12">
+                <div id="article_container">
+                    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+                        <header>                        
+                            <div class="post_information_container">
+                                <img src="https://avatars3.githubusercontent.com/u/656475" id="author_image">
+                                <div id="post_information">
+                                    <div id="author_name">Thomas Watson</div>
+                                    <div id="post_date">
+                                        <time datetime="2017-11-29T07:00:00-06:00" itemprop="datePublished">
+                                             Nov 29, 2017
+                                        </time>
+                                    </div>
+                                </div>
+                            </div>
+                            <h1 itemprop="name headline">Open Liberty Spring Boot Starter</h1>
+                        </header>
+                        <div itemprop="articleBody" id="article_body">
+                            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now that the Open Liberty project is in full swing we are looking for more opportunities to enable developers to use Open Liberty in their own projects. It is very common for developers to create and deploy Spring applications on Open Liberty as a simple web application, but increasingly Spring developers are using Spring Boot as a faster, simpler way to create Spring applications. Spring Boot uses a set of Maven dependencies to build the applications, these dependencies are called starters and by default Spring Boot starters use Tomcat as the embedded web container. Additional starters for Jetty and Undertow are available to override Tomcat with another container implementation. So we thought it would be interesting if you could use an Open Liberty Spring Boot starter as an alternative, just like you can already do for Jetty and Undertow.</p>
+</div>
+<div class="paragraph">
+<p>We have made available a Maven repository which can be used to try out the experimental Open Liberty Spring Boot starter <a href="https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1">here</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to use the Open Liberty Spring Boot starter there are a few small changes that need to be made to your Spring Boot project <code>pom.xml</code> file (when using Maven) or to your <code>build.gradle</code> file (when using Gradle).</p>
+</div>
+<div class="sect2">
+<h3 id="add-the-repository">Add the repository</h3>
+<div class="paragraph">
+<p>The experimental Open Liberty Spring Boot starter is available from the repository <a href="https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1">here</a>.  This repository must be configured for your project. For Maven projects, you can do this by adding the following XML directly in your Spring Boot project&#8217;s <code>pom.xml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;project&gt;</span>
+  ...
+  <span class="tag">&lt;repositories&gt;</span>
+    <span class="tag">&lt;repository&gt;</span>
+      <span class="tag">&lt;id&gt;</span>liberty-spring-boot<span class="tag">&lt;/id&gt;</span>
+      <span class="tag">&lt;url&gt;</span>https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1<span class="tag">&lt;/url&gt;</span>
+    <span class="tag">&lt;/repository&gt;</span>
+  <span class="tag">&lt;/repositories&gt;</span>
+  ...
+<span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For Gradle projects, you can do this by adding the following code directly in your Spring Boot project&#8217;s <code>build.gradle</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="gradle">repositories {
+  mavenCentral()
+  maven {
+    url &quot;https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1&quot;
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="exclude-the-default-tomcat-starter">Exclude the default Tomcat starter</h3>
+<div class="paragraph">
+<p>Many of the Spring Boot starters include the <code>spring-boot-starter-tomcat</code> starter. For example, the <code>spring-boot-starter-web</code> starter has a dependency on the <code>spring-boot-starter-tomcat</code> starter. Add an exclusion for each starter that your Spring Boot application depends on that transitively pulls in <code>spring-boot-starter-tomcat</code>. This excludes the <code>spring-boot-starter-tomcat</code> from your application. For Maven projects, you can do this by adding the following XML:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;project&gt;</span>
+  ...
+  <span class="tag">&lt;dependencies&gt;</span>
+    ...
+    <span class="tag">&lt;dependency&gt;</span>
+      <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+      <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-web<span class="tag">&lt;/artifactId&gt;</span>
+      <span class="comment">&lt;!-- BEGIN EXCLUDE TOMCAT --&gt;</span>
+      <span class="tag">&lt;exclusions&gt;</span>
+        <span class="tag">&lt;exclusion&gt;</span>
+          <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+          <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-tomcat<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;/exclusion&gt;</span>
+      <span class="tag">&lt;/exclusions&gt;</span>
+      <span class="comment">&lt;!-- END EXCLUDE TOMCAT --&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    ...
+  <span class="tag">&lt;/dependencies&gt;</span>
+  ...
+<span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For Gradle projects, you can do this by adding the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="gradle">dependencies {
+  ...
+  compile('org.springframework.boot:spring-boot-starter-web') {
+    exclude module: &quot;spring-boot-starter-tomcat&quot;
+  }
+  ...
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="include-the-open-liberty-spring-boot-starter">Include the Open Liberty Spring Boot starter</h3>
+<div class="paragraph">
+<p>The final step is to add a dependency on the <code>liberty-spring-boot-starter</code> to use the Open Liberty web container. For Maven projects, you can do this by adding the following XML:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;project&gt;</span>
+  ...
+  <span class="tag">&lt;dependencies&gt;</span>
+    ...
+    <span class="tag">&lt;dependency&gt;</span>
+      <span class="tag">&lt;groupId&gt;</span>io.openliberty.boot<span class="tag">&lt;/groupId&gt;</span>
+      <span class="tag">&lt;artifactId&gt;</span>liberty-spring-boot-starter<span class="tag">&lt;/artifactId&gt;</span>
+      <span class="tag">&lt;version&gt;</span>0.5.0.M1<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    ...
+  <span class="tag">&lt;/dependencies&gt;</span>
+  ...
+<span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For Gradle projects, you can do this by adding the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>dependencies {
+  ...
+  compile('io.openliberty.boot:liberty-spring-boot-starter:0.5.0.M1')
+  ...
+}</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="additional-open-liberty-components">Additional Open Liberty components</h3>
+<div class="paragraph">
+<p>Open Liberty has a modular runtime which allows developers to only enable the bits an application needs to get its job done. The <code>liberty-spring-boot-starter</code> enables only the core Open Liberty runtime along with the web container which implements the Servlet 3.1 specification. Additional Open Liberty components may be enabled if your application requires more. The following additional Open Liberty features can be enabled:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>liberty-boot-jsp</code></strong>: Enables JSP support.</p>
+</li>
+<li>
+<p><strong><code>liberty-boot-ssl</code></strong>: Enables SSL support.</p>
+</li>
+<li>
+<p><strong><code>liberty-boot-websocket</code></strong>: Enables WebSocket support.</p>
+</li>
+<li>
+<p><strong><code>liberty-boot-console</code></strong>: Enables the OSGi console for debug purposes only.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can enable these features by including additional dependencies in your application. For example, if you need to configure <code>server.ssl.*</code> settings for your application then you will need to include a dependency on the <code>liberty-boot-ssl</code> artifact.  For Maven projects, you can do this by adding the following XML:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;project&gt;</span>
+  ...
+  <span class="tag">&lt;dependencies&gt;</span>
+    ...
+    <span class="tag">&lt;dependency&gt;</span>
+      <span class="tag">&lt;groupId&gt;</span>io.openliberty.boot<span class="tag">&lt;/groupId&gt;</span>
+      <span class="tag">&lt;artifactId&gt;</span>liberty-boot-ssl<span class="tag">&lt;/artifactId&gt;</span>
+      <span class="tag">&lt;version&gt;</span>0.5.0.M1<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;/dependency&gt;</span>
+    ...
+  <span class="tag">&lt;/dependencies&gt;</span>
+  ...
+<span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For Gradle projects, you can do this by adding the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="gradle">dependencies {
+  ...
+  compile('io.openliberty.boot:liberty-boot-ssl:0.5.0.M1')
+  ...
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="open-liberty-specific-configuration">Open Liberty specific configuration</h3>
+<div class="paragraph">
+<p>There exist a small number of Liberty-specific configuration properties for configuring the container. The Liberty specific configuration properties are prefixed with <code>server.liberty.</code>.  The following properties are available at this time:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>server.liberty.basedir</code></strong>: <code>java.lang.String</code> - Liberty base directory. If not specified a temporary directory is used.</p>
+</li>
+<li>
+<p><strong><code>server.liberty.bootstrap-properties</code></strong>: <code>java.util.Map&lt;java.lang.String,java.lang.String&gt;</code> - Set boot strap properties for Liberty. Can be used to set any of the Liberty configuration properties that typically would go in a Liberty server bootstrap.properties file.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>NOTE</strong>: Open Liberty will create a server folder under the folder specified by the configuration <code>server.liberty.basedir</code>. This folder is used by Liberty as a persistent store while the application is running. By default the Liberty logs are stored under the folder <code>liberty-boot-0/wlp/usr/servers/defaultServer/logs/</code>. When the application stops, the base directory used by Liberty is deleted.  If you need to view the Liberty logs after the application has ended then set the <code>server.liberty.basedir</code> configuration property to a folder you want Liberty to use as the base directory.</p>
+</div>
+<div class="paragraph">
+<p>The OSGi console will not be enabled by default when you include the <code>liberty-boot-console</code> dependency. You must also configure a port which is used to telnet into the OSGi console. You can do this by specifying the bootstrap property <code>server.liberty.bootstrap-properties.osgi.console</code>.  For example, you can set <code>server.liberty.bootstrap-properties.osgi.console=5678</code> in your <code>application.properties</code> file or you can also pass in the <code>osgi.console</code> system property when launching your application with the <code>-Dosgi.console=5678</code> JVM option.</p>
+</div>
+</div>
+</div>
+</div>
+                        </div>
+                        <div id="share_post_container">
+                            Share this post:
+                            <a id="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('Open Liberty Spring Boot Starter') + '&url=' + encodeURIComponent(window.location)); return false"></a>
+                            <a id="reddit_link" href="//www.reddit.com/submit" onclick="window.open('//www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false"></a>
+                        </div>
+                        
+                    </article>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hidden">
+    <img src="/img/twitter_link_hover.svg">
+    <img src="/img/reddit_link_hover.svg">
+</div>
+
+    </main>
+
+    <footer>
+  <div id="footer_container" class="container">
+      <div class="row">
+          <div class="col-xs-12 text-right">
+              <div id="footer_links_container">
+                  <a href="https://github.com/OpenLiberty/open-liberty/blob/master/LICENSE" target="new" class="footer_link">License</a>
+                  <a href="https://www.ibm.com/privacy/us/en/" target="new" class="footer_link">Privacy policy</a>
+                  <a id="footer_twitter_link" href="https://twitter.com/OpenLibertyIO" target="new" aria-label="Twitter"></a>
+                  <a id="footer_github_link" href="https://github.com/OpenLiberty" target="new" aria-label="GitHub"></a>
+              </div>
+              <p id="footer_text">an IBM open source project</p>
+              <p id="footer_copyright">&copy; Copyright IBM Corp. 2017</p>
+          </div>
+      </div>
+  </div>
+  <div class="hidden">
+    <img src="/img/footer_twitter_darker.png">
+    <img src="/img/footer_github_darker.png">
+  </div>
+</footer>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    
+
+    
+
+  </body>
+
+</html>
