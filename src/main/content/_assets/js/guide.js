@@ -119,7 +119,7 @@ $(document).ready(function() {
 
         $('#copy_to_clipboard').css({
             top: target_position.top + 8,
-            right: parseInt($('#guide_column').css('padding-right')) + 11
+            right: parseInt($('#guide_column').css('padding-right')) + 55
         });
         $('#copy_to_clipboard').stop().fadeIn();
 
