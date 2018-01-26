@@ -39,10 +39,12 @@ js: guide
             <div id="guide_column" class="col-sm-9 position_relative">
                 <div id="guide_content">
                     <!-- Guide header section -->
-                    <h1 id="guide_title">{{ page.title }}</h1>
-                    <div id="duration_container">
-                        <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
-                        <span id="guide_duration">{{ page.duration }}</span>
+                    <div id="guide_meta" class="sect1">
+                        <h1 id="guide_title">{{ page.title }}</h1>
+                        <div id="duration_container">
+                            <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+                            <span id="guide_duration">{{ page.duration }}</span>
+                        </div>
                     </div>
 
                     <!-- Guide content section -->
@@ -50,10 +52,9 @@ js: guide
 
                     <!-- Related guides section -->
                     {% if page.related-guides %}
-                    <div id="related-guides" class="row">
-                        <div id="related_guides_header" class="col-sm-12">
-                            <h2>Related guides</h2>
-                        </div>
+                    <div id="related-guides" class="sect1">
+                        <h2>Related guides</h2>
+                        <div id="related-guides-cards" class="row">
                         {% for related-guide in page.related-guides %}
                             {% assign url = '/guides/' | append: related-guide %}
                             {% assign list = site.pages | where: 'permalink', url %}
@@ -76,6 +77,7 @@ js: guide
                                 </div>
                             {% endunless %}
                         {% endfor %}
+                        </div>
                     </div>
                     {% endif %}
                 </div>
