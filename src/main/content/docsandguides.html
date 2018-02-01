@@ -30,7 +30,7 @@ permalink: /docsandguides/
 {% assign static-guides = site.pages | where: 'layout', 'guide' %}
 {% assign interactive-guides = site.pages | where: 'layout', 'interactive-guide'%}
 {% assign guides = static-guides | concat: interactive-guides | sort: 'releasedate' | reverse %}
-{% assign docs = site.pages | where: 'layout', 'docs' %}
+{% assign javadocs = site.pages | where: 'layout', 'javadocs' %}
 <!-- 
     Some of the found documents are for internal use only and are not intended to be 
     shown on the website.  Remove them from the total number of guides.
@@ -42,7 +42,9 @@ permalink: /docsandguides/
     {% endif %}
 {% endfor %}
 
-<div id="overview_pane" class="col-md-2">
+{% assign numJavaDocs = javadocs.size %}
+
+<div id="overview_pane" class="col-md-3">
     <div id="search_container">
         <input id="guide_search_input" type="text" placeholder="Search All" aria-label="Search">
     </div>
@@ -58,7 +60,7 @@ permalink: /docsandguides/
     </ul>    
 </div>
 
-<div id="content" class="col-md-10">
+<div id="content" class="col-md-9">
     <div id="guides_container" class="container" data-resource="guides">
 
         <div class="resource_title_container">
@@ -73,11 +75,11 @@ permalink: /docsandguides/
             </div>
         </div>
     
-        <div id="guides_content_container" class="col-md-8 col-xs-12">
+        <div id="guides_content_container">
             {% for guide in guides %}
             <!-- Do not render anything from the two common guide repositories containing shared code -->
             {% unless guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
-                <div class="guide_column col-xs-12 col-sm-6 col-md-6">
+                <div class="guide_column col-xs-12 col-sm-6 col-md-4">
                     <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}">
                         <div class="guide_title_and_description_container">
                             <h3 class="guide_title">{{guide.title}}</h3>
@@ -98,16 +100,28 @@ permalink: /docsandguides/
     
 
     <div id="docs_container" class="col-md-8" data-resource="docs">
-        <div class="information_container col-md-4 col-xs-12">
+        <!-- <div class="information_container col-md-4 col-xs-12">
             <h2 id="guides_title">Docs</h2>
             <p id="guide_sort_message">Docs description.</p>
             <a href="/javadocs" id="all_docs"> View all docs</a>
+        </div> -->
+
+        <div class="resource_title_container">
+                <h2 class="resource_title">Docs</h2>
+        </div>
+        <div class="information_container container">           
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2 id="guide_counter_title">All Open Liberty docs ({{ numJavaDocs }})</h2>
+                    <!-- <p id="guide_sort_message">Most recent docs shown first</p> -->
+                </div>
+            </div>
         </div>
 
-        <div id="docs_content_container" class="col-md-8">
-            {% for doc in docs %}
-                <div class="guide_column col-xs-12 col-sm-6 col-md-6">
-                    <a href="{{ doc.url }}.html" class="guide_item" data-title="{{ doc.title | downcase }}" data-description="{{ doc.description | downcase }}" data-tags="{{ doc.tags | join: ' ' | downcase }}">
+        <div id="docs_content_container">
+            {% for doc in javadocs %}
+                <div class="guide_column col-xs-12 col-sm-6 col-md-4">
+                    <a href="{{ doc.url }}" class="guide_item" data-title="{{ doc.title | downcase }}" data-description="{{ doc.description | downcase }}" data-tags="{{ doc.tags | join: ' ' | downcase }}">
                         <div class="guide_title_and_description_container">
                             <h3 class="guide_title">{{doc.title}}</h3>
                             <p class="guide_description" title="{{doc.description}}">{{doc.description}}</p>

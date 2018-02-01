@@ -94,15 +94,17 @@ function addExpandAndCollapseToggleButtons() {
 function addCustomCssToJavaDocs() {
     // var customCss = $("head > link[href*='javadocs.css']"),
     //     rawHtml = customCss.prop('outerHTML'),
-    var javadoc_iframes = $('#javadoc_container').contents().find("iframe");
+    // var javadoc_iframes = $('#javadoc_container').contents().find("iframe");
 
-    $( javadoc_iframes ).each(function() {
-        console.log(this);
-        var head = $(this).contents().find("head");
-        head.append('<link rel="stylesheet" type="text/css" href="javadocs.css" title="Style">');
-    });
+    // $( javadoc_iframes ).each(function() {
+    //     console.log(this);
+    //     var head = $(this).contents().find("head");
+    //     head.append('<link rel="stylesheet" type="text/css" href="javadocs.css" title="Style">');
+    // });
     
     //iframe_head.append('<link rel="stylesheet" type="text/css" href="javadocs.css" title="Custom Style">');
+    $('#javadoc_container').contents().find("link[title='Style']").remove();
+    $('#javadoc_container').contents().find('head').append("<link rel='stylesheet' type='text/css' href='../css/javadoctest.css' title='Style'");
 }
 
 $(document).ready(function() {
@@ -115,5 +117,6 @@ $(document).ready(function() {
 
     $('#javadoc_container').load(function() {
         addExpandAndCollapseToggleButtons();
+        // addCustomCssToJavaDocs();
     })
 });
