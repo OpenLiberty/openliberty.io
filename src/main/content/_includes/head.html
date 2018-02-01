@@ -33,7 +33,7 @@
     
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@OpenLibertyIO" />
-  <meta name="twitter:title" content="{{site.title}}" />
+  <meta name="twitter:title" content="{% if page.seo-title %}{{ page.seo-title }}{% else %}{{site.title}}{% endif %}" />
   <meta name="twitter:description" content="{% if page.seo-description %}{{ page.seo-description | escape }}{% else %}{{site.description | normalize_whitespace }}{% endif %}" />
   <meta name="twitter:image" content="https://openliberty.io/img/twitter_card.jpg" />
   
