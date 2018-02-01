@@ -27,6 +27,7 @@ iframe {
 a:link, a:visited {
     text-decoration:none;
     color:#4A6782;
+    font-family: 'BuenueloCleanPro-Light';
 }
 
 a[target="packageFrame"],
@@ -119,7 +120,7 @@ Document title and Copyright styles
 }
 .bar a, .bar a:link, .bar a:visited, .bar a:active {
     color:black;
-    text-decoration:none;
+    text-decoration:none;    
 }
 .bar a:hover, .bar a:focus {
     color:#bb7a2a;
@@ -141,6 +142,7 @@ Navigation bar styles
     padding-top: 30px;
     margin-left: 10px;
     margin-right: 10px;
+    font-family: 'BuenueloCleanPro-SemiBold';
 }
 .navPadding {
     padding-top: 107px;
@@ -187,6 +189,7 @@ ul.navList li{
     text-align: center;
     padding: 0px 22px;
     text-transform:uppercase;
+    font-family: 'Asap-Medium';
 }
 ul.navListSearch {
     float:right;
@@ -211,6 +214,7 @@ ul.subNavList li {
     color:#5E6B8D;
     text-decoration:none;
     text-transform:uppercase;
+    font-family: 'Asap-Medium';
 }
 .topNav a:hover, .bottomNav a:hover {
     text-decoration:none;
@@ -314,6 +318,7 @@ Page layout container styles
     color: #5d6a8e;
     border-top: 3px solid rgb(217, 217, 217);
     padding-top: 30px;
+    font-family: 'BuenueloCleanPro-SemiBold';
 }
 .indexContainer ul {
     margin:0;
@@ -413,6 +418,7 @@ Table styles
     border-left:1px solid #EEE; 
     border-right:1px solid #EEE; 
     border-bottom:1px solid #EEE; 
+    font-family: Asap-Medium;
 }
 .overviewSummary, .memberSummary, .requiresSummary, .packagesSummary, .providesSummary, .usesSummary  {
     padding:0px;
@@ -610,7 +616,7 @@ ul.blockList ul.blockList ul.blockList li.blockList h3 {
 
 div.block {
     font-size:14px;
-    font-family:'DejaVu Serif', Georgia, "Times New Roman", Times, serif;
+    font-family: 'Asap-Regular', 'DejaVu Serif', Georgia, "Times New Roman", Times, serif;
 }
 
 td.colLast div {
@@ -708,6 +714,19 @@ IFRAME specific styles
     overflow:visible;
     margin-bottom:30px;
 }
+/*
+  Mobile styles for the 3 frames
+*/
+@media (max-width: 767px) {
+    .leftContainer, .leftTop, .leftBottom {
+        width: 100%;
+    }
+
+    .leftContainer, .rightContainer {
+        position: relative;
+    }
+}
+
 /*
 HTML5 specific styles
 */
@@ -875,9 +894,16 @@ table.striped > tbody > tr > td, table.striped > tbody > tr > td {
 /* Custom expand/collapse button */
 input[type='checkbox'] + label:before {
     content: "+";
+    font-family: BunueloCleanPro-Light;
+    font-size: 20px;
+    line-height: 26px;    
+    margin-right: 26px;
 }
+
 input[type='checkbox']:checked + label:before {
     content: "-";
+    font-size: 30px;
+    margin-right: 10px;
 }
 input[type='checkbox'] {
     display: none;
