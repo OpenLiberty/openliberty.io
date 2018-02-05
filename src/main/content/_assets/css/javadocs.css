@@ -1,13 +1,3 @@
-@font-face {
-    font-family: "BuenueloCleanPro-Light";
-    src: url("/fonts/BunueloCleanPro-Light.otf") format("otf")
-}
-
-@font-face {
-    font-family: "BuenueloCleanPro-SemiBold";
-    src: url("/fonts/BunueloCleanPro-SemiBold.otf") format("otf")
-}
-
 #docs_container {
     padding-top: 155px;
 }
@@ -18,6 +8,10 @@
 
 #doc_title {
     padding-left: 20px;
+}
+
+#doc_title_mobile {
+    display: none;
 }
 
 #doc_logo {
@@ -36,7 +30,30 @@
     content: "> ";
 }
 
-@media (max-width: 767px) {
+@media (max-width: 767px) {   
+
+    #doc_title {
+        display: none;
+    }
+
+    #doc_title_mobile {
+        display: inline-block;
+        padding-left: 20px;
+    }
+
+    #doc_logo {
+        display: inline-block;
+    }
+
+    .navbar-header {
+        margin-bottom: 10px;
+    }
+
+    #doc_logo {
+        margin-left: 20px;
+        margin-top: 10px;
+    }
+
     #docs_container {
         padding-top: 0;
     }
