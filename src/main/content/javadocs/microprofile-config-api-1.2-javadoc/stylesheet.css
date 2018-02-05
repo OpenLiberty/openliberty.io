@@ -5,12 +5,12 @@ Overall document style
 
 @font-face {
     font-family: "BuenueloCleanPro-Light";
-    src: url("/fonts/BunueloCleanPro-Light.otf")
+    src: url("/fonts/BunueloCleanPro-Light.otf") format("otf")
 }
 
 @font-face {
     font-family: "BuenueloCleanPro-SemiBold";
-    src: url("/fonts/BunueloCleanPro-SemiBold.otf")
+    src: url("/fonts/BunueloCleanPro-SemiBold.otf") format("otf")
 }
 
 @import url('resources/fonts/dejavu.css');
@@ -727,25 +727,14 @@ IFRAME specific styles
 /*
   Mobile styles for the 3 frames
 */
-@media only screen and (max-device-width: 767px) {   
-    .overviewSummary td.colFirst, .overviewSummary th.colFirst, .requiresSummary td.colFirst, .requiresSummary th.colFirst, .packagesSummary td.colFirst, .packagesSummary td.colSecond, .packagesSummary th.colFirst, .packagesSummary th, .usesSummary td.colFirst, .usesSummary th.colFirst, .providesSummary td.colFirst, .providesSummary th.colFirst, .memberSummary td.colFirst, .memberSummary th.colFirst, .memberSummary td.colSecond, .memberSummary th.colSecond, .memberSummary th.colConstructorName, .typeSummary td.colFirst{
-        padding-left: 7px;
-    }
-
+@media (max-width: 767px) {
     .leftContainer, .leftTop, .leftBottom {
-        display: none;
+        width: 100%;
     }
 
-   .rightContainer {
-        position: relative;      
-        left: 0;  
-        overflow: auto;
-   }
-
-   .topNav {
-       overflow-x: auto;
-       padding-bottom: 15px;
-   }
+    .leftContainer, .rightContainer {
+        position: relative;
+    }
 }
 
 /*
@@ -918,12 +907,13 @@ input[type='checkbox'] + label:before {
     font-family: BunueloCleanPro-Light;
     font-size: 20px;
     line-height: 26px;    
-    margin-right: 10px;
+    margin-right: 26px;
 }
 
 input[type='checkbox']:checked + label:before {
     content: "-";
     font-size: 30px;
+    margin-right: 10px;
 }
 input[type='checkbox'] {
     display: none;
