@@ -90,21 +90,45 @@ function addExpandAndCollapseToggleButtons() {
     });
 }
 
-// We want to apply our own custom styling to the default javadocs
-function addCustomCssToJavaDocs() {
-    // var customCss = $("head > link[href*='javadocs.css']"),
-    //     rawHtml = customCss.prop('outerHTML'),
-    // var javadoc_iframes = $('#javadoc_container').contents().find("iframe");
 
-    // $( javadoc_iframes ).each(function() {
-    //     console.log(this);
-    //     var head = $(this).contents().find("head");
-    //     head.append('<link rel="stylesheet" type="text/css" href="javadocs.css" title="Style">');
-    // });
-    
-    //iframe_head.append('<link rel="stylesheet" type="text/css" href="javadocs.css" title="Custom Style">');
-    $('#javadoc_container').contents().find("link[title='Style']").remove();
-    $('#javadoc_container').contents().find('head').append("<link rel='stylesheet' type='text/css' href='../css/javadoctest.css' title='Style'");
+
+/*
+    Hide the footer when scrolling in the iframes.
+*/
+function addScrollListener() {
+    var javadoc_container = $('#javadoc_container').contents();
+    var iframes = javadoc_container.find("iframe");
+
+    $(iframes).each(function() {
+        $(this).contents().on('scroll', function(event){
+            hideFooter($(this));
+        });
+    });
+}
+
+/*
+    Hide the footer when the user scrolls in each iframe.
+*/
+function hideFooter(element) {
+    var threshold = 50;
+    var scrollTop = element.scrollTop();
+    var footer = $("footer");        
+    var container = $('#javadoc_container'); 
+
+    if (scrollTop > threshold) {         
+        if(!container.data('extended') || container.data('extended') === "false"){
+            container.addClass('extendedContainer');             
+            container.data('extended', true);
+            footer.css({'display': 'none'});
+        }           
+    }
+    else{   
+        if(container.data('extended')){
+            container.removeClass('extendedContainer');  
+            container.data('extended', 'false'); 
+            footer.css({'display': 'block'});
+        }    
+    }
 }
 
 $(document).ready(function() {
@@ -117,6 +141,6 @@ $(document).ready(function() {
 
     $('#javadoc_container').load(function() {
         addExpandAndCollapseToggleButtons();
-        // addCustomCssToJavaDocs();
+        addScrollListener();
     })
 });
