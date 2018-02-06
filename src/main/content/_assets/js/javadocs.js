@@ -119,14 +119,16 @@ function hideFooter(element) {
         if(!container.data('extended') || container.data('extended') === "false"){
             container.addClass('extendedContainer');             
             container.data('extended', true);
-            footer.css({'display': 'none'});
+            // footer.css({'display': 'none'});
+            footer.addClass('fadeFooter');
         }           
     }
     else{   
         if(container.data('extended')){
             container.removeClass('extendedContainer');  
             container.data('extended', 'false'); 
-            footer.css({'display': 'block'});
+            // footer.css({'display': 'block'});
+            footer.removeClass('fadeFooter');
         }    
     }
 }
