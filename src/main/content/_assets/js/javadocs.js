@@ -113,23 +113,26 @@ function hideFooter(element) {
     var threshold = 50;
     var scrollTop = element.scrollTop();
     var footer = $("footer");        
-    var container = $('#javadoc_container'); 
+    var container = $('#javadoc_container');
 
     if (scrollTop > threshold) {         
         if(!container.data('extended') || container.data('extended') === "false"){
             container.addClass('extendedContainer');             
             container.data('extended', true);
             // footer.css({'display': 'none'});
+
             footer.addClass('fadeFooter');
-        }           
+            resizeJavaDocWindow();
+        }
     }
     else{   
         if(container.data('extended')){
-            container.removeClass('extendedContainer');  
-            container.data('extended', 'false'); 
-            // footer.css({'display': 'block'});
-            footer.removeClass('fadeFooter');
-        }    
+            // container.removeClass('extendedContainer');  
+            // container.data('extended', 'false'); 
+            // // footer.css({'display': 'block'});
+            // footer.removeClass('fadeFooter');
+            // resizeJavaDocWindow();
+        }
     }
 }
 
