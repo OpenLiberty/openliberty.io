@@ -8,7 +8,7 @@ set -e
 JEKYLL_BUILD_FLAGS=""
 
 echo "Installing ruby packages..."
-gem install jekyll bundler jekyll-feed jekyll-asciidoc coderay uglifier octopress-minify-html
+gem install jekyll bundler jekyll-feed jekyll-asciidoc coderay uglifier octopress-minify-html octokit
 gem install jekyll-assets -v 2.4.0
 
 echo "Ruby version:"
@@ -26,11 +26,16 @@ if [ "$JEKYLL_ENV" != "production" ]; then
     
     echo "Clone guides that are only for test site..."
     ruby ./scripts/build_clone_guides.rb "draft-guide"
+    echo "Moving any js and css files from draft interactive guides..."
+    find src/main/content/guides/draft-iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
+    find src/main/content/guides/draft-iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
+
+    # Include draft blog posts for non production environments
     JEKYLL_BUILD_FLAGS="--drafts"
 fi
 
 # Move any js/css files from guides to the _assets folder for jekyll-assets minification.
-echo "Moving any js and css files..."
+echo "Moving any js and css files published interactive guides..."
 find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
 find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
 
