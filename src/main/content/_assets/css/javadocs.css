@@ -1,5 +1,11 @@
-#background_container {
-    padding-top: 103px;
+#background_container{
+    padding-top: 121px;
+}
+
+@media (max-width: 767px) {
+    #background_container {
+        padding-top: 0;
+    }
 }
 
 .extendedContainer {
@@ -31,8 +37,33 @@
 }
 
 #breadcrumb_row {
-    background-color: #24243A;
     height: 41px;
+}
+
+@media (max-width: 767px){
+    #breadcrumb_row {
+        height: 36px;
+    }
+}
+
+#breadcrumb_row .breadcrumb {
+    background-color: #24243A;
+    padding-left: 30px;
+    height: 100%;
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+#breadcrumb_row > .breadcrumb > li > a {
+    color:#c8d6fb;
+}
+
+#breadcrumb_row > .breadcrumb > li > a:hover, #breadcrumb_row > .breadcrumb > li > a:focus {
+    color:white;
+}
+
+#breadcrumb_row > .breadcrumb > li.active, #breadcrumb_row > .breadcrumb > li.active + li:before {
+    color: white;
 }
 
 /* Change default bootstrap breadcrumb separator */
@@ -40,11 +71,7 @@
     content: "> ";
 }
 
-@media (max-width: 767px) {   
-
-    #doc_title {
-        display: none;
-    }
+@media (max-width: 767px) { 
 
     #doc_logo {
         display: inline-block;
@@ -57,6 +84,10 @@
     #doc_logo {
         margin-left: 20px;
         margin-top: 10px;
+    }
+
+    #doc_title {
+        margin-top: 15px;
     }
 
     #docs_container {

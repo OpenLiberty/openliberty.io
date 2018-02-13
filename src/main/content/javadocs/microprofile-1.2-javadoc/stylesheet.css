@@ -19,7 +19,7 @@ body {
     /* background-image: linear-gradient(to bottom, #131427, #2C2D4F); */
     background-color: white;
     color:#353833;
-    font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
+    font-family: 'Asap-Regular', 'DejaVu Sans', Arial, Helvetica, sans-serif;
     font-size:14px;
     margin:0;
     padding:0;
@@ -42,7 +42,7 @@ a:link, a:visited {
 a[target="packageFrame"],
 a[target="classFrame"] {
     font-size:14px;
-    color:#3f465a;
+    color:#5d6a8e;
     letter-spacing:0;
     line-height:30px;
 }
@@ -70,9 +70,11 @@ pre {
 }
 h1 {
     font-size:20px;
+    font-family: 'BuenueloCleanPro-SemiBold';
 }
 h2 {
     font-size:18px;
+    font-family: 'BuenueloCleanPro-SemiBold';
 }
 h3 {
     font-size:16px;
@@ -209,8 +211,19 @@ ul.navList li{
     vertical-align: middle;
     text-align: center;
     padding: 0px 22px;
+    font-size: 16px;    
     text-transform:uppercase;
     font-family: 'Asap-Medium';
+}
+ul.navList li:hover, ul.navList li:focus{
+    background-color: #D6D9E4;
+    color: #253441;
+}
+ul.navList li:hover{
+    cursor: pointer;    
+}
+ul.navList li > a:hover {
+    color: inherit;
 }
 ul.navListSearch {
     float:right;
@@ -294,6 +307,7 @@ Page header and footer styles
 .header ul li, .footer ul li {
     list-style:none;
     font-size:13px;
+    font-family: 'Asap-Regular';
 }
 /*
 Heading styles
@@ -326,7 +340,6 @@ Page layout container styles
     position:relative;
 }
 .indexContainer {
-    /* margin: 10px; Steven */
     position: relative;
     font-size: 12px;
 }
@@ -342,7 +355,6 @@ Page layout container styles
     padding:0 0 3px 0;
 }
 .indexContainer h2[title="Packages"] {
-    /* font-size:20px; Steven */
     border-top: 3px solid rgb(217, 217, 217);
     padding-top: 30px;
     margin-right: 10px;
@@ -391,6 +403,7 @@ List styles
 */
 li.circle {
     list-style:circle;
+    font-family: 'Asap-Regular';
 }
 ul.horizontal li {
     display:inline;
@@ -939,20 +952,20 @@ table.striped > tbody > tr > td, table.striped > tbody > tr > td {
 
 /* Custom expand/collapse button */
 input[type='checkbox'] + label:before {
-    content: "+";
+    /* content: "+"; */
+    content:url('/img/all_guides_plus.svg');
     font-family: BunueloCleanPro-Light;
-    font-size: 20px;
-    line-height: 26px;    
     margin-right: 10px;
 }
 
 input[type='checkbox']:checked + label:before {
-    content: "-";
-    font-size: 30px;
+    /* content: "-"; */
+    content:url('/img/all_guides_minus.svg');
 }
 input[type='checkbox'] {
-    display: none;
+    display: none;    
 }
 label {
     cursor: pointer;
+    float: left !important; /* Overrides the inline float left */
 }
