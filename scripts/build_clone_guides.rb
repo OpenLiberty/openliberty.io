@@ -8,19 +8,24 @@
 # The assumption is that a guide that are still being development, 
 # but need to be on the test website have a GitHub repository name starting with:
 #       draft-guide*
-require 'json'
+require 'octokit'
 
 # This variable is to determine if we want to clone the "still in progress"
 # guides that are not ready to be on openliberty.io
 cloneDraftGuides = ARGV[0]
 
+# --------------------------------------------
 # Get all the Open Liberty repositories
-response = `curl https://api.github.com/orgs/OpenLiberty/repos?access_token=$PAT`
-json = JSON.parse(response)
+# --------------------------------------------
+client = Octokit::Client.new :access_token => ENV['PAT']
+client.auto_paginate = true
+repos = client.org_repos('OpenLiberty')
 
+# --------------------------------------------
 # Filter for Open Liberty guide repositories
+# --------------------------------------------
 guides = []
-json.each do |element|
+repos.each do |element|
     repo_name = element['name']
     if cloneDraftGuides == "draft-guide"
         ##################
