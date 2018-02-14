@@ -100,10 +100,18 @@ function addScrollListener() {
     var iframes = javadoc_container.find("iframe");
 
     $(iframes).each(function() {
-        $(this).contents().on('scroll', function(event){
+        $(this).contents().off('scroll').on('scroll', function(event){
             hideFooter($(this));
         });
     });
+}
+
+/* 
+    Any time the main frame loads, listen for scrolling to hide the footer
+*/
+function addNavClickListener() {
+    var javadoc_container = $('#javadoc_container').contents();
+    var navbar = javadoc_container.find()
 }
 
 /*
@@ -142,5 +150,6 @@ $(document).ready(function() {
     $('#javadoc_container').load(function() {
         addExpandAndCollapseToggleButtons();
         addScrollListener();
+        addNavClickListener();
     })
 });
