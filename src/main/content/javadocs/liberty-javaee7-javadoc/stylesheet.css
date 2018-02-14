@@ -227,7 +227,7 @@ ul.navList li > a:hover {
 }
 ul.navListSearch {
     float:right;
-    margin:0 0 0 0;
+    margin:0 14px 0 0;
     padding:0;
 }
 ul.navListSearch li {
@@ -765,7 +765,8 @@ IFRAME specific styles
 /*
   Mobile styles for the 3 frames
 */
-@media only screen and (max-device-width: 767px) {   
+/* @media only screen and (max-device-width: 767px) {    */
+@media (max-width: 767px) { 
     .overviewSummary td.colFirst, .overviewSummary th.colFirst, .requiresSummary td.colFirst, .requiresSummary th.colFirst, .packagesSummary td.colFirst, .packagesSummary td.colSecond, .packagesSummary th.colFirst, .packagesSummary th, .usesSummary td.colFirst, .usesSummary th.colFirst, .providesSummary td.colFirst, .providesSummary th.colFirst, .memberSummary td.colFirst, .memberSummary th.colFirst, .memberSummary td.colSecond, .memberSummary th.colSecond, .memberSummary th.colConstructorName, .typeSummary td.colFirst{
         padding-left: 7px;
     }
@@ -777,13 +778,21 @@ IFRAME specific styles
    .rightContainer {
         position: relative;      
         left: 0;  
-        overflow: auto;
-   }
+   } 
 
    .topNav {
-       overflow-x: auto;
-       padding-bottom: 15px;
-   }
+        overflow-x: auto;
+   } 
+   #navbar\.top, #navbar\.top\.firstrow {
+    display: none;
+    }
+}
+/* Allow scrolling in mobile view */
+@media only screen and (max-device-width: 767px){
+    .rightContainer{
+        overflow: auto;
+    }    
+    
 }
 
 /*
