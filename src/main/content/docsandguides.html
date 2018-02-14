@@ -18,7 +18,7 @@ permalink: /docsandguides/
             </div>
             <div class="col-sm-8">
                 <p id="contribute_intro_paragraph_1">
-                    Sometimes even the best navigators need to be pointed in the right direction.  These guides are designed to make your development journey that much easier; whether you’re in need of a little help or just want to explore.
+                    Sometimes even the best navigators need to be pointed in the right direction.  These docs are designed to make your development journey that much easier; whether you’re in need of a little help or just want to explore.
                 </p>
             </div>
         </div>
@@ -43,80 +43,27 @@ permalink: /docsandguides/
 
 {% assign numJavaDocs = javadocs.size %}
 
-<div id="overview_pane" class="col-md-3">
-    <div id="search_container">
-        <input id="guide_search_input" type="text" placeholder="Search All" aria-label="Search">
-    </div>
-    
-    <ul id="overview_links">
-        <!-- <li id="getting_started"><a href="#">Getting Started</a></li> -->
-        <li id="all_guides_link"><a data-link="guides">GUIDES</a></li>
-        <li id="reference_header">REFERENCE</li>
-        <li><a data-link="docs">API</a></li>
-    </ul>    
-</div>
 
-<div id="content" class="col-md-9">
-    <div id="guides_container" class="container" data-resource="guides">
-
-        <div class="resource_title_container">
-            <h2 class="resource_title">Guides</h2>
+<div id="content">
+    <div id="guides_container" class="container">
+        <div class="resource_title_container container col-md-6">
+            <div class="resource_title">Open Liberty Guides</div>
+            <p class="resource_description">Our guides are the best way to learn and explore Open Liberty. All guides keep the code at the forefront, so you can get what you need and get back to work.</p>
+            <a id="all_guides_link">View all Open Liberty Guides</a>
         </div>
-        <div class="information_container container">            
-            <div class="row">
-                <div class="col-xs-12">
-                    <h2 id="guide_counter_title">All Open Liberty guides ({{ numGuides }})</h2>
-                    <p id="guide_sort_message">Most recent guides shown first</p>
-                </div>
-            </div>
-        </div>
-    
-        <div id="guides_content_container">
-            {% for guide in guides %}
-            <!-- Do not render anything from the two common guide repositories containing shared code -->
-            {% unless guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
-                <div class="guide_column col-xs-12 col-sm-6 col-md-4">
-                    <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}">
-                        <div class="guide_title_and_description_container">
-                            <h3 class="guide_title">{{guide.title}}</h3>
-                            <p class="guide_description" title="{{guide.description}}">{{guide.description}}</p>
-                        </div>
-                        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
-                        <span class="guide_duration">{{guide.duration}}</span>
-                        {% if guide.layout == 'interactive-guide' %}
-                        <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
-                        <span class="guide_interactive">Interactive</span>
-                        {% endif %}
-                    </a>
-                </div>
-            {% endunless %}
-            {% endfor %}
-        </div>        
+        <div class="resource_content container col-md-6">             
+        </div>  
     </div>
     
 
-    <div id="docs_container" class="col-md-8" data-resource="docs">
-        <!-- <div class="information_container col-md-4 col-xs-12">
-            <h2 id="guides_title">Docs</h2>
-            <p id="guide_sort_message">Docs description.</p>
-            <a href="/javadocs" id="all_docs"> View all docs</a>
-        </div> -->
-
-        <div class="resource_title_container">
-                <h2 class="resource_title">Docs</h2>
+    <div id="docs_container" class="container">
+        <div class="resource_title_container container col-md-4">
+                <div class="resource_title">API Reference</div>
+                <p class="resource_description">View the Javadoc for APIs available in Open Liberty. More reference material is in the works.</p>
         </div>
-        <div class="information_container container">           
-            <div class="row">
-                <div class="col-xs-12">
-                    <h2 id="guide_counter_title">All Open Liberty docs ({{ numJavaDocs }})</h2>
-                    <!-- <p id="guide_sort_message">Most recent docs shown first</p> -->
-                </div>
-            </div>
-        </div>
-
-        <div id="docs_content_container">
+        <div id="docs_content_container" class="container col-md-8">
             {% for doc in javadocs %}
-                <div class="guide_column col-xs-12 col-sm-6 col-md-4">
+                <div class="guide_column col-xs-12 col-sm-6 col-md-6">
                     <a href="{{ doc.url }}" class="guide_item" data-title="{{ doc.title | downcase }}" data-description="{{ doc.description | downcase }}" data-tags="{{ doc.tags | join: ' ' | downcase }}">
                         <div class="guide_title_and_description_container">
                             <h3 class="guide_title">{{doc.title}}</h3>
@@ -129,6 +76,3 @@ permalink: /docsandguides/
     </div>
     
 </div>
-
- 
-
