@@ -18,7 +18,15 @@ function resizeJavaDocWindow() {
     var middleSectionHeight = $(window).height() - (topSection + bottomSection);
     $('#javadoc_container').height(middleSectionHeight);
 
-    $("body").css("overflow" , "hidden");
+    var inMobileView = $(window).width() <= 800;
+    if(inMobileView){
+        // Allow overflow in the body so the footer is visible.
+        $("body").css("overflow" , "auto");
+    }
+    else{
+        // Hide the extra scrollbar.
+        $("body").css("overflow" , "hidden");
+    }
 }
 
 function addExpandAndCollapseToggleButtons() {
@@ -93,47 +101,35 @@ function addExpandAndCollapseToggleButtons() {
 
 
 /*
-    Hide the footer when scrolling in the iframes.
+    Add a listener to scrolling in the main frame.
 */
 function addScrollListener() {
     var javadoc_container = $('#javadoc_container').contents();
-    var iframes = javadoc_container.find("iframe");
-
-    $(iframes).each(function() {
-        $(this).contents().off('scroll').on('scroll', function(event){
-            hideFooter($(this));
-        });
+    var rightFrame = javadoc_container.find("iframe.rightIframe");
+    rightFrame.contents().off('scroll').on('scroll', function(event){
+        hideFooter($(this));
     });
 }
 
-/* 
-    Any time the main frame loads, listen for scrolling to hide the footer
-*/
-function addNavClickListener() {
-    var javadoc_container = $('#javadoc_container').contents();
-    var navbar = javadoc_container.find()
-}
-
 /*
-    Hide the footer when the user scrolls in each iframe.
+    Check if the main frame has been scrolled down at least 80% to show the footer.
 */
 function hideFooter(element) {
-    var threshold = 50;
     var scrollTop = element.scrollTop();
+    var height = element.height();
     var footer = $("footer");        
-    var container = $('#javadoc_container');
 
-    if (scrollTop > threshold) {         
-        if(!container.data('extended') || container.data('extended') === "false"){
-            container.data('extended', true);
-            footer.addClass('fadeFooter');
+    if (scrollTop > height * .80) {         
+        if(!footer.data('visible') || footer.data('visible') === "false"){
+            footer.data('visible', true);
+            footer.css('display', 'block');
             resizeJavaDocWindow();
         }
     }
     else{   
-        if(container.data('extended')){
-            container.data('extended', 'false'); 
-            footer.removeClass('fadeFooter');
+        if(footer.data('visible')){
+            footer.data('visible', 'false'); 
+            footer.css('display', 'none');
             resizeJavaDocWindow();
         }
     }
@@ -141,15 +137,16 @@ function hideFooter(element) {
 
 $(document).ready(function() {
 
-    resizeJavaDocWindow();
-
     $(window).on('resize', function(){
         resizeJavaDocWindow();
     });
 
     $('#javadoc_container').load(function() {
+        resizeJavaDocWindow();
         addExpandAndCollapseToggleButtons();
         addScrollListener();
-        addNavClickListener();
+        $('#javadoc_container').contents().find("iframe.rightIframe").on('load', function(){
+            addScrollListener();
+        });
     })
 });
