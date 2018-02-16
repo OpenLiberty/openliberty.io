@@ -32,7 +32,14 @@ permalink: /docsandguides/
             <a href="/guides" id="all_guides_link">View all Open Liberty Guides</a>
         </div>
         <div class="col-md-6">
-            <img id="code_block" src="{{ "/img/docsandguides_codeText.png" | relative }}" class="img-responsive" alt="Code block">
+            <div id="code_block">
+                <a href="/guides/?search=Interactive&key=tag" id="all_interactive_guides_link">
+                    <img id="all_guides_lighting_bolt" src="{{ "/img/docsandguides_lightningbolt.svg" | relative }}" class="img-responsive">
+                    <p id="interactive_guides_description">Check out the interactive guides with live code eamples for hands-on learning</p>
+                </a>
+            </div>
+            <!-- <img id="code_block" src="{{ "/img/docsandguides_codeText.png" | relative }}" class="img-responsive" alt="Code block"> -->
+
         </div>
     </div>
 </div>
@@ -51,10 +58,10 @@ permalink: /docsandguides/
             <div class="col-sm-12 col-sm-6 col-md-4">
                 <a href="{{ doc.url }}" class="reference_item">
                     {% if doc.url == '/javadocs/liberty-javaee7' %}
-                    <img src="{{ "/img/docsandguides_java_ee_logo.png" | relative }}" class="img-responsive" alt="Docs & Guides">
+                    <img id="javaee_logo" src="{{ "/img/docsandguides_java_ee_logo.png" | relative }}" class="img-responsive" alt="Java EE Logo">
                     {% endif %}
                     {% if doc.url == '/javadocs/mpconfig' %}
-                    <img src="{{ "/img/docsandguides_microprofile_logo.png" | relative }}" class="img-responsive" alt="Docs & Guides">
+                    <img id="mp_logo" src="{{ "/img/docsandguides_microprofile_logo.png" | relative }}" class="img-responsive" alt="MicroProfile Logo">
                     {% endif %}
                     <h3 class="reference_title">{{doc.title}}</h3>
                 </a>
