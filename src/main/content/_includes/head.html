@@ -4,8 +4,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>{% if page.title %}{{ page.title | append: ' - ' | append: site.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
-  <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">
+  <title>{% if page.seo-title %}{{ page.seo-title | escape }}{% else %}{% if page.title %}{{ page.title | append: ' - ' | append: site.title | escape }}{% else %}{{ site.title | escape }}{% endif %}{% endif %}</title>
+  <meta name="description" content="{% if page.seo-description %}{{ page.seo-description | escape }}{% else %}{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}{% endif %}">
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Asap">
@@ -35,8 +35,8 @@
     
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@OpenLibertyIO" />
-  <meta name="twitter:title" content="{{site.title}}" />
-  <meta name="twitter:description" content="{{site.description | normalize_whitespace }}" />
+  <meta name="twitter:title" content="{% if page.seo-title %}{{ page.seo-title }}{% else %}{{site.title}}{% endif %}" />
+  <meta name="twitter:description" content="{% if page.seo-description %}{{ page.seo-description | escape }}{% else %}{{site.description | normalize_whitespace }}{% endif %}" />
   <meta name="twitter:image" content="https://openliberty.io/img/twitter_card.jpg" />
   
   <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />

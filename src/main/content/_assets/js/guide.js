@@ -117,7 +117,7 @@ $(document).ready(function() {
 
         $('#copy_to_clipboard').css({
             top: target_position.top + 8,
-            right: parseInt($('#guide_column').css('padding-right')) + 11
+            right: parseInt($('#guide_column').css('padding-right')) + 55
         });
         $('#copy_to_clipboard').stop().fadeIn();
 
@@ -160,7 +160,7 @@ $(document).ready(function() {
     if( $('#related-guides').length ) {
         // Add _one_ Related guides link to the very bottom of the table of contents.
         // The assumption is that the TOC only contains one `sectlevel1` class.
-        $('#toc_container ul.sectlevel1').append('<li><a href="#related-guides">Related guides</a></li>')
+        $('#toc_container ul.sectlevel1').append('<li><a href="#related-guides">Related guides</a></li>');
     }
 
     // TABLE OF CONTENT
