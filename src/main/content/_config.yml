@@ -23,20 +23,11 @@ markdown: kramdown
 
 assets:
   compress:
-    css: false
-    js: false
-  sources:
-    - guides/iguides-common/js
-    - guides/iguides-common/css
-    - guides/iguide-microprofile-config/js
-    - guides/iguide-microprofile-config/css
-    - guides/iguide-circuit-breaker/js
-    - guides/iguide-circuit-breaker/css
-    - guides/draft-iguide-bulkhead/js
-    - guides/draft-iguide-bulkhead/css
+    css: true
+    js: true
 
 env: production
-minify_html: false
+minify_html: true
 
 plugins:
   - jekyll-feed
@@ -46,4 +37,3 @@ plugins:
 exclude:
   - Gemfile
   - Gemfile.lock
-  - vendor # TravisCI bundles all gems in the vendor directory on its build servers, which Jekyll will mistakenly read and explode on.
