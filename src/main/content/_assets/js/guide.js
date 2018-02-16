@@ -106,8 +106,6 @@ $(document).ready(function() {
     var target_width;
     var target_height;
 
-    $('#preamble').detach().insertBefore('#duration_container');
-
     $('#guide_content pre:not(.no_copy pre)').hover(function(event) {
 
         offset = $('#guide_column').position();
