@@ -3,14 +3,16 @@
 Overall document style
 */
 
+@import url("https://fonts.googleapis.com/css?family=Asap:400,500");
+
 @font-face {
     font-family: BunueloLight;
-    src: url("/fonts/BunueloCleanPro-Light.otf") format("opentype");
+    src: url("/fonts/BunueloCleanPro-Light.otf");
 }
 
 @font-face {
     font-family: BunueloBold;
-    src: url("/fonts/BunueloCleanPro-SemiBold.otf") format("opentype");
+    src: url("/fonts/BunueloCleanPro-SemiBold.otf");
 }
 
 @import url('resources/fonts/dejavu.css');
@@ -19,7 +21,7 @@ body {
     /* background-image: linear-gradient(to bottom, #131427, #2C2D4F); */
     background-color: white;
     color:#353833;
-    font-family: 'Asap-Regular', 'DejaVu Sans', Arial, Helvetica, sans-serif;
+    font-family: Asap, 'DejaVu Sans', Arial, Helvetica, sans-serif;
     font-size:14px;
     margin:0;
     padding:0;
@@ -115,7 +117,8 @@ th[scope='col'] {
     font-size: 11px; 
 }
 th > a {
-    font-family: Asap-Medium;
+    font-family: Asap;
+    font-weight: 500;
     font-size: 14px;
 }
 sup {
@@ -213,7 +216,8 @@ ul.navList li{
     padding: 0px 22px;
     font-size: 16px;    
     text-transform:uppercase;
-    font-family: 'Asap-Medium';
+    font-family: Asap;
+    font-weight: 500;
 }
 ul.navList li:hover, ul.navList li:focus{
     background-color: #D6D9E4;
@@ -249,7 +253,8 @@ ul.subNavList li {
     color:#5E6B8D;
     text-decoration:none;
     text-transform:uppercase;
-    font-family: 'Asap-Medium';
+    font-family: Asap;
+    font-weight: 500;
 }
 .topNav a:hover, .bottomNav a:hover {
     text-decoration:none;
@@ -308,7 +313,7 @@ Page header and footer styles
 .header ul li, .footer ul li {
     list-style:none;
     font-size:13px;
-    font-family: 'Asap-Regular';
+    font-family: Asap;
 }
 /*
 Heading styles
@@ -367,7 +372,7 @@ Page layout container styles
 .indexContainer ul li {
     list-style:none;
     height: 26px;
-    font-family: Asap-Regular;
+    font-family: Asap;
     font-size: 14px;
     border-left: 8px solid transparent;
     padding-left: 19px;
@@ -375,7 +380,8 @@ Page layout container styles
 .indexContainer ul li:hover, .indexContainer ul li:focus {
     background:#fdf2ea;
     border-left: 8px solid #f4914d;    
-    font-family: 'Asap-Medium';
+    font-family: Asap;
+    font-weight: 500;
 }
 .contentContainer .description dl dt, .contentContainer .details dl dt, .serializedFormContainer dl dt {
     font-size:12px;
@@ -404,7 +410,7 @@ List styles
 */
 li.circle {
     list-style:circle;
-    font-family: 'Asap-Regular';
+    font-family: Asap;
 }
 ul.horizontal li {
     display:inline;
@@ -467,7 +473,10 @@ Table styles
     border-left:1px solid #EEE; 
     border-right:1px solid #EEE; 
     border-bottom:1px solid #EEE; 
-    font-family: Asap-Medium;
+    font-family: Asap;
+}
+.overviewSummary tr:nth-child(1):not(.altColor) {
+    font-family:BunueloBold;
 }
 .overviewSummary, .memberSummary, .requiresSummary, .packagesSummary, .providesSummary, .usesSummary  {
     padding:0px;
@@ -665,7 +674,7 @@ ul.blockList ul.blockList ul.blockList li.blockList h3 {
 
 div.block {
     font-size:14px;
-    font-family: 'Asap-Regular', 'DejaVu Serif', Georgia, "Times New Roman", Times, serif;
+    font-family: Asap, 'DejaVu Serif', Georgia, "Times New Roman", Times, serif;
 }
 
 td.colLast div {
@@ -823,6 +832,7 @@ main, nav, header, footer, section {
 ul.ui-autocomplete {
     position:fixed;
     z-index:999999;
+    font-family: Asap;
 }
 ul.ui-autocomplete  li {
     float:left;
@@ -836,7 +846,7 @@ ul.ui-autocomplete  li {
     background-image:url('resources/glass.png');
     background-size:13px;
     background-repeat:no-repeat;
-    background-position:2px 3px;
+    background-position:2px 5px;
     padding: 5px 5px 5px 20px;
     position:relative;
     right:-18px;
@@ -962,14 +972,15 @@ table.striped > tbody > tr > td, table.striped > tbody > tr > td {
 
 /* Custom expand/collapse button */
 input[type='checkbox'] + label:before {
-    /* content: "+"; */
     content:url('/img/all_guides_plus.svg');
     font-family: BunueloLight;
     margin-right: 10px;
 }
 
+input[type='checkbox']:checked + label {
+    margin-top: -3px;
+}
 input[type='checkbox']:checked + label:before {
-    /* content: "-"; */
     content:url('/img/all_guides_minus.svg');
 }
 input[type='checkbox'] {

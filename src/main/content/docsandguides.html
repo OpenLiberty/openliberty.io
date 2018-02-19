@@ -4,7 +4,7 @@ title: Docs and Guides
 css:
 - reference-card
 - docsandguides
-permalink: /docsandguides/
+permalink: /docs/
 ---
 
 <!-- INTRO -->
@@ -34,8 +34,8 @@ permalink: /docsandguides/
         <div class="col-md-6">
             <div id="code_block">
                 <a href="/guides/?search=Interactive&key=tag" id="all_interactive_guides_link">
-                    <img id="all_guides_lighting_bolt" src="{{ "/img/docsandguides_lightningbolt.svg" | relative }}" class="img-responsive">
-                    <p id="interactive_guides_description">Check out the interactive guides with live code examples for hands-on learning</p>
+                    <img id="all_guides_lighting_bolt" src="{{ "/img/docsandguides_lightningbolt.svg" | relative }}" class="img-responsive" alt="">
+                    <p id="interactive_guides_description">Check out the <span class="bold">interactive guides</span> with live code examples for hands-on learning</p>
                 </a>
             </div>
         </div>
@@ -54,7 +54,7 @@ permalink: /docsandguides/
             </div>
             {% for doc in javadocs %}
             <div class="col-sm-12 col-sm-6 col-md-4">
-                <a href="{{ doc.url }}" class="reference_item">
+                <a href="{{ doc.url | replace: '%2E', '.'}}" class="reference_item">
                     {% if doc.url == '/docs/ref/javaee/7/' %}
                     <img id="javaee_logo" src="{{ "/img/docsandguides_java_ee_logo.png" | relative }}" class="img-responsive" alt="Java EE Logo">
                     {% endif %}
@@ -67,4 +67,10 @@ permalink: /docsandguides/
             {% endfor %}
         </div>
     </div>
+</div>
+
+<!-- PRE-LOADED IMAGES -->
+<div class="hidden">
+    <!-- This picture is much too large to pre-load... -->
+    <!-- <img src="/img/docsandguides_codeText.png"> -->
 </div>
