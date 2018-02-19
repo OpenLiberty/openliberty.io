@@ -4,7 +4,7 @@ title: Docs and Guides
 css:
 - reference-card
 - docsandguides
-permalink: /docsandguides/
+permalink: /docs/
 ---
 
 <!-- INTRO -->
@@ -54,7 +54,7 @@ permalink: /docsandguides/
             </div>
             {% for doc in javadocs %}
             <div class="col-sm-12 col-sm-6 col-md-4">
-                <a href="{{ doc.url }}" class="reference_item">
+                <a href="{{ doc.url | replace: '%2E', '.'}}" class="reference_item">
                     {% if doc.url == '/docs/ref/javaee/7/' %}
                     <img id="javaee_logo" src="{{ "/img/docsandguides_java_ee_logo.png" | relative }}" class="img-responsive" alt="Java EE Logo">
                     {% endif %}
