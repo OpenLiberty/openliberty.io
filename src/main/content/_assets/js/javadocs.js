@@ -40,6 +40,7 @@ function addExpandAndCollapseToggleButtons() {
         // Look for the two left side iframes
         var isTopLeftPackageIFrame = $(this).attr("name") === "packageListFrame";
         var isBottomLeftPackageIFrame = $(this).attr("name") === "packageFrame";
+        var isClassFrame = $(this).attr("name") === "classFrame";
 
         if(isTopLeftPackageIFrame) {
             var list = $(this).contents().find('ul[title="Packages"]');
@@ -50,26 +51,37 @@ function addExpandAndCollapseToggleButtons() {
             emptyParagraphElement.hide();
 
             var headerHeight = header.outerHeight(true); // true to include margins too
-            var toggleButton = $('<input id="top_left_toggle" type="checkbox" checked><label style="float: right;" for="top_left_toggle"></label>');
-            toggleButton.change(function() {
-                // this will contain a reference to the checkbox   
-                if (this.checked) {
+            var toggleButton = $('<div class="toggle" collapsed="false"><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/></div>');
+            toggleButton.on('click', function(){
+                var collapsed = $(this).attr('collapsed');
+                if(collapsed === "true"){
+                    // Expand the list
                     list.show();
                     leftTop.css("height", "30%");
                     leftBottom.css("height", "70%");
-                } else {
+                    $(this).empty().append($('<img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
+                    $(this).attr('collapsed', false);
+                }
+                else{
+                    // Collapse the list
                     list.hide();
                     leftTop.css("height", headerHeight);
                     leftTop.css("overflow", "hidden");
                     leftBottom.css("height", "86%");
+                    $(this).empty().append($('<img src="/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
+                    $(this).attr('collapsed', true);                    
                 }
             });
-            header.append(toggleButton);
-            // header.addClass("leftFrameHeaderStyling");
+            header.append(toggleButton);            
         }
         if(isBottomLeftPackageIFrame) {
-            var list2 = $(this).contents().find('main.indexContainer');
+            var list2 = $(this).contents().find('main.indexContainer > ul');
             var frame2 = $(this).contents().find('div.leftBottom');
+
+            // Add region to the package div
+            var packageHeader = $(this).contents().find('h1.bar');
+            $(this).contents().find('main.indexContainer').prepend(packageHeader.remove());
+            // packageHeader.attr('role', 'region');
 
             // I did not know how to select for text that contained whitespace.
             // example: "All Classes"
@@ -80,20 +92,33 @@ function addExpandAndCollapseToggleButtons() {
             // for string comparison.
             var header2_text = header2.text().replace('/\s/g',' ').trim();
             if(header2_text === "All Classes") {
-                var toggleButton2 = $('<input id="bottom_left_toggle"type="checkbox" checked><label style="float: right;" for="bottom_left_toggle"></label>');
-                toggleButton2.change(function() {
-                    // this will contain a reference to the checkbox   
-                    if (this.checked) {
+                var toggleButton2 = $('<div class="toggle" collapsed="false"><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/></div>');
+                toggleButton2.on('click', function(){
+                    var collapsed = $(this).attr('collapsed');
+                    if(collapsed === "true"){
+                        // Expand the list
                         list2.show();
                         leftBottom.css("height", "70%");
-                    } else {
+                        $(this).empty().append($('<img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
+                        $(this).attr('collapsed', false);
+                    }
+                    else{
+                        // Collapse the list
                         list2.hide();
                         leftBottom.css("height", headerHeight2);
+                        $(this).empty().append($('<img src="/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
+                        $(this).attr('collapsed', true);                    
                     }
                 });
                 header2.append(toggleButton2);
-                // header2.addClass("leftFrameHeaderStyling");
-            }
+            }     
+        }
+        if(isClassFrame){
+            // Add accessibility labels to the search input and search reset button
+            $(this).contents().find('#search').attr("aria-label", "Search");
+            $(this).contents().find("#reset").attr("aria-label", "Reset the search field");
+            $(this).contents().find('header > nav').removeAttr("role").attr("aria-label", "Header navigation");
+            $(this).contents().find('footer > nav').removeAttr("role").attr("aria-label", "Footer navigation");
         }
     });
 }
