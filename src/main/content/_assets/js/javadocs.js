@@ -29,6 +29,18 @@ function resizeJavaDocWindow() {
     }
 }
 
+/* Handles any elements which are not accessible by a screen reader and fixes DAP violations. */
+function addAccessibility() {
+    var javadoc_container = $('#javadoc_container').contents();
+    var classFrame = javadoc_container.find("iframe[name='classFrame']");
+
+    // Add accessibility labels to the search input and search reset button, and fix duplicate navigation roles.
+    classFrame.contents().find('#search').attr("aria-label", "Search");
+    classFrame.contents().find("#reset").attr("aria-label", "Reset the search field");
+    classFrame.contents().find('header > nav').removeAttr("role").attr("aria-label", "Header navigation");
+    classFrame.contents().find('footer > nav').removeAttr("role").attr("aria-label", "Footer navigation");
+}
+
 function addExpandAndCollapseToggleButtons() {
     var javadoc_container = $('#javadoc_container').contents();
     var iframes = javadoc_container.find("iframe");
@@ -112,14 +124,7 @@ function addExpandAndCollapseToggleButtons() {
                 });
                 header2.append(toggleButton2);
             }     
-        }
-        if(isClassFrame){
-            // Add accessibility labels to the search input and search reset button
-            $(this).contents().find('#search').attr("aria-label", "Search");
-            $(this).contents().find("#reset").attr("aria-label", "Reset the search field");
-            $(this).contents().find('header > nav').removeAttr("role").attr("aria-label", "Header navigation");
-            $(this).contents().find('footer > nav').removeAttr("role").attr("aria-label", "Footer navigation");
-        }
+        }        
     });
 }
 
@@ -168,7 +173,8 @@ $(document).ready(function() {
 
     $('#javadoc_container').load(function() {
         resizeJavaDocWindow();
-        addExpandAndCollapseToggleButtons();
+        addAccessibility();
+        addExpandAndCollapseToggleButtons();        
         addScrollListener();
         $('#javadoc_container').contents().find("iframe.rightIframe").on('load', function(){
             addScrollListener();
