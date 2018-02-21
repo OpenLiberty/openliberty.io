@@ -201,6 +201,7 @@ Navigation bar styles
     float:left;
     padding:0 0 5px 6px;
     text-transform:uppercase;
+    display: none; /* Hide the Summary subnav filters from javadoc */
 }
 ul.navList, ul.subNavList {
     display: table;
@@ -971,18 +972,22 @@ table.striped > tbody > tr > td, table.striped > tbody > tr > td {
 }
 
 /* Custom expand/collapse button */
-input[type='checkbox'] + label:before {
-    content:url('/img/all_guides_plus.svg');
-    font-family: BunueloLight;
+div.toggle {
+    width: 11px;
     margin-right: 10px;
+    margin-top: -1px;
+    float: left;
 }
 
-input[type='checkbox']:checked + label {
-    margin-top: -3px;
+/* Minus toggle svg */
+div.toggle[collapsed='false'] {
+    margin-top: -5px;    
 }
-input[type='checkbox']:checked + label:before {
-    content:url('/img/all_guides_minus.svg');
+
+div.toggle:hover {
+    cursor: pointer;
 }
+
 input[type='checkbox'] {
     display: none;    
 }
