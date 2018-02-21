@@ -69,8 +69,8 @@ function addExpandAndCollapseToggleButtons() {
                 if(collapsed === "true"){
                     // Expand the list
                     list.show();
-                    leftTop.css("height", "30%");
-                    leftBottom.css("height", "70%");
+                    leftTop.css("height", "45%");
+                    leftBottom.css("height", "55%");
                     $(this).empty().append($('<img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
                     $(this).attr('collapsed', false);
                 }
