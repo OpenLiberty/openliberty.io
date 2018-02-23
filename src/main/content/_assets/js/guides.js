@@ -16,6 +16,7 @@ $(document).ready(function() {
     var tags_key = 4;
 
     function filter_guides(key, search_value) {
+        var filteredList = false;
         $('.guide_item').each(function(index, element) {
             
             var guide_item = $(element);
@@ -26,12 +27,18 @@ $(document).ready(function() {
             if (((key & title_key) && title.indexOf(search_value) != -1)
              || ((key & description_key) && description.indexOf(search_value) != -1)
              || ((key & tags_key) && tags.indexOf(search_value) != -1)) {
-                guide_item.parent().removeClass('hidden');
+                guide_item.parent().removeClass('hidden');                
             } else {
                 guide_item.parent().addClass('hidden');
+                filteredList = true;
             }
-
         });
+        if(filteredList){
+            $("footer").addClass("stickyFooter"); // Make the footer sticky so it doesn't float up from the bottom.
+        }
+        else{
+            $("footer").removeClass("stickyFooter"); // Return footer to its default position if no guides were filtered.
+        }
     }
 
 
@@ -40,6 +47,7 @@ $(document).ready(function() {
         if(input_value.length == 0) {
             $('.guide_column').removeClass('hidden');
             $('#guide_counter_title').text('All Open Liberty guides (' + $('.guide_column').size() + ')');
+            $("footer").removeClass("stickyFooter"); // Return footer to its default position.
         } else {
             if(input_value.startsWith('tag:')) {
                 var search_value = input_value.substring(4).trim();
@@ -47,7 +55,7 @@ $(document).ready(function() {
             } else {
                 filter_guides(title_key | description_key | tags_key, input_value);
             }
-            $('#guide_counter_title').text('Search results (' + $('.guide_column:visible').size() + ')');
+            $('#guide_counter_title').text('Search results (' + $('.guide_column:visible').size() + ')');            
         }
     });
 
