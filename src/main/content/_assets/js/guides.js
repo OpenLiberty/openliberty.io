@@ -16,7 +16,6 @@ $(document).ready(function() {
     var tags_key = 4;
 
     function filter_guides(key, search_value) {
-        var filteredList = false;
         $('.guide_item').each(function(index, element) {
             
             var guide_item = $(element);
@@ -30,15 +29,8 @@ $(document).ready(function() {
                 guide_item.parent().removeClass('hidden');                
             } else {
                 guide_item.parent().addClass('hidden');
-                filteredList = true;
             }
         });
-        if(filteredList){
-            $("footer").addClass("stickyFooter"); // Make the footer sticky so it doesn't float up from the bottom.
-        }
-        else{
-            $("footer").removeClass("stickyFooter"); // Return footer to its default position if no guides were filtered.
-        }
     }
 
 
@@ -47,7 +39,6 @@ $(document).ready(function() {
         if(input_value.length == 0) {
             $('.guide_column').removeClass('hidden');
             $('#guide_counter_title').text('All Open Liberty guides (' + $('.guide_column').size() + ')');
-            $("footer").removeClass("stickyFooter"); // Return footer to its default position.
         } else {
             if(input_value.startsWith('tag:')) {
                 var search_value = input_value.substring(4).trim();
