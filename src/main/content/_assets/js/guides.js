@@ -80,5 +80,18 @@ $(document).ready(function() {
             $("[data-resource][data-resource='" + type + "']").show();
         }
     });
-    
+
+    /* Resize the search bar to match the width of a guide card */
+    function resize_search_bar(){
+        // Get guide card width
+        var card = $('.guide_item').get(0);
+        var card_width = $(card).width();
+        // Set the search to the same width as the guide card
+        $('#guide_search_input').width(card_width);
+    };
+
+    $(window).on('resize', function(){
+        resize_search_bar();
+    });
+    resize_search_bar();    
 });
