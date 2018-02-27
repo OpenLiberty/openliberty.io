@@ -12,7 +12,7 @@
                 <a href="/" aria-label="Open Liberty Home Page">
                     <img id="doc_logo" src="{{ " /img/docs_openliberty_logo.png " | relative }}" class="img-responsive" alt="Home" />
                 </a>
-                <div id="doc_title">Reference</div>
+                <div id="doc_title"> {{ page.type }} </div>
                 <!-- <img id="doc_title" src="{{ " /img/reference_header_title.svg " | relative }}" class="img-responsive" alt="Docs"> -->
             </div>
             <div id="navbar" class="navbar-collapse collapse">
@@ -21,23 +21,31 @@
                         <a href="/guides">Guides</a>
                     </li>
                     <li>
-                        <a href="/docs/ref/javaee/7"> Java EE 7 API</a>
+                        <a href="/docs/ref/javaee/7">Java EE 7 API</a>
                     </li>
                     <li>
                         <a href="/docs/ref/microprofile/1.2">MicroProfile 1.2 API</a>
-                    </li>
+                    </li>                    
                 </ul>
             </div>
             <div id="breadcrumb_row">
-                <ol class="breadcrumb fluid-container">
-                    <li>
-                        <a href="/docs">Docs and Guides</a>
-                    </li>
+                <ol class="breadcrumb fluid-container"> 
+                    {% for url in page.breadcrumb %}
+                    {% assign breadcrumb_page = site.pages | where: 'permalink', url %}
+                    {% assign breadcrumb_page = breadcrumb_page[0] %}
+                        <li>
+                            <a href="{{ breadcrumb_page.url }}"> {{ breadcrumb_page.title }}</a>
+                        </li>
+                    {% endfor %} 
                     <li class="active"> {{ page.title }} </li>
                 </ol>
             </div>
         </div>
     </nav>
+    <div id="background_container" class="black_blue_gradient_background">
+            <div id="docs_container" class="container">
+            </div>
+        </div>
     <div class="hidden">
         <img src="/img/small_logo_white.svg">
         <img src="/img/github_navbar_hover.svg">
