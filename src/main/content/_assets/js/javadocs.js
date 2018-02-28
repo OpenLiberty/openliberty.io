@@ -86,7 +86,8 @@ function addExpandAndCollapseToggleButtons() {
             });
             toggleButton.on('keypress', function(event){
                 event.stopPropagation();
-                if(event.which === 13){
+                // Enter key
+                if(event.which === 13 || event.keyCode === 13){
                     toggleButton.click();
                 }
             });
@@ -130,7 +131,8 @@ function addExpandAndCollapseToggleButtons() {
                 });
                 toggleButton2.on('keypress', function(event){
                     event.stopPropagation();
-                    if(event.which === 13){
+                    // Enter key
+                    if(event.which === 13 || event.keyCode === 13){
                         toggleButton2.click();
                     }
                 });
