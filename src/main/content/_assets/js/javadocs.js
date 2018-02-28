@@ -63,7 +63,7 @@ function addExpandAndCollapseToggleButtons() {
             emptyParagraphElement.hide();
 
             var headerHeight = header.outerHeight(true); // true to include margins too
-            var toggleButton = $('<div class="toggle" collapsed="false"><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/></div>');
+            var toggleButton = $('<div class="toggle" collapsed="false" tabindex=0><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse" /></div>');
             toggleButton.on('click', function(){
                 var collapsed = $(this).attr('collapsed');
                 if(collapsed === "true"){
@@ -82,6 +82,13 @@ function addExpandAndCollapseToggleButtons() {
                     leftBottom.css("height", "86%");
                     $(this).empty().append($('<img src="/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
                     $(this).attr('collapsed', true);                    
+                }
+            });
+            toggleButton.on('keypress', function(event){
+                event.stopPropagation();
+                // Enter key
+                if(event.which === 13 || event.keyCode === 13){
+                    toggleButton.click();
                 }
             });
             header.append(toggleButton);            
@@ -104,7 +111,7 @@ function addExpandAndCollapseToggleButtons() {
             // for string comparison.
             var header2_text = header2.text().replace('/\s/g',' ').trim();
             if(header2_text === "All Classes") {
-                var toggleButton2 = $('<div class="toggle" collapsed="false"><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/></div>');
+                var toggleButton2 = $('<div class="toggle" collapsed="false" tabindex=0><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse" /></div>');
                 toggleButton2.on('click', function(){
                     var collapsed = $(this).attr('collapsed');
                     if(collapsed === "true"){
@@ -120,6 +127,13 @@ function addExpandAndCollapseToggleButtons() {
                         leftBottom.css("height", headerHeight2);
                         $(this).empty().append($('<img src="/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
                         $(this).attr('collapsed', true);                    
+                    }
+                });
+                toggleButton2.on('keypress', function(event){
+                    event.stopPropagation();
+                    // Enter key
+                    if(event.which === 13 || event.keyCode === 13){
+                        toggleButton2.click();
                     }
                 });
                 header2.append(toggleButton2);
