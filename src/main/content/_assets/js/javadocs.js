@@ -184,10 +184,10 @@ function addNavHoverListener() {
     var rightFrame = javadoc_container.find("iframe.rightIframe");
     var tabs = rightFrame.contents().find('ul.navList li:has(a)');
     tabs.off('mouseover').on('mouseover', function(){
-        $(this).addClass('navbarBackground');
+        $(this).addClass('clickableNavListTab');
     });
     tabs.off('mouseleave').on('mouseleave', function() {
-        $(this).removeClass('navbarBackground');
+        $(this).removeClass('clickableNavListTab');
     })
 }
 
@@ -204,6 +204,7 @@ $(document).ready(function() {
         addNavHoverListener();      
         addScrollListener();
         $('#javadoc_container').contents().find("iframe.rightIframe").on('load', function(){
+            addAccessibility();
             addNavHoverListener();
             addScrollListener();
         });
