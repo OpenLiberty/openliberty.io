@@ -1,3 +1,152 @@
+/*******************************************************************************
+ * Copyright (c) 2018 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
 .navbar-default .navbar-nav > li > a {
     margin-left: 10px;
+}
+
+#header_background{
+    padding-top: 121px;
+    background-color: #313653;
+    background-image: none;
+}
+
+@media (max-width: 767px) {
+    #header_background {
+        padding-top: 0;
+    }
+}
+
+#doc_logo,
+#doc_title {
+    float: left;
+}
+
+#doc_title {
+    padding-left: 20px;
+    font-family: BunueloLight;
+    font-size:35px;
+    color:#f1f4fe;
+    letter-spacing:0;
+    text-align:left;
+}
+
+#breadcrumb_row {
+    height: 41px;
+}
+
+@media (max-width: 767px){
+    #breadcrumb_row {
+        height: 36px;
+    }
+}
+
+#breadcrumb_row .breadcrumb {
+    background-color: #24243A;
+    padding-left: 30px;
+    height: 100%;
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+#breadcrumb_row a {
+    color:#c8d6fb;
+}
+
+#breadcrumb_row a:hover, #breadcrumb_row a:focus,
+#breadcrumb_row > .breadcrumb > li.active, #breadcrumb_row > .breadcrumb > li.active + li:before {
+    color:white;
+}
+
+/* Change default bootstrap breadcrumb separator */
+.breadcrumb > li + li:before {
+    content: "> ";
+}
+
+@media (max-width: 767px) { 
+
+    #doc_logo {
+        display: inline-block;
+    }
+
+    .navbar-header {
+        margin-bottom: 10px;
+    }
+
+    #doc_logo {
+        margin-left: 10px;
+        margin-top: 10px;
+    }
+
+    #doc_title {
+        margin-top: 15px;
+    }
+}
+
+/* Breakpoint for hamburger navbar */
+@media (max-width: 800px) {
+    .navbar {
+        background-color: #313653;
+        position: static;
+    }
+
+    #navbar_responsive_button {
+        background-color: #313653;
+    }    
+
+    #header_background {
+        padding-top: 0;
+    }
+
+    .hidden-xs {
+        display: none!important;
+    }
+
+    .navbar-header {
+        float: none;
+    }
+    .navbar-left,.navbar-right {
+        float: none !important;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {        
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-fixed-top {
+        top: 0;
+        border-width: 0 0 1px;
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin-top: 7.5px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .collapse.in{
+        display:block !important;
+    }
+}
+
+/* FOOTER */
+#footer_container {
+    width: 100%;
 }
