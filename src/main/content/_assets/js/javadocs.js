@@ -179,6 +179,18 @@ function hideFooter(element) {
     }
 }
 
+function addNavHoverListener() {
+    var javadoc_container = $('#javadoc_container').contents();
+    var rightFrame = javadoc_container.find("iframe.rightIframe");
+    var tabs = rightFrame.contents().find('ul.navList li:has(a)');
+    tabs.off('mouseover').on('mouseover', function(){
+        $(this).addClass('navbarBackground');
+    });
+    tabs.off('mouseleave').on('mouseleave', function() {
+        $(this).removeClass('navbarBackground');
+    })
+}
+
 $(document).ready(function() {
 
     $(window).on('resize', function(){
@@ -188,9 +200,11 @@ $(document).ready(function() {
     $('#javadoc_container').load(function() {
         resizeJavaDocWindow();
         addAccessibility();
-        addExpandAndCollapseToggleButtons();        
+        addExpandAndCollapseToggleButtons();  
+        addNavHoverListener();      
         addScrollListener();
         $('#javadoc_container').contents().find("iframe.rightIframe").on('load', function(){
+            addNavHoverListener();
             addScrollListener();
         });
     })
