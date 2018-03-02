@@ -1,0 +1,219 @@
+---
+layout: post
+title:  "Enable distributed tracing of microservices with MicroProfile 1.3 in Open Liberty 18.0.0.1"
+date:   2018-03-16 12:05:00 +0100
+categories: news
+author_picture: https://avatars3.githubusercontent.com/u/3322532
+seo-title: Enable distributed tracing of microservices with MicroProfile 1.3 - Open Liberty
+seo-description: FILL THIS IN
+blog_description: FILL THIS IN
+---
+:description: FILL THIS IN in Open Liberty 18.0.0.1.
+= FILL THIS IN Open Liberty 18.0.0.1
+Laura Cowen <http://github.com/lauracowen>
+
+FILL THIS IN
+
+And, like a flash, a second release of Open Liberty (17.0.0.4) is upon us! Fancy bringing your own JSF implementation (Mojarra or MyFaces) to Open Liberty? You can now (and benefit from CDI) with the JSF Container 2.2 feature. Also, administrators can now configure concurrency policies for managed executors (Concurrency updates), and get distributed tracing with our implementation of opentracing.io.
+
+Remember, if you're really keen, you can see what's being developed in Open Liberty in the https://openliberty.io/downloads/[nightly builds]. Feel free to https://openliberty.io/contribute/[raise or even fix a bug]. Fancy influencing the future direction of Open Liberty? Join the https://groups.io/g/openliberty[Open Liberty discussion group].
+
+As we don't have a full set of documentation implemented for Open Liberty yet, the items below point (where relevant) to the official documentation for WebSphere Liberty (which is built on Open Liberty) so you can find out more about them.
+
+You can now download Open Liberty and Open Liberty Tools 18.0.0.1.
+
+[link=https://openliberty.io/downloads/]
+image::/img/blog_btn_download-ol.svg[Download Open Liberty]
+
+[link=https://stackoverflow.com/tags/open-liberty]
+image::/img/blog_btn_stack.svg[Ask a question on Stack Overflow]
+
+Alternatively, if you're using https://www.openliberty.io/guides/maven-intro.html[Maven], here are the coordinates:
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.openliberty</groupId>
+    <artifactId>openliberty-runtime</artifactId>
+    <version>18.0.0.1</version>
+    <type>zip</type>
+</dependency>
+----
+
+Or for https://openliberty.io/guides/gradle-intro.html[Gradle]:
+
+[source,json]
+----
+dependencies {
+    libertyRuntime group: 'io.openliberty', name: 'openliberty-runtime', version: '[18.0.0.1,)'
+}
+----
+
+Or if you're using Docker:
+
+[source]
+----
+docker pull openliberty/open-liberty
+----
+
+In Open Liberty 18.0.0.1, you'll find :
+
+UPDATE
+
+* MicroProfile 1.3:
+** <<mpopentracing,Enable distributed tracing with MicroProfile OpenTracing 1.0>>
+** <<mpopenapi,MicroProfile OpenAPI 1.0>>
+** <<mprestclient,MicroProfile Rest Client 1.0>>
+** <<mpmetrics,MicroProfile Metrics 1.1>>
+** <<mpconfig,MicroProfile Config 1.2>>
+* What else is new?
+** <<endpointcontrol,Endpoint control with MBeans>>
+** <<threadpool,Threadpool controller performance improvements>>
+
+
+[#mpopentracing]
+== Enable distributed tracing with MicroProfile OpenTracing 1.0
+
+The `mpOopenTracing-1.0` feature, together with a user provided `io.opentracing.Tracer` implementation, enables JAX-RS applications to automatically create, propagate, and deliver distributed tracing information. With the `mpOpenTracing-1.0` feature, you can also explicitly mark for tracing methods that would not automatically be traced. Additionally, you can use the `@Inject` annotation to obtain an application-specific instance of an `io.opentracing.Tracer`. The injected `Tracer` instance provides  access to the full opentracing.io API.
+
+In an environment with numerous services communicating with each other, distributed trace information provides a way to view the end-to-end flow of requests through multiple services. In many environments, there is a central trace collection service that accepts distributed tracing information from individual applications (one popular distributed tracing service is https://zipkin.io/[Zipkin]). The central service correlates the distributed tracing information and presents the end-to-end request flow information with a UI.
+
+The opentracing.io project defines an API that applications can use to create, propagate, and deliver distributed trace information. An implementation of the opentracing.io API must be available to an application so that the application can deliver distributed trace information. The implementation of the opentracing.io API must match the implementation of the central trace collection service.
+
+For example, if the central trace collection service is Zipkin, then the opentracing.io implementation used by applications must perform distributed tracing functions in a way that is specific to Zipkin.
+Typically, you must explicitly add code to each application in the environment for it to create, propagate, and deliver distributed tracing information. With the `mpOpenTracing-1.0`` feature of Liberty, you do not need to add any code to your JAX-RS applications to participate in distributed tracing. The JAX-RS application will automatically create, propagate, and deliver distributed tracing information.
+
+Each Liberty server in the environment must be configured with a user feature that provides an implementation of the opentracing.io API. The user feature must provide an implementation of the opentracing.io API that matches the central trace collection service that is used in the environment.
+You can find https://github.com/WASdev/sample.opentracing.zipkintracer[sample source code for a user feature] that provides a Zipkin-specific opentracing.io API implementation on GitHub. Or you can download http://central.maven.org/maven2/net/wasdev/wlp/tracer/liberty-opentracing-zipkintracer/1.0/liberty-opentracing-zipkintracer-1.0-sample.zip[a built version of the user feature] from Maven Central.
+
+
+[source,xml]
+----
+
+<feature>mpOpentracing-1.0</feature>
+<feature>usr:opentracingZipkin-0.30</feature>
+
+----
+
+
+[#mpopenapi]
+== MicroProfile OpenAPI 1.0
+
+The MicroProfile OpenAPI 1.0 feature (`mpOpenAPI-1.0`) is an implementation of the http://download.eclipse.org/microprofile/microprofile-open-api-1.0/microprofile-openapi-spec.html[MicroProfile OpenAPI 1.0 specification]. To try it out, add this feature to your `server.xml` list of features:
+
+[source,xml]
+----
+<featureManager>
+    <feature>mpOpenAPI-1.0</feature>
+</featureManager>
+----
+
+Then use one of http://download.eclipse.org/microprofile/microprofile-open-api-1.0/microprofile-openapi-spec.html#_documentation_mechanisms[the documentation methods]. You can view the generated OpenAPI document in the endpoint `/openapi`, or view the rendered user interface at the endpoint `/openapi/ui`. 
+
+
+[#mprestclient]
+== MicroProfile Rest Client 1.0
+
+The [MicroProfile Rest Client](http://microprofile.io/project/eclipse/microprofile-rest-client) builds on the JAX-RS 2.0 Client APIs to provide a type-safe approach for invoking RESTful services over HTTP.  This means writing client applications with more model-centric code and less "plumbing". You can create a Java interface that represents a remote RESTful service. Decorate the methods with appropriate `@Path`, `@GET`, `@POST`, etc. annotations, and then invoke those methods like a POJO and get the response from the remote service.
+
+To enable the MicroProfile Rest Client in the `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+    <feature>mpRestClient-1.0</feature>
+</featureManager>
+----
+
+To find out more about the MicroProfile Rest Client in Liberty, see [Andy McCright's blog post](https://openliberty.io/news/2018/01/31/mpRestClient.html) on the OpenLiberty.io website.
+
+
+[#mpmetrics]
+== MicroProfile Metrics 1.1
+
+This new feature builds from mpMetrics-1.0.  It implements the MicroProfile Metrics 1.1 spec, which added explicit support for reusing metrics in different parts of your app, and adds the ability to configure it using mpConfig-1.2. 
+
+In the past, accidentally using the same name for a metric in multiple places would result in that metric being updated from all of those places.  The new 'reusable' flag lets you explicitly indicate which metrics are expected/allowed to appear in multiple places and which are only allowed to be used in one place.
+
+[source,xml]
+----
+<featureManager>
+    <feature>mpMetrics-1.1</feature>
+</featureManager>
+
+<quickStartSecurity userName="theUser" userPassword="thePassword"/>
+<keyStore id="defaultKeyStore" password="Liberty"/>
+----
+
+To find out more, see the following WebSphere Liberty Knowledge Center articles:
+
+https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_add.html[Adding metrics to applications]
+
+https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_monitor.html[Monitoring with MicroProfile metrics]
+
+[#mpconfig]
+== MicroProfile Config 1.2
+
+Building on version 1.1, MicroProfile Config 1.2.1 adds a number of new built-in converters, including `Class`, `List`, `Set` and automatic conversion for classes which have a suitable String constructor or static `valueOf` method. You can use this feature with either the `cdi-1.2` feature or the `cdi-2.0` feature.
+
+To enable the MicroProfile Config 1.2 feature just add the following feature definition to your `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+    <feature>mpConfig-1.2</feature>
+</featureManager>
+----
+
+For more information about MicroProfile Config 1.2, see http://microprofile.io/project/eclipse/microprofile-config[the MicroProfile.io website].
+
+You can find a full list of changes since version 1.1 on the https://github.com/eclipse/microprofile-config/milestone/3?closed=1[MicroProfile Config 1.2 Milestone] and the https://github.com/eclipse/microprofile-config/milestone/5?closed=1[1.2.1 Maintenance Release Milestone].
+
+=== API/SPI changes
+
+The ConfigBuilder SPI has been extended with a method that allows for a converter with the specified class type to be registered (https://github.com/eclipse/microprofile-config/issues/205[#205]). This change removes the limitation in previous releases of being unable to add a lambda converter.  
+
+=== Functional changes
+
+* Implementations must now support the array converter (https://github.com/eclipse/microprofile-config/issues/259[#259]). For the array converter, the programmatic lookup of a property (e.g. `config.getValue(myProp, String[].class)`) must support the return type of the array. For the injection lookup, an Array, List, or Set must be supported as well (e.g. <code>@Inject @ConfigProperty(name="myProp") private List&lt;MyObject&gt; propValue;</code>). 
+* Implementations must also support the common sense converters (https://github.com/eclipse/microprofile-config/issues/269[#269]) where there is no corresponding type of converters provided for a given class. The implementation must use the class’s constructor with a single string parameter, then try `valueOf(String)` followed by `parse(CharSequence)`.
+* Implementations must also support Class converter (https://github.com/eclipse/microprofile-config/issues/267[#267]).
+
+=== Specification Changes
+
+Specification changes: (https://github.com/eclipse/microprofile-config/issues/205[#205]), (https://github.com/eclipse/microprofile-config/issues/259[#259]), (https://github.com/eclipse/microprofile-config/issues/269[#269]), and (https://github.com/eclipse/microprofile-config/issues/267[#267]).
+
+=== Other changes
+
+The API bundle can work with either CDI 1.2 or CDI 2.0 in the OSGi environment (https://github.com/eclipse/microprofile-config/issues/249[#249]).
+
+
+
+[#endpointcontrol]
+## Endpoint control with MBeans
+
+There's now a new endpoint control MBean so that you can query and control the state of both HTTP and messaging endpoints. You can also control the state of message endpoints using the existing `server` command.  And you can configure whether the messaging endpoint starts automatically with the associated application.
+
+Prior to this feature, the only option for administrators wanting to stop inbound http traffic to the server was to use the `server` pause and resume commands from the command line; for more info, see [the WebSphere Liberty Knowledge Center docs](https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_PauseResume_cmd.html).
+
+The MBean has the Object name: `WebSphere:feature=kernel,name=ServerEndpointControl` and, like most mbeans, is self-describing. If you don't know what any of that means, take a look at this blog post on https://developer.ibm.com/wasdev/blog/2017/12/21/mbean-controls-server-endpoints/[controlling server endpoint traffic with MBeans].
+
+ADD OTHER BLOG POST LINK HERE
+
+[#threadpool]
+== Threadpool controller performance improvements
+
+The Liberty threadpool controller automatically sets the size of the default threadpool to optimize the server throughput, so the system administrator does not have to manually tune the threadpool. This feature improves the controller's ability to auto-tune to a good pool size when the offered workload requires lots of threads, such as high-latency transactions where threads block on some slow-responding resource. Workloads that perform best with many threads were not always handled optimally by the prior controller implementation. With this improvement, there should be far fewer use cases where the system operator has to manually tune or configure the default threadpool in order to fully exploit the available CPU resources.
+
+For more info about Liberty's threading, see Gary's blog post: https://developer.ibm.com/wasdev/docs/was-liberty-threading-and-why-you-probably-dont-need-to-tune-it/[Liberty threading and why you probably don't need to tune it]
+
+PUBLISH UPDATED VERSION ON OL.IO?
+
+## Ready to give it a try?
+
+
+[link=https://openliberty.io/downloads/]
+image::/img/blog_btn_download-ol.svg[Download Open Liberty]
+
+[link=https://stackoverflow.com/tags/open-liberty]
+image::/img/blog_btn_stack.svg[Ask a question on Stack Overflow]
