@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 IBM Corporation and others.
+ * Copyright (c) 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,12 @@
 
 /* INTRO */
 
+#guides_intro_background {
+    padding-top: 190px;
+    padding-bottom: 170px;
+    margin-bottom: 40px;
+}
+
 #contribute_intro_paragraph_1 {
     font-size: 20px;
     line-height: 35px;
@@ -18,25 +24,20 @@
 }
 
 #guide_search_input {
-    height: 52px;
-    width: 320px;
-    display: inline-block;
-    line-height: 26px;
-    font-size: 14px;
-    color: #5D6A8E;
+    width: 50%;
+    font-size: 16px;
+    color: #3f4659;
     padding-top: 12px;
     padding-bottom: 12px;
-    padding-left: 22px;
-    padding-right: 27px;
-    border: none;
+    padding-left: 43px;
+    border: solid 3px #c0cae3;
+    border-radius: 100px;
     outline: none;
     margin-bottom: 50px;
-    background-color: #EEEFF3;
     background-image: url('/img/guides_search_icon.svg');
     background-repeat: no-repeat;
-    background-position: right 20px center;
+    background-position: left 20px center;
     transition: border-color .2s;
-    float: right;    
 }
 
 #guide_search_input:hover {
@@ -64,24 +65,12 @@
 }
 
 #guides_information_container {
-    width: 100%;
-    margin-top: 50px;
-    margin-bottom: 29px;
-    padding-left: 34px;
-    padding-right: 34px;
-}
-
-#guide_search_information {
-    display: inline-block;
+    margin-bottom: 52px;
 }
 
 #guide_counter_title {
     margin-top: 0;
-    margin-bottom: 14px;
-    font-family: BunueloLight;
-    font-size: 28px;
-    color: #24253A;
-    letter-spacing: 0;
+    margin-bottom: 18px;
 }
 
 #guide_sort_message {
@@ -90,19 +79,38 @@
 }
 
 #guides_container {
-    width: 100%;
     margin-bottom: 40px;
-    padding-left: 34px;
-    padding-right: 34px;
-    background-image: linear-gradient(-180deg, rgba(205,210,223,0.00) 0%, rgba(81, 100, 149, .21) 100%);
 }
 
-.guide_item {
-    background: white;
-    border-left: solid 9px rgba(94, 107, 141, .6); /* Override the light gray border-left from the default card */
+@media (max-width: 1199px) {
+
+    .guide_item {
+        width: 280px;
+    }
+
+}
+
+@media (max-width: 991px) {
+
+    .guide_item {
+        width: 330px;
+    }
+
 }
 
 @media (max-width: 767px) {
+
+    #guides_intro_background {
+        padding-top: 60px;
+        padding-bottom: 30px;
+        margin-bottom: 30px;
+    }
+
+    #intro_logo {
+        margin-left:auto;
+        margin-right: auto;
+        margin-bottom: 40px;
+    }
 
     #guides_container {
         margin-bottom: 30px;
@@ -114,12 +122,11 @@
     }
     
     #guide_search_input {
-        width: 100%;
-        float: none;
-        margin: 0 auto;
+        width: 90%;
     }
     
     .guide_item {
         width: 100%;
     }
+
 }
