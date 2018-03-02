@@ -69,18 +69,6 @@ $(document).ready(function() {
         }
     }
 
-    // Listener for the filters on the overview pane
-    $("#overview_links a").on("click", function(event){
-        var resource = $(event.currentTarget);
-        var type = resource.data("link");
-        if(type){
-            // Hide other types of resources
-            $("[data-resource][data-resource!='" + type + "']").hide();
-            // Show this resource
-            $("[data-resource][data-resource='" + type + "']").show();
-        }
-    });
-
     /* Resize the search bar to match the width of a guide card */
     function resize_search_bar(){
         // Get guide card width
