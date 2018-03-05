@@ -65,11 +65,7 @@ public class TLSFilter implements Filter {
           String redirectUri = redirects.get(uri);
           if(redirectUri != null && !redirectUri.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-            String newURL = 
-                req.getScheme() + "://" 
-                + req.getServerName() + ':' + req.getServerPort() 
-                + redirectUri;
-            response.setHeader("Location", newURL);
+            response.setHeader("Location", ((HttpServletRequest)req).getRequestURL().replace(uri, redirectUri).toString());
           }
 
         }
