@@ -12,7 +12,7 @@
 // Make sure the footer and header of the documentation page is always in the
 // browser viewport.
 function resizeJavaDocWindow() {
-    var topSection = $('#header_background').outerHeight();
+    var topSection = $('#background_container').outerHeight();
     var bottomSection = $('#footer_container').height();
 
     var middleSectionHeight = $(window).height() - (topSection + bottomSection);
@@ -179,6 +179,18 @@ function hideFooter(element) {
     }
 }
 
+function addNavHoverListener() {
+    var javadoc_container = $('#javadoc_container').contents();
+    var rightFrame = javadoc_container.find("iframe.rightIframe");
+    var tabs = rightFrame.contents().find('ul.navList li:has(a)');
+    tabs.off('mouseover').on('mouseover', function(){
+        $(this).addClass('clickableNavListTab');
+    });
+    tabs.off('mouseleave').on('mouseleave', function() {
+        $(this).removeClass('clickableNavListTab');
+    })
+}
+
 $(document).ready(function() {
 
     $(window).on('resize', function(){
@@ -188,9 +200,12 @@ $(document).ready(function() {
     $('#javadoc_container').load(function() {
         resizeJavaDocWindow();
         addAccessibility();
-        addExpandAndCollapseToggleButtons();        
+        addExpandAndCollapseToggleButtons();  
+        addNavHoverListener();      
         addScrollListener();
         $('#javadoc_container').contents().find("iframe.rightIframe").on('load', function(){
+            addAccessibility();
+            addNavHoverListener();
             addScrollListener();
         });
     })

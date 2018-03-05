@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 IBM Corporation and others.
+ * Copyright (c) 2017 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,10 +26,11 @@ $(document).ready(function() {
             if (((key & title_key) && title.indexOf(search_value) != -1)
              || ((key & description_key) && description.indexOf(search_value) != -1)
              || ((key & tags_key) && tags.indexOf(search_value) != -1)) {
-                guide_item.parent().removeClass('hidden');                
+                guide_item.parent().removeClass('hidden');
             } else {
                 guide_item.parent().addClass('hidden');
             }
+
         });
     }
 
@@ -46,7 +47,7 @@ $(document).ready(function() {
             } else {
                 filter_guides(title_key | description_key | tags_key, input_value);
             }
-            $('#guide_counter_title').text('Search results (' + $('.guide_column:visible').size() + ')');            
+            $('#guide_counter_title').text('Search results (' + $('.guide_column:visible').size() + ')');
         }
     });
 
@@ -80,18 +81,5 @@ $(document).ready(function() {
             $("[data-resource][data-resource='" + type + "']").show();
         }
     });
-
-    /* Resize the search bar to match the width of a guide card */
-    function resize_search_bar(){
-        // Get guide card width
-        var card = $('.guide_item').get(0);
-        var card_width = $(card).width();
-        // Set the search to the same width as the guide card
-        $('#guide_search_input').width(card_width);
-    };
-
-    $(window).on('resize', function(){
-        resize_search_bar();
-    });
-    resize_search_bar();    
+    
 });
