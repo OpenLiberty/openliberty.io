@@ -11,8 +11,6 @@
 package io.openliberty.website;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;
@@ -24,13 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 public class TLSFilter implements Filter {
-
-    // A list of deprecated URLs that need to be redirected to a new URL.
-    private Map<String, String> redirects = 
-        new HashMap<String, String>() {{ 
-            put("/guides/maven-intro.html", "/guides/maven-intro/");
-        }};
-
     public void destroy() {
     }
 
@@ -60,12 +51,6 @@ public class TLSFilter implements Filter {
         	  response.setHeader("Cache-Control", "max-age=604800");
           } else {
         	  response.setHeader("Cache-Control", "no-cache");
-          }
-
-          String redirectUri = redirects.get(uri);
-          if(redirectUri != null && !redirectUri.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-            response.setHeader("Location", ((HttpServletRequest)req).getRequestURL().replace(uri, redirectUri).toString());
           }
 
         }
