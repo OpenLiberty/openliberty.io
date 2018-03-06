@@ -13,21 +13,32 @@ asciidoctor:
   attributes:
     - icons=font
     - source-highlighter=coderay
+    - coderay-linenums-mode=inline
+    - coderay-linenums=true
     - coderay-css=class
     - allow-uri-read
 
 google_tag_manager: GTM-TKP3KJ7
 #google_analytics: UA-104349928-1
 
-markdown: kramdown
+markdown: kramdown  
 
 assets:
   compress:
-    css: true
-    js: true
+    css: false
+    js: false
+  sources:
+    - guides/draft-iguide-bulkhead/js
+    - guides/draft-iguide-bulkhead/css
+    - guides/iguide-circuit-breaker/js
+    - guides/iguide-circuit-breaker/css
+    - guides/iguide-microprofile-config/js
+    - guides/iguide-microprofile-config/css
+    - guides/iguides-common/js
+    - guides/iguides-common/css
 
 env: production
-minify_html: true
+minify_html: false
 
 plugins:
   - jekyll-feed

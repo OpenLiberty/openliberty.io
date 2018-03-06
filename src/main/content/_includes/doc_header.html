@@ -31,7 +31,8 @@
                         </li>
                     </ul>
                 </div>
-                <!-- Add breadcrumb -->
+                <!-- Add breadcrumb for all pages except /docs -->
+                {% if page.url != '/docs/' %}
                 <div id="breadcrumb_row">
                     <ol class="breadcrumb fluid-container"> 
                         <li>
@@ -60,9 +61,21 @@
                                 </li>                                    
                                 {% endfor %}
                             {% endif %}
+                        
+                        <!-- All Guides page -->
+                        {% elsif page.url == '/guides/' %}
+                            <li class="active">Guides</li>
+                        
+                        <!-- Individual Guides -->
+                        {% else %}
+                            <li> 
+                                <a href="/guides">Guides</a>
+                            </li>
+                            <li class="active">{{ page.title }}</li>
                         {% endif %}
                     </ol>
                 </div>     
+            {% endif %}      
             </div>
         </nav>
         <!-- Docs -->

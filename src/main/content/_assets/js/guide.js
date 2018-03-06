@@ -106,7 +106,12 @@ $(document).ready(function() {
     var target_width;
     var target_height;
 
-    $('#preamble').detach().insertBefore('#duration_container');
+    $('#preamble').detach().insertAfter('#duration_container');
+    // $(".javacode").each(function(){
+    //     $(this).parents('.sect1').last().detach().appendTo('#code_column'); // Move code to the right pane
+    // })
+    $(".rightside").detach().appendTo('#code_column'); // Move code to the right pane
+    // $(".javacode").last().hide();
 
     $('#guide_content pre:not(.no_copy pre)').hover(function(event) {
 
@@ -169,7 +174,38 @@ $(document).ready(function() {
     //
     // Keep the table of content (TOC) in view while scrolling (Desktop only)
     //
+    // $(window).scroll(function() {
+    //     handleFloatingTableOfContent();
+    // });
+
     $(window).scroll(function() {
-        handleFloatingTableOfContent();
-    });
+        // Check if there is a scrollToLine element in the viewport
+        $('div[class*=scrollToLine-').each(function(index){
+            var elem = $(this);
+            var hT = elem.offset().top,
+            hH = elem.outerHeight(),
+            wH = $(window).height(),
+            wS = $(window).scrollTop();
+            if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
+                // Get the line to scroll to
+                var classList = this.classList;
+                var scrollTo;
+                for(var i=0; i<classList.length; i++){
+                    if(classList[i].indexOf('scrollToLine-') > -1){
+                        scrollTo = classList[i].substring(13);
+                        break;
+                    }
+                }
+                // Scroll to the line in the code column
+                if(scrollTo){
+                    var target = $('#code_column .line-numbers:contains(' + scrollTo + ')').first();
+                    // $('html, #code_column').animate({
+                    //     scrollTop: target.offset().top
+                    // }, 500);
+                    // scrollTo(target.offset().top);
+                }                
+            }
+        });
+        
+   });
 });

@@ -1,21 +1,16 @@
 ---
-layout: default
+layout: doc
 css: 
 - guide-card
 - guide
+- doc-header
 js: guide
 ---
 
 <div id="background_container" class="black_blue_gradient_background">
-    <div class="container">
-        <div id="title_row" class="row">
-            <div class="col-xs-12">
-                <img id="intro_logo" src="{{ "/img/guides_page_title_small.svg" | relative }}" alt="Guides">
-            </div>
-        </div>
         <div class="row">
             <!-- Guide's table of contents section -->
-            <div id="toc_column" class="col-sm-3">
+            <!-- <div id="toc_column" class="col-sm-3">
                 <div id="toc_inner">
                     <a id="all_guides_link" href="/guides">All Guides</a>
                     {% assign toc = page.document | tocify_asciidoc %}
@@ -34,9 +29,9 @@ js: guide
                         </div>
                     {% endif %}
                 </div>
-            </div>
+            </div> -->
             <!-- Entire guide section -->
-            <div id="guide_column" class="col-sm-9 position_relative">
+            <div id="guide_column" class="col-sm-5 position_relative">
                 <div id="guide_content">
                     <!-- Guide header section -->
                     <div id="guide_meta" class="sect1">
@@ -84,7 +79,9 @@ js: guide
                 <div id="copied_to_clipboard_confirmation" style="display: none;">Copied to clipboard</div>
                 <a id="copy_to_clipboard" href="" style="display: none;"></a>
             </div>
+
+            <!-- Code section -->
+            <div id="code_column" class="col-sm-7 position_relative"></div>
         </div>
-    </div>
 </div>
 
