@@ -1,24 +1,28 @@
 language: ruby
 rvm:
 - 2.4.1
+
 before_script:
-- chmod +x ./scripts/build_jekyll_maven.sh
-script: "./scripts/build_jekyll_maven.sh"
+ - chmod +x ./scripts/build_jekyll_maven.sh # or do this locally and commit
+
+# Assume bundler is being used, therefore
+# the `install` step will run `bundle install` by default.
+script: ./scripts/build_jekyll_maven.sh
+
+# branch whitelist
 branches:
   only:
-  - development
-sudo: false
+    - development
+
+sudo: false # route your build to the container-based infrastructure for a faster build
+
 deploy:
   provider: bluemixcloudfoundry
   skip_cleanup: true
   manifest: manifest.yml
-  username: "$BLUEMIX_USER"
-  password: "$BLUEMIX_PASSWORD"
-  organization: "$BLUEMIX_ORGANIZATION"
-  space: "$BLUEMIX_SPACE"
+  username: $BLUEMIX_USER
+  password: $BLUEMIX_PASSWORD
+  organization: $BLUEMIX_ORGANIZATION
+  space: $BLUEMIX_SPACE
   on:
     branch: development
-notifications:
-  slack:
-    rooms:
-      secure: F/aEPqWHpM2k0U2LGSYSUNkblKBs8ImDWV9MfccjPxHQGlGa4v+DzjY+UKPeWopU1m4/DhTbcrfTDjA26GDtqv3gwogLbBRqutPuOlVh5Q3Al7c2FHOaSUI16T9mlj2v5K4nK11T3SCF5TPnKhMNF6uhH4oCQVSOb/AEhO0AvEk1sV+GJXCeR1ChyeIfUHY2VDI+q3YImqVJpZiaIwqaECkPQZKTgH8UCDZKJNExYJTDMnGARMdg8OnnaHM0B0zT8JX0BtGDziCMf03+TAbj7ulLwRLzBAZQyQU5wjL0kher4XNPOgw3z5iuYEiu9ctk2F/FE4NJo4NYAVW+yV+9HAOesBOew/yW27S3DocLS9UmWR8AC0WU/sn1vr7T8+3JCucxxsG5kIqgecdnFrjX2ZVrCPgI+1bU+YWwk+kspYS2Z58ZWxxKooEa4B/Bbbt2jy6FbFqDh46ftdES5qcfPKT0CZ1AWIaPBRmnxhNwtmSKqFJJ7K0cqJjYUCvpYGZtvPPodzR3+MCMWz92pyqdFBrg/z8ITpHJKk3QXb5Yvco03WqS5+CU4PHZ4Xk5av5S1OabB+FRLsr+1pW3lTr0uDrWtCNQ7XcyiqBe2DStn8f2RvLV8WGbOawADfWevirOGNXclFf/Mkdyz+b3HyK7oi4ehHaug016zR8zaehiJYo=
