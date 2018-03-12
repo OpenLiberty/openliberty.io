@@ -56,7 +56,7 @@ public class TLSFilter implements Filter {
           response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY); // HTTP 301
           response.setHeader("Location", ((HttpServletRequest)req).getRequestURL().replace(0, 4, "https").toString());
         } else if ("https".equals(req.getScheme())) {
-          response.setHeader("Strict-Transport-Security", "max-age=3600");
+          response.setHeader("Strict-Transport-Security", "max-age=2592000");
 
           String uri = ((HttpServletRequest)req).getRequestURI();
           if(uri.startsWith("/img/")) {
