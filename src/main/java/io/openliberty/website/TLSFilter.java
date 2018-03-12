@@ -56,7 +56,7 @@ public class TLSFilter implements Filter {
           response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY); // HTTP 301
           response.setHeader("Location", ((HttpServletRequest)req).getRequestURL().replace(0, 4, "https").toString());
         } else if ("https".equals(req.getScheme())) {
-          response.setHeader("Strict-Transport-Security", "max-age=2592000");
+          response.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains"); // Tell browsers that this site should only be accessed using HTTPS, instead of using HTTP. IncludeSubDomains and 1 year set per OWASP.
 
           String uri = ((HttpServletRequest)req).getRequestURI();
           if(uri.startsWith("/img/")) {
