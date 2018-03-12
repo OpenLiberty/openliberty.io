@@ -11,6 +11,8 @@
 package io.openliberty.website;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;
@@ -22,6 +24,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 public class TLSFilter implements Filter {
+
+    // A list of deprecated URLs that need to be redirected using the HTTP 302.
+    private final Map<String, String> TEMP_REDIRECTS = 
+        new HashMap<String, String>() {{
+            put("/docs/ref/javaee/", "/docs/ref/javaee/7/");
+            put("/docs/ref/microprofile/", "/docs/ref/microprofile/1.2/");
+            put("/docs/ref/", "/docs/");
+            // put("old uri", "new uri");
+        }};
+
     public void destroy() {
     }
 
@@ -41,7 +53,7 @@ public class TLSFilter implements Filter {
 				 || serverName.equals(Constants.OPEN_LIBERTY_BLUE_APP_HOST))) {   
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         } else if ("http".equals(req.getScheme())) {
-          response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+          response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY); // HTTP 301
           response.setHeader("Location", ((HttpServletRequest)req).getRequestURL().replace(0, 4, "https").toString());
         } else if ("https".equals(req.getScheme())) {
           response.setHeader("Strict-Transport-Security", "max-age=3600");
@@ -52,7 +64,16 @@ public class TLSFilter implements Filter {
           } else {
         	  response.setHeader("Cache-Control", "no-cache");
           }
-
+        
+          // REDIRECT CODE FOR HTTPS TRAFFIC
+          if(TEMP_REDIRECTS.containsKey(uri)) {
+              String newURI = TEMP_REDIRECTS.get(uri);
+              String newURL = req.getScheme() + "://" + req.getServerName() + newURI;
+              response.sendRedirect(newURL);
+              // We want to redirect the Servlet and stop further processing of
+              // the incoming request.
+              return;
+          }
         }
 
         chain.doFilter(req, resp);
