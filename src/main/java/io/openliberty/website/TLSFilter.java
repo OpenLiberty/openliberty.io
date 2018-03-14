@@ -60,7 +60,7 @@ public class TLSFilter implements Filter {
           response.setHeader("X-Frame-Options", "SAMEORIGIN"); // Prevent framing of this website.
           response.setHeader("X-XSS-Protection", "1; mode=block"); // Cross-site scripting prevention for Chrome, Safari, and IE. It's not necessary with newer browser versions that support the Content-Security-Policy but it helps prevent XSS on older versions of these browsers.
           response.setHeader("X-Content-Type-Options", "nosniff"); // Stops a browser from trying to MIME-sniff the content type.
-          response.setHeader("Content-Security-Policy", "default-src 'self'"); // Mitigating cross site scripting (XSS) from other domains.
+          response.setHeader("Content-Security-Policy-Report-Only", "default-src 'self' ajax.googleapis.com fonts.gstatic.com maxcdn.bootstrapcdn.com *.githubusercontent.com googletagmanager.com google-analytics.com; report-uri /csp-violation-report-endpoint/"); // Mitigating cross site scripting (XSS) from other domains.
           response.setHeader("Referrer-Policy", "no-referrer"); // Limits the information sent cross-domain and does not send the origin name.
 
           String uri = ((HttpServletRequest)req).getRequestURI();
