@@ -67,6 +67,7 @@ In Open Liberty 18.0.0.1, you'll find:
 * What else is new?
 ** <<endpointcontrol,Endpoint control with MBeans>>
 ** <<threadpool,Threadpool controller performance improvements>>
+** <<jsonlog,JSON format logging>>
 
 
 [#mpopentracing]
@@ -129,7 +130,7 @@ To enable MicroProfile Rest Client in the `server.xml`:
 </featureManager>
 ----
 
-To find out more about the MicroProfile Rest Client in Liberty, see [Andy McCright's blog post](https://openliberty.io/news/2018/01/31/mpRestClient.html) on the OpenLiberty.io website.
+To find out more about the MicroProfile Rest Client in Liberty, see https://openliberty.io/news/2018/01/31/mpRestClient.html[Andy McCright's blog post] on the OpenLiberty.io website.
 
 
 [#mpmetrics]
@@ -191,10 +192,6 @@ The ConfigBuilder SPI has been extended with a method that allows for a converte
 
 Specification changes: (https://github.com/eclipse/microprofile-config/issues/205[#205]), (https://github.com/eclipse/microprofile-config/issues/259[#259]), (https://github.com/eclipse/microprofile-config/issues/269[#269]), and (https://github.com/eclipse/microprofile-config/issues/267[#267]).
 
-=== Other changes
-
-The API bundle can work with either CDI 1.2 or CDI 2.0 in the OSGi environment (https://github.com/eclipse/microprofile-config/issues/249[#249]).
-
 
 
 [#endpointcontrol]
@@ -202,7 +199,7 @@ The API bundle can work with either CDI 1.2 or CDI 2.0 in the OSGi environment (
 
 There's now a new endpoint control MBean so that you can query and control the state of both HTTP and messaging endpoints. You can also control the state of message endpoints using the existing `server` command.  And you can configure whether the messaging endpoint starts automatically with the associated application.
 
-Prior to this feature, the only option for administrators wanting to stop inbound http traffic to the server was to use the `server` pause and resume commands from the command line; for more info, see [the WebSphere Liberty Knowledge Center docs](https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_PauseResume_cmd.html).
+Prior to this feature, the only option for administrators wanting to stop inbound http traffic to the server was to use the `server` pause and resume commands from the command line; for more info, see https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_PauseResume_cmd.html[the WebSphere Liberty Knowledge Center docs].
 
 The MBean has the Object name: `WebSphere:feature=kernel,name=ServerEndpointControl` and, like most mbeans, is self-describing. If you don't know what any of that means, take a look at this blog post on https://developer.ibm.com/wasdev/blog/2017/12/21/mbean-controls-server-endpoints/[controlling server endpoint traffic with MBeans].
 
@@ -213,6 +210,25 @@ The MBean has the Object name: `WebSphere:feature=kernel,name=ServerEndpointCont
 The Liberty threadpool controller automatically sets the size of the default threadpool to optimize the server throughput, so the system administrator does not have to manually tune the threadpool. This feature improves the controller's ability to auto-tune to a good pool size when the offered workload requires lots of threads, such as high-latency transactions where threads block on some slow-responding resource. Workloads that perform best with many threads were not always handled optimally by the prior controller implementation. With this improvement, there should be far fewer use cases where the system operator has to manually tune or configure the default threadpool in order to fully exploit the available CPU resources.
 
 For more info about Liberty's threading, see Gary's blog post: https://developer.ibm.com/wasdev/docs/was-liberty-threading-and-why-you-probably-dont-need-to-tune-it/[Liberty threading and why you probably don't need to tune it]
+
+
+[#jsonlog]
+== JSON format logging
+
+Currently, messages are written to the console and `messages.log` in a simple, human-friendly text format while FFDC, trace, and access log events are written to separate output files. This new JSON logging enhancement enables all of these events to be written to the `messages.log` and the console using JSON. This JSON format is easy for log analysis tools to read and parse.  Writing events in JSON format to the console is particularly useful in containerized environments that provide log management capabilities (such as Docker or Cloud Foundry).
+
+You can, for example, use JSON logging to provide effective log consolidation and analysis in Kibana dashboards.  Administrators can use the sample dashboards to monitor a large number of Liberty containers to aid in problem determination.  For more info, see https://www.ibm.com/support/knowledgecenter/SSAW57_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/twlp_icp.html[the WebSphere Liberty Knowledge Center docs].
+
+You can enable JSON logging by setting environment variables, bootstrap properties, or specifying new attributes in the `<logging>` element in `server.xml`.  For example:
+
+[source,xml]
+----
+<logging traceSpecification="com.myco.mypackage.*=finest" consoleFormat="json" consoleSource="message,trace,accessLog,ffdc"/>
+----
+
+This enables JSON logging and message, trace, access log, and FFDC events to be written to console in JSON format.
+
+For more info, see https://www.ibm.com/support/knowledgecenter/en/was_beta_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/rwlp_logging.html[the WebSphere Liberty Knowledge Center docs].
 
 
 ## Ready to give it a try?
