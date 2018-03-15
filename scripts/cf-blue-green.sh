@@ -17,7 +17,7 @@ TEMP="${BLUE}-old"
 echo "App name is $BLUE"
 
 # create the GREEN application
-./cf push $GREEN -p ./target/openliberty.war -b liberty-for-java
+./cf push $GREEN -p ./target/openliberty.war -b liberty-for-java -f manifest.yml
 
 # cleanup
 echo "Cleaning up after blue-green deployment..."
