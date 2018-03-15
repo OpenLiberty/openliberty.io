@@ -15,6 +15,7 @@ $(document).ready(function() {
     var description_key = 2;
     var tags_key = 4;
 
+    // Look for guides that contain every search word
     function filter_guides(key, search_value) {
         $('.guide_item').each(function(index, element) {
             
@@ -23,14 +24,33 @@ $(document).ready(function() {
             var description = guide_item.data('description');
             var tags = guide_item.data('tags');
 
-            if (((key & title_key) && title.indexOf(search_value) != -1)
-             || ((key & description_key) && description.indexOf(search_value) != -1)
-             || ((key & tags_key) && tags.indexOf(search_value) != -1)) {
+            // Split on whitespaces.  Treat consecutive whitespaces as one.
+            var tokens = search_value.trim().split(/\s+/);
+
+            // Look for guides that contain all the search words.
+            var matches_all_words = false;
+            for(var i = 0; i < tokens.length; i++) {
+                var word = tokens[i];
+                if (((key & title_key) && title.indexOf(word) != -1)
+                || ((key & description_key) && description.indexOf(word) != -1)
+                || ((key & tags_key) && tags.indexOf(word) != -1)) {
+                    // Guide contains one of the search word.
+                    // Keep checking this guide if it contains the other
+                    // search words.
+                    matches_all_words = true;
+                } else {
+                    // Guide is missing the search word.
+                    // mark guide as not a search result.
+                    matches_all_words = false;
+                    break;
+                }
+            }
+
+            if(matches_all_words) {
                 guide_item.parent().removeClass('hidden');
             } else {
                 guide_item.parent().addClass('hidden');
             }
-
         });
     }
 

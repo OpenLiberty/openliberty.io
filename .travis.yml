@@ -3,7 +3,8 @@ rvm:
 - 2.4.1
 
 before_script:
- - chmod +x ./scripts/build_jekyll_maven.sh # or do this locally and commit
+- chmod +x ./scripts/build_jekyll_maven.sh # or do this locally and commit
+
 
 # Assume bundler is being used, therefore
 # the `install` step will run `bundle install` by default.
@@ -16,13 +17,12 @@ branches:
 
 sudo: false # route your build to the container-based infrastructure for a faster build
 
+before_deploy:
+- chmod +x ./scripts/cf-blue-green.sh
+
 deploy:
-  provider: bluemixcloudfoundry
+  provider: script
+  script: ./scripts/cf-blue-green.sh
   skip_cleanup: true
-  manifest: manifest.yml
-  username: $BLUEMIX_USER
-  password: $BLUEMIX_PASSWORD
-  organization: $BLUEMIX_ORGANIZATION
-  space: $BLUEMIX_SPACE
   on:
-    branch: development
+    branch: deployment
