@@ -12,35 +12,67 @@
                 <a href="/" aria-label="Open Liberty Home Page">
                     <img id="doc_logo" src="{{ " /img/docs_openliberty_logo.png " | relative }}" class="img-responsive" alt="Home" />
                 </a>
-                <div id="doc_title">Reference</div>
+                <div id="doc_title">Docs</div>
                 <!-- <img id="doc_title" src="{{ " /img/reference_header_title.svg " | relative }}" class="img-responsive" alt="Docs"> -->
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right text-right">                    
+                <ul class="nav navbar-nav navbar-left text-right">                    
                     <li>
                         <a href="/guides">Guides</a>
                     </li>
-                    <li>
-                        <a href="/docs/ref/javaee/7"> Java EE 7 API</a>
-                    </li>
-                    <li>
-                        <a href="/docs/ref/microprofile/1.2">MicroProfile 1.2 API</a>
-                    </li>
-                    <li>
-                        <a href="/docs/ref/microprofile/1.3">MicroProfile 1.3 API</a>
-                    </li>
+                    <!-- <li> -->
+                        <!-- <a href="#" class="nav-reference">Reference</a> -->
+                    <!-- </li> -->
+                    <!-- Single button -->
+                    <div id="reference_dropdown_container" class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle reference_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Reference <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                            <!-- <li role="separator" class="divider"></li> Keep this divider for when we add the API,SPI,Config,and Features sections-->
+                            <li><a href="/docs/ref/javaee/7/">Java EE API</a></li>
+                            <li><a href="/docs/ref/microprofile/1.3/">MicroProfile API</a></li>
+                            </ul>
+                    </div>
                 </ul>
             </div>
-            <div id="breadcrumb_row">
-                <ol class="breadcrumb fluid-container">
-                    <li>
-                        <a href="/docs">Docs & Guides</a>
-                    </li>
-                    <li class="active"> {{ page.title }} </li>
-                </ol>
-            </div>
+            {% if page.breadcrumb %}
+                <div id="breadcrumb_row">
+                    <ol class="breadcrumb fluid-container">
+                        {% for url in page.breadcrumb %}
+                            {% assign breadcrumb_page = site.pages | where: 'permalink', url %}
+                            {% assign breadcrumb_page = breadcrumb_page[0] %}
+                            <li>
+                                <a href="{{ breadcrumb_page.url }}"> {{ breadcrumb_page.title }}</a>
+                            </li>
+                        {% endfor %}                        
+
+                        <!-- Javadocs -->
+                        {% if page.type == 'Reference' %}
+                            <li class="active"> {{ page.doc-type }} </li>
+                            {% assign versions = site.pages | where: 'doc-type', page.doc-type | sort: 'version' | reverse %}
+                            {% if versions | size > 1 %}
+                                <span id="breadcrumb_line">|</span>
+                                <li id="breadcrumb_version">VERSION:</li>
+
+                                {% for javadoc in versions %}
+                                <li class="javadoc_version">
+                                    <a href="{{ javadoc.url }}" {% if page.version == javadoc.version %} class="selected_javadoc__version" {% endif %}>{{ javadoc.version }}</a>
+                                </li>                                    
+                                {% endfor %}
+                            {% endif %}
+                        
+                        <!-- Guides -->
+                        {% else %}
+
+                        {% endif %}                        
+                    </ol>
+                </div>
+            {% endif %}            
         </div>
     </nav>
+    <!-- Docs -->
+    <div id="header_background" class="black_blue_gradient_background"></div>
     <div class="hidden">
         <img src="/img/small_logo_white.svg">
         <img src="/img/github_navbar_hover.svg">

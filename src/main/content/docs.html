@@ -1,8 +1,10 @@
 ---
-layout: default
+layout: doc
 title: Docs & Guides
+type: Docs
 css:
 - reference-card
+- doc-header
 - docs
 permalink: /docs/
 ---
@@ -12,7 +14,7 @@ permalink: /docs/
     <div class="container">
         <div class="row">
             <div class="col-sm-4">
-                <div id="docs_title">Docs & Guides</div>
+                <div id="docs_title">Docs</div>
             </div>
             <div class="col-sm-8">
                 <p id="contribute_intro_paragraph_1">
@@ -38,7 +40,7 @@ permalink: /docs/
 </div>
 
 <!-- Build one list of all the documents that have a particular layout -->
-{% assign javadocs = site.pages | where: 'layout', 'javadocs' %}
+{% assign javadocs = site.pages | where: 'type', 'Reference' %}
 
 <div class="grey_background">
     <div id="docs_container" class="container">
