@@ -19,21 +19,15 @@
     background-image: none;
 }
 
-@media (max-width: 767px) {
-    #header_background {
-        padding-top: 0;
-    }
-}
-
 #doc_logo,
 #doc_title {
     float: left;
 }
 
 #doc_title {
-    padding-left: 20px;
+    padding-left: 15px;
     font-family: BunueloLight;
-    font-size:35px;
+    font-size:30px;
     color:#f1f4fe;
     letter-spacing:0;
     text-align:left;
@@ -48,11 +42,6 @@
     background: inherit;
 }
 
-#reference_dropdown_container .dropdown-toggle:focus {
-    outline: 1px dotted #212121;
-    outline: 5px auto -webkit-focus-ring-color;
-}
-
 /* Override the dropdown button colors */
 #navbar .btn-default.active, #navbar .btn-default:active, #navbar .open > .dropdown-toggle.btn-default{
     color: white;
@@ -64,6 +53,7 @@
 
 #reference_dropdown_container {
     margin-top: 9px;
+    display: inline-block;
 }
 
 .reference_dropdown:hover, .reference_dropdown:focus, .reference_dropdown:active {
@@ -94,12 +84,6 @@
     height: 41px;
 }
 
-@media (max-width: 767px){
-    #breadcrumb_row {
-        height: 36px;
-    }
-}
-
 #breadcrumb_row .breadcrumb {
     background-color: #24243A;
     padding-left: 30px;
@@ -110,6 +94,11 @@
 
 #breadcrumb_row a {
     color:#c8d6fb;
+}
+
+/* Unclickable link */
+#breadcrumb_row a.inactive_link {
+    color:#FFFFFF;
 }
 
 #breadcrumb_row a:hover, #breadcrumb_row a:focus,
@@ -146,20 +135,27 @@
 
 .javadoc_version {
     margin: 0 7px;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 26px;
 }
 
 #breadcrumb_row .selected_javadoc__version {
     color: #f4914d;
+    font-family: BunueloBold;    
 }
 
+#breadcrumb_row a.selected_javadoc__version:hover {
+    color: #f4914d;
+    cursor: default;
+}
+
+/* Breakpoint for when the hamburger navbar appears and the navbar links go into the hamburger
+   The breadcrumb still exists at this point */
 @media (max-width: 767px) { 
 
     #doc_logo {
         display: inline-block;
-    }
-
-    .navbar-header {
-        margin-bottom: 10px;
     }
 
     #doc_logo {
@@ -170,14 +166,6 @@
     #doc_title {
         margin-top: 15px;
     }
-}
-
-/* Breakpoint for hamburger navbar */
-@media (max-width: 767px) {
-    .navbar {
-        background-color: #313653;
-        position: static;
-    }
 
     #navbar_responsive_button {
         background-color: #313653;
@@ -185,48 +173,6 @@
 
     #header_background {
         padding-top: 0;
-    }
-
-    .hidden-xs {
-        display: none!important;
-    }
-
-    .navbar-header {
-        float: none;
-    }
-    .navbar-left,.navbar-right {
-        float: none !important;
-    }
-    .navbar-toggle {
-        display: block;
-    }
-    .navbar-collapse {        
-        border-top: 1px solid transparent;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-    }
-    .navbar-fixed-top {
-        top: 0;
-        border-width: 0 0 1px;
-    }
-    .navbar-collapse.collapse {
-        display: none!important;
-    }
-    .navbar-nav {
-        float: none!important;
-        margin-top: 7.5px;
-    }
-    .navbar-nav>li {
-        float: none;
-    }
-    .navbar-nav>li>a {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-    .navbar-default .navbar-nav > li > a:focus{
-        color: white;
-    }
-    .collapse.in{
-        display:block !important;
     }
 
     .dropdown-toggle.btn-default {
@@ -237,9 +183,18 @@
         color: white;
     }
 
+    .navbar {
+        background-color: #313653;
+        position: static;
+    }
+
     .navbar-default .navbar-nav .open .dropdown-menu>li>a{
         float: right;
         color: #C8D2D2;
+    }
+
+    #breadcrumb_row {
+        height: 36px;
     }
 
     #breadcrumb_row .breadcrumb {
