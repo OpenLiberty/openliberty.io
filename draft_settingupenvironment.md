@@ -20,7 +20,7 @@
 
 ## (Optional) Turn off JavaScript/CSS/HTML minification for performance
 
-In `openliberty.io/src/main/content` set these values to false, `css`, `js`, `minify_html`.  The result should look like
+In `openliberty.io/src/main/content/_config.yml` set these values to false, `css`, `js`, `minify_html`.  The result should look like
 
 ```
 assets:
