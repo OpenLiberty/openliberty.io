@@ -73,7 +73,7 @@ In Open Liberty 18.0.0.1, you'll find:
 [#mpopentracing]
 == Enable distributed tracing with MicroProfile OpenTracing 1.0
 
-The `mpOopenTracing-1.0` feature, together with a user provided `io.opentracing.Tracer` implementation, enables JAX-RS applications to automatically create, propagate, and deliver distributed tracing information. With the `mpOpenTracing-1.0` feature, you can also explicitly mark for tracing methods that would not automatically be traced. Additionally, you can use the `@Inject` annotation to obtain an application-specific instance of an `io.opentracing.Tracer`. The injected `Tracer` instance provides  access to the full opentracing.io API.
+The `mpOpenTracing-1.0` feature, together with a user provided `io.opentracing.Tracer` implementation, enables JAX-RS applications to automatically create, propagate, and deliver distributed tracing information. With the `mpOpenTracing-1.0` feature, you can also explicitly mark for tracing methods that would not automatically be traced. Additionally, you can use the `@Inject` annotation to obtain an application-specific instance of an `io.opentracing.Tracer`. The injected `Tracer` instance provides  access to the full opentracing.io API.
 
 In an environment with numerous services communicating with each other, distributed trace information provides a way to view the end-to-end flow of requests through multiple services. In many environments, there is a central trace collection service that accepts distributed tracing information from individual applications (one popular distributed tracing service is https://zipkin.io/[Zipkin]). The central service correlates the distributed tracing information and presents the end-to-end request flow information with a UI.
 
