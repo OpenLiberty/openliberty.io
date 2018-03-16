@@ -1,18 +1,18 @@
 ---
 layout: post
-title:  "Enable distributed tracing of microservices with MicroProfile 1.3 in Open Liberty 18.0.0.1"
+title:  "Enable distributed tracing of microservices with MicroProfile 1.3 (and more) in Open Liberty 18.0.0.1"
 
 categories: news
 author_picture: https://avatars3.githubusercontent.com/u/3322532
-seo-title: Enable distributed tracing of microservices with MicroProfile 1.3 - Open Liberty
+seo-title: Enable distributed tracing of microservices with MicroProfile 1.3 (and more) - Open Liberty
 seo-description: Get distributed tracking of your microservices, a standardised way (through OpenAPI) to describe your RESTful applications, and a type-safe approach to invoking RESTful services over HTTP in Open Liberty 18.0.0.1.
 blog_description: Get distributed tracking of your microservices, a standardised way (through OpenAPI) to describe your RESTful applications, and a type-safe approach to invoking RESTful services over HTTP in Open Liberty 18.0.0.1.
 ---
 :description: Get distributed tracking of your microservices, a standardised way (through OpenAPI) to describe your RESTful applications, and a type-safe approach to invoking RESTful services over HTTP in Open Liberty 18.0.0.1.
-= Enable distributed tracing of microservices with MicroProfile 1.3 in Open Liberty 18.0.0.1
+= Enable distributed tracing of microservices with MicroProfile 1.3 (and more) in Open Liberty 18.0.0.1
 Laura Cowen <http://github.com/lauracowen>
 
-What's that? You'd like distributed tracing of microservices, a standardised way to describe your RESTful applications, a type-safe approach for invoking RESTful services over HTTP, metrics for your microservices, external configuration of your microservices, the moon on a stick? Funny you should ask: Let me introduce you to Open Liberty 18.0.0.1., steeped in MicroProfile goodness to give you all of those things (except the moon, obvs). Read on to try it out and to find out more...
+What's that? You'd like distributed tracing of microservices, a standardised way to describe your RESTful applications, a type-safe approach for invoking RESTful services over HTTP, metrics for your microservices, external configuration of your microservices, the moon on a stick? Funny you should ask: Let me introduce you to Open Liberty 18.0.0.1., steeped in MicroProfile goodness to give you all of those things (except the moon, obvs) and more. Read on to try it out and to find out more...
 
 image::/img/logos/docs_microprofile_logo.png[align="center"]
 
@@ -119,7 +119,7 @@ The MicroProfile OpenAPI 1.0 feature (`mpOpenAPI-1.0`) is an implementation of t
 [#mprestclient]
 == Type-safe way to call RESTful services over HTTP with MicroProfile Rest Client 1.0
 
-The [MicroProfile Rest Client](http://microprofile.io/project/eclipse/microprofile-rest-client) builds on the JAX-RS 2.0 Client APIs to provide a type-safe approach for invoking RESTful services over HTTP.  This means writing client applications with more model-centric code and less "plumbing". You can create a Java interface that represents a remote RESTful service. Decorate the methods with appropriate `@Path`, `@GET`, `@POST`, etc. annotations, and then invoke those methods like a POJO and get the response from the remote service.
+The http://microprofile.io/project/eclipse/microprofile-rest-client[MicroProfile Rest Client] builds on the JAX-RS 2.0 Client APIs to provide a type-safe approach for invoking RESTful services over HTTP.  This means writing client applications with more model-centric code and less "plumbing". You can create a Java interface that represents a remote RESTful service. Decorate the methods with appropriate `@Path`, `@GET`, `@POST`, etc. annotations, and then invoke those methods like a POJO and get the response from the remote service.
 
 To enable MicroProfile Rest Client in the `server.xml`:
 
@@ -197,9 +197,9 @@ Specification changes: (https://github.com/eclipse/microprofile-config/issues/20
 [#endpointcontrol]
 == Endpoint control with MBeans
 
-There's now a new endpoint control MBean so that you can query and control the state of both HTTP and messaging endpoints. You can also control the state of message endpoints using the existing `server` command.  And you can configure whether the messaging endpoint starts automatically with the associated application.
+There's a new endpoint control MBean so that you can now query and control the state of both HTTP endpoints and messaging endpoints (that is, activation specs). You can now also control the state of message endpoints using the existing `server` command.  And you can configure whether the messaging endpoint starts automatically with the associated application.
 
-Prior to this feature, the only option for administrators wanting to stop inbound http traffic to the server was to use the `server` pause and resume commands from the command line; for more info, see https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_PauseResume_cmd.html[the WebSphere Liberty Knowledge Center docs].
+Prior to this feature, the only option for administrators wanting to stop inbound traffic to the server was to use the `server` pause and resume commands from the command line; for more info, see https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_PauseResume_cmd.html[the WebSphere Liberty Knowledge Center docs].
 
 The MBean has the Object name: `WebSphere:feature=kernel,name=ServerEndpointControl` and, like most mbeans, is self-describing. If you don't know what any of that means, take a look at this blog post on https://developer.ibm.com/wasdev/blog/2017/12/21/mbean-controls-server-endpoints/[controlling server endpoint traffic with MBeans].
 
@@ -207,7 +207,7 @@ The MBean has the Object name: `WebSphere:feature=kernel,name=ServerEndpointCont
 [#threadpool]
 == Threadpool controller performance improvements
 
-The Liberty threadpool controller automatically sets the size of the default threadpool to optimize the server throughput, so the system administrator does not have to manually tune the threadpool. This feature improves the controller's ability to auto-tune to a good pool size when the offered workload requires lots of threads, such as high-latency transactions where threads block on some slow-responding resource. Workloads that perform best with many threads were not always handled optimally by the prior controller implementation. With this improvement, there should be far fewer use cases where the system operator has to manually tune or configure the default threadpool in order to fully exploit the available CPU resources.
+The Liberty threadpool controller automatically sets the size of the default threadpool to optimize the server throughput, so the system administrator does not have to manually tune the threadpool. This feature improves the controller's ability to auto-tune to an optimal pool size when the offered workload has high-latency transactions. Workloads with high latency that require many threads were not always handled optimally by the prior controller implementation. With this improvement, there should be far fewer use cases where the system operator has to manually tune or configure the default threadpool in order to fully exploit the available CPU resources.
 
 For more info about Liberty's threading, see Gary's blog post: https://developer.ibm.com/wasdev/docs/was-liberty-threading-and-why-you-probably-dont-need-to-tune-it/[Liberty threading and why you probably don't need to tune it]
 
