@@ -1,0 +1,241 @@
+---
+layout: post
+title:  "Enable distributed tracing of microservices with MicroProfile 1.3 (and more) in Open Liberty 18.0.0.1"
+date:   2018-03-16 18:00:00 -0000
+categories: news
+author_picture: https://avatars3.githubusercontent.com/u/3322532
+seo-title: Enable distributed tracing of microservices with MicroProfile 1.3 (and more) - Open Liberty
+seo-description: Get distributed tracking of your microservices, a standardised way (through OpenAPI) to describe your RESTful applications, and a type-safe approach to invoking RESTful services over HTTP in Open Liberty 18.0.0.1.
+blog_description: Get distributed tracking of your microservices, a standardised way (through OpenAPI) to describe your RESTful applications, and a type-safe approach to invoking RESTful services over HTTP in Open Liberty 18.0.0.1.
+---
+:description: Get distributed tracking of your microservices, a standardised way (through OpenAPI) to describe your RESTful applications, and a type-safe approach to invoking RESTful services over HTTP in Open Liberty 18.0.0.1.
+= Enable distributed tracing of microservices with MicroProfile 1.3 (and more) in Open Liberty 18.0.0.1
+Laura Cowen <http://github.com/lauracowen>
+
+What's that? You'd like distributed tracing of microservices, a standardised way to describe your RESTful applications, a type-safe approach for invoking RESTful services over HTTP, metrics for your microservices, external configuration of your microservices, the moon on a stick? Funny you should ask: Let me introduce you to Open Liberty 18.0.0.1., steeped in MicroProfile goodness to give you all of those things (except the moon, obvs) and more. Read on to try it out and to find out more...
+
+image::/img/logos/docs_microprofile_logo.png[align="center"]
+
+Remember, if you're really keen, you can see what's being developed in Open Liberty in the https://openliberty.io/downloads/[nightly builds]. Feel free to https://openliberty.io/contribute/[raise or even fix a bug]. Fancy influencing the future direction of Open Liberty? Join the https://groups.io/g/openliberty[Open Liberty discussion group].
+
+As we don't have a full set of documentation implemented for Open Liberty yet, the items below point (where relevant) to the official documentation for WebSphere Liberty (which is built on Open Liberty) so you can find out more about them.
+
+You can now download Open Liberty and Open Liberty Tools 18.0.0.1.:
+
+[link=https://openliberty.io/downloads/]
+image::/img/blog_btn_download-ol.svg[align="center"][Download Open Liberty]
+
+[link=https://stackoverflow.com/tags/open-liberty]
+image::/img/blog_btn_stack.svg[align="center"][Ask a question on Stack Overflow]
+
+Alternatively, if you're using https://www.openliberty.io/guides/maven-intro.html[Maven], here are the coordinates:
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.openliberty</groupId>
+    <artifactId>openliberty-runtime</artifactId>
+    <version>18.0.0.1</version>
+    <type>zip</type>
+</dependency>
+----
+
+Or for https://openliberty.io/guides/gradle-intro.html[Gradle]:
+
+[source,json]
+----
+dependencies {
+    libertyRuntime group: 'io.openliberty', name: 'openliberty-runtime', version: '[18.0.0.1,)'
+}
+----
+
+Or if you're using Docker:
+
+[source]
+----
+docker pull openliberty/open-liberty
+----
+
+In Open Liberty 18.0.0.1, you'll find:
+
+* MicroProfile 1.3:
+** <<mpopentracing,Distributed tracing with MicroProfile OpenTracing 1.0>>
+** <<mpopenapi,Standardised way of describing your apps with MicroProfile OpenAPI 1.0>>
+** <<mprestclient,Type-safe way to call RESTful services over HTTP with MicroProfile Rest Client 1.0>>
+** <<mpmetrics,Metrics for your microservices with MicroProfile Metrics 1.1>>
+** <<mpconfig,External configuration of your microservices with MicroProfile Config 1.2>>
+* What else is new?
+** <<endpointcontrol,Endpoint control with MBeans>>
+** <<threadpool,Threadpool controller performance improvements>>
+** <<jsonlog,JSON format logging>>
+
+
+[#mpopentracing]
+== Enable distributed tracing with MicroProfile OpenTracing 1.0
+
+The `mpOpenTracing-1.0` feature, together with a user provided `io.opentracing.Tracer` implementation, enables JAX-RS applications to automatically create, propagate, and deliver distributed tracing information. With the `mpOpenTracing-1.0` feature, you can also explicitly mark for tracing methods that would not automatically be traced. Additionally, you can use the `@Inject` annotation to obtain an application-specific instance of an `io.opentracing.Tracer`. The injected `Tracer` instance provides  access to the full opentracing.io API.
+
+In an environment with numerous services communicating with each other, distributed trace information provides a way to view the end-to-end flow of requests through multiple services. In many environments, there is a central trace collection service that accepts distributed tracing information from individual applications (one popular distributed tracing service is https://zipkin.io/[Zipkin]). The central service correlates the distributed tracing information and presents the end-to-end request flow information with a UI.
+
+The opentracing.io project defines an API that applications can use to create, propagate, and deliver distributed trace information. An implementation of the opentracing.io API must be available to an application so that the application can deliver distributed trace information. The implementation of the opentracing.io API must match the implementation of the central trace collection service.
+
+For example, if the central trace collection service is Zipkin, then the opentracing.io implementation used by applications must perform distributed tracing functions in a way that is specific to Zipkin.
+Typically, you must explicitly add code to each application in the environment for it to create, propagate, and deliver distributed tracing information. With the `mpOpenTracing-1.0`` feature of Liberty, you do not need to add any code to your JAX-RS applications to participate in distributed tracing. The JAX-RS application will automatically create, propagate, and deliver distributed tracing information.
+
+Each Liberty server in the environment must be configured with a user feature that provides an implementation of the opentracing.io API. The user feature must provide an implementation of the opentracing.io API that matches the central trace collection service that is used in the environment.
+You can find https://github.com/WASdev/sample.opentracing.zipkintracer[sample source code for a user feature] that provides a Zipkin-specific opentracing.io API implementation on GitHub. Or you can download http://central.maven.org/maven2/net/wasdev/wlp/tracer/liberty-opentracing-zipkintracer/1.0/liberty-opentracing-zipkintracer-1.0-sample.zip[a built version of the user feature] from Maven Central.
+
+To enable the MicroProfile OpenTracing in the `server.xml`:
+
+[source,xml]
+----
+
+<feature>mpOpentracing-1.0</feature>
+<feature>usr:opentracingZipkin-0.30</feature>
+
+----
+
+
+[#mpopenapi]
+== Standardised way of describing your apps with MicroProfile OpenAPI 1.0
+
+OpenAPI (previously Swagger) fully describes the details of your RESTful application, creating a shared contract between the server and clients and enables a variety of tools such as code generators and API gateways.
+
+The MicroProfile OpenAPI specification formalizes a programming model for OpenAPI v3 (the next generation of the Swagger spec).  Finally Java programmers have a standard set of annotations, models, and APIs that allow their application to remain portable (vendor neutral) while taking full advantage of the full OpenAPI v3 specification and extensive configuration provided by MicroProfile.
+
+To try it out, add this feature to your `server.xml` list of features:
+
+[source,xml]
+----
+<featureManager>
+    <feature>mpOpenAPI-1.0</feature>
+</featureManager>
+----
+
+Then use one of http://download.eclipse.org/microprofile/microprofile-open-api-1.0/microprofile-openapi-spec.html#_documentation_mechanisms[the documentation methods]. You can view the generated OpenAPI document in the endpoint `/openapi`, or view the rendered user interface at the endpoint `/openapi/ui`. 
+
+The MicroProfile OpenAPI 1.0 feature (`mpOpenAPI-1.0`) is an implementation of the http://download.eclipse.org/microprofile/microprofile-open-api-1.0/microprofile-openapi-spec.html[MicroProfile OpenAPI 1.0 specification].
+
+[#mprestclient]
+== Type-safe way to call RESTful services over HTTP with MicroProfile Rest Client 1.0
+
+The http://microprofile.io/project/eclipse/microprofile-rest-client[MicroProfile Rest Client] builds on the JAX-RS 2.0 Client APIs to provide a type-safe approach for invoking RESTful services over HTTP.  This means writing client applications with more model-centric code and less "plumbing". You can create a Java interface that represents a remote RESTful service. Decorate the methods with appropriate `@Path`, `@GET`, `@POST`, etc. annotations, and then invoke those methods like a POJO and get the response from the remote service.
+
+To enable MicroProfile Rest Client in the `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+    <feature>mpRestClient-1.0</feature>
+</featureManager>
+----
+
+Want to see some worked examples? https://openliberty.io/news/2018/01/31/mpRestClient.html[Andy McCright has written an intro to writing a REST client] and there's https://github.com/eclipse/microprofile-rest-client/blob/master/README.adoc[an even simpler example here on GitHub].
+
+
+[#mpmetrics]
+== Metrics for your microservices with MicroProfile Metrics 1.1
+
+MicroProfile Metrics 1.1 adds explicit support for reusing metrics in different parts of your app, and adds the ability to configure it using `mpConfig-1.2`. 
+
+In the past, accidentally using the same name for a metric in multiple places would result in that metric being updated from all of those places.  The new 'reusable' flag lets you explicitly indicate which metrics are expected/allowed to appear in multiple places and which are only allowed to be used in one place.
+
+To enable the MicroProfile Metrics in the `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+    <feature>mpMetrics-1.1</feature>
+</featureManager>
+
+<quickStartSecurity userName="theUser" userPassword="thePassword"/>
+<keyStore id="defaultKeyStore" password="Liberty"/>
+----
+
+To find out more, see the following WebSphere Liberty Knowledge Center articles:
+
+https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_add.html[Adding metrics to applications]
+
+https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_monitor.html[Monitoring with MicroProfile metrics]
+
+[#mpconfig]
+== External configuration of your microservices with MicroProfile Config 1.2
+
+MicroProfile Config provides you with the capability to externally configure your microservices. If you'd like to know more, take a look at our https://www.openliberty.io/guides/microprofile-config.html[new guide to configuring microservices] or our https://www.openliberty.io/guides/microprofile-config-intro.html[interactive guide to separating configuration from code] (no installation necessary to try this one!).
+
+Building on version 1.1, MicroProfile Config 1.2.1 adds a number of new built-in converters, including `Class`, `List`, `Set` and automatic conversion for classes which have a suitable String constructor or static `valueOf` method. You can use this feature with either the `cdi-1.2` feature or the `cdi-2.0` feature.
+
+To enable the MicroProfile Config 1.2 feature just add the following feature definition to your `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+    <feature>mpConfig-1.2</feature>
+</featureManager>
+----
+
+For more information about MicroProfile Config 1.2, see http://microprofile.io/project/eclipse/microprofile-config[the MicroProfile.io website].
+
+You can find a full list of changes since version 1.1 on the https://github.com/eclipse/microprofile-config/milestone/3?closed=1[MicroProfile Config 1.2 Milestone] and the https://github.com/eclipse/microprofile-config/milestone/5?closed=1[1.2.1 Maintenance Release Milestone].
+
+=== API/SPI changes
+
+The ConfigBuilder SPI has been extended with a method that allows for a converter with the specified class type to be registered (https://github.com/eclipse/microprofile-config/issues/205[#205]). This change removes the limitation in previous releases of being unable to add a lambda converter.  
+
+=== Functional changes
+
+* Implementations must now support the array converter (https://github.com/eclipse/microprofile-config/issues/259[#259]). For the array converter, the programmatic lookup of a property (e.g. `config.getValue(myProp, String[].class)`) must support the return type of the array. For the injection lookup, an Array, List, or Set must be supported as well (e.g. <code>@Inject @ConfigProperty(name="myProp") private List&lt;MyObject&gt; propValue;</code>). 
+* Implementations must also support the common sense converters (https://github.com/eclipse/microprofile-config/issues/269[#269]) where there is no corresponding type of converters provided for a given class. The implementation must use the class’s constructor with a single string parameter, then try `valueOf(String)` followed by `parse(CharSequence)`.
+* Implementations must also support Class converter (https://github.com/eclipse/microprofile-config/issues/267[#267]).
+
+=== Specification Changes
+
+Specification changes: (https://github.com/eclipse/microprofile-config/issues/205[#205]), (https://github.com/eclipse/microprofile-config/issues/259[#259]), (https://github.com/eclipse/microprofile-config/issues/269[#269]), and (https://github.com/eclipse/microprofile-config/issues/267[#267]).
+
+
+
+[#endpointcontrol]
+== Endpoint control with MBeans
+
+There’s a new endpoint control MBean so that you can now query and control the state of both HTTP endpoints and message-driven beans (MDBs). You can now also control the state of MDBs using the existing server command. And you can configure whether the MDB starts automatically with the associated application.
+
+Prior to this feature, the only option for administrators wanting to stop inbound traffic to the server was to use the `server` pause and resume commands from the command line; for more info, see https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_PauseResume_cmd.html[the WebSphere Liberty Knowledge Center docs].
+
+The MBean has the Object name: `WebSphere:feature=kernel,name=ServerEndpointControl` and, like most mbeans, is self-describing. If you don't know what any of that means, take a look at this blog post on https://developer.ibm.com/wasdev/blog/2017/12/21/mbean-controls-server-endpoints/[controlling server endpoint traffic with MBeans].
+
+
+[#threadpool]
+== Threadpool controller performance improvements
+
+The Liberty threadpool controller automatically sets the size of the default threadpool to optimize the server throughput, so the system administrator does not have to manually tune the threadpool. This feature improves the controller's ability to auto-tune to an optimal pool size when the offered workload has high-latency transactions. Workloads with high latency that require many threads were not always handled optimally by the prior controller implementation. With this improvement, there should be far fewer use cases where the system operator has to manually tune or configure the default threadpool in order to fully exploit the available CPU resources.
+
+For more about Liberty's threading, see Gary's blog post: https://developer.ibm.com/wasdev/docs/was-liberty-threading-and-why-you-probably-dont-need-to-tune-it/[Liberty threading and why you probably don't need to tune it]
+
+
+[#jsonlog]
+== JSON format logging
+
+Currently, messages are written to the console and `messages.log` in a simple, human-friendly text format while FFDC, trace, and access log events are written to separate output files. This new JSON logging enhancement enables all of these events to be written to the `messages.log` and the console using JSON. This JSON format is easy for log analysis tools to read and parse.  Writing events in JSON format to the console is particularly useful in containerized environments that provide log management capabilities (such as Docker or Cloud Foundry).
+
+You can, for example, use JSON logging to provide effective log consolidation and analysis in Kibana dashboards.  Administrators can use the sample dashboards to monitor a large number of Liberty containers to aid in problem determination.  For example, see https://www.ibm.com/support/knowledgecenter/SSAW57_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/twlp_icp.html[the WebSphere Liberty Knowledge Center docs].
+
+You can enable JSON logging by setting environment variables, bootstrap properties, or specifying new attributes in the `<logging>` element in `server.xml`.  For example:
+
+[source,xml]
+----
+<logging traceSpecification="com.myco.mypackage.*=finest" consoleFormat="json" consoleSource="message,trace,accessLog,ffdc"/>
+----
+
+This enables JSON logging and message, trace, access log, and FFDC events to be written to console in JSON format.
+
+For more info, see https://www.ibm.com/support/knowledgecenter/en/was_beta_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/rwlp_logging.html[the WebSphere Liberty Knowledge Center docs].
+
+
+## Ready to give it a try?
+
+
+[link=https://openliberty.io/downloads/]
+image::/img/blog_btn_download-ol.svg[align="center"][Download Open Liberty]
+
+[link=https://stackoverflow.com/tags/open-liberty]
+image::/img/blog_btn_stack.svg[align="center"][Ask a question on Stack Overflow]
