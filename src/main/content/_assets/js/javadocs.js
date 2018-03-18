@@ -17,16 +17,6 @@ function resizeJavaDocWindow() {
 
     var middleSectionHeight = $(window).height() - (topSection + bottomSection);
     $('#javadoc_container').height(middleSectionHeight);
-
-    var inMobileView = $(window).width() <= 800;
-    if(inMobileView){
-        // Allow overflow in the body so the footer is visible.
-        $("body").css("overflow" , "auto");
-    }
-    else{
-        // Hide the extra scrollbar.
-        $("body").css("overflow" , "hidden");
-    }
 }
 
 /* Handles any elements which are not accessible by a screen reader and fixes DAP violations. */
@@ -156,14 +146,18 @@ function addScrollListener() {
 }
 
 /*
-    Check if the main frame has been scrolled down at least 80% to show the footer.
+    Check if the right iframe has been scrolled down at least 85% to show the footer.
 */
 function hideFooter(element) {
-    var scrollTop = element.scrollTop();
-    var height = element.height();
+    var scrollTop = element.scrollTop(); // Add the viewport to the top of the scrollTop to see if we've reached end of page.
+    var javadoc_container = $('#javadoc_container').contents();
+    var rightFrame = javadoc_container.find("iframe.rightIframe");
+    var rightFrameViewportHeight = rightFrame.contents()[0].documentElement.clientHeight;
+    var height = element.height(); 
     var footer = $("footer");        
 
-    if (scrollTop > height * .80) {         
+    // Show footer if the scrollTop plus the viewport height of the right iFrame is at least 85% past the bottom of the right iFrame.
+    if ((scrollTop + rightFrameViewportHeight) > height * .85) {         
         if(!footer.data('visible') || footer.data('visible') === "false"){
             footer.data('visible', true);
             footer.css('display', 'block');
