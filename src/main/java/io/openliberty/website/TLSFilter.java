@@ -29,7 +29,7 @@ public class TLSFilter implements Filter {
     private final Map<String, String> TEMP_REDIRECTS = 
         new HashMap<String, String>() {{
             put("/docs/ref/javaee/", "/docs/ref/javaee/7/");
-            put("/docs/ref/microprofile/", "/docs/ref/microprofile/1.2/");
+            put("/docs/ref/microprofile/", "/docs/ref/microprofile/1.3/");
             put("/docs/ref/", "/docs/");
             // put("old uri", "new uri");
         }};
