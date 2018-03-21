@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Enable distributed tracing of microservices with MicroProfile 1.3 (and more) in Open Liberty 18.0.0.1"
+date:   2018-03-16 18:00:00 -0000
 categories: news
 author_picture: https://avatars3.githubusercontent.com/u/3322532
 seo-title: Enable distributed tracing of microservices with MicroProfile 1.3 (and more) - Open Liberty
@@ -74,6 +75,9 @@ In Open Liberty 18.0.0.1, you'll find:
 
 The `mpOpenTracing-1.0` feature, together with a user provided `io.opentracing.Tracer` implementation, enables JAX-RS applications to automatically create, propagate, and deliver distributed tracing information. With the `mpOpenTracing-1.0` feature, you can also explicitly mark for tracing methods that would not automatically be traced. Additionally, you can use the `@Inject` annotation to obtain an application-specific instance of an `io.opentracing.Tracer`. The injected `Tracer` instance provides  access to the full opentracing.io API.
 
+
+Give it a go with our new guide: https://openliberty.io/guides/microprofile-opentracing.html[Enabling distributed tracing in microservices].
+
 In an environment with numerous services communicating with each other, distributed trace information provides a way to view the end-to-end flow of requests through multiple services. In many environments, there is a central trace collection service that accepts distributed tracing information from individual applications (one popular distributed tracing service is https://zipkin.io/[Zipkin]). The central service correlates the distributed tracing information and presents the end-to-end request flow information with a UI.
 
 The opentracing.io project defines an API that applications can use to create, propagate, and deliver distributed trace information. An implementation of the opentracing.io API must be available to an application so that the application can deliver distributed trace information. The implementation of the opentracing.io API must match the implementation of the central trace collection service.
@@ -113,7 +117,7 @@ To try it out, add this feature to your `server.xml` list of features:
 
 Then use one of http://download.eclipse.org/microprofile/microprofile-open-api-1.0/microprofile-openapi-spec.html#_documentation_mechanisms[the documentation methods]. You can view the generated OpenAPI document in the endpoint `/openapi`, or view the rendered user interface at the endpoint `/openapi/ui`. 
 
-The MicroProfile OpenAPI 1.0 feature (`mpOpenAPI-1.0`) is an implementation of the http://download.eclipse.org/microprofile/microprofile-open-api-1.0/microprofile-openapi-spec.html[MicroProfile OpenAPI 1.0 specification].
+Give it a go with our new guide: https://openliberty.io/guides/microprofile-openapi.html[Documenting RESTful APIs].
 
 [#mprestclient]
 == Type-safe way to call RESTful services over HTTP with MicroProfile Rest Client 1.0
@@ -151,11 +155,8 @@ To enable the MicroProfile Metrics in the `server.xml`:
 <keyStore id="defaultKeyStore" password="Liberty"/>
 ----
 
-To find out more, see the following WebSphere Liberty Knowledge Center articles:
+Give it a go with our new guide: https://openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice].
 
-https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_add.html[Adding metrics to applications]
-
-https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_monitor.html[Monitoring with MicroProfile metrics]
 
 [#mpconfig]
 == External configuration of your microservices with MicroProfile Config 1.2
@@ -196,11 +197,11 @@ Specification changes: (https://github.com/eclipse/microprofile-config/issues/20
 [#endpointcontrol]
 == Endpoint control with MBeans
 
-There's a new endpoint control MBean so that you can now query and control the state of both HTTP endpoints and messaging endpoints (that is, activation specs). You can now also control the state of message endpoints using the existing `server` command.  And you can configure whether the messaging endpoint starts automatically with the associated application.
+There’s a new endpoint control MBean so that you can now query and control the state of both HTTP endpoints and message-driven beans (MDBs). You can now also control the state of MDBs using the existing server command. And you can configure whether the MDB starts automatically with the associated application.
 
 Prior to this feature, the only option for administrators wanting to stop inbound traffic to the server was to use the `server` pause and resume commands from the command line; for more info, see https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_PauseResume_cmd.html[the WebSphere Liberty Knowledge Center docs].
 
-The MBean has the Object name: `WebSphere:feature=kernel,name=ServerEndpointControl` and, like most mbeans, is self-describing. If you don't know what any of that means, take a look at this blog post on https://developer.ibm.com/wasdev/blog/2017/12/21/mbean-controls-server-endpoints/[controlling server endpoint traffic with MBeans].
+The MBean has the Object name: `WebSphere:feature=kernel,name=ServerEndpointControl` and, like most mbeans, is self-describing. If you don't know what any of that means, take a look at Fred's blog post on https://developer.ibm.com/wasdev/blog/2017/12/21/mbean-controls-server-endpoints/[controlling server endpoint traffic with MBeans (Part 1)]. If you want to know more about what's new, take a look at Fred's new blog post on https://developer.ibm.com/wasdev/blog/2018/03/16/endpoints-liberty-mbeans-part2/[controlling traffic on server endpoints with Liberty MBeans (Part 2)].
 
 
 [#threadpool]
@@ -238,3 +239,4 @@ image::/img/blog_btn_download-ol.svg[Download Open Liberty, align="center", role
 
 [link=https://stackoverflow.com/tags/open-liberty]
 image::/img/blog_btn_stack.svg[Ask a question on Stack Overflow, align="center"]
+
