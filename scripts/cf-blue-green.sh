@@ -11,10 +11,7 @@ echo "============== LOGGING INTO CLOUD FOUNDRY =============="
 ./cf login -a=$BLUEMIX_API -s=$BLUEMIX_SPACE -o=$BLUEMIX_ORGANIZATION -u=$BLUEMIX_USER -p=$BLUEMIX_PASSWORD
 
 # ==== VARIABLE SETUP ====
-MANIFEST="manifest.yml"
-# get route, app name (BLUE), and domain
-ROUTE=`cat $MANIFEST | grep route: | awk '{print $3}'`
-
+# ROUTE should be set in TravisCI repo
 BLUE=`echo $ROUTE | sed -e 's,\..*,,'`
 echo "App name is $BLUE"
 
