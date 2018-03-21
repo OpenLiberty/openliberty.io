@@ -55,24 +55,24 @@ $(document).ready(function() {
     }
 
     function processSearch(input_value){
-        if(input_value.startsWith('tag:')) {
-            var search_value = input_value.substring(4).trim();
-            filter_guides(tags_key, search_value);
+        if(input_value.length == 0) {
+            $('.guide_column').removeClass('hidden');
+            $('#guide_counter_title').text('All Open Liberty guides (' + $('.guide_column').size() + ')');
         } else {
-            filter_guides(title_key | description_key | tags_key, input_value);
-        }
+            if(input_value.startsWith('tag:')) {
+                var search_value = input_value.substring(4).trim();
+                filter_guides(tags_key, search_value);
+            } else {
+                filter_guides(title_key | description_key | tags_key, input_value);
+            }
+            $('#guide_counter_title').text('Search results (' + $('.guide_column:visible').size() + ')');
+        }        
     }
 
 
     $('#guide_search_input').keyup(function(event) {
         var input_value = event.currentTarget.value.toLowerCase();
-        if(input_value.length == 0) {
-            $('.guide_column').removeClass('hidden');
-            $('#guide_counter_title').text('All Open Liberty guides (' + $('.guide_column').size() + ')');
-        } else {
-            processSearch(input_value);
-            $('#guide_counter_title').text('Search results (' + $('.guide_column:visible').size() + ')');
-        }
+        processSearch(input_value);        
     });
 
     var query_string = location.search;
