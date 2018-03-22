@@ -22,6 +22,16 @@ client.auto_paginate = true
 repos = client.org_repos('OpenLiberty')
 
 # --------------------------------------------
+# Travis CI related steps
+# --------------------------------------------
+# For the interactive guides, only build the dev branch for the TravisCI environments
+iguide_branch = 'master'
+if ENV['TRAVIS']
+    iguide_branch = 'dev'
+end
+puts "Looking for draft interactive guides with branch: #{iguide_branch}..."
+
+# --------------------------------------------
 # Filter for Open Liberty guide repositories
 # --------------------------------------------
 guides = []
@@ -29,11 +39,11 @@ repos.each do |element|
     repo_name = element['name']
     if cloneDraftGuides == "draft-guide"
         ##################
-        # DRAFT GUIDES
+        # DRAFT GUIDES  
         # Clone guides that are still being drafted and are only for the staging website
         if repo_name.start_with?('draft-iguide')
             # Always clone the master branch for interactive guides
-            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch master --single-branch src/main/content/guides/#{repo_name}`
+            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{iguide_branch} --single-branch src/main/content/guides/#{repo_name}`
         elsif repo_name.start_with?('draft-guide')
             `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
         end
