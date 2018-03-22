@@ -45,14 +45,14 @@ public class BuildsManager {
     }
 
     public JsonObject getBuilds() {
-        if (lastSuccessfulUpdate == null) {
+        if (isBuildUpdateAllowed()) {
             updateBuilds();
         }
         return builds;
     }
 
     public JsonObject getLatestReleases() {
-        if (lastSuccessfulUpdate == null) {
+        if (isBuildUpdateAllowed()) {
             updateBuilds();
         }
         return latestReleases;
@@ -209,6 +209,20 @@ public class BuildsManager {
             return response.getHeaderString(Constants.CONTENT_LENGTH);
         }
         return null;
+    }
+
+    // Compare the current time with the time the last build request is run. Allow the next
+    // build request to go through if the last build request was run an hour ago or more.
+    private boolean isBuildUpdateAllowed() {
+        boolean isBuildUpdateAllowed = false;
+        long currentTime = new Date().getTime();
+        long lastUpdateTime = lastSuccessfulUpdate.getTime();
+        // 1 hour = 3600000 ms
+        if (currentTime - lastUpdateTime >= 3600000) {
+            isBuildUpdateAllowed = true;
+        }
+
+        return isBuildUpdateAllowed;
     }
 
 }
