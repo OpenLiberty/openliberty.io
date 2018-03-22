@@ -12,7 +12,7 @@ blog_description: Try out the new JCache-based distributed in-memory session cac
 =  JCache session persistence
 Andy Guibert <https://github.com/aguibert>
 
-When running applications in production, offering high availability to the end users is important. One aspect of high availability in web applications is failover of non-persistent user session data.  Currently, Open Liberty offers the `sessionDatabase-1.0` feature for persisting https://openliberty.io/javadocs/liberty-javaee7-javadoc/javax/servlet/http/HttpSession.html[HttpSession] data into a relational database.  However, not all applications may have a database available to them, so a more lightweight solution is needed.
+When running applications in production, offering high availability to the end users is important. One aspect of high availability in web applications is failover of non-persistent user session data (e.g. a shopping cart).  Currently, Open Liberty offers the `sessionDatabase-1.0` feature for persisting https://openliberty.io/javadocs/liberty-javaee7-javadoc/javax/servlet/http/HttpSession.html[HttpSession] data into a relational database.  However, not all applications may have a database available to them, so a more lightweight solution is needed.
 
 == Introducing sessionCache-1.0
 
@@ -31,7 +31,7 @@ The `sessionCache-1.0` feature does not include a JCache implementation, so you 
 - Infinispan
 - Ehcache
 
-Ultimately, the `sessionCache-1.0`` feature should work with anything that complies with the JCache specification.
+Ultimately, the `sessionCache-1.0` feature should work with anything that complies with the JCache specification.
 
 To configure the JCache Session Persistence feature, include the following configuration in your `server.xml`:
 
