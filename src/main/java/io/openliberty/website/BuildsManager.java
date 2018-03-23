@@ -214,12 +214,14 @@ public class BuildsManager {
     // Compare the current time with the time the last build request is run. Allow the next
     // build request to go through if the last build request was run an hour ago or more.
     private boolean isBuildUpdateAllowed() {
-        boolean isBuildUpdateAllowed = false;
-        long currentTime = new Date().getTime();
-        long lastUpdateTime = lastSuccessfulUpdate.getTime();
-        // 1 hour = 3600000 ms
-        if (currentTime - lastUpdateTime >= 3600000) {
-            isBuildUpdateAllowed = true;
+        boolean isBuildUpdateAllowed = true;
+        if (lastSuccessfulUpdate != null) {
+            long currentTime = new Date().getTime();
+            long lastUpdateTime = lastSuccessfulUpdate.getTime();
+            // 1 hour = 3600000 ms
+            if (currentTime - lastUpdateTime < 3600000) {
+                isBuildUpdateAllowed = false;
+            }
         }
 
         return isBuildUpdateAllowed;
