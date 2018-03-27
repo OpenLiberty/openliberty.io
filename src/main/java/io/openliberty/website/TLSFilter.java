@@ -65,7 +65,10 @@ public class TLSFilter implements Filter {
 
           String uri = ((HttpServletRequest)req).getRequestURI();
           if(uri.startsWith("/img/")) {
-        	  response.setHeader("Cache-Control", "max-age=604800");
+              response.setHeader("Cache-Control", "max-age=604800");
+          } else if (uri.startsWith("/api/builds/") || uri.startsWith("/api/github/")) {
+              response.setHeader("Cache-Control", "no-store");
+              response.setHeader("Pragma", "no-cache");
           } else {
         	  response.setHeader("Cache-Control", "no-cache");
           }
