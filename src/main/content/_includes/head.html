@@ -20,7 +20,7 @@
     {% css {{css_name}} %}
   {% endfor %}
 
-  {% if site.google_tag_manager %}
+  {% if jekyll.environment == 'production' and site.google_tag_manager %}
     {% include google_tag_manager_head.html %}
   {% endif %}
 
