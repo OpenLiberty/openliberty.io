@@ -98,6 +98,24 @@ function handleTOCScolling() {
     }
 }
 
+// Remove code block from TOC titles
+function sanitizeTitleInTOC() {
+    var tocLevel1 = $('#toc_container ul.sectlevel1 li');
+    $.each(tocLevel1, function (i, tocElements) {
+        var aHrefElements = $(tocElements).find("a");
+        $.each(aHrefElements, function (i, tocElement) {
+            var title = $(tocElement).html();
+            // look for code block and remove it 
+            var stringToMatch = "([\\s\\S]*)<\\s*code\\s*>([\\s\\S]*)<\\s*\\/code\\s*>([\\s\\S]*)";
+            var regExprToMatch = new RegExp(stringToMatch, "g");
+            var matches = regExprToMatch.exec(title);
+            if (matches) {
+                $(tocElement).html(matches[1] + matches[2] + matches[3]);
+            }
+        });
+    });
+}
+
 $(document).ready(function() {
 
     var offset;
@@ -165,6 +183,9 @@ $(document).ready(function() {
         $('#toc_container ul.sectlevel1').append('<li><a href="#related-guides">Related guides</a></li>');
     }
 
+    // Iterate through the titles in TOC to remove code block
+    sanitizeTitleInTOC();
+    
     // TABLE OF CONTENT
     //
     // Keep the table of content (TOC) in view while scrolling (Desktop only)
