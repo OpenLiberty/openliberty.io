@@ -53,7 +53,7 @@ repos.each do |element|
         # Clone interactive guides that are ready to be published to openliberty.io
         if repo_name.start_with?('iguide')
             # Always clone the master branch for interactive guides
-            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch master --single-branch src/main/content/guides/#{repo_name}`
+            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{iguide_branch} --single-branch src/main/content/guides/#{repo_name}`
         elsif repo_name.start_with?('guide')
             # Clone static guides that are ready to be published to openliberty.io
             `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
