@@ -30,7 +30,8 @@ public class TLSFilter implements Filter {
         new HashMap<String, String>() {{
             put("/docs/ref/javaee/", "/docs/ref/javaee/7/");
             put("/docs/ref/microprofile/", "/docs/ref/microprofile/1.3/");
-            put("/docs/ref/", "/docs/");
+            put("/docs/ref/", "/docs/");        
+            put("/index.html/", "/index.html");    
             // put("old uri", "new uri");
         }};
 
@@ -60,10 +61,15 @@ public class TLSFilter implements Filter {
           response.setHeader("X-Frame-Options", "SAMEORIGIN"); // Prevent framing of this website.
           response.setHeader("X-XSS-Protection", "1; mode=block"); // Cross-site scripting prevention for Chrome, Safari, and IE. It's not necessary with newer browser versions that support the Content-Security-Policy but it helps prevent XSS on older versions of these browsers.
           response.setHeader("X-Content-Type-Options", "nosniff"); // Stops a browser from trying to MIME-sniff the content type.
+          response.setHeader("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval' maxcdn.bootstrapcdn.com fonts.googleapis.com ajax.googleapis.com fonts.gstatic.com  *.githubusercontent.com api.github.com www.googletagmanager.com tagmanager.google.com www.google-analytics.com data:"); // Mitigating cross site scripting (XSS) from other domains.
+          response.setHeader("Referrer-Policy", "no-referrer"); // Limits the information sent cross-domain and does not send the origin name.
 
           String uri = ((HttpServletRequest)req).getRequestURI();
           if(uri.startsWith("/img/")) {
-        	  response.setHeader("Cache-Control", "max-age=604800");
+              response.setHeader("Cache-Control", "max-age=604800");
+          } else if (uri.startsWith("/api/builds/") || uri.startsWith("/api/github/")) {
+              response.setHeader("Cache-Control", "no-store");
+              response.setHeader("Pragma", "no-cache");
           } else {
         	  response.setHeader("Cache-Control", "no-cache");
           }

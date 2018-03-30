@@ -42,7 +42,7 @@ repos.each do |element|
         # DRAFT GUIDES  
         # Clone guides that are still being drafted and are only for the staging website
         if repo_name.start_with?('draft-iguide')
-            # Always clone the master branch for interactive guides
+            # Clone the draft interactive guides, using the dev branch for travis and master for all other environments.
             `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{iguide_branch} --single-branch src/main/content/guides/#{repo_name}`
         elsif repo_name.start_with?('draft-guide')
             `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
@@ -52,8 +52,8 @@ repos.each do |element|
         # PUBLISHED GUIDES
         # Clone interactive guides that are ready to be published to openliberty.io
         if repo_name.start_with?('iguide')
-            # Always clone the master branch for interactive guides
-            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch master --single-branch src/main/content/guides/#{repo_name}`
+            # Clone the interactive guides, using the dev branch for travis and master for all other environments.
+            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{iguide_branch} --single-branch src/main/content/guides/#{repo_name}`
         elsif repo_name.start_with?('guide')
             # Clone static guides that are ready to be published to openliberty.io
             `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
