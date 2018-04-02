@@ -59,7 +59,7 @@ $(document).ready(function() {
             $('.guide_column').removeClass('hidden');
             $('#guide_counter_title').text('All Open Liberty guides (' + $('.guide_column').size() + ')');
         } else {
-            if(input_value.startsWith('tag:')) {
+            if(input_value.indexOf('tag:') === 0) {
                 var search_value = input_value.substring(4).trim();
                 filter_guides(tags_key, search_value);
             } else {
@@ -82,9 +82,9 @@ $(document).ready(function() {
         var search_value = false;
         var search_key = false;
         for(var i = 0; i < parameters.length; i++) {
-            if(parameters[i].startsWith('search=')) {
+            if(parameters[i].indexOf('search=') === 0) {
                 search_value = parameters[i].substring(7);
-            } else if (parameters[i].startsWith('key=')) {
+            } else if (parameters[i].indexOf('key=') === 0) {
                 search_key = parameters[i].substring(4);
             }
         }
