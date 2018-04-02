@@ -103,14 +103,14 @@ function sanitizeTitleInTOC() {
     var tocLevel1 = $('#toc_container ul.sectlevel1 li');
     $.each(tocLevel1, function (i, tocElements) {
         var aHrefElements = $(tocElements).find("a");
-        $.each(aHrefElements, function (i, tocElement) {
-            var title = $(tocElement).html();
+        $.each(aHrefElements, function (i, aHrefElement) {
+            var title = $(aHrefElement).html();
             // look for code block and remove it 
             var stringToMatch = "([\\s\\S]*)<\\s*code\\s*>([\\s\\S]*)<\\s*\\/code\\s*>([\\s\\S]*)";
             var regExprToMatch = new RegExp(stringToMatch, "g");
             var matches = regExprToMatch.exec(title);
             if (matches) {
-                $(tocElement).html(matches[1] + matches[2] + matches[3]);
+                $(aHrefElement).html(matches[1] + matches[2] + matches[3]);
             }
         });
     });
