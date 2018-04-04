@@ -178,6 +178,11 @@ $(document).ready(function() {
     //     handleFloatingTableOfContent();
     // });
 
+    // TABLE OF CONTENTS
+    // $('#breadcrumb_hamburger').on('click', function(){
+    //     $("#toc_column").toggleClass('hidden');
+    // });
+
     $(window).scroll(function() {
         // Check if there is a scrollToLine element in the viewport
         $('div[class*=scrollToLine-').each(function(index){

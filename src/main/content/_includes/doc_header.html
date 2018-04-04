@@ -33,8 +33,19 @@
                 </div>
                 <!-- Add breadcrumb for all pages except /docs -->
                 {% if page.url != '/docs/' %}
-                <div id="breadcrumb_row">
-                    <ol class="breadcrumb fluid-container"> 
+                <div id="breadcrumb_row"> 
+                    {% if page.layout == 'guide' or page.layout == 'interactive-guide' %}
+                        <!-- Hamburger icon for showing the table of contents -->
+                        <button id="breadcrumb_hamburger" class="toc-toggle collapsed" type="button" data-toggle="collapse" data-target="#toc_column"    aria-expanded="false" aria-controls="table of contents">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <img src="{{ " /img/TOC_Close.svg " | relative }}" class="TOC_Close_SVG img-responsive" alt="Table of contents close button"/>
+                        </button>                        
+                    {% endif %}  
+                    <ol class="breadcrumb fluid-container">     
+                                         
                         <li>
                             <a href="/docs">Docs</a>
                         </li>
