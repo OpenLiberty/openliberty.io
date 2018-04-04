@@ -1,0 +1,215 @@
+/*******************************************************************************
+ * Copyright (c) 2018 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+ /* BREADCRUMB specific to the collapsable table of contents */
+
+#breadcrumb_row .breadcrumb {
+    display: block;
+    width: calc(100% - 76px);
+    float: right;
+    padding-left: 0;
+}
+
+#breadcrumb_row .breadcrumb li:first-of-type {
+    padding-left: 30px;
+}
+
+.TOC_Close_SVG {
+    display: none;
+}
+
+#breadcrumb_hamburger {
+    display: inline-block;
+    width: 76px;
+    height: 100%;
+    background-color: #24243A;
+    border: none;
+    padding: 9px 10px;
+    border-right: 1px solid #474d6f;
+    padding: 4px 26px 7px 29px;
+}
+
+#breadcrumb_hamburger:not(.collapsed) {
+    border-right: none;
+    background-color: #ffffff;
+}
+
+#breadcrumb_hamburger:not(.collapsed) > .sr-only, #breadcrumb_hamburger:not(.collapsed) > .icon-bar {
+    display: none;
+}
+
+#breadcrumb_hamburger:not(.collapsed) > .TOC_Close_SVG {
+    display: block !important;
+}
+
+#breadcrumb_hamburger:focus{
+    outline: none;
+}
+
+#breadcrumb_hamburger .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
+#breadcrumb_hamburger .icon-bar {
+    background-color: #c8d6fb;
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 1px;
+}
+
+#breadcrumb_hamburger .icon-bar+.icon-bar {
+    margin-top: 4px;
+}
+
+/* TABLE OF CONTENTS */
+#toc_column {
+    position: absolute;
+    left: 0;
+    width: 280px;
+    padding-bottom: 22px;
+    vertical-align: top;
+    background-color: white;
+    z-index: 1;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.21);
+}
+
+#toc_container > .sectlevel1 > li {
+    list-style: none;
+    font-weight: 300;
+    color: #5D6A8E;
+    font-size: 14px;
+    min-height: 30px;
+    border-left: 8px solid transparent;
+    padding-left: 19px;
+    word-wrap: break-word;
+}
+
+#toc_container > .sectlevel1 > li:hover {
+    background: #fdf2ea;
+    border-left: 8px solid #f4914d;
+    font-weight: 500;
+}
+
+#toc_title {
+    font-family: BunueloBold;
+    font-size:14px;
+    color:#313653;
+    margin-left: 27px;
+    margin-bottom: 22px;
+}
+
+#toc_container ul {
+    list-style-type: none;
+}
+
+#toc_container ul {
+    padding-left: 30px;
+}
+
+#toc_container .sectlevel1 {
+    padding-left: 0;
+}
+
+#toc_container a {
+    display: inline-block;
+    color:#5d6a8e;
+    margin-bottom: 10px;
+}
+
+#toc_container a:hover {
+    color:#313653;
+}
+
+#toc_separator {
+    width: 232px;
+    height: 2px;
+    border: solid 1px #d4d7e3;
+    margin: auto;
+}
+
+#tag_title {
+    font-family: BunueloBold;
+    font-size:14px;
+    color:#313653;
+    margin-left: 27px;
+    margin-bottom: 22px;
+}
+
+#tags_container {
+    margin-left: 27px;
+}
+
+#tags_container a {
+    color: #4f660a;
+    margin-right: 15px;
+    line-height: 30px;
+}
+
+#tags_container a:hover {
+    color: #4f660a;
+}
+
+@media (max-width: 767px) {
+
+    #tags_container {
+        margin-bottom: 30px;
+    }
+
+    /* Hide the table of contents and right pane in mobile view */
+    #breadcrumb_hamburger, #toc_column, #code_column {
+        display: none;
+    }
+
+    #breadcrumb_row .breadcrumb {
+        width: 100%;
+        float: none;
+    }
+
+    /* Show the code snippets in mobile view that were on the right pane in desktop view */
+
+}
+
+@media (min-width: 1440px) {
+
+    #background_container > .row {
+        background-color: white;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    #toc_column {
+        width: 18.76%;
+        display: inline-block;
+        float: left;
+        position: relative;
+        left: 0;
+        padding-bottom: 22px;
+        background-color: white;
+        z-index: 0;
+        box-shadow: none;
+    }
+
+    #guide_column {
+        width: 30.58%;
+    }
+
+    #code_column {
+        width: 50.66%;
+    }
+}

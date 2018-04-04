@@ -1,16 +1,17 @@
 ---
 layout: doc
 css: 
+- doc-header
+- table-of-contents
 - guide-card
 - guide
-- doc-header
 js: guide
 ---
 
 <div id="background_container" class="black_blue_gradient_background">
         <div class="row">
             <!-- Guide's table of contents section -->
-            <div id="toc_column" class="col-sm-3 collapse">
+            <div id="toc_column" class="collapse">
                 <div id="toc_inner">
                     {% assign toc = page.document | tocify_asciidoc %}
                     {% if toc %}
@@ -18,6 +19,7 @@ js: guide
                     <div id="toc_container">
                         {{ toc }}
                     </div>
+                    <div id="toc_separator"></div>
                     {% endif %}
                     {% if page.tags %}
                         <h3 id="tag_title">Tags</h3>
