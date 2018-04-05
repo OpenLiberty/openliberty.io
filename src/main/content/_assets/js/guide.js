@@ -174,14 +174,9 @@ $(document).ready(function() {
     //
     // Keep the table of content (TOC) in view while scrolling (Desktop only)
     //
-    // $(window).scroll(function() {
-    //     handleFloatingTableOfContent();
-    // });
-
-    // TABLE OF CONTENTS
-    // $('#breadcrumb_hamburger').on('click', function(){
-    //     $("#toc_column").toggleClass('hidden');
-    // });
+    $(window).scroll(function() {
+        handleFloatingTableOfContent();
+    });
 
     $(window).scroll(function() {
         // Check if there is a scrollToLine element in the viewport
