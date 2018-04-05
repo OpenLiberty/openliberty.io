@@ -44,9 +44,9 @@ function isBackgroundBottomVisible() {
     return visibleBottom;
 }
 
-// Handle when to float the table of content
+// Handle when to float the table of contents when the browser width is 1440 pixels or greater.
 function handleFloatingTableOfContent() {
-    if($(window).width() > 769) { // bootstrap grid size for sm column
+    if($(window).width() >= 1440) {
         // CURRENTLY IN DESKTOP VIEW
         if($(window).scrollTop() > $('#toc_column').offset().top) {
             // The top of the TOC is scrolling off the screen, enable floating TOC.
