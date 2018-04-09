@@ -107,11 +107,55 @@ $(document).ready(function() {
     var target_height;
 
     $('#preamble').detach().insertAfter('#duration_container');
-    // $(".javacode").each(function(){
-    //     $(this).parents('.sect1').last().detach().appendTo('#code_column'); // Move code to the right pane
-    // })
-    $(".rightside").detach().appendTo('#code_column'); // Move code to the right pane
-    // $(".javacode").last().hide();
+
+    // Move the code snippets to the code column on the right
+    $('.rightside').each(function(){
+        var code_block = $(this);
+        var sections = $(this).prev().find('p');
+        if(sections.length > 0){
+            var section_list = sections[0].innerText.toLowerCase();
+            // console.log(sections);
+            // Split the string into sections that should display this code block
+            section_list = section_list.split(',');
+            
+            for(var i = 0; i < section_list.length; i++){
+                // Split the string into pattern of id=line_num
+                section_list[i] = section_list[i].trim().replace(/\s+|\’/g, '-');
+                // console.log(section_list[i]);
+                // Get the section id and line number from the section
+                var equal_index = section_list[i].indexOf('=');
+                var id = section_list[i].substring(0, equal_index);
+                var line_num = section_list[i].substring(equal_index + 1);
+
+                // Add scroll listener for when the guide_column is scrolled to the given sections
+                var elem = $('#' + id);
+                if(elem.length > 0){
+                    // $(window).scroll(function(){       
+                    //     var hT = elem.offset().top,
+                    //     hH = elem.outerHeight(),
+                    //     wH = $(window).height(),
+                    //     wS = $(window).scrollTop();
+                    //     if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
+                    //         // Scroll to the line in the code column
+                    //         if(line_num){
+                    //             // var target = $('#code_column .line-numbers:contains(' + scrollTo + ')').first();
+                    //             var target = code_block.find('.line-numbers:contains(' + line_num + ')').first();
+                    //             $('html, #code_column').animate({
+                    //                 scrollTop: target.offset().top
+                    //             }, 500);
+                    //             // scrollTo(target.offset().top);
+                    //         }                
+                    //     }
+                    // });
+                }                
+            }
+            // Remove the section list from the DOM as it is not needed anymore.
+            sections.remove();
+        }       
+
+        $(this).detach().appendTo('#code_column'); // Move code to the right column
+    });
+    // $(".rightside").detach().appendTo('#code_column'); // Move code to the right pane
 
     $('#guide_content pre:not(.no_copy pre)').hover(function(event) {
 
@@ -205,7 +249,6 @@ $(document).ready(function() {
                     // scrollTo(target.offset().top);
                 }                
             }
-        });
-        
+        });        
    });
 });
