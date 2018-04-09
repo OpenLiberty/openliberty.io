@@ -3,12 +3,25 @@
 Overall document style
 */
 
+@import url("https://fonts.googleapis.com/css?family=Asap:300,400,500");
+
+@font-face {
+    font-family: BunueloLight;
+    src: url("/fonts/BunueloCleanPro-Light.otf");
+}
+
+@font-face {
+    font-family: BunueloBold;
+    src: url("/fonts/BunueloCleanPro-SemiBold.otf");
+}
+
 @import url('resources/fonts/dejavu.css');
 
 body {
-    background-color:#ffffff;
+    /* background-image: linear-gradient(to bottom, #131427, #2C2D4F); */
+    background-color: white;
     color:#353833;
-    font-family:'DejaVu Sans', Arial, Helvetica, sans-serif;
+    font-family: Asap, 'DejaVu Sans', Arial, Helvetica, sans-serif;
     font-size:14px;
     margin:0;
     padding:0;
@@ -27,6 +40,15 @@ a:link, a:visited {
     text-decoration:none;
     color:#4A6782;
 }
+
+a[target="packageFrame"],
+a[target="classFrame"] {
+    font-size:14px;
+    color:#5d6a8e;
+    letter-spacing:0;
+    line-height:24px;
+}
+
 a[href]:hover, a[href]:focus {
     text-decoration:none;
     color:#bb7a2a;
@@ -50,9 +72,11 @@ pre {
 }
 h1 {
     font-size:20px;
+    font-family: BunueloBold;
 }
 h2 {
     font-size:18px;
+    font-family: BunueloBold;
 }
 h3 {
     font-size:16px;
@@ -88,6 +112,14 @@ table tr td dt code {
     vertical-align:top;
     padding-top:4px;
 }
+th[scope='col'] {
+    font-family: BunueloBold;
+    font-size: 11px; 
+}
+th > a {
+    font-weight: 500;
+    font-size: 14px;
+}
 sup {
     font-size:8px;
 }
@@ -110,8 +142,9 @@ Document title and Copyright styles
     margin-left:.5em;
 }
 .bar a, .bar a:link, .bar a:visited, .bar a:active {
-    color:#FFFFFF;
-    text-decoration:none;
+    color:black;
+    text-decoration:none;  
+    text-transform: none;  
 }
 .bar a:hover, .bar a:focus {
     color:#bb7a2a;
@@ -126,13 +159,18 @@ Document title and Copyright styles
 /*
 Navigation bar styles
 */
-.bar {
-    background-color:#4D7A97;
-    color:#FFFFFF;
-    padding:.8em .5em .4em .8em;
-    height:auto;/*height:1.8em;*/
-    font-size:11px;
-    margin:0;
+.bar {    
+    color: #5d6a8e;
+    border-top: 1px solid #D4D7E3;
+    padding-top: 20px;
+    margin-left: 8px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    margin-top: 20px;
+    font-family: BunueloBold;
+    font-size: 14px;
+    color:#313653;
+    text-transform: uppercase;
 }
 .navPadding {
     padding-top: 107px;
@@ -144,57 +182,60 @@ Navigation bar styles
     background-color:#ffffff;
 }
 .topNav {
-    background-color:#4D7A97;
-    color:#FFFFFF;
+    background-color:#f1f4fe;
+    color:#5E6B8D;
     float:left;
     padding:0;
     width:100%;
     clear:right;
-    height:2.8em;
-    padding-top:10px;
+    height: 52px;
     overflow:hidden;
-    font-size:12px; 
+    font-size:16px; 
 }
 .bottomNav {
-    margin-top:10px;
-    background-color:#4D7A97;
-    color:#FFFFFF;
-    float:left;
-    padding:0;
-    width:100%;
-    clear:right;
-    height:2.8em;
-    padding-top:10px;
-    overflow:hidden;
-    font-size:12px;
+    display:none;
 }
 .subNav {
-    background-color:#dee3e9;
-    float:left;
-    width:100%;
-    overflow:hidden;
-    font-size:12px;
+}
+.subNav .navList {
+    display: none;
 }
 .subNav div {
     clear:left;
     float:left;
     padding:0 0 5px 6px;
     text-transform:uppercase;
+    display: none; /* Hide the Summary subnav filters from javadoc */
 }
 ul.navList, ul.subNavList {
+    display: table;
     float:left;
     margin:0 25px 0 0;
     padding:0;
+    height: 100%;
 }
 ul.navList li{
-    list-style:none;
-    float:left;
-    padding: 5px 6px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0px 22px;
+    font-size: 16px;    
     text-transform:uppercase;
+    font-weight: 500;
+}
+.clickableNavListTab, ul.navList li:focus{
+    background-color: #D6D9E4;
+    color: #253441;
+}
+.clickableNavListTab:hover{
+    cursor: pointer;
+}
+ul.navList li > a:hover {
+    color: inherit;
 }
 ul.navListSearch {
     float:right;
-    margin:0 0 0 0;
+    margin: 5px 14px 0 0;
     padding:0;
 }
 ul.navListSearch li {
@@ -206,15 +247,17 @@ ul.navListSearch li {
 ul.navListSearch li span {
     position:relative;
     right:-16px;
+    display: none;
 }
 ul.subNavList li {
     list-style:none;
     float:left;
 }
 .topNav a:link, .topNav a:active, .topNav a:visited, .bottomNav a:link, .bottomNav a:active, .bottomNav a:visited {
-    color:#FFFFFF;
+    color:#5E6B8D;
     text-decoration:none;
     text-transform:uppercase;
+    font-weight: 500;
 }
 .topNav a:hover, .bottomNav a:hover {
     text-decoration:none;
@@ -222,7 +265,7 @@ ul.subNavList li {
     text-transform:uppercase;
 }
 .navBarCell1Rev {
-    background-color:#F8981D;
+    background-color:#D6D9E4;
     color:#253441;
     margin: auto 5px;
 }
@@ -237,13 +280,11 @@ Page header and footer styles
 */
 .header, .footer {
     clear:both;
-    margin:0 20px;
-    padding:5px 0 0 0;
+    margin: 0 20px;
+    padding: 5px 0 0 0;
 }
 .indexNav {
-    position:relative;
-    font-size:12px;
-    background-color:#dee3e9;
+    display:none;
 }
 .indexNav ul {
     margin-top:0;
@@ -286,7 +327,7 @@ div.details ul.blockList ul.blockList ul.blockList li.blockList h4, div.details 
     padding:7px 5px;
 }
 ul.blockList ul.blockList ul.blockList li.blockList h3 {
-    background-color:#dee3e9;
+    background-color:#C8CCD8;
     border:1px solid #d0d9e0;
     margin:0 0 6px -8px;
     padding:7px 5px;
@@ -303,17 +344,26 @@ Page layout container styles
 */
 .contentContainer, .sourceContainer, .classUseContainer, .serializedFormContainer, .constantValuesContainer {
     clear:both;
-    padding:10px 20px;
+    padding:10px 0px;
     position:relative;
 }
 .indexContainer {
-    margin:10px;
-    position:relative;
-    font-size:12px;
+    position: relative;
+    font-size: 12px;
 }
-.indexContainer h2 {
-    font-size:13px;
-    padding:0 0 3px 0;
+
+.indexContainer h2,
+.indexContainer h2[title="Packages"] {
+    margin-left: 8px;
+    font-family: BunueloBold;
+    text-transform: uppercase;
+    font-size: 14px;
+    color:#313653;
+}
+.indexContainer h2[title="Packages"] {
+    padding-top: 30px;
+    margin-right: 10px;
+    margin-bottom: 5px;
 }
 .indexContainer ul {
     margin:0;
@@ -321,7 +371,18 @@ Page layout container styles
 }
 .indexContainer ul li {
     list-style:none;
-    padding-top:2px;
+    font-weight: 300;
+    color: #5D6A8E;
+    font-size: 14px;
+    min-height: 30px;
+    border-left: 8px solid transparent;
+    padding-left: 19px;
+    word-wrap: break-word;
+}
+.indexContainer ul li:hover, .indexContainer ul li:focus {
+    background:#fdf2ea;
+    border-left: 8px solid #f4914d; 
+    font-weight: 500;
 }
 .contentContainer .description dl dt, .contentContainer .details dl dt, .serializedFormContainer dl dt {
     font-size:12px;
@@ -413,6 +474,9 @@ Table styles
     border-right:1px solid #EEE; 
     border-bottom:1px solid #EEE; 
 }
+.overviewSummary tr:nth-child(1):not(.altColor) {
+    font-family:BunueloBold;
+}
 .overviewSummary, .memberSummary, .requiresSummary, .packagesSummary, .providesSummary, .usesSummary  {
     padding:0px;
 }
@@ -461,9 +525,10 @@ Table styles
     padding-bottom:7px;
     display:inline-block;
     float:left;
-    background-color:#F8981D;
+    background-color:#D6D9E4;
     border: none;
-    height:16px;
+    font-family: BunueloLight;
+    font-size: 35px;
 }
 .memberSummary caption span.activeTableTab span, .packagesSummary caption span.activeTableTab span {
     white-space:nowrap;
@@ -473,8 +538,7 @@ Table styles
     margin-right:3px;
     display:inline-block;
     float:left;
-    background-color:#F8981D;
-    height:16px;
+    background-color:#D6D9E4;
 }
 .memberSummary caption span.tableTab span, .packagesSummary caption span.tableTab span {
     white-space:nowrap;
@@ -485,7 +549,6 @@ Table styles
     display:inline-block;
     float:left;
     background-color:#4D7A97;
-    height:16px;
 }
 .memberSummary caption span.tableTab, .memberSummary caption span.activeTableTab,
 .packagesSummary caption span.tableTab, .packagesSummary caption span.activeTableTab {
@@ -503,7 +566,7 @@ Table styles
     width:5px;
     position:relative;
     float:left;
-    background-color:#F8981D;
+    background-color:#D6D9E4;
 }
 .memberSummary .activeTableTab .tabEnd, .packagesSummary .activeTableTab .tabEnd {
     display:none;
@@ -511,7 +574,7 @@ Table styles
     margin-right:3px;
     position:relative; 
     float:left;
-    background-color:#F8981D;
+    background-color:#D6D9E4;
 }
 .memberSummary .tableTab .tabEnd, .packagesSummary .tableTab .tabEnd {
     display:none;
@@ -533,19 +596,18 @@ Table styles
 }
 th.colFirst, th.colSecond, th.colLast, th.colConstructorName, .useSummary th, .constantsSummary th, .packagesSummary th,
 td.colFirst, td.colSecond, td.colLast, .useSummary td, .constantsSummary td {
-    vertical-align:top;
     padding-right:0px;
     padding-top:8px;
     padding-bottom:3px;
 }
 th.colFirst, th.colSecond, th.colLast, th.colConstructorName, .constantsSummary th, .packagesSummary th {
-    background:#dee3e9;
+    background:#C8CCD8;
     text-align:left;
-    padding:8px 3px 3px 7px;
+    padding: 0px 3px 0px 7px;
 }
 td.colFirst, th.colFirst {
     white-space:nowrap;
-    font-size:13px;
+    font-size: 14px;
 }
 td.colSecond, th.colSecond, td.colLast, th.colConstructorName, th.colLast {
     font-size:13px;
@@ -566,7 +628,8 @@ td.colSecond, th.colSecond, td.colLast, th.colConstructorName, th.colLast {
 .memberSummary td.colFirst, .memberSummary th.colFirst,
 .memberSummary td.colSecond, .memberSummary th.colSecond, .memberSummary th.colConstructorName,
 .typeSummary td.colFirst {
-    vertical-align:top;
+    height: 45px;
+    padding-left: 49px;
 }
 .packagesSummary th.colLast, .packagesSummary td.colLast {
     white-space:normal;
@@ -587,7 +650,7 @@ td.colLast a:link, td.colLast a:visited,
     background-color:#FFFFFF;
 }
 .rowColor, .rowColor th {
-    background-color:#EEEEEF;
+    background-color:#EEEFF3;
 }
 /*
 Content styles
@@ -609,7 +672,7 @@ ul.blockList ul.blockList ul.blockList li.blockList h3 {
 
 div.block {
     font-size:14px;
-    font-family:'DejaVu Serif', Georgia, "Times New Roman", Times, serif;
+    font-family: Asap, 'DejaVu Serif', Georgia, "Times New Roman", Times, serif;
 }
 
 td.colLast div {
@@ -678,9 +741,8 @@ IFRAME specific styles
     width:315px;
     top:0;
     left:0;
-    height:30%;
-    border-right:6px solid #ccc;
-    border-bottom:6px solid #ccc;
+    height:45%;
+    transition: height 0.5s;
 }
 .leftBottom {
     position:relative;
@@ -688,9 +750,8 @@ IFRAME specific styles
     width:315px;
     bottom:0;
     left:0;
-    height:70%;
-    border-right:6px solid #ccc;
-    border-top:1px solid #000;
+    height:55%;
+    transition: height 0.5s;
 }
 .rightContainer {
     position:absolute;
@@ -699,7 +760,6 @@ IFRAME specific styles
     bottom:0;
     height:100%;
     right:0;
-    border-left:1px solid #000;
 }
 .rightIframe {
     margin:0;
@@ -710,6 +770,39 @@ IFRAME specific styles
     overflow:visible;
     margin-bottom:30px;
 }
+/*
+  Mobile styles for the 3 frames
+*/
+/* @media only screen and (max-device-width: 767px) {    */
+@media (max-width: 767px) { 
+    .overviewSummary td.colFirst, .overviewSummary th.colFirst, .requiresSummary td.colFirst, .requiresSummary th.colFirst, .packagesSummary td.colFirst, .packagesSummary td.colSecond, .packagesSummary th.colFirst, .packagesSummary th, .usesSummary td.colFirst, .usesSummary th.colFirst, .providesSummary td.colFirst, .providesSummary th.colFirst, .memberSummary td.colFirst, .memberSummary th.colFirst, .memberSummary td.colSecond, .memberSummary th.colSecond, .memberSummary th.colConstructorName, .typeSummary td.colFirst{
+        padding-left: 7px;
+    }
+
+    .leftContainer, .leftTop, .leftBottom {
+        display: none;
+    }
+
+   .rightContainer {
+        position: relative;      
+        left: 0;  
+   } 
+
+   .topNav {
+        overflow-x: auto;
+   } 
+   #navbar\.top, #navbar\.top\.firstrow {
+    display: none;
+    }
+}
+/* Allow scrolling in mobile view */
+@media only screen and (max-device-width: 767px){
+    .rightContainer{
+        overflow: auto;
+    }    
+    
+}
+
 /*
 HTML5 specific styles
 */
@@ -737,6 +830,7 @@ main, nav, header, footer, section {
 ul.ui-autocomplete {
     position:fixed;
     z-index:999999;
+    font-family: Asap;
 }
 ul.ui-autocomplete  li {
     float:left;
@@ -750,8 +844,8 @@ ul.ui-autocomplete  li {
     background-image:url('resources/glass.png');
     background-size:13px;
     background-repeat:no-repeat;
-    background-position:2px 3px;
-    padding-left:20px;
+    background-position:2px 5px;
+    padding: 5px 5px 5px 20px;
     position:relative;
     right:-18px;
 }
@@ -761,7 +855,7 @@ ul.ui-autocomplete  li {
     width:16px;
     height:17px;
     position:relative;
-    left:-2px;
+    left:-5px;
     background-image:url('resources/x.png');
     background-repeat:no-repeat;
     background-size:12px;
@@ -867,4 +961,34 @@ table.striped > thead > tr > th, table.striped > tbody > tr > th,
 table.striped > tbody > tr > td, table.striped > tbody > tr > td {
     border-left: 1px solid black;
     border-right: 1px solid black;
+}
+
+.leftFrameHeaderStyling {
+    border-top: 3px solid rgb(217, 217, 217);
+    padding-top: 30px;
+}
+
+/* Custom expand/collapse button */
+div.toggle {
+    width: 11px;
+    margin-right: 10px;
+    margin-top: -1px;
+    float: left;
+}
+
+/* Minus toggle svg */
+div.toggle[collapsed='false'] {
+    margin-top: -5px;    
+}
+
+div.toggle:hover {
+    cursor: pointer;
+}
+
+input[type='checkbox'] {
+    display: none;    
+}
+label {
+    cursor: pointer;
+    float: left !important; /* Overrides the inline float left */
 }
