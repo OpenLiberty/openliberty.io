@@ -30,16 +30,17 @@
     margin-bottom: 0px;
 }
 
-#guide_content #relateGuidesContent h3 {
+#guide_content #related-guides h3 {
     font-size: 20px;
     font-weight: 400;
     margin-top: 0px;
     margin-bottom: 14px;
     padding-top: 0px;
 }
-#guide_content #relateGuidesContent p {
+#guide_content #related-guides p {
     line-height: 1.4;
     margin: 0;
+    padding: 0;
 }
 
 #guide_content h4 {
@@ -306,5 +307,19 @@
     
     #tags_container {
         margin-bottom: 30px;
+    }
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    /* IE10+ CSS styles go here */
+
+    /* to handle long continuous string with no blank in it such as URL and file path */
+    #guide_content a, #guide_content code { 
+        word-break: break-all;
+        display: inline-block;
+    }
+
+    #guide_content li a, #guide_content li code { 
+        display: inline-table; /* line up the list item bullet with the text properly */
     }
 }
