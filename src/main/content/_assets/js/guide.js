@@ -47,7 +47,7 @@ function isBackgroundBottomVisible() {
 // Handle when to float the table of contents when the browser width is 1440 pixels or greater.
 function handleFloatingTableOfContent() {
     if($(window).width() >= 1440) {
-        // CURRENTLY IN DESKTOP VIEW
+        // CURRENTLY IN FULL SCREEN VIEW
         if($(window).scrollTop() > $('#toc_column').offset().top) {
             // The top of the TOC is scrolling off the screen, enable floating TOC.
 
@@ -98,6 +98,53 @@ function handleTOCScolling() {
     }
 }
 
+function handleFloatingCodeColumn(){
+    if($(window).width() >= 767) {
+        // CURRENTLY IN DESKTOP VIEW
+        if($(window).scrollTop() > $('#code_column').offset().top) {
+            // The top of the code column is scrolling off the screen, enable floating code column.
+
+            if(isBackgroundBottomVisible()) {
+                handleCodeColumnScolling();
+            } else {
+                // The entire viewport is filled with the background, so
+                // do not need to worry about the code column flowing out of the background.
+                enableFloatingCodeColumn();
+            }
+        } else {
+            // code column no longer needs to float,
+            // remove all the custom styling for floating code column
+            disableFloatingCodeColumn();
+        }
+    } else {
+        // CURRENTLY IN MOBILE VIEW
+        // Remove any floating code column when on mobile
+        disableFloatingCodeColumn();
+    }
+}
+
+function disableFloatingCodeColumn(){
+    $('#code_column').width("").css({"position": "", "top": ""});
+}
+
+function enableFloatingCodeColumn(){
+    $('#code_column').css({"position":"fixed", "top":"0"});
+}
+
+// Handle when the code column is too small to fit completely in the dark background.
+// We want to give the end result of the bottom of the code column sticks to the bottom of the dark background
+// and the top of the code column scrolls off screen.
+function handleCodeColumnScolling() {
+    var visible_background_height = heightOfVisibleBackground();
+    var code_height = $('#code_column').height();
+    if(code_height > visible_background_height) {
+        // The code column cannot fit in the dark background, allow the code column to scroll out of viewport
+        // to avoid the code column overflowing out of the dark background
+        var negativeNumber = visible_background_height - code_height;
+        $('#code_column').css({"position":"fixed", "top":negativeNumber});
+    }
+}
+
 $(document).ready(function() {
 
     var offset;
@@ -114,7 +161,6 @@ $(document).ready(function() {
         var sections = $(this).prev().find('p');
         if(sections.length > 0){
             var section_list = sections[0].innerText.toLowerCase();
-            // console.log(sections);
             // Split the string into sections that should display this code block
             section_list = section_list.split(',');
             
@@ -130,23 +176,26 @@ $(document).ready(function() {
                 // Add scroll listener for when the guide_column is scrolled to the given sections
                 var elem = $('#' + id);
                 if(elem.length > 0){
-                    // $(window).scroll(function(){       
-                    //     var hT = elem.offset().top,
-                    //     hH = elem.outerHeight(),
-                    //     wH = $(window).height(),
-                    //     wS = $(window).scrollTop();
-                    //     if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
-                    //         // Scroll to the line in the code column
-                    //         if(line_num){
-                    //             // var target = $('#code_column .line-numbers:contains(' + scrollTo + ')').first();
-                    //             var target = code_block.find('.line-numbers:contains(' + line_num + ')').first();
-                    //             $('html, #code_column').animate({
-                    //                 scrollTop: target.offset().top
-                    //             }, 500);
-                    //             // scrollTo(target.offset().top);
-                    //         }                
-                    //     }
-                    // });
+                    $(window).scroll(function(){       
+                        var hT = elem.offset().top,
+                        hH = elem.outerHeight(),
+                        wH = $(window).height(),
+                        wS = $(window).scrollTop();
+                        if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
+                            // Scroll to the line in the code column
+                            if(line_num){
+                                var target = code_block.find('.line-numbers:contains(' + line_num + ')').first();
+
+                                // Hide other code blocks and scroll to the correct one
+                                $('.rightside').not($(this)).hide();
+                                code_block.show();
+
+                                // $('html, #code_column').animate({
+                                //     scrollTop: target.offset().top
+                                // }, 500);
+                            }                
+                        }
+                    });
                 }                
             }
             // Remove the section list from the DOM as it is not needed anymore.
@@ -155,7 +204,21 @@ $(document).ready(function() {
 
         $(this).detach().appendTo('#code_column'); // Move code to the right column
     });
-    // $(".rightside").detach().appendTo('#code_column'); // Move code to the right pane
+
+    // Hide all code blocks except the first one
+    $('.rightside:not(:first)').hide();
+
+
+    // Handle collapsing the table of contents from full width into the hamburger
+    $('#close_container').on('click', function(event){
+        $(this).hide(); // Hide the close button
+        // Show the hamburger button
+        $('#breadcrumb_hamburger').css('display', 'inline-block');
+        $('#breadcrumb_row .breadcrumb').css([
+            'width', 'auto',
+            'float', 'right'
+        ])
+    });
 
     $('#guide_content pre:not(.no_copy pre)').hover(function(event) {
 
@@ -220,35 +283,6 @@ $(document).ready(function() {
     //
     $(window).scroll(function() {
         handleFloatingTableOfContent();
+        handleFloatingCodeColumn();
     });
-
-    $(window).scroll(function() {
-        // Check if there is a scrollToLine element in the viewport
-        $('div[class*=scrollToLine-').each(function(index){
-            var elem = $(this);
-            var hT = elem.offset().top,
-            hH = elem.outerHeight(),
-            wH = $(window).height(),
-            wS = $(window).scrollTop();
-            if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
-                // Get the line to scroll to
-                var classList = this.classList;
-                var scrollTo;
-                for(var i=0; i<classList.length; i++){
-                    if(classList[i].indexOf('scrollToLine-') > -1){
-                        scrollTo = classList[i].substring(13);
-                        break;
-                    }
-                }
-                // Scroll to the line in the code column
-                if(scrollTo){
-                    var target = $('#code_column .line-numbers:contains(' + scrollTo + ')').first();
-                    // $('html, #code_column').animate({
-                    //     scrollTop: target.offset().top
-                    // }, 500);
-                    // scrollTo(target.offset().top);
-                }                
-            }
-        });        
-   });
 });

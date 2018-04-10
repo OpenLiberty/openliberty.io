@@ -106,6 +106,10 @@
     font-weight: 500;
 }
 
+#close_container {
+    display: none;
+}
+
 #toc_title {
     font-family: BunueloBold;
     font-size:14px;
@@ -200,6 +204,32 @@
         background-color: white;
         margin-left: 0;
         margin-right: 0;
+    }
+
+    #close_container {
+        display: block;
+    }
+
+    #close_container:after {
+        clear: both;
+        content: "";
+        height: 0;
+        visibility: hidden;
+        display: block;
+    }
+    
+    #close_container > img {
+        float: right;
+        margin-right: 12px;
+        margin-top: 20px;
+    }
+
+    #close_container > img:hover{
+        cursor: pointer;
+    }
+
+    #toc_title {
+        margin-top: 0;
     }
 
     #toc_column {
