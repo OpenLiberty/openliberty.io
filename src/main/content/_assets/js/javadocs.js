@@ -44,7 +44,7 @@ function addExpandAndCollapseToggleButtons() {
         var isBottomLeftPackageIFrame = $(this).attr("name") === "packageFrame";
         var isClassFrame = $(this).attr("name") === "classFrame";
 
-        if(isTopLeftPackageIFrame) {
+        if(isTopLeftPackageIFrame && $(this).contents().find(".toggle").length === 0) {
             var list = $(this).contents().find('ul[title="Packages"]');
             var header = $(this).contents().find("h2[title='Packages']");
 
@@ -83,7 +83,7 @@ function addExpandAndCollapseToggleButtons() {
             });
             header.append(toggleButton);            
         }
-        if(isBottomLeftPackageIFrame) {
+        if(isBottomLeftPackageIFrame && $(this).contents().find(".toggle").length === 0) {
             var list2 = $(this).contents().find('main.indexContainer > ul');
             var frame2 = $(this).contents().find('div.leftBottom');
 
@@ -185,22 +185,126 @@ function addNavHoverListener() {
     })
 }
 
+function addClickListeners() {
+    var javadoc_container = $('#javadoc_container').contents();
+    var iframes = javadoc_container.find("iframe");
+ 
+    $( iframes ).each(function() {
+        // console.log("iframe ", $(this));
+        var isTopLeftPackageIFrame = $(this).attr("name") === "packageListFrame";
+        var isBottomLeftPackageIFrame = $(this).attr("name") === "packageFrame";
+        var isClassFrame = $(this).attr("name") === "classFrame";
+        var searchName = "";
+        if (isTopLeftPackageIFrame) {
+            searchName = "package=";
+        } else if (isClassFrame || isBottomLeftPackageIFrame) {
+            searchName = "class=";
+        }
+    
+        // $(this).contents().click(function(e) {
+        //     window.history.replaceState({}, null, e.target.href);
+        // })
+        addClickListener($(this).contents(), searchName);
+    });
+}
+
+function addClickListener(contents, searchName) {
+    //contents.click(function(e) {
+    contents.bind("click", function(e) {
+        console.log("event", event);
+        setHistoryState(e.target.href, searchName);
+    })
+}
+
+function setHistoryState(url, searchName) {
+    if (url !== undefined && url != "") {
+        var searchString = searchName + getJavaDocHtmlPath(url);
+        if (window.location.href.indexOf(searchString) === -1) {
+            //searchString !== "package=allclasses-frame.html" && 
+            //searchString !== "class=overview-summary.html") {
+            if (window.location.href.indexOf(searchName) !== -1) {
+                try {
+                    // take out existing search string with same name first
+                    var searchNameToMatch = "(.*)" + searchName + ".*?.html(.*)";
+                    var regExpToMatch = new RegExp(searchNameToMatch, "g");
+                    var groups = regExpToMatch.exec(window.location.href);
+                    window.history.replaceState({}, null, groups[1] + searchString + groups[2]);
+                } catch (ex) {
+
+                }
+            } else {
+                if (window.location.href.indexOf("?") === -1) {
+                    searchString = "?" + searchString;
+                } else {
+                    searchString = "&" + searchString;
+                }
+                console.log("searchString = " + searchString);
+                window.history.replaceState({}, null, window.location.href + searchString);
+            }
+        }
+    }
+}
+
+function getJavaDocHtmlPath(href) {
+    var javaDocHtml = "";
+    try {
+        var stringToMatch = ".*/javadocs/.*-javadoc/(.*)";
+        var regExpToMatch = new RegExp(stringToMatch, "g");
+        var groups = regExpToMatch.exec(href);
+        javaDocHtml = groups[1];
+    } catch (e) {
+
+    }
+    console.log("javaDocHtml = " + javaDocHtml);
+    return javaDocHtml;
+}
+
 $(document).ready(function() {
 
     $(window).on('resize', function(){
         resizeJavaDocWindow();
     });
 
+    $(window).on('beforeunload', function(event) {
+        console.log("beforeunload", event);
+        var javadoc_container = $('#javadoc_container').contents();
+        var iframes = javadoc_container.find("iframe");
+     
+        $( iframes ).each(function() {
+            $(this).contents().unbind("click");
+        })
+    })
+
     $('#javadoc_container').load(function() {
+        console.log("window.locatio.href", window.location);
         resizeJavaDocWindow();
         addAccessibility();
         addExpandAndCollapseToggleButtons();  
         addNavHoverListener();      
         addScrollListener();
+        //addClickListeners();
+    
+
         $('#javadoc_container').contents().find("iframe.rightIframe").on('load', function(){
             addAccessibility();
             addNavHoverListener();
             addScrollListener();
+            //addExpandAndCollapseToggleButtons();
+            //var url = $($('#javadoc_container').contents().find("iframe.rightIframe")[0]).contents().attr("URL");
+            var url = $(this).contents().attr("URL");
+            //var url = $(this).get(0).contentWindow.location.href // another way to get the iframe url
+            //var url = (window.location != window.parent.location) ? document.referrer: document.location
+            console.log("url=", url);
+            setHistoryState(url, "class=");
         });
+        $('#javadoc_container').contents().find(".leftBottom iframe").on('load', function(){
+            var url = $(this).contents().attr("URL");
+            console.log("left url=", url);
+            setHistoryState(url, "package=");
+        });
+
+        // window.onpopstate = function(event) {
+        //     console.log("history changed to: " + document.location.href);
+        // }
     })
 });

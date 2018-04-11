@@ -12,5 +12,24 @@ css:
 permalink: /docs/ref/javaee/7/
 ---
 
-<iframe id="javadoc_container" title="Java Platform Enterprise Edition 7 application programming interface" style="width: 100%;" frameBorder="0" src="/javadocs/liberty-javaee7-javadoc/index.html?overview-summary.html">
+<iframe id="javadoc_container" title="Java Platform Enterprise Edition 7 application programming interface" style="width: 100%;" frameBorder="0"> 
 </iframe>
+<script>
+    if (window.location.search !== "" && window.location.search !== undefined) {
+        var classFoundInSearchString = false;
+        var splitSearchString = window.location.search.split("&");
+        for (i = 0; i < splitSearchString.length; i++) {
+            if ((splitSearchString[i].indexOf("class=") !== -1) ||
+                (splitSearchString.indexOf("=") === -1)) {
+                classFoundInSearchString = true;
+                break;
+            }
+        }
+        if (!classFoundInSearchString)
+            document.getElementById("javadoc_container").src = "/javadocs/liberty-javaee7-javadoc/index.html" + window.location.search + "&overview-summary.html";
+        else
+            document.getElementById("javadoc_container").src = "/javadocs/liberty-javaee7-javadoc/index.html" + window.location.search;
+    } else {
+        document.getElementById("javadoc_container").src = "/javadocs/liberty-javaee7-javadoc/index.html?overview-summary.html";
+    }
+</script>
