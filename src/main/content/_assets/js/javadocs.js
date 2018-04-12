@@ -209,16 +209,16 @@ function addClickListeners() {
 }
 
 function addClickListener(contents, searchName) {
-    //contents.click(function(e) {
     contents.bind("click", function(e) {
         console.log("event", event);
-        setHistoryState(e.target.href, searchName);
+        setHistoryState(e.target.href, searchName, true);
     })
 }
 
 function setHistoryState(url, searchName) {
     if (url !== undefined && url != "") {
         var searchString = searchName + getJavaDocHtmlPath(url);
+        console.log("before window.history.length=" + window.history.length);
         if (window.location.href.indexOf(searchString) === -1) {
             //searchString !== "package=allclasses-frame.html" && 
             //searchString !== "class=overview-summary.html") {
@@ -241,6 +241,7 @@ function setHistoryState(url, searchName) {
                 console.log("searchString = " + searchString);
                 window.history.replaceState({}, null, window.location.href + searchString);
             }
+            console.log("after window.history.length=" + window.history.length);
         }
     }
 }
@@ -265,15 +266,15 @@ $(document).ready(function() {
         resizeJavaDocWindow();
     });
 
-    $(window).on('beforeunload', function(event) {
-        console.log("beforeunload", event);
-        var javadoc_container = $('#javadoc_container').contents();
-        var iframes = javadoc_container.find("iframe");
+    // $(window).on('beforeunload', function(event) {
+    //     console.log("beforeunload", event);
+    //     var javadoc_container = $('#javadoc_container').contents();
+    //     var iframes = javadoc_container.find("iframe");
      
-        $( iframes ).each(function() {
-            $(this).contents().unbind("click");
-        })
-    })
+    //     $( iframes ).each(function() {
+    //         $(this).contents().unbind("click");
+    //     })
+    // })
 
     $('#javadoc_container').load(function() {
         console.log("window.locatio.href", window.location);
@@ -282,14 +283,12 @@ $(document).ready(function() {
         addExpandAndCollapseToggleButtons();  
         addNavHoverListener();      
         addScrollListener();
-        //addClickListeners();
-    
+        //addClickListener();
 
         $('#javadoc_container').contents().find("iframe.rightIframe").on('load', function(){
             addAccessibility();
             addNavHoverListener();
             addScrollListener();
-            //addExpandAndCollapseToggleButtons();
             //var url = $($('#javadoc_container').contents().find("iframe.rightIframe")[0]).contents().attr("URL");
             var url = $(this).contents().attr("URL");
             //var url = $(this).get(0).contentWindow.location.href // another way to get the iframe url
