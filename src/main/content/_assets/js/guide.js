@@ -124,11 +124,11 @@ function handleFloatingCodeColumn(){
 }
 
 function disableFloatingCodeColumn(){
-    $('#code_column').width("").css({"position": "", "top": ""});
+    $('#code_column').width("").css({"position":"", "top":"", "left":""});
 }
 
 function enableFloatingCodeColumn(){
-    $('#code_column').css({"position":"fixed", "top":"0"});
+    $('#code_column').css({"position":"fixed", "top":"0", "left":"50%"});
 }
 
 // Handle when the code column is too small to fit completely in the dark background.
@@ -155,8 +155,8 @@ $(document).ready(function() {
 
     $('#preamble').detach().insertAfter('#duration_container');
 
-    // Move the code snippets to the code column on the right
-    $('.rightside').each(function(){
+    // Move the code snippets to the code column on the right side.
+    $('.codecolumn').each(function(){
         var code_block = $(this);
         var sections = $(this).prev().find('p');
         if(sections.length > 0){
@@ -165,9 +165,8 @@ $(document).ready(function() {
             section_list = section_list.split(',');
             
             for(var i = 0; i < section_list.length; i++){
-                // Split the string into pattern of id=line_num
+                // Split the string into a pattern of id=line_num
                 section_list[i] = section_list[i].trim().replace(/\s+|\’/g, '-');
-                // console.log(section_list[i]);
                 // Get the section id and line number from the section
                 var equal_index = section_list[i].indexOf('=');
                 var id = section_list[i].substring(0, equal_index);
@@ -187,7 +186,7 @@ $(document).ready(function() {
                                 var target = code_block.find('.line-numbers:contains(' + line_num + ')').first();
 
                                 // Hide other code blocks and scroll to the correct one
-                                $('.rightside').not($(this)).hide();
+                                $('.codecolumn').not($(this)).hide();
                                 code_block.show();
 
                                 // $('html, #code_column').animate({
@@ -202,22 +201,31 @@ $(document).ready(function() {
             sections.remove();
         }       
 
+        // Create a title pane for the code section
+        var title = $(this).parents('.sect1').find('h3').first();
+        title.addClass('codeTitle');
+        $(this).prepend(title.detach());
+
         $(this).detach().appendTo('#code_column'); // Move code to the right column
     });
 
     // Hide all code blocks except the first one
-    $('.rightside:not(:first)').hide();
+    $('.codecolumn:not(:first)').hide();
 
 
     // Handle collapsing the table of contents from full width into the hamburger
     $('#close_container').on('click', function(event){
         $(this).hide(); // Hide the close button
+        // $("#toc_column").hide(); // Hide the table of contents
         // Show the hamburger button
         $('#breadcrumb_hamburger').css('display', 'inline-block');
-        $('#breadcrumb_row .breadcrumb').css([
-            'width', 'auto',
-            'float', 'right'
-        ])
+        $('#breadcrumb_row .breadcrumb').css({
+            'width': 'calc(100% - 76px)',
+            'float': 'right',
+        });
+        $("#toc_title").css('margin-top', '20px');
+
+        $('#breadcrumb_hamburger').click();
     });
 
     $('#guide_content pre:not(.no_copy pre)').hover(function(event) {
@@ -267,6 +275,13 @@ $(document).ready(function() {
 
     });
 
+    // Adjust the window for 
+    var shiftWindow = function() { scrollBy(0, -120) };
+    if (location.hash){
+        shiftWindow();
+    } 
+    window.addEventListener("hashchange", shiftWindow);
+
     // RELATED GUIDES
     //
     // Add Related guides link to the table of contents, if needed
@@ -282,7 +297,7 @@ $(document).ready(function() {
     // Keep the table of content (TOC) in view while scrolling (Desktop only)
     //
     $(window).scroll(function() {
-        handleFloatingTableOfContent();
-        handleFloatingCodeColumn();
+        // handleFloatingTableOfContent();
+        // handleFloatingCodeColumn();
     });
 });
