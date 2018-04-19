@@ -1,0 +1,32 @@
+---
+layout: doc
+css: 
+- doc-header
+- javadocs
+---
+
+<div id="background_container" class="black_blue_gradient_background">
+        <div class="row">
+            <!-- Guide's table of contents section -->
+            <div id="toc_column" class="col-sm-3">
+                <div id="toc_inner">
+                    {% assign toc = page.document | tocify_asciidoc %}
+                    {% if toc %}
+                    <h3 id="toc_title">Contents</h3>
+                    <div id="toc_container">
+                        {{ toc }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Entire guide section -->
+            <div id="config_column" class="col-sm-9 position_relative">
+                <div id="guide_content">
+
+                    <!-- Config content section -->
+                    {{ content }}
+                </div>
+            </div>
+        </div>
+</div>
+
