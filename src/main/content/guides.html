@@ -55,7 +55,7 @@ permalink: /guides/
     <div class="row">
         {% for guide in guides %}
         <!-- Do not render anything from the two common guide repositories containing shared code -->
-        {% unless guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
+        {% unless guide.archived or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
             <div class="guide_column col-xs-12 col-sm-6 col-md-4">
                 <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}">
                     <div class="guide_title_and_description_container">
