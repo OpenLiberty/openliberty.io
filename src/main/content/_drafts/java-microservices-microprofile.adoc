@@ -1,0 +1,118 @@
+---
+layout: post
+title:
+author_picture: https://avatars0.githubusercontent.com/u/0
+seo-title: Writing Java microservices with MicroProfile - OpenLiberty.io
+seo-description:
+blog_description: "Blog preview description"
+---
+= Writing Java microservices with MicroProfile
+
+http://microprofile.io/[Eclipse MicroProfile] is a set of vendor-neutral Java extensions for building fault-tolerant, scalable Java microservices. With MicroProfile on Open Liberty, you can build and deploy applications as loosely-coupled services, each representing one unique business function.
+
+## What is a microservice?
+
+A microservices architecture is a collection of loosely-coupled services, each representing one unique business function in your application. This approach is more modular and makes the application easy to understand, easy to develop, and easy to test. It also enables small, autonomous teams to develop, deploy, and scale their respective services independently.
+
+## Why use a microservices architecture?
+
+image::/img/microservices-architecture.png[align="center",Diagram of a monolithic architecture with all applications hosted by a single app server versus three separate app servers each hosting a single microservice.]
+
+A monolithic architecture (left) packages all aspects of the business functionality into a single application. All services are interdependent and deployed as a single unit.
+
+A microservice architecture (right) packages each business function separately as its own service. Each service is independent and developed, tested, and deployed independently.
+
+## What is MicroProfile?
+
+MicroProfile is a vendor-neutral programming model which is designed in the open for developing Java microservices. It provides the core capabilities you need to build fault-tolerant, scalable microservices.
+
+Because MicroProfile is developed in the open and is http://microprofile.io/[a collaboration between several partners], it means we can be innovative and fast! MicroProfile is part of the https://projects.eclipse.org/projects/technology.microprofile[Eclipse Foundation].
+
+The project has released three updates to MicroProfile in 2017 and are working on more for 2018. Open Liberty is implementing these updates as fast as they are being agreed. The most recent release of https://openliberty.io/news/2018/03/16/distributed-tracing-microservices-18001.html[Open Liberty, 18.0.0.1], contains a full implementation of https://github.com/eclipse/microprofile-bom/releases/tag/1.3[MicroProfile 1.3].
+
+## What's in MicroProfile 1.3?
+
+image::/img/microprofile13.png[align="center",Diagram of the components of MicroProfile 1.3.]
+
+MicroProfile 1.3 is our latest release and contains the following capabilities:
+
+### Externalize configuration to improve portability (Config 1.2)
+
+The https://github.com/eclipse/microprofile-config[Config 1.2 component] externalizes configuration from the application to improve portability of the application. A core principal is to be able to override configuration at deployment time using system properties and environment variables. Config 1.0 was the key component for the first Eclipse MicroProfile 1.1 release, and has had two iterations since.
+
+The Config technology is also being proposed as the https://www.jcp.org/en/jsr/detail?id=382[Configuration API 1.0 JSR] through the JCP process.
+
+
+Find out more:
+
+* https://openliberty.io/guides/microprofile-config.html[Configuring microservices]
+* https://openliberty.io/guides/microprofile-config-intro.html[Separating configuration from code in microservices [interactive guide]]
+
+### Monitor a microservice's health (Metrics 1.1)
+
+The https://github.com/eclipse/microprofile-metrics[Metrics 1.1 component] provides common REST endpoints for monitoring a microservice's health. Similar in nature to JMX but a much simpler API using JAX-RS.  Both built-in and application-defined metrics are accessible, with the output in either Json or Prometheus text formats.  Again, this is a popular feature with one update on the books and more to come. This API provides more extensive detail than the simple up/down reporting provided by the Health Check component.
+
+Find out more:
+
+* https://openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice]
+
+### Handle unexpected failures in your microservices (Fault Tolerance 1.0)
+
+The https://github.com/eclipse/microprofile-fault-tolerance[Fault Tolerance component] provides an API and annotations for building robust behavior to cope with unexpected failures in your microservice.  Aspects of fault-tolerant execution include timeouts, retries, fallbacks, bulkhead processing, and circuit breakers.  This is proving to be one of our most popular features of MicroProfile, and is frequently referenced in conference sessions.
+
+Find out more:
+
+* https://openliberty.io/guides/microprofile-fallback.html[Building fault-tolerant microservices]
+* https://openliberty.io/guides/circuit-breaker.html[Preventing repeated failed calls to microservices [interactive guide]]
+
+
+### Determine a microservice's availability (Health Check 1.0)
+
+The https://github.com/eclipse/microprofile-health[Health Check component] provides a common REST endpoint format to determine microservice availability.  This is a simple check to determine if a microservice is alive or not.  Contrast with Metrics, which provides much more detail on the running microservice.
+
+Find out more:
+
+* https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices]
+
+### Authentication and role-based access control (JWT Propagation 1.0)
+
+The https://github.com/eclipse/microprofile-jwt-auth[JWT Propagation component] provides for interoperable authentication and role-based access control in Java.  This MicroProfile feature allows for an authenticated JWT token to be shared across multiple microservices--even if these services are running on other vendors’ implementations.  This was one of the first ideas proposed for MicroProfile and we delivered it as part of MicroProfile 1.2.
+
+Find out more:
+
+* https://openliberty.io/guides/microprofile-jwt.html[Securing microservices with JSON Web Tokens]
+
+### Document your RESTful APIs (OpenAPI 1.0)
+
+The https://github.com/eclipse/microprofile-open-api[OpenAPI component] provides a Java API for the https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md[OpenAPI v3 specification] that you can use to expose their API documentation.  You can natively produce OpenAPI v3 documents from their JAX-RS applications. FYI, the OpenAPI specification https://swagger.io/blog/difference-between-swagger-and-openapi/[started off as the Swagger specification].
+
+Find out more:
+
+* https://openliberty.io/guides/microprofile-openapi.html[Documenting RESTful APIs]
+
+### Enable distributed tracing of your microservices (OpenTracing 1.0)
+
+The https://github.com/eclipse/microprofile-opentracing[OpenTracing component] allows services to easily participate in a distributed tracing environment.  The specification defines behaviors and an API for accessing an http://opentracing.io/[OpenTracing]-compliant Tracer object within your microservice.  These trace logs can then be consumed by a third-party distributed tracing facility such ashttps://zipkin.io/[Zipkin] or https://github.com/jaegertracing/jaeger[Jaeger].
+
+Find out more:
+
+* https://openliberty.io/guides/microprofile-opentracing.html[Enabling distributed tracing in microservices]
+
+### Consuming a RESTful web service with type-safe Java (Rest Client 1.0)
+
+The https://github.com/eclipse/microprofile-rest-client[Rest Client component] provides a type-safe approach for invoking RESTful services over HTTP.  This API greatly simplifies the client-side API as defined by JAX-RS.  The underlying MicroProfile implementation also handles the communication between the client and service.
+
+Find out more:
+
+* (coming soon)
+
+### Build RESTful web services (JAX-RS 2.0, CDI 1.2, JSON-P1.0)
+
+These three Java EE technologies (JAX-RS, CDI, and JSON-P) provide the base for MicroProfile and were the designated content for MicroProfile 1.0.
+
+Each of the other technologies listed are beyond the scope of Java EE.  They define additions or extensions to the programming model for microservice development.  Each component is responsible for developing a specification, an API, and a TCK.  MicroProfile does not produce an RI (reference implementation), per se.  Instead, each member of the MicroProfile community is invited to develop their own implementation and use the TCK to verify its correctness.
+
+
+## Give it a try on Open Liberty
+
+https://openliberty.io/news/2018/03/16/distributed-tracing-microservices-18001.html[Open Liberty 18.0.0.1] implemented MicroProfile 1.3. Pick a MicroProfile technology that you like the sound of and try its guide to see it in action on Open Liberty. Each of the guides takes from 25 – 50 minutes, depending on your experience level.  They are all self-sufficient and you can do them in any order.
