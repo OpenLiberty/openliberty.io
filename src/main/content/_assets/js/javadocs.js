@@ -95,55 +95,61 @@ function addExpandAndCollapseToggleButtons() {
             header.append(toggleButton);            
         }
         if(isBottomLeftPackageIFrame && $(this).contents().find(".toggle").length === 0) {
-            var list2 = $(this).contents().find('main.indexContainer > ul');
-            var frame2 = $(this).contents().find('div.leftBottom');
-
-            // Add region to the package div
-            var packageHeader = $(this).contents().find('h1.bar');
-            $(this).contents().find('main.indexContainer').prepend(packageHeader.remove());
-            // packageHeader.attr('role', 'region');
-
-            // I did not know how to select for text that contained whitespace.
-            // example: "All Classes"
-            var header2 = $(this).contents().find("h1:contains('Classes')");
-            var headerHeight2 = header2.outerHeight(true); // true to include margins too
-
-            // .text() returns encoded spaces, convert back to normal spaces 
-            // for string comparison.
-            var header2_text = header2.text().replace('/\s/g',' ').trim();
-            if(header2_text === "All Classes") {
-                var toggleButton2 = $('<div class="toggle" collapsed="false" tabindex=0><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse" /></div>');
-                toggleButton2.on('click', function(){
-                    var collapsed = $(this).attr('collapsed');
-                    if(collapsed === "true"){
-                        // Expand the list
-                        list2.show();
-                        leftBottom.css("height", "70%");
-                        $(this).empty().append($('<img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
-                        $(this).attr('collapsed', false);
-                    }
-                    else{
-                        // Collapse the list
-                        list2.hide();
-                        leftBottom.css("height", headerHeight2);
-                        $(this).empty().append($('<img src="/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
-                        $(this).attr('collapsed', true);                    
-                    }
-                });
-                toggleButton2.on('keypress', function(event){
-                    event.stopPropagation();
-                    // Enter key
-                    if(event.which === 13 || event.keyCode === 13){
-                        toggleButton2.click();
-                    }
-                });
-                header2.append(toggleButton2);
-            }     
+            addExpandAndCollapseToggleButtonForPackageFrame($(this).contents(), leftBottom);
         }        
     });
 }
 
+function addExpandAndCollapseToggleButtonForPackageFrame(contents, leftBottom) {
+    var list2 = contents.find('main.indexContainer > ul');
+    var frame2 = contents.find('div.leftBottom');
 
+    // Add region to the package div
+    var packageHeader = contents.find('h1.bar');
+    var packageHeaderText = packageHeader.text().replace('/\s/g',' ').trim(); 
+    // Move the header text only if it is showing "All Classes" content
+    if (packageHeaderText === "All Classes") {
+        contents.find('main.indexContainer').prepend(packageHeader.remove());
+    }
+    // packageHeader.attr('role', 'region');
+
+    // I did not know how to select for text that contained whitespace.
+    // example: "All Classes"
+    var header2 = contents.find("h1:contains('Classes')");
+    var headerHeight2 = header2.outerHeight(true); // true to include margins too
+
+    // .text() returns encoded spaces, convert back to normal spaces 
+    // for string comparison.
+    var header2_text = header2.text().replace('/\s/g',' ').trim();
+    if(header2_text === "All Classes") {
+        var toggleButton2 = $('<div class="toggle" collapsed="false" tabindex=0><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse" /></div>');
+        toggleButton2.on('click', function(){
+            var collapsed = $(this).attr('collapsed');
+            if(collapsed === "true"){
+                // Expand the list
+                list2.show();
+                leftBottom.css("height", "70%");
+                $(this).empty().append($('<img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
+                $(this).attr('collapsed', false);
+            }
+            else{
+                // Collapse the list
+                list2.hide();
+                leftBottom.css("height", headerHeight2);
+                $(this).empty().append($('<img src="/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
+                $(this).attr('collapsed', true);                    
+            }
+        });
+        toggleButton2.on('keypress', function(event){
+            event.stopPropagation();
+            // Enter key
+            if(event.which === 13 || event.keyCode === 13){
+                toggleButton2.click();
+            }
+        });
+        header2.append(toggleButton2);
+    }            
+}
 
 /*
     Add a listener to scrolling in the main frame.
@@ -247,10 +253,7 @@ function addClickListeners() {
 
 function addClickListener(contents) {
     contents.bind("click", function(e) {
-        // handling onclick here, not by the provided javadoc implementation
-        e.preventDefault();
-        e.stopPropagation();
-
+        var handlingClick = true;
         var iframeName = CLASS_FRAME;
         var hashKey = CLASS_HASH;
         var href = e.target.href;
@@ -269,27 +272,44 @@ function addClickListener(contents) {
                     iframeName = PACKAGE_FRAME;
                     hashKey = PACKAGE_HASH;
                 }
+            } else {
+                handlingClick = false;
             }
         } else if (e.target.target === "packageFrame") {
             iframeName = PACKAGE_FRAME;
             hashKey = PACKAGE_HASH;
         }
-        var hashParams = setHashParams(href, hashKey);
-        setIFrameContent(iframeName, href);
+        if (handlingClick) {
+            // handling onclick here, not by the provided javadoc implementation
+            e.preventDefault();
+            e.stopPropagation();
 
-        // provide state data to be used by the popstate event to render the frame contents
-        var state = {};
-        state[iframeName] = href;
-        var otherHashContent = getRemainingHashParam(hashParams, hashKey);
-        $.each( otherHashContent, function( key, value ) {
-            var otherStateKey = CLASS_FRAME;
-            if (key === PACKAGE_HASH) {
-                otherStateKey = PACKAGE_FRAME;
-            }
-            state[otherStateKey] = defaultHtmlRootPath + value;
-        });
-        window.history.pushState(state, null, hashParams);
+            var hashParams = setHashParams(href, hashKey);
+            setIFrameContent(iframeName, href);
+            setPackageContainerHeight();
+
+            // provide state data to be used by the popstate event to render the frame contents
+            var state = {};
+            state[iframeName] = href;
+            var otherHashContent = getRemainingHashParam(hashParams, hashKey);
+            $.each(otherHashContent, function (key, value) {
+                var otherStateKey = CLASS_FRAME;
+                if (key === PACKAGE_HASH) {
+                    otherStateKey = PACKAGE_FRAME;
+                }
+                state[otherStateKey] = defaultHtmlRootPath + value;
+            });
+            window.history.pushState(state, null, hashParams);
+        }
     })
+}
+
+function setPackageContainerHeight() {
+    var packageContainer = $('#javadoc_container').contents().find(".leftBottom");
+    if (packageContainer.css("height") !== "70%") {
+        // restore the height in case it is collapsed
+        packageContainer.css("height", "70%");
+    }
 }
 
 function setIFrameContent(iframeName, href) {
@@ -410,10 +430,10 @@ $(document).ready(function() {
             addNavHoverListener();
             addScrollListener();
             addClickListener($(this).contents());
-            addExpandAndCollapseToggleButtonForPackageFrame();
         });
         $('#javadoc_container').contents().find(PACKAGE_FRAME).on('load', function(){
             addClickListener($(this).contents());
+            addExpandAndCollapseToggleButtonForPackageFrame($(this).contents(), $('#javadoc_container').contents().find(".leftBottom"));
         });
 
         setDynamicIframeContent();
@@ -423,6 +443,8 @@ $(document).ready(function() {
                 $.each( event.state, function( key, value ) {
                     setIFrameContent(key, value);
                 });
+                // restore the height in case it is collapsed
+                setPackageContainerHeight();
              } else {
                  // This path is exercised with the initial page
                  setIFrameContent(PACKAGE_FRAME, defaultPackageHtml);
