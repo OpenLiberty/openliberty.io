@@ -7,50 +7,46 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" type="text/css" href="stylesheet.css" title="Style">
 <script type="text/javascript">
-    console.log("window.location", window.location);
-    console.log("parent.window", parent.window);
-    tmpTargetPage = parent.window.location.search;
+    // tmpTargetPage = parent.window.location.search;
 
-    if (tmpTargetPage != "" && tmpTargetPage != "undefined") {
-        tmpTargetPage = tmpTargetPage.substring(1);
-        splitTargetPage = tmpTargetPage.split("&");
-        tmpTargetPage = {};
-        console.log("splitTargetPage:", splitTargetPage);
-        console.log("isArray", Array.isArray(splitTargetPage));
-        for (i = 0; i < splitTargetPage.length; i++) {
-           console.log("searchString=", splitTargetPage[i].trim());
-           var searchString = splitTargetPage[i].trim();
-           if (searchString.indexOf("package=") === 0) {
-               tmpPackagePage = searchString.substring(8);
-               console.log("tmpPackagePage=" + tmpPackagePage);
-               if (validURL(tmpPackagePage)) {
-                   tmpTargetPage.package = tmpPackagePage;
-               } else {
-                   tmpTargetPage = "undefined";
-               }
-           } else {
-               tmpClassPage = searchString;
-               if (searchString.indexOf("class=") === 0) {
-                   tmpClassPage = searchString.substring(6);
-               } else if (searchString.indexOf("=") !== -1) {
-                   tmpClassPage = "";
-               }
-               if (tmpClassPage !== "" && validURL(tmpClassPage)) {
-                    tmpTargetPage.class = tmpClassPage;
-               } else {
-                   tmpTargetPage = "undefined";
-               }
-           }
-        }
-        console.log("tmpTargetPage after splitting", tmpTargetPage);
-    }
+    // if (tmpTargetPage != "" && tmpTargetPage != "undefined") {
+    //     tmpTargetPage = tmpTargetPage.substring(1);
+    //     splitTargetPage = tmpTargetPage.split("&");
+    //     tmpTargetPage = {};
+    //     for (i = 0; i < splitTargetPage.length; i++) {
+    //        console.log("searchString=", splitTargetPage[i].trim());
+    //        var searchString = splitTargetPage[i].trim();
+    //        if (searchString.indexOf("package=") === 0) {
+    //            tmpPackagePage = searchString.substring(8);
+    //            console.log("tmpPackagePage=" + tmpPackagePage);
+    //            if (validURL(tmpPackagePage)) {
+    //                tmpTargetPage.package = tmpPackagePage;
+    //            } else {
+    //                tmpTargetPage = "undefined";
+    //            }
+    //        } else {
+    //            tmpClassPage = searchString;
+    //            if (searchString.indexOf("class=") === 0) {
+    //                tmpClassPage = searchString.substring(6);
+    //            } else if (searchString.indexOf("=") !== -1) {
+    //                tmpClassPage = "";
+    //            }
+    //            if (tmpClassPage !== "" && validURL(tmpClassPage)) {
+    //                 tmpTargetPage.class = tmpClassPage;
+    //            } else {
+    //                tmpTargetPage = "undefined";
+    //            }
+    //        }
+    //     }
+    //     console.log("tmpTargetPage after splitting", tmpTargetPage);
+    // }
     
     // if (tmpTargetPage.indexOf(":") != -1 || (tmpTargetPage != "" && !validURL(tmpTargetPage))) {
     //     tmpTargetPage = "undefined";
     //     console.log("validate must have failed");
     // }
-    targetPage = tmpTargetPage;
-    console.log("targetPage=", targetPage);
+    // targetPage = tmpTargetPage;
+    // console.log("targetPage=", targetPage);
     
     function validURL(url) {
         if (url.indexOf(":") !== -1) {
@@ -109,21 +105,26 @@
         return true;
     }
     function loadFrames() {
-        console.log("targetPage", targetPage);
-        if (targetPage != "" && targetPage != "undefined") {
-            if (targetPage.class !== undefined && targetPage.class !== "") {
-                classFrame.location = targetPage.class;
-            } else {
-                classFrame.location = "overview-summary.html";
-            }
-            if (targetPage.package !== undefined && targetPage.package !== "") {
-                packageFrame.location = targetPage.package;
-            } else {
-                packageFrame.location = "allclasses-frame.html";
-            }
-        } else {
-            classFrame.location = "overview-summary.html";
-            packageFrame.location = "allclasses-frame.html";
+        // console.log("targetPage", targetPage);
+        // if (targetPage != "" && targetPage != "undefined") {
+        //     if (targetPage.class !== undefined && targetPage.class !== "") {
+        //         classFrame.location = targetPage.class;
+        //     } else {
+        //         classFrame.location = "overview-summary.html";
+        //     }
+        //     if (targetPage.package !== undefined && targetPage.package !== "") {
+        //         packageFrame.location = targetPage.package;
+        //     } else {
+        //         packageFrame.location = "allclasses-frame.html";
+        //     }
+        // } else {
+        //     classFrame.location = "overview-summary.html";
+        //     packageFrame.location = "allclasses-frame.html";
+        // }
+        if (window.performance.navigation.type === window.performance.navigation.TYPE_RELOAD) {
+            console.log("skipping reload");
+            console.log("window.top", window.top);
+            console.log("parent.window.location", parent.window.location);
         }
     }
 </script>
