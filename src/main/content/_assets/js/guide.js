@@ -189,6 +189,9 @@ $(document).ready(function() {
                                 $('.codecolumn').not($(this)).hide();
                                 code_block.show();
 
+                                // Update the header file name
+                                $('.fileName').text(code_block.attr('fileName'));
+
                                 // $('html, #code_column').animate({
                                 //     scrollTop: target.offset().top
                                 // }, 500);
@@ -203,8 +206,13 @@ $(document).ready(function() {
 
         // Create a title pane for the code section
         var title = $(this).parents('.sect1').find('h3').first();
-        title.addClass('codeTitle');
-        $(this).prepend(title.detach());
+        var fileName = title.text();
+        $(this).attr('fileName', fileName);
+        $('.fileName').text(fileName);
+        title.detach();
+
+        // title.addClass('codeTitle');
+        // $(this).prepend(title.detach());
 
         $(this).detach().appendTo('#code_column'); // Move code to the right column
     });
