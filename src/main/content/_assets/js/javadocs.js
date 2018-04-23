@@ -420,8 +420,6 @@ $(document).ready(function() {
 
     $('#javadoc_container').load(function() {
         console.log("window.locatio.href", window.location);
-        // topWindowHref = window.location.href;
-        // topWindowHash = window.location.hash;
         resizeJavaDocWindow();
         addAccessibility();
         addExpandAndCollapseToggleButtons();  
@@ -437,6 +435,7 @@ $(document).ready(function() {
         });
         $('#javadoc_container').contents().find(PACKAGE_FRAME).on('load', function(){
             addClickListener($(this).contents());
+            // add back the toggle expand/collapse button
             addExpandAndCollapseToggleButtonForPackageFrame($(this).contents(), $('#javadoc_container').contents().find(".leftBottom"));
         });
 
