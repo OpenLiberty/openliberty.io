@@ -419,7 +419,6 @@ $(document).ready(function() {
     });
 
     $('#javadoc_container').load(function() {
-        console.log("window.locatio.href", window.location);
         resizeJavaDocWindow();
         addAccessibility();
         addExpandAndCollapseToggleButtons();  
