@@ -278,6 +278,10 @@ function addClickListener(contents) {
         } else if (e.target.target === "packageFrame") {
             iframeName = PACKAGE_FRAME;
             hashKey = PACKAGE_HASH;
+        } else if (e.target.href && e.target.href.indexOf("javascript:") === 0) {
+            // let javadoc handles the click for "All/Instance/Abstract" methods in
+            // the Method Summary section
+            handlingClick = false;
         }
         if (handlingClick) {
             // handling onclick here, not by the provided javadoc implementation
