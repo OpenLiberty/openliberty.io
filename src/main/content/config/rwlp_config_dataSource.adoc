@@ -1,0 +1,5864 @@
+//  Copyright (c) 2017 IBM Corporation and others.
+// Licensed under Creative Commons Attribution-NoDerivatives
+// 4.0 International (CC BY-ND 4.0)
+//   https://creativecommons.org/licenses/by-nd/4.0/
+//
+// Contributors:
+//     IBM Corporation
+//
+:projectid: dataSource
+:page-layout: config
+:page-duration: 30 minutes
+:page-releasedate: 2017-09-19
+:page-description: Learn how to create a REST service with JAX-RS, JSON-P, and Open Liberty.
+:page-tags: ['REST', 'Getting Started']
+:page-related-guides: ['rest-client-java', 'rest-client-angularjs']
+:page-permalink: /docs/ref/config/{projectid}
+= dataSource - Data Source (dataSource)
+Defines a data source configuration.
+
+* <<connectionManager,connectionManager>>
+* <<containerAuthData,containerAuthData>>
+* <<jaasLoginContextEntry,jaasLoginContextEntry>>
+* <<jdbcDriver,jdbcDriver>>
+** <<jdbcDriver/library,library>>
+*** <<jdbcDriver/library/file,file>>
+*** <<jdbcDriver/library/fileset,fileset>>
+*** <<jdbcDriver/library/folder,folder>>
+* <<onConnect,onConnect>>
+* <<properties,properties>>
+* <<properties.datadirect.sqlserver,properties.datadirect.sqlserver>>
+* <<properties.db2.i.native,properties.db2.i.native>>
+* <<properties.db2.i.toolbox,properties.db2.i.toolbox>>
+* <<properties.db2.jcc,properties.db2.jcc>>
+* <<properties.derby.client,properties.derby.client>>
+* <<properties.derby.embedded,properties.derby.embedded>>
+* <<properties.informix,properties.informix>>
+* <<properties.informix.jcc,properties.informix.jcc>>
+* <<properties.microsoft.sqlserver,properties.microsoft.sqlserver>>
+* <<properties.oracle,properties.oracle>>
+* <<properties.sybase,properties.sybase>>
+* <<recoveryAuthData,recoveryAuthData>>
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|connectionManagerRef
+
+|A reference to top level connectionManager element (string).
+
+|
+
+|Connection manager for a data source. If updated while the server is running, existing connections are destroyed.
+
+|connectionSharing
+
+|* MatchCurrentState
+* MatchOriginalRequest
+
+
+|MatchOriginalRequest
+
+|Specifies how connections are matched for sharing. +
+*MatchCurrentState* +
+  When sharing connections, match based on the current state of the connection. If updated while the server is running, the update is applied with each first connection handle in a transaction. +
+*MatchOriginalRequest* +
+  When sharing connections, match based on the original connection request.
+
+|containerAuthDataRef
+
+|A reference to top level authData element (string).
+
+|
+
+|Default authentication data for container managed authentication that applies when bindings do not specify an authentication-alias for a resource reference with res-auth=CONTAINER. If updated while the server is running, the change is applied with new connection requests; in-use connections are not impacted.
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|isolationLevel
+
+|* TRANSACTION_READ_COMMITTED
+* TRANSACTION_READ_UNCOMMITTED
+* TRANSACTION_REPEATABLE_READ
+* TRANSACTION_SERIALIZABLE
+* TRANSACTION_SNAPSHOT
+
+
+|
+
+|Default transaction isolation level. If unspecified and the database is identified as DB2, Derby, Informix, Microsoft SQL Server or Sybase, TRANSACTION_REPEATABLE_READ is used. If unspecified for other databases, TRANSACTION_READ_COMMITTED is used. If updated while the server is running, the update is applied with new connection requests; in-use connections are not impacted. +
+*TRANSACTION_READ_COMMITTED* +
+  Dirty reads are prevented; non-repeatable reads and phantom reads can occur. +
+*TRANSACTION_READ_UNCOMMITTED* +
+  Dirty reads, non-repeatable reads and phantom reads can occur. +
+*TRANSACTION_REPEATABLE_READ* +
+  Dirty reads and non-repeatable reads are prevented; phantom reads can occur. +
+*TRANSACTION_SERIALIZABLE* +
+  Dirty reads, non-repeatable reads and phantom reads are prevented. +
+*TRANSACTION_SNAPSHOT* +
+  Snapshot isolation for Microsoft SQL Server JDBC Driver and DataDirect Connect for JDBC driver.
+
+|jaasLoginContextEntryRef
+
+|A reference to top level jaasLoginContextEntry element (string).
+
+|
+
+|JAAS login context entry for authentication. If updated while the server is running, the update is applied with new connection requests; in-use connections are not impacted.
+
+|jdbcDriverRef
+
+|A reference to top level jdbcDriver element (string).
+
+|
+
+|JDBC driver for a data source. If updated while the server is running, existing connections are destroyed.
+
+|jndiName
+
+|string
+
+|
+
+|JNDI name for a data source. If updated while the server is running, existing connections are destroyed.
+
+|statementCacheSize
+
+|int +
+Min: 0 +
+
+
+|10
+
+|Maximum number of cached statements per connection. If updated while the server is running, the statement cache is resized upon next use.
+
+|transactional
+
+|boolean
+
+|true
+
+|Enable participation in transactions that are managed by the application server. If updated while the server is running, existing connections are destroyed.
+
+|type
+
+|* javax.sql.ConnectionPoolDataSource
+* javax.sql.DataSource
+* javax.sql.XADataSource
+
+
+|
+
+|Type of data source. If updated while the server is running, existing connections are destroyed.
+
+4+|*Advanced Properties*
+
+|beginTranForResultSetScrollingAPIs
+
+|boolean
+
+|true
+
+|Attempt transaction enlistment when result set scrolling interfaces are used.
+
+|beginTranForVendorAPIs
+
+|boolean
+
+|true
+
+|Attempt transaction enlistment when vendor interfaces are used.
+
+|commitOrRollbackOnCleanup
+
+|* commit
+* rollback
+
+
+|
+
+|Determines how to clean up connections that might be in a database unit of work (AutoCommit=false) when the connection is closed or returned to the pool. +
+*commit* +
+  Clean up the connection by committing. +
+*rollback* +
+  Clean up the connection by rolling back.
+
+|enableConnectionCasting
+
+|boolean
+
+|false
+
+|Indicates that connections obtained from the data source should be castable to interface classes that the JDBC vendor connection implementation implements. Enabling this option incurs additional overhead on each getConnection operation. If vendor JDBC interfaces are needed less frequently, it might be more efficient to leave this option disabled and use Connection.unwrap(interface) only where it is needed. If updated while the server is running, the update is applied with new connection requests; in-use connections are not impacted.
+
+|queryTimeout
+
+|A period of time with second precision
+
+|
+
+|Default query timeout for SQL statements. In a JTA transaction, syncQueryTimeoutWithTransactionTimeout can override this default. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|recoveryAuthDataRef
+
+|A reference to top level authData element (string).
+
+|
+
+|Authentication data for transaction recovery.
+
+|supplementalJDBCTrace
+
+|boolean
+
+|
+
+|Supplements the JDBC driver trace that is logged when JDBC driver trace is enabled in bootstrap.properties. JDBC driver trace specifications include: com.ibm.ws.database.logwriter, com.ibm.ws.db2.logwriter, com.ibm.ws.derby.logwriter, com.ibm.ws.informix.logwriter, com.ibm.ws.oracle.logwriter, com.ibm.ws.sqlserver.logwriter, com.ibm.ws.sybase.logwriter. If updated while the server is running, existing connections are destroyed.
+
+|syncQueryTimeoutWithTransactionTimeout
+
+|boolean
+
+|false
+
+|Use the time remaining (if any) in a JTA transaction as the default query timeout for SQL statements.
+
+|validationTimeout
+
+|A period of time with second precision
+
+|
+
+|Specifies a timeout for validation of pooled connections. When specified, pooled connections are validated before being reused from the connection pool. The validation timeout is also used when the connection manager validates connections in response to a stale connection for PurgePolicy=ValidateAllConnections. A value of 0 means that connections are validated without applying any timeout. Validation timeout requires a JDBC driver that complies with the JDBC 4.0 specification or higher. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+|===
+[#connectionManager]*connectionManager*
+
+Connection manager for a data source. If updated while the server is running, existing connections are destroyed.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|agedTimeout
+
+|A period of time with second precision
+
+|-1
+
+|Amount of time before a connection can be discarded by pool maintenance. A value of -1 disables this timeout. A value of 0 discards every connection, which disables connection pooling. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|connectionTimeout
+
+|A period of time with second precision
+
+|30s
+
+|Amount of time after which a connection request times out. A value of -1 disables this timeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|maxIdleTime
+
+|A period of time with second precision
+
+|30m
+
+|Amount of time a connection can be unused or idle until it can be discarded during pool maintenance, if doing so does not reduce the pool below the minimum size. A value of -1 disables this timeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|maxPoolSize
+
+|int +
+Min: 0 +
+
+
+|50
+
+|Maximum number of physical connections for a pool. A value of 0 means unlimited.
+
+|minPoolSize
+
+|int +
+Min: 0 +
+
+
+|
+
+|Minimum number of physical connections to maintain in the pool. The pool is not pre-populated. Aged timeout can override the minimum.
+
+|purgePolicy
+
+|* EntirePool
+* FailingConnectionOnly
+* ValidateAllConnections
+
+
+|EntirePool
+
+|Specifies which connections to destroy when a stale connection is detected in a pool. +
+*EntirePool* +
+  When a stale connection is detected, all connections in the pool are marked stale, and when no longer in use, are closed. +
+*FailingConnectionOnly* +
+  When a stale connection is detected, only the connection which was found to be bad is closed. +
+*ValidateAllConnections* +
+  When a stale connection is detected, connections are tested and those found to be bad are closed.
+
+|reapTime
+
+|A period of time with second precision
+
+|3m
+
+|Amount of time between runs of the pool maintenance thread. A value of -1 disables pool maintenance. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+4+|*Advanced Properties*
+
+|enableSharingForDirectLookups
+
+|boolean
+
+|true
+
+|If set to true, connections are shared. If set to false, connections are unshared.
+
+|maxConnectionsPerThread
+
+|int +
+Min: 0 +
+
+
+|
+
+|Limits the number of open connections on each thread.
+
+|numConnectionsPerThreadLocal
+
+|int +
+Min: 0 +
+
+
+|
+
+|Caches the specified number of connections for each thread.
+|===
+[#containerAuthData]*containerAuthData*
+
+Default authentication data for container managed authentication that applies when bindings do not specify an authentication-alias for a resource reference with res-auth=CONTAINER. If updated while the server is running, the change is applied with new connection requests; in-use connections are not impacted.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|Password of the user to use when connecting to the EIS. The value can be stored in clear text or encoded form. It is recommended that you encode the password. To do so, use the securityUtility tool with the encode option.
+
+|user
+
+|string
+
+|
+
+|Name of the user to use when connecting to the EIS.
+|===
+[#jaasLoginContextEntry]*jaasLoginContextEntry*
+
+JAAS login context entry for authentication. If updated while the server is running, the update is applied with new connection requests; in-use connections are not impacted.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|loginModuleRef
+
+|List of references to top level jaasLoginModule elements (comma-separated string).
+
+|hashtable,userNameAndPassword,certificate,token
+
+|A reference to the ID of a JAAS login module.
+
+|name
+
+|string
+
+|
+
+|Name of a JAAS configuration entry.
+|===
+[#jdbcDriver]*jdbcDriver*
+
+JDBC driver for a data source. If updated while the server is running, existing connections are destroyed.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|libraryRef
+
+|A reference to top level library element (string).
+
+|
+
+|Identifies JDBC driver JARs and native files.
+
+4+|*Advanced Properties*
+
+|javax.sql.ConnectionPoolDataSource
+
+|string
+
+|
+
+|JDBC driver implementation of javax.sql.ConnectionPoolDataSource.
+
+|javax.sql.DataSource
+
+|string
+
+|
+
+|JDBC driver implementation of javax.sql.DataSource.
+
+|javax.sql.XADataSource
+
+|string
+
+|
+
+|JDBC driver implementation of javax.sql.XADataSource.
+|===
+[#jdbcDriver/library]*jdbcDriver > library*
+
+Identifies JDBC driver JARs and native files.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|apiTypeVisibility
+
+|string
+
+|spec,ibm-api,api,stable
+
+|The types of API packages that this class loader supports. This value is a comma-separated list of any combination of the following API packages: spec, ibm-api, api, stable, third-party.
+
+|description
+
+|string
+
+|
+
+|Description of shared library for administrators
+
+|filesetRef
+
+|List of references to top level fileset elements (comma-separated string).
+
+|
+
+|Id of referenced Fileset
+
+|name
+
+|string
+
+|
+
+|Name of shared library for administrators
+|===
+[#jdbcDriver/library/file]*jdbcDriver > library > file*
+
+Id of referenced File
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|name
+
+|Path to a file
+
+|
+
+|Fully qualified filename
+|===
+[#jdbcDriver/library/fileset]*jdbcDriver > library > fileset*
+
+Id of referenced Fileset
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|caseSensitive
+
+|boolean
+
+|true
+
+|Boolean to indicate whether or not the search should be case sensitive (default: true).
+
+|dir
+
+|Path to a directory
+
+|${server.config.dir}
+
+|The base directory to search for files.
+
+|excludes
+
+|string
+
+|
+
+|The comma or space separated list of file name patterns to exclude from the search results, by default no files are excluded.
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|includes
+
+|string
+
+|*
+
+|The comma or space separated list of file name patterns to include in the search results (default: *).
+
+|scanInterval
+
+|A period of time with millisecond precision
+
+|0
+
+|Scanning interval to check the fileset for changes as a long with a time unit suffix h-hour, m-minute, s-second, ms-millisecond (e.g. 2ms or 5s). Disabled (scanInterval=0) by default. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+|===
+[#jdbcDriver/library/folder]*jdbcDriver > library > folder*
+
+Id of referenced folder
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|dir
+
+|Path to a directory
+
+|
+
+|Directory or folder to be included in the library classpath for locating resource files
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+|===
+[#onConnect]*onConnect*
+
+SQL command to execute once on each new connection that is established to the database. The SQL statement applies only to newly created connections, not to existing connections that are reused from the connection pool. If updated while the server is running, existing connections are destroyed.
+
+
+[#properties]*properties*
+
+List of JDBC vendor properties for the data source. For example, databaseName="dbname" serverName="localhost" portNumber="50000".
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|URL
+
+|string
+
+|
+
+|URL for connecting to the database.
+
+|databaseName
+
+|string
+
+|
+
+|JDBC driver property: databaseName.
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|portNumber
+
+|int
+
+|
+
+|Port on which to obtain database connections.
+
+|serverName
+
+|string
+
+|
+
+|Server where the database is running.
+
+|user
+
+|string
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+|===
+[#properties.datadirect.sqlserver]*properties.datadirect.sqlserver*
+
+Data source properties for the DataDirect Connect for JDBC driver for Microsoft SQL Server.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|databaseName
+
+|string
+
+|
+
+|JDBC driver property: databaseName.
+
+|portNumber
+
+|int
+
+|
+
+|Port on which to obtain database connections.
+
+|serverName
+
+|string
+
+|localhost
+
+|Server where the database is running.
+
+4+|*Advanced Properties*
+
+|JDBCBehavior
+
+|* 0
+* 1
+
+
+|0
+
+|JDBC driver property: JDBCBehavior. Values are: 0 (JDBC 4.0) or 1 (JDBC 3.0). +
+*0* +
+  JDBC 4.0 +
+*1* +
+  JDBC 3.0
+
+|XATransactionGroup
+
+|string
+
+|
+
+|JDBC driver property: XATransactionGroup.
+
+|XMLDescribeType
+
+|* longvarbinary
+* longvarchar
+
+
+|
+
+|JDBC driver property: XMLDescribeType.
+
+|accountingInfo
+
+|string
+
+|
+
+|JDBC driver property: accountingInfo.
+
+|alwaysReportTriggerResults
+
+|boolean
+
+|
+
+|JDBC driver property: alwaysReportTriggerResults.
+
+|applicationName
+
+|string
+
+|
+
+|JDBC driver property: applicationName.
+
+|authenticationMethod
+
+|* auto
+* kerberos
+* ntlm
+* userIdPassword
+
+
+|
+
+|JDBC driver property: authenticationMethod.
+
+|bulkLoadBatchSize
+
+|long
+
+|
+
+|JDBC driver property: bulkLoadBatchSize.
+
+|bulkLoadOptions
+
+|long
+
+|
+
+|JDBC driver property: bulkLoadOptions.
+
+|clientHostName
+
+|string
+
+|
+
+|JDBC driver property: clientHostName.
+
+|clientUser
+
+|string
+
+|
+
+|JDBC driver property: clientUser.
+
+|codePageOverride
+
+|string
+
+|
+
+|JDBC driver property: codePageOverride.
+
+|convertNull
+
+|int
+
+|
+
+|JDBC driver property: convertNull.
+
+|dateTimeInputParameterType
+
+|* auto
+* dateTime
+* dateTimeOffset
+
+
+|
+
+|JDBC driver property: dateTimeInputParameterType.
+
+|dateTimeOutputParameterType
+
+|* auto
+* dateTime
+* dateTimeOffset
+
+
+|
+
+|JDBC driver property: dateTimeOutputParameterType.
+
+|describeInputParameters
+
+|* describeAll
+* describeIfDateTime
+* describeIfString
+* noDescribe
+
+
+|
+
+|JDBC driver property: describeInputParameters.
+
+|describeOutputParameters
+
+|* describeAll
+* describeIfDateTime
+* describeIfString
+* noDescribe
+
+
+|
+
+|JDBC driver property: describeOutputParameters.
+
+|enableBulkLoad
+
+|boolean
+
+|
+
+|JDBC driver property: enableBulkLoad.
+
+|enableCancelTimeout
+
+|boolean
+
+|
+
+|JDBC driver property: enableCancelTimeout.
+
+|encryptionMethod
+
+|* SSL
+* loginSSL
+* noEncryption
+* requestSSL
+
+
+|
+
+|JDBC driver property: encryptionMethod.
+
+|hostNameInCertificate
+
+|string
+
+|
+
+|JDBC driver property: hostNameInCertificate.
+
+|initializationString
+
+|string
+
+|
+
+|JDBC driver property: initializationString.
+
+|insensitiveResultSetBufferSize
+
+|int
+
+|
+
+|JDBC driver property: insensitiveResultSetBufferSize.
+
+|javaDoubleToString
+
+|boolean
+
+|
+
+|JDBC driver property: javaDoubleToString.
+
+|loginTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: loginTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|longDataCacheSize
+
+|int +
+Min: -1 +
+
+
+|
+
+|JDBC driver property: longDataCacheSize.
+
+|netAddress
+
+|string
+
+|
+
+|JDBC driver property: netAddress.
+
+|packetSize
+
+|int +
+Min: -1 +
+ +
+Max: 128 +
+
+
+|
+
+|JDBC driver property: packetSize.
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|queryTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: queryTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|resultsetMetaDataOptions
+
+|int
+
+|
+
+|JDBC driver property: resultsetMetaDataOptions.
+
+|selectMethod
+
+|* cursor
+* direct
+
+
+|
+
+|JDBC driver property: selectMethod.
+
+|snapshotSerializable
+
+|boolean
+
+|
+
+|JDBC driver property: snapshotSerializable.
+
+|spyAttributes
+
+|string
+
+|
+
+|JDBC driver property: spyAttributes.
+
+|stringInputParameterType
+
+|* nvarchar
+* varchar
+
+
+|varchar
+
+|JDBC driver property: stringInputParameterType.
+
+|stringOutputParameterType
+
+|* nvarchar
+* varchar
+
+
+|varchar
+
+|JDBC driver property: stringOutputParameterType.
+
+|suppressConnectionWarnings
+
+|boolean
+
+|
+
+|JDBC driver property: suppressConnectionWarnings.
+
+|transactionMode
+
+|* explicit
+* implicit
+
+
+|
+
+|JDBC driver property: transactionMode.
+
+|truncateFractionalSeconds
+
+|boolean
+
+|
+
+|JDBC driver property: truncateFractionalSeconds.
+
+|trustStore
+
+|string
+
+|
+
+|JDBC driver property: trustStore.
+
+|trustStorePassword
+
+|Reversably encoded password (string)
+
+|
+
+|JDBC driver property: trustStorePassword.
+
+|useServerSideUpdatableCursors
+
+|boolean
+
+|
+
+|JDBC driver property: useServerSideUpdatableCursors.
+
+|user
+
+|string
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|validateServerCertificate
+
+|boolean
+
+|
+
+|JDBC driver property: validateServerCertificate.
+
+4+|*Failover Properties*
+
+|alternateServers
+
+|string
+
+|
+
+|JDBC driver property: alternateServers.
+
+|connectionRetryCount
+
+|int
+
+|
+
+|JDBC driver property: connectionRetryCount.
+
+|connectionRetryDelay
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: connectionRetryDelay. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|failoverGranularity
+
+|* atomic
+* atomicWithRepositioning
+* disableIntegrityCheck
+* nonAtomic
+
+
+|
+
+|JDBC driver property: failoverGranularity.
+
+|failoverMode
+
+|* connect
+* extended
+* select
+
+
+|
+
+|JDBC driver property: failoverMode.
+
+|failoverPreconnect
+
+|boolean
+
+|
+
+|JDBC driver property: failoverPreconnect.
+
+|loadBalancing
+
+|boolean
+
+|
+
+|JDBC driver property: loadBalancing.
+|===
+[#properties.db2.i.native]*properties.db2.i.native*
+
+Data source properties for the IBM DB2 for i Native JDBC driver.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|databaseName
+
+|string
+
+|*LOCAL
+
+|JDBC driver property: databaseName.
+
+4+|*Advanced Properties*
+
+|access
+
+|* all
+* read call
+* read only
+
+
+|all
+
+|JDBC driver property: access.
+
+|autoCommit
+
+|boolean
+
+|true
+
+|JDBC driver property: autoCommit.
+
+|batchStyle
+
+|* 2.0
+* 2.1
+
+
+|2.0
+
+|JDBC driver property: batchStyle.
+
+|behaviorOverride
+
+|int
+
+|
+
+|JDBC driver property: behaviorOverride.
+
+|blockSize
+
+|* 0
+* 8
+* 16
+* 32
+* 64
+* 128
+* 256
+* 512
+
+
+|32
+
+|JDBC driver property: blockSize.
+
+|cursorHold
+
+|boolean
+
+|false
+
+|JDBC driver property: cursorHold.
+
+|cursorSensitivity
+
+|* asensitive
+* sensitive
+
+
+|asensitive
+
+|JDBC driver property: cursorSensitivity. Values are: 0 (TYPE_SCROLL_SENSITIVE_STATIC), 1 (TYPE_SCROLL_SENSITIVE_DYNAMIC), 2 (TYPE_SCROLL_ASENSITIVE).
+
+|dataTruncation
+
+|string
+
+|true
+
+|JDBC driver property: dataTruncation.
+
+|dateFormat
+
+|* dmy
+* eur
+* iso
+* jis
+* julian
+* mdy
+* usa
+* ymd
+
+
+|
+
+|JDBC driver property: dateFormat.
+
+|dateSeparator
+
+|* -
+* .
+* /
+* \,
+* b
+
+
+|
+
+|JDBC driver property: dateSeparator. +
+*-* +
+  The dash character (-). +
+*.* +
+  The period character (.). +
+*/* +
+  The forward slash character (/). +
+*\,* +
+  The comma character (,). +
+*b* +
+  The character b
+
+|decimalSeparator
+
+|* .
+* \,
+
+
+|
+
+|JDBC driver property: decimalSeparator. +
+*.* +
+  The period character (.). +
+*\,* +
+  The comma character (,).
+
+|directMap
+
+|boolean
+
+|true
+
+|JDBC driver property: directMap.
+
+|doEscapeProcessing
+
+|boolean
+
+|true
+
+|JDBC driver property: doEscapeProcessing.
+
+|fullErrors
+
+|boolean
+
+|
+
+|JDBC driver property: fullErrors.
+
+|libraries
+
+|string
+
+|
+
+|JDBC driver property: libraries.
+
+|lobThreshold
+
+|int +
+Max: 500000 +
+
+
+|0
+
+|JDBC driver property: lobThreshold.
+
+|lockTimeout
+
+|A period of time with second precision
+
+|0
+
+|JDBC driver property: lockTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|loginTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: loginTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|maximumPrecision
+
+|* 31
+* 63
+
+
+|31
+
+|JDBC driver property: maximumPrecision.
+
+|maximumScale
+
+|int +
+Min: 0 +
+ +
+Max: 63 +
+
+
+|31
+
+|JDBC driver property: maximumScale.
+
+|minimumDivideScale
+
+|int +
+Min: 0 +
+ +
+Max: 9 +
+
+
+|0
+
+|JDBC driver property: minimumDivideScale.
+
+|networkProtocol
+
+|int
+
+|
+
+|JDBC driver property: networkProtocol.
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|portNumber
+
+|int
+
+|
+
+|Port on which to obtain database connections.
+
+|prefetch
+
+|boolean
+
+|true
+
+|JDBC driver property: prefetch.
+
+|queryOptimizeGoal
+
+|* 1
+* 2
+
+
+|2
+
+|JDBC driver property: queryOptimizeGoal. Values are: 1 (*FIRSTIO) or 2 (*ALLIO). +
+*1* +
+  *FIRSTIO +
+*2* +
+  *ALLIO
+
+|reuseObjects
+
+|boolean
+
+|true
+
+|JDBC driver property: reuseObjects.
+
+|serverName
+
+|string
+
+|
+
+|Server where the database is running.
+
+|serverTraceCategories
+
+|int
+
+|0
+
+|JDBC driver property: serverTraceCategories.
+
+|systemNaming
+
+|boolean
+
+|false
+
+|JDBC driver property: systemNaming.
+
+|timeFormat
+
+|* eur
+* hms
+* iso
+* jis
+* usa
+
+
+|
+
+|JDBC driver property: timeFormat.
+
+|timeSeparator
+
+|* .
+* :
+* \,
+* b
+
+
+|
+
+|JDBC driver property: timeSeparator. +
+*.* +
+  The period character (.). +
+*:* +
+  The colon character (:). +
+*\,* +
+  The comma character (,). +
+*b* +
+  The character b
+
+|trace
+
+|boolean
+
+|
+
+|JDBC driver property: trace.
+
+|transactionTimeout
+
+|A period of time with second precision
+
+|0
+
+|JDBC driver property: transactionTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|translateBinary
+
+|boolean
+
+|false
+
+|JDBC driver property: translateBinary.
+
+|translateHex
+
+|* binary
+* character
+
+
+|character
+
+|JDBC driver property: translateHex.
+
+|useBlockInsert
+
+|boolean
+
+|false
+
+|JDBC driver property: useBlockInsert.
+
+|user
+
+|string
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+|===
+[#properties.db2.i.toolbox]*properties.db2.i.toolbox*
+
+Data source properties for the IBM DB2 for i Toolbox JDBC driver.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|databaseName
+
+|string
+
+|
+
+|JDBC driver property: databaseName.
+
+|serverName
+
+|string
+
+|
+
+|Server where the database is running.
+
+4+|*Advanced Properties*
+
+|access
+
+|* all
+* read call
+* read only
+
+
+|all
+
+|JDBC driver property: access.
+
+|behaviorOverride
+
+|int
+
+|
+
+|JDBC driver property: behaviorOverride.
+
+|bidiImplicitReordering
+
+|boolean
+
+|true
+
+|JDBC driver property: bidiImplicitReordering.
+
+|bidiNumericOrdering
+
+|boolean
+
+|false
+
+|JDBC driver property: bidiNumericOrdering.
+
+|bidiStringType
+
+|int
+
+|
+
+|JDBC driver property: bidiStringType.
+
+|bigDecimal
+
+|boolean
+
+|true
+
+|JDBC driver property: bigDecimal.
+
+|blockCriteria
+
+|* 0
+* 1
+* 2
+
+
+|2
+
+|JDBC driver property: blockCriteria. Values are: 0 (no record blocking), 1 (block if FOR FETCH ONLY is specified), 2 (block if FOR UPDATE is specified).
+
+|blockSize
+
+|* 0
+* 8
+* 16
+* 32
+* 64
+* 128
+* 256
+* 512
+
+
+|32
+
+|JDBC driver property: blockSize.
+
+|characterTruncation
+
+|* default
+* none
+* warning
+
+
+|
+
+|JDBC driver property: CharacterTruncation.
+
+|concurrentAccessResolution
+
+|int +
+Min: 0 +
+ +
+Max: 3 +
+
+
+|
+
+|JDBC driver property: concurrentAccessResolution.
+
+|cursorHold
+
+|boolean
+
+|false
+
+|JDBC driver property: cursorHold.
+
+|cursorSensitivity
+
+|* asensitive
+* insensitive
+* sensitive
+
+
+|asensitive
+
+|JDBC driver property: cursorSensitivity. Values are: 0 (TYPE_SCROLL_SENSITIVE_STATIC), 1 (TYPE_SCROLL_SENSITIVE_DYNAMIC), 2 (TYPE_SCROLL_ASENSITIVE).
+
+|dataCompression
+
+|boolean
+
+|true
+
+|JDBC driver property: dataCompression.
+
+|dataTruncation
+
+|boolean
+
+|true
+
+|JDBC driver property: dataTruncation.
+
+|dateFormat
+
+|* dmy
+* eur
+* iso
+* jis
+* julian
+* mdy
+* usa
+* ymd
+
+
+|
+
+|JDBC driver property: dateFormat.
+
+|dateSeparator
+
+|*  
+* -
+* .
+* /
+* \,
+
+
+|
+
+|JDBC driver property: dateSeparator. +
+* * +
+  The space character ( ). +
+*-* +
+  The dash character (-). +
+*.* +
+  The period character (.). +
+*/* +
+  The forward slash character (/). +
+*\,* +
+  The comma character (,).
+
+|decfloatRoundingMode
+
+|* ceiling
+* down
+* floor
+* half down
+* half even
+* half up
+* up
+
+
+|
+
+|JDBC driver property: decfloatRoundingMode.
+
+|decimalDataErrors
+
+|string
+
+|
+
+|JDBC driver property: decimalDataErrors.
+
+|decimalSeparator
+
+|* .
+* \,
+
+
+|
+
+|JDBC driver property: decimalSeparator. +
+*.* +
+  The period character (.). +
+*\,* +
+  The comma character (,).
+
+|describeOption
+
+|string
+
+|
+
+|JDBC driver property: describeOption.
+
+|driver
+
+|* native
+* toolbox
+
+
+|toolbox
+
+|JDBC driver property: driver.
+
+|errors
+
+|* basic
+* full
+
+
+|basic
+
+|JDBC driver property: errors.
+
+|extendedDynamic
+
+|boolean
+
+|false
+
+|JDBC driver property: extendedDynamic.
+
+|extendedMetaData
+
+|boolean
+
+|false
+
+|JDBC driver property: extendedMetaData.
+
+|fullOpen
+
+|boolean
+
+|false
+
+|JDBC driver property: fullOpen.
+
+|holdInputLocators
+
+|boolean
+
+|true
+
+|JDBC driver property: holdInputLocators.
+
+|holdStatements
+
+|boolean
+
+|false
+
+|JDBC driver property: holdStatements.
+
+|ignoreWarnings
+
+|string
+
+|
+
+|JDBC driver property: ignoreWarnings.
+
+|isolationLevelSwitchingSupport
+
+|boolean
+
+|false
+
+|JDBC driver property: isolationLevelSwitchingSupport.
+
+|keepAlive
+
+|boolean
+
+|
+
+|JDBC driver property: keepAlive.
+
+|lazyClose
+
+|boolean
+
+|false
+
+|JDBC driver property: lazyClose.
+
+|libraries
+
+|string
+
+|
+
+|JDBC driver property: libraries.
+
+|lobThreshold
+
+|int +
+Min: 0 +
+ +
+Max: 16777216 +
+
+
+|0
+
+|JDBC driver property: lobThreshold.
+
+|loginTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: loginTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|maximumBlockedInputRows
+
+|int +
+Min: 1 +
+ +
+Max: 32000 +
+
+
+|
+
+|JDBC driver property: maximumBlockedInputRows.
+
+|maximumPrecision
+
+|* 31
+* 63
+
+
+|31
+
+|JDBC driver property: maximumPrecision. +
+*63* +
+  64
+
+|maximumScale
+
+|int +
+Min: 0 +
+ +
+Max: 63 +
+
+
+|31
+
+|JDBC driver property: maximumScale.
+
+|metaDataSource
+
+|int +
+Min: 0 +
+ +
+Max: 1 +
+
+
+|1
+
+|JDBC driver property: metaDataSource.
+
+|minimumDivideScale
+
+|int +
+Min: 0 +
+ +
+Max: 9 +
+
+
+|0
+
+|JDBC driver property: minimumDivideScale.
+
+|naming
+
+|* sql
+* system
+
+
+|sql
+
+|JDBC driver property: naming.
+
+|numericRangeError
+
+|* default
+* none
+* warning
+
+
+|
+
+|JDBC driver property: numericRangeError.
+
+|package
+
+|string
+
+|
+
+|JDBC driver property: package.
+
+|packageAdd
+
+|boolean
+
+|true
+
+|JDBC driver property: packageAdd.
+
+|packageCCSID
+
+|* 1200
+* 13488
+
+
+|13488
+
+|JDBC driver property: packageCCSID. Values are: 1200 (UCS-2) or 13488 (UTF-16). +
+*1200* +
+  1200 (UCS-2) +
+*13488* +
+  13488 (UTF-16)
+
+|packageCache
+
+|boolean
+
+|false
+
+|JDBC driver property: packageCache.
+
+|packageCriteria
+
+|* default
+* select
+
+
+|default
+
+|JDBC driver property: packageCriteria.
+
+|packageError
+
+|* exception
+* none
+* warning
+
+
+|warning
+
+|JDBC driver property: packageError.
+
+|packageLibrary
+
+|string
+
+|QGPL
+
+|JDBC driver property: packageLibrary.
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|prefetch
+
+|boolean
+
+|true
+
+|JDBC driver property: prefetch.
+
+|prompt
+
+|boolean
+
+|false
+
+|JDBC driver property: prompt.
+
+|proxyServer
+
+|string
+
+|
+
+|JDBC driver property: proxyServer.
+
+|qaqqiniLibrary
+
+|string
+
+|
+
+|JDBC driver property: qaqqiniLibrary.
+
+|queryOptimizeGoal
+
+|int +
+Min: 0 +
+ +
+Max: 2 +
+
+
+|0
+
+|JDBC driver property: queryOptimizeGoal. Values are: 1 (*FIRSTIO) or 2 (*ALLIO).
+
+|queryReplaceTruncatedParameter
+
+|string
+
+|
+
+|JDBC driver property: queryReplaceTruncatedParameter.
+
+|queryStorageLimit
+
+|int +
+Min: -1 +
+
+
+|
+
+|Query storage limit
+
+|queryTimeoutMechanism
+
+|* cancel
+* qqrytimlmt
+
+
+|
+
+|JDBC driver property: queryTimeoutMechanism.
+
+|receiveBufferSize
+
+|int +
+Min: 1 +
+
+
+|
+
+|JDBC driver property: receiveBufferSize.
+
+|remarks
+
+|* sql
+* system
+
+
+|system
+
+|JDBC driver property: remarks.
+
+|rollbackCursorHold
+
+|boolean
+
+|false
+
+|JDBC driver property: rollbackCursorHold.
+
+|savePasswordWhenSerialized
+
+|boolean
+
+|false
+
+|JDBC driver property: savePasswordWhenSerialized.
+
+|secondaryUrl
+
+|string
+
+|
+
+|JDBC driver property: secondaryUrl.
+
+|secure
+
+|boolean
+
+|false
+
+|JDBC driver property: secure.
+
+|secureCurrentUser
+
+|boolean
+
+|
+
+|JDBC driver property: secureCurrentUser.
+
+|sendBufferSize
+
+|int +
+Min: 1 +
+
+
+|
+
+|JDBC driver property: sendBufferSize.
+
+|serverTrace
+
+|int
+
+|
+
+|JDBC driver property: serverTrace.
+
+|serverTraceCategories
+
+|int
+
+|0
+
+|JDBC driver property: serverTraceCategories.
+
+|soLinger
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: soLinger. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|soTimeout
+
+|A period of time with millisecond precision
+
+|
+
+|JDBC driver property: soTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+
+|sort
+
+|* hex
+* language
+* table
+
+
+|hex
+
+|JDBC driver property: sort.
+
+|sortLanguage
+
+|string
+
+|
+
+|JDBC driver property: sortLanguage.
+
+|sortTable
+
+|string
+
+|
+
+|JDBC driver property: sortTable.
+
+|sortWeight
+
+|* shared
+* unqiue
+
+
+|
+
+|JDBC driver property: sortWeight. +
+*unqiue* +
+  unique
+
+|tcpNoDelay
+
+|boolean
+
+|
+
+|JDBC driver property: tcpNoDelay.
+
+|threadUsed
+
+|boolean
+
+|true
+
+|JDBC driver property: threadUsed.
+
+|timeFormat
+
+|* eur
+* hms
+* iso
+* jis
+* usa
+
+
+|
+
+|JDBC driver property: timeFormat.
+
+|timeSeparator
+
+|*  
+* .
+* :
+* \,
+
+
+|
+
+|JDBC driver property: timeSeparator. +
+* * +
+  The space character ( ). +
+*.* +
+  The period character (.). +
+*:* +
+  The colon character (:). +
+*\,* +
+  The comma character (,).
+
+|timestampFormat
+
+|* ibmsql
+* iso
+
+
+|
+
+|JDBC driver property: timestampFormat.
+
+|toolboxTrace
+
+|* all
+* conversion
+* datastream
+* diagnostic
+* error
+* information
+* jdbc
+* none
+* pcml
+* proxy
+* thread
+* warning
+
+
+|
+
+|JDBC driver property: toolboxTrace.
+
+|trace
+
+|boolean
+
+|
+
+|JDBC driver property: trace.
+
+|translateBinary
+
+|boolean
+
+|false
+
+|JDBC driver property: translateBinary.
+
+|translateBoolean
+
+|boolean
+
+|true
+
+|JDBC driver property: translateBoolean.
+
+|translateHex
+
+|* binary
+* character
+
+
+|character
+
+|JDBC driver property: translateHex.
+
+|trueAutoCommit
+
+|boolean
+
+|false
+
+|JDBC driver property: trueAutoCommit.
+
+|useBlockUpdate
+
+|boolean
+
+|
+
+|JDBC driver property: useBlockUpdate.
+
+|useDrdaMetadataVersion
+
+|boolean
+
+|
+
+|JDBC driver property: useDrdaMetadataVersion.
+
+|user
+
+|string
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|variableFieldCompression
+
+|* all
+* false
+* insert
+* true
+
+
+|
+
+|JDBC driver property: variableFieldCompression.
+
+|xaLooselyCoupledSupport
+
+|int +
+Min: 0 +
+ +
+Max: 1 +
+
+
+|0
+
+|JDBC driver property: xaLooselyCoupledSupport.
+|===
+[#properties.db2.jcc]*properties.db2.jcc*
+
+Data source properties for the IBM Data Server Driver for JDBC and SQLJ for DB2.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|databaseName
+
+|string
+
+|
+
+|JDBC driver property: databaseName.
+
+|driverType
+
+|* 2
+* 4
+
+
+|4
+
+|JDBC driver property: driverType. +
+*2* +
+  Type 2 JDBC driver. +
+*4* +
+  Type 4 JDBC driver.
+
+|portNumber
+
+|int
+
+|50000
+
+|Port on which to obtain database connections.
+
+|serverName
+
+|string
+
+|localhost
+
+|Server where the database is running.
+
+4+|*Advanced Properties*
+
+|SSLCipherSuites
+
+|string
+
+|
+
+|JDBC driver property: SSLCipherSuites.
+
+|accountingInterval
+
+|string
+
+|
+
+|JDBC driver property: accountingInterval.
+
+|activateDatabase
+
+|int
+
+|
+
+|JDBC driver property: activateDatabase.
+
+|allowNextOnExhaustedResultSet
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: allowNextOnExhaustedResultSet. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|allowNullResultSetForExecuteQuery
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: allowNullResultSetForExecuteQuery. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|alternateGroupDatabaseName
+
+|string
+
+|
+
+|JDBC driver property: alternateGroupDatabaseName.
+
+|alternateGroupPortNumber
+
+|string
+
+|
+
+|JDBC driver property: alternateGroupPortNumber.
+
+|alternateGroupServerName
+
+|string
+
+|
+
+|JDBC driver property: alternateGroupServerName.
+
+|atomicMultiRowInsert
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: atomicMultiRowInsert. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|blockingReadConnectionTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: blockingReadConnectionTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|charOutputSize
+
+|short
+
+|
+
+|JDBC driver property: charOutputSize.
+
+|clientAccountingInformation
+
+|string
+
+|
+
+|JDBC driver property: clientAccountingInformation.
+
+|clientApplcompat
+
+|string
+
+|
+
+|JDBC driver property: clientApplcompat.
+
+|clientApplicationInformation
+
+|string
+
+|
+
+|JDBC driver property: clientApplicationInformation.
+
+|clientBidiStringType
+
+|* 4
+* 5
+* 6
+* 7
+* 8
+* 9
+* 10
+* 11
+
+
+|
+
+|JDBC driver property: clientBidiStringType. +
+*4* +
+  BIDI_ST4 +
+*5* +
+  BIDI_ST5 +
+*6* +
+  BIDI_ST6 +
+*7* +
+  BIDI_ST7 +
+*8* +
+  BIDI_ST8 +
+*9* +
+  BIDI_ST9 +
+*10* +
+  BIDI_ST10 +
+*11* +
+  BIDI_ST11
+
+|clientDebugInfo
+
+|string +
+Max: 254 +
+
+
+|
+
+|JDBC driver property: clientDebugInfo.
+
+|clientProgramId
+
+|string +
+Max: 80 +
+
+
+|
+
+|JDBC driver property: clientProgramId.
+
+|clientProgramName
+
+|string +
+Max: 12 +
+
+
+|
+
+|JDBC driver property: clientProgramName.
+
+|clientUser
+
+|string
+
+|
+
+|JDBC driver property: clientUser.
+
+|clientWorkstation
+
+|string
+
+|
+
+|JDBC driver property: clientWorkstation.
+
+|commandTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: commandTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|concurrentAccessResolution
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: concurrentAccessResolution. +
+*1* +
+  CONCURRENTACCESS_USE_CURRENTLY_COMMITTED +
+*2* +
+  CONCURRENTACCESS_WAIT_FOR_OUTCOME
+
+|connectNode
+
+|int +
+Min: 0 +
+ +
+Max: 999 +
+
+
+|
+
+|JDBC driver property: connectNode.
+
+|connectionCloseWithInFlightTransaction
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: connectionCloseWithInFlightTransaction. +
+*1* +
+  CONNECTION_CLOSE_WITH_EXCEPTION +
+*2* +
+  CONNECTION_CLOSE_WITH_ROLLBACK
+
+|connectionTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: connectionTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|currentAlternateGroupEntry
+
+|int
+
+|
+
+|JDBC driver property: currentAlternateGroupEntry.
+
+|currentDegree
+
+|string
+
+|
+
+|JDBC driver property: currentDegree.
+
+|currentExplainMode
+
+|string +
+Max: 254 +
+
+
+|
+
+|JDBC driver property: currentExplainMode.
+
+|currentExplainSnapshot
+
+|int +
+Max: 8 +
+
+
+|
+
+|JDBC driver property: currentExplainSnapshot.
+
+|currentFunctionPath
+
+|string
+
+|
+
+|JDBC driver property: currentFunctionPath.
+
+|currentLocaleLcCtype
+
+|string
+
+|
+
+|JDBC driver property: currentLocaleLcCtype.
+
+|currentLockTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: currentLockTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|currentMaintainedTableTypesForOptimization
+
+|* ALL
+* NONE
+* SYSTEM
+* USER
+
+
+|
+
+|JDBC driver property: currentMaintainedTableTypesForOptimization.
+
+|currentPackagePath
+
+|string
+
+|
+
+|JDBC driver property: currentPackagePath.
+
+|currentPackageSet
+
+|string
+
+|
+
+|JDBC driver property: currentPackageSet.
+
+|currentQueryOptimization
+
+|* 0
+* 1
+* 2
+* 3
+* 5
+* 7
+* 9
+
+
+|
+
+|JDBC driver property: currentQueryOptimization.
+
+|currentSQLID
+
+|string
+
+|
+
+|JDBC driver property: currentSQLID.
+
+|currentSchema
+
+|string
+
+|
+
+|JDBC driver property: currentSchema.
+
+|cursorSensitivity
+
+|* 0
+* 1
+* 2
+
+
+|
+
+|JDBC driver property: cursorSensitivity. Values are: 0 (TYPE_SCROLL_SENSITIVE_STATIC), 1 (TYPE_SCROLL_SENSITIVE_DYNAMIC), 2 (TYPE_SCROLL_ASENSITIVE). +
+*0* +
+  TYPE_SCROLL_SENSITIVE_STATIC +
+*1* +
+  TYPE_SCROLL_SENSITIVE_DYNAMIC +
+*2* +
+  TYPE_SCROLL_ASENSITIVE
+
+|dateFormat
+
+|* 1
+* 2
+* 3
+* 4
+
+
+|
+
+|JDBC driver property: dateFormat. +
+*1* +
+  ISO +
+*2* +
+  USA +
+*3* +
+  EUR +
+*4* +
+  JIS
+
+|decimalRoundingMode
+
+|* 1
+* 2
+* 3
+* 4
+* 6
+
+
+|
+
+|JDBC driver property: decimalRoundingMode. +
+*1* +
+  ROUND_DOWN +
+*2* +
+  ROUND_CEILING +
+*3* +
+  ROUND_HALF_EVEN +
+*4* +
+  ROUND_HALF_UP +
+*6* +
+  ROUND_FLOOR
+
+|decimalSeparator
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: decimalSeparator. +
+*1* +
+  DECIMAL_SEPARATOR_PERIOD +
+*2* +
+  DECIMAL_SEPARATOR_COMMA
+
+|decimalStringFormat
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: decimalStringFormat. +
+*1* +
+  DECIMAL_STRING_FORMAT_TO_STRING +
+*2* +
+  DECIMAL_STRING_FORMAT_TO_PLAIN_STRING
+
+|deferPrepares
+
+|boolean
+
+|true
+
+|JDBC driver property: deferPrepares.
+
+|downgradeHoldCursorsUnderXa
+
+|boolean
+
+|
+
+|JDBC driver property: downgradeHoldCursorsUnderXa.
+
+|enableAlternateGroupSeamlessACR
+
+|boolean
+
+|
+
+|JDBC driver property: enableAlternateGroupSeamlessACR.
+
+|enableBidiLayoutTransformation
+
+|boolean
+
+|
+
+|JDBC driver property: enableBidiLayoutTransformation.
+
+|enableClientAffinitiesList
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: enableClientAffinitiesList. Values are: 1 (YES) or 2 (NO). +
+*1* +
+  YES +
+*2* +
+  NO
+
+|enableConnectionConcentrator
+
+|boolean
+
+|
+
+|JDBC driver property: enableConnectionConcentrator.
+
+|enableExtendedDescribe
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: enableExtendedDescribe. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|enableExtendedIndicators
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: enableExtendedIndicators. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|enableMultiRowInsertSupport
+
+|boolean
+
+|
+
+|JDBC driver property: enableMultiRowInsertSupport.
+
+|enableNamedParameterMarkers
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: enableNamedParameterMarkers. Values are: 1 (YES) or 2 (NO). +
+*1* +
+  YES +
+*2* +
+  NO
+
+|enableRowsetSupport
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: enableRowsetSupport. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|enableSeamlessFailover
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: enableSeamlessFailover. Values are: 1 (YES) or 2 (NO). +
+*1* +
+  YES +
+*2* +
+  NO
+
+|enableSysplexWLB
+
+|boolean
+
+|
+
+|JDBC driver property: enableSysplexWLB.
+
+|enableT2zosLBF
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: enableT2zosLBF. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|enableT2zosLBFSPResultSets
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: enableT2zosLBFSPResultSets. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|enableXACleanTransaction
+
+|boolean
+
+|
+
+|JDBC driver property: enableXACleanTransaction.
+
+|encryptionAlgorithm
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: encryptionAlgorithm.
+
+|extendedTableInfo
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: extendedTableInfo. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|fetchSize
+
+|int
+
+|
+
+|JDBC driver property: fetchSize.
+
+|fullyMaterializeInputStreams
+
+|boolean
+
+|
+
+|JDBC driver property: fullyMaterializeInputStreams.
+
+|fullyMaterializeInputStreamsOnBatchExecution
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: fullyMaterializeInputStreamsOnBatchExecution. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|fullyMaterializeLobData
+
+|boolean
+
+|
+
+|JDBC driver property: fullyMaterializeLobData.
+
+|implicitRollbackOption
+
+|* 0
+* 1
+* 2
+
+
+|
+
+|JDBC driver property: implicitRollbackOption. +
+*0* +
+  IMPLICIT_ROLLBACK_OPTION_NOT_SET +
+*1* +
+  IMPLICIT_ROLLBACK_OPTION_NOT_CLOSE_CONNECTION +
+*2* +
+  IMPLICIT_ROLLBACK_OPTION_CLOSE_CONNECTION
+
+|interruptProcessingMode
+
+|* 0
+* 1
+* 2
+
+
+|
+
+|JDBC driver property: interruptProcessingMode. +
+*0* +
+  INTERRUPT_PROCESSING_MODE_DISABLED +
+*1* +
+  INTERRUPT_PROCESSING_MODE_STATEMENT_CANCEL +
+*2* +
+  INTERRUPT_PROCESSING_MODE_CLOSE_SOCKET
+
+|jdbcCollection
+
+|string
+
+|
+
+|JDBC driver property: jdbcCollection.
+
+|keepAliveTimeOut
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: keepAliveTimeOut. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|keepDynamic
+
+|int
+
+|
+
+|JDBC driver property: keepDynamic.
+
+|kerberosServerPrincipal
+
+|string
+
+|
+
+|JDBC driver property: kerberosServerPrincipal.
+
+|loginTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: loginTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|maxConnCachedParamBufferSize
+
+|int
+
+|
+
+|JDBC driver property: maxConnCachedParamBufferSize.
+
+|maxRowsetSize
+
+|int
+
+|
+
+|JDBC driver property: maxRowsetSize.
+
+|maxTransportObjects
+
+|int
+
+|
+
+|JDBC driver property: maxTransportObjects.
+
+|optimizationProfile
+
+|string
+
+|
+
+|JDBC driver property: optimizationProfile.
+
+|optimizationProfileToFlush
+
+|string
+
+|
+
+|JDBC driver property: optimizationProfileToFlush.
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|pkList
+
+|string
+
+|
+
+|JDBC driver property: pkList.
+
+|profileName
+
+|string
+
+|
+
+|JDBC driver property: profileName.
+
+|progressiveStreaming
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: progressiveStreaming. Values are: 1 (YES) or 2 (NO). +
+*1* +
+  YES +
+*2* +
+  NO
+
+|queryCloseImplicit
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: queryCloseImplicit. Values are:  1 (QUERY_CLOSE_IMPLICIT_YES) or 2 (QUERY_CLOSE_IMPLICIT_NO). +
+*1* +
+  QUERY_CLOSE_IMPLICIT_YES +
+*2* +
+  QUERY_CLOSE_IMPLICIT_NO
+
+|queryDataSize
+
+|int +
+Min: 4096 +
+ +
+Max: 65535 +
+
+
+|
+
+|JDBC driver property: queryDataSize.
+
+|queryTimeoutInterruptProcessingMode
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: queryTimeoutInterruptProcessingMode. +
+*1* +
+  INTERRUPT_PROCESSING_MODE_STATEMENT_CANCEL +
+*2* +
+  INTERRUPT_PROCESSING_MODE_CLOSE_SOCKET
+
+|readOnly
+
+|boolean
+
+|
+
+|JDBC driver property: readOnly.
+
+|recordTemporalHistory
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: recordTemporalHistory. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|reportLongTypes
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: reportLongTypes. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|resultSetHoldability
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: resultSetHoldability. Values are: 1 (HOLD_CURSORS_OVER_COMMIT) or 2 (CLOSE_CURSORS_AT_COMMIT). +
+*1* +
+  HOLD_CURSORS_OVER_COMMIT +
+*2* +
+  CLOSE_CURSORS_AT_COMMIT
+
+|resultSetHoldabilityForCatalogQueries
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: resultSetHoldabilityForCatalogQueries. Values are: 1 (HOLD_CURSORS_OVER_COMMIT) or 2 (CLOSE_CURSORS_AT_COMMIT). +
+*1* +
+  HOLD_CURSORS_OVER_COMMIT +
+*2* +
+  CLOSE_CURSORS_AT_COMMIT
+
+|retrieveMessagesFromServerOnGetMessage
+
+|boolean
+
+|true
+
+|JDBC driver property: retrieveMessagesFromServerOnGetMessage.
+
+|retryWithAlternativeSecurityMechanism
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: retryWithAlternativeSecurityMechanism. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|returnAlias
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: returnAlias.
+
+|securityMechanism
+
+|* 3
+* 4
+* 7
+* 9
+* 11
+* 12
+* 13
+* 15
+* 16
+* 18
+
+
+|
+
+|JDBC driver property: securityMechanism. Values are: 3 (CLEAR_TEXT_PASSWORD_SECURITY), 4 (USER_ONLY_SECURITY), 7 (ENCRYPTED_PASSWORD_SECURITY), 9 (ENCRYPTED_USER_AND_PASSWORD_SECURITY), 11 (KERBEROS_SECURITY), 12 (ENCRYPTED_USER_AND_DATA_SECURITY), 13 (ENCRYPTED_USER_PASSWORD_AND_DATA_SECURITY), 15 (PLUGIN_SECURITY), 16 (ENCRYPTED_USER_ONLY_SECURITY), 18 (TLS_CLIENT_CERTIFICATE_SECURITY). +
+*3* +
+  CLEAR_TEXT_PASSWORD_SECURITY +
+*4* +
+  USER_ONLY_SECURITY +
+*7* +
+  ENCRYPTED_PASSWORD_SECURITY +
+*9* +
+  ENCRYPTED_USER_AND_PASSWORD_SECURITY +
+*11* +
+  KERBEROS_SECURITY +
+*12* +
+  ENCRYPTED_USER_AND_DATA_SECURITY +
+*13* +
+  ENCRYPTED_USER_PASSWORD_AND_DATA_SECURITY +
+*15* +
+  PLUGIN_SECURITY +
+*16* +
+  ENCRYPTED_USER_ONLY_SECURITY +
+*18* +
+  TLS_CLIENT_CERTIFICATE_SECURITY
+
+|sendCharInputsUTF8
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: sendCharInputsUTF8. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|sendDataAsIs
+
+|boolean
+
+|
+
+|JDBC driver property: sendDataAsIs.
+
+|serverBidiStringType
+
+|* 4
+* 5
+* 6
+* 7
+* 8
+* 9
+* 10
+* 11
+
+
+|
+
+|JDBC driver property: serverBidiStringType. +
+*4* +
+  BIDI_ST4 +
+*5* +
+  BIDI_ST5 +
+*6* +
+  BIDI_ST6 +
+*7* +
+  BIDI_ST7 +
+*8* +
+  BIDI_ST8 +
+*9* +
+  BIDI_ST9 +
+*10* +
+  BIDI_ST10 +
+*11* +
+  BIDI_ST11
+
+|sessionTimeZone
+
+|string
+
+|
+
+|JDBC driver property: sessionTimeZone.
+
+|sqljCloseStmtsWithOpenResultSet
+
+|boolean
+
+|
+
+|JDBC driver property: sqljCloseStmtsWithOpenResultSet.
+
+|sqljEnableClassLoaderSpecificProfiles
+
+|boolean
+
+|
+
+|JDBC driver property: sqljEnableClassLoaderSpecificProfiles.
+
+|ssid
+
+|string
+
+|
+
+|JDBC driver property: ssid.
+
+|sslCertLocation
+
+|string
+
+|
+
+|JDBC driver property: sslCertLocation.
+
+|sslConnection
+
+|boolean
+
+|
+
+|JDBC driver property: sslConnection.
+
+|sslTrustStoreLocation
+
+|string
+
+|
+
+|JDBC driver property: sslTrustStoreLocation.
+
+|sslTrustStorePassword
+
+|Reversably encoded password (string)
+
+|
+
+|JDBC driver property: sslTrustStorePassword.
+
+|sslTrustStoreType
+
+|string
+
+|
+
+|JDBC driver property: sslTrustStoreType.
+
+|statementConcentrator
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: statementConcentrator. +
+*1* +
+  STATEMENT_CONCENTRATOR_OFF +
+*2* +
+  STATEMENT_CONCENTRATOR_WITH_LITERALS
+
+|streamBufferSize
+
+|int
+
+|
+
+|JDBC driver property: streamBufferSize.
+
+|stripTrailingZerosForDecimalNumbers
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: stripTrailingZerosForDecimalNumbers. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|sysSchema
+
+|string
+
+|
+
+|JDBC driver property: sysSchema.
+
+|timeFormat
+
+|* 1
+* 2
+* 3
+* 4
+
+
+|
+
+|JDBC driver property: timeFormat. +
+*1* +
+  ISO +
+*2* +
+  USA +
+*3* +
+  EUR +
+*4* +
+  JIS
+
+|timerLevelForQueryTimeOut
+
+|* -1
+* 1
+* 2
+
+
+|
+
+|JDBC driver property: timerLevelForQueryTimeOut. +
+*-1* +
+  QUERYTIMEOUT_DISABLED +
+*1* +
+  QUERYTIMEOUT_STATEMENT_LEVEL +
+*2* +
+  QUERYTIMEOUT_CONNECTION_LEVEL
+
+|timestampFormat
+
+|* 1
+* 5
+
+
+|
+
+|JDBC driver property: timestampFormat. +
+*1* +
+  ISO +
+*5* +
+  JDBC
+
+|timestampOutputType
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: timestampOutputType. +
+*1* +
+  JDBC_TIMESTAMP +
+*2* +
+  JCC_DBTIMESTAMP
+
+|timestampPrecisionReporting
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: timestampPrecisionReporting. +
+*1* +
+  TIMESTAMP_JDBC_STANDARD +
+*2* +
+  TIMESTAMP_ZERO_PADDING
+
+|traceDirectory
+
+|string
+
+|
+
+|JDBC driver property: traceDirectory.
+
+|traceFile
+
+|string
+
+|
+
+|JDBC driver property: traceFile.
+
+|traceFileAppend
+
+|boolean
+
+|
+
+|JDBC driver property: traceFileAppend.
+
+|traceFileCount
+
+|int
+
+|
+
+|JDBC driver property: traceFileCount.
+
+|traceFileSize
+
+|int
+
+|
+
+|JDBC driver property: traceFileSize.
+
+|traceLevel
+
+|int
+
+|0
+
+|Bitwise combination of the following constant values: TRACE_NONE=0, TRACE_CONNECTION_CALLS=1, TRACE_STATEMENT_CALLS=2, TRACE_RESULT_SET_CALLS=4, TRACE_DRIVER_CONFIGURATION=16, TRACE_CONNECTS=32, TRACE_DRDA_FLOWS=64, TRACE_RESULT_SET_META_DATA=128, TRACE_PARAMETER_META_DATA=256, TRACE_DIAGNOSTICS=512, TRACE_SQLJ=1024, TRACE_META_CALLS=8192, TRACE_DATASOURCE_CALLS=16384, TRACE_LARGE_OBJECT_CALLS=32768, TRACE_SYSTEM_MONITOR=131072, TRACE_TRACEPOINTS=262144, TRACE_ALL=-1.
+
+|traceOption
+
+|* 0
+* 1
+
+
+|
+
+|JDBC driver property: traceOption
+
+|translateForBitData
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: translateForBitData. +
+*1* +
+  HEX_REPRESENTATION +
+*2* +
+  SERVER_ENCODING_REPRESENTATION
+
+|updateCountForBatch
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: updateCountForBatch. +
+*1* +
+  NO_UPDATE_COUNT +
+*2* +
+  TOTAL_UPDATE_COUNT
+
+|useCachedCursor
+
+|boolean
+
+|
+
+|JDBC driver property: useCachedCursor.
+
+|useIdentityValLocalForAutoGeneratedKeys
+
+|boolean
+
+|
+
+|JDBC driver property: useIdentityValLocalForAutoGeneratedKeys.
+
+|useJDBC41DefinitionForGetColumns
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: useJDBC41DefinitionForGetColumns. +
+*1* +
+  YES +
+*2* +
+  NO
+
+|useJDBC4ColumnNameAndLabelSemantics
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: useJDBC4ColumnNameAndLabelSemantics. Values are: 1 (YES) or 2 (NO). +
+*1* +
+  YES +
+*2* +
+  NO
+
+|useRowsetCursor
+
+|boolean
+
+|
+
+|JDBC driver property: useRowsetCursor.
+
+|useTransactionRedirect
+
+|boolean
+
+|
+
+|JDBC driver property: useTransactionRedirect.
+
+|user
+
+|string
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|xaNetworkOptimization
+
+|boolean
+
+|
+
+|JDBC driver property: xaNetworkOptimization.
+
+|xmlFormat
+
+|* 0
+* 1
+
+
+|
+
+|JDBC driver property: xmlFormat. +
+*0* +
+  XML_FORMAT_TEXTUAL +
+*1* +
+  XML_FORMAT_BINARY
+
+4+|*Automatic Client Reroute Properties*
+
+|affinityFailbackInterval
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: affinityFailbackInterval. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|clientRerouteAlternatePortNumber
+
+|string
+
+|
+
+|JDBC driver property: clientRerouteAlternatePortNumber.
+
+|clientRerouteAlternateServerName
+
+|string
+
+|
+
+|JDBC driver property: clientRerouteAlternateServerName.
+
+|maxRetriesForClientReroute
+
+|int
+
+|
+
+|JDBC driver property: maxRetriesForClientReroute.
+
+|memberConnectTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: memberConnectTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|retryIntervalForClientReroute
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: retryIntervalForClientReroute. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+|===
+[#properties.derby.client]*properties.derby.client*
+
+Data source properties for Derby Network Client JDBC driver.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|createDatabase
+
+|* create
+* false
+
+
+|
+
+|JDBC driver property: createDatabase. +
+*create* +
+  When the first connection is established, automatically create the database if it doesn't exist. +
+*false* +
+  Do not automatically create the database.
+
+|databaseName
+
+|string
+
+|
+
+|JDBC driver property: databaseName.
+
+|portNumber
+
+|int
+
+|1527
+
+|Port on which to obtain database connections.
+
+|serverName
+
+|string
+
+|localhost
+
+|Server where the database is running.
+
+4+|*Advanced Properties*
+
+|connectionAttributes
+
+|string
+
+|
+
+|JDBC driver property: connectionAttributes.
+
+|loginTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: loginTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|retrieveMessageText
+
+|boolean
+
+|true
+
+|JDBC driver property: retrieveMessageText.
+
+|securityMechanism
+
+|* 3
+* 4
+* 7
+* 8
+* 9
+
+
+|3
+
+|JDBC driver property: securityMechanism. Values are: 3 (CLEAR_TEXT_PASSWORD_SECURITY), 4 (USER_ONLY_SECURITY), 7 (ENCRYPTED_PASSWORD_SECURITY), 8 (STRONG_PASSWORD_SUBSTITUTE_SECURITY), 9 (ENCRYPTED_USER_AND_PASSWORD_SECURITY). +
+*3* +
+  CLEAR_TEXT_PASSWORD_SECURITY +
+*4* +
+  USER_ONLY_SECURITY +
+*7* +
+  ENCRYPTED_PASSWORD_SECURITY +
+*8* +
+  STRONG_PASSWORD_SUBSTITUTE_SECURITY +
+*9* +
+  ENCRYPTED_USER_AND_PASSWORD_SECURITY
+
+|shutdownDatabase
+
+|* false
+* shutdown
+
+
+|
+
+|JDBC driver property: shutdownDatabase. +
+*false* +
+  Do not shut down the database. +
+*shutdown* +
+  Shut down the database when a connection is attempted.
+
+|ssl
+
+|* basic
+* off
+* peerAuthentication
+
+
+|
+
+|JDBC driver property: ssl.
+
+|traceDirectory
+
+|string
+
+|
+
+|JDBC driver property: traceDirectory.
+
+|traceFile
+
+|string
+
+|
+
+|JDBC driver property: traceFile.
+
+|traceFileAppend
+
+|boolean
+
+|
+
+|JDBC driver property: traceFileAppend.
+
+|traceLevel
+
+|int
+
+|
+
+|Bitwise combination of the following constant values: TRACE_NONE=0, TRACE_CONNECTION_CALLS=1, TRACE_STATEMENT_CALLS=2, TRACE_RESULT_SET_CALLS=4, TRACE_DRIVER_CONFIGURATION=16, TRACE_CONNECTS=32, TRACE_DRDA_FLOWS=64, TRACE_RESULT_SET_META_DATA=128, TRACE_PARAMETER_META_DATA=256, TRACE_DIAGNOSTICS=512, TRACE_XA_CALLS=2048, TRACE_ALL=-1.
+
+|user
+
+|string
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+|===
+[#properties.derby.embedded]*properties.derby.embedded*
+
+Data source properties for Derby Embedded JDBC driver.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|createDatabase
+
+|* create
+* false
+
+
+|
+
+|JDBC driver property: createDatabase. +
+*create* +
+  When the first connection is established, automatically create the database if it doesn't exist. +
+*false* +
+  Do not automatically create the database.
+
+|databaseName
+
+|string
+
+|
+
+|JDBC driver property: databaseName.
+
+4+|*Advanced Properties*
+
+|connectionAttributes
+
+|string
+
+|
+
+|JDBC driver property: connectionAttributes.
+
+|loginTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: loginTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|shutdownDatabase
+
+|* false
+* shutdown
+
+
+|
+
+|JDBC driver property: shutdownDatabase. +
+*false* +
+  Do not shut down the database. +
+*shutdown* +
+  Shut down the database when a connection is attempted.
+
+|user
+
+|string
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+|===
+[#properties.informix]*properties.informix*
+
+Data source properties for the Informix JDBC driver.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|databaseName
+
+|string
+
+|
+
+|JDBC driver property: databaseName.
+
+|ifxIFXHOST
+
+|string
+
+|localhost
+
+|JDBC driver property: ifxIFXHOST.
+
+|portNumber
+
+|int
+
+|1526
+
+|Port on which to obtain database connections.
+
+|serverName
+
+|string
+
+|
+
+|Server where the database is running.
+
+4+|*Advanced Properties*
+
+|ifxCLIENT_LOCALE
+
+|string
+
+|
+
+|JDBC driver property: ifxCLIENT_LOCALE.
+
+|ifxDBANSIWARN
+
+|boolean
+
+|
+
+|JDBC driver property: ifxDBANSIWARN.
+
+|ifxDBCENTURY
+
+|string
+
+|
+
+|JDBC driver property: ifxDBCENTURY.
+
+|ifxDBDATE
+
+|string
+
+|
+
+|JDBC driver property: ifxDBDATE.
+
+|ifxDBSPACETEMP
+
+|string
+
+|
+
+|JDBC driver property: ifxDBSPACETEMP.
+
+|ifxDBTEMP
+
+|string
+
+|
+
+|JDBC driver property: ifxDBTEMP.
+
+|ifxDBTIME
+
+|string
+
+|
+
+|JDBC driver property: ifxDBTIME.
+
+|ifxDBUPSPACE
+
+|string
+
+|
+
+|JDBC driver property: ifxDBUPSPACE.
+
+|ifxDB_LOCALE
+
+|string
+
+|
+
+|JDBC driver property: ifxDB_LOCALE.
+
+|ifxDELIMIDENT
+
+|boolean
+
+|
+
+|JDBC driver property: ifxDELIMIDENT.
+
+|ifxENABLE_TYPE_CACHE
+
+|boolean
+
+|
+
+|JDBC driver property: ifxENABLE_TYPE_CACHE.
+
+|ifxFET_BUF_SIZE
+
+|int
+
+|
+
+|JDBC driver property: ifxFET_BUF_SIZE.
+
+|ifxGL_DATE
+
+|string
+
+|
+
+|JDBC driver property: ifxGL_DATE.
+
+|ifxGL_DATETIME
+
+|string
+
+|
+
+|JDBC driver property: ifxGL_DATETIME.
+
+|ifxIFX_AUTOFREE
+
+|boolean
+
+|
+
+|JDBC driver property: ifxIFX_AUTOFREE.
+
+|ifxIFX_DIRECTIVES
+
+|string
+
+|
+
+|JDBC driver property: ifxIFX_DIRECTIVES.
+
+|ifxIFX_LOCK_MODE_WAIT
+
+|A period of time with second precision
+
+|2s
+
+|JDBC driver property: ifxIFX_LOCK_MODE_WAIT. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|ifxIFX_SOC_TIMEOUT
+
+|A period of time with millisecond precision
+
+|
+
+|JDBC driver property: ifxIFX_SOC_TIMEOUT. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+
+|ifxIFX_USEPUT
+
+|boolean
+
+|
+
+|JDBC driver property: ifxIFX_USEPUT.
+
+|ifxIFX_USE_STRENC
+
+|boolean
+
+|
+
+|JDBC driver property: ifxIFX_USE_STRENC.
+
+|ifxIFX_XASPEC
+
+|string
+
+|y
+
+|JDBC driver property: ifxIFX_XASPEC.
+
+|ifxINFORMIXCONRETRY
+
+|int
+
+|
+
+|JDBC driver property: ifxINFORMIXCONRETRY.
+
+|ifxINFORMIXCONTIME
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: ifxINFORMIXCONTIME. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|ifxINFORMIXOPCACHE
+
+|string
+
+|
+
+|JDBC driver property: ifxINFORMIXOPCACHE.
+
+|ifxINFORMIXSTACKSIZE
+
+|int
+
+|
+
+|JDBC driver property: ifxINFORMIXSTACKSIZE.
+
+|ifxJDBCTEMP
+
+|string
+
+|
+
+|JDBC driver property: ifxJDBCTEMP.
+
+|ifxLDAP_IFXBASE
+
+|string
+
+|
+
+|JDBC driver property: ifxLDAP_IFXBASE.
+
+|ifxLDAP_PASSWD
+
+|string
+
+|
+
+|JDBC driver property: ifxLDAP_PASSWD.
+
+|ifxLDAP_URL
+
+|string
+
+|
+
+|JDBC driver property: ifxLDAP_URL.
+
+|ifxLDAP_USER
+
+|string
+
+|
+
+|JDBC driver property: ifxLDAP_USER.
+
+|ifxLOBCACHE
+
+|int
+
+|
+
+|JDBC driver property: ifxLOBCACHE.
+
+|ifxNEWCODESET
+
+|string
+
+|
+
+|JDBC driver property: ifxNEWCODESET.
+
+|ifxNEWLOCALE
+
+|string
+
+|
+
+|JDBC driver property: ifxNEWLOCALE.
+
+|ifxNODEFDAC
+
+|string
+
+|
+
+|JDBC driver property: ifxNODEFDAC.
+
+|ifxOPTCOMPIND
+
+|string
+
+|
+
+|JDBC driver property: ifxOPTCOMPIND.
+
+|ifxOPTOFC
+
+|string
+
+|
+
+|JDBC driver property: ifxOPTOFC.
+
+|ifxOPT_GOAL
+
+|string
+
+|
+
+|JDBC driver property: ifxOPT_GOAL.
+
+|ifxPATH
+
+|string
+
+|
+
+|JDBC driver property: ifxPATH.
+
+|ifxPDQPRIORITY
+
+|string
+
+|
+
+|JDBC driver property: ifxPDQPRIORITY.
+
+|ifxPLCONFIG
+
+|string
+
+|
+
+|JDBC driver property: ifxPLCONFIG.
+
+|ifxPLOAD_LO_PATH
+
+|string
+
+|
+
+|JDBC driver property: ifxPLOAD_LO_PATH.
+
+|ifxPROTOCOLTRACE
+
+|int
+
+|
+
+|JDBC driver property: ifxPROTOCOLTRACE.
+
+|ifxPROTOCOLTRACEFILE
+
+|string
+
+|
+
+|JDBC driver property: ifxPROTOCOLTRACEFILE.
+
+|ifxPROXY
+
+|string
+
+|
+
+|JDBC driver property: ifxPROXY.
+
+|ifxPSORT_DBTEMP
+
+|string
+
+|
+
+|JDBC driver property: ifxPSORT_DBTEMP.
+
+|ifxPSORT_NPROCS
+
+|boolean
+
+|
+
+|JDBC driver property: ifxPSORT_NPROCS.
+
+|ifxSECURITY
+
+|string
+
+|
+
+|JDBC driver property: ifxSECURITY.
+
+|ifxSQLH_FILE
+
+|string
+
+|
+
+|JDBC driver property: ifxSQLH_FILE.
+
+|ifxSQLH_LOC
+
+|string
+
+|
+
+|JDBC driver property: ifxSQLH_LOC.
+
+|ifxSQLH_TYPE
+
+|string
+
+|
+
+|JDBC driver property: ifxSQLH_TYPE.
+
+|ifxSSLCONNECTION
+
+|string
+
+|
+
+|JDBC driver property: ifxSSLCONNECTION.
+
+|ifxSTMT_CACHE
+
+|string
+
+|
+
+|JDBC driver property: ifxSTMT_CACHE.
+
+|ifxTRACE
+
+|int
+
+|
+
+|JDBC driver property: ifxTRACE.
+
+|ifxTRACEFILE
+
+|string
+
+|
+
+|JDBC driver property: ifxTRACEFILE.
+
+|ifxTRUSTED_CONTEXT
+
+|string
+
+|
+
+|JDBC driver property: ifxTRUSTED_CONTEXT.
+
+|ifxUSEV5SERVER
+
+|boolean
+
+|
+
+|JDBC driver property: ifxUSEV5SERVER.
+
+|ifxUSE_DTENV
+
+|boolean
+
+|
+
+|JDBC driver property: ifxUSE_DTENV.
+
+|loginTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: loginTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|roleName
+
+|string
+
+|
+
+|JDBC driver property: roleName.
+
+|user
+
+|string
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+4+|*Informix Connection Pool Properties*
+
+|ifxCPMAgeLimit
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: ifxCPMAgeLimit. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|ifxCPMInitPoolSize
+
+|int
+
+|
+
+|JDBC driver property: ifxCPMInitPoolSize.
+
+|ifxCPMMaxConnections
+
+|int
+
+|
+
+|JDBC driver property: ifxCPMMaxConnections.
+
+|ifxCPMMaxPoolSize
+
+|int
+
+|
+
+|JDBC driver property: ifxCPMMaxPoolSize.
+
+|ifxCPMMinAgeLimit
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: ifxCPMMinAgeLimit. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|ifxCPMMinPoolSize
+
+|int
+
+|
+
+|JDBC driver property: ifxCPMMinPoolSize.
+
+|ifxCPMServiceInterval
+
+|A period of time with millisecond precision
+
+|
+
+|JDBC driver property: ifxCPMServiceInterval. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+|===
+[#properties.informix.jcc]*properties.informix.jcc*
+
+Data source properties for the IBM Data Server Driver for JDBC and SQLJ for Informix.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|databaseName
+
+|string
+
+|
+
+|JDBC driver property: databaseName.
+
+|portNumber
+
+|int
+
+|1526
+
+|Port on which to obtain database connections.
+
+|serverName
+
+|string
+
+|localhost
+
+|Server where the database is running.
+
+4+|*Advanced Properties*
+
+|DBANSIWARN
+
+|boolean
+
+|
+
+|JDBC driver property: DBANSIWARN.
+
+|DBDATE
+
+|string
+
+|
+
+|JDBC driver property: DBDATE.
+
+|DBPATH
+
+|string
+
+|
+
+|JDBC driver property: DBPATH.
+
+|DBSPACETEMP
+
+|string
+
+|
+
+|JDBC driver property: DBSPACETEMP.
+
+|DBTEMP
+
+|string
+
+|
+
+|JDBC driver property: DBTEMP.
+
+|DBUPSPACE
+
+|string
+
+|
+
+|JDBC driver property: DBUPSPACE.
+
+|DELIMIDENT
+
+|boolean
+
+|
+
+|JDBC driver property: DELIMIDENT.
+
+|IFX_DIRECTIVES
+
+|* OFF
+* ON
+
+
+|
+
+|JDBC driver property: IFX_DIRECTIVES.
+
+|IFX_EXTDIRECTIVES
+
+|* OFF
+* ON
+
+
+|
+
+|JDBC driver property: IFX_EXTDIRECTIVES.
+
+|IFX_UPDDESC
+
+|string
+
+|
+
+|JDBC driver property: IFX_UPDDESC.
+
+|IFX_XASTDCOMPLIANCE_XAEND
+
+|* 0
+* 1
+
+
+|
+
+|JDBC driver property: IFX_XASTDCOMPLIANCE_XAEND.
+
+|INFORMIXOPCACHE
+
+|string
+
+|
+
+|JDBC driver property: INFORMIXOPCACHE.
+
+|INFORMIXSTACKSIZE
+
+|string
+
+|
+
+|JDBC driver property: INFORMIXSTACKSIZE.
+
+|NODEFDAC
+
+|* no
+* yes
+
+
+|
+
+|JDBC driver property: NODEFDAC.
+
+|OPTCOMPIND
+
+|* 0
+* 1
+* 2
+
+
+|
+
+|JDBC driver property: OPTCOMPIND.
+
+|OPTOFC
+
+|* 0
+* 1
+
+
+|
+
+|JDBC driver property: OPTOFC.
+
+|PDQPRIORITY
+
+|* HIGH
+* LOW
+* OFF
+
+
+|
+
+|JDBC driver property: PDQPRIORITY.
+
+|PSORT_DBTEMP
+
+|string
+
+|
+
+|JDBC driver property: PSORT_DBTEMP.
+
+|PSORT_NPROCS
+
+|string +
+Max: 10 +
+
+
+|
+
+|JDBC driver property: PSORT_NPROCS.
+
+|STMT_CACHE
+
+|* 0
+* 1
+
+
+|
+
+|JDBC driver property: STMT_CACHE.
+
+|currentLockTimeout
+
+|A period of time with second precision
+
+|2s
+
+|JDBC driver property: currentLockTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|deferPrepares
+
+|boolean
+
+|
+
+|JDBC driver property: deferPrepares.
+
+|driverType
+
+|int
+
+|4
+
+|JDBC driver property: driverType.
+
+|enableNamedParameterMarkers
+
+|int
+
+|
+
+|JDBC driver property: enableNamedParameterMarkers. Values are: 1 (YES) or 2 (NO).
+
+|enableSeamlessFailover
+
+|int
+
+|
+
+|JDBC driver property: enableSeamlessFailover. Values are: 1 (YES) or 2 (NO).
+
+|enableSysplexWLB
+
+|boolean
+
+|
+
+|JDBC driver property: enableSysplexWLB.
+
+|fetchSize
+
+|int
+
+|
+
+|JDBC driver property: fetchSize.
+
+|fullyMaterializeLobData
+
+|boolean
+
+|
+
+|JDBC driver property: fullyMaterializeLobData.
+
+|keepDynamic
+
+|int
+
+|
+
+|JDBC driver property: keepDynamic.
+
+|loginTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: loginTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|progressiveStreaming
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: progressiveStreaming. Values are: 1 (YES) or 2 (NO). +
+*1* +
+  YES +
+*2* +
+  NO
+
+|queryDataSize
+
+|int +
+Min: 4096 +
+ +
+Max: 10485760 +
+
+
+|
+
+|JDBC driver property: queryDataSize.
+
+|resultSetHoldability
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: resultSetHoldability. Values are: 1 (HOLD_CURSORS_OVER_COMMIT) or 2 (CLOSE_CURSORS_AT_COMMIT). +
+*1* +
+  HOLD_CURSORS_OVER_COMMIT +
+*2* +
+  CLOSE_CURSORS_AT_COMMIT
+
+|resultSetHoldabilityForCatalogQueries
+
+|* 1
+* 2
+
+
+|
+
+|JDBC driver property: resultSetHoldabilityForCatalogQueries. Values are: 1 (HOLD_CURSORS_OVER_COMMIT) or 2 (CLOSE_CURSORS_AT_COMMIT). +
+*1* +
+  HOLD_CURSORS_OVER_COMMIT +
+*2* +
+  CLOSE_CURSORS_AT_COMMIT
+
+|retrieveMessagesFromServerOnGetMessage
+
+|boolean
+
+|true
+
+|JDBC driver property: retrieveMessagesFromServerOnGetMessage.
+
+|securityMechanism
+
+|* 3
+* 4
+* 7
+* 9
+
+
+|
+
+|JDBC driver property: securityMechanism. Values are: 3 (CLEAR_TEXT_PASSWORD_SECURITY), 4 (USER_ONLY_SECURITY), 7 (ENCRYPTED_PASSWORD_SECURITY), 9 (ENCRYPTED_USER_AND_PASSWORD_SECURITY). +
+*3* +
+  CLEAR_TEXT_PASSWORD_SECURITY +
+*4* +
+  USER_ONLY_SECURITY +
+*7* +
+  ENCRYPTED_PASSWORD_SECURITY +
+*9* +
+  ENCRYPTED_USER_AND_PASSWORD_SECURITY
+
+|traceDirectory
+
+|string
+
+|
+
+|JDBC driver property: traceDirectory.
+
+|traceFile
+
+|string
+
+|
+
+|JDBC driver property: traceFile.
+
+|traceFileAppend
+
+|boolean
+
+|
+
+|JDBC driver property: traceFileAppend.
+
+|traceLevel
+
+|int
+
+|
+
+|Bitwise combination of the following constant values: TRACE_NONE=0, TRACE_CONNECTION_CALLS=1, TRACE_STATEMENT_CALLS=2, TRACE_RESULT_SET_CALLS=4, TRACE_DRIVER_CONFIGURATION=16, TRACE_CONNECTS=32, TRACE_DRDA_FLOWS=64, TRACE_RESULT_SET_META_DATA=128, TRACE_PARAMETER_META_DATA=256, TRACE_DIAGNOSTICS=512, TRACE_SQLJ=1024, TRACE_META_CALLS=8192, TRACE_DATASOURCE_CALLS=16384, TRACE_LARGE_OBJECT_CALLS=32768, TRACE_SYSTEM_MONITOR=131072, TRACE_TRACEPOINTS=262144, TRACE_ALL=-1.
+
+|useJDBC4ColumnNameAndLabelSemantics
+
+|int
+
+|
+
+|JDBC driver property: useJDBC4ColumnNameAndLabelSemantics. Values are: 1 (YES) or 2 (NO).
+
+|user
+
+|string
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+|===
+[#properties.microsoft.sqlserver]*properties.microsoft.sqlserver*
+
+Data source properties for Microsoft SQL Server JDBC Driver.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|databaseName
+
+|string
+
+|
+
+|JDBC driver property: databaseName.
+
+|instanceName
+
+|string
+
+|
+
+|JDBC driver property: instanceName.
+
+|portNumber
+
+|int
+
+|
+
+|Port on which to obtain database connections.
+
+|serverName
+
+|string
+
+|localhost
+
+|Server where the database is running.
+
+4+|*Advanced Properties*
+
+|URL
+
+|string
+
+|
+
+|URL for connecting to the database. Example: jdbc:sqlserver://localhost:1433;databaseName=myDB.
+
+|accessToken
+
+|string
+
+|
+
+|JDBC driver property: accessToken.
+
+|applicationIntent
+
+|* ReadOnly
+* ReadWrite
+
+
+|
+
+|JDBC driver property: applicationIntent.
+
+|applicationName
+
+|string
+
+|
+
+|JDBC driver property: applicationName.
+
+|authentication
+
+|* ActiveDirectoryIntegrated
+* ActiveDirectoryPassword
+* NotSpecified
+* SqlPassword
+
+
+|
+
+|JDBC driver property: authentication.
+
+|authenticationScheme
+
+|* JavaKerberos
+* NativeAuthentication
+
+
+|
+
+|JDBC driver property: authenticationScheme.
+
+|columnEncryptionSetting
+
+|* Disabled
+* Enabled
+
+
+|
+
+|JDBC driver property: columnEncryptionSetting.
+
+|encrypt
+
+|boolean
+
+|
+
+|JDBC driver property: encrypt.
+
+|failoverPartner
+
+|string
+
+|
+
+|JDBC driver property: failoverPartner.
+
+|hostNameInCertificate
+
+|string
+
+|
+
+|JDBC driver property: hostNameInCertificate.
+
+|integratedSecurity
+
+|boolean
+
+|
+
+|JDBC driver property: integratedSecurity.
+
+|keyStoreAuthentication
+
+|* JavaKeyStorePassword
+
+
+|
+
+|JDBC driver property: keyStoreAuthentication.
+
+|keyStoreLocation
+
+|Path to a file
+
+|
+
+|JDBC driver property: keyStoreLocation.
+
+|keyStoreSecret
+
+|Reversably encoded password (string)
+
+|
+
+|JDBC driver property: keyStoreSecret.
+
+|lastUpdateCount
+
+|boolean
+
+|
+
+|JDBC driver property: lastUpdateCount.
+
+|lockTimeout
+
+|A period of time with millisecond precision
+
+|
+
+|JDBC driver property: lockTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+
+|loginTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: loginTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|multiSubnetFailover
+
+|boolean
+
+|
+
+|JDBC driver property: multiSubnetFailover.
+
+|packetSize
+
+|int +
+Min: -1 +
+ +
+Max: 32767 +
+
+
+|
+
+|JDBC driver property: packetSize.
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|responseBuffering
+
+|* adaptive
+* full
+
+
+|
+
+|JDBC driver property: responseBuffering.
+
+|selectMethod
+
+|* cursor
+* direct
+
+
+|
+
+|JDBC driver property: selectMethod.
+
+|sendStringParametersAsUnicode
+
+|boolean
+
+|false
+
+|JDBC driver property: sendStringParametersAsUnicode.
+
+|sendTimeAsDatetime
+
+|boolean
+
+|
+
+|JDBC driver property: sendTimeAsDatetime.
+
+|serverNameAsACE
+
+|boolean
+
+|
+
+|JDBC driver property: serverNameAsACE.
+
+|serverSpn
+
+|string
+
+|
+
+|JDBC driver property: serverSpn.
+
+|transparentNetworkIPResolution
+
+|boolean
+
+|
+
+|JDBC driver property: transparentNetworkIPResolution.
+
+|trustServerCertificate
+
+|boolean
+
+|
+
+|JDBC driver property: trustServerCertificate.
+
+|trustStore
+
+|string
+
+|
+
+|JDBC driver property: trustStore.
+
+|trustStorePassword
+
+|Reversably encoded password (string)
+
+|
+
+|JDBC driver property: trustStorePassword.
+
+|user
+
+|string
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|workstationID
+
+|string
+
+|
+
+|JDBC driver property: workstationID.
+
+|xopenStates
+
+|boolean
+
+|
+
+|JDBC driver property: xopenStates.
+|===
+[#properties.oracle]*properties.oracle*
+
+Data source properties for Oracle JDBC driver.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|URL
+
+|string
+
+|
+
+|URL for connecting to the database. Examples: jdbc:oracle:thin:@//localhost:1521/sample or jdbc:oracle:oci:@//localhost:1521/sample.
+
+|databaseName
+
+|string
+
+|
+
+|JDBC driver property: databaseName.
+
+|driverType
+
+|* oci
+* thin
+
+
+|thin
+
+|JDBC driver property: driverType.
+
+|portNumber
+
+|int
+
+|1521
+
+|Port on which to obtain database connections.
+
+|serverName
+
+|string
+
+|localhost
+
+|Server where the database is running.
+
+4+|*Advanced Properties*
+
+|ONSConfiguration
+
+|string
+
+|
+
+|JDBC driver property: ONSConfiguration.
+
+|TNSEntryName
+
+|string
+
+|
+
+|JDBC driver property: TNSEntryName.
+
+|connectionProperties
+
+|string
+
+|
+
+|JDBC driver property: connectionProperties.
+
+|loginTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: loginTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|networkProtocol
+
+|string
+
+|
+
+|JDBC driver property: networkProtocol.
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|roleName
+
+|string
+
+|
+
+|JDBC driver property: roleName.
+
+|serviceName
+
+|string
+
+|
+
+|JDBC driver property: serviceName.
+
+|user
+
+|string
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+|===
+[#properties.sybase]*properties.sybase*
+
+Data source properties for Sybase JDBC driver.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|databaseName
+
+|string
+
+|
+
+|JDBC driver property: databaseName.
+
+|portNumber
+
+|int
+
+|5000
+
+|Port on which to obtain database connections.
+
+|serverName
+
+|string
+
+|localhost
+
+|Server where the database is running.
+
+4+|*Advanced Properties*
+
+|SERVER_INITIATED_TRANSACTIONS
+
+|* false
+* true
+
+
+|false
+
+|JDBC driver property: SERVER_INITIATED_TRANSACTIONS.
+
+|connectionProperties
+
+|string
+
+|SELECT_OPENS_CURSOR=true
+
+|JDBC driver property: connectionProperties.
+
+|loginTimeout
+
+|A period of time with second precision
+
+|
+
+|JDBC driver property: loginTimeout. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|networkProtocol
+
+|* SSL
+* socket
+
+
+|
+
+|JDBC driver property: networkProtocol.
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|resourceManagerName
+
+|string
+
+|
+
+|JDBC driver property: resourceManagerName.
+
+|user
+
+|string
+
+|
+
+|It is recommended to use a container managed authentication alias instead of configuring this property.
+
+|version
+
+|int
+
+|
+
+|JDBC driver property: version.
+|===
+[#recoveryAuthData]*recoveryAuthData*
+
+Authentication data for transaction recovery.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|Password of the user to use when connecting to the EIS. The value can be stored in clear text or encoded form. It is recommended that you encode the password. To do so, use the securityUtility tool with the encode option.
+
+|user
+
+|string
+
+|
+
+|Name of the user to use when connecting to the EIS.
+|===

@@ -1,27 +1,34 @@
 ---
 layout: doc
-css: 
+css:
 - doc-header
-- javadocs
+- config
 ---
 
-<div id="background_container" class="black_blue_gradient_background">
+<!-- Build list of config pages -->
+{% assign configs = site.pages | where: 'layout', 'config' %}
+
+<div id="background_container">
         <div class="row">
             <!-- Guide's table of contents section -->
             <div id="toc_column" class="col-sm-3">
                 <div id="toc_inner">
-                    {% assign toc = page.document | tocify_asciidoc %}
-                    {% if toc %}
                     <h3 id="toc_title">Contents</h3>
+                    {% if configs %}
                     <div id="toc_container">
-                        {{ toc }}
+                        <ul>
+                            {% for config in configs %}
+                                <li><a href="#">{{ config.title }}</a></li>
+                            {% endfor %}
+                        </ul>                        
                     </div>
                     {% endif %}
                 </div>
             </div>
             <!-- Entire guide section -->
             <div id="config_column" class="col-sm-9 position_relative">
-                <div id="guide_content">
+                <div id="config_content">
+                    <div id="page_title"> {{ page.title }} </div>
 
                     <!-- Config content section -->
                     {{ content }}
