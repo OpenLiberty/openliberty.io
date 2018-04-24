@@ -312,6 +312,9 @@ $(function() {
             collision: "flip"
         },
         select: function(event, ui) {
+            // prevent click event handling by the iframe
+            event.stopPropagation();
+
             if (ui.item.l !== noResult.l) {
                 var url = "";
                 if (ui.item.category === catModules) {
@@ -339,7 +342,42 @@ $(function() {
                     url += ui.item.u;
                 }
                 if (top !== window) {
-                    parent.classFrame.location = pathtoroot + url;
+                    // get the javadoc base path eg. http://localhost:4000/javadocs/microprofile-1.3-javadoc/
+                    var currentHref = parent.classFrame.location.href;
+                    var javaDocPath = "";
+                    try {
+                        var stringToMatch = "(.*/javadocs/.*-javadoc/)(.*)";
+                        var regExpToMatch = new RegExp(stringToMatch, "g");
+                        var groups = regExpToMatch.exec(currentHref);
+                        javaDocPath = groups[1];
+                    } catch (e) {
+
+                    }
+                    var href = javaDocPath + url;
+
+                    // calling replace so as not to add an entry to the history
+                    parent.classFrame.location.replace(pathtoroot + url);
+
+                    // building the hash
+                    var hash = top.window.location.hash;
+                    if (hash.indexOf("class=") !== -1) {
+                        try {
+                            var hashNameToMatch = "(.*)class=.*?.html(.*)";
+                            var regExpToMatch = new RegExp(hashNameToMatch, "g");
+                            var groups = regExpToMatch.exec(hash);
+                            hash = groups[1] + "class=" + url + groups[2];
+                        } catch (ex) {
+
+                        }
+                    } else {
+                        hash = "#class=" + url + "&package=allclasses-frame.html"; // putting in default html for package iframe
+                    }
+                    if (hash !== top.window.location.hash) {
+                        var state = {};
+                        state["iframe.rightIframe"] = href;
+                        // create a history entry
+                        top.window.history.pushState(state, null, hash);
+                    }
                 } else {
                     window.location.href = pathtoroot + url;
                 }
