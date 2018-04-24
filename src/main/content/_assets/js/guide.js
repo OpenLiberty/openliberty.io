@@ -283,7 +283,22 @@ $(document).ready(function() {
 
     });
 
-    // Adjust the window for 
+    /* Copy button for the github clone command  that pops up initially when opening a guide. */
+    $("#github_clone_popup_copy").click(function(event){
+        console.log("clicked copy button.");
+
+        event.preventDefault();
+        target = $("#github_clone_popup_repo").get(0);
+        window.getSelection().selectAllChildren(target); // Set the github clone command as the copy target.
+        if(document.execCommand('copy')) {
+            window.getSelection().removeAllRanges();
+            $("#github_clone_popup_container").hide();
+        } else {
+            alert('Copy failed. Copy the command manually: ' + target.innerText);
+        }        
+    });
+
+    // Adjust the window for the sticky header when clicking on a section anchor.
     var shiftWindow = function() { scrollBy(0, -120) };
     if (location.hash){
         shiftWindow();
