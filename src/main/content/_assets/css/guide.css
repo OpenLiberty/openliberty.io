@@ -11,10 +11,6 @@
 
 /* GUIDE CONTENT */
 
-#background_container {
-    overflow-x: hidden;
-}
-
 header {
     position: sticky;
     position: -webkit-sticky;
@@ -160,9 +156,15 @@ header {
 #background_container {
     min-height: 600px;
     /* if you change the 200px, please also change backgroundSizeAdjustment in guide.js */ 
-    background-size: 100% calc(100% - 200px);
+    /* background-size: 100% calc(100% - 200px); */
     background-repeat: no-repeat;
     margin-bottom: 100px;
+    overflow-x: hidden;
+    background-color: #f1f4fe;
+}
+
+#background_container > .row {
+    overflow: hidden;
 }
 
 #title_row {
@@ -171,14 +173,20 @@ header {
 
 #guide_column {
     color: #24253a;
+    width: calc(100% - 730px);
 }
 
 #code_column {
     padding: 0;
-    height: 100%;
+    /* height: 100%; */
     background-color: #f1f4fe;
     position: fixed;
-    left: 50%;
+    width: 730px;
+    left: calc(100% - 700px); /* Adjust for the width and padding */
+
+    top: 120px;
+    bottom: 100px; /* todo adjust this dynamically */
+    overflow-y: auto;
 }
 
 #github_clone_popup_container {
@@ -222,10 +230,20 @@ header {
     text-align: center;
 }
 
+#github_clone_popup_copy:hover {
+    border: solid 1px #b2bbd1;
+    cursor: pointer;
+}
+
+#github_clone_popup_copy:active {
+    border: solid 1px #5e6b8d;
+}
+
 #github_clone_popup_copy > img {
     width: 14px;
     height: 16px;
 }
+
 
 #guide_content > .sect1 {
     -webkit-box-shadow: 0px 5px 11px -3px rgba(0,0,0,0.27);
@@ -301,13 +319,19 @@ header {
     background-color: #f1f4fe;
 }
 
+#related_guides_section {
+    width: 100%;
+    height: 100px;
+    box-shadow: inset 0px 94px 0px 0px #F7F9E5, 0px 5px 11px -3px rgba(0,0,0,0.27);
+}
+
 @media (max-width: 1199px) {
     .guide_item {
         width: 100%;
     }
 }
     
-@media (max-width: 767px) {
+@media screen and (max-width: 767px) {
 
     #background_container {
         padding-top: 40px;
@@ -323,6 +347,7 @@ header {
     }
         
     #guide_column {
+        width: auto;
         padding-top: 10px;
         padding-bottom: 60px;
         padding-left: 15px;
@@ -331,15 +356,18 @@ header {
     }  
 }
 
-@media (min-width: 1440px) { 
+@media (min-width: 1440px) {
     #guide_column {
-        width: 30.58%;
+        /* width: 30.58%; */
+        width: calc(100% - 280px - 730px);
         display: inline-block;
     }
 
     #code_column {
-        width: 50.66%;
+        /* width: 50.66%; */
         left: initial;
+        /* left: calc(100% - 280px - 730px); */
+        left: calc(100% - 715px); /* Adjust for the width and padding */
         display: inline-block;
     }
 }

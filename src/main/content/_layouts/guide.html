@@ -8,7 +8,7 @@ css:
 js: guide
 ---
 
-<div id="background_container" class="black_blue_gradient_background">
+<div id="background_container">
         <div class="row">
             <!-- Guide's table of contents section -->
             <div id="toc_column" class="collapse">
@@ -35,7 +35,7 @@ js: guide
                 </div>
             </div>
             <!-- Entire guide section -->
-            <div id="guide_column" class="col-sm-6 position_relative">
+            <div id="guide_column" class="position_relative">
                 <div id="guide_content">
                     <!-- Guide header section -->
                     <div id="guide_meta" class="sect1">
@@ -85,7 +85,8 @@ js: guide
             </div>
 
             <!-- Code section -->
-            <div id="code_column" class="col-sm-6 position_relative">
+            <div id="code_column" class="position_relative">
+                {% if page.projectid %}
                 <div id="github_clone_popup_container">
                     <div id="github_clone_popup">
                         <div id="github_clone_popup_title">Git clone this repo to get going right away:</div>
@@ -97,8 +98,12 @@ js: guide
                         </div>
                     </div>
                 </div>
-                
+                {% endif %}
             </div>
+        </div>
+
+        <div id="related_guides_section">
+            <h2>Nice work! You did it!</h2>
         </div>
 </div>
 

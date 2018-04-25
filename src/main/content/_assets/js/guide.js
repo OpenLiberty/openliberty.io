@@ -220,6 +220,10 @@ $(document).ready(function() {
     // Hide all code blocks except the first one
     $('.codecolumn:not(:first)').hide();
 
+    // Set height of code column to the same height as the guide column
+    // var guide_height = $("#guide_column").height();
+    // $("#code_column").height(guide_height);
+
 
     // Handle collapsing the table of contents from full width into the hamburger
     $('#close_container').on('click', function(event){
@@ -232,6 +236,8 @@ $(document).ready(function() {
             'float': 'right',
         });
         $("#toc_title").css('margin-top', '20px');
+
+        // TODO Update the width of the guide_column to accomodate the larger space
 
         $('#breadcrumb_hamburger').click();
     });
@@ -283,6 +289,29 @@ $(document).ready(function() {
 
     });
 
+    // Set the github clone popup top value to the same as the what you'll learn section.
+    var whatYoullLearn = $("#what-you-ll-learn");
+    if(whatYoullLearn.length > 0){
+        var githubCloneTop = whatYoullLearn.get(0).offsetTop;
+        $("#github_clone_popup_container").css('top', githubCloneTop);
+    }
+
+    // Desktop view only: Set the file name in the breadcrumb to be aligned with the code column   
+    var alignCodeFileName = function(){
+        if($(window).width() >= 767) {
+            var codeColumnOffset = $("#code_column").offset().left;
+            var lastBreadcrumb = $("#breadcrumb_row li:nth-last-child(2)");
+            var endPoint = lastBreadcrumb.offset().left + lastBreadcrumb.width();
+            // If the title would overlap the last breadcrumb, then adjust the 'left' location to be to the right of the breadcrumb.
+            if(endPoint >= codeColumnOffset){
+                codeColumnOffset = endPoint + '5px';
+            }
+            $("#breadcrumb_row .fileName").css('left', codeColumnOffset);
+        }        
+    }
+    alignCodeFileName();
+    
+
     /* Copy button for the github clone command  that pops up initially when opening a guide. */
     $("#github_clone_popup_copy").click(function(event){
         console.log("clicked copy button.");
@@ -292,11 +321,29 @@ $(document).ready(function() {
         window.getSelection().selectAllChildren(target); // Set the github clone command as the copy target.
         if(document.execCommand('copy')) {
             window.getSelection().removeAllRanges();
-            $("#github_clone_popup_container").hide();
+            var current_target_object = $(event.currentTarget);
+            var position = current_target_object.position();
+            $('#copied_to_clipboard_confirmation').css({
+                top: position.top - 25,
+                right: 50
+            }).stop().fadeIn().delay(3500).fadeOut();
+            $("#github_clone_popup_container").fadeOut("slow");
         } else {
             alert('Copy failed. Copy the command manually: ' + target.innerText);
         }        
     });
+
+    var handleGithubPopup = function(){
+        // If the page is scrolled down past the top of the page then hide the github clone popup
+        var githubPopup = $("#github_clone_popup_container");
+        var atTop = $(window).scrollTop() === 0;
+        if(atTop){
+            githubPopup.fadeIn();
+        }
+        else{            
+            githubPopup.fadeOut();
+        }
+    }
 
     // Adjust the window for the sticky header when clicking on a section anchor.
     var shiftWindow = function() { scrollBy(0, -120) };
@@ -315,11 +362,16 @@ $(document).ready(function() {
         $('#toc_container ul.sectlevel1').append('<li><a href="#related-guides">Related guides</a></li>');
     }
 
+    $(window).on('resize', function(){
+        alignCodeFileName();
+    });
+
     // TABLE OF CONTENT
     //
     // Keep the table of content (TOC) in view while scrolling (Desktop only)
     //
     $(window).scroll(function() {
+        handleGithubPopup();
         // handleFloatingTableOfContent();
         // handleFloatingCodeColumn();
     });
