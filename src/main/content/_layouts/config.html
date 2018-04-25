@@ -1,39 +1,12 @@
 ---
-layout: doc
-css:
-- doc-header
-- config
+layout: config-content
+css: config
 ---
 
-<!-- Build list of config pages -->
-{% assign configs = site.pages | where: 'layout', 'config' %}
+<div id="content">
+    <div id="config_title"> {{ page.title }}
+    </div>
 
-<div id="background_container">
-        <div class="row">
-            <!-- Guide's table of contents section -->
-            <div id="toc_column" class="col-sm-3">
-                <div id="toc_inner">
-                    <h3 id="toc_title">Contents</h3>
-                    {% if configs %}
-                    <div id="toc_container">
-                        <ul>
-                            {% for config in configs %}
-                                <li><a href="#">{{ config.title }}</a></li>
-                            {% endfor %}
-                        </ul>                        
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-            <!-- Entire guide section -->
-            <div id="config_column" class="col-sm-9 position_relative">
-                <div id="config_content">
-                    <div id="page_title"> {{ page.title }} </div>
-
-                    <!-- Config content section -->
-                    {{ content }}
-                </div>
-            </div>
-        </div>
+    <!-- Config content section -->
+    {{ content }}
 </div>
-
