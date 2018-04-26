@@ -160,7 +160,6 @@ header {
     background-repeat: no-repeat;
     margin-bottom: 100px;
     overflow-x: hidden;
-    background-color: #f1f4fe;
 }
 
 #background_container > .row {
@@ -178,12 +177,10 @@ header {
 
 #code_column {
     padding: 0;
-    /* height: 100%; */
     background-color: #f1f4fe;
     position: fixed;
     width: 730px;
     left: calc(100% - 700px); /* Adjust for the width and padding */
-
     top: 120px;
     bottom: 100px; /* todo adjust this dynamically */
     overflow-y: auto;
@@ -331,7 +328,7 @@ header {
     }
 }
     
-@media screen and (max-width: 767px) {
+@media (max-width: 1170px) {
 
     #background_container {
         padding-top: 40px;
@@ -358,15 +355,12 @@ header {
 
 @media (min-width: 1440px) {
     #guide_column {
-        /* width: 30.58%; */
-        width: calc(100% - 280px - 730px);
+        width: calc(100% - 280px - 730px); /* Adjust for the size of the table of contents and the code column */
         display: inline-block;
     }
 
     #code_column {
-        /* width: 50.66%; */
         left: initial;
-        /* left: calc(100% - 280px - 730px); */
         left: calc(100% - 715px); /* Adjust for the width and padding */
         display: inline-block;
     }
