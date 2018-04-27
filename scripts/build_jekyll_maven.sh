@@ -14,6 +14,11 @@ gem install jekyll-assets -v 2.4.0
 echo "Ruby version:"
 echo `ruby -v`
 
+pushd gems/ol-asciidoc
+gem build ol-asciidoc.gemspec
+gem install ol-asciidoc-0.0.1.gem
+popd
+
 # Guides that are ready to be published to openliberty.io
 echo "Cloning repositories with name starting with guide or iguide..."
 ruby ./scripts/build_clone_guides.rb
