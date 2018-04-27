@@ -1,6 +1,117 @@
-= dataSource - Data Source (dataSource)
+= batchPersistence - Batch Persistence (batchPersistence)
 :nofooter:
-Defines a data source configuration.
+Configures the Batch persistence store.
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|jobStoreRef
+
+|A reference to top level databaseStore element (string).
+
+|defaultDatabaseStore
+
+|Persistent store for batch data.
+|===
+[#jobStore]*jobStore*
+
+Persistent store for batch data.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|authDataRef
+
+|A reference to top level authData element (string).
+
+|
+
+|Authentication data for task scheduling, queries, and execution.
+
+|createTables
+
+|boolean
+
+|true
+
+|When set to true, database tables are created.
+
+|dataSourceRef
+
+|A reference to top level dataSource element (string).
+
+|DefaultDataSource
+
+|Data source that connects to the persistent store.
+
+|keyGenerationStrategy
+
+|* AUTO
+* IDENTITY
+* SEQUENCE
+* TABLE
+
+
+|AUTO
+
+|The preferred strategy for generating unique primary keys. If the selected strategy is not supported for the database, a different strategy might be used. +
+*AUTO* +
+  Automatically select the strategy to generate unique primary keys. +
+*IDENTITY* +
+  Use a database identity column to generate unique primary keys. +
+*SEQUENCE* +
+  Use a database sequence to generate unique primary keys. +
+*TABLE* +
+  Use a database table to generate unique primary keys.
+
+|schema
+
+|string
+
+|
+
+|Schema name with read and write access to the database tables.
+
+|tablePrefix
+
+|string
+
+|WLP
+
+|Name prefix for tables, sequences, and other database artifacts.
+|===
+[#jobStore/authData]*jobStore > authData*
+
+Authentication data for task scheduling, queries, and execution.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|Password of the user to use when connecting to the EIS. The value can be stored in clear text or encoded form. It is recommended that you encode the password. To do so, use the securityUtility tool with the encode option.
+
+|user
+
+|string
+
+|
+
+|Name of the user to use when connecting to the EIS.
+|===
+[#jobStore/dataSource]*jobStore > dataSource*
+
+Data source that connects to the persistent store.
+
 
 [cols="a,a,a,a",width="100%"]
 |===
@@ -35,14 +146,6 @@ Defines a data source configuration.
 |
 
 |Default authentication data for container managed authentication that applies when bindings do not specify an authentication-alias for a resource reference with res-auth=CONTAINER. If updated while the server is running, the change is applied with new connection requests; in-use connections are not impacted.
-
-|id
-
-|string
-
-|
-
-|A unique configuration ID.
 
 |isolationLevel
 
@@ -200,7 +303,7 @@ Min: 0 +
 
 |Specifies a timeout for validation of pooled connections. When specified, pooled connections are validated before being reused from the connection pool. The validation timeout is also used when the connection manager validates connections in response to a stale connection for PurgePolicy=ValidateAllConnections. A value of 0 means that connections are validated without applying any timeout. Validation timeout requires a JDBC driver that complies with the JDBC 4.0 specification or higher. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
 |===
-[#connectionManager]*connectionManager*
+[#jobStore/dataSource/connectionManager]*jobStore > dataSource > connectionManager*
 
 Connection manager for a data source. If updated while the server is running, existing connections are destroyed.
 
@@ -308,7 +411,7 @@ Min: 0 +
 
 |Caches the specified number of connections for each thread.
 |===
-[#containerAuthData]*containerAuthData*
+[#jobStore/dataSource/containerAuthData]*jobStore > dataSource > containerAuthData*
 
 Default authentication data for container managed authentication that applies when bindings do not specify an authentication-alias for a resource reference with res-auth=CONTAINER. If updated while the server is running, the change is applied with new connection requests; in-use connections are not impacted.
 
@@ -333,7 +436,7 @@ Default authentication data for container managed authentication that applies wh
 
 |Name of the user to use when connecting to the EIS.
 |===
-[#jaasLoginContextEntry]*jaasLoginContextEntry*
+[#jobStore/dataSource/jaasLoginContextEntry]*jobStore > dataSource > jaasLoginContextEntry*
 
 JAAS login context entry for authentication. If updated while the server is running, the update is applied with new connection requests; in-use connections are not impacted.
 
@@ -358,7 +461,7 @@ JAAS login context entry for authentication. If updated while the server is runn
 
 |Name of a JAAS configuration entry.
 |===
-[#jdbcDriver]*jdbcDriver*
+[#jobStore/dataSource/jdbcDriver]*jobStore > dataSource > jdbcDriver*
 
 JDBC driver for a data source. If updated while the server is running, existing connections are destroyed.
 
@@ -401,7 +504,7 @@ JDBC driver for a data source. If updated while the server is running, existing 
 
 |JDBC driver implementation of javax.sql.XADataSource.
 |===
-[#jdbcDriver/library]*jdbcDriver > library*
+[#jobStore/dataSource/jdbcDriver/library]*jobStore > dataSource > jdbcDriver > library*
 
 Identifies JDBC driver JARs and native files.
 
@@ -442,7 +545,7 @@ Identifies JDBC driver JARs and native files.
 
 |Name of shared library for administrators
 |===
-[#jdbcDriver/library/file]*jdbcDriver > library > file*
+[#jobStore/dataSource/jdbcDriver/library/file]*jobStore > dataSource > jdbcDriver > library > file*
 
 Id of referenced File
 
@@ -467,7 +570,7 @@ Id of referenced File
 
 |Fully qualified filename
 |===
-[#jdbcDriver/library/fileset]*jdbcDriver > library > fileset*
+[#jobStore/dataSource/jdbcDriver/library/fileset]*jobStore > dataSource > jdbcDriver > library > fileset*
 
 Id of referenced Fileset
 
@@ -524,7 +627,7 @@ Id of referenced Fileset
 
 |Scanning interval to check the fileset for changes as a long with a time unit suffix h-hour, m-minute, s-second, ms-millisecond (e.g. 2ms or 5s). Disabled (scanInterval=0) by default. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
 |===
-[#jdbcDriver/library/folder]*jdbcDriver > library > folder*
+[#jobStore/dataSource/jdbcDriver/library/folder]*jobStore > dataSource > jdbcDriver > library > folder*
 
 Id of referenced folder
 
@@ -549,12 +652,12 @@ Id of referenced folder
 
 |A unique configuration ID.
 |===
-[#onConnect]*onConnect*
+[#jobStore/dataSource/onConnect]*jobStore > dataSource > onConnect*
 
 SQL command to execute once on each new connection that is established to the database. The SQL statement applies only to newly created connections, not to existing connections that are reused from the connection pool. If updated while the server is running, existing connections are destroyed.
 
 
-[#properties]*properties*
+[#jobStore/dataSource/properties]*jobStore > dataSource > properties*
 
 List of JDBC vendor properties for the data source. For example, databaseName="dbname" serverName="localhost" portNumber="50000".
 
@@ -611,7 +714,7 @@ List of JDBC vendor properties for the data source. For example, databaseName="d
 
 |It is recommended to use a container managed authentication alias instead of configuring this property.
 |===
-[#properties.datadirect.sqlserver]*properties.datadirect.sqlserver*
+[#jobStore/dataSource/properties.datadirect.sqlserver]*jobStore > dataSource > properties.datadirect.sqlserver*
 
 Data source properties for the DataDirect Connect for JDBC driver for Microsoft SQL Server.
 
@@ -1107,7 +1210,7 @@ Max: 128 +
 
 |JDBC driver property: loadBalancing.
 |===
-[#properties.db2.i.native]*properties.db2.i.native*
+[#jobStore/dataSource/properties.db2.i.native]*jobStore > dataSource > properties.db2.i.native*
 
 Data source properties for the IBM DB2 for i Native JDBC driver.
 
@@ -1511,7 +1614,7 @@ Max: 9 +
 
 |It is recommended to use a container managed authentication alias instead of configuring this property.
 |===
-[#properties.db2.i.toolbox]*properties.db2.i.toolbox*
+[#jobStore/dataSource/properties.db2.i.toolbox]*jobStore > dataSource > properties.db2.i.toolbox*
 
 Data source properties for the IBM DB2 for i Toolbox JDBC driver.
 
@@ -2416,7 +2519,7 @@ Max: 1 +
 
 |JDBC driver property: xaLooselyCoupledSupport.
 |===
-[#properties.db2.jcc]*properties.db2.jcc*
+[#jobStore/dataSource/properties.db2.jcc]*jobStore > dataSource > properties.db2.jcc*
 
 Data source properties for the IBM Data Server Driver for JDBC and SQLJ for DB2.
 
@@ -3975,7 +4078,7 @@ Max: 65535 +
 
 |JDBC driver property: retryIntervalForClientReroute. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
 |===
-[#properties.derby.client]*properties.derby.client*
+[#jobStore/dataSource/properties.derby.client]*jobStore > dataSource > properties.derby.client*
 
 Data source properties for Derby Network Client JDBC driver.
 
@@ -4144,7 +4247,7 @@ Data source properties for Derby Network Client JDBC driver.
 
 |It is recommended to use a container managed authentication alias instead of configuring this property.
 |===
-[#properties.derby.embedded]*properties.derby.embedded*
+[#jobStore/dataSource/properties.derby.embedded]*jobStore > dataSource > properties.derby.embedded*
 
 Data source properties for Derby Embedded JDBC driver.
 
@@ -4223,7 +4326,7 @@ Data source properties for Derby Embedded JDBC driver.
 
 |It is recommended to use a container managed authentication alias instead of configuring this property.
 |===
-[#properties.informix]*properties.informix*
+[#jobStore/dataSource/properties.informix]*jobStore > dataSource > properties.informix*
 
 Data source properties for the Informix JDBC driver.
 
@@ -4812,7 +4915,7 @@ Data source properties for the Informix JDBC driver.
 
 |JDBC driver property: ifxCPMServiceInterval. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
 |===
-[#properties.informix.jcc]*properties.informix.jcc*
+[#jobStore/dataSource/properties.informix.jcc]*jobStore > dataSource > properties.informix.jcc*
 
 Data source properties for the IBM Data Server Driver for JDBC and SQLJ for Informix.
 
@@ -5245,7 +5348,7 @@ Max: 10485760 +
 
 |It is recommended to use a container managed authentication alias instead of configuring this property.
 |===
-[#properties.microsoft.sqlserver]*properties.microsoft.sqlserver*
+[#jobStore/dataSource/properties.microsoft.sqlserver]*jobStore > dataSource > properties.microsoft.sqlserver*
 
 Data source properties for Microsoft SQL Server JDBC Driver.
 
@@ -5571,7 +5674,7 @@ Max: 32767 +
 
 |JDBC driver property: xopenStates.
 |===
-[#properties.oracle]*properties.oracle*
+[#jobStore/dataSource/properties.oracle]*jobStore > dataSource > properties.oracle*
 
 Data source properties for Oracle JDBC driver.
 
@@ -5696,7 +5799,7 @@ Data source properties for Oracle JDBC driver.
 
 |It is recommended to use a container managed authentication alias instead of configuring this property.
 |===
-[#properties.sybase]*properties.sybase*
+[#jobStore/dataSource/properties.sybase]*jobStore > dataSource > properties.sybase*
 
 Data source properties for Sybase JDBC driver.
 
@@ -5799,7 +5902,7 @@ Data source properties for Sybase JDBC driver.
 
 |JDBC driver property: version.
 |===
-[#recoveryAuthData]*recoveryAuthData*
+[#jobStore/dataSource/recoveryAuthData]*jobStore > dataSource > recoveryAuthData*
 
 Authentication data for transaction recovery.
 

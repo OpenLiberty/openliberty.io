@@ -1,0 +1,115 @@
+= basicRegistry - Basic User Registry (basicRegistry)
+:nofooter:
+A simple XML-based user registry.
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|ignoreCaseForAuthentication
+
+|boolean
+
+|false
+
+|Allow case-insensitive user name authentication.
+
+|realm
+
+|string
+
+|BasicRegistry
+
+|The realm name represents the user registry.
+|===
+[#group]*group*
+
+A group in a Basic User Registry.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|name
+
+|string
+
+|
+
+|Name of a group in a Basic User Registry.
+|===
+[#group/member]*group > member*
+
+A member of a Basic User Registry group.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|name
+
+|string
+
+|
+
+|Name of a user in a Basic User Registry group.
+|===
+[#user]*user*
+
+A user in a Basic User Registry.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|name
+
+|string
+
+|
+
+|Name of a user in a Basic User Registry.
+
+|password
+
+|One way hashable, or reversably encoded password (string)
+
+|
+
+|Password of a user in a Basic User Registry. The value can be stored in clear text or encoded form. It is recommended that you encode the password. To do so, use the securityUtility tool with the encode option.
+|===

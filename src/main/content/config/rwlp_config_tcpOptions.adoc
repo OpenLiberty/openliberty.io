@@ -1,0 +1,64 @@
+= tcpOptions - TCP Options (tcpOptions)
+:nofooter:
+Defines TCP protocol settings.
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|addressExcludeList
+
+|string
+
+|
+
+|A comma-separated list of addresses that are not allowed to make inbound connections on this endpoint. You can specify IPv4 or IPv6 addresses. All values in an IPv4 or IPv6 address must be represented by a number or by an asterisk wildcard character.
+
+|addressIncludeList
+
+|string
+
+|
+
+|A comma-separated list of addresses that are allowed to make inbound connections on this endpoint. You can specify IPv4 or IPv6 addresses. All values in an IPv4 or IPv6 address must be represented by a number or by an asterisk wildcard character.
+
+|hostNameExcludeList
+
+|string
+
+|
+
+|A comma-separated list of host names that are not allowed to make inbound connections on this endpoint. Host names are not case-sensitive and can start with an asterisk, which is used as a wildcard character. However, asterisks cannot be elsewhere in the host name. For example, *.abc.com is valid, but *.abc.* is not valid.
+
+|hostNameIncludeList
+
+|string
+
+|
+
+|A comma-separated list of host names that are allowed to make inbound connections on this endpoint. Host names are not case-sensitive and can start with an asterisk, which is used as a wildcard character. However, asterisks cannot be elsewhere in the host name. For example, *.abc.com is valid, but *.abc.* is not valid.
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|inactivityTimeout
+
+|A period of time with millisecond precision
+
+|60s
+
+|Amount of time to wait for a read or write request to complete on a socket. This value is overridden by protocol-specific timeouts. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+
+|soReuseAddr
+
+|boolean
+
+|true
+
+|Enables immediate rebind to a port with no active listener.
+|===

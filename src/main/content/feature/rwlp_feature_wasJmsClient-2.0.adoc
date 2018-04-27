@@ -1,0 +1,52 @@
+= JMS 2.0 Client for Message Server
+:nofooter:
+The wasJmsClient-2.0 feature provides applications with access to the message queues that are hosted on WebSphere Application Server through the JMS 2.0 API. This feature supersedes wasJmsClient-1.1. The wasJmsClient-2.0 feature is compliant with JMS 2.0 specifications and is supported only on JDK 7 or later. It enables access to the messaging engine that is enabled through the wasJmsServer feature, and also to the service integration bus that is hosted on a full profile server.
+
+== Enabling this feature
+To enable the JMS 2.0 Client for Message Server feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>wasJmsClient-2.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the JMS 2.0 Client for Message Server feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.wasJmsClient-2.0; type="osgi.subsystem.feature"
+----
+
+== Features that enable this feature
+* feature:javaee-7.0[javaee-7.0]
+* feature:javaeeClient-7.0[javaeeClient-7.0]
+
+== Standard API packages provided by this feature
+* javadoc:javax.jms[javax.jms]
+
+== Feature configuration elements
+* config:activationSpec[activationSpec]
+* config:adminObject[adminObject]
+* config:application[application]
+* config:applicationManager[applicationManager]
+* config:applicationMonitor[applicationMonitor]
+* config:authData[authData]
+* config:channelfw[channelfw]
+* config:classloading[classloading]
+* config:connectionFactory[connectionFactory]
+* config:connectionManager[connectionManager]
+* config:javaPermission[javaPermission]
+* config:jmsActivationSpec[jmsActivationSpec]
+* config:jmsConnectionFactory[jmsConnectionFactory]
+* config:jmsDestination[jmsDestination]
+* config:jmsQueue[jmsQueue]
+* config:jmsQueueConnectionFactory[jmsQueueConnectionFactory]
+* config:jmsTopic[jmsTopic]
+* config:jmsTopicConnectionFactory[jmsTopicConnectionFactory]
+* config:library[library]
+* config:resourceAdapter[resourceAdapter]
+* config:tcpOptions[tcpOptions]
+* config:transaction[transaction]
+* config:wasJmsOutbound[wasJmsOutbound]

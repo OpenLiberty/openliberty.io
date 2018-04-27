@@ -1,0 +1,40 @@
+= LDAP User Registry
+:nofooter:
+This feature enables support for using  an LDAP server as a user registry. Any server that supports LDAP Version 3.0 may be used.  Multiple LDAP registries can be configured, and then federated to achieve a single logical registry view. 
+
+== Enabling this feature
+To enable the LDAP User Registry feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>ldapRegistry-3.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the LDAP User Registry feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.ldapRegistry-3.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:federatedRegistry-1.0[federatedRegistry-1.0]
+
+== Features that enable this feature
+* feature:appSecurity-1.0[appSecurity-1.0]
+
+== Feature configuration elements
+* config:activedLdapFilterProperties[activedLdapFilterProperties]
+* config:administrator-role[administrator-role]
+* config:classloading[classloading]
+* config:customLdapFilterProperties[customLdapFilterProperties]
+* config:domino50LdapFilterProperties[domino50LdapFilterProperties]
+* config:edirectoryLdapFilterProperties[edirectoryLdapFilterProperties]
+* config:idsLdapFilterProperties[idsLdapFilterProperties]
+* config:iplanetLdapFilterProperties[iplanetLdapFilterProperties]
+* config:ldapRegistry[ldapRegistry]
+* config:library[library]
+* config:netscapeLdapFilterProperties[netscapeLdapFilterProperties]
+* config:securewayLdapFilterProperties[securewayLdapFilterProperties]

@@ -1,0 +1,618 @@
+= federatedRepository - User Registry Federation (federatedRepository)
+:nofooter:
+Configuration for the user registry federation.
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|maxSearchResults
+
+|int
+
+|4500
+
+|Maximum number of entries that can be returned in a search.
+
+|pageCacheSize
+
+|int
+
+|1000
+
+|Defines the number of pagination requests that can be stored in the cache. The paging cache size needs to be configured based on the number of pagination requests executed on the system and the hardware system resources available.
+
+|pageCacheTimeout
+
+|A period of time with millisecond precision
+
+|30000ms
+
+|Defines the maximum time that an entry, which added to the page cache, is available. When the specified time has elapsed, the entry from the page cache is cleared. This needs to be configured based on the interval between pagination search requests executed on the system and the hardware system resources available. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+
+|searchTimeout
+
+|A period of time with millisecond precision
+
+|10m
+
+|Maximum amount of time, in milliseconds, to process a search. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+|===
+[#extendedProperty]*extendedProperty*
+
+The extended properties for Person and Group.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|dataType
+
+|* BigDecimal
+* BigInteger
+* Boolean
+* Date
+* Double
+* Integer
+* Long
+* String
+
+
+|
+
+|Defines the data type of the property extended for Person and Group. The basic Java data types are supported.
+
+|defaultValue
+
+|string
+
+|
+
+|Defines the default value for the property during write operation, if no default value is set.
+
+|entityType
+
+|* Group
+* PersonAccount
+
+
+|
+
+|The name of the entity being mapped. The name of the entity can be PersonAccount or Group. +
+*PersonAccount* +
+  Person
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|multiValued
+
+|boolean
+
+|false
+
+|Defines if the property extended for Person and Group supports multiple values.
+
+|name
+
+|string
+
+|
+
+|Defines the name of the property extended for Person and Group.
+|===
+[#primaryRealm]*primaryRealm*
+
+Primary realm configuration.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|allowOpIfRepoDown
+
+|boolean
+
+|false
+
+|Specifies whether operation is allowed if a repository is down. The default value is false.
+
+|delimiter
+
+|string
+
+|/
+
+|Delimiter used to qualify the realm under which the operation should be executed. For example, userid=test1/myrealm where / is the delimiter and myrealm is the realm name.
+
+|name
+
+|string
+
+|
+
+|Name of the realm.
+|===
+[#primaryRealm/defaultParents]*primaryRealm > defaultParents*
+
+The default parent mapping for the realm.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|name
+
+|string
+
+|
+
+|The name of the entity being mapped. The name of the entity can be PersonAccount or Group.
+
+|parentUniqueName
+
+|string
+
+|
+
+|The distinguished name under Base distinguished name (DN) in the repository under which all entities of the configured type will be created.
+|===
+[#primaryRealm/groupDisplayNameMapping]*primaryRealm > groupDisplayNameMapping*
+
+The input and output property mappings for group display name in an user registry operation.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|inputProperty
+
+|string
+
+|cn
+
+|The property that maps to the user registry attribute for input. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+
+|outputProperty
+
+|string
+
+|cn
+
+|The property that maps to the user registry attribute for output. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+|===
+[#primaryRealm/groupSecurityNameMapping]*primaryRealm > groupSecurityNameMapping*
+
+The input and output property mappings for group security name in an user registry operation.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|inputProperty
+
+|string
+
+|cn
+
+|The property that maps to the user registry attribute for input. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+
+|outputProperty
+
+|string
+
+|cn
+
+|The property that maps to the user registry attribute for output. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+|===
+[#primaryRealm/participatingBaseEntry]*primaryRealm > participatingBaseEntry*
+
+The Base Entry that is part of this realm.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|name
+
+|string
+
+|
+
+|Name of the base entry.
+|===
+[#primaryRealm/uniqueGroupIdMapping]*primaryRealm > uniqueGroupIdMapping*
+
+The input and output property mappings for unique group id in an user registry operation.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|inputProperty
+
+|string
+
+|cn
+
+|The property that maps to the user registry attribute for input. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+
+|outputProperty
+
+|string
+
+|uniqueName
+
+|The property that maps to the user registry attribute for output. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+|===
+[#primaryRealm/uniqueUserIdMapping]*primaryRealm > uniqueUserIdMapping*
+
+The input and output property mappings for unique user id used in an user registry operation.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|inputProperty
+
+|string
+
+|uniqueName
+
+|The property that maps to the user registry attribute for input. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+
+|outputProperty
+
+|string
+
+|uniqueName
+
+|The property that maps to the user registry attribute for output. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+|===
+[#primaryRealm/userDisplayNameMapping]*primaryRealm > userDisplayNameMapping*
+
+The input and output property mappings for user display name in an user registry operation.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|inputProperty
+
+|string
+
+|principalName
+
+|The property that maps to the user registry attribute for input. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+
+|outputProperty
+
+|string
+
+|principalName
+
+|The property that maps to the user registry attribute for output. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+|===
+[#primaryRealm/userSecurityNameMapping]*primaryRealm > userSecurityNameMapping*
+
+The input and output property mappings for user security name in an user registry operation.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|inputProperty
+
+|string
+
+|principalName
+
+|The property that maps to the user registry attribute for input. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+
+|outputProperty
+
+|string
+
+|uniqueName
+
+|The property that maps to the user registry attribute for output. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+|===
+[#realm]*realm*
+
+Reference to the realm.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|allowOpIfRepoDown
+
+|boolean
+
+|false
+
+|Specifies whether operation is allowed if a repository is down. The default value is false.
+
+|delimiter
+
+|string
+
+|/
+
+|Delimiter used to qualify the realm under which the operation should be executed. For example, userid=test1/myrealm where / is the delimiter and myrealm is the realm name.
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|name
+
+|string
+
+|
+
+|Name of the realm.
+|===
+[#realm/defaultParents]*realm > defaultParents*
+
+The default parent mapping for the realm.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|name
+
+|string
+
+|
+
+|The name of the entity being mapped. The name of the entity can be PersonAccount or Group.
+
+|parentUniqueName
+
+|string
+
+|
+
+|The distinguished name under Base distinguished name (DN) in the repository under which all entities of the configured type will be created.
+|===
+[#realm/groupDisplayNameMapping]*realm > groupDisplayNameMapping*
+
+The input and output property mappings for group display name in an user registry operation.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|inputProperty
+
+|string
+
+|cn
+
+|The property that maps to the user registry attribute for input. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+
+|outputProperty
+
+|string
+
+|cn
+
+|The property that maps to the user registry attribute for output. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+|===
+[#realm/groupSecurityNameMapping]*realm > groupSecurityNameMapping*
+
+The input and output property mappings for group security name in an user registry operation.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|inputProperty
+
+|string
+
+|cn
+
+|The property that maps to the user registry attribute for input. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+
+|outputProperty
+
+|string
+
+|cn
+
+|The property that maps to the user registry attribute for output. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+|===
+[#realm/participatingBaseEntry]*realm > participatingBaseEntry*
+
+The Base Entry that is part of this realm.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|name
+
+|string
+
+|
+
+|Name of the base entry.
+|===
+[#realm/uniqueGroupIdMapping]*realm > uniqueGroupIdMapping*
+
+The input and output property mappings for unique group id in an user registry operation.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|inputProperty
+
+|string
+
+|cn
+
+|The property that maps to the user registry attribute for input. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+
+|outputProperty
+
+|string
+
+|uniqueName
+
+|The property that maps to the user registry attribute for output. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+|===
+[#realm/uniqueUserIdMapping]*realm > uniqueUserIdMapping*
+
+The input and output property mappings for unique user id used in an user registry operation.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|inputProperty
+
+|string
+
+|uniqueName
+
+|The property that maps to the user registry attribute for input. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+
+|outputProperty
+
+|string
+
+|uniqueName
+
+|The property that maps to the user registry attribute for output. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+|===
+[#realm/userDisplayNameMapping]*realm > userDisplayNameMapping*
+
+The input and output property mappings for user display name in an user registry operation.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|inputProperty
+
+|string
+
+|principalName
+
+|The property that maps to the user registry attribute for input. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+
+|outputProperty
+
+|string
+
+|principalName
+
+|The property that maps to the user registry attribute for output. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+|===
+[#realm/userSecurityNameMapping]*realm > userSecurityNameMapping*
+
+The input and output property mappings for user security name in an user registry operation.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|inputProperty
+
+|string
+
+|principalName
+
+|The property that maps to the user registry attribute for input. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+
+|outputProperty
+
+|string
+
+|uniqueName
+
+|The property that maps to the user registry attribute for output. The valid values are: uniqueId, uniqueName, externalId, externalName and the attributes of PersonAccount and Group entity types.
+|===
+[#supportedEntityType]*supportedEntityType*
+
+The default parent for an entity type mapping.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+|===
+[#supportedEntityType/defaultParent]*supportedEntityType > defaultParent*
+
+The distinguished name under Base distinguished name (DN) in the repository under which all entities of the configured type will be created.
+
+
+[#supportedEntityType/name]*supportedEntityType > name*
+
+The name of the entity being mapped. The name of the entity can be PersonAccount or Group.
+
+

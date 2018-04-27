@@ -1,0 +1,29 @@
+= httpDispatcher - HTTP Dispatcher (httpDispatcher)
+:nofooter:
+HTTP Dispatcher configuration.
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|appOrContextRootMissingMessage
+
+|string
+
+|
+
+|Message to return to the client when the application in the requested URI can not be found.
+
+|enableWelcomePage
+
+|boolean
+
+|true
+
+|Enables the default Liberty profile welcome page when no application is bound to a context root of "/".  The default value is true.
+|===
+[#trustedHeaderOrigin]*trustedHeaderOrigin*
+
+Private headers are used by the web server plug-in to provide information about the original request. These headers take precedence over the http Host header, and are used to select a virtual host to service a request. The default value is '*', which will trust incoming private headers from any source. Specify 'none' to disable private headers and rely only on the http Host header, or specify a list of IP addresses to restrict private header processing to specific trusted sources.
+
+

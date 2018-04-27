@@ -1,0 +1,52 @@
+= Java Web Services 2.2
+:nofooter:
+This feature enables support for Java API for XML-Based Web Services 2.2. JAX-WS web services and clients communicate using XML. Annotations can be used to simplify the development of JAX-WS clients and endpoints.
+
+== Enabling this feature
+To enable the Java Web Services 2.2 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>jaxws-2.2</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Java Web Services 2.2 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.jaxws-2.2; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:jaxb-2.2[jaxb-2.2]
+
+== Features that enable this feature
+* feature:javaee-7.0[javaee-7.0]
+
+== Standard API packages provided by this feature
+* javadoc:javax.wsdl[javax.wsdl]
+* javadoc:javax.wsdl.extensions[javax.wsdl.extensions]
+* javadoc:javax.wsdl.extensions.http[javax.wsdl.extensions.http]
+* javadoc:javax.wsdl.extensions.mime[javax.wsdl.extensions.mime]
+* javadoc:javax.wsdl.extensions.schema[javax.wsdl.extensions.schema]
+* javadoc:javax.wsdl.extensions.soap[javax.wsdl.extensions.soap]
+* javadoc:javax.wsdl.extensions.soap12[javax.wsdl.extensions.soap12]
+* javadoc:javax.wsdl.factory[javax.wsdl.factory]
+* javadoc:javax.wsdl.xml[javax.wsdl.xml]
+* javadoc:javax.xml.ws[javax.xml.ws]
+* javadoc:javax.xml.ws.handler[javax.xml.ws.handler]
+* javadoc:javax.xml.ws.handler.soap[javax.xml.ws.handler.soap]
+* javadoc:javax.xml.ws.http[javax.xml.ws.http]
+* javadoc:javax.xml.ws.soap[javax.xml.ws.soap]
+* javadoc:javax.xml.ws.spi[javax.xml.ws.spi]
+* javadoc:javax.xml.ws.spi.http[javax.xml.ws.spi.http]
+* javadoc:javax.xml.ws.wsaddressing[javax.xml.ws.wsaddressing]
+
+== SPI packages provided by this feature
+* javadoc:com.ibm.wsspi.webservices.handler[com.ibm.wsspi.webservices.handler]
+
+== Feature configuration elements
+* config:classloading[classloading]
+* config:library[library]

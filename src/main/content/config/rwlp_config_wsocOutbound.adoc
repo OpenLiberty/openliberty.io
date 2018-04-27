@@ -1,0 +1,205 @@
+= wsocOutbound - WAS WebSocket Outbound (wsocOutbound)
+:nofooter:
+Configuration properties for WAS WebSocket outgoing connection requests.
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|httpOptionsRef
+
+|A reference to top level httpOptions element (string).
+
+|defaultHttpOptions
+
+|HTTPprotocol options for WAS WebSocket outbound
+
+|sslOptionsRef
+
+|A reference to top level sslOptions element (string).
+
+|
+
+|SSL protocol options for WAS WebSocket outbound
+
+|tcpOptionsRef
+
+|A reference to top level tcpOptions element (string).
+
+|defaultTCPOptions
+
+|TCP protocol options for WAS WebSocket outbound
+|===
+[#httpOptions]*httpOptions*
+
+HTTPprotocol options for WAS WebSocket outbound
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|AutoDecompression
+
+|boolean
+
+|true
+
+|Specifies whether the HTTP Channel automatically decompresses incoming request body data.
+
+|NoCacheCookiesControl
+
+|boolean
+
+|true
+
+|Allows the user to control whether or not the presence of a Set-Cookie header should update the Cache-Control header with a matching no-cache value. This also adds the Expires header.
+
+|keepAliveEnabled
+
+|boolean
+
+|true
+
+|Enables persistent connections (HTTP keepalive). If true, connections are kept alive for reuse by multiple sequential requests and responses. If false, connections are closed after the response is sent.
+
+|maxKeepAliveRequests
+
+|int +
+Min: -1 +
+
+
+|100
+
+|Maximum number of persistent requests that are allowed on a single HTTP connection if persistent connections are enabled. A value of -1 means unlimited.
+
+|persistTimeout
+
+|A period of time with second precision
+
+|30s
+
+|Amount of time that a socket will be allowed to remain idle between requests. This setting only applies if persistent connections are enabled. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|readTimeout
+
+|A period of time with second precision
+
+|60s
+
+|Amount of time to wait for a read request to complete on a socket after the first read occurs. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|removeServerHeader
+
+|boolean
+
+|false
+
+|Removes server implementation information from HTTP headers and also disables the default Liberty profile welcome page.
+
+|writeTimeout
+
+|A period of time with second precision
+
+|60s
+
+|Amount of time to wait on a socket for each portion of the response data to be transmitted. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+|===
+[#sslOptions]*sslOptions*
+
+SSL protocol options for WAS WebSocket outbound
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|sessionTimeout
+
+|A period of time with second precision
+
+|1d
+
+|Amount of time to wait for a read or write request to complete on a socket. This value is overridden by protocol-specific timeouts. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|sslRef
+
+|A reference to top level ssl element (string).
+
+|
+
+|The default SSL configuration repertoire. The default value is defaultSSLSettings.
+
+|sslSessionTimeout
+
+|A period of time with millisecond precision
+
+|8640ms
+
+|The timeout limit for an SSL session that is established by the SSL Channel. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+
+|suppressHandshakeErrors
+
+|boolean
+
+|false
+
+|Disable logging of SSL handshake errors. SSL handshake errors can occur during normal operation, however these messages can be useful when SSL is behaving unexpectedly.
+|===
+[#tcpOptions]*tcpOptions*
+
+TCP protocol options for WAS WebSocket outbound
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|addressExcludeList
+
+|string
+
+|
+
+|A comma-separated list of addresses that are not allowed to make inbound connections on this endpoint. You can specify IPv4 or IPv6 addresses. All values in an IPv4 or IPv6 address must be represented by a number or by an asterisk wildcard character.
+
+|addressIncludeList
+
+|string
+
+|
+
+|A comma-separated list of addresses that are allowed to make inbound connections on this endpoint. You can specify IPv4 or IPv6 addresses. All values in an IPv4 or IPv6 address must be represented by a number or by an asterisk wildcard character.
+
+|hostNameExcludeList
+
+|string
+
+|
+
+|A comma-separated list of host names that are not allowed to make inbound connections on this endpoint. Host names are not case-sensitive and can start with an asterisk, which is used as a wildcard character. However, asterisks cannot be elsewhere in the host name. For example, *.abc.com is valid, but *.abc.* is not valid.
+
+|hostNameIncludeList
+
+|string
+
+|
+
+|A comma-separated list of host names that are allowed to make inbound connections on this endpoint. Host names are not case-sensitive and can start with an asterisk, which is used as a wildcard character. However, asterisks cannot be elsewhere in the host name. For example, *.abc.com is valid, but *.abc.* is not valid.
+
+|inactivityTimeout
+
+|A period of time with millisecond precision
+
+|60s
+
+|Amount of time to wait for a read or write request to complete on a socket. This value is overridden by protocol-specific timeouts. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+
+|soReuseAddr
+
+|boolean
+
+|true
+
+|Enables immediate rebind to a port with no active listener.
+|===

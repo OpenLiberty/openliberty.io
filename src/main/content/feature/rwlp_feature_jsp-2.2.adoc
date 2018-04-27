@@ -1,0 +1,37 @@
+= JavaServer Pages 2.2
+:nofooter:
+This feature enables support for Java Server Pages (JSPs) that are written to the JSP 2.2 specification. This framework simplifies the construction of user interfaces.
+
+== Enabling this feature
+To enable the JavaServer Pages 2.2 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>jsp-2.2</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the JavaServer Pages 2.2 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.jsp-2.2; type="osgi.subsystem.feature"
+----
+
+== Standard API packages provided by this feature
+* javadoc:javax.el[javax.el]
+* javadoc:javax.servlet.jsp[javax.servlet.jsp]
+* javadoc:javax.servlet.jsp.el[javax.servlet.jsp.el]
+* javadoc:javax.servlet.jsp.jstl.core[javax.servlet.jsp.jstl.core]
+* javadoc:javax.servlet.jsp.jstl.fmt[javax.servlet.jsp.jstl.fmt]
+* javadoc:javax.servlet.jsp.jstl.sql[javax.servlet.jsp.jstl.sql]
+* javadoc:javax.servlet.jsp.jstl.tlv[javax.servlet.jsp.jstl.tlv]
+* javadoc:javax.servlet.jsp.resources[javax.servlet.jsp.resources]
+* javadoc:javax.servlet.jsp.tagext[javax.servlet.jsp.tagext]
+
+== SPI packages provided by this feature
+* javadoc:com.ibm.wsspi.jsp.taglib.config[com.ibm.wsspi.jsp.taglib.config]
+
+== Feature configuration elements
+* config:jspEngine[jspEngine]

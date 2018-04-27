@@ -1,0 +1,32 @@
+= JavaScript Object Notation for Java
+:nofooter:
+This feature provides access to the JavaScript Object Notation (JSON4J) library. The JSON4J library provides a simple Java model for constructing and manipulating data to be rendered as JSON data.
+
+== Enabling this feature
+To enable the JavaScript Object Notation for Java feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>json-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the JavaScript Object Notation for Java feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.json-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that enable this feature
+* feature:jaxrs-2.0[jaxrs-2.0]
+* feature:jaxrsClient-2.0[jaxrsClient-2.0]
+* feature:mpHealth-1.0[mpHealth-1.0]
+* feature:mpMetrics-1.0[mpMetrics-1.0]
+* feature:mpMetrics-1.1[mpMetrics-1.1]
+* feature:restConnector-2.0[restConnector-2.0]
+
+== IBM API packages provided by this feature
+* javadoc:com.ibm.json.java[com.ibm.json.java]
+* javadoc:com.ibm.json.xml[com.ibm.json.xml]

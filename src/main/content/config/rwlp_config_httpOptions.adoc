@@ -1,0 +1,82 @@
+= httpOptions - HTTP Options (httpOptions)
+:nofooter:
+HTTP protocol configuration.
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|AutoDecompression
+
+|boolean
+
+|true
+
+|Specifies whether the HTTP Channel automatically decompresses incoming request body data.
+
+|NoCacheCookiesControl
+
+|boolean
+
+|true
+
+|Allows the user to control whether or not the presence of a Set-Cookie header should update the Cache-Control header with a matching no-cache value. This also adds the Expires header.
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|keepAliveEnabled
+
+|boolean
+
+|true
+
+|Enables persistent connections (HTTP keepalive). If true, connections are kept alive for reuse by multiple sequential requests and responses. If false, connections are closed after the response is sent.
+
+|maxKeepAliveRequests
+
+|int +
+Min: -1 +
+
+
+|100
+
+|Maximum number of persistent requests that are allowed on a single HTTP connection if persistent connections are enabled. A value of -1 means unlimited.
+
+|persistTimeout
+
+|A period of time with second precision
+
+|30s
+
+|Amount of time that a socket will be allowed to remain idle between requests. This setting only applies if persistent connections are enabled. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|readTimeout
+
+|A period of time with second precision
+
+|60s
+
+|Amount of time to wait for a read request to complete on a socket after the first read occurs. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|removeServerHeader
+
+|boolean
+
+|false
+
+|Removes server implementation information from HTTP headers and also disables the default Liberty profile welcome page.
+
+|writeTimeout
+
+|A period of time with second precision
+
+|60s
+
+|Amount of time to wait on a socket for each portion of the response data to be transmitted. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+|===

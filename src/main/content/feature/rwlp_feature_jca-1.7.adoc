@@ -1,0 +1,40 @@
+= Java Connector Architecture 1.7
+:nofooter:
+This feature enables the configuration of resource adapters to access Enterprise Information Systems (EIS) from applications. The configuration of a resource adapter also includes the configuration of connection factories, administered objects and activation specifications. Any resource adapter that complies with the JCA 1.7 specification or lower can be used. High performance connection pooling is also provided.
+
+== Enabling this feature
+To enable the Java Connector Architecture 1.7 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>jca-1.7</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Java Connector Architecture 1.7 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.jca-1.7; type="osgi.subsystem.feature"
+----
+
+== Features that enable this feature
+* feature:javaee-7.0[javaee-7.0]
+* feature:jms-2.0[jms-2.0]
+* feature:mdb-3.2[mdb-3.2]
+
+== Feature configuration elements
+* config:activationSpec[activationSpec]
+* config:adminObject[adminObject]
+* config:application[application]
+* config:applicationManager[applicationManager]
+* config:applicationMonitor[applicationMonitor]
+* config:authData[authData]
+* config:classloading[classloading]
+* config:connectionFactory[connectionFactory]
+* config:connectionManager[connectionManager]
+* config:javaPermission[javaPermission]
+* config:library[library]
+* config:resourceAdapter[resourceAdapter]
+* config:transaction[transaction]

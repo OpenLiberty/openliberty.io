@@ -1,0 +1,31 @@
+= Application Security 1.0
+:nofooter:
+This feature is superseded by appSecurity-2.0. Support for securing the server runtime environment and applications. This feature enables servlet-3.0 and web application security, support for LDAP and basic user registries, and SSL. To support secure EJB applications, you must add the ejbLite-3.1 feature. When you add this feature to your server, you need to configure a user registry, such as the basic user registry or the LDAP user registry. 
+
+== Enabling this feature
+To enable the Application Security 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>appSecurity-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Application Security 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.appSecurity-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature is superseded by
+* feature:ldapRegistry-3.0[ldapRegistry-3.0]
+* feature:appSecurity-2.0[appSecurity-2.0]
+
+== Features that this feature enables
+* feature:appSecurity-2.0[appSecurity-2.0]
+* feature:ldapRegistry-3.0[ldapRegistry-3.0]
+
+== Features that enable this feature
+* feature:passwordUtilities-1.0[passwordUtilities-1.0]

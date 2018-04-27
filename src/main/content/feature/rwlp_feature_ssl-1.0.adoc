@@ -1,0 +1,49 @@
+= Secure Socket Layer
+:nofooter:
+This feature enables support for Secure Sockets Layer (SSL) connections. The secure HTTPS listener is not started unless the ssl-1.0 feature is enabled and a keystore is configured.
+
+== Enabling this feature
+To enable the Secure Socket Layer feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>ssl-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Secure Socket Layer feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.ssl-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature is superseded by
+* feature:transportSecurity-1.0[transportSecurity-1.0]
+
+== Features that enable this feature
+* feature:appSecurity-2.0[appSecurity-2.0]
+* feature:appSecurityClient-1.0[appSecurityClient-1.0]
+* feature:federatedRegistry-1.0[federatedRegistry-1.0]
+* feature:jcaInboundSecurity-1.0[jcaInboundSecurity-1.0]
+* feature:jwt-1.0[jwt-1.0]
+* feature:mpMetrics-1.0[mpMetrics-1.0]
+* feature:mpMetrics-1.1[mpMetrics-1.1]
+* feature:restConnector-2.0[restConnector-2.0]
+* feature:transportSecurity-1.0[transportSecurity-1.0]
+* feature:wasJmsSecurity-1.0[wasJmsSecurity-1.0]
+
+== IBM API packages provided by this feature
+* javadoc:com.ibm.websphere.ssl[com.ibm.websphere.ssl]
+
+== SPI packages provided by this feature
+* javadoc:com.ibm.wsspi.ssl[com.ibm.wsspi.ssl]
+
+== Feature configuration elements
+* config:channelfw[channelfw]
+* config:keyStore[keyStore]
+* config:ssl[ssl]
+* config:sslDefault[sslDefault]
+* config:sslOptions[sslOptions]
+* config:tcpOptions[tcpOptions]

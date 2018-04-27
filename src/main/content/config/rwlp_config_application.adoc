@@ -1,6 +1,6 @@
-= webApplication - Web Application (webApplication)
+= application - Application (application)
 :nofooter:
-Defines the properties of a web application.
+Defines the properties of an application.
 
 [cols="a,a,a,a",width="100%"]
 |===
@@ -14,7 +14,7 @@ Defines the properties of a web application.
 
 |Indicates whether or not the server automatically starts the application.
 
-|contextRoot
+|context-root
 
 |string
 
@@ -53,6 +53,14 @@ Defines the properties of a web application.
 |false
 
 |Option to suppress uncovered HTTP method warning message during application deployment.
+
+|type
+
+|string
+
+|
+
+|Type of application archive.
 |===
 [#application-bnd]*application-bnd*
 
@@ -3377,6 +3385,283 @@ Defines a property for a custom login configuration.
 |
 
 |The value of the property.
+|===
+[#resourceAdapter]*resourceAdapter*
+
+Specifies configuration for a resource adapter that is embedded in an application.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|alias
+
+|string
+
+|${id}
+
+|Overrides the default identifier for the resource adapter. The identifier is used in the name of the resource adapter's configuration properties element, which in turn is used in determining the name of configuration properties elements for any resources provided by the resource adapter. The resource adapter's configuration properties element name has the format, properties.&lt;APP_NAME&gt;.&lt;ALIAS&gt;, where &lt;APP_NAME&gt; is the name of the application and &lt;ALIAS&gt; is the configured alias. If unspecified, the alias defaults to the module name of the resource adapter.
+
+|autoStart
+
+|boolean
+
+|
+
+|Configures whether a resource adapter starts automatically upon deployment of the resource adapter or lazily upon injection or lookup of a resource.
+
+|contextServiceRef
+
+|A reference to top level contextService element (string).
+
+|
+
+|Configures how context is captured and propagated to threads.
+
+|id
+
+|string
+
+|
+
+|Identifies the name of the embedded resource adapter module to which this configuration applies.
+|===
+[#resourceAdapter/contextService]*resourceAdapter > contextService*
+
+Configures how context is captured and propagated to threads.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|jndiName
+
+|string
+
+|
+
+|JNDI name
+
+|onError
+
+|* FAIL
+* IGNORE
+* WARN
+
+
+|WARN
+
+|Determines the action to take in response to configuration errors. For example, if securityContext is configured for this contextService, but the security feature is not enabled, then onError determines whether to fail, raise a warning, or ignore the parts of the configuration which are incorrect. +
+*FAIL* +
+  Server will issue a warning or error message on the first error occurrence and then stop the server. +
+*IGNORE* +
+  Server will not issue any warning and error messages when it incurs a configuration error. +
+*WARN* +
+  Server will issue warning and error messages when it incurs a configuration error.
+
+4+|*Advanced Properties*
+
+|baseContextRef
+
+|A reference to top level contextService element (string).
+
+|
+
+|Specifies a base context service from which to inherit context that is not already defined on this context service.
+|===
+[#resourceAdapter/contextService/baseContext]*resourceAdapter > contextService > baseContext*
+
+Specifies a base context service from which to inherit context that is not already defined on this context service.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|jndiName
+
+|string
+
+|
+
+|JNDI name
+
+|onError
+
+|* FAIL
+* IGNORE
+* WARN
+
+
+|WARN
+
+|Determines the action to take in response to configuration errors. For example, if securityContext is configured for this contextService, but the security feature is not enabled, then onError determines whether to fail, raise a warning, or ignore the parts of the configuration which are incorrect. +
+*FAIL* +
+  Server will issue a warning or error message on the first error occurrence and then stop the server. +
+*IGNORE* +
+  Server will not issue any warning and error messages when it incurs a configuration error. +
+*WARN* +
+  Server will issue warning and error messages when it incurs a configuration error.
+
+4+|*Advanced Properties*
+
+|baseContextRef
+
+|A reference to top level contextService element (string).
+
+|
+
+|Specifies a base context service from which to inherit context that is not already defined on this context service.
+|===
+[#resourceAdapter/contextService/baseContext/baseContext]*resourceAdapter > contextService > baseContext > baseContext*
+
+Specifies a base context service from which to inherit context that is not already defined on this context service.
+
+
+[#resourceAdapter/contextService/baseContext/classloaderContext]*resourceAdapter > contextService > baseContext > classloaderContext*
+
+A unique configuration ID.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+|===
+[#resourceAdapter/contextService/baseContext/jeeMetadataContext]*resourceAdapter > contextService > baseContext > jeeMetadataContext*
+
+A unique configuration ID.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+|===
+[#resourceAdapter/contextService/baseContext/securityContext]*resourceAdapter > contextService > baseContext > securityContext*
+
+A unique configuration ID.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+|===
+[#resourceAdapter/contextService/classloaderContext]*resourceAdapter > contextService > classloaderContext*
+
+A unique configuration ID.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+|===
+[#resourceAdapter/contextService/jeeMetadataContext]*resourceAdapter > contextService > jeeMetadataContext*
+
+A unique configuration ID.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+|===
+[#resourceAdapter/contextService/securityContext]*resourceAdapter > contextService > securityContext*
+
+A unique configuration ID.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+|===
+[#resourceAdapter/customize]*resourceAdapter > customize*
+
+Customizes the configuration properties element for the activation specification, administered object, or connection factory with the specified interface and/or implementation class.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|implementation
+
+|string
+
+|
+
+|Fully qualified implementation class name for which the configuration properties element should be customized.
+
+|interface
+
+|string
+
+|
+
+|Fully qualified interface class name for which the configuration properties element should be customized.
+
+|suffix
+
+|string
+
+|
+
+|Overrides the default suffix for the configuration properties element. For example, "CustomConnectionFactory" in properties.rarModule1.CustomConnectionFactory. The suffix is useful to disambiguate when multiple types of connection factories, administered objects, or endpoint activations are provided by a resource adapter. If a configuration properties element customization omits the suffix or leaves it blank, no suffix is used.
 |===
 [#web-bnd]*web-bnd*
 

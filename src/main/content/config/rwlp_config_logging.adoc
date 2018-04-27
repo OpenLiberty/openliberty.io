@@ -1,0 +1,164 @@
+= logging - Logging (logging)
+:nofooter:
+Controls the capture and output of log and trace messages.
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|consoleFormat
+
+|string
+
+|basic
+
+|The format to use for console.log / console
+
+|consoleLogLevel
+
+|* AUDIT
+* ERROR
+* INFO
+* OFF
+* WARNING
+
+
+|AUDIT
+
+|The logging level used to filter messages written to system streams. The default value is audit. +
+*AUDIT* +
+  Audit and warning messages will be written to the system output stream. Error messages will be written to the system error stream. +
+*ERROR* +
+  Error messages will be written to the system error stream. +
+*INFO* +
+  Info, audit, and warning messages will be written to the system output stream. Error messages will be written to the system error stream. +
+*OFF* +
+  No server output will be written to system streams.  Only JVM output will be written to system streams. +
+*WARNING* +
+  Warning messages will be written to the system output stream. Error messages will be written to the system error stream.
+
+|consoleSource
+
+|string
+
+|message
+
+|The list of sources to route to console.log / console
+
+|copySystemStreams
+
+|boolean
+
+|true
+
+|If true, write System.out to the system output stream and System.err to the system error stream. If false, System.out and System.err will write to configured logs like messages.log or trace.log, but not to the system streams. The default value is true.
+
+|hideMessage
+
+|string
+
+|
+
+|The list of messages, separated by a comma, that are configured to be hidden from the console.log and message.log files. If the messages are configured to be hidden, then they are redirected to the trace.log file.
+
+|isoDateFormat
+
+|boolean
+
+|false
+
+|If this attribute is set to true, log entries in the messages.log, trace.log, and FFDC log files will use the ISO 8601 date and time format. The default value is false.
+
+|logDirectory
+
+|Path to a directory
+
+|${server.output.dir}/logs
+
+|Location of the directory for log files. The default value is ${server.output.dir}/logs.
+
+|maxFileSize
+
+|int +
+Min: 0 +
+
+
+|20
+
+|Maximum size of a log file, in megabytes, before being rolled over; a value of 0 means no limit.
+
+|maxFiles
+
+|int +
+Min: 0 +
+
+
+|2
+
+|Maximum number of log files that will be kept, before the oldest file is removed; a value of 0 means no limit.
+
+|messageFileName
+
+|string
+
+|messages.log
+
+|Name of the file to which message output will be written relative to the configured log directory. The default value is messages.log.
+
+|messageFormat
+
+|string
+
+|basic
+
+|The format to use for messages.log
+
+|messageSource
+
+|string
+
+|message
+
+|The list of sources to route to messages.log
+
+|suppressSensitiveTrace
+
+|boolean
+
+|false
+
+|The server trace can expose sensitive data when tracing untyped data, such as bytes received over a network connection. If true, prevent potentially sensitive information from being exposed in log and trace files. The default value is false.
+
+|traceFileName
+
+|string
+
+|trace.log
+
+|Name of the file to which trace output will be written relative to the configured log directory. The default value is trace.log.
+
+|traceFormat
+
+|* ADVANCED
+* BASIC
+* ENHANCED
+
+
+|ENHANCED
+
+|This format is used for the trace log. +
+*ADVANCED* +
+  Use the advanced trace format. +
+*BASIC* +
+  Use the basic trace format. +
+*ENHANCED* +
+  Use the enhanced basic trace format.
+
+|traceSpecification
+
+|string
+
+|*=info
+
+|A trace specification that conforms to the trace specification grammar and specifies the initial state for various trace components. An empty value is allowed and treated as 'disable all trace'. Any component that is not specified is initialized to a default state of *=info.
+|===

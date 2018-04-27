@@ -1,0 +1,47 @@
+= Batch API 1.0
+:nofooter:
+This feature enables support for the Java Batch 1.0 API specified by JSR-352.
+
+== Enabling this feature
+To enable the Batch API 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>batch-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Batch API 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.batch-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:jdbc-4.0[jdbc-4.0]
+* feature:jdbc-4.1[jdbc-4.1]
+* feature:jdbc-4.2[jdbc-4.2]
+* feature:jndi-1.0[jndi-1.0]
+* feature:servlet-3.1[servlet-3.1]
+
+== Features that enable this feature
+* feature:javaee-7.0[javaee-7.0]
+
+== Standard API packages provided by this feature
+* javadoc:javax.batch.api[javax.batch.api]
+* javadoc:javax.batch.api.chunk[javax.batch.api.chunk]
+* javadoc:javax.batch.api.chunk.listener[javax.batch.api.chunk.listener]
+* javadoc:javax.batch.api.listener[javax.batch.api.listener]
+* javadoc:javax.batch.api.partition[javax.batch.api.partition]
+* javadoc:javax.batch.operations[javax.batch.operations]
+* javadoc:javax.batch.runtime[javax.batch.runtime]
+* javadoc:javax.batch.runtime.context[javax.batch.runtime.context]
+* javadoc:javax.inject[javax.inject]
+
+== Feature configuration elements
+* config:batchPersistence[batchPersistence]
+* config:classloading[classloading]
+* config:databaseStore[databaseStore]
+* config:transaction[transaction]

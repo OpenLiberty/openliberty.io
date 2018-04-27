@@ -1,0 +1,45 @@
+= JavaServer Pages 2.3
+:nofooter:
+This feature enables support for Java Server Pages (JSPs) that are written to the JSP 2.3 specification. This framework simplifies the construction of user interfaces. Enabling this feature also enables the Expression Language (EL) version 3.0 feature.  
+
+== Enabling this feature
+To enable the JavaServer Pages 2.3 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>jsp-2.3</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the JavaServer Pages 2.3 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.jsp-2.3; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:el-3.0[el-3.0]
+* feature:servlet-3.1[servlet-3.1]
+
+== Features that enable this feature
+* feature:jsf-2.2[jsf-2.2]
+* feature:jsfContainer-2.2[jsfContainer-2.2]
+* feature:webProfile-7.0[webProfile-7.0]
+
+== Standard API packages provided by this feature
+* javadoc:javax.el[javax.el]
+* javadoc:javax.servlet.jsp[javax.servlet.jsp]
+* javadoc:javax.servlet.jsp.el[javax.servlet.jsp.el]
+* javadoc:javax.servlet.jsp.jstl.core[javax.servlet.jsp.jstl.core]
+* javadoc:javax.servlet.jsp.jstl.fmt[javax.servlet.jsp.jstl.fmt]
+* javadoc:javax.servlet.jsp.jstl.sql[javax.servlet.jsp.jstl.sql]
+* javadoc:javax.servlet.jsp.jstl.tlv[javax.servlet.jsp.jstl.tlv]
+* javadoc:javax.servlet.jsp.tagext[javax.servlet.jsp.tagext]
+
+== SPI packages provided by this feature
+* javadoc:com.ibm.wsspi.jsp.taglib.config[com.ibm.wsspi.jsp.taglib.config]
+
+== Feature configuration elements
+* config:jspEngine[jspEngine]

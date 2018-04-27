@@ -1,0 +1,33 @@
+= Java EE Managed Bean 1.0
+:nofooter:
+This feature enables support for the Managed Beans 1.0 specification. Managed Beans provide a common foundation for different Java EE components types that are managed by a container.  Common services provided to Managed Beans include resource injection, lifecycle management and the use of interceptors.
+
+== Enabling this feature
+To enable the Java EE Managed Bean 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>managedBeans-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Java EE Managed Bean 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.managedBeans-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:jndi-1.0[jndi-1.0]
+
+== Features that enable this feature
+* feature:javaeeClient-7.0[javaeeClient-7.0]
+* feature:webProfile-7.0[webProfile-7.0]
+
+== Feature configuration elements
+* config:classloading[classloading]
+* config:ejbContainer[ejbContainer]
+* config:library[library]
+* config:transaction[transaction]

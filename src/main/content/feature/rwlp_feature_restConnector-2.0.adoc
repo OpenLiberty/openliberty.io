@@ -1,0 +1,55 @@
+= Admin REST Connector 2.0
+:nofooter:
+A secure admin connector that can be used locally or remotely using any JDK. It enables remote access by clients via a REST-based connector and requires SSL and basic user security configuration. Client support includes JMX. This feature supersedes the restConnector-1.0 feature and does not include the jaxrs-1.1 feature.
+
+== Enabling this feature
+To enable the Admin REST Connector 2.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>restConnector-2.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Admin REST Connector 2.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.restConnector-2.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:distributedMap-1.0[distributedMap-1.0]
+* feature:json-1.0[json-1.0]
+* feature:ssl-1.0[ssl-1.0]
+
+== IBM API packages provided by this feature
+* javadoc:com.ibm.websphere.filetransfer[com.ibm.websphere.filetransfer]
+* javadoc:com.ibm.websphere.jmx.connector.rest[com.ibm.websphere.jmx.connector.rest]
+* javadoc:com.ibm.ws.jmx.connector.client.rest[com.ibm.ws.jmx.connector.client.rest]
+
+== Feature configuration elements
+* config:administrator-role[administrator-role]
+* config:authCache[authCache]
+* config:authentication[authentication]
+* config:authorization-roles[authorization-roles]
+* config:basicRegistry[basicRegistry]
+* config:channelfw[channelfw]
+* config:classloading[classloading]
+* config:httpAccessLogging[httpAccessLogging]
+* config:httpDispatcher[httpDispatcher]
+* config:httpEncoding[httpEncoding]
+* config:httpEndpoint[httpEndpoint]
+* config:httpOptions[httpOptions]
+* config:httpProxyRedirect[httpProxyRedirect]
+* config:jaasLoginContextEntry[jaasLoginContextEntry]
+* config:jaasLoginModule[jaasLoginModule]
+* config:library[library]
+* config:ltpa[ltpa]
+* config:mimeTypes[mimeTypes]
+* config:quickStartSecurity[quickStartSecurity]
+* config:remoteFileAccess[remoteFileAccess]
+* config:tcpOptions[tcpOptions]
+* config:trustAssociation[trustAssociation]
+* config:virtualHost[virtualHost]

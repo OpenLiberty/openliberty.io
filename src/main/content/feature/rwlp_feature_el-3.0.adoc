@@ -1,0 +1,28 @@
+= Expression Language 3.0
+:nofooter:
+This feature enables support for the Expression Language (EL) 3.0.
+
+== Enabling this feature
+To enable the Expression Language 3.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>el-3.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Expression Language 3.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.el-3.0; type="osgi.subsystem.feature"
+----
+
+== Features that enable this feature
+* feature:beanValidation-1.1[beanValidation-1.1]
+* feature:jsp-2.3[jsp-2.3]
+* feature:webProfile-7.0[webProfile-7.0]
+
+== Standard API packages provided by this feature
+* javadoc:javax.el[javax.el]

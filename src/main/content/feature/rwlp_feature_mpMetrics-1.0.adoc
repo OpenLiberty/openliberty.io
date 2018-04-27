@@ -1,0 +1,54 @@
+= MicroProfile Metrics 1.0
+:nofooter:
+This feature provides support for the MicroProfile Metrics API for enterprise Java.
+
+== Enabling this feature
+To enable the MicroProfile Metrics 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>mpMetrics-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the MicroProfile Metrics 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.mpMetrics-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:cdi-1.2[cdi-1.2]
+* feature:distributedMap-1.0[distributedMap-1.0]
+* feature:json-1.0[json-1.0]
+* feature:servlet-3.1[servlet-3.1]
+* feature:ssl-1.0[ssl-1.0]
+
+== Features that enable this feature
+* feature:microProfile-1.2[microProfile-1.2]
+
+== Feature configuration elements
+* config:administrator-role[administrator-role]
+* config:authCache[authCache]
+* config:authentication[authentication]
+* config:authorization-roles[authorization-roles]
+* config:basicRegistry[basicRegistry]
+* config:channelfw[channelfw]
+* config:classloading[classloading]
+* config:httpAccessLogging[httpAccessLogging]
+* config:httpDispatcher[httpDispatcher]
+* config:httpEncoding[httpEncoding]
+* config:httpEndpoint[httpEndpoint]
+* config:httpOptions[httpOptions]
+* config:httpProxyRedirect[httpProxyRedirect]
+* config:jaasLoginContextEntry[jaasLoginContextEntry]
+* config:jaasLoginModule[jaasLoginModule]
+* config:library[library]
+* config:ltpa[ltpa]
+* config:mimeTypes[mimeTypes]
+* config:quickStartSecurity[quickStartSecurity]
+* config:tcpOptions[tcpOptions]
+* config:trustAssociation[trustAssociation]
+* config:virtualHost[virtualHost]

@@ -1,0 +1,34 @@
+= Federated User Registry
+:nofooter:
+This feature enables support for federation of multiple user registries.
+
+== Enabling this feature
+To enable the Federated User Registry feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>federatedRegistry-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Federated User Registry feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.federatedRegistry-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:ssl-1.0[ssl-1.0]
+
+== Features that enable this feature
+* feature:ldapRegistry-3.0[ldapRegistry-3.0]
+
+== SPI packages provided by this feature
+* javadoc:com.ibm.wsspi.security.wim[com.ibm.wsspi.security.wim]
+* javadoc:com.ibm.wsspi.security.wim.exception[com.ibm.wsspi.security.wim.exception]
+* javadoc:com.ibm.wsspi.security.wim.model[com.ibm.wsspi.security.wim.model]
+
+== Feature configuration elements
+* config:federatedRepository[federatedRepository]

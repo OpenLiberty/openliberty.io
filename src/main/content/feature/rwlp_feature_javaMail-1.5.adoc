@@ -1,0 +1,48 @@
+= JavaMail 1.5
+:nofooter:
+This feature allows applications to utilize the JavaMail 1.5 API. 
+
+== Enabling this feature
+To enable the JavaMail 1.5 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>javaMail-1.5</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the JavaMail 1.5 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.javaMail-1.5; type="osgi.subsystem.feature"
+----
+
+== Features that enable this feature
+* feature:javaee-7.0[javaee-7.0]
+* feature:javaeeClient-7.0[javaeeClient-7.0]
+
+== Standard API packages provided by this feature
+* javadoc:javax.mail[javax.mail]
+* javadoc:javax.mail.event[javax.mail.event]
+* javadoc:javax.mail.internet[javax.mail.internet]
+* javadoc:javax.mail.search[javax.mail.search]
+* javadoc:javax.mail.util[javax.mail.util]
+
+== Third-party API packages provided by this feature
+* javadoc:com.sun.mail[com.sun.mail]
+* javadoc:com.sun.mail.auth[com.sun.mail.auth]
+* javadoc:com.sun.mail.handlers[com.sun.mail.handlers]
+* javadoc:com.sun.mail.iap[com.sun.mail.iap]
+* javadoc:com.sun.mail.imap[com.sun.mail.imap]
+* javadoc:com.sun.mail.imap.protocol[com.sun.mail.imap.protocol]
+* javadoc:com.sun.mail.pop3[com.sun.mail.pop3]
+* javadoc:com.sun.mail.smtp[com.sun.mail.smtp]
+* javadoc:com.sun.mail.util[com.sun.mail.util]
+* javadoc:com.sun.mail.util.logging[com.sun.mail.util.logging]
+
+== Feature configuration elements
+* config:classloading[classloading]
+* config:library[library]
+* config:mailSession[mailSession]

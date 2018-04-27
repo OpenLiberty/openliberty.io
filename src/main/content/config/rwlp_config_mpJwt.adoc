@@ -1,0 +1,101 @@
+= mpJwt - MicroProfile JWT (mpJwt)
+:nofooter:
+The configuration to process the MicroProfile JWT token.
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|clockSkew
+
+|A period of time with millisecond precision
+
+|5m
+
+|This is used to specify the allowed clock skew in minutes when validating the JSON web token. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+
+|groupNameAttribute
+
+|string
+
+|groups
+
+|The value of the claim will be used as the user group membership.
+
+|id
+
+|string
+
+|
+
+|The unique ID.
+
+|ignoreApplicationAuthMethod
+
+|boolean
+
+|true
+
+|Ignore the configured authentication method in the application. Allow legacy applications that do not configure MP-JWT as their authentication method to use MicroProfile JWT token if one is included in the request.
+
+|issuer
+
+|string
+
+|
+
+|The url of the issuer.
+
+|jwksUri
+
+|string
+
+|
+
+|Specifies a JSON Web Key service URL.
+
+|keyName
+
+|string
+
+|
+
+|Specifies a trusted key alias for using the public key to verify the signature of the token.
+
+|mapToUserRegistry
+
+|boolean
+
+|false
+
+|Specifies whether to map userIdentifier to a registry user.
+
+|sslRef
+
+|A reference to top level ssl element (string).
+
+|
+
+|Specifies an ID of the SSL configuration that is used for SSL connections.
+
+|tokenReuse
+
+|boolean
+
+|true
+
+|Specifies whether the token can be re-used.
+
+|userNameAttribute
+
+|string
+
+|upn
+
+|The value of the claim will be used as user principal to authenticate.
+|===
+[#audiences]*audiences*
+
+The trusted audience list to be included in the aud claim in the JSON web token.
+
+

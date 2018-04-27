@@ -1,0 +1,46 @@
+= Json Web Token
+:nofooter:
+This feature allows runtime to create JWT tokens.
+
+== Enabling this feature
+To enable the Json Web Token feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>jwt-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Json Web Token feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.jwt-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:distributedMap-1.0[distributedMap-1.0]
+* feature:ssl-1.0[ssl-1.0]
+
+== Features that enable this feature
+* feature:mpJwt-1.0[mpJwt-1.0]
+
+== IBM API packages provided by this feature
+* javadoc:com.ibm.websphere.security.jwt[com.ibm.websphere.security.jwt]
+
+== Feature configuration elements
+* config:administrator-role[administrator-role]
+* config:authCache[authCache]
+* config:authentication[authentication]
+* config:authorization-roles[authorization-roles]
+* config:basicRegistry[basicRegistry]
+* config:classloading[classloading]
+* config:jaasLoginContextEntry[jaasLoginContextEntry]
+* config:jaasLoginModule[jaasLoginModule]
+* config:jwtBuilder[jwtBuilder]
+* config:jwtConsumer[jwtConsumer]
+* config:library[library]
+* config:ltpa[ltpa]
+* config:quickStartSecurity[quickStartSecurity]
+* config:trustAssociation[trustAssociation]

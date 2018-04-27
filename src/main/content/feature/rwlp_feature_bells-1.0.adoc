@@ -1,0 +1,25 @@
+= Basic Extensions using Liberty Libraries
+:nofooter:
+This feature enables the configuration of Basic Extensions using Liberty Libraries (BELL).
+
+== Enabling this feature
+To enable the Basic Extensions using Liberty Libraries feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>bells-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Basic Extensions using Liberty Libraries feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.bells-1.0; type="osgi.subsystem.feature"
+----
+
+== Feature configuration elements
+* config:bell[bell]
+* config:classloading[classloading]
+* config:library[library]

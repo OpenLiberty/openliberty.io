@@ -1,0 +1,505 @@
+= orb - Object Request Broker (ORB) (orb)
+:nofooter:
+Configuration for a server or client ORB. Specify either the nameService attribute for a client ORB or one or more iiopEndpoint references for a server ORB.
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|iiopEndpointRef
+
+|List of references to top level iiopEndpoint elements (comma-separated string).
+
+|defaultIiopEndpoint
+
+|Optional IIOP Endpoint describing the ports open for this ORB
+
+|nameService
+
+|string
+
+|corbaname::localhost:2809
+
+|Optional URL for the remote name service, for example corbaname::localhost:2809
+|===
+[#clientPolicy.clientContainerCsiv2]*clientPolicy.clientContainerCsiv2*
+
+A unique configuration ID.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+|===
+[#clientPolicy.clientContainerCsiv2/layers]*clientPolicy.clientContainerCsiv2 > layers*
+
+Specify the CSIv2 layers like transport, authentication, and attribute.
+
+
+[#clientPolicy.clientContainerCsiv2/layers/authenticationLayer]*clientPolicy.clientContainerCsiv2 > layers > authenticationLayer*
+
+Determine the authentication mechanisms and association options to be performed by the client for outgoing CSIv2 requests.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|establishTrustInClient
+
+|* Never
+* Required
+* Supported
+
+
+|Supported
+
+|Specify if this association option is Supported, Required, or Never used for this layer. It indicates the authentication requirements at the authentication layer. +
+*Never* +
+  The association option must not be used +
+*Required* +
+  The association option is required +
+*Supported* +
+  The association option is supported
+
+|password
+
+|Reversably encoded password (string)
+
+|
+
+|The user password that is used with the user name.
+
+|user
+
+|string
+
+|
+
+|The user name that is used to login to the remote server.
+|===
+[#clientPolicy.clientContainerCsiv2/layers/authenticationLayer/mechanisms]*clientPolicy.clientContainerCsiv2 > layers > authenticationLayer > mechanisms*
+
+Specifies authentication mechanisms as a comma separated list. For example: GSSUP
+
+
+[#clientPolicy.clientContainerCsiv2/layers/transportLayer]*clientPolicy.clientContainerCsiv2 > layers > transportLayer*
+
+Configure how to trust the client.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|sslEnabled
+
+|boolean
+
+|true
+
+|Indicate by true or false whether SSL is enabled for CSIv2 requests. Default is true and is the recommended value. If this attribute is set to false, sensitive information such as passwords and tokens are sent over unsecured channels when using IIOP.
+
+|sslRef
+
+|A reference to top level ssl element (string).
+
+|
+
+|Specify the SSL configuration needed to establish a secure connection.
+|===
+[#clientPolicy.csiv2]*clientPolicy.csiv2*
+
+A unique configuration ID.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+|===
+[#clientPolicy.csiv2/layers]*clientPolicy.csiv2 > layers*
+
+Specify the CSIv2 layers like transport, authentication, and attribute.
+
+
+[#clientPolicy.csiv2/layers/attributeLayer]*clientPolicy.csiv2 > layers > attributeLayer*
+
+Determine the attribute layer options to be performed by the client for outgoing CSIv2 requests.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|identityAssertionEnabled
+
+|boolean
+
+|false
+
+|Indicate by true or false whether identity assertion is enabled. Default is false.
+
+|trustedIdentity
+
+|string
+
+|
+
+|The trusted identity used to assert an entity to the remote server.
+
+|trustedPassword
+
+|Reversably encoded password (string)
+
+|
+
+|Specify the password that is used with the trusted identity.
+|===
+[#clientPolicy.csiv2/layers/attributeLayer/identityAssertionTypes]*clientPolicy.csiv2 > layers > attributeLayer > identityAssertionTypes*
+
+Specify the supported identity token types for identity assertion.
+
+
+[#clientPolicy.csiv2/layers/authenticationLayer]*clientPolicy.csiv2 > layers > authenticationLayer*
+
+Determine the authentication mechanisms and association options to be performed by the client for outgoing CSIv2 requests.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|establishTrustInClient
+
+|* Never
+* Required
+* Supported
+
+
+|Supported
+
+|Specify if this association option is Supported, Required, or Never used for this layer. It indicates authentication requirements at the authentication layer. +
+*Never* +
+  The association option must not be used +
+*Required* +
+  The association option is required +
+*Supported* +
+  The association option is supported
+|===
+[#clientPolicy.csiv2/layers/authenticationLayer/mechanisms]*clientPolicy.csiv2 > layers > authenticationLayer > mechanisms*
+
+Specifies authentication mechanisms as a comma separated list. For example: GSSUP, LTPA
+
+
+[#clientPolicy.csiv2/layers/transportLayer]*clientPolicy.csiv2 > layers > transportLayer*
+
+Configure how to trust the client.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|sslEnabled
+
+|boolean
+
+|true
+
+|Indicate by true or false whether SSL is enabled for CSIv2 requests. Default is true and is the recommended value. If this attribute is set to false, sensitive information such as passwords and tokens are sent over unsecured channels when using IIOP.
+
+|sslRef
+
+|A reference to top level ssl element (string).
+
+|
+
+|Specify the SSL configuration needed to establish a secure connection.
+|===
+[#iiopEndpoint]*iiopEndpoint*
+
+Optional IIOP Endpoint describing the ports open for this ORB
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|host
+
+|string
+
+|localhost
+
+|IP address, domain name server (DNS) host name with domain name suffix, or just the DNS host name
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|iiopPort
+
+|int
+
+|
+
+|Port for the unsecured server socket opened by this IIOP endpoint
+
+|tcpOptionsRef
+
+|A reference to top level tcpOptions element (string).
+
+|defaultTCPOptions
+
+|TCP protocol options for the IIOP endpoint
+|===
+[#iiopEndpoint/iiopsOptions]*iiopEndpoint > iiopsOptions*
+
+Specification of a secured server socket opened by this IIOP endpoint
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|iiopsPort
+
+|int
+
+|
+
+|Specify the port to be configured with the SSL options.
+
+|sessionTimeout
+
+|A period of time with second precision
+
+|1d
+
+|Amount of time to wait for a read or write request to complete on a socket. This value is overridden by protocol-specific timeouts. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|sslRef
+
+|A reference to top level ssl element (string).
+
+|
+
+|The default SSL configuration repertoire. The default value is defaultSSLSettings.
+
+|sslSessionTimeout
+
+|A period of time with millisecond precision
+
+|8640ms
+
+|The timeout limit for an SSL session that is established by the SSL Channel. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+
+|suppressHandshakeErrors
+
+|boolean
+
+|false
+
+|Disable logging of SSL handshake errors. SSL handshake errors can occur during normal operation, however these messages can be useful when SSL is behaving unexpectedly.
+|===
+[#iiopEndpoint/tcpOptions]*iiopEndpoint > tcpOptions*
+
+TCP protocol options for the IIOP endpoint
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|addressExcludeList
+
+|string
+
+|
+
+|A comma-separated list of addresses that are not allowed to make inbound connections on this endpoint. You can specify IPv4 or IPv6 addresses. All values in an IPv4 or IPv6 address must be represented by a number or by an asterisk wildcard character.
+
+|addressIncludeList
+
+|string
+
+|
+
+|A comma-separated list of addresses that are allowed to make inbound connections on this endpoint. You can specify IPv4 or IPv6 addresses. All values in an IPv4 or IPv6 address must be represented by a number or by an asterisk wildcard character.
+
+|hostNameExcludeList
+
+|string
+
+|
+
+|A comma-separated list of host names that are not allowed to make inbound connections on this endpoint. Host names are not case-sensitive and can start with an asterisk, which is used as a wildcard character. However, asterisks cannot be elsewhere in the host name. For example, *.abc.com is valid, but *.abc.* is not valid.
+
+|hostNameIncludeList
+
+|string
+
+|
+
+|A comma-separated list of host names that are allowed to make inbound connections on this endpoint. Host names are not case-sensitive and can start with an asterisk, which is used as a wildcard character. However, asterisks cannot be elsewhere in the host name. For example, *.abc.com is valid, but *.abc.* is not valid.
+
+|inactivityTimeout
+
+|A period of time with millisecond precision
+
+|60s
+
+|Amount of time to wait for a read or write request to complete on a socket. This value is overridden by protocol-specific timeouts. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+
+|soReuseAddr
+
+|boolean
+
+|true
+
+|Enables immediate rebind to a port with no active listener.
+|===
+[#serverPolicy.csiv2]*serverPolicy.csiv2*
+
+A unique configuration ID.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+|===
+[#serverPolicy.csiv2/layers]*serverPolicy.csiv2 > layers*
+
+Specify the CSIv2 layers like transport, authentication, and attribute.
+
+
+[#serverPolicy.csiv2/layers/attributeLayer]*serverPolicy.csiv2 > layers > attributeLayer*
+
+Determine the attribute layer options that are claimed by the server for incoming CSIv2 requests.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|identityAssertionEnabled
+
+|boolean
+
+|false
+
+|Indicate by true or false whether identity assertion is enabled. Default is false.
+
+|trustedIdentities
+
+|string
+
+|
+
+|Specify a pipe (|)-separated list of server identities, which are trusted to perform identity assertion to this server. A value of “*” is also accepted to indicate implicit trust (trust anyone).
+|===
+[#serverPolicy.csiv2/layers/attributeLayer/identityAssertionTypes]*serverPolicy.csiv2 > layers > attributeLayer > identityAssertionTypes*
+
+Specify the supported identity token types for identity assertion.
+
+
+[#serverPolicy.csiv2/layers/authenticationLayer]*serverPolicy.csiv2 > layers > authenticationLayer*
+
+Determine the authentication mechanisms and association options that are claimed by the server for incoming CSIv2 requests.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|establishTrustInClient
+
+|* Never
+* Required
+* Supported
+
+
+|Required
+
+|Specify if this association option is Supported, Required, or Never used for this layer. It indicates authentication requirements at the authentication layer. +
+*Never* +
+  The association option must not be used +
+*Required* +
+  The association option is required +
+*Supported* +
+  The association option is supported
+|===
+[#serverPolicy.csiv2/layers/authenticationLayer/mechanisms]*serverPolicy.csiv2 > layers > authenticationLayer > mechanisms*
+
+Specifies authentication mechanisms as a comma separated list. For example: GSSUP, LTPA
+
+
+[#serverPolicy.csiv2/layers/transportLayer]*serverPolicy.csiv2 > layers > transportLayer*
+
+Configure how to trust the client.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|sslEnabled
+
+|boolean
+
+|true
+
+|Indicate by true or false whether SSL is enabled for CSIv2 requests. Default is true and is the recommended value. If this attribute is set to false, sensitive information such as passwords and tokens are sent over unsecured channels when using IIOP.
+
+|sslRef
+
+|A reference to top level ssl element (string).
+
+|
+
+|Specify the SSL configuration needed to establish a secure connection.
+|===

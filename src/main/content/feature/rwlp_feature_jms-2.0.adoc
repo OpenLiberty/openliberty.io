@@ -1,0 +1,51 @@
+= Java Message Service 2.0
+:nofooter:
+This feature enables the configuration of resource adapters to access messaging systems using the Java Message Service API. This also includes the configuration JMS connection factories, queues, topics and activation specifications. Any JMS resource adapter that complies with the JCA 1.7 specification can be used. 
+
+== Enabling this feature
+To enable the Java Message Service 2.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>jms-2.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Java Message Service 2.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.jms-2.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:jca-1.7[jca-1.7]
+
+== Features that enable this feature
+* feature:javaee-7.0[javaee-7.0]
+
+== Standard API packages provided by this feature
+* javadoc:javax.jms[javax.jms]
+
+== Feature configuration elements
+* config:activationSpec[activationSpec]
+* config:adminObject[adminObject]
+* config:application[application]
+* config:applicationManager[applicationManager]
+* config:applicationMonitor[applicationMonitor]
+* config:authData[authData]
+* config:classloading[classloading]
+* config:connectionFactory[connectionFactory]
+* config:connectionManager[connectionManager]
+* config:javaPermission[javaPermission]
+* config:jmsActivationSpec[jmsActivationSpec]
+* config:jmsConnectionFactory[jmsConnectionFactory]
+* config:jmsDestination[jmsDestination]
+* config:jmsQueue[jmsQueue]
+* config:jmsQueueConnectionFactory[jmsQueueConnectionFactory]
+* config:jmsTopic[jmsTopic]
+* config:jmsTopicConnectionFactory[jmsTopicConnectionFactory]
+* config:library[library]
+* config:resourceAdapter[resourceAdapter]
+* config:transaction[transaction]

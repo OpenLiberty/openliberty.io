@@ -1,0 +1,35 @@
+= Application Security for Client 1.0
+:nofooter:
+Support for securing the client container runtime environment and applications. This feature enables application security, CSIv2 and SSL on the client.
+
+== Enabling this feature
+To enable the Application Security for Client 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>appSecurityClient-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Application Security for Client 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.appSecurityClient-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:ssl-1.0[ssl-1.0]
+
+== IBM API packages provided by this feature
+* javadoc:com.ibm.websphere.security[com.ibm.websphere.security]
+* javadoc:com.ibm.websphere.security.auth.callback[com.ibm.websphere.security.auth.callback]
+* javadoc:com.ibm.wsspi.security.auth.callback[com.ibm.wsspi.security.auth.callback]
+
+== Feature configuration elements
+* config:channelfw[channelfw]
+* config:jaasLoginContextEntry[jaasLoginContextEntry]
+* config:jaasLoginModule[jaasLoginModule]
+* config:orb[orb]
+* config:tcpOptions[tcpOptions]

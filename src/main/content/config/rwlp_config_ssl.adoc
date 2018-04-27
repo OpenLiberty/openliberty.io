@@ -1,0 +1,141 @@
+= ssl - SSL Repertoire (ssl)
+:nofooter:
+An SSL repertoire with an ID, a defined keystore, and an optional truststore.
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|clientAuthentication
+
+|boolean
+
+|false
+
+|Specifies whether client authentication is enabled. If set to true then client authentication is required and the client must provide a certificate for the server trusts.
+
+|clientAuthenticationSupported
+
+|boolean
+
+|false
+
+|Specifies whether a client authentication is supported.  If set to true then the client authentication support means the server will check trust from a client if the client presents a certificate.
+
+|clientKeyAlias
+
+|string
+
+|
+
+|Specifies the alias of the certificate in the keystore that is used as the key to send to a server that has client authentication enabled.  This attribute is only needed if the keystore has more than one key entry.
+
+|enabledCiphers
+
+|string
+
+|
+
+|Specifies a custom list of ciphers. Separate each cipher in the list with a space. The supported cipher will depend on the underlying JRE used.  Please check the JRE for valid ciphers.
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|keyStoreRef
+
+|A reference to top level keyStore element (string).
+
+|
+
+|A keystore containing key entries for the SSL repertoire. This attribute is required.
+
+|securityLevel
+
+|* CUSTOM
+* HIGH
+* LOW
+* MEDIUM
+
+
+|HIGH
+
+|Specifies the cipher suite group used by the SSL handshake.  HIGH are 3DES and 128 bit and higher ciphers, MEDIUM are DES and 40 bit ciphers, LOW are ciphers without encryption.  If the enabledCiphers attribute is used the securityLevel list is ignored. +
+*CUSTOM* +
+  %repertoire.CUSTOM +
+*HIGH* +
+  Cipher suites 3DES and 128 bit and higher +
+*LOW* +
+  %repertoire.LOW +
+*MEDIUM* +
+  %repertoire.MEDIUM
+
+|serverKeyAlias
+
+|string
+
+|
+
+|Specifies the alias of the certificate in the keystore used as the server's key.  This attribute is only needed if the keystore has more then one key entry.
+
+|sslProtocol
+
+|string
+
+|
+
+|The SSL handshake protocol. Protocol values can be found in the documentation for the underlying JRE's Java Secure Socket Extension (JSSE) provider.  When using the IBM JRE the default value is SSL_TLS and when using the Oracle JRE the default value is SSL.
+
+|trustStoreRef
+
+|A reference to top level keyStore element (string).
+
+|${keyStoreRef}
+
+|A keystore containing trusted certificate entries used by the SSL repertoire for signing verification. This attribute is optional. If unspecified, the same keystore is used for both key and trusted certificate entries.
+|===
+[#outboundConnection]*outboundConnection*
+
+A unique configuration ID.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|clientCertificate
+
+|string
+
+|
+
+|The client uses this certificate alias if you make a connection to a server that supports or requires client authentication.
+
+|host
+
+|string
+
+|
+
+|The server uses this SSL configuration when it accesses the specified host name.
+
+|id
+
+|string
+
+|
+
+|A unique configuration ID.
+
+|port
+
+|int
+
+|
+
+|The server uses this SSL configuration when it accesses the remote host name at the specified port.
+|===

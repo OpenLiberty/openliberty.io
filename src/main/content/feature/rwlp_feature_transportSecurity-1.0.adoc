@@ -1,0 +1,23 @@
+= Transport Security
+:nofooter:
+This feature enables support for Secure Sockets Layer (SSL) connections. The secure HTTPS listener is not started unless the transportSecurity-1.0 feature is enabled and a keystore is configured.
+
+== Enabling this feature
+To enable the Transport Security feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>transportSecurity-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Transport Security feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.transportSecurity-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:ssl-1.0[ssl-1.0]

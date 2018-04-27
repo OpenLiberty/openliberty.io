@@ -1,0 +1,20 @@
+= OSGi Debug Console
+:nofooter:
+This feature enables an OSGi console to aid debug of the runtime. It can  be used to display information about bundles, packages and services which may be useful when developing your own features for product extensions.
+
+== Enabling this feature
+To enable the OSGi Debug Console feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>osgiConsole-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the OSGi Debug Console feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.osgiConsole-1.0; type="osgi.subsystem.feature"
+----

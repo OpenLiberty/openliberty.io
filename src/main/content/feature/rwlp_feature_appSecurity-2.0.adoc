@@ -1,0 +1,43 @@
+= Application Security 2.0
+:nofooter:
+This feature enables support for securing the server runtime environment and applications; it includes a basic user registry. This feature supersedes appSecurity-1.0 and does not include servlet-3.0 or support for the LDAP user registry. To secure web applications, add the servlet-3.0 feature. To secure EJB applications, add the ejbLite-3.1 feature. To use LDAP, add the ldapRegistry-3.0 feature. When you add the appSecurity-2.0 feature to your server, you need to configure a user registry, such as the basic user registry or the LDAP user registry.
+
+== Enabling this feature
+To enable the Application Security 2.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>appSecurity-2.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Application Security 2.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.appSecurity-2.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:ssl-1.0[ssl-1.0]
+
+== Features that enable this feature
+* feature:appSecurity-1.0[appSecurity-1.0]
+* feature:jacc-1.5[jacc-1.5]
+* feature:jaspic-1.1[jaspic-1.1]
+* feature:passwordUtilities-1.0[passwordUtilities-1.0]
+* feature:webProfile-7.0[webProfile-7.0]
+
+== Feature configuration elements
+* config:administrator-role[administrator-role]
+* config:authCache[authCache]
+* config:authentication[authentication]
+* config:basicRegistry[basicRegistry]
+* config:classloading[classloading]
+* config:jaasLoginContextEntry[jaasLoginContextEntry]
+* config:jaasLoginModule[jaasLoginModule]
+* config:library[library]
+* config:ltpa[ltpa]
+* config:quickStartSecurity[quickStartSecurity]
+* config:trustAssociation[trustAssociation]

@@ -1,0 +1,45 @@
+= Java EE Full Platform 7.0
+:nofooter:
+This feature combines the Liberty features that support the Java EE 7.0 Full Platform.
+
+== Enabling this feature
+To enable the Java EE Full Platform 7.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>javaee-7.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Java EE Full Platform 7.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.javaee-7.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:appClientSupport-1.0[appClientSupport-1.0]
+* feature:batch-1.0[batch-1.0]
+* feature:concurrent-1.0[concurrent-1.0]
+* feature:ejb-3.2[ejb-3.2]
+* feature:j2eeManagement-1.1[j2eeManagement-1.1]
+* feature:jacc-1.5[jacc-1.5]
+* feature:jaspic-1.1[jaspic-1.1]
+* feature:javaMail-1.5[javaMail-1.5]
+* feature:jaxws-2.2[jaxws-2.2]
+* feature:jca-1.7[jca-1.7]
+* feature:jcaInboundSecurity-1.0[jcaInboundSecurity-1.0]
+* feature:jdbc-4.1[jdbc-4.1]
+* feature:jdbc-4.2[jdbc-4.2]
+* feature:jms-2.0[jms-2.0]
+* feature:servlet-3.1[servlet-3.1]
+* feature:wasJmsClient-2.0[wasJmsClient-2.0]
+* feature:wasJmsSecurity-1.0[wasJmsSecurity-1.0]
+* feature:wasJmsServer-1.0[wasJmsServer-1.0]
+* feature:webProfile-7.0[webProfile-7.0]
+
+== Feature configuration elements
+* config:classloading[classloading]
+* config:transaction[transaction]

@@ -1,0 +1,26 @@
+= JavaServer Faces Container 2.2
+:nofooter:
+This feature enables CDI integrations for web applications that use the Java Server Faces (JSF) 2.2 framework. This feature only includes container integration code for JSF, and does not include any JSF interfaces or implementation.  To use this feature, JSF interfaces and implementation must be packaged within web applications that use JSF.
+
+== Enabling this feature
+To enable the JavaServer Faces Container 2.2 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>jsfContainer-2.2</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the JavaServer Faces Container 2.2 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.jsfContainer-2.2; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:cdi-1.2[cdi-1.2]
+* feature:jndi-1.0[jndi-1.0]
+* feature:jsp-2.3[jsp-2.3]
+* feature:servlet-3.1[servlet-3.1]

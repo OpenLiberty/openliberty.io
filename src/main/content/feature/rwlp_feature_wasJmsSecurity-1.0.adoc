@@ -1,0 +1,38 @@
+= Message Server Security 1.0
+:nofooter:
+This feature enables the WebSphere Embedded Messaging Server to authenticate and authorize access from JMS clients.
+
+== Enabling this feature
+To enable the Message Server Security 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>wasJmsSecurity-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Message Server Security 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.wasJmsSecurity-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:ssl-1.0[ssl-1.0]
+
+== Features that enable this feature
+* feature:javaee-7.0[javaee-7.0]
+
+== Feature configuration elements
+* config:administrator-role[administrator-role]
+* config:authCache[authCache]
+* config:authentication[authentication]
+* config:basicRegistry[basicRegistry]
+* config:classloading[classloading]
+* config:jaasLoginContextEntry[jaasLoginContextEntry]
+* config:jaasLoginModule[jaasLoginModule]
+* config:library[library]
+* config:ltpa[ltpa]
+* config:quickStartSecurity[quickStartSecurity]

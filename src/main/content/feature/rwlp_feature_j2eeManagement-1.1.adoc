@@ -1,0 +1,38 @@
+= J2EE Management 1.1
+:nofooter:
+This feature allows applications to utilize the interfaces defined in the JSR77 specification. 
+
+== Enabling this feature
+To enable the J2EE Management 1.1 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>j2eeManagement-1.1</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the J2EE Management 1.1 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.j2eeManagement-1.1; type="osgi.subsystem.feature"
+----
+
+== Features that enable this feature
+* feature:javaee-7.0[javaee-7.0]
+
+== Standard API packages provided by this feature
+* javadoc:javax.management.j2ee[javax.management.j2ee]
+* javadoc:javax.management.j2ee.statistics[javax.management.j2ee.statistics]
+* javadoc:org.omg.stub.javax.management.j2ee[org.omg.stub.javax.management.j2ee]
+
+== IBM API packages provided by this feature
+* javadoc:com.ibm.websphere.management.j2ee[com.ibm.websphere.management.j2ee]
+
+== Feature configuration elements
+* config:channelfw[channelfw]
+* config:classloading[classloading]
+* config:orb[orb]
+* config:tcpOptions[tcpOptions]
+* config:transaction[transaction]

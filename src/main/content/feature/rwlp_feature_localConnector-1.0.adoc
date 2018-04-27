@@ -1,0 +1,20 @@
+= Admin Local Connector
+:nofooter:
+This feature allows the use of a local JMX connector that is built into the JVM to access JMX resources in the server. The JMX connector can only be used on the same host machine by a client that has the same user ID and the same JDK as the server process. It enables local access by JMX clients such as jConsole, or other JMX clients that use the Attach API.
+
+== Enabling this feature
+To enable the Admin Local Connector feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>localConnector-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Admin Local Connector feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.localConnector-1.0; type="osgi.subsystem.feature"
+----

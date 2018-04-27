@@ -1,0 +1,45 @@
+= Java EE Web Profile 7.0
+:nofooter:
+This feature combines the Liberty features that support the Java EE 7.0 Web Profile.
+
+== Enabling this feature
+To enable the Java EE Web Profile 7.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>webProfile-7.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Java EE Web Profile 7.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.webProfile-7.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:appSecurity-2.0[appSecurity-2.0]
+* feature:beanValidation-1.1[beanValidation-1.1]
+* feature:cdi-1.2[cdi-1.2]
+* feature:ejbLite-3.2[ejbLite-3.2]
+* feature:el-3.0[el-3.0]
+* feature:jaxrs-2.0[jaxrs-2.0]
+* feature:jdbc-4.1[jdbc-4.1]
+* feature:jdbc-4.2[jdbc-4.2]
+* feature:jndi-1.0[jndi-1.0]
+* feature:jpa-2.1[jpa-2.1]
+* feature:jsf-2.2[jsf-2.2]
+* feature:jsonp-1.0[jsonp-1.0]
+* feature:jsp-2.3[jsp-2.3]
+* feature:managedBeans-1.0[managedBeans-1.0]
+* feature:servlet-3.1[servlet-3.1]
+* feature:websocket-1.1[websocket-1.1]
+
+== Features that enable this feature
+* feature:javaee-7.0[javaee-7.0]
+
+== Feature configuration elements
+* config:classloading[classloading]
+* config:transaction[transaction]

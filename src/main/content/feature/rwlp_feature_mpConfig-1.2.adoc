@@ -1,0 +1,26 @@
+= MicroProfile Config 1.2
+:nofooter:
+The MicroProfile Config specification provides a unified mechanism to access configuration, providing a single view of multiple sources.
+
+== Enabling this feature
+To enable the MicroProfile Config 1.2 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>mpConfig-1.2</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the MicroProfile Config 1.2 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.mpConfig-1.2; type="osgi.subsystem.feature"
+----
+
+== Features that enable this feature
+* feature:microProfile-1.3[microProfile-1.3]
+* feature:mpFaultTolerance-1.0[mpFaultTolerance-1.0]
+* feature:mpMetrics-1.1[mpMetrics-1.1]
+* feature:mpOpenAPI-1.0[mpOpenAPI-1.0]

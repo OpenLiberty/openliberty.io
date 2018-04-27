@@ -1,0 +1,559 @@
+= pluginConfiguration - Web Server Plugin (pluginConfiguration)
+:nofooter:
+Properties used when generating the web server plugin configuration file
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|ESIEnable
+
+|boolean
+
+|true
+
+|ESIEnable property enables Edge Side Include processing to cache the responses. This property provides the option to disable ESI in the web server plugin configuration file.
+
+|ESIEnableToPassCookies
+
+|boolean
+
+|false
+
+|ESIEnableToPassCookies allows forwarding of session cookies to WebSphere Application Server. This property provides the option to override the value in the web server plugin configuration file.
+
+|ESIInvalidationMonitor
+
+|boolean
+
+|false
+
+|ESIInvalidationMonitor specifies if the ESI processor should receive invalidations from the application server. This property provides the option to override the value in the web server plugin configuration file.
+
+|ESIMaxCacheSize
+
+|int
+
+|1024
+
+|ESIMaxCacheSize is the maximum size of the cache which defaults to 1MB. This property provides the option to override the value in the web server plugin configuration file.
+
+|connectTimeout
+
+|A period of time with second precision
+
+|5s
+
+|Identifies the maximum amount of time that the application server should maintain a connection with the web server. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|extendedHandshake
+
+|boolean
+
+|false
+
+|If true, the web server plugin uses an extended handshake to determine if the application server is running.
+
+|httpEndpointRef
+
+|A reference to top level httpEndpoint element (string).
+
+|defaultHttpEndpoint
+
+|Specify the identifier of the http endpoint to include in the generated plugin-cfg.xml file. The endpoint defines the server in the cluster. The default value is 'defaultHttpEndpoint'.
+
+|ipv6Preferred
+
+|boolean
+
+|false
+
+|Used when resolving an application server host name of {null} or {0}, to prefer the type of address when possible
+
+|loadBalanceWeight
+
+|int
+
+|20
+
+|This value is dynamically changed during run time. The weight of a server is lowered each time a request is assigned to that server. When all weights for all servers drop to 0 or a lesser value, the web server plug-in readjusts all the weights so that they are greater than 0.
+
+|logDirLocation
+
+|Path to a directory
+
+|${pluginInstallRoot}/logs/${webserverName}
+
+|Deprecated: Identifies the directory where the http_plugin.log file is located. See Log file name.
+
+|logFileName
+
+|Path to a file
+
+|
+
+|A fully qualified path to to the web server plug-in log file. Directory component must already exist.  For Apache-based web servers, a path that begins with a pipe character is interpreted as an external piped logger.  If specified, the path overrides logDirLocation.
+
+|pluginInstallRoot
+
+|string
+
+|/opt/IBM/WebSphere/Plugins
+
+|Web server plugin installation location in file system of web server host
+
+|serverIOTimeout
+
+|A period of time with second precision
+
+|900s
+
+|Identifies the maximum amount of time that the web server plugin waits to send a request or receive a response from the application server. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|serverIOTimeoutRetry
+
+|int +
+Min: -1 +
+ +
+Max: 65535 +
+
+
+|-1
+
+|Limits the number of request retries after a read or write timeout. The default value, {-1}, applies no additional limits, so retries are limited by the number of available servers in the cluster.  A {0} value indicates there should be no retries. This value is scoped to the server cluster and does not apply to connection failures or timeouts due to the HTTP plug-in Connection timeout, or to web socket timeouts.
+
+|serverRole
+
+|* BACKUP
+* PRIMARY
+
+
+|PRIMARY
+
+|The server role identifies a server as primary or backup. When primary servers are available, the web server plug-in uses them for load balance and failover. However, if none of the primary servers are available, the web server plug-in uses only backup servers for load balance and failover.
+
+|sslCertlabel
+
+|string
+
+|
+
+|Specifies the label of the certificate within the keyring that the plug-in is to use when the web container requests a client certificate from the plug-in.
+
+|sslKeyringLocation
+
+|string
+
+|${pluginInstallRoot}/config/${webserverName}/plugin-key.kdb
+
+|The fully qualified path to the SSL keyring file on the web server host
+
+|sslStashfileLocation
+
+|string
+
+|${pluginInstallRoot}/config/${webserverName}/plugin-key.sth
+
+|The fully qualified path to the SSL stashfile on the web server host
+
+|trustedProxyEnable
+
+|boolean
+
+|
+
+|Enables trusted proxies to be used. When specified, this property overrides the value in the web server plug-in configuration file.
+
+|trustedProxyGroup
+
+|string
+
+|
+
+|A comma-separated list of trusted proxies. When specified, this property overrides the value in the web server plug-in configuration file.
+
+|waitForContinue
+
+|boolean
+
+|false
+
+|If false (the default value), the web server plugin sends the "Expect: 100-continue" header with HTTP requests that have a message body. When set to true, the web server plugin sends the "Expect: 100-continue" header with every HTTP request. Consider setting this value to true if you have a firewall between the web server and the application server, and are sensitive to requests retries with no request body.
+
+|webserverName
+
+|string
+
+|webserver1
+
+|Name of the web server where this configuration will be used. Used to generate the plugin log file location if that is not specified explicitly by Log file name or directory.
+
+|webserverPort
+
+|int +
+Min: -1 +
+ +
+Max: 65535 +
+
+
+|80
+
+|Web server HTTP port
+
+|webserverSecurePort
+
+|int +
+Min: -1 +
+ +
+Max: 65535 +
+
+
+|443
+
+|Web server HTTPS port
+
+|wsServerIOTimeout
+
+|A period of time with second precision
+
+|
+
+|Identifies the maximum amount of time that the web server plugin waits to send a request or receive a websocket response from the application server. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|wsServerIdleTimeout
+
+|A period of time with second precision
+
+|
+
+|Identifies the maximum amount of time that the web server plugin waits to terminate an idle websocket connection. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+|===
+[#extraConfigProperties]*extraConfigProperties*
+
+Additional properties to be added to the Config element in the generated plug-in configuration file.  These properties can be specified by IBM support to modify behavior of the web server plug-in.
+
+
+[#httpEndpoint]*httpEndpoint*
+
+Specify the identifier of the http endpoint to include in the generated plugin-cfg.xml file. The endpoint defines the server in the cluster. The default value is 'defaultHttpEndpoint'.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|accessLoggingRef
+
+|A reference to top level httpAccessLogging element (string).
+
+|
+
+|HTTP access logging configuration for the endpoint.
+
+|enabled
+
+|boolean
+
+|true
+
+|Toggle the availability of an endpoint. When true, this endpoint will be activated by the dispatcher to handle HTTP requests.
+
+|host
+
+|string
+
+|localhost
+
+|IP address, domain name server (DNS) host name with domain name suffix, or just the DNS host name, used by a client to request a resource. Use '*' for all available network interfaces.
+
+|httpOptionsRef
+
+|A reference to top level httpOptions element (string).
+
+|defaultHttpOptions
+
+|HTTP protocol options for the endpoint.
+
+|httpPort
+
+|int +
+Min: -1 +
+ +
+Max: 65535 +
+
+
+|
+
+|The port used for client HTTP requests. Use -1 to disable this port.
+
+|httpsPort
+
+|int +
+Min: -1 +
+ +
+Max: 65535 +
+
+
+|
+
+|The port used for client HTTP requests secured with SSL (https). Use -1 to disable this port.
+
+|onError
+
+|* FAIL
+* IGNORE
+* WARN
+
+
+|WARN
+
+|Action to take after a failure to start an endpoint. +
+*FAIL* +
+  Server will issue a warning or error message on the first error occurrence and then stop the server. +
+*IGNORE* +
+  Server will not issue any warning and error messages when it incurs a configuration error. +
+*WARN* +
+  Server will issue warning and error messages when it incurs a configuration error.
+
+|sslOptionsRef
+
+|A reference to top level sslOptions element (string).
+
+|
+
+|SSL protocol options for the endpoint.
+
+|tcpOptionsRef
+
+|A reference to top level tcpOptions element (string).
+
+|defaultTCPOptions
+
+|TCP protocol options for the endpoint.
+|===
+[#httpEndpoint/accessLogging]*httpEndpoint > accessLogging*
+
+HTTP access logging configuration for the endpoint.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|enabled
+
+|boolean
+
+|true
+
+|Enable access logging.
+
+|filePath
+
+|Path to a file
+
+|${server.output.dir}/logs/http_access.log
+
+|Directory path and name of the access log file. Standard variable substitutions, such as ${server.output.dir}, can be used when specifying the directory path.
+
+|logFormat
+
+|string
+
+|%h %u %{t}W "%r" %s %b
+
+|Specifies the log format that is used when logging client access information.
+
+|maxFileSize
+
+|int +
+Min: 0 +
+
+
+|20
+
+|Maximum size of a log file, in megabytes, before being rolled over; a value of 0 means no limit.
+
+|maxFiles
+
+|int +
+Min: 0 +
+
+
+|2
+
+|Maximum number of log files that will be kept, before the oldest file is removed; a value of 0 means no limit.
+|===
+[#httpEndpoint/httpOptions]*httpEndpoint > httpOptions*
+
+HTTP protocol options for the endpoint.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|AutoDecompression
+
+|boolean
+
+|true
+
+|Specifies whether the HTTP Channel automatically decompresses incoming request body data.
+
+|NoCacheCookiesControl
+
+|boolean
+
+|true
+
+|Allows the user to control whether or not the presence of a Set-Cookie header should update the Cache-Control header with a matching no-cache value. This also adds the Expires header.
+
+|keepAliveEnabled
+
+|boolean
+
+|true
+
+|Enables persistent connections (HTTP keepalive). If true, connections are kept alive for reuse by multiple sequential requests and responses. If false, connections are closed after the response is sent.
+
+|maxKeepAliveRequests
+
+|int +
+Min: -1 +
+
+
+|100
+
+|Maximum number of persistent requests that are allowed on a single HTTP connection if persistent connections are enabled. A value of -1 means unlimited.
+
+|persistTimeout
+
+|A period of time with second precision
+
+|30s
+
+|Amount of time that a socket will be allowed to remain idle between requests. This setting only applies if persistent connections are enabled. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|readTimeout
+
+|A period of time with second precision
+
+|60s
+
+|Amount of time to wait for a read request to complete on a socket after the first read occurs. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|removeServerHeader
+
+|boolean
+
+|false
+
+|Removes server implementation information from HTTP headers and also disables the default Liberty profile welcome page.
+
+|writeTimeout
+
+|A period of time with second precision
+
+|60s
+
+|Amount of time to wait on a socket for each portion of the response data to be transmitted. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+|===
+[#httpEndpoint/sslOptions]*httpEndpoint > sslOptions*
+
+SSL protocol options for the endpoint.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|sessionTimeout
+
+|A period of time with second precision
+
+|1d
+
+|Amount of time to wait for a read or write request to complete on a socket. This value is overridden by protocol-specific timeouts. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.
+
+|sslRef
+
+|A reference to top level ssl element (string).
+
+|
+
+|The default SSL configuration repertoire. The default value is defaultSSLSettings.
+
+|sslSessionTimeout
+
+|A period of time with millisecond precision
+
+|8640ms
+
+|The timeout limit for an SSL session that is established by the SSL Channel. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+
+|suppressHandshakeErrors
+
+|boolean
+
+|false
+
+|Disable logging of SSL handshake errors. SSL handshake errors can occur during normal operation, however these messages can be useful when SSL is behaving unexpectedly.
+|===
+[#httpEndpoint/tcpOptions]*httpEndpoint > tcpOptions*
+
+TCP protocol options for the endpoint.
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|addressExcludeList
+
+|string
+
+|
+
+|A comma-separated list of addresses that are not allowed to make inbound connections on this endpoint. You can specify IPv4 or IPv6 addresses. All values in an IPv4 or IPv6 address must be represented by a number or by an asterisk wildcard character.
+
+|addressIncludeList
+
+|string
+
+|
+
+|A comma-separated list of addresses that are allowed to make inbound connections on this endpoint. You can specify IPv4 or IPv6 addresses. All values in an IPv4 or IPv6 address must be represented by a number or by an asterisk wildcard character.
+
+|hostNameExcludeList
+
+|string
+
+|
+
+|A comma-separated list of host names that are not allowed to make inbound connections on this endpoint. Host names are not case-sensitive and can start with an asterisk, which is used as a wildcard character. However, asterisks cannot be elsewhere in the host name. For example, *.abc.com is valid, but *.abc.* is not valid.
+
+|hostNameIncludeList
+
+|string
+
+|
+
+|A comma-separated list of host names that are allowed to make inbound connections on this endpoint. Host names are not case-sensitive and can start with an asterisk, which is used as a wildcard character. However, asterisks cannot be elsewhere in the host name. For example, *.abc.com is valid, but *.abc.* is not valid.
+
+|inactivityTimeout
+
+|A period of time with millisecond precision
+
+|60s
+
+|Amount of time to wait for a read or write request to complete on a socket. This value is overridden by protocol-specific timeouts. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+
+|soReuseAddr
+
+|boolean
+
+|true
+
+|Enables immediate rebind to a port with no active listener.
+|===

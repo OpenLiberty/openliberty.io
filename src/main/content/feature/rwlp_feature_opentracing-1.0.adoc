@@ -1,0 +1,32 @@
+= Opentracing 1.0
+:nofooter:
+This feature provides support for Opentracing function for enterprise Java.
+
+== Enabling this feature
+To enable the Opentracing 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>opentracing-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Opentracing 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.opentracing-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:cdi-1.2[cdi-1.2]
+* feature:jaxrs-2.0[jaxrs-2.0]
+
+== Features that enable this feature
+* feature:mpOpenTracing-1.0[mpOpenTracing-1.0]
+
+== Third-party API packages provided by this feature
+* javadoc:io.opentracing[io.opentracing]
+* javadoc:io.opentracing.propagation[io.opentracing.propagation]
+* javadoc:io.opentracing.tag[io.opentracing.tag]
