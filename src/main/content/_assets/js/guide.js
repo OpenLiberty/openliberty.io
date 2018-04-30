@@ -220,10 +220,19 @@ $(document).ready(function() {
     // Hide all code blocks except the first
     $('.codecolumn:not(:first)').hide();
 
-    // Set height of code column to the same height as the guide column
-    // var guide_height = $("#guide_column").height();
-    // $("#code_column").height(guide_height);
-
+    $("#breadcrumb_hamburger").on('click', function(event){
+        // Handle resizing of the guide column when collapsing/expanding the TOC in full screen view
+        if($(window).width() >= 1440){
+            if($("#toc_column").hasClass('in')){
+                // TOC is expanded
+                $("#guide_column").addClass('expanded');
+            }
+            else{
+                // TOC is closed
+                $("#guide_column").removeClass('expanded');
+            }
+        }
+    });
 
     // Handle collapsing the table of contents from full width into the hamburger
     $('#close_container').on('click', function(event){
