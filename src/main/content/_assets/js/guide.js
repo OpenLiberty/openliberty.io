@@ -221,7 +221,7 @@ $(document).ready(function() {
     $('.codecolumn:not(:first)').hide();
 
     $("#breadcrumb_hamburger").on('click', function(event){
-        // Handle resizing of the guide column when collapsing/expanding the TOC in full screen view
+        // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
         if($(window).width() >= 1440){
             if($("#toc_column").hasClass('in')){
                 // TOC is expanded
@@ -250,7 +250,10 @@ $(document).ready(function() {
         // Remove display type from the table of contents
         $("#toc_column").removeClass('inline');
 
-        // TODO Update the width of the guide_column to accomodate the larger space
+        // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
+        if($(window).width() >= 1440){
+            $("#guide_column").addClass('expanded');
+        }
     });
 
     $('#guide_content pre:not(.no_copy pre)').hover(function(event) {
