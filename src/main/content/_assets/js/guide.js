@@ -44,10 +44,10 @@ function isBackgroundBottomVisible() {
     return visibleBottom;
 }
 
-// Handle when to float the table of contents when the browser width is 1440 pixels or greater.
+// Handle when to float the table of content
 function handleFloatingTableOfContent() {
-    if($(window).width() >= 1440) {
-        // CURRENTLY IN FULL SCREEN VIEW
+    if($(window).width() > 769) { // bootstrap grid size for sm column
+        // CURRENTLY IN DESKTOP VIEW
         if($(window).scrollTop() > $('#toc_column').offset().top) {
             // The top of the TOC is scrolling off the screen, enable floating TOC.
 
@@ -98,51 +98,22 @@ function handleTOCScolling() {
     }
 }
 
-function handleFloatingCodeColumn(){
-    if($(window).width() >= 767) {
-        // CURRENTLY IN DESKTOP VIEW
-        if($(window).scrollTop() > $('#code_column').offset().top) {
-            // The top of the code column is scrolling off the screen, enable floating code column.
-
-            if(isBackgroundBottomVisible()) {
-                handleCodeColumnScolling();
-            } else {
-                // The entire viewport is filled with the background, so
-                // do not need to worry about the code column flowing out of the background.
-                enableFloatingCodeColumn();
+// Remove code block from TOC titles
+function sanitizeTitleInTOC() {
+    var tocLevel1 = $('#toc_container ul.sectlevel1 li');
+    $.each(tocLevel1, function (i, tocElements) {
+        var aHrefElements = $(tocElements).find("a");
+        $.each(aHrefElements, function (i, aHrefElement) {
+            var title = $(aHrefElement).html();
+            // look for code block and remove it 
+            var stringToMatch = "([\\s\\S]*)<\\s*code\\s*>([\\s\\S]*)<\\s*\\/code\\s*>([\\s\\S]*)";
+            var regExprToMatch = new RegExp(stringToMatch, "g");
+            var matches = regExprToMatch.exec(title);
+            if (matches) {
+                $(aHrefElement).html(matches[1] + matches[2] + matches[3]);
             }
-        } else {
-            // code column no longer needs to float,
-            // remove all the custom styling for floating code column
-            disableFloatingCodeColumn();
-        }
-    } else {
-        // CURRENTLY IN MOBILE VIEW
-        // Remove any floating code column when on mobile
-        disableFloatingCodeColumn();
-    }
-}
-
-function disableFloatingCodeColumn(){
-    $('#code_column').width("").css({"position":"", "top":"", "left":""});
-}
-
-function enableFloatingCodeColumn(){
-    $('#code_column').css({"position":"fixed", "top":"0", "left":"50%"});
-}
-
-// Handle when the code column is too small to fit completely in the dark background.
-// We want to give the end result of the bottom of the code column sticks to the bottom of the dark background
-// and the top of the code column scrolls off screen.
-function handleCodeColumnScolling() {
-    var visible_background_height = heightOfVisibleBackground();
-    var code_height = $('#code_column').height();
-    if(code_height > visible_background_height) {
-        // The code column cannot fit in the dark background, allow the code column to scroll out of viewport
-        // to avoid the code column overflowing out of the dark background
-        var negativeNumber = visible_background_height - code_height;
-        $('#code_column').css({"position":"fixed", "top":negativeNumber});
-    }
+        });
+    });
 }
 
 $(document).ready(function() {
@@ -153,108 +124,7 @@ $(document).ready(function() {
     var target_width;
     var target_height;
 
-    $('#preamble').detach().insertAfter('#duration_container');
-
-    // Move the code snippets to the code column on the right side.
-    $('.codecolumn').each(function(){
-        var code_block = $(this);
-        var sections = $(this).prev().find('p');
-        if(sections.length > 0){
-            var section_list = sections[0].innerText.toLowerCase();
-            // Split the string into sections that should display this code block
-            section_list = section_list.split(',');
-            
-            for(var i = 0; i < section_list.length; i++){
-                // Split the string into a pattern of id=line_num
-                section_list[i] = section_list[i].trim().replace(/\s+|\’/g, '-');
-                // Get the section id and line number from the section
-                var equal_index = section_list[i].indexOf('=');
-                var id = section_list[i].substring(0, equal_index);
-                var line_num = section_list[i].substring(equal_index + 1);
-
-                // Add scroll listener for when the guide_column is scrolled to the given sections
-                var elem = $('#' + id);
-                if(elem.length > 0){
-                    $(window).scroll(function(){       
-                        var hT = elem.offset().top,
-                        hH = elem.outerHeight(),
-                        wH = $(window).height(),
-                        wS = $(window).scrollTop();
-                        if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
-                            // Scroll to the line in the code column
-                            if(line_num){
-                                var target = code_block.find('.line-numbers:contains(' + line_num + ')').first();
-
-                                // Hide other code blocks and scroll to the correct one
-                                $('.codecolumn').not($(this)).hide();
-                                code_block.show();
-
-                                // Update the header file name
-                                $('.fileName').text(code_block.attr('fileName'));
-
-                                // $('html, #code_column').animate({
-                                //     scrollTop: target.offset().top
-                                // }, 500);
-                            }                
-                        }
-                    });
-                }                
-            }
-            // Remove the section list from the DOM as it is not needed anymore.
-            sections.remove();
-        }       
-
-        // Create a title pane for the code section
-        var title = $(this).parents('.sect1').find('h3').first();
-        var fileName = title.text();
-        $(this).attr('fileName', fileName);
-        $('.fileName').text(fileName);
-        title.detach();
-
-        // title.addClass('codeTitle');
-        // $(this).prepend(title.detach());
-
-        $(this).detach().appendTo('#code_column'); // Move code to the right column
-    });
-
-    // Hide all code blocks except the first
-    $('.codecolumn:not(:first)').hide();
-
-    $("#breadcrumb_hamburger").on('click', function(event){
-        // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
-        if($(window).width() >= 1440){
-            if($("#toc_column").hasClass('in')){
-                // TOC is expanded
-                $("#guide_column").addClass('expanded');
-            }
-            else{
-                // TOC is closed
-                $("#guide_column").removeClass('expanded');
-            }
-        }
-    });
-
-    // Handle collapsing the table of contents from full width into the hamburger
-    $('#close_container').on('click', function(event){
-         // Hide the X button
-        $(this).hide();
-
-        // Show the hamburger button and adjust the header to accomodate it
-        $('#breadcrumb_hamburger').css('display', 'inline-block');
-        $('#breadcrumb_row .breadcrumb').css({
-            'width': 'calc(100% - 76px)',
-            'float': 'right',
-        });
-        $("#toc_title").css('margin-top', '20px');        
-
-        // Remove display type from the table of contents
-        $("#toc_column").removeClass('inline');
-
-        // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
-        if($(window).width() >= 1440){
-            $("#guide_column").addClass('expanded');
-        }
-    });
+    $('#preamble').detach().insertBefore('#duration_container');
 
     $('#guide_content pre:not(.no_copy pre)').hover(function(event) {
 
@@ -303,69 +173,6 @@ $(document).ready(function() {
 
     });
 
-    // Set the github clone popup top value to the same as the what you'll learn section.
-    var whatYoullLearn = $("#what-you-ll-learn");
-    if(whatYoullLearn.length > 0){
-        var githubCloneTop = whatYoullLearn.get(0).offsetTop;
-        $("#github_clone_popup_container").css('top', githubCloneTop);
-    }
-
-    // Desktop view only: Set the file name in the breadcrumb to be aligned with the code column   
-    var alignCodeFileName = function(){
-        if($(window).width() >= 767) {
-            var codeColumnOffset = $("#code_column").offset().left;
-            var lastBreadcrumb = $("#breadcrumb_row li:nth-last-child(2)");
-            var endPoint = lastBreadcrumb.offset().left + lastBreadcrumb.width();
-            // If the title would overlap the last breadcrumb, then adjust the 'left' location to be to the right of the breadcrumb.
-            if(endPoint >= codeColumnOffset){
-                codeColumnOffset = endPoint + '5px';
-            }
-            $("#breadcrumb_row .fileName").css('left', codeColumnOffset);
-        }        
-    }
-    alignCodeFileName();
-    
-
-    /* Copy button for the github clone command  that pops up initially when opening a guide. */
-    $("#github_clone_popup_copy").click(function(event){
-        console.log("clicked copy button.");
-
-        event.preventDefault();
-        target = $("#github_clone_popup_repo").get(0);
-        window.getSelection().selectAllChildren(target); // Set the github clone command as the copy target.
-        if(document.execCommand('copy')) {
-            window.getSelection().removeAllRanges();
-            var current_target_object = $(event.currentTarget);
-            var position = current_target_object.position();
-            $('#copied_to_clipboard_confirmation').css({
-                top: position.top - 25,
-                right: 50
-            }).stop().fadeIn().delay(3500).fadeOut();
-            $("#github_clone_popup_container").fadeOut("slow");
-        } else {
-            alert('Copy failed. Copy the command manually: ' + target.innerText);
-        }        
-    });
-
-    var handleGithubPopup = function(){
-        // If the page is scrolled down past the top of the page then hide the github clone popup
-        var githubPopup = $("#github_clone_popup_container");
-        var atTop = $(window).scrollTop() === 0;
-        if(atTop){
-            githubPopup.fadeIn();
-        }
-        else{            
-            githubPopup.fadeOut();
-        }
-    }
-
-    // Adjust the window for the sticky header when clicking on a section anchor.
-    var shiftWindow = function() { scrollBy(0, -120) };
-    if (location.hash){
-        shiftWindow();
-    } 
-    window.addEventListener("hashchange", shiftWindow);
-
     // RELATED GUIDES
     //
     // Add Related guides link to the table of contents, if needed
@@ -376,17 +183,14 @@ $(document).ready(function() {
         $('#toc_container ul.sectlevel1').append('<li><a href="#related-guides">Related guides</a></li>');
     }
 
-    $(window).on('resize', function(){
-        alignCodeFileName();
-    });
-
+    // Iterate through the titles in TOC to remove code block
+    sanitizeTitleInTOC();
+    
     // TABLE OF CONTENT
     //
     // Keep the table of content (TOC) in view while scrolling (Desktop only)
     //
     $(window).scroll(function() {
-        handleGithubPopup();
-        // handleFloatingTableOfContent();
-        // handleFloatingCodeColumn();
+        handleFloatingTableOfContent();
     });
 });

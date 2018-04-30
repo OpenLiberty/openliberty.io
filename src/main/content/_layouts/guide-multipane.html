@@ -1,29 +1,28 @@
 ---
-layout: default
+layout: doc
 css: 
+- doc-header
+- table-of-contents
 - guide-card
-- guide
-js: guide
+- guide-multipane
+js: guide-multipane
 ---
 
-<div id="background_container" class="black_blue_gradient_background">
-    <div class="container">
-        <div id="title_row" class="row">
-            <div class="col-xs-12">
-                <img id="intro_logo" src="{{ "/img/guides_page_title_small.svg" | relative }}" alt="Guides">
-            </div>
-        </div>
+<div id="background_container">
         <div class="row">
             <!-- Guide's table of contents section -->
-            <div id="toc_column" class="col-sm-3">
+            <div id="toc_column" class="collapse inline">
                 <div id="toc_inner">
-                    <a id="all_guides_link" href="/guides">All Guides</a>
                     {% assign toc = page.document | tocify_asciidoc %}
                     {% if toc %}
+                    <div id="close_container">
+                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button"/>
+                    </div>
                     <h3 id="toc_title">Contents</h3>
                     <div id="toc_container">
                         {{ toc }}
                     </div>
+                    <div id="toc_separator"></div>
                     {% endif %}
                     {% if page.tags %}
                         <h3 id="tag_title">Tags</h3>
@@ -36,7 +35,7 @@ js: guide
                 </div>
             </div>
             <!-- Entire guide section -->
-            <div id="guide_column" class="col-sm-9 position_relative">
+            <div id="guide_column" class="position_relative">
                 <div id="guide_content">
                     <!-- Guide header section -->
                     <div id="guide_meta" class="sect1">
@@ -65,7 +64,7 @@ js: guide
                                     <a href="/guides/{{related-guide}}.html" class="guide_item">
                                         <div class="guide_title_and_description_container">
                                             <h3 class="guide_title">{{related-guide-metadata.title}}</h3>
-                                            <p class="guide_description" title="{{related-guide-metadata.description}}">{{related-guide-metadata.description}}</p>
+                                            <p class="guide_description">{{related-guide-metadata.description}}</p>
                                         </div>
                                         <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
                                         <span class="guide_duration">{{related-guide-metadata.duration}}</span>
@@ -84,6 +83,27 @@ js: guide
                 <div id="copied_to_clipboard_confirmation" style="display: none;">Copied to clipboard</div>
                 <a id="copy_to_clipboard" href="" style="display: none;"></a>
             </div>
+
+            <!-- Code section -->
+            <div id="code_column" class="position_relative">
+                {% if page.projectid %}
+                <div id="github_clone_popup_container">
+                    <div id="github_clone_popup">
+                        <div id="github_clone_popup_title">Git clone this repo to get going right away:</div>
+                        <div id="github_clone_popup_repo">
+                                git clone https://github.com/openliberty/guide-{{page.projectid}}.git
+                        </div>
+                        <div id="github_clone_popup_copy">
+                            <img src="/img/guide_copy_button_black.svg">
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
         </div>
-    </div>
+
+        <div id="related_guides_section">
+            <h2>Nice work! You did it!</h2>
+        </div>
 </div>
+

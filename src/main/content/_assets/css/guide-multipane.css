@@ -8,8 +8,15 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
- 
+
 /* GUIDE CONTENT */
+
+header {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 1;
+}
 
 #guide_content h1 {
     font-size: 28px;
@@ -28,19 +35,6 @@
     font-weight: 500;
     margin-top: 32px;
     margin-bottom: 0px;
-}
-
-#guide_content #related-guides h3 {
-    font-size: 20px;
-    font-weight: 400;
-    margin-top: 0px;
-    margin-bottom: 14px;
-    padding-top: 0px;
-}
-#guide_content #related-guides p {
-    line-height: 1.4;
-    margin: 0;
-    padding: 0;
 }
 
 #guide_content h4 {
@@ -105,7 +99,7 @@
 
 #guide_content div.sect1 {
     padding-bottom: 50px;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
     padding-left: 60px;
     padding-right: 60px;
     margin-left: -15px;
@@ -119,7 +113,7 @@
 
 #guide_content .sect1 h2 {
     padding-top: 48px;
-    margin-top: 10px;
+    margin-top: 0;
     margin-bottom: 21px;
 }
 
@@ -160,12 +154,16 @@
 /* GUIDE PAGE LAYOUT */
 
 #background_container {
-    padding-top: 100px;
     min-height: 600px;
     /* if you change the 200px, please also change backgroundSizeAdjustment in guide.js */ 
-    background-size: 100% calc(100% - 200px);
+    /* background-size: 100% calc(100% - 200px); */
     background-repeat: no-repeat;
     margin-bottom: 100px;
+    overflow-x: hidden;
+}
+
+#background_container > .row {
+    overflow: hidden;
 }
 
 #title_row {
@@ -174,7 +172,75 @@
 
 #guide_column {
     color: #24253a;
+    width: calc(100% - 730px);
 }
+
+#code_column {
+    padding: 0;
+    background-color: #f1f4fe;
+    position: fixed;
+    width: 730px;
+    left: calc(100% - 700px); /* Adjust for the width and padding */
+    top: 120px;
+    /* bottom: 100px; todo adjust this dynamically */
+    overflow-y: auto;
+}
+
+#github_clone_popup_container {
+    position: absolute;
+    top: 31%;
+    width: 100%;
+}
+
+#github_clone_popup {
+    height: 111px;
+    margin: 0 20px;
+    padding: 19px 0 0 20px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+}
+
+#github_clone_popup_title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.63;
+    color: #1b1c34;
+    margin-bottom: 14px;
+}
+
+#github_clone_popup_repo {
+    font-size: 14px;
+    line-height: 1.57;
+    color: #737373;
+    width: 95%;
+    border-bottom: solid 1px #96bc32;
+}
+
+#github_clone_popup_copy {
+    width: 48px;
+    height: 38px;
+    background-color: #96bc32;
+    position: absolute;
+    top: 0;
+    right: 20px;
+    padding: 8px 12px;
+    text-align: center;
+}
+
+#github_clone_popup_copy:hover {
+    border: solid 1px #b2bbd1;
+    cursor: pointer;
+}
+
+#github_clone_popup_copy:active {
+    border: solid 1px #5e6b8d;
+}
+
+#github_clone_popup_copy > img {
+    width: 14px;
+    height: 16px;
+}
+
 
 #guide_content > .sect1 {
     -webkit-box-shadow: 0px 5px 11px -3px rgba(0,0,0,0.27);
@@ -191,58 +257,19 @@
     color: #eaf0ff;
 }
 
-#toc_title {
-    margin-bottom: 22px;
-}
-
-#toc_container ul {
-    list-style-type: none;
-}
-
-#toc_container ul {
-    padding-left: 30px;
-}
-
-#toc_container .sectlevel1 {
-    padding-left: 0;
-}
-
-#toc_container a {
-    display: inline-block;
-    color: #e6eda8;
-    margin-bottom: 10px;
-}
-
-#toc_container a:hover {
-    color: #f7fbd2;
-}
-
-#tag_title {
-    margin-bottom: 22px;
-}
-
-#tags_container a {
-    color: #c8d6fb;
-    margin-right: 15px;
-    line-height: 30px;
-}
-
-#tags_container a:hover {
-    color: #eaf0ff;
-}
-
 #guide_title {
     margin-top: 15px;
     margin-bottom: 4px;
 }
-/* 
+
 #duration_container {
     margin-top: 15px;
     margin-bottom: 15px;
-} */
+}
 
 #guide_duration {
     margin-left: 15px;
+    font-size: 16px;
 }
 
 #copied_to_clipboard_confirmation {
@@ -270,27 +297,52 @@
     border: solid 1px #5e6b8d;
 }
 
+.codecolumn .CodeRay {
+    border: none;
+    border-radius: 0;
+}
+
+.codeTitle {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.86;
+    color: #3f465a;
+    border-bottom: solid 1px #d4d7e3;
+    margin: 0;
+    padding-top: 11px;
+    padding-bottom: 5px;
+    padding-left: 22px;
+    height: 42px;
+    background-color: #f1f4fe;
+}
+
+#related_guides_section {
+    width: 100%;
+    height: 100px;
+    box-shadow: inset 0px 94px 0px 0px #F7F9E5, 0px 5px 11px -3px rgba(0,0,0,0.27);
+}
+
+@media (max-width: 767px) {
+    header {
+        position: static; /* Make the header non sticky in mobile view */
+    }
+}
+
 @media (max-width: 1199px) {
     .guide_item {
         width: 100%;
     }
 }
-
-@media (max-width: 991px) {
     
-    #guide_column {
-        padding-top: 30px;
-        padding-bottom: 70px;
-        padding-left: 30px;
-        padding-right: 30px;
-    }
-}
-    
-@media (max-width: 767px) {
+@media (max-width: 1170px) {
 
     #background_container {
         padding-top: 40px;
         margin-bottom: 0;
+    }
+
+    #github_clone_popup_container {
+        display: none;
     }
 
     #title_row {
@@ -298,28 +350,27 @@
     }
         
     #guide_column {
+        width: auto;
         padding-top: 10px;
         padding-bottom: 60px;
         padding-left: 15px;
         padding-right: 15px;
         box-shadow: none;
-    }
-    
-    #tags_container {
-        margin-bottom: 30px;
-    }
+    }  
 }
 
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-    /* IE10+ CSS styles go here */
-
-    /* to handle long continuous string with no blank in it such as URL and file path */
-    #guide_content a, #guide_content code { 
-        word-break: break-all;
+@media (min-width: 1440px) {
+    #guide_column {
+        width: calc(100% - 280px - 730px); /* Adjust for the size of the table of contents and the code column */
         display: inline-block;
     }
 
-    #guide_content li a, #guide_content li code { 
-        display: inline-table; /* line up the list item bullet with the text properly */
+    #guide_column.expanded {
+        width: calc(100% - 730px);
+    }
+
+    #code_column {
+        left: calc(100% - 715px); /* Adjust for the width and padding */
+        display: inline-block;
     }
 }
