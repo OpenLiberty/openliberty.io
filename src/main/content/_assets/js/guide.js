@@ -217,7 +217,7 @@ $(document).ready(function() {
         $(this).detach().appendTo('#code_column'); // Move code to the right column
     });
 
-    // Hide all code blocks except the first one
+    // Hide all code blocks except the first
     $('.codecolumn:not(:first)').hide();
 
     // Set height of code column to the same height as the guide column
@@ -227,19 +227,21 @@ $(document).ready(function() {
 
     // Handle collapsing the table of contents from full width into the hamburger
     $('#close_container').on('click', function(event){
-        $(this).hide(); // Hide the close button
-        // $("#toc_column").hide(); // Hide the table of contents
-        // Show the hamburger button
+         // Hide the X button
+        $(this).hide();
+
+        // Show the hamburger button and adjust the header to accomodate it
         $('#breadcrumb_hamburger').css('display', 'inline-block');
         $('#breadcrumb_row .breadcrumb').css({
             'width': 'calc(100% - 76px)',
             'float': 'right',
         });
-        $("#toc_title").css('margin-top', '20px');
+        $("#toc_title").css('margin-top', '20px');        
+
+        // Remove display type from the table of contents
+        $("#toc_column").removeClass('inline');
 
         // TODO Update the width of the guide_column to accomodate the larger space
-
-        $('#breadcrumb_hamburger').click();
     });
 
     $('#guide_content pre:not(.no_copy pre)').hover(function(event) {
