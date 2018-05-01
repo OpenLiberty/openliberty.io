@@ -314,7 +314,7 @@ $(document).ready(function() {
     var alignCodeFileName = function(){
         if($(window).width() >= 767) {
             var codeColumnOffset = $("#code_column").offset().left;
-            var lastBreadcrumb = $("#breadcrumb_row li:nth-last-child(2)");
+            var lastBreadcrumb = $("#breadcrumb_row li:nth-last-child(3)");
             var endPoint = lastBreadcrumb.offset().left + lastBreadcrumb.width();
             // If the title would overlap the last breadcrumb, then adjust the 'left' location to be to the right of the breadcrumb.
             if(endPoint >= codeColumnOffset){
@@ -324,23 +324,26 @@ $(document).ready(function() {
         }        
     }
     alignCodeFileName();
+
+    $(".copyFileButton").click(function(event){
+        event.preventDefault();
+        target = $(".codecolumn:visible").get(0);
+        window.getSelection().selectAllChildren(target); // Set the github clone command as the copy target.
+        if(document.execCommand('copy')) {
+            window.getSelection().removeAllRanges();
+        } else {
+            alert('Copy failed. Copy the code manually: ' + target.innerText);
+        }
+    });
     
 
     /* Copy button for the github clone command  that pops up initially when opening a guide. */
     $("#github_clone_popup_copy").click(function(event){
-        console.log("clicked copy button.");
-
         event.preventDefault();
         target = $("#github_clone_popup_repo").get(0);
         window.getSelection().selectAllChildren(target); // Set the github clone command as the copy target.
         if(document.execCommand('copy')) {
             window.getSelection().removeAllRanges();
-            var current_target_object = $(event.currentTarget);
-            var position = current_target_object.position();
-            $('#copied_to_clipboard_confirmation').css({
-                top: position.top - 25,
-                right: 50
-            }).stop().fadeIn().delay(3500).fadeOut();
             $("#github_clone_popup_container").fadeOut("slow");
         } else {
             alert('Copy failed. Copy the command manually: ' + target.innerText);

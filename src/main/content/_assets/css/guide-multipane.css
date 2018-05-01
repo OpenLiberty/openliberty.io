@@ -18,6 +18,52 @@ header {
     z-index: 1;
 }
 
+.breadcrumb > .fileName {
+    display: none;
+}
+
+#breadcrumb_row .fileName {
+    position: absolute;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 26px;
+    color: white;
+    left: 50%;
+    padding-left: 12px;
+    border-left: 2px solid #1E1F38;        
+}
+
+#breadcrumb_row .fileName:before {
+    content: "";
+}
+
+#breadcrumb_row .copyFileButton {
+    float: right;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    line-height: 5px;
+    margin-right: 20px;
+}
+
+#breadcrumb_row .copyFileButton:hover {
+    border: solid 1px #b2bbd1;
+    cursor: pointer;
+}
+
+#breadcrumb_row .copyFileButton:active {
+    border: solid 1px #5e6b8d;
+}
+
+#breadcrumb_row .copyFileButton > img {
+    width: 14px;
+    height: 16px;
+}
+
+#breadcrumb_row .copyFileButton:before {
+    content: "";
+}
+
 #guide_content h1 {
     font-size: 28px;
     color: #24253a;
@@ -341,7 +387,7 @@ header {
         margin-bottom: 0;
     }
 
-    #github_clone_popup_container {
+    .breadcrumb > .fileName, #breadcrumb_row .copyFileButton, #github_clone_popup_container {
         display: none;
     }
 
