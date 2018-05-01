@@ -40,7 +40,7 @@ public class TLSFilter implements Filter {
         {
             put("/news/","/blog/");
         }
-    }
+    };
 
     public void destroy() {
     }
