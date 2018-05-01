@@ -335,6 +335,14 @@ $(document).ready(function() {
             alert('Copy failed. Copy the code manually: ' + target.innerText);
         }
     });
+
+    // Handle enter key presses on the copy file button
+    $(".copyFileButton").on('keypress', function(event){
+        // Enter key
+        if(event.key === "Enter"){
+            $(this).click();
+        }
+    });
     
 
     /* Copy button for the github clone command  that pops up initially when opening a guide. */
