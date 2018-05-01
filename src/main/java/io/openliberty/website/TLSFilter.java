@@ -32,9 +32,15 @@ public class TLSFilter implements Filter {
             put("/docs/ref/microprofile/", "/docs/ref/microprofile/1.3/");
             put("/docs/ref/", "/docs/");        
             put("/index.html/", "/index.html");  
-            put("/news/", "/blog/");  
             // put("old uri", "new uri");
-        }};
+    }};
+
+    // Generic deprecated redirect URLS that need to be redirected.
+    private final Map<String, String> GENERIC_REDIRECTS = new HashMap<String,String>(){
+        {
+            put("/news/","/blog/");
+        }
+    }
 
     public void destroy() {
     }
@@ -83,6 +89,18 @@ public class TLSFilter implements Filter {
               // We want to redirect the Servlet and stop further processing of
               // the incoming request.
               return;
+          }
+          // Generic redirects that handle multiple URIs
+          for(String key: GENERIC_REDIRECTS.keySet()){
+              if(uri.contains(key)){
+                  // Redirect using the old value replaced by the new value
+                  String newURI = uri.replaceAll(key, GENERIC_REDIRECTS.get(key));
+                  String newURL = req.getScheme() + "://" + req.getServerName() + newURI;
+                  response.sendRedirect(newURL);
+                  // We want to redirect the Servlet and stop further processing of
+                  // the incoming request.
+                  return;
+              }
           }
         }
 
