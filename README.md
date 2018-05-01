@@ -12,7 +12,7 @@ The [jQuery](https://jquery.com/) and [Bootstrap](http://getbootstrap.com/) fram
 ## Contributing to the blog
 Create a pull request with the content of the blog post placed in the `src/main/content/_posts/` folder using the following file naming scheme: `YYYY-MM-DD-post-title.extension`. HTML, markdown and asciidoc formats can be used. The file extension would be html, md or adoc respectively. In the blog post file the following front matter variables must be set:
 - layout: post
-- categories: news
+- categories: blog
 - title: `title of the blog post`
 - date: `date in YYYY-MM-DD HH:MM:SS +/-TTTT format`
 - author_picture: `secure url to author picture`
