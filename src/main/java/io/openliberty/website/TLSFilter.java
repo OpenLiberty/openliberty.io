@@ -31,7 +31,8 @@ public class TLSFilter implements Filter {
             put("/docs/ref/javaee/", "/docs/ref/javaee/7/");
             put("/docs/ref/microprofile/", "/docs/ref/microprofile/1.3/");
             put("/docs/ref/", "/docs/");        
-            put("/index.html/", "/index.html");    
+            put("/index.html/", "/index.html");  
+            put("/news/", "/blog/");  
             // put("old uri", "new uri");
         }};
 
