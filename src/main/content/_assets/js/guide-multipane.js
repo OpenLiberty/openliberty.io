@@ -44,104 +44,15 @@ function isBackgroundBottomVisible() {
     return visibleBottom;
 }
 
-// Handle when to float the table of contents when the browser width is 1440 pixels or greater.
-function handleFloatingTableOfContent() {
-    if($(window).width() >= 1440) {
-        // CURRENTLY IN FULL SCREEN VIEW
-        if($(window).scrollTop() > $('#toc_column').offset().top) {
-            // The top of the TOC is scrolling off the screen, enable floating TOC.
-
-            // Get the initial width of the TOC before applying position:fixed
-            var toc_width = $('#toc_inner').width();
-            
-            // position:fixed loses the original TOC width.  Restore original width when
-            // applying position fixed.
-            $('#toc_inner').width(toc_width);
-            if(isBackgroundBottomVisible()) {
-                handleTOCScolling();
-            } else {
-                // The entire viewport is filled with the background, so
-                // do not need to worry about the TOC flowing out of the background.
-                enableFloatingTOC();
-            }
-        } else {
-            // TOC no longer needs to float,
-            // remove all the custom styling for floating TOC
-            disableFloatingTOC();
-        }
-    } else {
-        // CURRENTLY IN MOBILE VIEW
-        // Remove any floating TOC when on mobile
-        disableFloatingTOC();
-    }
-}
-
-function disableFloatingTOC() {
-    $('#toc_inner').width("").css({"position": "", "top": ""});
-}
-
-function enableFloatingTOC() {
-    $('#toc_inner').css({"position":"fixed", "top":"0"});
-}
-
-// Handle when the table of content (TOC) is too small to fit completely in the dark background.
-// We want to give the end result of the bottom of the TOC sticks to the bottom of the dark background
-// and the top of the TOC scrolls off screen.
-function handleTOCScolling() {
-    var visible_background_height = heightOfVisibleBackground();
-    var toc_height = $('#toc_inner').height();
-    if(toc_height > visible_background_height) {
-        // The TOC cannot fit in the dark background, allow the TOC to scroll out of viewport
-        // to avoid the TOC overflowing out of the dark background
-        var negativeNumber = visible_background_height - toc_height;
-        $('#toc_inner').css({"position":"fixed", "top":negativeNumber});
-    }
-}
-
 function handleFloatingCodeColumn(){
-    if($(window).width() >= 767) {
+    if($(window).width() >= 117) {
         // CURRENTLY IN DESKTOP VIEW
-        if($(window).scrollTop() > $('#code_column').offset().top) {
-            // The top of the code column is scrolling off the screen, enable floating code column.
-
-            if(isBackgroundBottomVisible()) {
-                handleCodeColumnScolling();
-            } else {
-                // The entire viewport is filled with the background, so
-                // do not need to worry about the code column flowing out of the background.
-                enableFloatingCodeColumn();
-            }
+        if(isBackgroundBottomVisible()) {
+            $("#code_column").css('bottom', 'auto');
         } else {
-            // code column no longer needs to float,
-            // remove all the custom styling for floating code column
-            disableFloatingCodeColumn();
+            // The entire viewport is filled with the code column
+            $("#code_column").css('bottom', '0');
         }
-    } else {
-        // CURRENTLY IN MOBILE VIEW
-        // Remove any floating code column when on mobile
-        disableFloatingCodeColumn();
-    }
-}
-
-function disableFloatingCodeColumn(){
-    $('#code_column').width("").css({"position":"", "top":"", "left":""});
-}
-
-function enableFloatingCodeColumn(){
-    $('#code_column').css({"position":"fixed", "top":"0", "left":"50%"});
-}
-
-// Handle when the code column is too small to fit completely in the dark background.
-// We want to give the end result of the bottom of the code column sticks to the bottom of the dark background
-// and the top of the code column scrolls off screen.
-function handleCodeColumnScolling() {
-    var visible_background_height = heightOfVisibleBackground();
-    var code_height = $('#code_column').height();
-    if(code_height > visible_background_height) {
-        // The code column cannot fit in the dark background, allow the code column to scroll out of viewport
-        // to avoid the code column overflowing out of the dark background
-        var negativeNumber = visible_background_height - code_height;
-        $('#code_column').css({"position":"fixed", "top":negativeNumber});
     }
 }
 
@@ -397,7 +308,6 @@ $(document).ready(function() {
     //
     $(window).scroll(function() {
         handleGithubPopup();
-        // handleFloatingTableOfContent();
-        // handleFloatingCodeColumn();
+        handleFloatingCodeColumn();
     });
 });
