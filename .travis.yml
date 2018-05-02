@@ -17,11 +17,11 @@ branches:
 sudo: false # route your build to the container-based infrastructure for a faster build
 
 before_deploy:
-- chmod +x ./scripts/cf-blue-green.sh
+- chmod +x ./.travis/cf-blue-green.sh
 
 deploy:
   provider: script
-  script: ./scripts/cf-blue-green.sh
+  script: ./.travis/cf-blue-green.sh
   skip_cleanup: true
   on:
     branch: development

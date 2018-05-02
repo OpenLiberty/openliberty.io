@@ -13,24 +13,33 @@
     margin-left: 10px;
 }
 
-#header_background{
-    padding-top: 121px;
+#navbar {
+    padding-top: 10px;
+}
+
+.navbar {
+    padding-top: 0;
+}
+
+.container-fluid > .navbar-header {
+    padding-top: 10px;
+}
+
+#header_background {
+    padding-top: 101px;
     background-color: #313653;
     background-image: none;
 }
 
-#doc_logo,
-#doc_title {
+#doc_logo {
     float: left;
+    margin-top: 5px;
 }
 
 #doc_title {
-    padding-left: 15px;
-    font-family: BunueloLight;
-    font-size:30px;
-    color:#f1f4fe;
-    letter-spacing:0;
-    text-align:left;
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: 10px;
 }
 
 .reference_dropdown {
@@ -90,6 +99,7 @@
     height: 100%;
     margin-bottom: 0;
     border-radius: 0;
+    white-space: nowrap;
 }
 
 #breadcrumb_row a {
@@ -178,6 +188,11 @@
         margin-top: 0;
     }
 
+    #doc_title > img {
+        width: 67px;
+        height: 31px;
+    }
+
     #navbar_responsive_button {
         background-color: #313653;
     }    
@@ -206,12 +221,13 @@
     }
 
     #breadcrumb_row {
-        height: 36px;
+        height: auto; /* Accodomate longer breadcrumbs with multiple rows */
     }
 
     #breadcrumb_row .breadcrumb {
         overflow: auto;
-        white-space: nowrap;
+        white-space: inherit;
+        padding-left: 15px;
     }
 
     /* Bootstrap override */

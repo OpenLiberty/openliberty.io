@@ -43,20 +43,50 @@ css: home
     <div id="quick_start_background_bottom_border"></div>
     <div class="container">
         <div id="quick_start_row" class="row">
-            <div class="col-xs-12 text-center">
-                <h2 id="quick_start_title">Get started</h2>
-                <p id="quick_start_paragraph">Launch a sample app in a few quick steps!</p>
+            <div class="col-md-4 col-sm-12">
+                <h2 id="quick_start_title">Launch a sample app</h2>
+                <p id="quick_start_paragraph">
+                    Open Liberty is fast and composable, but don’t 
+                    take our word for it - try it out!
+                </p>
+            </div>
+            <div class="col-md-8 col-sm-12">
                 <div id="code_container" class="text-left center-block">
                     git clone https://github.com/OpenLiberty/sample-getting-started.git
                     <br>
                     cd sample-getting-started
                     <br>
-                    mvn clean install
+                    mvn clean package liberty:run-server
                     <br>
-                    Open browser to: <a class="orange_link_light_background" target="new" href="https://localhost:9443/sampleApp">https://localhost:9443/sampleApp</a>
+                    <br>
+                    <span id="sample_app_browser_link">Open browser to: <a class="light_green_link_light_background" target="new" href="http://localhost:9080">http://localhost:9080</a></span>
                 </div>
             </div>
         </div>
+
+        <div id="guides_container" class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2 id="guides_title">Set course for the Open Liberty guides</h2>
+                    <p id="guides_description">
+                            Your sample app looks great - but what next? 
+                            <br>
+                            <br>
+                            All of the info you need to continue your journey is here, laid out in easy to follow steps and
+                            <br>
+                            examples. Searching our current selection makes it easy to find the guide that will help make
+                            <br>
+                            your next project a reality. 
+                    </p>
+                    <div id="guides_link_container">
+                        <a id="guides_link" href="/guides">View all Open Liberty guides</a>
+                    </div>                    
+                </div>
+                <div class="col-md-4">
+                    <img id="guides_ufo" src="{{ "/img/homepage_ufo.png" | relative }}" class="img-responsive center-block" alt="Two UFOs working together to adjust the ring of a planet">
+                </div>
+            </div>
+        </div>        
     </div> 
 </div>
 
@@ -64,17 +94,10 @@ css: home
 
 <!-- COLLABORATE -->
 <div id="collaborate_background">
-    <div id="collaborate_container" class="container">
-        <div class="row">
-            <div class="col-xs-12 text-center">
-                <p id="guides_link_paragraph">
-                    Want to go above and beyond? Check out the <a href="/guides" class="light_green_link_dark_background">Open Liberty guides</a>
-                </p>
-            </div>
-        </div>
+    <div id="collaborate_container" class="container">        
         <div class="row">
             <div class="col-sm-5">
-                <h2 id="collaborate_title">Collaborate</h2>
+                <h2 id="collaborate_title">Find your crew</h2>
                 <p id="collaborate_text">
                     Open Liberty thrives on users' collaboration, contributions and creativity.
                     We invite you to share your expertise with users near and light years away.

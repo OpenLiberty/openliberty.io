@@ -1,9 +1,9 @@
 ---
-layout: default
-title: Docs & Guides
+layout: doc
 type: Docs
 css:
 - reference-card
+- doc-header
 - docs
 permalink: /docs/
 ---
@@ -13,7 +13,7 @@ permalink: /docs/
     <div class="container">
         <div class="row">
             <div class="col-sm-4">
-                <div id="docs_title">Docs & Guides</div>
+                <img id="docs_title" src="{{ "/img/docs_page_title.svg" | relative }}" class="img-responsive" alt="Docs">
             </div>
             <div class="col-sm-8">
                 <p id="contribute_intro_paragraph_1">
@@ -49,19 +49,19 @@ permalink: /docs/
                 <p id="reference_description">View the Javadoc for APIs available in Open Liberty. More reference material is in the works.</p>
             </div>
             {% for doc in javadocs %}
-            {% if doc.url == '/docs/ref/javaee/7/' or doc.url == '/docs/ref/microprofile/1%2E3/' %}
-                <div class="col-sm-12 col-sm-6 col-md-4">
-                    <a href="{{ doc.url | replace: '%2E', '.'}}" class="reference_item">
-                        {% if doc.url == '/docs/ref/javaee/7/' %}
+                {% if doc.url == '/docs/ref/javaee/7/' or doc.url == '/docs/ref/microprofile/1%2E3/' %}
+                    <div class="col-sm-12 col-sm-6 col-md-4">
+                        <a href="{{ doc.url | replace: '%2E', '.'}}" class="reference_item">
+                            {% if doc.url == '/docs/ref/javaee/7/' %}
                             <img id="javaee_logo" src="{{ "/img/docs_java_ee_logo.png" | relative }}" class="img-responsive" alt="Java EE Logo">
-                        {% endif %}
-                        {% if doc.url == '/docs/ref/microprofile/1%2E3/' %}
+                            {% endif %}
+                            {% if doc.url == '/docs/ref/microprofile/1%2E3/' %}
                             <img id="mp_logo" src="{{ "/img/logos/docs_microprofile_logo.png" | relative }}" class="img-responsive" alt="MicroProfile Logo">
-                        {% endif %}
-                        <h3 class="reference_title">{{doc.title}}</h3>
-                    </a>
-                </div>
-            {% endif %}
+                            {% endif %}
+                            <h3 class="reference_title">{{doc.title}}</h3>
+                        </a>
+                    </div>
+                {% endif %}            
             {% endfor %}
         </div>
     </div>
