@@ -290,7 +290,7 @@ $(document).ready(function() {
     }
 
     // Adjust the window for the sticky header when clicking on a section anchor.
-    var shiftWindow = function() { scrollBy(0, -120) };
+    var shiftWindow = function() { scrollBy(0, -100) };
     if (location.hash){
         shiftWindow();
     } 
