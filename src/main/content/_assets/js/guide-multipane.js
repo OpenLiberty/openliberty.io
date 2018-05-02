@@ -45,10 +45,18 @@ function isBackgroundBottomVisible() {
 }
 
 function handleFloatingCodeColumn(){
-    if($(window).width() >= 117) {
+    if($(window).width() >= 1171) {
         // CURRENTLY IN DESKTOP VIEW
         if(isBackgroundBottomVisible()) {
-            $("#code_column").css('bottom', 'auto');
+            // Set the bottom of the code column to the distance between the top of the related guides section and the bottom of the page.
+            var windowHeight = window.innerHeight;
+            var relatedGuidesTopValue = $("#related_guides_section")[0].getBoundingClientRect().top;
+            if(relatedGuidesTopValue){
+                var bottom = windowHeight - relatedGuidesTopValue;
+                $("#code_column").css('bottom', bottom + 'px');
+            } else {
+                $("#code_column").css('bottom', 'auto');
+            }            
         } else {
             // The entire viewport is filled with the code column
             $("#code_column").css('bottom', '0');
