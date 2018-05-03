@@ -18,6 +18,11 @@
     padding-left: 0;
 }
 
+#breadcrumb_row .breadcrumbWithHamburger {
+    width: calc(100% - 76px);
+    float: right;
+}
+
 #breadcrumb_row .breadcrumb li:first-of-type {
     padding-left: 30px;
 }
@@ -35,6 +40,10 @@
     padding: 9px 10px;
     border-right: 1px solid #474d6f;
     padding: 4px 26px 7px 29px;
+}
+
+#breadcrumb_row .showHamburger {
+    display: inline-block;
 }
 
 #breadcrumb_hamburger:not(.collapsed) {
@@ -176,21 +185,28 @@
     }
 
     /* Hide the table of contents and right pane in mobile view */
-    #breadcrumb_hamburger, #toc_column, #code_column {
+    #toc_column {
+        display: none !important;
+    }
+
+    #breadcrumb_hamburger, #code_column, #breadcrumb_row .showHamburger {
         display: none;
     }
 
-    #breadcrumb_row .breadcrumb {
+    #breadcrumb_row .breadcrumb:not(.breadcrumbWithHamburger) {
         width: 100%;
         float: none;
     }
 
-    /* Show the code snippets in mobile view that were on the right pane in desktop view */
+    #breadcrumb_row .breadcrumbWithHamburger {
+        width: 100%;
+        float: none;
+    }
 }
 
 /* Breakpoint for when the hamburger navbar appears and the navbar links go into the hamburger
    The breadcrumb still exists at this point */
-   @media (max-width: 1170px) {
+@media (max-width: 1170px) {
 
     #doc_logo {
         display: inline-block;
@@ -252,6 +268,9 @@
     .navbar-collapse.collapse {
         display: none!important;
     }
+    .collapse.in{
+        display:block !important;
+    }
     .navbar-nav {
         float: none!important;
         margin-top: 7.5px;
@@ -262,9 +281,6 @@
     .navbar-nav>li>a {
         padding-top: 10px;
         padding-bottom: 10px;
-    }
-    .collapse.in{
-        display:block !important;
     }
 }
 
@@ -277,6 +293,11 @@
     #breadcrumb_row .breadcrumb {
         width: 100%;
         float: none;
+    }
+
+    #breadcrumb_row .breadcrumbWithHamburger {
+        width: calc(100% - 76px);
+        float: right;
     }
 
     #background_container > .row {

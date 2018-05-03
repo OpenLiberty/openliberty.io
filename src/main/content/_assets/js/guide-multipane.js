@@ -159,20 +159,16 @@ $(document).ready(function() {
         $(this).hide();
 
         // Show the hamburger button and adjust the header to accomodate it
-        $('#breadcrumb_hamburger').css('display', 'inline-block');
-        $('#breadcrumb_row .breadcrumb').css({
-            'width': 'calc(100% - 76px)',
-            'float': 'right',
-        });
+        $('#breadcrumb_hamburger').addClass('showHamburger');
+        $('#breadcrumb_row .breadcrumb').addClass('breadcrumbWithHamburger');
+        
         $("#toc_title").css('margin-top', '20px');        
 
         // Remove display type from the table of contents
         $("#toc_column").removeClass('inline');
 
         // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
-        if($(window).width() >= 1440){
-            $("#guide_column").addClass('expanded');
-        }
+        $("#guide_column").addClass('expanded');
     });
 
     $('#guide_content pre:not(.no_copy pre)').hover(function(event) {
