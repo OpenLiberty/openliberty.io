@@ -11,8 +11,9 @@ permalink: /guides/
 
 <!-- Build one list of all the documents that have a particular layout -->
 {% assign static-guides = site.pages | where: 'layout', 'guide' %}
+{% assign multipane-static-guides = site.pages | where: 'layout', 'guide-multipane' %}
 {% assign interactive-guides = site.pages | where: 'layout', 'interactive-guide' %}
-{% assign guides = static-guides | concat: interactive-guides | sort: 'releasedate' | reverse %}
+{% assign guides = static-guides | concat: interactive-guides | concat: multipane-static-guides | sort: 'releasedate' | reverse %}
 <!-- 
     Some of the found documents are for internal use only and are not intended to be 
     shown on the website.  Remove them from the total number of guides.
