@@ -1,0 +1,428 @@
+/*******************************************************************************
+ * Copyright (c) 2017 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+/* GUIDE CONTENT */
+
+header {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.breadcrumb > .fileName {
+    display: inline-block;
+}
+
+#breadcrumb_row .fileName {
+    position: absolute;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 26px;
+    color: white;
+    left: 50%;
+    padding-left: 12px;
+    border-left: 2px solid #1E1F38;        
+}
+
+#breadcrumb_row .fileName:before {
+    content: "";
+}
+
+#breadcrumb_row .copyFileButton {
+    float: right;
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    line-height: 5px;
+    margin-right: 20px;
+}
+
+#breadcrumb_row .copyFileButton:hover {
+    cursor: pointer;
+}
+
+#breadcrumb_row .copyFileButton > img {
+    width: 14px;
+    height: 16px;
+}
+
+#breadcrumb_row .copyFileButton:before {
+    content: "";
+}
+
+#guide_content h1 {
+    font-size: 28px;
+    color: #24253a;
+}
+
+#guide_content h2 {
+    font-size: 20px;
+    color: #24253a;
+}
+
+#guide_content h3 {
+    font-size: 16px;
+    line-height: 26px;
+    color: #24253a;
+    font-weight: 500;
+    margin-top: 32px;
+    margin-bottom: 0px;
+}
+
+#guide_content h4 {
+    font-size: 16px;
+    color: #6f7878;
+    font-weight: 500;
+    margin-top: 18px;
+    margin-bottom: 0px;
+}
+
+#guide_content p {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    line-height: 26px;
+}
+
+#guide_content a {
+    font-weight: 500;
+    color: #E3700D;
+    transition: color .2s;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+#guide_content a:hover {
+    color: #F4914D;
+}
+
+/* Hide code blocks by default unless in mobile view */
+#guide_content .listingblock {
+    display: none;
+}
+
+#guide_content code,
+#guide_content pre  {
+    /* Bootstrap override */
+    background-color: #F3F4F7;
+    color: #5e6b8d;
+}
+
+#guide_content code {
+    /* Bootstrap override */
+    word-wrap: break-word;
+}
+
+#guide_content pre {
+    border: none;
+    border-radius: 0;
+    padding: 30px;
+}
+
+#guide_content .no_copy pre {
+    background-color: #FFFFFF;
+    border:5px solid #e8eaee;
+    border-radius:3px;
+}
+
+#guide_content .no_copy pre code {
+    background-color: transparent;
+}
+
+#guide_content .sect1 > .sectionbody {
+    padding-top: 19px;
+}
+
+#guide_content div.sect1 {
+    padding-bottom: 50px;
+    /* margin-bottom: 10px; */
+    padding-left: 60px;
+    padding-right: 60px;
+    margin-left: -15px;
+    margin-right: -15px;
+    background-color: white;
+}
+
+#guide_content div.sect1:not(#guide_meta) {
+    box-shadow: inset 0px 94px 0px 0px #F7F9E5, 0px 5px 11px -3px rgba(0,0,0,0.27);
+}
+
+#guide_content .sect1 h2 {
+    padding-top: 48px;
+    margin-top: 0;
+    margin-bottom: 21px;
+}
+
+#guide_content #guide_meta {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+#guide_content #related-guides-cards {
+    margin-top: 50px;
+}
+
+#guide_content dl > dt.hdlist1 {
+    font-size: 16px;
+    line-height: 26px;
+    padding-top: 26px;
+}
+
+#guide_content dl > dd > p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 1px;
+    padding-bottom: 18px;
+}
+
+#guide_content p.tableblock {
+    padding-top: 23px;
+    padding-bottom: 23px;
+}
+
+#guide_content table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+#guide_content table thead, #guide_content table tfoot{background:#f7f8f7;font-weight:bold}
+#guide_content table thead tr th,#guide_content table thead tr td,#guide_content table tfoot tr th,#guide_content table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+#guide_content table tr th,#guide_content table tr td{padding: 0em 1.625em;font-size:inherit;color:rgba(0,0,0,.8)}
+#guide_content table tr.even,#guide_content table tr.alt,#guide_content table tr:nth-of-type(even){background:#f8f8f7}
+#guide_content table thead tr th,#guide_content table tfoot tr th,#guide_content table tbody tr td,#guide_content table tr td,#guide_content table tfoot tr td{display:table-cell;line-height:1.6}
+
+/* GUIDE PAGE LAYOUT */
+
+#background_container {
+    min-height: 600px;
+    /* if you change the 200px, please also change backgroundSizeAdjustment in guide.js */ 
+    /* background-size: 100% calc(100% - 200px); */
+    background-repeat: no-repeat;
+    margin-bottom: 100px;
+    overflow-x: hidden;
+}
+
+#background_container > .row {
+    overflow: hidden;
+}
+
+#title_row {
+    margin-bottom: 70px;
+}
+
+#guide_column {
+    color: #24253a;
+    width: calc(100% - 730px);
+}
+
+#code_column {
+    padding: 0;
+    background-color: #f1f4fe;
+    position: fixed;
+    width: 730px;
+    left: calc(100% - 700px); /* Adjust for the width and padding */
+    top: 100px;
+    overflow-y: auto;
+}
+
+#github_clone_popup_container {
+    position: absolute;
+    top: 31%;
+    width: 100%;
+}
+
+#github_clone_popup {
+    height: 111px;
+    margin: 0 20px;
+    padding: 19px 0 0 20px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+}
+
+#github_clone_popup_title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.63;
+    color: #1b1c34;
+    margin-bottom: 14px;
+}
+
+#github_clone_popup_repo {
+    font-size: 14px;
+    line-height: 1.57;
+    color: #737373;
+    width: 95%;
+    border-bottom: solid 1px #96bc32;
+}
+
+#github_clone_popup_copy {
+    width: 48px;
+    height: 38px;
+    background-color: #96bc32;
+    position: absolute;
+    top: 0;
+    right: 20px;
+    padding: 8px 12px;
+    text-align: center;
+}
+
+#github_clone_popup_copy:hover {
+    border: solid 1px #b2bbd1;
+    cursor: pointer;
+}
+
+#github_clone_popup_copy:active {
+    border: solid 1px #5e6b8d;
+}
+
+#github_clone_popup_copy > img {
+    width: 14px;
+    height: 16px;
+}
+
+
+#guide_content > .sect1 {
+    -webkit-box-shadow: 0px 5px 11px -3px rgba(0,0,0,0.27);
+    -moz-box-shadow: 0px 5px 11px -3px rgba(0,0,0,0.27);
+    box-shadow: 0px 5px 11px -3px rgba(0,0,0,0.27);
+}
+
+#all_guides_link {
+    color: #c8d6fb;
+    margin-bottom: 20px;
+}
+
+#all_guides_link:hover {
+    color: #eaf0ff;
+}
+
+#guide_title {
+    margin-top: 15px;
+    margin-bottom: 4px;
+}
+
+#duration_container {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+#guide_duration {
+    margin-left: 15px;
+    font-size: 16px;
+}
+
+#copied_to_clipboard_confirmation {
+    position: absolute;
+    font-size: 11px;
+    color: #5e6b8d;
+}
+
+#copy_to_clipboard {
+    position: absolute;
+    display: block;
+    background-color: #eeeff3;
+    background-image: url('/img/guide_copy_button.svg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 63px;
+    width: 58px;
+}
+
+#copy_to_clipboard:hover {
+    border: solid 1px #b2bbd1;
+}
+
+#copy_to_clipboard:active {
+    border: solid 1px #5e6b8d;
+}
+
+.codecolumn .CodeRay {
+    border: none;
+    border-radius: 0;
+}
+
+.codeTitle {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.86;
+    color: #3f465a;
+    border-bottom: solid 1px #d4d7e3;
+    margin: 0;
+    padding-top: 11px;
+    padding-bottom: 5px;
+    padding-left: 22px;
+    height: 42px;
+    background-color: #f1f4fe;
+}
+
+#related_guides_section {
+    width: 100%;
+    height: 100px;
+    box-shadow: inset 0px 94px 0px 0px #F7F9E5, 0px 5px 11px -3px rgba(0,0,0,0.27);
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+@media (max-width: 767px) {
+    header {
+        position: static; /* Make the header non sticky in mobile view */
+    }
+}
+
+@media (max-width: 1199px) {
+    .guide_item {
+        width: 100%;
+    }
+}
+    
+@media (max-width: 1170px) {
+
+    #background_container {
+        padding-top: 40px;
+        margin-bottom: 0;
+    }
+
+    .breadcrumb > .fileName, #breadcrumb_row .copyFileButton, #github_clone_popup_container {
+        display: none;
+    }
+
+    #title_row {
+        margin-bottom: 30px;
+    }
+        
+    #guide_column {
+        width: auto;
+        padding-top: 10px;
+        padding-bottom: 60px;
+        padding-left: 15px;
+        padding-right: 15px;
+        box-shadow: none;
+    }  
+
+    /* Show the code snippets in mobile view that were on the right pane in desktop view */
+    #guide_content .listingblock {
+        display: block;
+    }
+}
+
+@media (min-width: 1440px) {
+    #guide_column {
+        width: calc(100% - 280px - 730px); /* Adjust for the size of the table of contents and the code column */
+        display: inline-block;
+    }
+
+    #guide_column.expanded {
+        width: calc(100% - 730px);
+    }
+
+    #code_column {
+        left: calc(100% - 715px); /* Adjust for the width and padding */
+        display: inline-block;
+    }
+}

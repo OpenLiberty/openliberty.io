@@ -1,0 +1,348 @@
+/*******************************************************************************
+ * Copyright (c) 2018 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+ /* BREADCRUMB specific to the collapsable table of contents */
+
+#breadcrumb_row .breadcrumb {
+    display: block;
+    width: calc(100% - 76px); /* If you change this value then update guide.js too */
+    float: right;
+    padding-left: 0;
+}
+
+#breadcrumb_row .breadcrumbWithHamburger {
+    width: calc(100% - 76px);
+    float: right;
+}
+
+#breadcrumb_row .breadcrumb li:first-of-type {
+    padding-left: 30px;
+}
+
+.TOC_Close_SVG {
+    display: none;
+}
+
+#breadcrumb_hamburger {
+    display: inline-block;
+    width: 76px;
+    height: 100%;
+    background-color: #24243A;
+    border: none;
+    padding: 9px 10px;
+    border-right: 1px solid #474d6f;
+    padding: 4px 26px 7px 29px;
+}
+
+#breadcrumb_row .showHamburger {
+    display: inline-block;
+}
+
+#breadcrumb_hamburger:not(.collapsed) {
+    border-right: none;
+    background-color: #ffffff;
+}
+
+#breadcrumb_hamburger:not(.collapsed) > .sr-only, #breadcrumb_hamburger:not(.collapsed) > .icon-bar {
+    display: none;
+}
+
+#breadcrumb_hamburger:not(.collapsed) > .TOC_Close_SVG {
+    display: block !important;
+}
+
+#breadcrumb_hamburger:focus{
+    outline: none;
+}
+
+#breadcrumb_hamburger .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
+#breadcrumb_hamburger .icon-bar {
+    background-color: #c8d6fb;
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 1px;
+}
+
+#breadcrumb_hamburger .icon-bar+.icon-bar {
+    margin-top: 4px;
+}
+
+/* TABLE OF CONTENTS */
+#toc_column {
+    position: fixed;
+    left: 0;
+    width: 280px;
+    padding-bottom: 22px;
+    vertical-align: top;
+    background-color: white;
+    z-index: 1;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.21);
+}
+
+#toc_container > .sectlevel1 > li {
+    list-style: none;
+    font-weight: 300;
+    color: #5D6A8E;
+    font-size: 14px;
+    min-height: 30px;
+    border-left: 8px solid transparent;
+    padding-left: 19px;
+    word-wrap: break-word;
+}
+
+#toc_container > .sectlevel1 > li:hover {
+    background: #fdf2ea;
+    border-left: 8px solid #f4914d;
+    font-weight: 500;
+}
+
+#close_container {
+    display: none;
+}
+
+#toc_title {
+    font-family: BunueloBold;
+    font-size:14px;
+    color:#313653;
+    margin-left: 27px;
+    margin-bottom: 22px;
+}
+
+#toc_container ul {
+    list-style-type: none;
+}
+
+#toc_container ul {
+    padding-left: 30px;
+}
+
+#toc_container .sectlevel1 {
+    padding-left: 0;
+}
+
+#toc_container a {
+    display: inline-block;
+    color:#5d6a8e;
+    margin-bottom: 10px;
+}
+
+#toc_container a:hover {
+    color:#313653;
+}
+
+#toc_separator {
+    width: 232px;
+    height: 2px;
+    border: solid 1px #d4d7e3;
+    margin: auto;
+}
+
+#tag_title {
+    font-family: BunueloBold;
+    font-size:14px;
+    color:#313653;
+    margin-left: 27px;
+    margin-bottom: 22px;
+}
+
+#tags_container {
+    margin-left: 27px;
+}
+
+#tags_container a {
+    color: #4f660a;
+    margin-right: 15px;
+    line-height: 30px;
+}
+
+#tags_container a:hover {
+    color: #4f660a;
+}
+
+@media (max-width: 1170px) {
+
+    #tags_container {
+        margin-bottom: 30px;
+    }
+
+    /* Hide the table of contents and right pane in mobile view */
+    #toc_column {
+        display: none !important;
+    }
+
+    #breadcrumb_hamburger, #code_column, #breadcrumb_row .showHamburger {
+        display: none;
+    }
+
+    #breadcrumb_row .breadcrumb:not(.breadcrumbWithHamburger) {
+        width: 100%;
+        float: none;
+    }
+
+    #breadcrumb_row .breadcrumbWithHamburger {
+        width: 100%;
+        float: none;
+    }
+}
+
+/* Breakpoint for when the hamburger navbar appears and the navbar links go into the hamburger
+   The breadcrumb still exists at this point */
+@media (max-width: 1170px) {
+
+    #doc_logo {
+        display: inline-block;
+    }
+
+    #navbar_responsive_button {
+        background-color: #313653;
+    }    
+
+    #header_background {
+        padding-top: 0;
+    }
+
+    .dropdown-toggle.btn-default {
+        float: right;
+    }
+
+    #reference_dropdown_container .dropdown-menu > li > a:hover, #reference_dropdown_container .dropdown-menu > li > a:focus {
+        color: white;
+    }
+
+    .navbar {
+        background-color: #313653;
+        position: static;
+    }
+
+    .navbar-default .navbar-nav .open .dropdown-menu>li>a{
+        float: right;
+        color: #C8D2D2;
+    }
+
+    #breadcrumb_row {
+        height: 36px;
+    }
+
+    #breadcrumb_row .breadcrumb {
+        overflow: auto;
+        white-space: nowrap;
+    }
+
+    /* Bootstrap override */
+    .navbar-header {
+        float: none;
+    }
+    .navbar-left,.navbar-right {
+        float: none !important;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-fixed-top {
+        top: 0;
+        border-width: 0 0 1px;
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .collapse.in{
+        display:block !important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin-top: 7.5px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}
+
+@media (min-width: 1440px) {    
+
+    #breadcrumb_hamburger {
+        display: none;
+    }
+
+    #breadcrumb_row .breadcrumb {
+        width: 100%;
+        float: none;
+    }
+
+    #breadcrumb_row .breadcrumbWithHamburger {
+        width: calc(100% - 76px);
+        float: right;
+    }
+
+    #background_container > .row {
+        background-color: white;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    #close_container {
+        display: block;
+    }
+
+    #close_container:after {
+        clear: both;
+        content: "";
+        height: 0;
+        visibility: hidden;
+        display: block;
+    }
+    
+    #close_container > img {
+        float: right;
+        margin-right: 25px;
+        margin-top: 20px;
+    }
+
+    #close_container > img:hover{
+        cursor: pointer;
+    }
+
+    #toc_title {
+        margin-top: 0;
+    }
+
+    #toc_column {
+        float: left;
+        position: relative;
+        left: 0;
+        padding-bottom: 22px;
+        background-color: white;
+        z-index: 0;
+        box-shadow: none;
+    }
+    
+    #toc_column.inline {
+        display: inline-block;
+    }
+}

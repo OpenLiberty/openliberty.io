@@ -35,49 +35,68 @@
             </div>
             <!-- Add breadcrumb for all pages except /docs -->
             {% if page.url != '/docs/' %}
-                <div id="breadcrumb_row">
-                    <ol class="breadcrumb fluid-container"> 
+            <div id="breadcrumb_row">
+                {% if page.layout == 'guide-multipane' or page.layout == 'interactive-guide-multipane' %}
+                    <!-- Hamburger icon for showing the table of contents -->
+                    <button id="breadcrumb_hamburger" class="toc-toggle collapsed" type="button" data-toggle="collapse" data-target="#toc_column"    aria-expanded="false" aria-controls="toc_column">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <img src="{{ " /img/TOC_Close.svg " | relative }}" class="TOC_Close_SVG img-responsive" alt="Table of contents close button"/>
+                    </button>                        
+                {% endif %}  
+                <ol class="breadcrumb fluid-container">     
+                                     
+                    <li>
+                        <a href="/docs">Docs</a>
+                    </li>
+
+                    <!-- Javadocs -->
+                    {% if page.type == 'Javadoc' %}
                         <li>
-                            <a href="/docs">Docs</a>
+                            <a class="inactive_link">Reference</a>
                         </li>
+                        <li class="active"> {{ page.doc-type }} </li>
+                        {% assign versions = site.pages | where: 'doc-type', page.doc-type | sort: 'version' | reverse %}
+                        {% if versions | size > 1 %}
+                            <span id="breadcrumb_line">|</span>
+                            <li id="breadcrumb_version">VERSION:</li>
 
-                        <!-- Javadocs -->
-                        {% if page.type == 'Javadoc' %}
-                            <li>
-                                <a class="inactive_link">Reference</a>
-                            </li>
-                            <li class="active"> {{ page.doc-type }} </li>
-                            {% assign versions = site.pages | where: 'doc-type', page.doc-type | sort: 'version' | reverse %}
-                            {% if versions | size > 1 %}
-                                <span id="breadcrumb_line">|</span>
-                                <li id="breadcrumb_version">VERSION:</li>
-
-                                {% for javadoc in versions %}
-                                <li class="javadoc_version">
-                                    {% if page.version == javadoc.version %}
-                                        <a class="selected_javadoc__version">{{ javadoc.version }}</a>
-                                    {% else %}
-                                        <a href="{{ javadoc.url }}" >{{ javadoc.version }}</a>
-                                    {% endif %}
-                                    
-                                </li>                                    
-                                {% endfor %}
-                            {% endif %}
-                        
-                        <!-- All Guides page -->
-                        {% elsif page.url == '/guides/' %}
-                            <li class="active">Guides</li>
-                        
-                        <!-- Individual Guides -->
-                        {% else %}
-                            <li> 
-                                <a href="/guides">Guides</a>
-                            </li>
-                            <li class="active">{{ page.title }}</li>
+                            {% for javadoc in versions %}
+                            <li class="javadoc_version">
+                                {% if page.version == javadoc.version %}
+                                    <a class="selected_javadoc__version">{{ javadoc.version }}</a>
+                                {% else %}
+                                    <a href="{{ javadoc.url }}" >{{ javadoc.version }}</a>
+                                {% endif %}
+                                
+                            </li>                                    
+                            {% endfor %}
                         {% endif %}
-                    </ol>
-                </div>     
-            {% endif %}
+                    
+                    <!-- All Guides page -->
+                    {% elsif page.url == '/guides/' %}
+                        <li class="active">Guides</li>
+                    
+                    <!-- Individual Guides -->
+                    {% else %}
+                        <li> 
+                            <a href="/guides">Guides</a>
+                        </li>
+                        <li class="active">{{ page.title }}</li>
+
+                        {% if page.layout == 'guide-multipane' or page.layout == 'interactive-guide-multipane' %}
+                            <!-- File name displayed in sticky header for multipane guide code files -->
+                            <li class="fileName"></li>
+                            <li class="copyFileButton" tabindex=0>
+                                <img src="/img/guide_copy_button_white.svg" alt="Copy file contents">
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ol>
+            </div>     
+        {% endif %}      
         </div>
     </nav>
     <!-- Docs -->
