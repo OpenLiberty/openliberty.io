@@ -136,17 +136,17 @@ $(document).ready(function() {
         var title = $(this).parents('.sect1').find('h3').first();
         var fileName = title.text();
         $(this).attr('fileName', fileName);
-        $('.fileName').text(fileName);
         title.detach();
-
-        // title.addClass('codeTitle');
-        // $(this).prepend(title.detach());
 
         $(this).detach().appendTo('#code_column'); // Move code to the right column
     });
 
     // Hide all code blocks except the first
     $('.codecolumn:not(:first)').hide();
+
+    // Set the file name from the first code section
+    var fileName = $('.codecolumn:first').attr('fileName');
+    $('.fileName').text(fileName);
 
     $("#breadcrumb_hamburger").on('click', function(event){
         // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
