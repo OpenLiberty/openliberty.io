@@ -130,10 +130,8 @@ $(document).ready(function() {
         $('.fileName').text(fileName);
         title.detach();
 
-        // title.addClass('codeTitle');
-        // $(this).prepend(title.detach());
-
-        $(this).detach().appendTo('#code_column'); // Move code to the right column
+        $(this).addClass('dimmed_code_column'); // Dim the code at first while the github popup takes focus.
+        $(this).detach().appendTo('#code_column'); // Move code to the right column        
     });
 
     // Hide all code blocks except the first
@@ -279,9 +277,11 @@ $(document).ready(function() {
         var atTop = $(window).scrollTop() === 0;
         if(atTop){
             githubPopup.fadeIn();
+            $(".codecolumn").addClass('dimmed_code_column', {duration:400});
         }
         else{            
             githubPopup.fadeOut();
+            $(".codecolumn").removeClass('dimmed_code_column', {duration:400});
         }
     }
 
