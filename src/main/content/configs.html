@@ -4,28 +4,32 @@ type: config
 css:
 - doc-header
 - config
-permalink: /docs/config/
+permalink: /docs/ref/config/
 ---
 
 <!-- Build list of config pages -->
-{% assign configs = site.pages | where: 'layout', 'config' %}
+{% assign configDocs = site.pages | where: 'page-layout', 'config' %}
 
 <div id="background_container">
     <!-- <div class="row"> -->
         <!-- Guide's table of contents section -->
         <div id="toc_column" class="col-sm-3">
             <div id="toc_inner">
-                <h3 id="toc_title">Contents</h3>
-                {% if configs %}
+                <h3 id="toc_title">Server Configuration</h3>
+                {% if configDocs %}
                 <div id="toc_container">
                     <ul>
-                        {% for config in configs %}
+                         {% for config in configDocs %}
+                         {% assign toc = config.content | tocify_asciidoc %}
                         <li>
-                            <a href="{{ config.url }}.html" target="contentFrame">{{ config.title }}</a>
+                            <a href="{{ config.url }}" target="contentFrame">{{ config.title }}</a>
                         </li>
+                     
                         {% endfor %}
                     </ul>
                 </div>
+                {% else %}
+                <div>No config found</div>
                 {% endif %}
             </div>
         </div>
