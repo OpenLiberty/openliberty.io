@@ -50,9 +50,9 @@ function handleFloatingCodeColumn(){
         if(isBackgroundBottomVisible()) {
             // Set the bottom of the code column to the distance between the top of the related guides section and the bottom of the page.
             var windowHeight = window.innerHeight;
-            var relatedGuidesTopValue = $("#related_guides_section")[0].getBoundingClientRect().top;
-            if(relatedGuidesTopValue){
-                var bottom = windowHeight - relatedGuidesTopValue;
+            var relatedGuidesTopPosition = $("#related_guides_section")[0].getBoundingClientRect().top;
+            if(relatedGuidesTopPosition){
+                var bottom = windowHeight - relatedGuidesTopPosition;
                 $("#code_column").css('bottom', bottom + 'px');
             } else {
                 $("#code_column").css('bottom', 'auto');
@@ -149,6 +149,8 @@ $(document).ready(function() {
                 $("#guide_column").removeClass('expanded');
             }
         }
+        // Handle table of content floating if in the middle of the guide.
+        handleFloatingTableOfContent();
     });
 
     // Handle collapsing the table of contents from full width into the hamburger
@@ -266,6 +268,7 @@ $(document).ready(function() {
         if(document.execCommand('copy')) {
             window.getSelection().removeAllRanges();
             $("#github_clone_popup_container").fadeOut("slow");
+            $(".codecolumn").removeClass('dimmed_code_column', {duration:400});
         } else {
             alert('Copy failed. Copy the command manually: ' + target.innerText);
         }        
@@ -284,6 +287,56 @@ $(document).ready(function() {
             $(".codecolumn").removeClass('dimmed_code_column', {duration:400});
         }
     }
+
+    // Handle when to float the table of content
+    function handleFloatingTableOfContent() {
+        if($(window).width() > 1440) {
+            // CURRENTLY IN 3 COLUMN VIEW
+            if($(window).scrollTop() >= $('#toc_column').offset().top) {
+                // The top of the TOC is scrolling off the screen, enable floating TOC.                
+                if(isBackgroundBottomVisible()) {
+                    handleTOCScrolling();
+                } else {
+                    // The entire viewport is filled with the background, so
+                    // do not need to worry about the TOC flowing out of the background.
+                    enableFloatingTOC();
+                }
+            } else {
+                // TOC no longer needs to float,
+                // remove all the custom styling for floating TOC
+                disableFloatingTOC();
+            }
+        } else {
+            // CURRENTLY IN MOBILE VIEW OR 2 COLUMN VIEW
+            // Remove any floating TOC
+            disableFloatingTOC();
+        }
+    }
+
+    function disableFloatingTOC() {
+        $('#toc_inner').width("").css({"position": "", "top": ""});
+        $("#close_container > img").css({"right": "27px"});
+    }
+
+    function enableFloatingTOC() {
+        $('#toc_inner').css({"position":"fixed", "top":"100px"});
+        $("#close_container > img").css({"right": "0"});
+    }
+
+    // Handle when the table of content (TOC) is too small to fit completely in the dark background.
+    // We want to give the end result of the bottom of the TOC sticks to the bottom of the dark background
+    // and the top of the TOC scrolls off screen.
+    function handleTOCScrolling() {
+        var visible_background_height = heightOfVisibleBackground();
+        var toc_height = $('#toc_inner').height();
+        if(toc_height > visible_background_height) {
+            // The TOC cannot fit in the dark background, allow the TOC to scroll out of viewport
+            // to avoid the TOC overflowing out of the dark background
+            var negativeNumber = visible_background_height - toc_height + 100;
+            $('#toc_inner').css({"position":"fixed", "top":negativeNumber});
+        }
+    }
+
 
     // Adjust the window for the sticky header when clicking on a section anchor.
     var shiftWindow = function() { scrollBy(0, -100) };
@@ -304,6 +357,7 @@ $(document).ready(function() {
 
     $(window).on('resize', function(){
         alignCodeFileName();
+        handleFloatingTableOfContent(); // Handle table of content view changes.
     });
 
     // TABLE OF CONTENT
@@ -312,6 +366,7 @@ $(document).ready(function() {
     //
     $(window).scroll(function() {
         handleGithubPopup();
-        handleFloatingCodeColumn();
+        handleFloatingTableOfContent();
+        handleFloatingCodeColumn();        
     });
 });
