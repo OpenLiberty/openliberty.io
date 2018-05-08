@@ -127,7 +127,6 @@ $(document).ready(function() {
         var title = $(this).parents('.sect1').find('h3').first();
         var fileName = title.text();
         $(this).attr('fileName', fileName);
-        $('.fileName').text(fileName);
         title.detach();
 
         $(this).addClass('dimmed_code_column'); // Dim the code at first while the github popup takes focus.
@@ -136,6 +135,8 @@ $(document).ready(function() {
 
     // Hide all code blocks except the first
     $('.codecolumn:not(:first)').hide();
+    let fileName = $('.codecolumn:first').attr('fileName');
+    $('.fileName').text(fileName);
 
     $("#breadcrumb_hamburger").on('click', function(event){
         // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
