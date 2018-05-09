@@ -75,6 +75,9 @@ $(document).ready(function() {
     $('#preamble').detach().insertAfter('#duration_container');
     
 
+    var guide_sections = [];
+    var code_sections = {}; // Map guide sections to code blocks to show on the right column.
+
     // Move the code snippets to the code column on the right side.
     $('.codecolumn').each(function(){
         var code_block = $(this);
@@ -85,41 +88,30 @@ $(document).ready(function() {
             section_list = section_list.split(',');
             
             for(var i = 0; i < section_list.length; i++){
+                // Replace spaces and apostrophes with dashes to match the section id
+                section_list[i] = section_list[i].trim();
+                section_list[i] = section_list[i].replace(/\!/g, ''); // Remove all exclamation marks.
+                section_list[i] = section_list[i].replace(/\s+|\’|\!/g, '-');
+
                 // Split the string into a pattern of id=line_num
-                section_list[i] = section_list[i].trim().replace(/\s+|\’/g, '-');
-                
-                // Get the section id and line number from the section
+                // Obtain the section id and line number that should be scrolled to
+                var id;
+                var line_num;
                 var equal_index = section_list[i].indexOf('=');
-                var id = section_list[i].substring(0, equal_index);
-                var line_num = section_list[i].substring(equal_index + 1);
+                if(equal_index){
+                    id = section_list[i].substring(0, equal_index);
+                    line_num = section_list[i].substring(equal_index + 1);
+                } else {
+                    id = section_list[i];
+                }
 
                 // Add scroll listener for when the guide_column is scrolled to the given sections
                 var elem = $('#' + id);
                 if(elem.length > 0){
-                    $(window).scroll(function(){    
-                        var hT = elem.offset().top,
-                        hH = elem.outerHeight(),
-                        wH = $(window).height(),
-                        wS = $(window).scrollTop();
-                        if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
-                            // Scroll to the line in the code column
-                            if(line_num){
-                                var target = code_block.find('.line-numbers:contains(' + line_num + ')').first();
-
-                                // Hide other code blocks and scroll to the correct one
-                                $('.codecolumn').not($(this)).hide();
-                                code_block.show();
-
-                                // Update the header file name
-                                $('.fileName').text(code_block.attr('fileName'));
-
-                                // $('html, #code_column').animate({
-                                //     scrollTop: target.offset().top
-                                // }, 500);
-                            }                
-                        }                  
-                    });
-                }                
+                    code_sections[id] = code_block;
+                    guide_sections.push(elem);
+                }
+                                
             }
             // Remove the section list from the DOM as it is not needed anymore.
             sections.remove();
@@ -135,8 +127,42 @@ $(document).ready(function() {
         $(this).detach().appendTo('#code_column'); // Move code to the right column        
     });
 
+    $(window).scroll(function(){
+        for(var i = 0; i < guide_sections.length; i++){
+            var elem = guide_sections[i];
+            try{
+                var hT = elem.offset().top,
+                hH = elem.outerHeight(),
+                wH = $(window).height(),
+                wS = $(window).scrollTop();
+                if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
+                    // Hide other code blocks and show the correct code block.
+                    var id = elem.attr('id');
+                    var code_block = code_sections[id];
+                    $('.codecolumn').not(code_block).hide();
+                    code_block.show();
+    
+                    // Update the header file name
+                    $('.fileName').text(code_block.attr('fileName'));
+    
+                    // Scroll to the line in the code column if a line number is given
+                    // if(line_num){
+                    //     var target = code_block.find('.line-numbers:contains(' + line_num + ')').first(); 
+                    //     $('html, #code_column').animate({
+                    //         scrollTop: target.offset().top
+                    //     }, 500);
+                    // }                
+                }
+            } catch(e) {
+                // Element not found.
+            }  
+        }                 
+    })
+
     // Hide all code blocks except the first
     $('.codecolumn:not(:first)').hide();
+
+    // Set the file name from the first code section
     let fileName = $('.codecolumn:first').attr('fileName');
     $('.fileName').text(fileName);
 
