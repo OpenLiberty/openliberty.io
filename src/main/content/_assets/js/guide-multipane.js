@@ -73,6 +73,7 @@ $(document).ready(function() {
     var target_height;
 
     $('#preamble').detach().insertAfter('#duration_container');
+    
 
     // Move the code snippets to the code column on the right side.
     $('.codecolumn').each(function(){
@@ -86,6 +87,7 @@ $(document).ready(function() {
             for(var i = 0; i < section_list.length; i++){
                 // Split the string into a pattern of id=line_num
                 section_list[i] = section_list[i].trim().replace(/\s+|\’/g, '-');
+                
                 // Get the section id and line number from the section
                 var equal_index = section_list[i].indexOf('=');
                 var id = section_list[i].substring(0, equal_index);
@@ -94,7 +96,7 @@ $(document).ready(function() {
                 // Add scroll listener for when the guide_column is scrolled to the given sections
                 var elem = $('#' + id);
                 if(elem.length > 0){
-                    $(window).scroll(function(){       
+                    $(window).scroll(function(){    
                         var hT = elem.offset().top,
                         hH = elem.outerHeight(),
                         wH = $(window).height(),
@@ -115,7 +117,7 @@ $(document).ready(function() {
                                 //     scrollTop: target.offset().top
                                 // }, 500);
                             }                
-                        }
+                        }                  
                     });
                 }                
             }
@@ -152,6 +154,25 @@ $(document).ready(function() {
         }
         // Handle table of content floating if in the middle of the guide.
         handleFloatingTableOfContent();
+    });
+
+    // Handle scrolling in the code column.
+    // Prevents the default scroll behavior which would scroll the whole browser.
+    // The code column scrolling is independent of the guide column.
+    $('#code_column').on('wheel mousewheel DOMMouseScroll', function(event){
+        var event0 = event.originalEvent;
+        var dir = (event0.deltaY) < 0 ? 'up' : 'down';
+        // If the code column is at the top and the browser is scrolled down, the element has no scrollTop and does not respond to changing its scrollTop.
+        if(!(dir == 'down' && this.scrollTop === 0)){
+            var delta = event0.wheelDelta || -event0.detail || -event0.deltaY;
+            // Firefox's scroll value is always 1 so multiply by 30 to scroll faster.
+            if(delta === 1 || delta === -1){
+                delta *= 30;
+            }
+            this.scrollTop -= delta;
+            handleGithubPopup();
+            event.preventDefault();  
+        }            
     });
 
     // Handle collapsing the table of contents from full width into the hamburger
