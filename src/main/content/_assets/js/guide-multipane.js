@@ -194,9 +194,16 @@ $(document).ready(function() {
     // The code column scrolling is independent of the guide column.
     $('#code_column').on('wheel mousewheel DOMMouseScroll', function(event){
         var event0 = event.originalEvent;
-        var dir = (event0.deltaY) < 0 ? 'up' : 'down';
+        var dir = (event0.deltaY) < 0 ? 'up' : 'down';                
+        var hasVerticalScrollbar = this.scrollHeight > this.clientHeight;
+
+        if(!hasVerticalScrollbar){
+            // If the code file has no scrollbar, the page will still scroll if the event is propagated to the window scroll listener.
+            event.stopPropagation();
+            event.preventDefault();
+        }
         // If the code column is at the top and the browser is scrolled down, the element has no scrollTop and does not respond to changing its scrollTop.
-        if(!(dir == 'down' && this.scrollTop === 0)){
+        else if(!(dir == 'down' && this.scrollTop === 0)){
             var delta = event0.wheelDelta || -event0.detail || -event0.deltaY;
             // Firefox's scroll value is always 1 so multiply by 30 to scroll faster.
             if(delta === 1 || delta === -1){
