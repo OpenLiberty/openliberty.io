@@ -121,8 +121,22 @@ $(document).ready(function() {
         var title = $(this).parents('.sect1').find('h3').first();
         var fileName = title.text();
         $(this).attr('fileName', fileName);
+
+        // Move file name to the code column
+        var title_section = $("<div class='code_column_title_container'></div>");
+        var title_div = $("<div class='code_column_title'>" + title.text() + "</div>");
+        title_section.append(title_div);
+
+        // Remove old title from the DOM
         title.detach();
 
+        // Add a copy file button and add it to the title section
+        var copyFileButton = $("<div class='copyFileButton' tabindex=0>");
+        var img = $("<img src='/img/guide_copy_button.svg' alt='Copy file contents' />");
+        copyFileButton.append(img);
+        title_section.append(copyFileButton);
+
+        $(this).prepend(title_section);
         $(this).addClass('dimmed_code_column'); // Dim the code at first while the github popup takes focus.
         $(this).detach().appendTo('#code_column'); // Move code to the right column        
     });
@@ -142,9 +156,6 @@ $(document).ready(function() {
                     $('.codecolumn').not(code_block).hide();
                     code_block.show();
     
-                    // Update the header file name
-                    $('.fileName').text(code_block.attr('fileName'));
-    
                     // Scroll to the line in the code column if a line number is given
                     // if(line_num){
                     //     var target = code_block.find('.line-numbers:contains(' + line_num + ')').first(); 
@@ -161,10 +172,6 @@ $(document).ready(function() {
 
     // Hide all code blocks except the first
     $('.codecolumn:not(:first)').hide();
-
-    // Set the file name from the first code section
-    let fileName = $('.codecolumn:first').attr('fileName');
-    $('.fileName').text(fileName);
 
     $("#breadcrumb_hamburger").on('click', function(event){
         // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
@@ -273,24 +280,9 @@ $(document).ready(function() {
         $("#github_clone_popup_container").css('top', githubCloneTop);
     }
 
-    // Desktop view only: Set the file name in the breadcrumb to be aligned with the code column   
-    var alignCodeFileName = function(){
-        if($(window).width() >= 767) {
-            var codeColumnOffset = $("#code_column").offset().left;
-            var lastBreadcrumb = $("#breadcrumb_row li:nth-last-child(3)");
-            var endPoint = lastBreadcrumb.offset().left + lastBreadcrumb.width();
-            // If the title would overlap the last breadcrumb, then adjust the 'left' location to be to the right of the breadcrumb.
-            if(endPoint >= codeColumnOffset){
-                codeColumnOffset = endPoint + '5px';
-            }
-            $("#breadcrumb_row .fileName").css('left', codeColumnOffset);
-        }        
-    }
-    alignCodeFileName();
-
     $(".copyFileButton").click(function(event){
         event.preventDefault();
-        target = $(".codecolumn:visible").get(0);
+        target = $(".codecolumn:visible .content").get(0);
         window.getSelection().selectAllChildren(target); // Set the github clone command as the copy target.
         if(document.execCommand('copy')) {
             window.getSelection().removeAllRanges();
@@ -404,7 +396,6 @@ $(document).ready(function() {
     }
 
     $(window).on('resize', function(){
-        alignCodeFileName();
         handleFloatingTableOfContent(); // Handle table of content view changes.
     });
 

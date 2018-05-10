@@ -18,45 +18,22 @@ header {
     z-index: 1;
 }
 
-.breadcrumb > .fileName {
-    display: inline-block;
-}
-
-#breadcrumb_row .fileName {
-    position: absolute;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 26px;
-    color: white;
-    left: 50%;
-    padding-left: 12px;
-    border-left: 2px solid #1E1F38;        
-}
-
-#breadcrumb_row .fileName:before {
-    content: "";
-}
-
-#breadcrumb_row .copyFileButton {
-    float: right;
+.copyFileButton {
     display: inline-block;
     position: absolute;
-    right: 0;
+    right: 16px;
+    top: 14px;
     line-height: 5px;
     margin-right: 20px;
 }
 
-#breadcrumb_row .copyFileButton:hover {
+.copyFileButton:hover {
     cursor: pointer;
 }
 
-#breadcrumb_row .copyFileButton > img {
+.copyFileButton > img {
     width: 14px;
     height: 16px;
-}
-
-#breadcrumb_row .copyFileButton:before {
-    content: "";
 }
 
 #doc_title {
@@ -237,11 +214,29 @@ header {
     width: 730px;
     left: calc(100% - 700px); /* Adjust for the width and padding */
     top: 100px;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 .dimmed_code_column {
     opacity: .19;
+}
+
+.code_column_title_container {
+    height: 43px;
+    padding-left: 9.5px; 
+    border-bottom: solid 1px #d4d7e3;
+    display: table;
+    width: 100%;
+}
+
+.code_column_title {
+    font-family: Asap;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.86;
+    color: #3f465a;       
+    display: table-cell;
+    vertical-align: middle;
 }
 
 #github_clone_popup_container {
@@ -402,7 +397,7 @@ header {
         margin-bottom: 0;
     }
 
-    .breadcrumb > .fileName, #breadcrumb_row .copyFileButton, #github_clone_popup_container {
+    #github_clone_popup_container {
         display: none;
     }
 
@@ -436,7 +431,7 @@ header {
     }
 
     #code_column {
-        left: calc(100% - 715px); /* Adjust for the width and padding */
+        left: calc(100% - 730px); /* Adjust for the width and padding */
         display: inline-block;
     }
 }
