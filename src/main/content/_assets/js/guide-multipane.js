@@ -210,7 +210,7 @@ $(document).ready(function() {
                 delta *= 30;
             }
             this.scrollTop -= delta;
-            handleGithubPopup();
+            handleGithubPopup(true);
             event.preventDefault();  
         }            
     });
@@ -290,7 +290,7 @@ $(document).ready(function() {
     $(".copyFileButton").click(function(event){
         event.preventDefault();
         target = $(".codecolumn:visible .content").get(0);
-        window.getSelection().selectAllChildren(target); // Set the github clone command as the copy target.
+        window.getSelection().selectAllChildren(target); // Set the file contents as the copy target.
         if(document.execCommand('copy')) {
             window.getSelection().removeAllRanges();
         } else {
@@ -321,18 +321,33 @@ $(document).ready(function() {
         }        
     });
 
-    var handleGithubPopup = function(){
+    /*
+       Handle showing/hiding the Github popup.
+       @Param isCodeColumn boolean for telling if the scroll happened in the code column instead of the overall window.
+    */
+    var handleGithubPopup = function(isCodeColumn) {
         // If the page is scrolled down past the top of the page then hide the github clone popup
         var githubPopup = $("#github_clone_popup_container");
-        var atTop = $(window).scrollTop() === 0;
-        if(atTop){
-            githubPopup.fadeIn();
-            $(".codecolumn").addClass('dimmed_code_column', {duration:400});
-        }
-        else{            
-            githubPopup.fadeOut();
-            $(".codecolumn").removeClass('dimmed_code_column', {duration:400});
-        }
+        if(githubPopup.length > 0){
+            var atTop;
+            if(isCodeColumn){
+                // Only show the Github popup for the first code column
+                if(!$('.codecolumn:first').is(":visible")){
+                    return;
+                }
+                atTop = $("#code_column").scrollTop() === 0;
+            } else {
+                atTop = $(window).scrollTop() === 0;
+            }
+            if(atTop){
+                githubPopup.fadeIn();
+                $(".codecolumn").addClass('dimmed_code_column', {duration:400});
+            }
+            else{            
+                githubPopup.fadeOut();
+                $(".codecolumn").removeClass('dimmed_code_column', {duration:400});
+            }
+        }        
     }
 
     // Handle when to float the table of content
@@ -411,7 +426,7 @@ $(document).ready(function() {
     // Keep the table of content (TOC) in view while scrolling (Desktop only)
     //
     $(window).scroll(function() {
-        handleGithubPopup();
+        handleGithubPopup(false);
         handleFloatingTableOfContent();
         handleFloatingCodeColumn();        
     });
