@@ -430,4 +430,11 @@ $(document).ready(function() {
         handleFloatingTableOfContent();
         handleFloatingCodeColumn();        
     });
+
+    // Show the github popup for the first section.
+    $(window).on('load', function(){
+        if(window.location.hash === ""){
+            handleGithubPopup();
+        }
+    });
 });
