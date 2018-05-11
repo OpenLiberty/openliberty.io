@@ -62,7 +62,7 @@ html, body, main {
     font-size: 14px;
     /* border-left: 8px solid transparent; */
     word-wrap: break-word;
-    padding: 0px 47px 14px 27px;
+    padding: 7px 47px 7px 27px;
 }
 
 a[target="contentFrame"] {
@@ -107,7 +107,6 @@ iframe.config_content_frame {
     overflow-x: hidden;  /* hide horizontal scrollbar due to table */
 }
 
-
 #config_title {
     font-family: BunueloLight; /* BunueloCleanPro-Light; */
     font-size: 35px;
@@ -116,22 +115,38 @@ iframe.config_content_frame {
     margin: 29px 0 13px -2px; /* 18px; */
 }
 
-#content div.paragraph p a {
-    font-family: Asap-Regular;
+#content div.paragraph p strong {
+    font-family: Asap; /* Asap-Regular; */
     font-size: 20px;
     color: #121200;
     letter-spacing: 0;
     line-height: 24px;
 }
 
+.subHeading {
+    font-size: 20px;
+}
+
+.subsection {
+    margin-left: 69px;
+}
+
+div.paragraph p.subsection {
+    margin-top: 20px;
+}
+
 /* TABLE STYLING */
 
 table {
     margin-top: 30px;
-    margin-bottom: 74px;
+    margin-bottom: 54px; /* 74px */
     margin-left: -20px;
     box-shadow: 0 4px #D6D9E4;
     width: calc(100% + 20px);
+}
+
+table.subsection {
+    margin-left: 59px;
 }
 
 th {
@@ -173,4 +188,15 @@ tr:nth-child(even) {
 
 tr:nth-child(odd) {
     background: #FFFFFF;
+}
+
+/* Custom expand/collapse button */
+div.toggle {
+    margin-right: 10px;
+    margin-left: -20px; 
+    display: inline;
+}
+
+div.toggle:hover {
+    cursor: pointer;
 }
