@@ -377,12 +377,10 @@ $(document).ready(function() {
 
     function disableFloatingTOC() {
         $('#toc_inner').width("").css({"position": "", "top": ""});
-        // $("#close_container > img").css({"right": "27px"});
     }
 
     function enableFloatingTOC() {
         $('#toc_inner').css({"position":"fixed", "top":"100px"});
-        // $("#close_container > img").css({"right": "0"});
     }
 
     // Handle when the table of content (TOC) is too small to fit completely in the dark background.
@@ -401,7 +399,9 @@ $(document).ready(function() {
 
 
     // Adjust the window for the sticky header when clicking on a section anchor.
-    var shiftWindow = function() { scrollBy(0, -100) };
+    var shiftWindow = function() { 
+        scrollBy(0, -100);
+    };
     if (location.hash){
         shiftWindow();
     } 
