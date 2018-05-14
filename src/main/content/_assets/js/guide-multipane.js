@@ -194,8 +194,13 @@ $(document).ready(function() {
     // The code column scrolling is independent of the guide column.
     $('#code_column').on('wheel mousewheel DOMMouseScroll', function(event){
         var event0 = event.originalEvent;
-        var dir = (event0.deltaY) < 0 ? 'up' : 'down';                
-        var hasVerticalScrollbar = this.scrollHeight > this.clientHeight;
+        var dir = (event0.deltaY) < 0 ? 'up' : 'down';        
+        var hasVerticalScrollbar = false;     
+
+        // Check if element is scrollable.
+        if(this.scrollTop > 0 || this.scrollHeight > document.documentElement.clientHeight){
+            hasVerticalScrollbar = true;
+        }
 
         if(!hasVerticalScrollbar){
             // If the code file has no scrollbar, the page will still scroll if the event is propagated to the window scroll listener.
