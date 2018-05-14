@@ -98,7 +98,7 @@ $(document).ready(function() {
                 var id;
                 var line_num;
                 var equal_index = section_list[i].indexOf('=');
-                if(equal_index){
+                if(equal_index > -1){
                     id = section_list[i].substring(0, equal_index);
                     line_num = section_list[i].substring(equal_index + 1);
                 } else {
