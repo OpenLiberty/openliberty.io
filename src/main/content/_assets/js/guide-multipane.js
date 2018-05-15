@@ -446,7 +446,8 @@ $(document).ready(function() {
 
     $(window).on('resize', function(){
         handleFloatingTableOfContent(); // Handle table of content view changes.
-        resizeGuideSections();
+        handleFloatingCodeColumn();
+        resizeGuideSections();        
     });
 
     // TABLE OF CONTENT
