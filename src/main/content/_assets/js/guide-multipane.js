@@ -412,6 +412,28 @@ $(document).ready(function() {
     } 
     window.addEventListener("hashchange", shiftWindow);
 
+    // Resize the guide sections so that there is clear separation between each section and the code column transitions better.
+    function resizeGuideSections(){
+        // Two column view or three column view.
+        if($(window).width() > 1170){
+            var viewportHeight = window.innerHeight;
+            var headerHeight = $('header').height();
+            var sectionTitleHeight = $("#guide_content h2").first().height();
+            var newSectionHeight = viewportHeight - headerHeight - (2 * sectionTitleHeight);
+            $('.sect1:not(#guide_meta)').css({
+                'min-height': newSectionHeight + 'px'
+            });
+        }
+        // Use initial height for single column view / mobile
+        else {
+            $('.sect1:not(#guide_meta)').css({
+                'min-height': 'initial'
+            });
+        }
+    };
+
+    resizeGuideSections();
+
     // RELATED GUIDES
     //
     // Add Related guides link to the table of contents, if needed
@@ -424,6 +446,7 @@ $(document).ready(function() {
 
     $(window).on('resize', function(){
         handleFloatingTableOfContent(); // Handle table of content view changes.
+        resizeGuideSections();
     });
 
     // TABLE OF CONTENT
