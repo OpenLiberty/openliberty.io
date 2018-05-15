@@ -326,6 +326,15 @@ $(document).ready(function() {
         }        
     });
 
+    var handleDownArrow = function() {        
+        if($(window).width() < 1171){
+            $("#down_arrow").hide();
+            return;
+        }
+        var atTop = $(window).scrollTop() === 0;
+        atTop ? $("#down_arrow").fadeIn() : $("#down_arrow").fadeOut();
+    }
+
     /*
        Handle showing/hiding the Github popup.
        @Param isCodeColumn boolean for telling if the scroll happened in the code column instead of the overall window.
@@ -352,7 +361,7 @@ $(document).ready(function() {
                 githubPopup.fadeOut();
                 $(".codecolumn").removeClass('dimmed_code_column', {duration:400});
             }
-        }        
+        }                
     }
 
     // Handle when to float the table of content
@@ -446,6 +455,7 @@ $(document).ready(function() {
 
     $(window).on('resize', function(){
         handleFloatingTableOfContent(); // Handle table of content view changes.
+        handleDownArrow();
         handleFloatingCodeColumn();
         resizeGuideSections();        
     });
@@ -456,6 +466,7 @@ $(document).ready(function() {
     //
     $(window).scroll(function() {
         handleGithubPopup(false);
+        handleDownArrow();
         handleFloatingTableOfContent();
         handleFloatingCodeColumn();        
     });
