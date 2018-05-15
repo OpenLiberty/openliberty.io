@@ -141,6 +141,17 @@ $(document).ready(function() {
         $(this).detach().appendTo('#code_column'); // Move code to the right column        
     });
 
+    // Map the guide sections that don't have any code sections to the previous section's code.
+    var sections = $('.sect1:not(#guide_meta) > h2, .sect2:not(#guide_meta) > h3');
+    for(var i = 1; i < sections.length; i++){
+        var id = sections[i].id;
+        if(!code_sections[id]){
+            guide_sections.push($(sections[i]));
+            var previous_id = sections[i-1].id;
+            code_sections[id] = code_sections[previous_id];
+        }
+    }
+
     $(window).scroll(function(){
         for(var i = 0; i < guide_sections.length; i++){
             var elem = guide_sections[i];
