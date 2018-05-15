@@ -108,7 +108,10 @@ $(document).ready(function() {
                 // Add scroll listener for when the guide_column is scrolled to the given sections
                 var elem = $('#' + id);
                 if(elem.length > 0){
-                    code_sections[id] = code_block;
+                    code_sections[id] = {
+                        'code': code_block,
+                        'line_num': line_num
+                    };
                     guide_sections.push(elem);
                 }
                                 
@@ -163,17 +166,20 @@ $(document).ready(function() {
                 if (wS > (hT+hH-wH) && (hT > wS) && (wS+wH > hT+hH)){
                     // Hide other code blocks and show the correct code block.
                     var id = elem.attr('id');
-                    var code_block = code_sections[id];
+                    var code_block = code_sections[id].code;
+                    var line_num = code_sections[id].line_num;
                     $('.codecolumn').not(code_block).hide();
                     code_block.show();
     
                     // Scroll to the line in the code column if a line number is given
-                    // if(line_num){
-                    //     var target = code_block.find('.line-numbers:contains(' + line_num + ')').first(); 
-                    //     $('html, #code_column').animate({
-                    //         scrollTop: target.offset().top
-                    //     }, 500);
-                    // }                
+                    if(line_num){
+                        var target = code_block.find('.line-numbers:contains(' + line_num + ')').first();                         
+                        $('#code_column').animate({
+                            scrollTop: target.offset().top
+                        }, 500);
+                    } else {
+                        $('#code_column').scrollTop('0');
+                    }                
                 }
             } catch(e) {
                 // Element not found.
@@ -204,6 +210,8 @@ $(document).ready(function() {
     // Prevents the default scroll behavior which would scroll the whole browser.
     // The code column scrolling is independent of the guide column.
     $('#code_column').on('wheel mousewheel DOMMouseScroll', function(event){
+        $(this).stop(); // Stop animations taking place with this code section.
+
         var event0 = event.originalEvent;
         var dir = (event0.deltaY) < 0 ? 'up' : 'down';        
         var hasVerticalScrollbar = false;     
