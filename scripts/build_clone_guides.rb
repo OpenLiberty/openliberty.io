@@ -26,10 +26,17 @@ repos = client.org_repos('OpenLiberty')
 # --------------------------------------------
 # For the interactive guides, only build the dev branch for the TravisCI environments
 iguide_branch = 'master'
+guide_branch = 'master'
 if ENV['TRAVIS']
     iguide_branch = 'dev'
+    guide_branch = 'multipane'
 end
 puts "Looking for draft interactive guides with branch: #{iguide_branch}..."
+
+# Function to check if the guide directory exists after a git clone command
+def directory_exists?(directory)
+    File.directory?(directory)
+end
 
 # --------------------------------------------
 # Filter for Open Liberty guide repositories
@@ -45,7 +52,10 @@ repos.each do |element|
             # Clone the draft interactive guides, using the dev branch for travis and master for all other environments.
             `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{iguide_branch} --single-branch src/main/content/guides/#{repo_name}`
         elsif repo_name.start_with?('draft-guide')
-            `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
+            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_branch} --single-branch src/main/content/guides/#{repo_name}`
+            # Clone the default branch if the guide_branch does not exist for this guide repo.
+            if !(directory_exists(repo_name))
+                `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
         end
     else
         ##################
@@ -56,7 +66,10 @@ repos.each do |element|
             `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{iguide_branch} --single-branch src/main/content/guides/#{repo_name}`
         elsif repo_name.start_with?('guide')
             # Clone static guides that are ready to be published to openliberty.io
-            `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
+            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_branch} --single-branch src/main/content/guides/#{repo_name}`
+            # Clone the default branch if the guide_branch does not exist for this guide repo.
+            if !(directory_exists(repo_name))
+                `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`            
         end
     end
 end
