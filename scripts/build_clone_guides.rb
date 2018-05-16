@@ -34,8 +34,8 @@ end
 puts "Looking for draft interactive guides with branch: #{iguide_branch}..."
 
 # Function to check if the guide directory exists after a git clone command
-def directory_exists?(directory)
-    File.directory?(directory)
+def directory_exists?(repo_name)
+    File.directory?('src/main/content/guides/' + repo_name)
 end
 
 # --------------------------------------------
