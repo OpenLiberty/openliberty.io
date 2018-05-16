@@ -54,7 +54,7 @@ repos.each do |element|
         elsif repo_name.start_with?('draft-guide')
             `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_branch} --single-branch src/main/content/guides/#{repo_name}`
             # Clone the default branch if the guide_branch does not exist for this guide repo.
-            if !(directory_exists(repo_name))
+            if !(directory_exists?(repo_name))
                 `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
         end
     else
@@ -68,7 +68,7 @@ repos.each do |element|
             # Clone static guides that are ready to be published to openliberty.io
             `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_branch} --single-branch src/main/content/guides/#{repo_name}`
             # Clone the default branch if the guide_branch does not exist for this guide repo.
-            if !(directory_exists(repo_name))
+            if !(directory_exists?(repo_name))
                 `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`            
         end
     end
