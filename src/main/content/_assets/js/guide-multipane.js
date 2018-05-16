@@ -229,9 +229,9 @@ $(document).ready(function() {
         // If the code column is at the top and the browser is scrolled down, the element has no scrollTop and does not respond to changing its scrollTop.
         else if(!(dir == 'down' && this.scrollTop === 0)){
             var delta = event0.wheelDelta || -event0.detail || -event0.deltaY;
-            // Firefox's scroll value is always 1 so multiply by 30 to scroll faster.
+            // Firefox's scroll value is always 1 so multiply by 150 to scroll faster.
             if(delta === 1 || delta === -1){
-                delta *= 30;
+                delta *= 150;
             }
             this.scrollTop -= delta;
             handleGithubPopup(true);
