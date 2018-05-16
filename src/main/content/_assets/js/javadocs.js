@@ -174,28 +174,43 @@ function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
     var frameHeader = frame.contents().find(frameElementToListen);
     var offsetTop = frameHeader.offset().top;
     var origPaddingTop = parseInt(frameHeader.css("padding-top").replace("px", ""));
-    var origBorderTop = frameHeader.css("border-top");
+    // For FireFox, cannot use border-top, has to use border-top-color, border-top-style, border-top-width
+    //var origBorderTop = frameHeader.css("border-top");
+    var origBorderTopWidth = frameHeader.css("border-top-width");
+    var origBorderTopStyle = frameHeader.css("border-top-style");
+    var origBorderTopColor = frameHeader.css("border-top-color");
+    var stickyBeforeCss = '<style data-class="sticky">.sticky:before {top:' + origPaddingTop + 'px; ' + 
+    'border-top-width: ' + origBorderTopWidth + '; border-top-style: ' + origBorderTopStyle + '; border-top-color: ' + origBorderTopColor +';}</style>';
     frame.contents().off('scroll').on('scroll', function(event){
         var topPos = $(this).scrollTop();
         if (topPos >= offsetTop) {
-            // sticky css will set margin-top to 0, otherwise the rolling content will appear in the margin-top area.
-            // To maintain the spacing and look with margin-top removed, replace padding-top and border-top
-            // with temporarily values and adjust sticky header with calculated padding-top and border-top.
-            frameHeader.css("padding-top", offsetTop + origPaddingTop); 
-            frameHeader.css("border-top", "0px solid transparent"); 
-            if ($(this).find('head style[data-class="sticky"]').length) {
-                $(this).find('head style[data-class="sticky]').replaceWith(
-                    '<style data-class="sticky">.sticky:before{top:' + origPaddingTop + 'px; border-top: ' + origBorderTop + ';}</style>');      
-            } else {
-                $(this).find('head').append(
-                    '<style data-class="sticky">.sticky:before{top:' + origPaddingTop + 'px; border-top: ' + origBorderTop + ';}</style>');
+            if (!frameHeader.hasClass("sticky")) {
+                // sticky css will set margin-top to 0, otherwise the rolling content will appear in the margin-top area.
+                // To maintain the spacing and look with margin-top removed, replace padding-top and border-top
+                // with temporarily values and adjust sticky header with calculated padding-top and border-top.
+                frameHeader.css("padding-top", offsetTop + origPaddingTop);
+                //frameHeader.css("border-top", "0px solid transparent"); 
+                frameHeader.css("border-top-width", "0px");
+                frameHeader.css("border-top-style", "solid");
+                frameHeader.css("border-top-color", "transparent");
+
+                if ($(this).find('head style[data-class="sticky"]').length) {
+                    $(this).find('head style[data-class="sticky"]').replaceWith(stickyBeforeCss);
+                } else {
+                    $(this).find('head').append(stickyBeforeCss);
+                }
+                frameHeader.addClass("sticky");
             }
-            frameHeader.addClass("sticky");
         } else {
-            frameHeader.removeClass("sticky");
-            /* restore the original padding-top and border-top css */
-            frameHeader.css("padding-top", origPaddingTop); 
-            frameHeader.css("border-top", origBorderTop);
+            if (frameHeader.hasClass("sticky")) {
+                frameHeader.removeClass("sticky");
+                /* restore the original padding-top and border-top css */
+                frameHeader.css("padding-top", origPaddingTop);
+                //frameHeader.css("border-top", origBorderTop);
+                frameHeader.css("border-top-width", origBorderTopWidth);
+                frameHeader.css("border-top-style", origBorderTopStyle);
+                frameHeader.css("border-top-color", origBorderTopColor);
+            }
         }
     });
 }
