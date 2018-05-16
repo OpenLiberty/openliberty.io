@@ -46,7 +46,7 @@ find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/conte
 find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
 
 # Copy stylesheet.css located in the css directory to the javadoc subdirectories
-find src/main/content/javadocs -path *-javadoc/stylesheet.css -exec cp src/main/content/_assets/css/stylesheet.css {} \;
+find src/main/content/javadocs -name *-javadoc -exec cp src/main/content/_assets/css/stylesheet.css {} \;
 
 # Jekyll build
 echo "Building with jekyll..."
