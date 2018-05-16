@@ -45,6 +45,9 @@ echo "Moving any js and css files published interactive guides..."
 find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
 find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
 
+# Copy stylesheet.css located in the css directory to the javadoc subdirectories
+find src/main/content/javadocs -path *-javadoc/stylesheet.css -exec cp src/main/content/_assets/css/stylesheet.css {} \;
+
 # Jekyll build
 echo "Building with jekyll..."
 echo `jekyll -version`

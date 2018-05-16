@@ -58,6 +58,9 @@ function addExpandAndCollapseToggleButtons() {
         if(isTopLeftPackageIFrame && $(this).contents().find(".toggle").length === 0) {
             var list = $(this).contents().find('ul[title="Packages"]');
             var header = $(this).contents().find("h2[title='Packages']");
+            // header.css("position", "fixed");
+            // header.css("top", "0");
+            // header.css("width", "100%");
 
             // A empty whitespace only <p> element needs to be hidden
             var emptyParagraphElement = $(this).contents().find("body > p");
@@ -122,6 +125,9 @@ function addExpandAndCollapseToggleButtonForPackageFrame(contents, leftBottom) {
     // for string comparison.
     var header2_text = header2.text().replace('/\s/g',' ').trim();
     if(header2_text === "All Classes") {
+        // header2.css("position", "fixed");
+        // header2.css("top", "0");
+        // header2.css("width", "100%");
         var toggleButton2 = $('<div class="toggle" collapsed="false" tabindex=0><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse" /></div>');
         toggleButton2.on('click', function(){
             var collapsed = $(this).attr('collapsed');
@@ -159,6 +165,38 @@ function addScrollListener() {
     var rightFrame = javadoc_container.find(CLASS_FRAME);
     rightFrame.contents().off('scroll').on('scroll', function(event){
         hideFooter($(this));
+    });
+}
+
+/* Scroll listener to the left frame */
+function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
+    var frame = $('#javadoc_container').contents().find(frameToListen);
+    var frameHeader = frame.contents().find(frameElementToListen);
+    var offsetTop = frameHeader.offset().top;
+    var origPaddingTop = parseInt(frameHeader.css("padding-top").replace("px", ""));
+    var origBorderTop = frameHeader.css("border-top");
+    frame.contents().off('scroll').on('scroll', function(event){
+        var topPos = $(this).scrollTop();
+        if (topPos >= offsetTop) {
+            // sticky css will set margin-top to 0, otherwise the rolling content will appear in the margin-top area.
+            // To maintain the spacing and look with margin-top removed, replace padding-top and border-top
+            // with temporarily values and adjust sticky header with calculated padding-top and border-top.
+            frameHeader.css("padding-top", offsetTop + origPaddingTop); 
+            frameHeader.css("border-top", "0px solid transparent"); 
+            if ($(this).find('head style[data-class="sticky"]').length) {
+                $(this).find('head style[data-class="sticky]').replaceWith(
+                    '<style data-class="sticky">.sticky:before{top:' + origPaddingTop + 'px; border-top: ' + origBorderTop + ';}</style>');      
+            } else {
+                $(this).find('head').append(
+                    '<style data-class="sticky">.sticky:before{top:' + origPaddingTop + 'px; border-top: ' + origBorderTop + ';}</style>');
+            }
+            frameHeader.addClass("sticky");
+        } else {
+            frameHeader.removeClass("sticky");
+            /* restore the original padding-top and border-top css */
+            frameHeader.css("padding-top", origPaddingTop); 
+            frameHeader.css("border-top", origBorderTop);
+        }
     });
 }
 
@@ -306,6 +344,9 @@ function addClickListener(contents) {
             window.history.pushState(state, null, hashParams);
         }
     })
+    contents.find("a").on("contextmenu", function(event) {
+        console.log("event", event);
+    })
 }
 
 function setPackageContainerHeight() {
@@ -422,7 +463,9 @@ $(document).ready(function() {
         resizeJavaDocWindow();
         addAccessibility();
         addExpandAndCollapseToggleButtons();  
-        addNavHoverListener();      
+        addNavHoverListener();
+        addLeftFrameScrollListener('.leftTop iframe', 'h2[title="Packages"]');
+        addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
         addScrollListener();
         addClickListeners();
 
@@ -436,6 +479,7 @@ $(document).ready(function() {
             addClickListener($(this).contents());
             // add back the toggle expand/collapse button
             addExpandAndCollapseToggleButtonForPackageFrame($(this).contents(), $('#javadoc_container').contents().find(".leftBottom"));
+            addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
         });
 
         setDynamicIframeContent();
