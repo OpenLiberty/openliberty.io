@@ -58,9 +58,6 @@ function addExpandAndCollapseToggleButtons() {
         if(isTopLeftPackageIFrame && $(this).contents().find(".toggle").length === 0) {
             var list = $(this).contents().find('ul[title="Packages"]');
             var header = $(this).contents().find("h2[title='Packages']");
-            // header.css("position", "fixed");
-            // header.css("top", "0");
-            // header.css("width", "100%");
 
             // A empty whitespace only <p> element needs to be hidden
             var emptyParagraphElement = $(this).contents().find("body > p");
@@ -125,9 +122,6 @@ function addExpandAndCollapseToggleButtonForPackageFrame(contents, leftBottom) {
     // for string comparison.
     var header2_text = header2.text().replace('/\s/g',' ').trim();
     if(header2_text === "All Classes") {
-        // header2.css("position", "fixed");
-        // header2.css("top", "0");
-        // header2.css("width", "100%");
         var toggleButton2 = $('<div class="toggle" collapsed="false" tabindex=0><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse" /></div>');
         toggleButton2.on('click', function(){
             var collapsed = $(this).attr('collapsed');
@@ -174,8 +168,7 @@ function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
     var frameHeader = frame.contents().find(frameElementToListen);
     var offsetTop = frameHeader.offset().top;
     var origPaddingTop = parseInt(frameHeader.css("padding-top").replace("px", ""));
-    // For FireFox, cannot use border-top, has to use border-top-color, border-top-style, border-top-width
-    //var origBorderTop = frameHeader.css("border-top");
+    // For FireFox, cannot just use border-top, has to use border-top-color, border-top-style, border-top-width
     var origBorderTopWidth = frameHeader.css("border-top-width");
     var origBorderTopStyle = frameHeader.css("border-top-style");
     var origBorderTopColor = frameHeader.css("border-top-color");
@@ -189,7 +182,6 @@ function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
                 // To maintain the spacing and look with margin-top removed, replace padding-top and border-top
                 // with temporarily values and adjust sticky header with calculated padding-top and border-top.
                 frameHeader.css("padding-top", offsetTop + origPaddingTop);
-                //frameHeader.css("border-top", "0px solid transparent"); 
                 frameHeader.css("border-top-width", "0px");
                 frameHeader.css("border-top-style", "solid");
                 frameHeader.css("border-top-color", "transparent");
@@ -206,7 +198,6 @@ function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
                 frameHeader.removeClass("sticky");
                 /* restore the original padding-top and border-top css */
                 frameHeader.css("padding-top", origPaddingTop);
-                //frameHeader.css("border-top", origBorderTop);
                 frameHeader.css("border-top-width", origBorderTopWidth);
                 frameHeader.css("border-top-style", origBorderTopStyle);
                 frameHeader.css("border-top-color", origBorderTopColor);
@@ -358,9 +349,6 @@ function addClickListener(contents) {
             });
             window.history.pushState(state, null, hashParams);
         }
-    })
-    contents.find("a").on("contextmenu", function(event) {
-        console.log("event", event);
     })
 }
 
