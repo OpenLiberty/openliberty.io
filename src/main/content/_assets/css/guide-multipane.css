@@ -9,8 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-/* GUIDE CONTENT */
-
+ /* HEADER and BREADCRUMB */
 header {
     position: sticky;
     position: -webkit-sticky;
@@ -18,46 +17,28 @@ header {
     z-index: 1;
 }
 
-.breadcrumb > .fileName {
-    display: inline-block;
-}
-
-#breadcrumb_row .fileName {
-    position: absolute;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 26px;
-    color: white;
-    left: 50%;
-    padding-left: 12px;
-    border-left: 2px solid #1E1F38;        
-}
-
-#breadcrumb_row .fileName:before {
-    content: "";
-}
-
-#breadcrumb_row .copyFileButton {
-    float: right;
+.copyFileButton {
     display: inline-block;
     position: absolute;
-    right: 0;
+    right: 16px;
+    top: 14px;
     line-height: 5px;
-    margin-right: 20px;
 }
 
-#breadcrumb_row .copyFileButton:hover {
+.copyFileButton:hover {
     cursor: pointer;
 }
 
-#breadcrumb_row .copyFileButton > img {
+.copyFileButton > img {
     width: 14px;
     height: 16px;
 }
 
-#breadcrumb_row .copyFileButton:before {
-    content: "";
+#doc_title {
+    margin-left: 23px;
 }
+
+/* GUIDE CONTENT */
 
 #guide_content h1 {
     font-size: 28px;
@@ -145,7 +126,6 @@ header {
 
 #guide_content div.sect1 {
     padding-bottom: 50px;
-    /* margin-bottom: 10px; */
     padding-left: 60px;
     padding-right: 60px;
     margin-left: -15px;
@@ -155,17 +135,21 @@ header {
 
 #guide_content div.sect1:not(#guide_meta) {
     box-shadow: inset 0px 94px 0px 0px #F7F9E5, 0px 5px 11px -3px rgba(0,0,0,0.27);
+    border-top: 3px solid #d4d7e3;
 }
 
 #guide_content .sect1 h2 {
     padding-top: 48px;
     margin-top: 0;
-    margin-bottom: 21px;
+    margin-bottom: 21px;    
+    font-family: Bunuelo;
+    font-weight: 600;
+    line-height: 1.3;
 }
 
 #guide_content #guide_meta {
     padding-top: 40px;
-    padding-bottom: 40px;
+    padding-bottom: 40px;    
 }
 
 #guide_content #related-guides-cards {
@@ -228,13 +212,36 @@ header {
     width: 730px;
     left: calc(100% - 700px); /* Adjust for the width and padding */
     top: 100px;
-    overflow-y: auto;
+    overflow-y: scroll;
+}
+
+.dimmed_code_column {
+    opacity: .19;
+}
+
+.code_column_title_container {
+    height: 43px;
+    padding-left: 9.5px; 
+    border-bottom: solid 1px #d4d7e3;
+    display: table;
+    width: 100%;
+}
+
+.code_column_title {
+    font-family: Asap;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.86;
+    color: #3f465a;       
+    display: table-cell;
+    vertical-align: middle;
 }
 
 #github_clone_popup_container {
     position: absolute;
     top: 31%;
     width: 100%;
+    z-index: 2;
 }
 
 #github_clone_popup {
@@ -361,6 +368,21 @@ header {
     background-color: #f1f4fe;
 }
 
+#down_arrow {
+    position: fixed;
+    display: none;
+    bottom: 20px;    
+    text-align: center;
+    z-index: 1;
+    width: 45px;
+    height: 45px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14);
+    background-color: #ffffff;
+    border: solid 2px #838ea9;
+    border-radius: 25px;
+    padding: 5px;
+}
+
 #related_guides_section {
     width: 100%;
     height: 100px;
@@ -388,7 +410,7 @@ header {
         margin-bottom: 0;
     }
 
-    .breadcrumb > .fileName, #breadcrumb_row .copyFileButton, #github_clone_popup_container {
+    #github_clone_popup_container {
         display: none;
     }
 
@@ -408,6 +430,13 @@ header {
     /* Show the code snippets in mobile view that were on the right pane in desktop view */
     #guide_content .listingblock {
         display: block;
+    } 
+}
+
+@media (min-width: 1171px) {
+    #down_arrow {
+        display: block;
+        left: calc((100% - 730px - 45px)/2); /* Calculate positioning to be in the center of the guide column */
     }
 }
 
@@ -421,8 +450,13 @@ header {
         width: calc(100% - 730px);
     }
 
+    #down_arrow {
+        display: block;
+        left: calc(280px + (100% - 280px - 730px - 45px)/2); /* Calculate positioning to be in the center of the guide column */
+    }
+
     #code_column {
-        left: calc(100% - 715px); /* Adjust for the width and padding */
+        left: calc(100% - 730px); /* Adjust for the width and padding */
         display: inline-block;
     }
 }
