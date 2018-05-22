@@ -25,7 +25,7 @@ The consortium governance model of this new specification meant that new tools v
 
 Similarly to how the Swagger specification was used as the base for a community-driven specification, the Java libraries for Swagger were used as the base for the http://microprofile.io/)[MicroProfile community] programming model for OpenAPI v3: https://github.com/eclipse/microprofile-open-api[MicroProfile OpenAPI].  This specification outlined an official set of annotations and interfaces that allow developers to successfully generate OpenAPI v3 documentation for their Java RESTful APIs.
 
-The following diagram provides an overview of the MicroProfile OpenAPI architecture, which has been supported in Open Liberty starting with version 18.0.0.1:
+The following diagram provides an overview of the MicroProfile OpenAPI support in Open Liberty, via the `mpOpenAPI-1.0` feature.
 
 image::img/mp_ol_openapi.png[MP OpenAPI Architecture]
 
@@ -43,8 +43,17 @@ Additionally, a https://github.com/eclipse/microprofile-open-api/blob/master/spe
 
 You are now ready to try out an application that has MicroProfile OpenAPI enabled!  Just head over to our  https://github.com/microservices-api/oas3-microprofile-app[sample app] and follow the instructions to build an Open Liberty docker container that with MicroProfile OpenAPI!  
 
+## OpenAPI UI
+
+A very important value-add from Open Liberty is the native OpenAPI UI that it ships out of the box!  This UI is built from the https://github.com/swagger-api/swagger-ui[Open Source Swagger UI] and renders the generated `/openapi` documented into a very user friendly page.  One of the best features is the ability to `Try out` each endpoint, making an invocation to the back-end straight from the UI.  
+
+The UI, available from the endpoint `/openapi/ui` can also be https://www.ibm.com/support/knowledgecenter/en/SSD28V_9.0.0/com.ibm.websphere.wlp.core.doc/ae/twlp_api_mpopenapi_custom.html[customized] beyond the default look-and-feel.  
+
+TODO image
+
 ## Additional Information
 
-For more information on the MicroProfile OpenAPI specification, see the http://download.eclipse.org/microprofile/microprofile-open-api-1.0.1/microprofile-openapi-spec.html[official MicroProfile OpenAPI 1.0 release].
+For more information on the MicroProfile OpenAPI specification, see the http://download.eclipse.org/microprofile/microprofile-open-api-1.0.1/microprofile-openapi-spec.html[official MicroProfile OpenAPI 1.0 release].  For further documentation the `mpOpenAPI-1.0` feature, check out the https://www.ibm.com/support/knowledgecenter/en/SSD28V_9.0.0/com.ibm.websphere.wlp.core.doc/ae/twlp_mpopenapi.html[official topic].  
+
 
 Get involved in the MicroProfile community at: http://microprofile.io
