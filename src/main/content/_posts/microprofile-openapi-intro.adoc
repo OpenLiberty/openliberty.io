@@ -1,157 +1,51 @@
 ---
 layout: post
-title:  "MicroProfile Rest Client 1.0"
-date:   2018-01-31 12:05:00 +0100
+title:  "MicroProfile OpenAPI 1.0"
+date:   2018-05-22 12:05:00 +0100
 categories: blog
-blog_description: "Learn how to build type-safe REST clients using the new MicroProfile Rest Client APIs in Liberty."
-author_picture: https://avatars2.githubusercontent.com/u/21365299
+blog_description: "Learn how to generate OpenAPI v3 documents from your RESTful application using the new MicroProfile OpenAPI programming model in Liberty."
+author_picture: https://avatars1.githubusercontent.com/u/5042215
 ---
-:description: Learn how to build type-safe REST clients using the new MicroProfile Rest Client APIs in Liberty.
-=  Introducing MicroProfile Rest Client 1.0
-Andy McCright <https://github.com/andymc12>
+:description: Learn how to generate OpenAPI v3 documents from your RESTful application using the new MicroProfile OpenAPI programming model in Liberty..
+=  Introducing MicroProfile OpenAPI 1.0
+Arthur De Magalhaes <https://github.com/arthurdm>
 
-The Liberty application server now offers the `mpRestClient-1.0` feature.  This is the implementation of the http://microprofile.io/project/eclipse/microprofile-rest-client[MicroProfile Rest Client 1.0] API spec released in December 2017.
+Starting with Open Liberty 18.0.0.1 you can access the `mpOpenAPI-1.0` feature.  This is the implementation of the http://microprofile.io/project/eclipse/microprofile-open-api[MicroProfile OpenAPI 1.0] API spec released in December 2017.
 
-The MicroProfile Rest Client builds on JAX-RS 2.0 client APIs to provide a type-safe approach for invoking RESTful services.  This means writing client applications with more model-centric code and less 'plumbing'.  Although these are client APIs, they are deployed in a server.
+# MicroProfile OpenAPI Specification
 
-Here is a quick run-down of how to create your own REST clients:
+## State of the API Economy
 
-## The interface
+If you have written REST APIs in the last few years, chances are you were asked to provide the Swagger file that described your APIs.  Conversely if you wanted to use a REST API from another provider you would have been given their Swagger file.  
 
-First, we start off with an interface that represents the remote service.  The methods of the interface should match the RESTful APIs of the endpoint.  So if we want to access a service that provides online music and allows us to view and modify playlists, we might create an interface that looks like this:
+The Swagger specification certainly rose above other similar standards, such as API Blueprint and RAML, but it was still being governed by a single entity.  That was until 2016, when the main players in the API industry got together and formed the https://www.openapis.org/membership/members[OpenAPI Initiative].  The Swagger v2 specification was donated to the OpenAPI Initiative and renamed to OpenAPI v2, and in July 26, 2017 a new, more powerful specification was released:  https://www.openapis.org/blog/2017/07/26/the-oai-announces-the-openapi-specification-3-0-0[OpenAPI v3]
 
-[source,java]
-----
-@Path("/playlist")
-@Consumes("application/json")
-public interface MusicPlaylistService {
+The consortium governance model of this new specification meant that new tools vendors started to emerge with libraries and SDKs.  Java developers had a choice from many different annotations or libraries to include in their application – but none that was officially supported by any of the major Java application server vendors, which affected portability and consistency.  There was an increasing need for an official Java programming model that was supported by different vendors and integrated with other modern libraries.  
 
-    @GET
-    List<String> getPlaylistNames();
+## Enter MicroProfile OpenAPI
 
-    @GET
-    @Path("/{playlistName}")
-    List<Song> getPlaylist(@PathParam("playlistName") String name)
-        throws UnknownPlaylistException;
+Similarly to how the Swagger specification was used as the base for a community-driven specification, the Java libraries for Swagger were used as the base for the http://microprofile.io/)[MicroProfile community] programming model for OpenAPI v3: https://github.com/eclipse/microprofile-open-api[MicroProfile OpenAPI].  This specification outlined an official set of annotations and interfaces that allow developers to successfully generate OpenAPI v3 documentation for their Java RESTful APIs.
 
-    @POST
-    @Path("/{playlistName}")
-    long newPlayList(@PathParam("playlistName") String name, List<Song> playlist)
-        throws PlaylistAlreadyExistsException;
+The following diagram provides an overview of the MicroProfile OpenAPI architecture, which has been supported in Open Liberty starting with version 18.0.0.1:
 
-    @PUT
-    @Path("/{playlistName}")
-    long updatePlayList(@PathParam("playlistName") String name, List<Song> playlist)
-        throws UnknownPlaylistException;
-}
-----
+image::https://github.com/eclipse/microprofile-open-api/blob/master/spec/src/main/asciidoc/images/diagram.png
 
-Just like JAX-RS on the server side, this interface uses annotations like `@Path`, `@Consumes`, `@GET` and `@PathParam`.  From this, we know that when a user invokes the `getPlaylistNames` method, the MicroProfile Rest Client implementation sends a GET request to the endpoint at `<baseUrl>/playlist`. The GET request accepts the `application/json` media type of a list of strings indicating the available names of playlists.
+There are many different ways to provide input for the generation of the resulting OpenAPI document.
+The MicroProfile OpenAPI specification requires vendors to produce a valid OpenAPI document from pure JAX-RS 2.0 applications. This means that Open Liberty processes all the relevant JAX-RS annotations (such as @Path and @Consumes) as well as Java objects (POJOs) used as input or output to JAX-RS operations. This is a good place to start for application developers that are new to OpenAPI: just deploy your existing JAX-RS application into Open Liberty and check out the output from /openapi!
 
-## ResponseExceptionMappers
+The application developer then has a few choices:
+1.	Augment those JAX-RS annotations with the OpenAPI https://github.com/eclipse/microprofile-open-api/blob/master/spec/src/main/asciidoc/microprofile-openapi-spec.adoc#annotations[Annotations]. Using annotations means developers don’t have to re-write the portions of the OpenAPI document that are already covered by the JAX-RS framework (e.g. the HTTP method of an operation).  This is the most common path, so definitely check out some of the https://github.com/eclipse/microprofile-open-api/blob/master/spec/src/main/asciidoc/microprofile-openapi-spec.adoc#412-detailed-usage-of-key-annotations[examples] to get familiar with some of these annotations and its generated output.
 
-To see what songs are in a given playlist, invoke the `getPlaylist` method.  Notice that this method throws an `UnknownPlaylistException` - this situation might be indicated on the remote service as returning an HTTP 404 response.  In order to convert this response to a specific exception, we need a `ResponseExceptionMapper` like this:
+2.	Take the initial output from /openapi as a starting point to document your APIs via https://github.com/eclipse/microprofile-open-api/blob/master/spec/src/main/asciidoc/microprofile-openapi-spec.adoc#static-openapi-files[Static OpenAPI files]. It’s worth mentioning that these static files can also be written before any code, which is an approach often adopted by enterprises that want to lock-in the contract of the API. In this case, we refer to the OpenAPI document as the "source of truth", by which the client and provider must abide.
 
-[source,java]
-----
-@Provider
-public class PlaylistResponseExceptionMapper implements
-    ResponseExceptionMapper<BasePlaylistException> {
+3.	Use the https://github.com/eclipse/microprofile-open-api/blob/master/spec/src/main/asciidoc/microprofile-openapi-spec.adoc#programming-model[API interfaces to provide a bootstrap (or complete) OpenAPI model tree. 
 
-    @Override
-    public boolean handles(int statusCode, MultivaluedMap<String, Object> headers) {
-        return statusCode == 404  // Not Found
-            || statusCode == 409; // Conflict
-    }
+Additionally, a https://github.com/eclipse/microprofile-open-api/blob/master/spec/src/main/asciidoc/microprofile-openapi-spec.adoc#filter[Filter] is described which can update the OpenAPI model after it has been built from the previously described documentation mechanisms.
 
-    @Override
-    public BasePlaylistException toThrowable(Response response) {
-        switch(response.getStatus()) {
-        case 404: return new UnknownPlaylistException();
-        case 409: return new PlaylistAlreadyExistsException();
-        }
-        return null;
-    }
-
-}
-----
-
-This code assumes that both `UnknownPlaylistException` and `PlaylistAlreadyExistsException` are both sub-classes of `BasePlaylistException`.  Notice that the `toThrowable` *returns* an instance of the throwable rather than throwing it.
-
-## Implementation
-
-Now that we have the interface and response exception mapper written, we just need to build the implementation and then invoke it.  There are two ways to build the implementation: using the `RestClientBuilder` API or using CDI and MicroProfile Config.  We'll start with the `RestClientBuilder` - it is a little more verbose but can come in handy in environments where CDI is not available, like testing.
-
-### RestClientBuilder
-
-[source,java]
-----
-...
-URL apiUrl = new URL("http://localhost:9080/onlineMusicService");
-MusicPlaylistService playlistSvc =
-    RestClientBuilder.newBuilder()
-                     .baseUrl(apiUrl)
-                     .register(PlaylistResponseExceptionMapper.class)
-                     .build(MusicPlaylistService.class);
-
-List<String> playlistNames = playlistSvc.getPlaylistNames();
-for (String name : playlistNames) {
-    List<Song> songs = playlistSvc.getPlaylist(name);
-    if (hasSongBy(songs, "Band of Horses")) {
-        coolPlaylists.add(name);
-    }
-}
-...
-----
-
-First we create a new instance of the `RestClientBuilder`.  We must specify the `baseUrl` value for the remote endpoint - this is required before building the client.  Next, we register the response exception mapper. If we need to register other provider classes like `MessageBodyReaders` or `MessageBodyWriters`, filters, interceptors, etc., we would do that here with the `register` method.  Then we build the client, passing in the interface class.  After that we can invoke methods on the client like it was any other Java object.
-
-### CDI and MicroProfile Config integration
-
-It is also possible to let CDI instantiate the client.  For all of the code we have covered so far, the user only needs to install the `mpRestClient-1.0` feature in the Liberty `server.xml`.  In order for this CDI approach to operate, we need to add two more features: `cdi-1.2` (or 2.0) and `mpConfig-1.1` (or 1.2).  First, we need to update the `MusicPlaylistService` with some new annotations:
-
-[source,java]
-----
-@Path("/playlist")
-@Consumes("application/json")
-@Dependent
-@RegisterRestClient
-@RegisterProvider(PlaylistResponseExceptionMapper.class)
-public interface MusicPlaylistService {
-    ...
-----
-
-The `@Dependent` and `@RegisterRestClient` annotations declare that this interface is to be managed by CDI.  The `@RegisterProvider` annotation tells the MicroProfile Rest Client implementation code to register the specified provider class. This annotation can be repeated for as many providers as necessary.  Now we can inject the client in another managed object like this:
-
-[source,java]
-----
- @WebServlet(urlPatterns = "/PlaylistServlet")
-public class PlaylistServlet extends HttpServlet {
-
-    @Inject
-    @RestClient
-    private MusicPlaylistService playlistService;
-
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-
-        List<String> names = playlistService.getPlaylistNames();
-        ...
-    }
-----
-
-The `@Inject` combined with the `@RestClient` decorator tells CDI that we want to inject an instance of the `MusicPlaylistService` interface.  There is still one more step... we need to tell the MicroProfile Rest Client implementation the `baseUrl` value for the remote endpoint.  For that, we use MicroProfile Config.  The config property to use is `<fullyQualifiedInterfaceName>/mp-rest/url`. So you could specify this as a system property in the `jvm.options` file like this:
-
-----
--Dcom.mypkg.MusicPlaylistService/mp-rest/url=http://localhost:9080/onlineMusicService
-----
-
-CDI injection makes things a lot simpler when it comes to bootstrapping the client and, with MicroProfile Config, it is possible to use different URLs for different environments; for example, use one URL for test and another URL for production, without needing to change code.
+You are now ready to try out an application that has MicroProfile OpenAPI enabled!  Just head over to our  https://github.com/microservices-api/oas3-microprofile-app[sample app] and follow the instructions to build an Open Liberty docker container that with MicroProfile OpenAPI!  
 
 ## Additional Information
 
-For more information on the MicroProfile Rest Client, see the http://download.eclipse.org/microprofile/microprofile-rest-client-1.0/microprofile-rest-client.pdf[MicroProfile Rest Client 1.0 spec]
+For more information on the MicroProfile OpenAPI specification, see the http://download.eclipse.org/microprofile/microprofile-open-api-1.0.1/microprofile-openapi-spec.html[MicroProfile OpenAPI]
 
-Get involved in the MicroProfile community at:
-http://microprofile.io
+Get involved in the MicroProfile community at: http://microprofile.io
