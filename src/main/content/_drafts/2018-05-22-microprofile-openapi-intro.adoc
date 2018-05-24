@@ -23,11 +23,11 @@ The consortium governance model of this new specification meant that new tools v
 
 ## Enter MicroProfile OpenAPI
 
-Similarly to how the Swagger specification was used as the base for a community-driven specification, the Java libraries for Swagger were used as the base for the http://microprofile.io/)[MicroProfile community] programming model for OpenAPI v3: https://github.com/eclipse/microprofile-open-api[MicroProfile OpenAPI].  This specification outlined an official set of annotations and interfaces that allow developers to successfully generate OpenAPI v3 documentation for their Java RESTful APIs.
+Similarly to how the Swagger specification was used as the base for a community-driven specification, the Java libraries for Swagger were used as the base for the http://microprofile.io/[MicroProfile community] programming model for OpenAPI v3: https://github.com/eclipse/microprofile-open-api[MicroProfile OpenAPI].  This specification outlined an official set of annotations and interfaces that allow developers to successfully generate OpenAPI v3 documentation for their Java RESTful APIs.
 
 The following diagram provides an overview of the MicroProfile OpenAPI support in Open Liberty, via the `mpOpenAPI-1.0` feature.
 
-image::img/mp_ol_openapi.png[MP OpenAPI Architecture]
+image::/img/blog/mp_ol_openapi.png[MP OpenAPI Architecture,width=100%]
 
 One of the key aspects of the MicroProfile OpenAPI specification is the requirement to produce a valid OpenAPI document from pure JAX-RS 2.0 applications. This means that Open Liberty processes all the relevant JAX-RS annotations (such as `@Path` and `@Consumes`) as well as Java objects (POJOs) used as input or output to JAX-RS operations. This is a good place to start for application developers that are new to OpenAPI: just deploy your existing JAX-RS application into Open Liberty and check out the output from /openapi!
 
@@ -49,7 +49,7 @@ A very important value-add from Open Liberty is the native OpenAPI UI that it sh
 
 The UI, available from the endpoint `/openapi/ui` can also be https://www.ibm.com/support/knowledgecenter/en/SSD28V_9.0.0/com.ibm.websphere.wlp.core.doc/ae/twlp_api_mpopenapi_custom.html[customized] beyond the default look-and-feel.  
 
-image::img/mp_ol_openapi_ui.png[MP OpenAPI UI]
+image::/img/blog/mp_ol_openapi_ui.png[MP OpenAPI UI,width=100%]
 
 ## Additional Information
 
