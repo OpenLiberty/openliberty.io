@@ -510,21 +510,26 @@ $(document).ready(function() {
 
                     // Hide other code blocks and show the correct code block.
                     var id = elem.id;
-                    var code_block = code_sections[id].code;
-                    var fromLine = code_sections[id].fromLine,
-                        toLine = code_sections[id].toLine; // To be used in the future when we have designs for highlighting a range of lines.
-                    $('.codecolumn').not(code_block).hide();
-                    code_block.show();
-    
-                    // Scroll to the line in the code column if a line number is given
-                    if(fromLine){
-                        var target = code_block.find('.line-numbers:contains(' + fromLine + ')').first();                         
-                        $('#code_column').animate({
-                            scrollTop: target.offset().top
-                        }, 500);
-                    } else {
-                        $('#code_column').scrollTop('0');
-                    }        
+                    try{
+                        var code_block = code_sections[id].code;
+                        var fromLine = code_sections[id].fromLine,
+                            toLine = code_sections[id].toLine; // To be used in the future when we have designs for highlighting a range of lines.
+                        $('.codecolumn').not(code_block).hide();
+                        code_block.show();
+        
+                        // Scroll to the line in the code column if a line number is given
+                        if(fromLine){
+                            var target = code_block.find('.line-numbers:contains(' + fromLine + ')').first();                         
+                            $('#code_column').animate({
+                                scrollTop: target.offset().top
+                            }, 500);
+                        } else {
+                            $('#code_column').scrollTop('0');
+                        }   
+                    } catch(e) {
+                        console.log(e);
+                    }
+                         
                     
                     // event.preventDefault();
                     // // delta = delta * 0.75; // Reduce speed by 25%
