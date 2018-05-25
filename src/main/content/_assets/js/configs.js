@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 IBM Corporation and others.
+ * Copyright (c) 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@ var maxIndentLevel = 7;
 var minIndentLevel = 3;
 
 function addTOCClick() {
-    // Listener for the filters on the overview pane
     $("#toc_container a").on("click", function(event){
         var resource = $(event.currentTarget);
 
@@ -26,7 +25,7 @@ function addTOCClick() {
         }
         $(".breadcrumb.fluid-container").append("<li><a class='inactive_link'>" + resource.text() + "</a></li>");
     });
-};
+}
 
 function setSelectedTOC(resource) {
     var currecntTOCSelected = $(".toc_selected");
@@ -34,118 +33,103 @@ function setSelectedTOC(resource) {
         $(".toc_selected").removeClass("toc_selected");
     }
     resource.parent().addClass("toc_selected");
-};
+}
 
 function handleSubHeadings() {
     var iframeContents = $('iframe[name=contentFrame]').contents();
     var anchors = iframeContents.find("div.paragraph > p > a");
+    var parentTitleTableProps;
+    var parentTitle;
 
     $(anchors).each(function () {
+        var titleId = $(this).attr("id");
         var subHeading = $(this).parent();
         var title = modifySubHeading(subHeading);
         var table = getTableForSubHeading(subHeading);
-        var indentLevels = calcIndentAndAddClass(subHeading, title, table);
-        if ((indentLevels >= minIndentLevel) && table) {
-            addExpandAndCollapseToggleButtons(subHeading, table);
+        var indentLevels = calcIndentAndAddClass(subHeading, title, table, titleId);
+
+        if (indentLevels >= minIndentLevel) {
+            addExpandAndCollapseToggleButtons(subHeading, titleId);
         }
     });
 }
 
-function addExpandAndCollapseToggleButtons(subHeading, table) {
-    // var iframeContents = $('iframe[name=contentFrame]').contents();
-    // var subsections = iframeContents.find("p.subsection");
-
-    // $(subsections).each(function () {
-    //     // Look for the matching element to collapse/expand
-    //     var idToMatch = $(this).find("a").attr("id");
-    //     var table = iframeContents.find("table[data-id='" + idToMatch + "']");
-
-    //     var title = modifySubHeading($(this));
-    //     var indentLevels = calcIndent($(this, title, table));
-
-    //     if ((indentLevels >= minIndentLevel) && (table.length === 1)) {
-            var toggleButton = $('<div class="toggle" collapsed="false" tabindex=0><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse" /></div>');
-            toggleButton.on('click', function () {
-                var collapsed = $(this).attr('collapsed');
-                if (collapsed === "true") {
-                    // Expand to show the table
-                    table.show();
-                    $(this).empty().append($('<img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
-                    $(this).attr('collapsed', false);
-                }
-                else {
-                    // Collapse the table
-                    table.hide();
-                    $(this).empty().append($('<img src="/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
-                    $(this).attr('collapsed', true);
-                }
-            });
-            toggleButton.on('keypress', function (event) {
-                event.stopPropagation();
-                // Enter key
-                if (event.which === 13 || event.keyCode === 13) {
-                    toggleButton.click();
-                }
-            });
-            subHeading.prepend(toggleButton);
-        // }
-        
-        // add subsection class
-        // var next = $(this).parent().next();
-        // while (!next.is("table")) {
-        //     next.addClass("subsection");
-        //     next = next.next();
-        // }
-
-        // remove strong from the last title
-        // var strong = $(this).find("strong");
-        // var title;
-        // if (strong.length > 0) {
-        //     title = strong.text();
-        // } else {
-        //     title = $(this).text();
-        // }
-        // var lastIndex = title.lastIndexOf(">");
-        // var titleStrong = title.substring(0, lastIndex + 1);
-        // var titlePlain = title.substring(lastIndex + 1);
-        // strong.remove();
-        // $(this).append("<strong>" + titleStrong + "</strong>" + titlePlain);
-
-        // calculate the indentation
-        // var splits = title.split(">");
-        // var levels = splits.length;
-        // if (levels > 7) {
-        //     levels = 7;
-        // }
-        // var marginLeft;
-        // if (levels> 3) {
-        //     marginLeft = (levels - 3) * 49 + 69;
-        // }
-
-        // // add subsection class + extra left margin indentation
-        // var next = $(this).parent().next();
-        // while (!next.is("table")) {
-        //     next.addClass("subsection");
-        //     if (marginLeft !== undefined) {
-        //         next.css("margin-left", marginLeft + "px");
-        //     }
-        //     next = next.next();
-        // }
-        // table.addClass("subsection");
-        // if (marginLeft !== undefined) {
-        //     table.css("margin-left", marginLeft - 10 + "px");
-        //     $(this).css("margin-left", marginLeft + "px");
-        // }
-    //});
+function processParentTitles(parentTitle, parentTitleTableProps) {
+    while (parentTitle) {
+        var titleTableProp = parentTitleTableProps[parentTitle];
+        if (titleTableProp) {
+            var table = titleTableProp.table;
+            var subHeading = titleTableProp.subHeading;
+            var id = titleTableProp.id;
+            table.attr("data-id", id);
+        }
+    }
 }
 
-// add subsection css to all subheadings
-// function addSubsectionClass() {
-//     var subHeadings = iframeContents.find("div.paragraph > p > a");
-//     $(subHeadings).each(function () {
-//         $(this).parent().addClass(subSectionClass);
-//     });
-// }
+function addExpandAndCollapseToggleButtons(subHeading, titleId) {
+    var toggleButton = $('<div class="toggle" collapsed="false" tabindex=0><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse" /></div>');
+    toggleButton.on('click', function () {
+        var collapsed = $(this).attr('collapsed');
+        if (collapsed === "true") {
+            // Expand to show the table and nested elements
+            $(this).empty().append($('<img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
+            $(this).attr('collapsed', false);
+            // this call needs to be done after collapsed is set to false
+            handleCollapseExpandTitle(titleId, true);
+        }
+        else {
+            // Collapse the table and nested elements
+            handleCollapseExpandTitle(titleId, false);
+            $(this).empty().append($('<img src="/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
+            $(this).attr('collapsed', true);
+        }
+    });
+    toggleButton.on('keypress', function (event) {
+        event.stopPropagation();
+        // Enter key
+        if (event.which === 13 || event.keyCode === 13) {
+            toggleButton.click();
+        }
+    });
+    subHeading.prepend(toggleButton);    
+}
+
+function handleCollapseExpandTitle(titleId, isShow) {
+    var iframeContents = $('iframe[name=contentFrame]').contents();
+    var matchingElements = iframeContents.find('[data-id^="' + titleId + '"]');
+    var hideElements = [];
+    $(matchingElements).each(function () {
+        if (isShow) {
+            // don't show already collapsed element
+            var toggleButton = $(this).find(".toggle");
+            if (toggleButton.length === 1) {
+                if (toggleButton.attr("collapsed") === "true") {
+                    var dataId = $(this).attr("data-id");
+                    //hideElements.push(iframeContents.find("table[data-id^='" + dataId + "']"));
+                    var elements = iframeContents.find("[data-id^='" + dataId + "']");
+                    $(elements).each(function () {
+                        if (($(this).attr('data-id') === dataId && $(this).is("table")) ||
+                            ($(this).attr('data-id') !== dataId)) {
+                            hideElements.push($(this));
+                        }
+                    })
+                }
+            }
+
+            $(this).show();
+
+        } else {
+            // don't hide the clicked toggle element title and description
+            if (($(this).attr('data-id') === titleId && $(this).is("table")) ||
+                ($(this).attr('data-id') !== titleId)) {
+                $(this).hide();
+            }
+        }
+    });
+    $(hideElements).each(function() {
+        $(this).hide();
+    })
+}
 
 // remove strong from the last heading
 function modifySubHeading(subHeadingElement) {
@@ -168,12 +152,21 @@ function modifySubHeading(subHeadingElement) {
     return title;
 }
 
+// get the table belonging to the subheading
 function getTableForSubHeading(subHeadingElement) {
     var next = subHeadingElement.parent().next();
     while ((next.length === 1) && !next.is("table") && (next.find("p > a").length === 0)) {
+        // if (isSet)
+        //     setDataId(next, dataId);
+        // else
+        //     unsetDataId(next);
         next = next.next();
     }
     if (next.is("table")) {
+        // if (isSet)
+        //     setDataId(next, dataId);
+        // else
+        //     unsetDataId(next);
         return next;
     } else {
         return undefined;
@@ -181,7 +174,7 @@ function getTableForSubHeading(subHeadingElement) {
 }
 
 // calculate the indentation
-function calcIndentAndAddClass(subHeadingElement, title, table) {
+function calcIndentAndAddClass(subHeadingElement, title, table, dataId) {
     var levels;
     if (title) {
         var splits = title.split(">");
@@ -197,6 +190,7 @@ function calcIndentAndAddClass(subHeadingElement, title, table) {
         subHeadingElement.addClass(subHeadingClass);
         if (levels >= minIndentLevel) {
             subHeadingElement.addClass(subSectionClass);
+            setDataId(subHeadingElement, dataId);
             if (marginLeft !== undefined) {
                 subHeadingElement.css("margin-left", marginLeft + "px");
             }
@@ -204,6 +198,7 @@ function calcIndentAndAddClass(subHeadingElement, title, table) {
             var next = subHeadingElement.parent().next();
             while (!next.is("table")) {
                 next.addClass(subSectionClass);
+                setDataId(next, dataId);
                 if (marginLeft !== undefined) {
                     next.css("margin-left", marginLeft + "px");
                 }
@@ -211,13 +206,22 @@ function calcIndentAndAddClass(subHeadingElement, title, table) {
             }
             if (table) {
                 table.addClass(subSectionClass);
+                setDataId(table, dataId);
+                var width = parseInt(table.css("width").replace("px", ""));
                 if (marginLeft !== undefined) {
                     table.css("margin-left", marginLeft - 10 + "px");
+                    table.css("width", width - marginLeft - 10 + "px");
+                } else {
+                    table.css("width", width - 59 + "px");
                 }
             }
         }
     }
     return levels;
+}
+
+function setDataId(element, dataId) {
+    element.attr("data-id", dataId);
 }
 
 $(document).ready(function () {
