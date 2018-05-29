@@ -177,39 +177,6 @@ $(document).ready(function() {
         }
     }
 
-    // $(window).scroll(function(){
-    //     for(var i = 0; i < guide_sections.length; i++){
-    //         var elem = guide_sections[i];
-    //         try{
-    //             var eT = elem.offset().top,
-    //             eH = elem.outerHeight(),
-    //             wH = $(window).height(),
-    //             wS = $(window).scrollTop();
-    //             if (wS > (eT+eH-wH) && (eT > wS) && (wS+wH > eT+eH)){
-    //                 // Hide other code blocks and show the correct code block.
-    //                 var id = elem.attr('id');
-    //                 var code_block = code_sections[id].code;
-    //                 var fromLine = code_sections[id].fromLine,
-    //                     toLine = code_sections[id].toLine; // To be used in the future when we have designs for highlighting a range of lines.
-    //                 $('.codecolumn').not(code_block).hide();
-    //                 code_block.show();
-    
-    //                 // Scroll to the line in the code column if a line number is given
-    //                 if(fromLine){
-    //                     var target = code_block.find('.line-numbers:contains(' + fromLine + ')').first();                         
-    //                     $('#code_column').animate({
-    //                         scrollTop: target.offset().top
-    //                     }, 500);
-    //                 } else {
-    //                     $('#code_column').scrollTop('0');
-    //                 }                
-    //             }
-    //         } catch(e) {
-    //             // Element not found.
-    //         }  
-    //     }                 
-    // })
-
     // Hide all code blocks except the first
     $('#code_column .codecolumn:not(:first)').hide();
 
@@ -336,7 +303,7 @@ $(document).ready(function() {
 
     $(".copyFileButton").click(function(event){
         event.preventDefault();
-        target = $(".codecolumn:visible .content").get(0);
+        target = $("#code_column .codecolumn:visible .content").get(0);
         window.getSelection().selectAllChildren(target); // Set the file contents as the copy target.
         if(document.execCommand('copy')) {
             window.getSelection().removeAllRanges();
@@ -393,7 +360,7 @@ $(document).ready(function() {
             var atTop;
             if(isCodeColumn){
                 // Only show the Github popup for the first code column
-                if(!$('.codecolumn:first').is(":visible")){
+                if(!$('#code_column .codecolumn:first').is(":visible")){
                     return;
                 }
                 atTop = $("#code_column").scrollTop() === 0;
@@ -402,11 +369,11 @@ $(document).ready(function() {
             }
             if(atTop){
                 githubPopup.fadeIn();
-                $(".codecolumn").addClass('dimmed_code_column', {duration:400});
+                $("#code_column .codecolumn").addClass('dimmed_code_column', {duration:400});
             }
             else{            
                 githubPopup.fadeOut();
-                $(".codecolumn").removeClass('dimmed_code_column', {duration:400});
+                $("#code_column .codecolumn").removeClass('dimmed_code_column', {duration:400});
             }
         }                
     }
@@ -463,7 +430,7 @@ $(document).ready(function() {
 
     // Slow the scrolling over section headers in the guide
     var handleSectionSnapping = function(event){
-        var origEvent = event.originalEvent;
+        var origEvent = event.originalEvent;        
         var target = origEvent.target;
         var dir = (origEvent.deltaY) < 0 ? 'up' : 'down';
         var delta = origEvent.wheelDelta || -origEvent.detail || -origEvent.deltaY;
@@ -476,17 +443,13 @@ $(document).ready(function() {
                 var elemTop = rect.top - 100; // Offset by the sticky header's height
                 var elemBottom = rect.bottom;
 
-                // Only completely visible elements return true:
-                // var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);
-                // Partially visible elements return true:
-                // var isVisible = elemTop < window.innerHeight && elemBottom >= 0;
-
                 // Check if the next section in the direction the user is scrolling shows up
                 var isVisible;
                 if(dir === 'down'){
                     // Element top is visible and bottom is not visible
                     isVisible = elemTop < window.innerHeight && elemBottom >= window.innerHeight;
                 } else if(dir === 'up'){
+                    // isVisible = elemBottom >= 0 && elemBottom < window.innerHeight;
                     isVisible = elemBottom >= 0 && elemBottom < window.innerHeight;
                 }
 
@@ -497,16 +460,20 @@ $(document).ready(function() {
                     anchor.parent().addClass('liSelected');
 
                     // Scroll to the section coming into view if scrolling down the page
-                    if(dir === 'down' || (dir === 'up' && elemTop < 0)){
-                        const y = elemTop + window.scrollY;
-                        $('html, body').stop().animate({
-                            scrollTop: y
-                        });
-                    }
+                    // if(dir === 'down' || (dir === 'up' && elemTop < 0)){
+                        // const y = elemTop + window.scrollY;
+                        // $('html, body').stop().animate({
+                        //     scrollTop: y,
+                        //     easing: 'linear'
+                        // });
+                    // }
                     
 
                     // Set URL hash value to be the section id
-                    location.hash = elem.id;        
+                    if(elem.id){
+                        location.hash = elem.id;
+                    }
+                       
 
                     // Hide other code blocks and show the correct code block.
                     var id = elem.id;
@@ -514,7 +481,7 @@ $(document).ready(function() {
                         var code_block = code_sections[id].code;
                         var fromLine = code_sections[id].fromLine,
                             toLine = code_sections[id].toLine; // To be used in the future when we have designs for highlighting a range of lines.
-                        $('.codecolumn').not(code_block).hide();
+                        $('#code_column .codecolumn').not(code_block).hide();
                         code_block.show();
         
                         // Scroll to the line in the code column if a line number is given
@@ -529,23 +496,7 @@ $(document).ready(function() {
                     } catch(e) {
                         console.log(e);
                     }
-                         
-                    
-                    // event.preventDefault();
-                    // // delta = delta * 0.75; // Reduce speed by 25%
-                    // // elem.scrollTop -= delta;       
 
-                    // var scrollSpeed = elem.getAttribute('scrollSpeed');
-                    // if(!scrollSpeed){
-                    //     scrollSpeed = .01;
-                    // } else {
-                    //     scrollSpeed = 1;
-                    //     elem.setAttribute('scrollSpeed', scrollSpeed);
-                    // }
-                    
-                    // $('html, body').stop().animate({
-                    //     scrollTop: $(window).scrollTop() - (scrollSpeed * delta)
-                    // });
                     return false; // Break out of loop        
                 }             
             });      
