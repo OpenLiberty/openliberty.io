@@ -11,19 +11,16 @@
 
 var subSectionClass = "subsection";
 var subHeadingClass = "subHeading";
-var maxIndentLevel = 7;
-var minIndentLevel = 3;
+var maxIndentLevel = 7; 
+var minIndentLevel = 3; 
 
 function addTOCClick() {
     $("#toc_container a").on("click", function(event){
         var resource = $(event.currentTarget);
 
         setSelectedTOC(resource);
-        if ($(".breadcrumb.fluid-container").find("li:last-child").find("a").hasClass("inactive_link")) {
-            // remove existing inactive link
-            $(".breadcrumb.fluid-container").find("li:last-child").remove();
-        }
-        $(".breadcrumb.fluid-container").append("<li><a class='inactive_link'>" + resource.text() + "</a></li>");
+        addSubHeadingTOC(resource);
+        updateBreadCrumb(resource);
     });
 }
 
@@ -35,35 +32,33 @@ function setSelectedTOC(resource) {
     resource.parent().addClass("toc_selected");
 }
 
-function handleSubHeadings() {
-    var iframeContents = $('iframe[name=contentFrame]').contents();
-    var anchors = iframeContents.find("div.paragraph > p > a");
-    var parentTitleTableProps;
-    var parentTitle;
-
-    $(anchors).each(function () {
-        var titleId = $(this).attr("id");
-        var subHeading = $(this).parent();
-        var title = modifySubHeading(subHeading);
-        var table = getTableForSubHeading(subHeading);
-        var indentLevels = calcIndentAndAddClass(subHeading, title, table, titleId);
-
-        if (indentLevels >= minIndentLevel) {
-            addExpandAndCollapseToggleButtons(subHeading, titleId);
-        }
-    });
+function updateBreadCrumb(resource) {
+    if ($(".breadcrumb.fluid-container").find("li:last-child").find("a").hasClass("inactive_link")) {
+        // remove existing inactive link
+        $(".breadcrumb.fluid-container").find("li:last-child").remove();
+    }
+    $(".breadcrumb.fluid-container").append("<li><a class='inactive_link'>" + resource.text() + "</a></li>");
 }
 
-function processParentTitles(parentTitle, parentTitleTableProps) {
-    while (parentTitle) {
-        var titleTableProp = parentTitleTableProps[parentTitle];
-        if (titleTableProp) {
-            var table = titleTableProp.table;
-            var subHeading = titleTableProp.subHeading;
-            var id = titleTableProp.id;
-            table.attr("data-id", id);
-        }
+function handleSubHeadingsInContent() {
+    var iframeContents = $('iframe[name=contentFrame]').contents();
+    var contentTitle = iframeContents.find("#config_title").text();
+    if (contentTitle.indexOf(" - ") !== -1) {
+        contentTitle = contentTitle.substring(0, contentTitle.indexOf(" - "));
     }
+    var anchors = iframeContents.find("div.paragraph > p > a");
+
+    $(anchors).each(function () {
+        var anchorTitleId = $(this).attr("id");
+        var subHeading = $(this).parent();
+        var anchorTitle = modifySubHeading(subHeading, contentTitle);
+        var table = getTableForSubHeading(subHeading);
+        var indentLevels = calcIndentAndAddClass(subHeading, anchorTitle, table, anchorTitleId);
+
+        if (indentLevels >= minIndentLevel) {
+            addExpandAndCollapseToggleButtons(subHeading, anchorTitleId);
+        }
+    });
 }
 
 function addExpandAndCollapseToggleButtons(subHeading, titleId) {
@@ -116,6 +111,9 @@ function handleCollapseExpandTitle(titleId, isShow) {
                 }
             }
 
+            if ($(this).attr("data-id") === titleId && $(this).is("div") && $(this).hasClass("collapseMargin")) {
+                $(this).removeClass("collapseMargin");
+            }
             $(this).show();
 
         } else {
@@ -123,6 +121,8 @@ function handleCollapseExpandTitle(titleId, isShow) {
             if (($(this).attr('data-id') === titleId && $(this).is("table")) ||
                 ($(this).attr('data-id') !== titleId)) {
                 $(this).hide();
+            } else if ($(this).attr("data-id") === titleId && $(this).is("div")) {
+                $(this).addClass("collapseMargin");
             }
         }
     });
@@ -132,15 +132,16 @@ function handleCollapseExpandTitle(titleId, isShow) {
 }
 
 // remove strong from the last heading
-function modifySubHeading(subHeadingElement) {
+function modifySubHeading(subHeadingElement, contentTitle) {
     var strong = subHeadingElement.find("strong");
-    var title;
+    var anchorTitle;
     if (strong.length > 0) {
-        title = strong.text();
+        anchorTitle = strong.text();
     } else {
-        title = subHeadingElement.text();
+        anchorTitle = subHeadingElement.text();
     }
-    if (title !== undefined) {
+    if (anchorTitle !== undefined) {
+        var title = contentTitle + " > " + anchorTitle;
         var lastIndex = title.lastIndexOf(">");
         if (lastIndex !== -1) {
             var titleStrong = title.substring(0, lastIndex + 1);
@@ -156,17 +157,9 @@ function modifySubHeading(subHeadingElement) {
 function getTableForSubHeading(subHeadingElement) {
     var next = subHeadingElement.parent().next();
     while ((next.length === 1) && !next.is("table") && (next.find("p > a").length === 0)) {
-        // if (isSet)
-        //     setDataId(next, dataId);
-        // else
-        //     unsetDataId(next);
         next = next.next();
     }
     if (next.is("table")) {
-        // if (isSet)
-        //     setDataId(next, dataId);
-        // else
-        //     unsetDataId(next);
         return next;
     } else {
         return undefined;
@@ -224,9 +217,20 @@ function setDataId(element, dataId) {
     element.attr("data-id", dataId);
 }
 
+function removeFixedTableColumnWidth() {
+    var iframeContents = $('iframe[name=contentFrame]').contents();
+    var cols = iframeContents.find("col");
+
+    $(cols).each(function() {
+        $(this).css("width", "");
+    })
+}
+
 $(document).ready(function () {
     addTOCClick();
     $('iframe[name="contentFrame"]').load(function() {
-        handleSubHeadings();
+        removeFixedTableColumnWidth();
+        handleSubHeadingsInContent();
+       //handleSubHeadingsInTOC();
     });
 });
