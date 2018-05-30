@@ -551,6 +551,20 @@ $(document).ready(function() {
         rightSide.append(relatedGuides);
     }
 
+    function addGuideRatingsListener(){
+        $("#feedback_ratings img").on('click', function(event){
+            var rating = $(this).data('guide-rating');
+            // Send rating to google analytics
+            // The first parameter '1' is the slot for the custom variable
+            // The last parameter '3' is opt_scope is which is page level storage
+            if(typeof _setCustomVar === "function"){
+                _setCustomVar(1, "Guide Review", rating, 3);
+            }
+            $("#feedback_ratings img").not($(this)).css('opacity', '.25');
+            $(this).css('opacity', '1');
+        });
+    }
+
     // RELATED GUIDES
     //
     // Add Related guides link to the table of contents, if needed
@@ -583,6 +597,7 @@ $(document).ready(function() {
         handleFloatingTableOfContent();        
         resizeGuideSections();
         createEndOfGuideContent();
+        addGuideRatingsListener();
         handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
     });
 });
