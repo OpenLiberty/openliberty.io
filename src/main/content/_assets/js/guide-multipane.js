@@ -80,9 +80,9 @@ $(document).ready(function() {
 
     // Move the code snippets to the code column on the right side.
     // Each code section is duplicated to show the full file in the right column and just the snippet of code relevant to the guide in the left column in single column / mobile view.
-    $('.codecolumn').each(function(){
-        var code_block = $(this);
-        var metadata_sect = $(this).prev().find('p');
+    $('.code_column').each(function(){
+        var code_block = $(this);             
+        var metadata_sect = code_block.prev().find('p');
         if(metadata_sect.length > 0){
             var metadata = metadata_sect[0].innerText;
             var fileName, 
@@ -130,8 +130,6 @@ $(document).ready(function() {
                 'toLine': toLine
             }
 
-            console.log("File contents:" + code_block.text());
-
             if(line_nums !== '*'){
                 var first_span = code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
                 var last_span = code_block.find('.line-numbers:contains(' + toLine + ')').first(); 
@@ -162,7 +160,7 @@ $(document).ready(function() {
 
             duplicate_code_block.prepend(title_section);
             duplicate_code_block.addClass('dimmed_code_column'); // Dim the code at first while the github popup takes focus.
-            duplicate_code_block.appendTo('#code_column'); // Move code to the right column    
+            duplicate_code_block.appendTo('#code_column'); // Move code to the right column  
         }    
     });
 
@@ -178,7 +176,7 @@ $(document).ready(function() {
     }
 
     // Hide all code blocks except the first
-    $('#code_column .codecolumn:not(:first)').hide();
+    $('#code_column .code_column:not(:first)').hide();
 
     $("#breadcrumb_hamburger").on('click', function(event){
         // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
@@ -303,7 +301,7 @@ $(document).ready(function() {
 
     $(".copyFileButton").click(function(event){
         event.preventDefault();
-        target = $("#code_column .codecolumn:visible .content").get(0);
+        target = $("#code_column .code_column:visible .content").get(0);
         window.getSelection().selectAllChildren(target); // Set the file contents as the copy target.
         if(document.execCommand('copy')) {
             window.getSelection().removeAllRanges();
@@ -329,7 +327,7 @@ $(document).ready(function() {
         if(document.execCommand('copy')) {
             window.getSelection().removeAllRanges();
             $("#github_clone_popup_container").fadeOut("slow");
-            $(".codecolumn").removeClass('dimmed_code_column', {duration:400});
+            $(".code_column").removeClass('dimmed_code_column', {duration:400});
         } else {
             alert('Copy failed. Copy the command manually: ' + target.innerText);
         }        
@@ -340,7 +338,7 @@ $(document).ready(function() {
        var nextHeader = $("#guide_content p:visible").first().next('.sect1'); 
     })
 
-    var handleDownArrow = function() {
+    function handleDownArrow() {
         if($(window).width() < 1171){
             $("#down_arrow").hide();
             return;
@@ -353,14 +351,14 @@ $(document).ready(function() {
        Handle showing/hiding the Github popup.
        @Param isCodeColumn boolean for telling if the scroll happened in the code column instead of the overall window.
     */
-    var handleGithubPopup = function(isCodeColumn) {
+    function handleGithubPopup(isCodeColumn) {
         // If the page is scrolled down past the top of the page then hide the github clone popup
         var githubPopup = $("#github_clone_popup_container");
         if(githubPopup.length > 0){
             var atTop;
             if(isCodeColumn){
                 // Only show the Github popup for the first code column
-                if(!$('#code_column .codecolumn:first').is(":visible")){
+                if(!$('#code_column .code_column:first').is(":visible")){
                     return;
                 }
                 atTop = $("#code_column").scrollTop() === 0;
@@ -369,11 +367,11 @@ $(document).ready(function() {
             }
             if(atTop){
                 githubPopup.fadeIn();
-                $("#code_column .codecolumn").addClass('dimmed_code_column', {duration:400});
+                $("#code_column .code_column").addClass('dimmed_code_column', {duration:400});
             }
             else{            
                 githubPopup.fadeOut();
-                $("#code_column .codecolumn").removeClass('dimmed_code_column', {duration:400});
+                $("#code_column .code_column").removeClass('dimmed_code_column', {duration:400});
             }
         }                
     }
@@ -429,7 +427,7 @@ $(document).ready(function() {
     }
 
     // Slow the scrolling over section headers in the guide
-    var handleSectionSnapping = function(event){
+    function handleSectionSnapping(event){
         var origEvent = event.originalEvent;        
         var target = origEvent.target;
         var dir = (origEvent.deltaY) < 0 ? 'up' : 'down';
@@ -455,9 +453,7 @@ $(document).ready(function() {
 
                 if(isVisible){
                     // Remove previous TOC section highlighted and highlight correct step
-                    $('.liSelected').removeClass('liSelected');
-                    var anchor = $("#toc_container a[href='#" + this.id + "']");
-                    anchor.parent().addClass('liSelected');
+                    updateTOCHighlighting(this.id);
 
                     // Scroll to the section coming into view if scrolling down the page
                     // if(dir === 'down' || (dir === 'up' && elemTop < 0)){
@@ -481,7 +477,7 @@ $(document).ready(function() {
                         var code_block = code_sections[id].code;
                         var fromLine = code_sections[id].fromLine,
                             toLine = code_sections[id].toLine; // To be used in the future when we have designs for highlighting a range of lines.
-                        $('#code_column .codecolumn').not(code_block).hide();
+                        $('#code_column .code_column').not(code_block).hide();
                         code_block.show();
         
                         // Scroll to the line in the code column if a line number is given
@@ -503,8 +499,20 @@ $(document).ready(function() {
         }            
     };
 
+    function updateTOCHighlighting(id){
+        // Remove previous TOC section highlighted and highlight correct step
+        $('.liSelected').removeClass('liSelected');
+        var anchor = $("#toc_container a[href='#" + id + "']");
+        anchor.parent().addClass('liSelected');
+    }
+
+    $("#toc_container a").on('click', function(event){
+        var id = this.hash.substring(1);
+        updateTOCHighlighting(id);
+    });
+
     // Adjust the window for the sticky header when clicking on a section anchor.
-    var shiftWindow = function() {
+    function shiftWindow() {
         scrollBy(0, -100);
     };
     if (location.hash){
