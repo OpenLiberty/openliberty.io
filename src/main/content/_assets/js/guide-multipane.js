@@ -48,9 +48,9 @@ function handleFloatingCodeColumn(){
     if($(window).width() > 1170) {
         // CURRENTLY IN DESKTOP VIEW
         if(isBackgroundBottomVisible()) {
-            // Set the bottom of the code column to the distance between the top of the related guides section and the bottom of the page.
+            // Set the bottom of the code column to the distance between the top of the end of guide section and the bottom of the page.
             var windowHeight = window.innerHeight;
-            var relatedGuidesTopPosition = $("#related_guides_section")[0].getBoundingClientRect().top;
+            var relatedGuidesTopPosition = $("#end_of_guide")[0].getBoundingClientRect().top;
             if(relatedGuidesTopPosition){
                 var bottom = windowHeight - relatedGuidesTopPosition;
                 $("#code_column").css('bottom', bottom + 'px');
@@ -541,9 +541,15 @@ $(document).ready(function() {
                 'min-height': 'initial'
             });
         }
-    };
+    };    
 
-    resizeGuideSections();
+    function createEndOfGuideContent(){
+        var leftSide = $("#end_of_guide_left_section");
+        var rightSide = $("#end_of_guide_right_section");
+
+        var whatYouLearned = $("#great-work-you-re-done").siblings().find('p').clone();
+        leftSide.append(whatYouLearned);
+    }
 
     // RELATED GUIDES
     //
@@ -559,7 +565,7 @@ $(document).ready(function() {
         handleFloatingTableOfContent(); // Handle table of content view changes.
         handleDownArrow();
         handleFloatingCodeColumn();
-        resizeGuideSections();        
+        resizeGuideSections();
     });
 
     $(window).on('wheel mousewheel DOMMouseScroll', function(event) {
@@ -570,10 +576,13 @@ $(document).ready(function() {
         handleSectionSnapping(event);  
     });
 
-    // Show the github popup for the first section.
     $(window).on('load', function(){
         if(window.location.hash === ""){
-            handleGithubPopup();
-        }
+            handleGithubPopup();            
+        }        
+        handleFloatingTableOfContent();        
+        resizeGuideSections();
+        createEndOfGuideContent();
+        handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
     });
 });
