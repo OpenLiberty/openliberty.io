@@ -19,7 +19,6 @@ function addTOCClick() {
         var resource = $(event.currentTarget);
 
         setSelectedTOC(resource);
-        addSubHeadingTOC(resource);
         updateBreadCrumb(resource);
     });
 }
@@ -189,7 +188,7 @@ function calcIndentAndAddClass(subHeadingElement, title, table, dataId) {
             }
             // add subsection class + extra left margin indentation
             var next = subHeadingElement.parent().next();
-            while (!next.is("table")) {
+            while (!next.is("table") && (next.find("p > a").length === 0)) {
                 next.addClass(subSectionClass);
                 setDataId(next, dataId);
                 if (marginLeft !== undefined) {
@@ -203,9 +202,13 @@ function calcIndentAndAddClass(subHeadingElement, title, table, dataId) {
                 var width = parseInt(table.css("width").replace("px", ""));
                 if (marginLeft !== undefined) {
                     table.css("margin-left", marginLeft - 10 + "px");
-                    table.css("width", width - marginLeft - 10 + "px");
+                    var marginValue = marginLeft - 10;
+                    //table.css("width", width - marginLeft - 10 + "px");
+                    table.css("width", "calc(100% + 20px - " + marginLeft + "px - 10px)");
+                    //table.css("width", "-=" + marginLeft )
                 } else {
-                    table.css("width", width - 59 + "px");
+                    //table.css("width", width - 59 + "px");
+                    table.css("width", "calc(100% + 20px - 59px)");
                 }
             }
         }
@@ -219,11 +222,44 @@ function setDataId(element, dataId) {
 
 function removeFixedTableColumnWidth() {
     var iframeContents = $('iframe[name=contentFrame]').contents();
-    var cols = iframeContents.find("col");
-
-    $(cols).each(function() {
-        $(this).css("width", "");
+    var colgroups = iframeContents.find("colgroup");
+    var colWidths = [];
+    colWidths[4] = ["25%", "15%", "15%", "45%"];
+    $(colgroups).each(function() {
+        var cols = $(this).find("col");
+        var currentColWidths = colWidths[cols.length];
+        if (currentColWidths) {
+            $(cols).each(function(index) {
+                $(this).css("width", currentColWidths[index]);
+            })
+        }
     })
+}
+
+function handleSubHeadingsInTOC() {
+    var currentTOCSelected = $(".toc_selected > a");
+    var href;
+    if (currentTOCSelected.length === 1) {
+        href = currentTOCSelected.attr("href");
+    }
+    var iframeContents = $('iframe[name=contentFrame]').contents();
+    var anchors = iframeContents.find("div.paragraph > p > a");
+    var anchorLI = currentTOCSelected.parent();
+
+    $(anchors).each(function () {
+        var subHeading = $(this).parent();
+        if (subHeading.hasClass("subsection") === false) {
+            var anchorTitleId = $(this).attr("id");
+            var anchorTitleText = subHeading.text();
+            var anchorTitleTextIndex = anchorTitleText.lastIndexOf(" > ");
+            if (anchorTitleTextIndex !== -1) {
+                anchorTitleText = anchorTitleText.substring(anchorTitleTextIndex + 3);
+            }
+            var tocLI = $('<li style="margin-left: 10px"><a href="' + href + '#' + anchorTitleId + '" target="contentFrame">' + anchorTitleText + '</a></li>');
+            anchorLI.after(tocLI);
+            anchorLI = tocLI;
+        }
+    });
 }
 
 $(document).ready(function () {
@@ -231,6 +267,6 @@ $(document).ready(function () {
     $('iframe[name="contentFrame"]').load(function() {
         removeFixedTableColumnWidth();
         handleSubHeadingsInContent();
-       //handleSubHeadingsInTOC();
+        handleSubHeadingsInTOC();
     });
 });
