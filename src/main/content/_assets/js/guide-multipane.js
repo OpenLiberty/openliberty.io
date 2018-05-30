@@ -333,11 +333,6 @@ $(document).ready(function() {
         }        
     });
 
-    $("#down_arrow").on('click', function(){
-        // Scroll to the next guide section
-       var nextHeader = $("#guide_content p:visible").first().next('.sect1'); 
-    })
-
     function handleDownArrow() {
         if($(window).width() < 1171){
             $("#down_arrow").hide();
@@ -509,6 +504,7 @@ $(document).ready(function() {
     $("#toc_container a").on('click', function(event){
         var id = this.hash.substring(1);
         updateTOCHighlighting(id);
+        handleFloatingTableOfContent();        
     });
 
     // Adjust the window for the sticky header when clicking on a section anchor.
