@@ -15,20 +15,43 @@ var maxIndentLevel = 7;
 var minIndentLevel = 3; 
 
 function addTOCClick() {
-    $("#toc_container a").on("click", function(event){
+    var onclick = function(event){
         var resource = $(event.currentTarget);
-
         setSelectedTOC(resource);
         updateBreadCrumb(resource);
-    });
+    }
+
+    $("#toc_container a").unbind("click");
+    $("#toc_container a").bind("click", onclick);
 }
 
 function setSelectedTOC(resource) {
-    var currecntTOCSelected = $(".toc_selected");
-    if (currecntTOCSelected.length === 1) {
-        $(".toc_selected").removeClass("toc_selected");
+    var currentTOCSelected = $(".toc_selected");
+    var newHref = resource.attr("href");
+
+    if (currentTOCSelected.length === 1) {
+        var href = currentTOCSelected.find("a").attr("href");
+        if (href.indexOf("#") !== -1) {
+            href = href.substring(0, href.indexOf("#"));
+        }
+        // remove all hash href created based on the content if a different TOC element is clicked
+        if (newHref.indexOf(href) === -1) {
+            // var hashHref = $("#toc_container").find("a[href^='" + href + "#']");
+            // $(hashHref).each(function () {
+            //     $(this).parent().remove();
+            // })
+            removeHashRefTOC(href);
+        }
+        currentTOCSelected.removeClass("toc_selected");
     }
     resource.parent().addClass("toc_selected");
+}
+
+function removeHashRefTOC(href) {
+    var hashHref = $("#toc_container").find("a[href^='" + href + "#']");
+    $(hashHref).each(function () {
+        $(this).parent().remove();
+    })
 }
 
 function updateBreadCrumb(resource) {
@@ -46,88 +69,25 @@ function handleSubHeadingsInContent() {
         contentTitle = contentTitle.substring(0, contentTitle.indexOf(" - "));
     }
     var anchors = iframeContents.find("div.paragraph > p > a");
+    var deferAddingExpandAndCollapseToggleButton = [];
 
     $(anchors).each(function () {
-        var anchorTitleId = $(this).attr("id");
         var subHeading = $(this).parent();
         var anchorTitle = modifySubHeading(subHeading, contentTitle);
         var table = getTableForSubHeading(subHeading);
+        var anchorTitleId = $(this).attr("id");
         var indentLevels = calcIndentAndAddClass(subHeading, anchorTitle, table, anchorTitleId);
 
         if (indentLevels >= minIndentLevel) {
-            addExpandAndCollapseToggleButtons(subHeading, anchorTitleId);
-        }
-    });
-}
-
-function addExpandAndCollapseToggleButtons(subHeading, titleId) {
-    var toggleButton = $('<div class="toggle" collapsed="false" tabindex=0><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse" /></div>');
-    toggleButton.on('click', function () {
-        var collapsed = $(this).attr('collapsed');
-        if (collapsed === "true") {
-            // Expand to show the table and nested elements
-            $(this).empty().append($('<img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
-            $(this).attr('collapsed', false);
-            // this call needs to be done after collapsed is set to false
-            handleCollapseExpandTitle(titleId, true);
-        }
-        else {
-            // Collapse the table and nested elements
-            handleCollapseExpandTitle(titleId, false);
-            $(this).empty().append($('<img src="/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
-            $(this).attr('collapsed', true);
-        }
-    });
-    toggleButton.on('keypress', function (event) {
-        event.stopPropagation();
-        // Enter key
-        if (event.which === 13 || event.keyCode === 13) {
-            toggleButton.click();
-        }
-    });
-    subHeading.prepend(toggleButton);    
-}
-
-function handleCollapseExpandTitle(titleId, isShow) {
-    var iframeContents = $('iframe[name=contentFrame]').contents();
-    var matchingElements = iframeContents.find('[data-id^="' + titleId + '"]');
-    var hideElements = [];
-    $(matchingElements).each(function () {
-        if (isShow) {
-            // don't show already collapsed element
-            var toggleButton = $(this).find(".toggle");
-            if (toggleButton.length === 1) {
-                if (toggleButton.attr("collapsed") === "true") {
-                    var dataId = $(this).attr("data-id");
-                    //hideElements.push(iframeContents.find("table[data-id^='" + dataId + "']"));
-                    var elements = iframeContents.find("[data-id^='" + dataId + "']");
-                    $(elements).each(function () {
-                        if (($(this).attr('data-id') === dataId && $(this).is("table")) ||
-                            ($(this).attr('data-id') !== dataId)) {
-                            hideElements.push($(this));
-                        }
-                    })
-                }
-            }
-
-            if ($(this).attr("data-id") === titleId && $(this).is("div") && $(this).hasClass("collapseMargin")) {
-                $(this).removeClass("collapseMargin");
-            }
-            $(this).show();
-
-        } else {
-            // don't hide the clicked toggle element title and description
-            if (($(this).attr('data-id') === titleId && $(this).is("table")) ||
-                ($(this).attr('data-id') !== titleId)) {
-                $(this).hide();
-            } else if ($(this).attr("data-id") === titleId && $(this).is("div")) {
-                $(this).addClass("collapseMargin");
+            if (table) {
+                addExpandAndCollapseToggleButtons(subHeading, anchorTitleId);
+            } else {
+                deferAddingExpandAndCollapseToggleButton.push({heading: subHeading, anchorTitleId: anchorTitleId});
             }
         }
     });
-    $(hideElements).each(function() {
-        $(this).hide();
-    })
+
+    handleDeferredExpandCollapseElements(deferAddingExpandAndCollapseToggleButton);
 }
 
 // remove strong from the last heading
@@ -147,6 +107,12 @@ function modifySubHeading(subHeadingElement, contentTitle) {
             var titlePlain = title.substring(lastIndex + 1);
             strong.remove();
             subHeadingElement.append("<strong>" + titleStrong + "</strong>" + titlePlain);
+        }
+
+        // fix incomplete tag id cuz of colon
+        if (title.indexOf(".") !== -1) {
+            var titleId = title.replace(/ > /g, "/");
+            subHeadingElement.find("a").attr("id", titleId);
         }
     }
     return title;
@@ -203,11 +169,8 @@ function calcIndentAndAddClass(subHeadingElement, title, table, dataId) {
                 if (marginLeft !== undefined) {
                     table.css("margin-left", marginLeft - 10 + "px");
                     var marginValue = marginLeft - 10;
-                    //table.css("width", width - marginLeft - 10 + "px");
                     table.css("width", "calc(100% + 20px - " + marginLeft + "px - 10px)");
-                    //table.css("width", "-=" + marginLeft )
                 } else {
-                    //table.css("width", width - 59 + "px");
                     table.css("width", "calc(100% + 20px - 59px)");
                 }
             }
@@ -220,7 +183,97 @@ function setDataId(element, dataId) {
     element.attr("data-id", dataId);
 }
 
-function removeFixedTableColumnWidth() {
+function getDataId(element) {
+    return element.attr("data-id");
+}
+
+function addExpandAndCollapseToggleButtons(subHeading, titleId) {
+    var toggleButton = $('<div class="toggle" collapsed="false" tabindex=0><img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse" /></div>');
+    toggleButton.on('click', function () {
+        var collapsed = $(this).attr('collapsed');
+        if (collapsed === "true") {
+            // Expand to show the table and nested elements
+            $(this).empty().append($('<img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
+            $(this).attr('collapsed', false);
+            // this call needs to be done after collapsed is set to false
+            handleExpandCollapseTitle(titleId, true);
+        }
+        else {
+            // Collapse the table and nested elements
+            handleExpandCollapseTitle(titleId, false);
+            $(this).empty().append($('<img src="/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
+            $(this).attr('collapsed', true);
+        }
+    });
+    toggleButton.on('keypress', function (event) {
+        event.stopPropagation();
+        // Enter key
+        if (event.which === 13 || event.keyCode === 13) {
+            toggleButton.click();
+        }
+    });
+    subHeading.prepend(toggleButton);    
+}
+
+function handleExpandCollapseTitle(titleId, isShow) {
+    var iframeContents = $('iframe[name=contentFrame]').contents();
+    var matchingElements = iframeContents.find('[data-id^="' + titleId + '"]');
+    var hideElements = [];
+    $(matchingElements).each(function () {
+        var dataId = getDataId($(this));
+        if (isShow) {
+            // don't show already collapsed element
+            var toggleButton = $(this).find(".toggle");
+            if (toggleButton.length === 1) {
+                if (toggleButton.attr("collapsed") === "true") {
+                    var elements = iframeContents.find("[data-id^='" + dataId + "']");
+                    $(elements).each(function () {
+                        var nestedDataId = getDataId($(this));
+                        if ((nestedDataId === dataId && $(this).is("table")) ||
+                            /* detect id with same string + more such as http-method-omission when matching http-method */
+                            (nestedDataId !== dataId && (nestedDataId.indexOf(dataId + "/") === 0))) { 
+                            hideElements.push($(this));
+                        }
+                    })
+                }
+            }
+
+            if (dataId === titleId && $(this).is("div") && $(this).hasClass("collapseMargin")) {
+                $(this).removeClass("collapseMargin");
+            }
+            $(this).show();
+
+        } else {
+            // don't hide the clicked toggle element title and description
+            if ((dataId === titleId && $(this).is("table")) || (dataId !== titleId && (dataId.indexOf(titleId + "/") === 0))) {
+                $(this).hide();
+            } else if (dataId === titleId && $(this).is("div")) {
+                $(this).addClass("collapseMargin");
+            }
+        }
+    });
+    $(hideElements).each(function() {
+        $(this).hide();
+    })
+}
+
+function handleDeferredExpandCollapseElements(deferredElements) {
+    var iframeContents = $('iframe[name=contentFrame]').contents();
+    $(deferredElements).each(function() {
+        var subHeading = $(this).attr("heading");
+        var titleId = $(this).attr("anchorTitleId");
+        var matchingElements = iframeContents.find('[data-id^="' + titleId + '"]');
+        $(matchingElements).each(function() {
+            var dataId = getDataId($(this));
+            if (dataId !== titleId && (dataId.indexOf(titleId + "/") === 0)) {
+                addExpandAndCollapseToggleButtons(subHeading, titleId);
+                return false;
+            }
+        })
+    })
+}
+
+function modifyFixedTableColumnWidth() {
     var iframeContents = $('iframe[name=contentFrame]').contents();
     var colgroups = iframeContents.find("colgroup");
     var colWidths = [];
@@ -246,6 +299,8 @@ function handleSubHeadingsInTOC() {
     var anchors = iframeContents.find("div.paragraph > p > a");
     var anchorLI = currentTOCSelected.parent();
 
+    removeHashRefTOC(href);
+
     $(anchors).each(function () {
         var subHeading = $(this).parent();
         if (subHeading.hasClass("subsection") === false) {
@@ -260,12 +315,13 @@ function handleSubHeadingsInTOC() {
             anchorLI = tocLI;
         }
     });
+    addTOCClick();
 }
 
 $(document).ready(function () {
     addTOCClick();
     $('iframe[name="contentFrame"]').load(function() {
-        removeFixedTableColumnWidth();
+        modifyFixedTableColumnWidth();
         handleSubHeadingsInContent();
         handleSubHeadingsInTOC();
     });
