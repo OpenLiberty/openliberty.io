@@ -10,25 +10,32 @@ permalink: /docs/
 
 <!-- INTRO -->
 <div id="docs_intro_background">
-    <div class="container">
+    <div id="docs_intro_container" class="container-fluid">
         <div class="row">
-            <div class="col-sm-5">
+            <div class="col-md-4">
                 <img id="docs_title" src="{{ "/img/docs_page_title.svg" | relative }}" class="img-responsive" alt="Docs">
-                <p id="docs_description">Docs, guides and reference that’s worth exploring!</p>
+                <p id="docs_description"><br>Docs, guides and reference that’s worth exploring!</p>
             </div>
-            <div id="docs_open_guides_box" class="col-sm-7">
-                  <div id="all_guides_title">Open Liberty Guides</div>
-                  <p id="all_guides_description">Our guides are the best way to learn and explore Open Liberty. All guides keep the code at the forefront,
-                       so you can get what you need and get back to work.<br><br>For live code examples and hands-on learning, check out the interactive guides.</p>
-                  <a href="/guides" id="all_guides_link">View all Open Liberty guides</a>
+            <div id="docs_open_guides_box" class="col-md-8">
+                <div id="all_guides_title">Open Liberty Guides</div>
+                <p id="all_guides_description">Our guides are the best way to learn and explore Open Liberty. All guides keep the code at the forefront, so you can get what you need and get back to work.<br><br>For live code examples and hands-on learning, check out the interactive guides.</p>
+                <div id="all_guides_link_container" class="row">
+                    <div class="col-lg-6 col-md-12 col-sm-6">
+                        <a href="/guides" id="all_guides_link">View all Open Liberty guides</a>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-6">
+                        <a href="/guides" id="docs_all_interactive_guides_link"><img id="lightningbolt" src="{{ "/img/docs_interactive_button2.png" | relative }}" alt="lightningbolt">View all interactive guides</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-<img id="star1" class="star hidden-xs" src="{{ "/img/doc_page_star1.png" | relative }}" alt="">
-<img id="star2" class="star hidden-xs" src="{{ "/img/doc_page_star2.png" | relative }}" alt="">
-<img id="star3" class="star hidden-xs" src="{{ "/img/doc_page_starcluster.png" | relative }}" alt="">
-<img id="ufo" class="star hidden-xs" src="{{ "/img/doc_page_ufo.png" | relative }}" alt="">
-<img id="leftcloud" class="hidden-xs" src="{{ "/img/doc_page_leftcloud_2x.png" | relative }}" alt="">
+    <img id="star1" class="hidden-sm hidden-xs" src="{{ "/img/doc_page_star1.png" | relative }}" alt="">
+    <img id="star2" class="hidden-sm hidden-xs" src="{{ "/img/doc_page_star2.png" | relative }}" alt="">
+    <img id="star3" class="hidden-sm hidden-xs" src="{{ "/img/doc_page_starcluster.png" | relative }}" alt="">
+    <img id="ufo" class="hidden-md hidden-sm hidden-xs" src="{{ "/img/doc_page_ufo.png" | relative }}" alt="">
+    <img id="leftcloud" class="hidden-sm hidden-xs" src="{{ "/img/doc_page_leftcloud_2x.png" | relative }}" alt="">
+    <img id="rightcloud" class="hidden-sm hidden-xs" src="{{ "/img/doc_page_rightcloud_2x.png" | relative }}" alt="">
 </div>
    
 <!-- Build one list of all the documents that have a particular layout -->
@@ -39,7 +46,7 @@ permalink: /docs/
         <div class="row">
             <div class="col-sm-12 col-md-4">
                 <div id="reference_title">API Reference</div>
-                <p id="reference_description">View the Javadoc for APIs available in Open Liberty. More reference material is in the works.</p>
+                <p id="reference_description">View the Javadoc for APIs available in Open Liberty. More APIs and other reference materials are on the way, so watch for updates!</p>
             </div>
             {% for doc in javadocs %}
                 {% if doc.url == '/docs/ref/javaee/7/' or doc.url == '/docs/ref/microprofile/1%2E3/' %}
