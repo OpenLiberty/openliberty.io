@@ -558,8 +558,8 @@ $(document).ready(function() {
             // Send rating to google analytics
             // The first parameter '1' is the slot for the custom variable
             // The last parameter '3' is opt_scope is which is page level storage
-            if(typeof _setCustomVar === "function"){
-                _setCustomVar(1, "Guide Review", rating, 3);
+            if(typeof ga === "function"){
+                ga(1, "Guide Review", rating, 3);
             }
             $("#feedback_ratings img").not($(this)).css('opacity', '.25');
             $(this).css('opacity', '1');
