@@ -548,6 +548,7 @@ $(document).ready(function() {
         leftSide.prepend(whatYouLearned);
 
         var relatedGuides = $("#related-guides-cards > div").clone();
+        relatedGuides.addClass('end_of_guide_related_guide');
         rightSide.append(relatedGuides);
     }
 
