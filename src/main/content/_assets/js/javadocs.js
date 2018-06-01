@@ -162,6 +162,50 @@ function addScrollListener() {
     });
 }
 
+/* Scroll listener to the left frame */
+function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
+    var frame = $('#javadoc_container').contents().find(frameToListen);
+    var frameHeader = frame.contents().find(frameElementToListen);
+    var offsetTop = frameHeader.offset().top;
+    var origPaddingTop = parseInt(frameHeader.css("padding-top").replace("px", ""));
+    // For FireFox, cannot just use border-top, has to use border-top-color, border-top-style, border-top-width
+    var origBorderTopWidth = frameHeader.css("border-top-width");
+    var origBorderTopStyle = frameHeader.css("border-top-style");
+    var origBorderTopColor = frameHeader.css("border-top-color");
+    var stickyBeforeCss = '<style data-class="sticky">.sticky:before {top:' + origPaddingTop + 'px; ' + 
+    'border-top-width: ' + origBorderTopWidth + '; border-top-style: ' + origBorderTopStyle + '; border-top-color: ' + origBorderTopColor +';}</style>';
+    frame.contents().off('scroll').on('scroll', function(event){
+        var topPos = $(this).scrollTop();
+        if (topPos >= offsetTop) {
+            if (!frameHeader.hasClass("sticky")) {
+                // sticky css will set margin-top to 0, otherwise the rolling content will appear in the margin-top area.
+                // To maintain the spacing and look with margin-top removed, replace padding-top and border-top
+                // with temporarily values and adjust sticky header with calculated padding-top and border-top.
+                frameHeader.css("padding-top", offsetTop + origPaddingTop);
+                frameHeader.css("border-top-width", "0px");
+                frameHeader.css("border-top-style", "solid");
+                frameHeader.css("border-top-color", "transparent");
+
+                if ($(this).find('head style[data-class="sticky"]').length) {
+                    $(this).find('head style[data-class="sticky"]').replaceWith(stickyBeforeCss);
+                } else {
+                    $(this).find('head').append(stickyBeforeCss);
+                }
+                frameHeader.addClass("sticky");
+            }
+        } else {
+            if (frameHeader.hasClass("sticky")) {
+                frameHeader.removeClass("sticky");
+                /* restore the original padding-top and border-top css */
+                frameHeader.css("padding-top", origPaddingTop);
+                frameHeader.css("border-top-width", origBorderTopWidth);
+                frameHeader.css("border-top-style", origBorderTopStyle);
+                frameHeader.css("border-top-color", origBorderTopColor);
+            }
+        }
+    });
+}
+
 /*
     Check if the right iframe has been scrolled down at least 85% to show the footer.
 */
@@ -422,7 +466,9 @@ $(document).ready(function() {
         resizeJavaDocWindow();
         addAccessibility();
         addExpandAndCollapseToggleButtons();  
-        addNavHoverListener();      
+        addNavHoverListener();
+        addLeftFrameScrollListener('.leftTop iframe', 'h2[title="Packages"]');
+        addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
         addScrollListener();
         addClickListeners();
 
@@ -436,6 +482,7 @@ $(document).ready(function() {
             addClickListener($(this).contents());
             // add back the toggle expand/collapse button
             addExpandAndCollapseToggleButtonForPackageFrame($(this).contents(), $('#javadoc_container').contents().find(".leftBottom"));
+            addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
         });
 
         setDynamicIframeContent();
