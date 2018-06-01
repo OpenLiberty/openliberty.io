@@ -93,9 +93,9 @@
     height: 41px;
 }
 
-#breadcrumb_row .breadcrumb {
+#breadcrumb_row .breadcrumb {    
     background-color: #24243A;
-    padding-left: 30px;
+    padding-left: 30px;    
     height: 100%;
     margin-bottom: 0;
     border-radius: 0;
@@ -159,21 +159,33 @@
     cursor: default;
 }
 
+/* FOOTER */
+#footer_container {
+    width: 100%;
+}
+
+@media (max-width: 767px) {
+    #doc_logo {
+        margin-left: 15px;
+    }
+
+    .navbar {
+        padding-top: 0;
+    }    
+}
+
 /* Breakpoint for when the hamburger navbar appears and the navbar links go into the hamburger
    The breadcrumb still exists at this point */
-@media (max-width: 767px) { 
+@media (max-width: 767px) {
 
     #doc_logo {
         display: inline-block;
-    }
-
-    #doc_logo {
-        margin-left: 10px;
-        margin-top: 20px;
+        margin-top: 0;
     }
 
     #doc_title {
-        margin-top: 22px;
+        margin-top: 15px;
+        margin-top: 0;
     }
 
     #doc_title > img {
@@ -216,9 +228,40 @@
         white-space: inherit;
         padding-left: 15px;
     }
-}
 
-/* FOOTER */
-#footer_container {
-    width: 100%;
+    /* Bootstrap override */
+    .navbar-header {
+        float: none;
+    }
+    .navbar-left,.navbar-right {
+        float: none !important;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-fixed-top {
+        top: 0;
+        border-width: 0 0 1px;
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin-top: 7.5px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .collapse.in{
+        display:block !important;
+    }
 }
