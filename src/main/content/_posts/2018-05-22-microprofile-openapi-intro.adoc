@@ -1,0 +1,63 @@
+---
+layout: post
+title:  "Document your microservice REST APIs on Liberty with MicroProfile OpenAPI 1.0"
+date:   2018-05-22 12:05:00 +0100
+categories: blog
+blog_description: "Generate standardised OpenAPI v3 documentation from your RESTful microservices using the new MicroProfile OpenAPI programming model in Liberty. Open Liberty 18.0.0.1 includes an implementation of the MicroProfile OpenAPI 1.0 spec."
+author_picture: https://avatars1.githubusercontent.com/u/5042215
+seo-title: Document your microservice REST APIs on Liberty with MicroProfile OpenAPI 1.0 - OpenLiberty.io
+seo-description: Generate standardised OpenAPI v3 documentation from your RESTful microservices using the new MicroProfile OpenAPI programming model in Liberty.
+---
+:description: Generate standardised OpenAPI v3 documentation from your RESTful microservices using the new MicroProfile OpenAPI programming model in Liberty.
+=  Introducing MicroProfile OpenAPI 1.0
+Arthur De Magalhaes <https://github.com/arthurdm>
+
+OpenAPI is a project that standardises how developers describe REST APIs so that it is easy to generate API documentation from the APIs themselves. You can now generate documentation from your microservice REST APIs using MicroProfile OpenAPI. Open Liberty 18.0.0.1 includes the `mpOpenAPI-1.0` feature. This is the implementation of the http://microprofile.io/project/eclipse/microprofile-open-api[MicroProfile OpenAPI 1.0] spec released in December 2017.
+
+
+## State of the API Economy
+
+If you have written REST APIs in the last few years, chances are you were asked to provide the Swagger file that described your APIs.  Conversely if you wanted to use a REST API from another provider you would have been given their Swagger file.
+
+The Swagger specification certainly rose above other similar standards, such as API Blueprint and RAML, but it was still being governed by a single entity.  That was until 2016, when the main players in the API industry got together and formed the https://www.openapis.org/membership/members[OpenAPI Initiative].  The Swagger v2 specification was donated to the OpenAPI Initiative and renamed to OpenAPI v2, and in July 26, 2017 a new, more powerful specification was released:  https://www.openapis.org/blog/2017/07/26/the-oai-announces-the-openapi-specification-3-0-0[OpenAPI v3]
+
+The consortium governance model of this new specification meant that new tools vendors started to emerge with libraries and SDKs.  Java developers had a choice from many different annotations or libraries to include in their application – but none that was officially supported by any of the major Java application server vendors, which affected portability and consistency.  There was an increasing need for an official Java programming model that was supported by different vendors and integrated with other modern libraries.
+
+## Enter MicroProfile OpenAPI
+
+Similarly to how the Swagger specification was used as the base for a community-driven specification, the Java libraries for Swagger were used as the base for the http://microprofile.io[MicroProfile community] programming model for OpenAPI v3: https://github.com/eclipse/microprofile-open-api[MicroProfile OpenAPI].  This specification outlined an official set of annotations and interfaces that allow developers to successfully generate OpenAPI v3 documentation for their Java RESTful APIs.
+
+The following diagram provides an overview of the MicroProfile OpenAPI support in Open Liberty, via the `mpOpenAPI-1.0` feature.
+
+image::/img/blog/mp_ol_openapi.png[MP OpenAPI Architecture,width=100%]
+
+One of the key aspects of the MicroProfile OpenAPI specification is the requirement to produce a valid OpenAPI document from pure JAX-RS 2.0 applications. This means that Open Liberty processes all the relevant JAX-RS annotations (such as `@Path` and `@Consumes`) as well as Java objects (POJOs) used as input or output to JAX-RS operations. This is a good place to start for application developers that are new to OpenAPI: just deploy your existing JAX-RS application into Open Liberty and check out the output from /openapi!
+
+The application developer then has a few choices to provide input for the generation of the resulting OpenAPI document:
+
+1.	Augment those JAX-RS annotations with the OpenAPI https://github.com/eclipse/microprofile-open-api/blob/master/spec/src/main/asciidoc/microprofile-openapi-spec.adoc#annotations[Annotations]. Using annotations means developers don’t have to re-write the portions of the OpenAPI document that are already covered by the JAX-RS framework (e.g. the HTTP method of an operation).  This is the most common path, so definitely check out some of the https://github.com/eclipse/microprofile-open-api/blob/master/spec/src/main/asciidoc/microprofile-openapi-spec.adoc#412-detailed-usage-of-key-annotations[examples] to get familiar with some of these annotations and their generated output.
+
+2.	Take the initial output from /openapi as a starting point to document your APIs via https://github.com/eclipse/microprofile-open-api/blob/master/spec/src/main/asciidoc/microprofile-openapi-spec.adoc#static-openapi-files[Static OpenAPI files]. It’s worth mentioning that these static files can also be written before any code, which is an approach often adopted by enterprises that want to lock-in the contract of the API. In this case, we refer to the OpenAPI document as the "source of truth", by which the client and provider must abide.
+
+3.	Use the https://github.com/eclipse/microprofile-open-api/blob/master/spec/src/main/asciidoc/microprofile-openapi-spec.adoc#programming-model[API interfaces] to provide a bootstrap (or complete) OpenAPI model tree.
+
+4.  Additionally, a https://github.com/eclipse/microprofile-open-api/blob/master/spec/src/main/asciidoc/microprofile-openapi-spec.adoc#filter[Filter] is described which can update the OpenAPI model after it has been built from the previously described documentation mechanisms.
+
+All of these mechanisms are combined to form the valid OpenAPI v3 document from `/openapi`.
+
+## OpenAPI UI
+
+A very important value-add from Open Liberty is the native OpenAPI UI that it ships out of the box!  This UI is built from the https://github.com/swagger-api/swagger-ui[Open Source Swagger UI] and renders the generated `/openapi` documented into a very user friendly page.  One of the best features is the ability to `Try out` each endpoint, making an invocation to the back-end straight from the UI.
+
+The UI, available from the endpoint `/openapi/ui` can also be https://www.ibm.com/support/knowledgecenter/en/SSD28V_9.0.0/com.ibm.websphere.wlp.core.doc/ae/twlp_api_mpopenapi_custom.html[customized] beyond the default look-and-feel.
+
+image::/img/blog/mp_ol_openapi_ui.png[MP OpenAPI UI,width=100%]
+
+## Additional Information
+
+You are now ready to try out an application that has MicroProfile OpenAPI enabled!  Just head over to our  https://github.com/microservices-api/oas3-microprofile-app[sample app project] and follow the instructions to build an Open Liberty docker container that with MicroProfile OpenAPI!
+
+For more information on the MicroProfile OpenAPI specification, see the http://download.eclipse.org/microprofile/microprofile-open-api-1.0.1/microprofile-openapi-spec.html[official MicroProfile OpenAPI 1.0 release].  For further documentation about the `mpOpenAPI-1.0` feature, check out the https://www.ibm.com/support/knowledgecenter/en/SSD28V_9.0.0/com.ibm.websphere.wlp.core.doc/ae/twlp_mpopenapi.html[official topic].
+
+
+Get involved in the MicroProfile community at: http://microprofile.io
