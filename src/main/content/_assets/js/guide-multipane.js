@@ -165,7 +165,7 @@ $(document).ready(function() {
     });
 
     // Map the guide sections that don't have any code sections to the previous section's code.
-    var sections = $('.sect1:not(#guide_meta) > h2, .sect2:not(#guide_meta) > h3');
+    var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2, .sect2:not(#guide_meta):not(#related-guides) > h3');
     for(var i = 1; i < sections.length; i++){
         var id = sections[i].id;
         if(!code_sections[id]){
@@ -429,7 +429,7 @@ $(document).ready(function() {
         var delta = origEvent.wheelDelta || -origEvent.detail || -origEvent.deltaY;
         // Multipane view
         if($(window).width() > 1170) {
-            var sections = $('.sect1:not(#guide_meta) > h2');
+            var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2');
             sections.each(function(index){
                 var elem = sections.get(index);
                 var rect = elem.getBoundingClientRect();
@@ -527,13 +527,13 @@ $(document).ready(function() {
             var headerHeight = $('header').height();
             var sectionTitleHeight = $("#guide_content h2").first().height();
             var newSectionHeight = viewportHeight - headerHeight - (2 * sectionTitleHeight);
-            $('.sect1:not(#guide_meta)').css({
+            $('.sect1:not(#guide_meta):not(#related-guides)').css({
                 'min-height': newSectionHeight + 'px'
             });
         }
         // Use initial height for single column view / mobile
         else {
-            $('.sect1:not(#guide_meta)').css({
+            $('.sect1:not(#guide_meta):not(#related-guides)').css({
                 'min-height': 'initial'
             });
         }
@@ -547,9 +547,9 @@ $(document).ready(function() {
         var whatYouLearned = $("#great-work-you-re-done").siblings().find('p').clone();
         leftSide.prepend(whatYouLearned);
 
-        var relatedGuides = $("#related-guides-cards > div").clone();
-        relatedGuides.addClass('end_of_guide_related_guide');
-        rightSide.append(relatedGuides);
+        // var relatedGuides = $("#related-guides-cards > div").clone();
+        // relatedGuides.addClass('end_of_guide_related_guide');
+        // rightSide.append(relatedGuides);
     }
 
     function addGuideRatingsListener(){
