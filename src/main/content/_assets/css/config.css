@@ -51,7 +51,13 @@ html, body, main {
     letter-spacing: 0.2px;
     line-height: 26px;
     text-transform: uppercase;
-    margin: 23px 39px 6px 26px;
+    padding: 23px 39px 6px 26px;
+    position: fixed;  /* keep the TOC heading sticky */
+    width: 23%; /* but mobile has to switch to 100% */
+    z-index: 1;
+    margin: 0;
+    background: rgba(255,255,255,1);
+    
 }
 
 #toc_column {
@@ -148,6 +154,22 @@ div.paragraph p.subsection {
 
 .collapseMargin {
     margin-bottom: 54px;
+}
+
+/* when jumping to a subheading with a toc subheading click, position the subheading below the sticky nav header  */
+p.subHeading {
+    position: relative;
+}
+
+p.subHeading a {
+    position: absolute;
+    top: -140px;
+}
+
+/* make the navbar sticky */
+.navbar {
+    position: fixed;
+    background-color: #24243A;
 }
 
 /* TABLE STYLING */
