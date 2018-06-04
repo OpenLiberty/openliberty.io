@@ -53,27 +53,41 @@ function removeHashRefTOC(href) {
 function updateBreadcrumb(resource) {
     var lastBreadcrumb = $(".breadcrumb.fluid-container").find("li:last-child");
     var lastBreadcrumbAnchorTag = lastBreadcrumb.find("a");
-    if (lastBreadcrumbAnchorTag.hasClass("inactive_link")) {
-        // check whether to add on new child doc breadcrumb or remove existing parent doc breadcrumb
-        var lastBreadcrumbHref = lastBreadcrumbAnchorTag.attr("doc-href");
-        if (resource.attr("href").indexOf(lastBreadcrumbHref) === 0) {
-            // convert inactive link to active link
-            lastBreadcrumbAnchorTag.removeClass("inactive_link");
-            lastBreadcrumbAnchorTag.attr("href", lastBreadcrumbHref);
-        } else {
-            // remove existing inactive link
-            $(".breadcrumb.fluid-container").find("li:last-child").remove();
-            // if the breadcrumb href contains a hash tag, find the parent breadcrumb 
-            if (lastBreadcrumbHref.indexOf("#") !== -1) {
-                var parentBreadcrumb = $(".breadcrumb.fluid-container").find("li:last-child");
-                // If it is for a different doc, remove the parent breadcrumb
-                if (resource.attr("href").indexOf(parentBreadcrumb.find("a").attr("href")) === -1) { 
-                    parentBreadcrumb.remove();
+    var lastBreadcrumbHref = lastBreadcrumbAnchorTag.attr("doc-href");
+    var currentHref = resource.attr("href");
+    var addBreadcrumb = true;
+    if (currentHref !== lastBreadcrumbHref) {
+        if (lastBreadcrumbAnchorTag.hasClass("inactive_link")) {
+            // check whether to add on new child doc breadcrumb or remove existing parent doc breadcrumb
+            //var lastBreadcrumbHref = lastBreadcrumbAnchorTag.attr("doc-href");
+            if (currentHref.indexOf(lastBreadcrumbHref) === 0) {
+                // convert inactive link to active link
+                lastBreadcrumbAnchorTag.removeClass("inactive_link");
+                lastBreadcrumbAnchorTag.attr("href", lastBreadcrumbHref);
+            } else {
+                // remove existing inactive link
+                $(".breadcrumb.fluid-container").find("li:last-child").remove();
+                // if the breadcrumb href contains a hash tag, find the parent breadcrumb 
+                if (lastBreadcrumbHref.indexOf("#") !== -1) {
+                    var parentBreadcrumb = $(".breadcrumb.fluid-container").find("li:last-child");
+                    var parentBreadcrumbAnchorTag = parentBreadcrumb.find("a");
+                    // If it is for a different doc or the same, remove the parent breadcrumb
+                    if (currentHref.indexOf(parentBreadcrumbAnchorTag.attr("href")) === -1) {
+                        parentBreadcrumb.remove();
+                    } else {
+                        if (currentHref === parentBreadcrumbAnchorTag.attr("href")) {
+                            addBreadcrumb = false;
+                            parentBreadcrumbAnchorTag.addClass("inactive_link");
+                            parentBreadcrumbAnchorTag.removeAttr("href");
+                        }
+                    }
                 }
             }
         }
+        if (addBreadcrumb) {
+            $(".breadcrumb.fluid-container").append("<li><a class='inactive_link' doc-href='" + resource.attr("href") + "' target='contentFrame'>" + resource.text() + "</a></li>");
+        }
     }
-    $(".breadcrumb.fluid-container").append("<li><a class='inactive_link' doc-href='" + resource.attr("href") + "' target='contentFrame'>" + resource.text() + "</a></li>");
 }
 
 function handleSubHeadingsInContent() {
@@ -303,7 +317,16 @@ function modifyFixedTableColumnWidth() {
     })
 }
 
-function handleSubHeadingsInTOC() {
+function findTOCElement() {
+    var iframeContents = $('iframe[name=contentFrame]').contents();
+    var contentTitle = iframeContents.find("#config_title").text().trim();
+    var matchingTOCELement = $("#toc_container a").filter(function() { 
+        return $(this).text().trim() === contentTitle;
+    })
+    return matchingTOCELement;
+}
+
+function handleSubHeadingsInTOC(TOCElement) {
     // clear out existing elected TOC and its subHeadings
     var currentTOCSelected = $(".toc_selected > a");
     var href;
@@ -317,7 +340,7 @@ function handleSubHeadingsInTOC() {
 
     var iframeContents = $('iframe[name=contentFrame]').contents();
     var anchors = iframeContents.find("div.paragraph > p > a");
-    var anchorLI = currentTOCSelected.parent();
+    var anchorLI = TOCElement.parent();
     $(anchors).each(function () {
         var subHeading = $(this).parent();
         if (subHeading.hasClass("subsection") === false) {
@@ -335,23 +358,15 @@ function handleSubHeadingsInTOC() {
     addTOCClick();
 }
 
-function updateSelectedTOC() {
-    var iframeContents = $('iframe[name=contentFrame]').contents();
-    var contentTitle = iframeContents.find("#config_title").text().trim();
-    var matchingTOCELement = $("#toc_container a").filter(function() { 
-        return $(this).text().trim() === contentTitle;
-    })
-    setSelectedTOC(matchingTOCELement);
-}
-
 $(document).ready(function () {
     addTOCClick();
     $('iframe[name="contentFrame"]').load(function() {
         scroll(0, 0); // scroll back to the top of the iframe content
         modifyFixedTableColumnWidth();
         handleSubHeadingsInContent();
-        handleSubHeadingsInTOC();
-        // update selected TOC
-        updateSelectedTOC();
+        var TOCElement = findTOCElement();
+        handleSubHeadingsInTOC(TOCElement);
+        setSelectedTOC(TOCElement);
+        updateBreadcrumb(TOCElement);
     });
 });
