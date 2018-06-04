@@ -101,20 +101,20 @@ $(document).ready(function() {
                     line_nums = line_nums.substring(6);
                     // Show the entire file
                     if(line_nums === '*'){
-                        fromLine = 0;
-                        toLine = code_block.find('.line-numbers').last().text();
+                        fromLine = "0";
+                        toLine = -1;
                     }
-                    if(line_nums.indexOf('-') > -1){
+                    else if(line_nums.indexOf('-') > -1){
                         var lines = line_nums.split('-');
-                        fromLine = lines[0];
-                        toLine = lines[1];
+                        fromLine = parseInt(lines[0]);
+                        toLine = parseInt(lines[1]);
                     }
                     else{
                         fromLine = line_nums;
                         toLine = -1;
                     }
                 }
-            }          
+            }   
 
             // Clone this code block so the full file can be shown in the right column and only a duplicate snippet will be shown in the single column view or mobile view.
             // The duplicated code block will be shown on the right column.
@@ -130,19 +130,25 @@ $(document).ready(function() {
                 'toLine': toLine
             }
 
-            if(line_nums !== '*'){
-                var first_span = code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
-                var last_span = code_block.find('.line-numbers:contains(' + toLine + ')').first(); 
+            var first_span;
+            var last_span;
+            if(line_nums === '*'){
+                first_span = code_block.find('.line-numbers').first(); 
+                last_span = code_block.find('.line-numbers').last();
+            }
+            else {
+                first_span = code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
+                last_span = code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
+            }
 
-                // Remove spans before the first line number and after the last line number
-                if(first_span.length > 0 && last_span.length > 0){
-                    first_span.prevAll('span').remove();
-                    last_span.nextAll('span').remove();
-                } 
-            }      
+            // Remove spans before the first line number and after the last line number
+            if(first_span.length > 0 && last_span.length > 0){
+                first_span.prevAll('span').remove();
+                last_span.nextAll('span').remove();
+            } 
 
             // Create a title pane for the code section
-            duplicate_code_block.attr('fileName', fileName);
+            duplicate_code_block.attr('fileName', fileName);            
 
             // Move file name to the code column
             var title_section = $("<div class='code_column_title_container'></div>");
@@ -161,6 +167,22 @@ $(document).ready(function() {
             duplicate_code_block.prepend(title_section);
             duplicate_code_block.addClass('dimmed_code_column'); // Dim the code at first while the github popup takes focus.
             duplicate_code_block.appendTo('#code_column'); // Move code to the right column  
+
+            // Wrap code block lines in a div to highlight
+            var highlight_start;
+            var highlight_end;
+            var range;
+            if(line_nums === '*'){
+                // highlight_start = duplicate_code_block.find('.line-numbers').first(); 
+                // highlight_end = duplicate_code_block.find('.line-numbers').last();
+                duplicate_code_block.find('code').wrapAll("<div class='highlightSection'></div>");
+            }
+            else {
+                highlight_start = duplicate_code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
+                highlight_end = duplicate_code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
+                range = highlight_start.nextUntil(highlight_end);
+                range.wrapAll("<div class='highlightSection'></div>");
+            }
         }    
     });
 
@@ -579,16 +601,16 @@ $(document).ready(function() {
     $(window).on('resize', function(){
         handleFloatingTableOfContent(); // Handle table of content view changes.
         handleDownArrow();
-        handleFloatingCodeColumn();
         resizeGuideSections();
+        handleFloatingCodeColumn();
     });
 
     $(window).on('wheel mousewheel DOMMouseScroll', function(event) {
         handleGithubPopup(false);
         handleDownArrow();
-        handleFloatingTableOfContent();
-        handleFloatingCodeColumn();
-        handleSectionSnapping(event);  
+        handleFloatingTableOfContent();        
+        handleSectionSnapping(event); 
+        handleFloatingCodeColumn(); 
     });
 
     $(window).on('load', function(){
