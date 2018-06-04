@@ -101,21 +101,23 @@
     transition: background-color .2s;
     width: 260px;
 }
-#all_guides_link:hover{
+#all_guides_link:hover {
     background-color: #C7EE63;
 }
 
 #docs_all_interactive_guides_link {
+    position: relative;
     display: inline-block;
     font-size: 16px;
     color: #F4914D;
     background-color: white;
     border:2px solid;
     border-radius:100px;
-    padding: 10px 20px 10px 20px;
+    padding: 13px 0px 13px 15px;
     margin-bottom: 5px;
     text-align: center;
     width: 260px;
+    transition: all .2s;
 }
 
 #all_interactive_guides_link {
@@ -131,12 +133,28 @@
 }
 
 #docs_all_interactive_guides_link:hover {
-    transition: all .2s;
-    color: #E3700D;
+    color: white;
+    border-color: #F4914D;
+    background-color: #F4914D;
 }
 
-#lightning_bolt {
-    float:left;
+#docs_all_interactive_guides_link .lightning-bolt {
+    position: absolute;
+    top: calc(50% - 12px);
+    left: 16px;
+    height: 28px;
+    width: 13px;
+    background-image: url('/img/docs_lightning_bolt.png');
+    background-repeat: no-repeat;
+}
+
+#docs_all_interactive_guides_link:hover .lightning-bolt{
+    background-image: url('/img/docs_lightning_bolt_hover.png');    
+}
+
+#interactive_button_label {
+    display: inline-block;
+    margin-left: 3px;
 }
 
 #all_guides_lightning_bolt {
