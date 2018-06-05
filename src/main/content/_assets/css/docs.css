@@ -96,10 +96,12 @@
     background-color: #ABD155;
     border-radius: 100px;
     padding: 15px 20px 15px 20px;
+    margin-right: 28px;
     margin-bottom: 5px;
     text-align: center;
     transition: background-color .2s;
     width: 260px;
+    max-width: 100%;
 }
 #all_guides_link:hover {
     background-color: #C7EE63;
@@ -113,10 +115,11 @@
     background-color: white;
     border:2px solid;
     border-radius:100px;
-    padding: 13px 0px 13px 15px;
+    padding: 13px 20px 13px 20px;
     margin-bottom: 5px;
     text-align: center;
     width: 260px;
+    max-width: 100%;
     transition: all .2s;
 }
 
@@ -144,19 +147,19 @@
     left: 16px;
     height: 28px;
     width: 13px;
-    background-image: url('/img/docs_lightning_bolt.png');
+    background-image: url('/img/guide_lightning_bolt.svg');
     background-repeat: no-repeat;
     transition: all .2s;
 
 }
 
 #docs_all_interactive_guides_link:hover .lightning-bolt{
-    background-image: url('/img/docs_lightning_bolt_hover.png');    
+    background-image: url('/img/guide_lightning_bolt_hover.svg');    
 }
 
 #interactive_button_label {
     display: inline-block;
-    margin-left: 3px;
+    margin-left: 13px;
 }
 
 #all_guides_lightning_bolt {
@@ -282,9 +285,6 @@
     #code_block {
         width: 476px;
     }
-    #all_guides_link_container {
-        text-align: center;
-    }
 }
 
 @media (max-width: 991px) {
@@ -296,29 +296,53 @@
         margin-left: auto;
         padding-bottom: 0px;
     }
-    #all_guides_link_container {
-        text-align: left;
-    }
-    #docs_all_interactive_guides_link {
-        margin-left: -55px;
-    }
 }
 
 @media (max-width: 767px) {
     #header_background {
         padding-top: 0;
     }
+}
+
+
+/** View all buttons  **/
+@media (max-width: 1268px) {
     #all_guides_link_container {
         text-align: center;
     }
+    #all_guides_link, #docs_all_interactive_guides_link {
+        margin-right: 28px;
+        margin-left: 28px;
+    }
+}
 
+@media (max-width: 991px) {
+    #all_guides_link_container {
+        text-align: left;
+    }
     #all_guides_link {
-        max-width: 260px;
-        width: 100%;
+        margin-right: 28px;
+        margin-left: 0px;
     }
     #docs_all_interactive_guides_link {
+        margin-right: 0px;
         margin-left: 0px;
-        max-width: 260px;
-        width: 100%;
+    }
+}
+
+@media (max-width: 710px) {
+    #all_guides_link_container {
+        text-align: center;
+    }
+    #all_guides_link, #docs_all_interactive_guides_link {
+        margin-right: 28px;
+        margin-left: 28px;
+    }
+}
+
+@media (max-width: 467px) {
+    #all_guides_link, #docs_all_interactive_guides_link {
+        margin-right: 0px;
+        margin-left: 0px;
     }
 }
