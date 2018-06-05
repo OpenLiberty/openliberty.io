@@ -99,19 +99,10 @@ $(document).ready(function() {
 
                 if(line_nums.indexOf('lines=') > -1){
                     line_nums = line_nums.substring(6);
-                    // Show the entire file
-                    if(line_nums === '*'){
-                        fromLine = "0";
-                        toLine = -1;
-                    }
-                    else if(line_nums.indexOf('-') > -1){
+                    if(line_nums.indexOf('-') > -1){
                         var lines = line_nums.split('-');
                         fromLine = parseInt(lines[0]);
                         toLine = parseInt(lines[1]);
-                    }
-                    else{
-                        fromLine = line_nums;
-                        toLine = -1;
                     }
                 }
             }   
@@ -130,16 +121,8 @@ $(document).ready(function() {
                 'toLine': toLine
             }
 
-            var first_span;
-            var last_span;
-            if(line_nums === '*'){
-                first_span = code_block.find('.line-numbers').first(); 
-                last_span = code_block.find('.line-numbers').last();
-            }
-            else {
-                first_span = code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
-                last_span = code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
-            }
+            var first_span = code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
+            var last_span = code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
 
             // Remove spans before the first line number and after the last line number
             if(first_span.length > 0 && last_span.length > 0){
@@ -166,23 +149,21 @@ $(document).ready(function() {
 
             duplicate_code_block.prepend(title_section);
             duplicate_code_block.addClass('dimmed_code_column'); // Dim the code at first while the github popup takes focus.
-            duplicate_code_block.appendTo('#code_column'); // Move code to the right column  
+            duplicate_code_block.appendTo('#code_column'); // Move code to the right column
 
             // Wrap code block lines in a div to highlight
-            var highlight_start;
-            var highlight_end;
-            var range;
-            if(line_nums === '*'){
-                // highlight_start = duplicate_code_block.find('.line-numbers').first(); 
-                // highlight_end = duplicate_code_block.find('.line-numbers').last();
-                duplicate_code_block.find('code').wrapAll("<div class='highlightSection'></div>");
-            }
-            else {
-                highlight_start = duplicate_code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
-                highlight_end = duplicate_code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
-                range = highlight_start.nextUntil(highlight_end);
-                range.wrapAll("<div class='highlightSection'></div>");
-            }
+            var highlight_start = duplicate_code_block.find('.line-numbers:contains(' + fromLine + ')').first();
+            var highlight_end = duplicate_code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
+            var range = highlight_start.nextUntil(highlight_end);
+
+            var duplicate_code_block_top = duplicate_code_block.offset().top;
+            var rangeTop = highlight_start.offset().top - duplicate_code_block_top;
+            var rangeHeight = duplicate_code_block.find('span:visible').first().height() * (toLine - fromLine + 1);
+
+            var highlighting = $("<div class='highlightSection'></div>");
+            highlighting.css('top', rangeTop);
+            highlighting.css('height', rangeHeight);
+            highlighting.appendTo(duplicate_code_block);
         }    
     });
 
@@ -479,14 +460,12 @@ $(document).ready(function() {
                         //     scrollTop: y,
                         //     easing: 'linear'
                         // });
-                    // }
-                    
+                    // }                    
 
                     // Set URL hash value to be the section id
                     if(elem.id){
                         location.hash = elem.id;
-                    }
-                       
+                    }                       
 
                     // Hide other code blocks and show the correct code block.
                     var id = elem.id;
@@ -499,10 +478,10 @@ $(document).ready(function() {
         
                         // Scroll to the line in the code column if a line number is given
                         if(fromLine){
-                            var target = code_block.find('.line-numbers:contains(' + fromLine + ')').first();                         
-                            $('#code_column').animate({
-                                scrollTop: target.offset().top
-                            }, 500);
+                            // var target = code_block.find('.line-numbers:contains(' + fromLine + ')').first();                         
+                            // $('#code_column').animate({
+                            //     scrollTop: target.offset().top
+                            // }, 500);
                         } else {
                             $('#code_column').scrollTop('0');
                         }   
@@ -568,10 +547,6 @@ $(document).ready(function() {
 
         var whatYouLearned = $("#great-work-you-re-done").siblings().find('p').clone();
         leftSide.prepend(whatYouLearned);
-
-        // var relatedGuides = $("#related-guides-cards > div").clone();
-        // relatedGuides.addClass('end_of_guide_related_guide');
-        // rightSide.append(relatedGuides);
     }
 
     function addGuideRatingsListener(){
