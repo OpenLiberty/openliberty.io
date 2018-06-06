@@ -40,6 +40,10 @@ html, body, main {
 }
 
 /* table of column styling */
+#toc_container {
+    padding-top: 55px;
+}
+
 #row, #toc_column, #toc_inner, #config_content {
     height: 100%;
 }
@@ -120,6 +124,7 @@ iframe.config_content_frame {
 }
 
 #content {
+    padding-top: 75px; /* to compensate for the sticky header */
     padding-left: 20px;
     overflow-x: hidden;  /* hide horizontal scrollbar due to table */
 }
@@ -161,9 +166,9 @@ p.subHeading {
     position: relative;
 }
 
-p.subHeading a {
+p.subHeading > a, p.subHeading > div.toggle > a {
     position: absolute;
-    top: -140px;
+    top: -215px;
 }
 
 /* make the navbar sticky */
@@ -242,4 +247,18 @@ div.toggle {
 
 div.toggle:hover {
     cursor: pointer;
+}
+
+/* sticky header on top of the content */
+.contentStickyBreadcrumbHeader {
+    position: fixed;
+    height: 75px;
+    width: 100%;
+    background: #FFFFFF;
+    box-shadow: 5px -2px 9px -1px rgba(63,70,89,0.37);
+    font-family: BunueloLight; /* BunueloCleanPro-Light; */
+    font-size: 35px;
+    color: #5D6A8E;
+    letter-spacing: 0;
+    padding: 17px 30px 12.5px 10.5px;
 }

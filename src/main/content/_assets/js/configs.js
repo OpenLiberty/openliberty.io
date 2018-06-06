@@ -18,7 +18,7 @@ function addTOCClick() {
     var onclick = function(event){
         var resource = $(event.currentTarget);
         setSelectedTOC(resource);
-        updateBreadcrumb(resource);
+        updateMainBreadcrumb(resource);
     }
 
     $("#toc_container a").unbind("click");
@@ -50,52 +50,61 @@ function removeHashRefTOC(href) {
     })
 }
 
-function updateBreadcrumb(resource) {
-    var lastBreadcrumb = $(".breadcrumb.fluid-container").find("li:last-child");
-    var lastBreadcrumbAnchorTag = lastBreadcrumb.find("a");
-    var lastBreadcrumbHref = lastBreadcrumbAnchorTag.attr("doc-href");
+function updateMainBreadcrumb(resource) {
     var currentHref = resource.attr("href");
-    var addBreadcrumb = true;
-    if (currentHref !== lastBreadcrumbHref) {
-        if (lastBreadcrumbAnchorTag.hasClass("inactive_link")) {
-            // check whether to add on new child doc breadcrumb or remove existing parent doc breadcrumb
-            //var lastBreadcrumbHref = lastBreadcrumbAnchorTag.attr("doc-href");
-            if (currentHref.indexOf(lastBreadcrumbHref) === 0) {
-                // convert inactive link to active link
-                lastBreadcrumbAnchorTag.removeClass("inactive_link");
-                lastBreadcrumbAnchorTag.attr("href", lastBreadcrumbHref);
-            } else {
-                // remove existing inactive link
-                $(".breadcrumb.fluid-container").find("li:last-child").remove();
-                // if the breadcrumb href contains a hash tag, find the parent breadcrumb 
-                if (lastBreadcrumbHref.indexOf("#") !== -1) {
-                    var parentBreadcrumb = $(".breadcrumb.fluid-container").find("li:last-child");
-                    var parentBreadcrumbAnchorTag = parentBreadcrumb.find("a");
-                    // If it is for a different doc or the same, remove the parent breadcrumb
-                    if (currentHref.indexOf(parentBreadcrumbAnchorTag.attr("href")) === -1) {
-                        parentBreadcrumb.remove();
-                    } else {
-                        if (currentHref === parentBreadcrumbAnchorTag.attr("href")) {
-                            addBreadcrumb = false;
-                            parentBreadcrumbAnchorTag.addClass("inactive_link");
-                            parentBreadcrumbAnchorTag.removeAttr("href");
+    // not adding subHeading to the breadcrumb
+    if (currentHref.indexOf("#") === -1) {
+        var lastBreadcrumb = $(".breadcrumb.fluid-container").find("li:last-child");
+        var lastBreadcrumbAnchorTag = lastBreadcrumb.find("a");
+        var lastBreadcrumbHref = lastBreadcrumbAnchorTag.attr("doc-href");
+        var addBreadcrumb = true;
+        if (currentHref !== lastBreadcrumbHref) {
+            if (lastBreadcrumbAnchorTag.hasClass("inactive_link")) {
+                // check whether to add on new child doc breadcrumb or remove existing parent doc breadcrumb
+                //var lastBreadcrumbHref = lastBreadcrumbAnchorTag.attr("doc-href");
+                if (currentHref.indexOf(lastBreadcrumbHref) === 0) {
+                    // convert inactive link to active link
+                    lastBreadcrumbAnchorTag.removeClass("inactive_link");
+                    lastBreadcrumbAnchorTag.attr("href", lastBreadcrumbHref);
+                } else {
+                    // remove existing inactive link
+                    $(".breadcrumb.fluid-container").find("li:last-child").remove();
+                    // if the breadcrumb href contains a hash tag, find the parent breadcrumb 
+                    if (lastBreadcrumbHref.indexOf("#") !== -1) {
+                        var parentBreadcrumb = $(".breadcrumb.fluid-container").find("li:last-child");
+                        var parentBreadcrumbAnchorTag = parentBreadcrumb.find("a");
+                        // If it is for a different doc or the same, remove the parent breadcrumb
+                        if (currentHref.indexOf(parentBreadcrumbAnchorTag.attr("href")) === -1) {
+                            parentBreadcrumb.remove();
+                        } else {
+                            if (currentHref === parentBreadcrumbAnchorTag.attr("href")) {
+                                addBreadcrumb = false;
+                                parentBreadcrumbAnchorTag.addClass("inactive_link");
+                                parentBreadcrumbAnchorTag.removeAttr("href");
+                            }
                         }
                     }
                 }
             }
-        }
-        if (addBreadcrumb) {
-            $(".breadcrumb.fluid-container").append("<li><a class='inactive_link' doc-href='" + resource.attr("href") + "' target='contentFrame'>" + resource.text() + "</a></li>");
+            if (addBreadcrumb) {
+                $(".breadcrumb.fluid-container").append("<li><a class='inactive_link' doc-href='" + resource.attr("href") + "' target='contentFrame'>" + resource.text() + "</a></li>");
+            }
         }
     }
 }
 
-function handleSubHeadingsInContent() {
+function selectFirstDoc() {
+    var firstTOCElement = $("#toc_container a").first();
+    var href = firstTOCElement.attr("href");
     var iframeContents = $('iframe[name=contentFrame]').contents();
-    var contentTitle = iframeContents.find("#config_title").text();
-    if (contentTitle.indexOf(" - ") !== -1) {
-        contentTitle = contentTitle.substring(0, contentTitle.indexOf(" - "));
-    }
+    iframeContents.attr("location").replace(href);
+
+    firstTOCElement.click();
+}
+
+function handleSubHeadingsInContent() {
+    var contentTitle = getContentBreadcrumbTitle();
+    var iframeContents = $('iframe[name=contentFrame]').contents();
     var anchors = iframeContents.find("div.paragraph > p > a");
     var deferAddingExpandAndCollapseToggleButton = [];
 
@@ -116,6 +125,15 @@ function handleSubHeadingsInContent() {
     });
 
     handleDeferredExpandCollapseElements(deferAddingExpandAndCollapseToggleButton);
+}
+
+function getContentBreadcrumbTitle() {
+    var iframeContents = $('iframe[name=contentFrame]').contents();
+    var contentTitle = iframeContents.find("#config_title").text();
+    if (contentTitle.indexOf(" - ") !== -1) {
+        contentTitle = contentTitle.substring(0, contentTitle.indexOf(" - "));
+    }
+    return contentTitle;
 }
 
 // remove strong from the last heading
@@ -283,6 +301,7 @@ function handleExpandCollapseTitle(titleId, isShow) {
     $(hideElements).each(function() {
         $(this).hide();
     })
+    $('iframe[name=contentFrame]').contents().trigger("scroll"); // trigger a scroll event to update the breadcrumb
 }
 
 function handleDeferredExpandCollapseElements(deferredElements) {
@@ -327,15 +346,7 @@ function findTOCElement() {
 }
 
 function handleSubHeadingsInTOC(TOCElement) {
-    // clear out existing elected TOC and its subHeadings
-    var currentTOCSelected = $(".toc_selected > a");
-    var href;
-    if (currentTOCSelected.length === 1) {
-        href = currentTOCSelected.attr("href");
-        if (href.indexOf("#") !== -1) {
-            href = href.substring(0, href.indexOf("#"));
-        }
-    }
+    var href = getCurrentDocHtml();
     removeHashRefTOC(href);
 
     var iframeContents = $('iframe[name=contentFrame]').contents();
@@ -358,8 +369,93 @@ function handleSubHeadingsInTOC(TOCElement) {
     addTOCClick();
 }
 
+function getCurrentDocHtml() {
+    var currentTOCSelected = $(".toc_selected > a");
+    var href = "";
+    if (currentTOCSelected.length === 1) {
+        href = currentTOCSelected.attr("href");
+        if (href.indexOf("#") !== -1) {
+            href = href.substring(0, href.indexOf("#"));
+        }
+    }
+    return href;
+}
+
+function handleDocScrolling() {
+    var frameContents = $('iframe[name="contentFrame"]').contents();
+
+    frameContents.off('scroll resize').on('scroll resize', function(e) {
+        var frameView = $(this);
+        var anchors = frameContents.find("div.paragraph > p > a");
+        var anchorInView = [];
+        $(anchors).each(function() {
+            if (isInViewport($(this), frameView)) {
+                anchorInView.push($(this));
+            }
+        })
+        var stickyHeaderTitle = "";
+        $(anchorInView).each(function() {
+            var title = $(this).parent().text();
+            if (stickyHeaderTitle === "") {
+                stickyHeaderTitle = title;
+            } else {
+                // look for common header title
+                var stickyHeaderTitleSplits = stickyHeaderTitle.split(" > ");
+                var titleSplits = title.split(" > ");
+                var commonHeaderTitle = [];
+                for (var i = 0; i < stickyHeaderTitleSplits.length; i++) {
+                    if (i < titleSplits.length) {
+                        if (stickyHeaderTitleSplits[i] === titleSplits[i]) {
+                            commonHeaderTitle.push(stickyHeaderTitleSplits[i]);
+                        }
+                    }
+                }
+                if (commonHeaderTitle.length > 0) {
+                    stickyHeaderTitle = commonHeaderTitle.join(" > ");
+                }
+            }
+        })
+        if (stickyHeaderTitle.length > 0) {
+            createClickableBreadcrumb(stickyHeaderTitle);
+        }
+    })
+}
+
+function isInViewport(anchorElement, viewWindow) {
+    var element = anchorElement.parent();
+    var elementTop = element.offset().top +  
+                    parseInt(element.css( "border-top-width" ) ) +
+                    parseInt(element.css( "margin-top" ) ) +
+                    parseInt(element.css( "padding-top" ) ); 
+    var elementBottom = elementTop + element.height();
+    var viewportTop = viewWindow.scrollTop() + 75; // account for sticky header
+    var frameViewportBottom = $('iframe[name="contentFrame"]').contents()[0].documentElement.clientHeight - 215; // account for space used by sticky header
+    var viewportBottom = viewportTop + frameViewportBottom;
+    return elementBottom > viewportTop && elementTop < viewportBottom;
+}
+
+function createClickableBreadcrumb(breadcrumbText) {
+    $('.contentStickyBreadcrumbHeader .stickyBreadcrumb').remove();
+    $(".contentStickyBreadcrumbHeader").append("<div class='stickyBreadcrumb'/>")
+    var breadcrumbTextSplits = breadcrumbText.split(" > ");
+    var href = getCurrentDocHtml() + "#";
+    var stickyHeaderBreadcrumb = "";
+    for (var i = 0; i < breadcrumbTextSplits.length; i++) {
+        if (i > 1) {
+            href = href + "/";
+        }
+        if (i > 0) {
+            href = href + breadcrumbTextSplits[i];
+            stickyHeaderBreadcrumb = stickyHeaderBreadcrumb + " > ";
+        } 
+        stickyHeaderBreadcrumb = stickyHeaderBreadcrumb + "<a href='" + href + "' target='contentFrame'>" + breadcrumbTextSplits[i] + "</a>";
+    }
+    $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").append(stickyHeaderBreadcrumb);
+}
+
 $(document).ready(function () {
     addTOCClick();
+    selectFirstDoc();
     $('iframe[name="contentFrame"]').load(function() {
         scroll(0, 0); // scroll back to the top of the iframe content
         modifyFixedTableColumnWidth();
@@ -367,6 +463,8 @@ $(document).ready(function () {
         var TOCElement = findTOCElement();
         handleSubHeadingsInTOC(TOCElement);
         setSelectedTOC(TOCElement);
-        updateBreadcrumb(TOCElement);
+        updateMainBreadcrumb(TOCElement);
+        createClickableBreadcrumb(getContentBreadcrumbTitle());
+        handleDocScrolling();
     });
 });
