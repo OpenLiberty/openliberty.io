@@ -63,37 +63,28 @@
                             <span id="breadcrumb_line">|</span>
                             <li id="breadcrumb_version">VERSION:</li>
 
-                        <!-- Javadocs -->
-                        {% if page.type == 'Javadoc' %}
-                            <li>
-                                <a class="inactive_link">Reference</a>
-                            </li>
-                            <li class="active"> {{ page.doc-type }} </li>
-                            {% assign versions = site.pages | where: 'doc-type', page.doc-type | sort: 'version' | reverse %}
-                            {% if versions | size > 1 %}
-                                <span id="breadcrumb_line">|</span>
-                                <li id="breadcrumb_version">VERSION:</li>
 
-                                {% for javadoc in versions %}
-                                <li class="javadoc_version">
-                                    {% if page.version == javadoc.version %}
-                                        <a class="selected_javadoc__version">{{ javadoc.version }}</a>
-                                    {% else %}
-                                        <a href="{{ javadoc.url }}" >{{ javadoc.version }}</a>
-                                    {% endif %}
-                                    
-                                </li>                                    
-                                {% endfor %}
-                            {% endif %}
-                        {% elsif page.type == 'config' %}
-                            <li>
-                                <a class="inactive_link">Reference</a>
+
+                            {% for javadoc in versions %}
+                            <li class="javadoc_version">
+                                {% if page.version == javadoc.version %}
+                                    <a class="selected_javadoc__version">{{ javadoc.version }}</a>
+                                {% else %}
+                                    <a href="{{ javadoc.url }}">{{ javadoc.version }}</a>
+                                {% endif %}
+                                
                             </li>
-                            <li>
-                                <a href="/docs/ref/config/">Config</a>
-                            </li>
+                            {% endfor %} 
                         {% endif %}
-                    
+
+                    {% elsif page.type == 'config' %}
+                        <li>
+                            <a class="inactive_link">Reference</a>
+                        </li>
+                        <li>
+                            <a href="/docs/ref/config/">Config</a>
+                        </li>    
+                                       
                     <!-- All Guides page -->
                     {% elsif page.url == '/guides/' %}
                         <li class="active">Guides</li>
