@@ -145,9 +145,67 @@ header {
     border-radius: 3px;    
 }
 
-#guide_content .command pre code {
+#guide_content .command code {
     background-color: transparent;
 }
+
+#guide_content .code_command pre,  #guide_content .code_command code {
+    background-color: #F1F4FE;
+    margin-bottom: 0;
+}
+
+/* Create pointed div using pseudo elements */
+#guide_content .code_command .content {
+    position: relative;    
+    border-left: 8px solid #96bc32;
+    border-top:1px solid #c8d6fb;
+    border-bottom:1px solid #c8d6fb;
+}
+
+#guide_content .code_command .content:after, #guide_content .code_command .content:before {
+    content: "";
+    position: absolute;
+    left: 100%;
+    width: 40px;
+    height: 50%;
+}
+#guide_content .code_command .content:before {
+    top: 0px;
+    background: linear-gradient(to top right, #F1F4FE 50%, transparent 51%), linear-gradient(230deg, transparent 29.5px, #c8d6fb 0);
+}
+#guide_content .code_command .content:after {
+    bottom: 0px;
+    background: linear-gradient(to bottom right, #F1F4FE 50%, transparent 51%), linear-gradient(310deg, transparent 29.5px, #c8d6fb 0);
+}
+/* End of pointed div */
+
+
+/* 2nd attempt*/
+/* #guide_content .code_command .content:after {
+    content: "";
+    position: absolute;
+    bottom: -25px;
+    left: 175px;
+    border-style: solid;
+    border-width: 25px 25px 0;
+    border-color: #c8d6fb;
+    display: block;
+    width: 0;
+    z-index: 1;
+}
+
+#guide_content .code_command .content:before {
+    content: "";
+    position: absolute;
+    top: 250px;
+    left: 174px;
+    border-style: solid;
+    border-width: 26px 26px 0;
+    border-color: #F1F4FE;
+    display: block;
+    width: 0;
+    z-index: 0;
+} */
 
 #guide_content .sect1 > .sectionbody {
     padding-top: 19px;
@@ -388,6 +446,10 @@ header {
     border-radius: 0;
     padding-left: 0;
     padding-right: 0;
+}
+
+.code_column .CodeRay code {
+    display: block;
 }
 
 .code_column .CodeRay code, .code_column .CodeRay .highlightSection {
