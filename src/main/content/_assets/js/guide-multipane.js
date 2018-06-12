@@ -11,6 +11,7 @@
 
 // The background is shortened by 200px
 var backgroundSizeAdjustment = 200;
+var twoColumnBreakpoint = 1170;
 
 function heightOfVisibleBackground() {
     var result;
@@ -45,7 +46,7 @@ function isBackgroundBottomVisible() {
 }
 
 function handleFloatingCodeColumn(){
-    if($(window).width() > 1170) {
+    if($(window).width() > twoColumnBreakpoint) {
         // CURRENTLY IN DESKTOP VIEW
         if(isBackgroundBottomVisible()) {
             // Set the bottom of the code column to the distance between the top of the end of guide section and the bottom of the page.
@@ -436,7 +437,7 @@ $(document).ready(function() {
         var dir = (origEvent.deltaY) < 0 ? 'up' : 'down';
         var delta = origEvent.wheelDelta || -origEvent.detail || -origEvent.deltaY;
         // Multipane view
-        if($(window).width() > 1170) {
+        if($(window).width() > twoColumnBreakpoint) {
             var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2');
             sections.each(function(index){
                 var elem = sections.get(index);
@@ -528,7 +529,7 @@ $(document).ready(function() {
     // Resize the guide sections so that there is clear separation between each section and the code column transitions better.
     function resizeGuideSections(){
         // Two column view or three column view.
-        if($(window).width() > 1170){
+        if($(window).width() > twoColumnBreakpoint){
             var viewportHeight = window.innerHeight;
             var headerHeight = $('header').height();
             var sectionTitleHeight = $("#guide_content h2").first().height();
@@ -585,7 +586,7 @@ $(document).ready(function() {
         handleFloatingCodeColumn();
     });
 
-    $(window).on('wheel mousewheel DOMMouseScroll', function(event) {
+    $(window).on('scroll', function(event) {
         handleGithubPopup(false);
         handleDownArrow();
         handleFloatingTableOfContent();        
