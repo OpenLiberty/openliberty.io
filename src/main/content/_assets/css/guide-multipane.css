@@ -160,6 +160,7 @@ header {
     border-left: 8px solid #96bc32;
     border-top:1px solid #c8d6fb;
     border-bottom:1px solid #c8d6fb;
+    width: 90%;
 }
 
 #guide_content .code_command .content:after, #guide_content .code_command .content:before {
@@ -183,28 +184,19 @@ header {
 /* 2nd attempt*/
 /* #guide_content .code_command .content:after {
     content: "";
+    vertical-align: middle;
+    margin: auto;
     position: absolute;
-    bottom: -25px;
-    left: 175px;
-    border-style: solid;
-    border-width: 25px 25px 0;
-    border-color: #c8d6fb;
     display: block;
-    width: 0;
-    z-index: 1;
-}
-
-#guide_content .code_command .content:before {
-    content: "";
-    position: absolute;
-    top: 250px;
-    left: 174px;
-    border-style: solid;
-    border-width: 26px 26px 0;
-    border-color: #F1F4FE;
-    display: block;
-    width: 0;
-    z-index: 0;
+    left: 0;
+    right: 0;
+    bottom: calc(100% - 6px);
+    width: 12px;
+    height: 12px;
+    transform: rotate(45deg);
+    border: 1px solid;
+    border-color: #ccc transparent transparent #ccc;
+    background-color: white;
 } */
 
 #guide_content .sect1 > .sectionbody {
@@ -526,10 +518,6 @@ header {
     #guide_content .listingblock:not(.no_copy):not(.inline_code) {
         display: block;
     } 
-
-    #end_of_guide {
-        display: none;
-    }
 }
 
 @media (min-width: 1171px) {

@@ -553,6 +553,8 @@ $(document).ready(function() {
 
         var whatYouLearned = $("#great-work-you-re-done").siblings().find('p').clone();
         leftSide.prepend(whatYouLearned);
+        $("#great-work-you-re-done").parent().remove(); // Remove section from the main guide column.
+        $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
     }
 
     function addGuideRatingsListener(){
@@ -567,17 +569,7 @@ $(document).ready(function() {
             $("#feedback_ratings img").not($(this)).css('opacity', '.25');
             $(this).css('opacity', '1');
         });
-    }
-
-    // RELATED GUIDES
-    //
-    // Add Related guides link to the table of contents, if needed
-    //
-    if( $('#related-guides').length ) {
-        // Add _one_ Related guides link to the very bottom of the table of contents.
-        // The assumption is that the TOC only contains one `sectlevel1` class.
-        $('#toc_container ul.sectlevel1').append('<li><a href="#related-guides">Related guides</a></li>');
-    }
+    }    
 
     $(window).on('resize', function(){
         handleFloatingTableOfContent(); // Handle table of content view changes.
