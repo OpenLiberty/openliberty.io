@@ -20,6 +20,10 @@
         <div id="end_of_guide_right_section">
             <h3>Where to next?</h3>
 
+            {% if page.categories %}
+            <p>Keep exploring <b>{{ page.categories }}</b> with these guides.</p>
+            {% endif %}
+
             <!-- Related guides section -->
             {% if page.related-guides %}
             <div id="related-guides">
@@ -47,6 +51,10 @@
                 {% endfor %}
                 </div>
             </div>
+            {% endif %}
+
+            {% if page.categories %}
+            <p>Dive into the <b>{{ page.categories }} config</b>.</p>
             {% endif %}
         </div>
     </div>

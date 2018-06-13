@@ -508,6 +508,11 @@ $(document).ready(function() {
         leftSide.prepend(whatYouLearned);
         $("#great-work-you-re-done").parent().remove(); // Remove section from the main guide column.
         $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
+
+        var relatedLinks = $("#related-links").siblings().find('p').clone();
+        rightSide.append(relatedLinks);
+        $("#related-links").parent().remove(); // Remove section from the main guide column.
+        $("#toc_container a[href='#related-links']").parent().remove(); // Remove from TOC.
     }
 
     function addGuideRatingsListener(){
