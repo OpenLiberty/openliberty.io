@@ -419,12 +419,7 @@ $(document).ready(function() {
                         //     scrollTop: y,
                         //     easing: 'linear'
                         // });
-                    // }                    
-
-                    // Set URL hash value to be the section id
-                    if(elem.id){
-                        location.hash = elem.id;
-                    }                       
+                    // }                       
 
                     // Hide other code blocks and show the correct code block.
                     var id = elem.id;
