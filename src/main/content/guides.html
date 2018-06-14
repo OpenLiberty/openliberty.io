@@ -13,14 +13,15 @@ permalink: /guides/
 {% assign static-guides = site.pages | where: 'layout', 'guide' %}
 {% assign multipane-static-guides = site.pages | where: 'layout', 'guide-multipane' %}
 {% assign interactive-guides = site.pages | where: 'layout', 'interactive-guide' %}
-{% assign guides = static-guides | concat: interactive-guides | concat: multipane-static-guides | sort: 'releasedate' | reverse %}
+{% assign multipane-iguides = site.pages | where: 'layout', 'iguide-multipane' %}
+{% assign guides = static-guides | concat: interactive-guides | concat: multipane-static-guides | concat: multipane-iguides | sort: 'releasedate' | reverse %}
 <!-- 
     Some of the found documents are for internal use only and are not intended to be 
     shown on the website.  Remove them from the total number of guides.
 -->
 {% assign numGuides = guides.size %}
 {% for guide in guides %}
-    {% if guide.archived or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
+    {% if guide.archived or guide.path contains "guides/guides-template" or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
         {% assign numGuides = numGuides | minus: 1 %}
     {% endif %}
 {% endfor %}
@@ -41,7 +42,7 @@ permalink: /guides/
     <div class="row">
         {% for guide in guides %}
         <!-- Do not render anything from the two common guide repositories containing shared code -->
-        {% unless guide.archived or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
+        {% unless guide.archived or guide.path contains "guides/guides-template" or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
             <div class="guide_column col-xs-12 col-sm-6 col-md-3">
                 <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}">
                     <div class="guide_title_and_description_container">
@@ -50,7 +51,7 @@ permalink: /guides/
                     </div>
                     <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
                     <span class="guide_duration">{{guide.duration}}</span>
-                    {% if guide.layout == 'interactive-guide' %}
+                    {% if guide.layout == 'interactive-guide' or guide.layout == 'iguide-multipane' %}
                     <div class="guide_interactive_container">
                             <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
                             <span class="guide_interactive">Interactive</span>
