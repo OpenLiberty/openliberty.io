@@ -19,11 +19,14 @@
         </div>
         <div id="end_of_guide_right_section">
             <h3>Where to next?</h3>
-            <p>Keep exploring <b>MicroProfile</b> with these guides.</p>
+
+            {% if page.categories %}
+            <p>Keep exploring <b>{{ page.categories }}</b> with these guides.</p>
+            {% endif %}
 
             <!-- Related guides section -->
             {% if page.related-guides %}
-            <div id="related-guides" class="sect1">
+            <div id="related-guides">
                 <div id="related-guides-cards" class="row">
                 {% for related-guide in page.related-guides %}
                     {% assign url = '/guides/' | append: related-guide %}
@@ -32,14 +35,13 @@
                         <!-- Only create a card if we find the permalink -->
                         {% assign related-guide-metadata = list[0] %}
                         <div class="col-sm-12 col-lg-6">
-                            <a href="/guides/{{related-guide}}.html" class="guide_item">
-                                <div class="guide_title_and_description_container">
+                            <a href="/guides/{{related-guide}}.html" class="small_guide_item">
+                                <div class="guide_title_container">
                                     <h3 class="guide_title">{{related-guide-metadata.title}}</h3>
-                                    <p class="guide_description">{{related-guide-metadata.description}}</p>
                                 </div>
                                 <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
                                 <span class="guide_duration">{{related-guide-metadata.duration}}</span>
-                                {% if related-guide-metadata.layout == 'interactive-guide' %}
+                                {% if related-guide-metadata.layout == 'interactive-guide' or related-guide-metadata.layout == 'iguide-multipane' %}
                                 <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
                                 <span class="guide_interactive">Interactive</span>
                                 {% endif %}
@@ -49,6 +51,10 @@
                 {% endfor %}
                 </div>
             </div>
+            {% endif %}
+
+            {% if page.categories %}
+            <p>Dive into the <b>{{ page.categories }} config</b>.</p>
             {% endif %}
         </div>
     </div>

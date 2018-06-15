@@ -14,17 +14,14 @@ js: guide-multipane
             <!-- Guide's table of contents section -->
             <div id="toc_column" class="collapse inline">
                 <div id="toc_inner">
-                    {% assign toc = page.document | tocify_asciidoc %}
-                    {% if toc %}
                     <div id="close_container">
                         <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button"/>
                     </div>
                     <h3 id="toc_title">Contents</h3>
                     <div id="toc_container">
-                        {{ toc }}
+                        <ul class="sectlevel1"></ul>
                     </div>
                     <div id="toc_separator"></div>
-                    {% endif %}
                     {% if page.tags %}
                         <h3 id="tag_title">Tags</h3>
                         <div id="tags_container">
@@ -52,28 +49,14 @@ js: guide-multipane
 
                     <div id="down_arrow">
                         <img src="/img/guide_down_arrow.svg" alt="scroll_down">
-                    </div>                    
+                    </div>
                 </div>
-                <div id="copied_to_clipboard_confirmation" style="display: none;">Copied to clipboard</div>
-                <a id="copy_to_clipboard" href="" style="display: none;"></a>
             </div>
 
             <!-- Code section -->
             <div id="code_column" class="position_relative">
-                <div id="github_clone_popup_container" style="display: none">
-                    <div id="github_clone_popup">
-                        <div id="github_clone_popup_title">Git clone this repo to get going right away:</div>
-                        <div id="github_clone_popup_repo">
-                                git clone https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}.git
-                        </div>
-                        <div id="github_clone_popup_copy">
-                            <img src="/img/guide_copy_button_black.svg" alt="Copy github clone command">
-                        </div>
-                    </div>
-                </div>
             </div>
-            
-        </div>        
+        </div>
 </div>
 
 {% include end-of-guide.html %}

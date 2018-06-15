@@ -145,9 +145,40 @@ header {
     border-radius: 3px;    
 }
 
-#guide_content .command pre code {
+#guide_content .command code {
     background-color: transparent;
 }
+
+#guide_content .code_command pre,  #guide_content .code_command code {
+    background-color: #F1F4FE;
+    margin-bottom: 0;
+}
+
+/* Create pointed div using pseudo elements */
+#guide_content .code_command .content {
+    position: relative;    
+    border-left: 8px solid #96bc32;
+    border-top:1px solid #c8d6fb;
+    border-bottom:1px solid #c8d6fb;
+    width: 90%;
+}
+
+#guide_content .code_command .content:after, #guide_content .code_command .content:before {
+    content: "";
+    position: absolute;
+    left: 100%;
+    width: 40px;
+    height: 50%;
+}
+#guide_content .code_command .content:before {
+    top: 0px;
+    background: linear-gradient(to top right, #F1F4FE 50%, transparent 51%), linear-gradient(230deg, transparent 29.5px, #c8d6fb 0);
+}
+#guide_content .code_command .content:after {
+    bottom: 0px;
+    background: linear-gradient(to bottom right, #F1F4FE 50%, transparent 51%), linear-gradient(310deg, transparent 29.5px, #c8d6fb 0);
+}
+/* End of pointed div */
 
 #guide_content .sect1 > .sectionbody {
     padding-top: 19px;
@@ -364,30 +395,15 @@ header {
     color: #5e6b8d;
 }
 
-#copy_to_clipboard {
-    position: absolute;
-    display: block;
-    background-color: #eeeff3;
-    background-image: url('/img/guide_copy_button.svg');
-    background-repeat: no-repeat;
-    background-position: center center;
-    height: 63px;
-    width: 58px;
-}
-
-#copy_to_clipboard:hover {
-    border: solid 1px #b2bbd1;
-}
-
-#copy_to_clipboard:active {
-    border: solid 1px #5e6b8d;
-}
-
 .code_column .CodeRay {
     border: none;
     border-radius: 0;
     padding-left: 0;
     padding-right: 0;
+}
+
+.code_column .CodeRay code {
+    display: block;
 }
 
 .code_column .CodeRay code, .code_column .CodeRay .highlightSection {
@@ -464,13 +480,13 @@ header {
     #guide_content .listingblock:not(.no_copy):not(.inline_code) {
         display: block;
     } 
-
-    #end_of_guide {
-        display: none;
-    }
 }
 
 @media (min-width: 1171px) {
+    #background_container {
+        background-image: inherit;
+    }
+
     #down_arrow {
         display: block;
         left: calc((100% - 730px - 45px)/2); /* Calculate positioning to be in the center of the guide column */
