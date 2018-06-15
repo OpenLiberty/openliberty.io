@@ -50,7 +50,7 @@ Or if you're using Docker:
 
 [source]
 ----
-docker pull openliberty/open-liberty
+docker pull open-liberty
 ----
 
 In Open Liberty 18.0.0.2, you'll find:
@@ -62,23 +62,24 @@ In Open Liberty 18.0.0.2, you'll find:
 ** <<http2,HTTP/2 protocol support>>
 ** <<jsf,Build user interfaces for web applications with JavaServer Faces (JSF) 2.3>>
 ** <<jpa,Interact with databases with Java Persistence API (JPA) 2.2>>
-** <<jwtsso,Emit and consume JWT cookies with JWT single sign-on>>
+** <<jwtsso,Emit and consume JWT cookies with JWT Single Sign-on 1.0>>
+** <<appsecurity,Secure your applications using portable code with Application Security 3.0>>
 
 * And:
-** <<openapi,Document RESTful APIs in your Java apps with OpenAPI>>
 ** <<spring,Deploy Spring Boot applications to Liberty>>
-** <<jandex,Speed up application start-up with Jandex indexes>>
 ** <<certmapper,Control how custom X.509 certificates map to users in Liberty's LDAP and basic user registries>>
 
 
 [#javaee8]
 == Full support for Java EE 8
 
+https://openliberty.io/downloads/[Download Liberty] with either the Java EE 8 Web Profile runtime or the Java EE 8 Full Platform runtime.
+
 You can enable all of the Java EE 8 features (or the more lightweight set of Web Profile features) with a single feature in your `server.xml`.
 
 The features included in `webProfile-8.0` (Java EE 8 Web Profile) that are new in Java EE 8 are:
 
-* `appSecurity-2.0` and `appSecurity-3.0`
+* `appSecurity-3.0`
 * `beanValidation-2.0`
 * `cdi-2.0`
 * `jaspic-1.1`
@@ -91,7 +92,7 @@ The features included in `webProfile-8.0` (Java EE 8 Web Profile) that are new i
 * `jsonp-1.1`
 * `servlet-4.0`
 
-The `webProfile-8.0` feature also contains the following features from Java EE 7: `distributedMap01.0`, `ejbLite-3.2`, `el-3.0`, `jndi-1.0`, `jsonb-1.0`, `jsp-2.3`, `managedBeans-1.0`, `ssl-1.0`, `websocket-1.1`.
+The `webProfile-8.0` feature also contains the following features which are unchanged from Java EE 7: `distributedMap01.0`, `ejbLite-3.2`, `el-3.0`, `jndi-1.0`, `jsonb-1.0`, `jsp-2.3`, `managedBeans-1.0`, `ssl-1.0`, `websocket-1.1`.
 
 To enable the whole of the `webProfile-8.0` feature, add the feature definition to your `server.xml`:
 
@@ -109,7 +110,7 @@ The features included in `javaee-8.0` (Java EE 8 Full Platform) that are new in 
 * `webProfile-8.0` (see above)
 * `javaMail-1.6`
 
-The `javaee-8.0` feature also contains the following features from Java EE 7: `appClientSupport-1.0`, `batch-1.0`, `concurrent-1.0`, `ejb-3.2`, `ejbHome-3.2`, `ejbPersistentTimer-3.2`, `jacc-1.5`, `jaspic-1.1`, `jaxws-2.2`, `jca-1.7`, `jcaInboundSecurity-1.0`, `jms-2.0`, `mdb-3.2`, `wasJmsClient-2.0`, `wasJmsSecurity-1.0`, `wasJmsServer-1.0`.
+The `javaee-8.0` feature also contains the following features which are unchanged from Java EE 7: `appClientSupport-1.0`, `batch-1.0`, `concurrent-1.0`, `ejb-3.2`, `ejbHome-3.2`, `ejbPersistentTimer-3.2`, `jacc-1.5`, `jaspic-1.1`, `jaxws-2.2`, `jca-1.7`, `jcaInboundSecurity-1.0`, `jms-2.0`, `mdb-3.2`, `wasJmsClient-2.0`, `wasJmsSecurity-1.0`, `wasJmsServer-1.0`.
 
 To enable the whole of the `javaee-8.0`, add the feature definition to your `server.xml`:
 
@@ -198,7 +199,7 @@ HTTP/2 is an optimization of the HTTP/1.1 protocol.  Use of the HTTP/2 protocol 
 
 Secure HTTP/2 (h2) uses ALPN (Application-Layer Protocol Negotiation) to upgrade the protocol of an HTTP/1.1 session to HTTP/2.  Insecure HTTP/2 (h2c) can be negotiated via an HTTP/1.1 Upgrade header.  The HTTP/2 protocol then allows for full-duplex communication of HTTP/1.1 traffic between client and server over this one upgraded connection.  Both client and server have to opt into the HTTP/2 protocol with the ALPN handshake being initiated by the client. 
 
-Servlet 4.0 makes use of the HTTP/2 protocol to implement the Servlet 4.0 Push-Promise APIs, and HTTP/2 is enabled when the Servlet 4.0 Liberty feature is enabled.
+Servlet 4.0 makes use of the HTTP/2 protocol to implement the Servlet 4.0 Server Push APIs, and HTTP/2 is enabled when the Servlet 4.0 Liberty feature is enabled.
 
 If the Servlet 3.1 Liberty feature is enabled instead of Servlet 4.0, HTTP/2 is off by default but can be enabled by setting the following attribute of the `httpEndpoint` element: `protocolVersion = "http/2"`
 
@@ -226,7 +227,7 @@ Take advantage of the latest JSF features and enhancements. The `jsf-2.3` featur
 * Multi-field validation using `<f:validateWholeBean>`
 * Use CDI for evaluation of JSF-specific Expression Language implicit objects
 * Support `@Inject` on JSF-specific artifacts
-* Ajax Method Invocation. See http://vdldoc.omnifaces.org/[vdldoc] for `<h:commandScript>`
+* Ajax Method Invocation. See vdldoc for `<h:commandScript>`
 * Add `PartialViewContext.getEvalScripts()` method which returns a mutable list of scripts
 
 With the delivery of JSF 2.3 you can also use your own JSF 2.3 implementation using the `jsfContainer-2.3` feature.
@@ -389,7 +390,7 @@ For more info:
 
 
 [#jwtsso]
-== Emit and consume JWT cookies with JWT single sign-on
+== Emit and consume JWT cookies with JWT Single Sign-on 1.0
 
 Java Web Tokens (JWT) single sign-on (SSO) cookies can replace proprietary LTPA cookies in many scenarios. They offer improved interoperability and simplified use compared to LTPA cookies in heterogenous and microservice environments.
 
@@ -411,29 +412,31 @@ For more info:
 * TODO: KC URL?
 
 
-[#openapi]
-== Document RESTful APIs in your Java apps with OpenAPI
+[#appsecurity]
+== Secure your applications using portable code with Application Security 3.0
 
-The new OpenAPI 3.1 (`openapi-3.1`) feature is an extension of the MicroProfile OpenAPI 1.0 (`mpOpenAPI-1.0`) feature. In addition to providing support for the https://github.com/eclipse/microprofile-open-api[MicroProfile OpenAPI 1.0 specification], this feature also provides an aggregated view of APIs from multiple applications deployed in the server.
+The `appSecurity-3.0` feature provides support for the Java EE Security API 1.0 specification. The https://jcp.org/en/jsr/detail?id=375"[Java Specification Request (JSR) 375] specifies the requirement.
 
-To enable the OpenAPI 3.1 feature, add the feature definition to your `server.xml`:
+The specification promotes self-contained application security portability across all Java EE servers, and makes use of modern programming concepts such as expression language and context dependency injection (CDI). It defines annotations specific to various authentication mechanisms, identity stores to handle user authentication, and common programming API to do programmatic Java EE security. It reduces the dependency on the deployment descriptors and application server based configuration for securing Java EE web resources.
+
+Once you configure the `appSecurity-3.0` feature, your application can annotate the authentication mechanisms and the identity stores that are needed. The applications can provide their own implementations to replace the application server provided ones. For example, you can create a custom authentication mechanism that you can bundle in your web application without the need to configure the `login-config` element in the `web.xml` file with one of the predefined auth-method types. If you also include your own `IdentityStore` bean in your application, your IdentityStore can be used to verify the user credentials without the need to configure a user registry in the `server.xml`.
+
+The applications can also use the SecurityContext API defined in the specification to perform programmatic security checks.
+
+To enable the Security API 1.0 feature, add the feature definition to your `server.xml`:
 
 [source,xml]
 ----
 
-           <featureManager>
-                  <feature>openapi-3.1</feature>
-          </featureManager>
+<featureManager>
+    <feature>appSecurity-3.0</feature>
+</featureManager>
 
 ----
 
-Then use one of the documentation methods specified in https://github.com/eclipse/microprofile-open-api/blob/master/spec/src/main/asciidoc/microprofile-openapi-spec.adoc#documentation-mechanisms[this section of the specification] for each of your applications. You can view the generated aggregated OpenAPI document in the endpoint `/api/docs`, or view the rendered user interface in the endpoint `/api/explorer`.
+For more info:
 
-Customize the URL path of the public endpoints by using MicroProfile Configuration. For example, setting the `mp.openapi.extensions.liberty.public.url` property to `/my/custom` changes the location of the aggregated document endpoint from `/api/docs` to `/my/custom/docs`. Similarly, the location of the rendered user interface changes from `/api/explorer` to `/my/custom/explorer`.
-
-You can designate APIs as private by setting the `mp.openapi.extensions.liberty.public` property to `false` at the application level. This setting hides APIs from the public endpoint view. Setting the `mp.openapi.extensions.liberty.enable.private.url` property to `true` makes private APIs available at the following private endpoints: `/ibm/api/docs` (aggregated document) and `/ibm/api/explorer` (UI).
-
-
+* https://www.ibm.com/support/knowledgecenter/SSAW57_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/rwlp_sec_jee_api.html[Security API 1.0 (Knowledge Center)]
 
 
 
@@ -469,31 +472,6 @@ For more info, see:
 
 * https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/rwlp_springboot.html[Spring Boot support (Knowledge Center)]
 * https://spring.io/projects/spring-boot[Spring Boot project]
-
-
-[#jandex]
-== Speed up application start-up with Jandex indexes
-
-If your application has many classes and is enabled for processing annotations, https://github.com/wildfly/jandex[Jandex indexes] considerably speed up the start-up of the application.
-
-To enable Jandex indexes, add Jandex indexes to the application archives (standard location is the `META-INF/jandex.idx` path) and configure the `server.xml`:
-
-[source,xml]
-----
-
-<applicationManager autoExpand="true" useJandex="true"/>
-<application name="TestApp" location="TestApp.war" type="war" useJandex="true"/>
-
-----
-
-
-To create Jandex indexes for your app, see http://javahowto.blogspot.co.uk/2012/08/how-to-run-jboss-jandex.html[How to run JBoss Jandex].
-
-For more info:
-
-* XXXWebSphere Liberty Knowledge Center. TODO: ADD URL
-* https://github.com/wildfly/jandex[Jandex on GitHub]
-* http://search.maven.org/#artifactdetails%7Corg.jboss%7Cjandex%7C2.0.3.Final%7Cbundle[Jandex on Maven Central]
 
 
 
