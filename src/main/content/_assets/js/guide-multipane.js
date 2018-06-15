@@ -11,6 +11,7 @@
 
 // The background is shortened by 200px
 var backgroundSizeAdjustment = 200;
+var twoColumnBreakpoint = 1170;
 
 function heightOfVisibleBackground() {
     var result;
@@ -45,7 +46,7 @@ function isBackgroundBottomVisible() {
 }
 
 function handleFloatingCodeColumn(){
-    if($(window).width() > 1170) {
+    if($(window).width() > twoColumnBreakpoint) {
         // CURRENTLY IN DESKTOP VIEW
         if(isBackgroundBottomVisible()) {
             // Set the bottom of the code column to the distance between the top of the end of guide section and the bottom of the page.
@@ -253,53 +254,6 @@ $(document).ready(function() {
         $("#guide_column").addClass('expanded');
     });
 
-    $('#guide_content pre:not(.command pre)').hover(function(event) {
-
-        offset = $('#guide_column').position();
-        target = event.currentTarget;
-        var current_target_object = $(event.currentTarget);
-        target_position = current_target_object.position();
-        target_width = current_target_object.outerWidth();
-        target_height = current_target_object.outerHeight();
-
-        $('#copy_to_clipboard').css({
-            top: target_position.top + 8,
-            right: parseInt($('#guide_column').css('padding-right')) + 55
-        });
-        $('#copy_to_clipboard').stop().fadeIn();
-
-    }, function(event) {
-
-        var x = event.clientX - offset.left;
-        var y = event.clientY - offset.top + $(window).scrollTop();
-        if(!(x > target_position.left
-        && x < target_position.left + target_width
-        && y > target_position.top
-        && y < target_position.top + target_height)) {
-            $('#copy_to_clipboard').stop().fadeOut();
-            $('#copied_to_clipboard_confirmation').stop().fadeOut();
-        }  
-
-    });
-
-    $('#copy_to_clipboard').click(function(event) {
-        
-        event.preventDefault();
-        window.getSelection().selectAllChildren(target);
-        if(document.execCommand('copy')) {
-            window.getSelection().removeAllRanges();
-            var current_target_object = $(event.currentTarget);
-            var position = current_target_object.position();
-            $('#copied_to_clipboard_confirmation').css({
-                top: position.top - 25,
-                right: 50
-            }).stop().fadeIn().delay(3500).fadeOut();
-        } else {
-            alert('To copy press CTRL + C');
-        }
-
-    });
-
     // Set the github clone popup top value to the same as the what you'll learn section.
     var whatYoullLearn = $("#what-you-ll-learn");
     if(whatYoullLearn.length > 0){
@@ -436,7 +390,7 @@ $(document).ready(function() {
         var dir = (origEvent.deltaY) < 0 ? 'up' : 'down';
         var delta = origEvent.wheelDelta || -origEvent.detail || -origEvent.deltaY;
         // Multipane view
-        if($(window).width() > 1170) {
+        if($(window).width() > twoColumnBreakpoint) {
             var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2');
             sections.each(function(index){
                 var elem = sections.get(index);
@@ -528,7 +482,7 @@ $(document).ready(function() {
     // Resize the guide sections so that there is clear separation between each section and the code column transitions better.
     function resizeGuideSections(){
         // Two column view or three column view.
-        if($(window).width() > 1170){
+        if($(window).width() > twoColumnBreakpoint){
             var viewportHeight = window.innerHeight;
             var headerHeight = $('header').height();
             var sectionTitleHeight = $("#guide_content h2").first().height();
@@ -552,6 +506,13 @@ $(document).ready(function() {
 
         var whatYouLearned = $("#great-work-you-re-done").siblings().find('p').clone();
         leftSide.prepend(whatYouLearned);
+        $("#great-work-you-re-done").parent().remove(); // Remove section from the main guide column.
+        $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
+
+        var relatedLinks = $("#related-links").siblings().find('p').clone();
+        rightSide.append(relatedLinks);
+        $("#related-links").parent().remove(); // Remove section from the main guide column.
+        $("#toc_container a[href='#related-links']").parent().remove(); // Remove from TOC.
     }
 
     function addGuideRatingsListener(){
@@ -566,17 +527,7 @@ $(document).ready(function() {
             $("#feedback_ratings img").not($(this)).css('opacity', '.25');
             $(this).css('opacity', '1');
         });
-    }
-
-    // RELATED GUIDES
-    //
-    // Add Related guides link to the table of contents, if needed
-    //
-    if( $('#related-guides').length ) {
-        // Add _one_ Related guides link to the very bottom of the table of contents.
-        // The assumption is that the TOC only contains one `sectlevel1` class.
-        $('#toc_container ul.sectlevel1').append('<li><a href="#related-guides">Related guides</a></li>');
-    }
+    }    
 
     $(window).on('resize', function(){
         handleFloatingTableOfContent(); // Handle table of content view changes.
@@ -585,7 +536,7 @@ $(document).ready(function() {
         handleFloatingCodeColumn();
     });
 
-    $(window).on('wheel mousewheel DOMMouseScroll', function(event) {
+    $(window).on('scroll', function(event) {
         handleGithubPopup(false);
         handleDownArrow();
         handleFloatingTableOfContent();        
