@@ -171,7 +171,7 @@ $(document).ready(function() {
             // Remove line numbers which were mainly used for highlighting the section.
             code_block.find('.line-numbers').remove();
             duplicate_code_block.find('.line-numbers').remove();
-        }    
+        }
     });
 
     // Map the guide sections that don't have any code sections to the previous section's code.
