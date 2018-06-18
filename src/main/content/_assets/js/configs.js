@@ -77,13 +77,13 @@ function updateMainBreadcrumb(resource) {
     }
 }
 
-// Using anchor href to jump to a heading in the doc within an iframe causes the parent window to scroll to.
+// Using anchor href to jump to a heading in the doc within an iframe causes the parent window to scroll too.
 // To avoid the scrolling of the parent window, manually scroll to the position of the heading.
 function handleIFrameDocPosition(href) {
     var hrefElement = "";
     var index = href.indexOf("#");
     var iframeContents = $('iframe[name=contentFrame]').contents();
-    adjustParentScrollView();
+    adjustParentScrollView(); 
     if (index !== -1) {
         if (href.length === index + 1) {
             // handle positioning to the top
@@ -508,8 +508,8 @@ function addContentBreadcrumbClick() {
 }
 
 function adjustParentScrollView() {
-    if ($("html").scrollTop() > 0) {
-        $("html").scrollTop(0);
+    if ($(window.parent.document).scrollTop() > 0) {
+        $(window.parent.document).scrollTop(0);
     }
 }
 
