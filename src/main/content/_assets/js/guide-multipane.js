@@ -268,7 +268,6 @@ $(document).ready(function() {
             }   
         }            
     }
-    
     $(window).on('scroll', function(event) {
         handleGithubPopup(false);
         handleSectionSnapping(event);

@@ -125,6 +125,17 @@ function createEndOfGuideContent(){
     leftSide.prepend(whatYouLearned);
     $("#great-work-you-re-done").parent().remove(); // Remove section from the main guide column.
     $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
+
+    // Concatenate the guide title and guide attribution license and append it to the end of guide.
+    var guideAttribution = $("#guide-attribution").siblings().find('p').text();
+    if(guideAttribution){
+        var guideTitle = $("#guide_title").text();
+        var concatenatedAttribution = guideTitle + " is licensed under " + guideAttribution;
+        $("#guide_attribution").text(concatenatedAttribution);
+        $("#guide-attribution").parent().remove();
+        $("#toc_container a[href='#guide-attribution']").parent().remove(); // Remove from TOC.
+    }
+    
     var relatedLinks = $("#related-links").siblings().find('p').clone();
     rightSide.append(relatedLinks);
     $("#related-links").parent().remove(); // Remove section from the main guide column.
