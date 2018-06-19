@@ -14,6 +14,9 @@ gem install jekyll-assets -v 2.4.0
 echo "Ruby version:"
 echo `ruby -v`
 
+# Special handling for javadocs
+./scripts/copy_javadoc_stylesheet.sh
+
 # Guides that are ready to be published to openliberty.io
 echo "Cloning repositories with name starting with guide or iguide..."
 ruby ./scripts/build_clone_guides.rb

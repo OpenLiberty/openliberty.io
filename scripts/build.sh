@@ -12,5 +12,4 @@ rvm use 2.4.1 --default
 sudo apt-get -y install nodejs
 
 SCRIPT_DIR=$(dirname $0)
-source $SCRIPT_DIR/copy_javadoc_stylesheet.sh
 source $SCRIPT_DIR/build_jekyll_maven.sh
