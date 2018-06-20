@@ -32,6 +32,7 @@ public class TLSFilter implements Filter {
             put("/docs/ref/microprofile/", "/docs/ref/microprofile/1.3/");
             put("/docs/ref/", "/docs/");        
             put("/index.html/", "/index.html");  
+            put("/guides/microprofile-intro.html", "/guides/cdi-intro.html");
             // put("old uri", "new uri");
     }};
 
