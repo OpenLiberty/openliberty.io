@@ -161,10 +161,25 @@ div.paragraph p.subsection {
     margin-bottom: 54px;
 }
 
+/* position the subheading below the sticky nav header when the url contains hash using forward and backward 
+   arrow navigate thru the history */
+p.subHeading > a, p.subHeading > div.toogle > a {
+    position: relative;
+}
+
+p.subHeading > a::before, p.subHeading > div.toogle > a::before {
+    display: inline-block;
+    content: " ";
+    margin-top: -125px;
+    height: 125px;
+    visibility: hidden;
+    pointer-events: none;
+}
+
 /* make the navbar sticky */
 .navbar {
     position: fixed;
-    background-color: #313653;;
+    background-color: #313653;
 }
 
 /* TABLE STYLING */
@@ -250,7 +265,7 @@ div.toggle:hover {
     font-size: 35px;
     color: #5D6A8E;
     letter-spacing: 0;
-    padding: 17px 30px 12.5px 10.5px;
+    padding: 17px 30px 12.5px 20px;
 }
 
 .contentStickyBreadcrumbHeader a.lastParentItem {
