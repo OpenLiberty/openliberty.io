@@ -30,6 +30,7 @@ public interface Constants {
     String BUILD_LOG = "build_log";
     String TESTS_LOG = "tests_log";
     String DRIVER_LOCATION = "driver_location";
+    String PACKAGE_LOCATIONS = "package_locations";
     String RUNTIME_RELEASES = "runtime_releases";
     String RUNTIME_NIGHTLY_BUILDS = "runtime_nightly_builds";
     String TOOLS_RELEASES = "tools_releases";

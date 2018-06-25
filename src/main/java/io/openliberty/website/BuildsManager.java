@@ -13,6 +13,7 @@ package io.openliberty.website;
 import java.io.StringReader;
 import java.util.Date;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.Json;
@@ -128,6 +129,7 @@ public class BuildsManager {
                     if (value instanceof JsonString) {
                         String version = ((JsonString) value).getString();
                         String versionPath = version + '/';
+                        String driverLocation = "";
                         String informationFileURL = Constants.DHE_URL + artifactPath + buildTypePath + versionPath
                                 + Constants.DHE_INFO_JSON_FILE_NAME;
                         JsonObject buildInformationSrc = retrieveJSON(informationFileURL);
@@ -153,7 +155,7 @@ public class BuildsManager {
 
                             JsonValue driverLocationObject = buildInformationSrc.get(Constants.DRIVER_LOCATION);
                             if (driverLocationObject instanceof JsonString) {
-                                String driverLocation = ((JsonString) driverLocationObject).getString();
+                                driverLocation = ((JsonString) driverLocationObject).getString();
                                 String newDrvierLocation = Constants.DHE_URL + artifactPath + buildTypePath
                                         + versionPath + driverLocation;
                                 buildInformation.add(Constants.DRIVER_LOCATION, newDrvierLocation);
@@ -162,6 +164,28 @@ public class BuildsManager {
                                 if (size != null) {
                                     buildInformation.add(Constants.SIZE_IN_BYTES, size);
                                 }
+                            }
+
+                            JsonValue packageLocationsObject = buildInformationSrc.get(Constants.PACKAGE_LOCATIONS);
+                            if(packageLocationsObject instanceof JsonArray){
+                                JsonArray packageLocations = (JsonArray) packageLocationsObject;
+                                // Map package name to DHE location
+                                LinkedHashMap<String,String> packagesMap = new LinkedHashMap<String,String>();
+                                for(int i = 0; i < packageLocations.size(); i++){                                    
+                                    String packageName = "";
+                                    String packageLocation = packageLocations.get(i).toString();
+                                    // Use driverLocation as the base for package locations to find the package name.
+                                    if(driverLocation != ""){
+                                        String baseLocation = driverLocation.substring(0,driverLocation.indexOf(".zip"));
+                                        if(packageLocation.contains(baseLocation)){
+                                            packageName = packageLocation.substring(baseLocation.length());
+                                        }
+                                    }
+                                    String newLocation = Constants.DHE_URL + artifactPath + buildTypePath
+                                    + versionPath + packageLocation;
+                                    packagesMap.put(packageName != "" ? packageName : packageLocation, packageLocation);
+                                }
+                                buildInformation.add(Constants.PACKAGE_LOCATIONS, packagesMap.toString());
                             }
 
                             jsonArray.add(buildInformation.build());
