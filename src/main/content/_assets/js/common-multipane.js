@@ -44,6 +44,28 @@ function isBackgroundBottomVisible() {
     return visibleBottom;
 }
 
+// Resize the guide sections so that there is clear separation between each
+// section and the code column transitions better by making the section height
+// in two and three column view at least as tall as the viewport.
+function resizeGuideSections() {
+        // Two column view or three column view.
+    if ($(window).width() > twoColumnBreakpoint) {
+        var viewportHeight = window.innerHeight;
+        var headerHeight = $('header').height();
+        var sectionTitleHeight = $("#guide_content h2").first().height();
+        var newSectionHeight = viewportHeight - headerHeight - (2 * sectionTitleHeight);
+        $('.sect1:not(#guide_meta):not(#related-guides)').css({
+                'min-height': newSectionHeight + 'px'
+        });
+    }
+    // Use initial height for single column view / mobile
+    else {
+            $('.sect1:not(#guide_meta):not(#related-guides)').css({
+                'min-height': 'initial'
+        });
+    }
+}
+    
 function handleFloatingCodeColumn() {
     if($(window).width() > twoColumnBreakpoint) {
         // CURRENTLY IN DESKTOP VIEW
@@ -94,6 +116,21 @@ function getScrolledVisibleSectionID(event) {
     return id;
 }
 
+// Copy over content that should be shown in a different section than where it
+// is generated.
+function createEndOfGuideContent(){
+    var leftSide = $("#end_of_guide_left_section");
+    var rightSide = $("#end_of_guide_right_section");
+    var whatYouLearned = $("#great-work-you-re-done").siblings().find('p').clone();
+    leftSide.prepend(whatYouLearned);
+    $("#great-work-you-re-done").parent().remove(); // Remove section from the main guide column.
+    $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
+    var relatedLinks = $("#related-links").siblings().find('p').clone();
+    rightSide.append(relatedLinks);
+    $("#related-links").parent().remove(); // Remove section from the main guide column.
+    $("#toc_container a[href='#related-links']").parent().remove(); // Remove from TOC.
+}
+
 
 $(document).ready(function() {
     function handleDownArrow() {
@@ -104,44 +141,7 @@ $(document).ready(function() {
         var atTop = $(window).scrollTop() === 0;
         atTop ? $("#down_arrow").fadeIn() : $("#down_arrow").fadeOut();
     }
-    
-    // Resize the guide sections so that there is clear separation between each
-    // section and the code column transitions better by making the section height
-    // in two and three column view at least as tall as the viewport.
-    function resizeGuideSections() {
-        // Two column view or three column view.
-        if ($(window).width() > twoColumnBreakpoint) {
-            var viewportHeight = window.innerHeight;
-            var headerHeight = $('header').height();
-            var sectionTitleHeight = $("#guide_content h2").first().height();
-            var newSectionHeight = viewportHeight - headerHeight - (2 * sectionTitleHeight);
-            $('.sect1:not(#guide_meta):not(#related-guides)').css({
-                'min-height': newSectionHeight + 'px'
-            });
-        }
-        // Use initial height for single column view / mobile
-        else {
-            $('.sect1:not(#guide_meta):not(#related-guides)').css({
-                'min-height': 'initial'
-            });
-        }
-    }
-    
-    // Copy over content that should be shown in a different section than where it
-    // is generated.
-    function createEndOfGuideContent(){
-        var leftSide = $("#end_of_guide_left_section");
-        var rightSide = $("#end_of_guide_right_section");
-        var whatYouLearned = $("#great-work-you-re-done").siblings().find('p').clone();
-        leftSide.prepend(whatYouLearned);
-        $("#great-work-you-re-done").parent().remove(); // Remove section from the main guide column.
-        $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
-        var relatedLinks = $("#related-links").siblings().find('p').clone();
-        rightSide.append(relatedLinks);
-        $("#related-links").parent().remove(); // Remove section from the main guide column.
-        $("#toc_container a[href='#related-links']").parent().remove(); // Remove from TOC.
-    }
-    
+        
     function addGuideRatingsListener(){
         $("#feedback_ratings img").on('click', function(event){
             var rating = $(this).data('guide-rating');
@@ -189,8 +189,6 @@ $(document).ready(function() {
 
     $(window).on('load', function(){
         handleFloatingTableOfContent();
-        resizeGuideSections();
-        createEndOfGuideContent();
         addGuideRatingsListener();
         handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
     });
