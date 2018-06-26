@@ -56,8 +56,14 @@ $(document).ready(function() {
 
     function processSearch(input_value){
         if(input_value.length == 0) {
+            //revert elements to their original state
+            $('#guides_container').css({'background':'#f8f9f9','box-shadow':'0 2px 4px 0 rgba(0,0,0,0.11)','margin-bottom':'52px'});
+            $('#microprofile_header').removeClass('hidden');
+            $('#microprofile_subtitle').removeClass('hidden');
+            $('.mp_guide_column').removeClass('hidden');
+            $('#additional_header').removeClass('hidden');
             $('.guide_column').removeClass('hidden');
-            $('#guide_counter_title').text('All Open Liberty guides (' + $('.guide_column').size() + ')');
+            $('#guide_counter_title').addClass('hidden');
         } else {
             if(input_value.indexOf('tag:') === 0) {
                 var search_value = input_value.substring(4).trim();
@@ -65,7 +71,28 @@ $(document).ready(function() {
             } else {
                 filter_guides(title_key | description_key | tags_key, input_value);
             }
-            $('#guide_counter_title').text('Search results (' + $('.guide_column:visible').size() + ')');
+            
+            var mpGuideVisible = $('.mp_guide_column:visible').size();
+            var additionalGuideVisible = $('.guide_column:visible').size();
+            var totalGuideVisible = mpGuideVisible + additionalGuideVisible;
+
+            //hide categories if there are no search results in them 
+            if (mpGuideVisible == 0) {
+                $('#guides_container').css({'background':'none','box-shadow':'none','margin-bottom':'0px'});
+                $('#microprofile_header').addClass('hidden');
+            } else {
+                $('#guides_container').css({'background':'#f8f9f9','box-shadow':'0 2px 4px 0 rgba(0,0,0,0.11)','margin-bottom':'52px'});
+                $('#microprofile_header').removeClass('hidden');
+            }
+
+            if (additionalGuideVisible == 0) {
+                $('#additional_header').addClass('hidden');
+            } else {
+                $('#additional_header').removeClass('hidden');
+            }
+            $('#microprofile_subtitle').addClass('hidden');
+            $('#guide_counter_title').removeClass('hidden');
+            $('#guide_counter_title').text('Total search results (' + totalGuideVisible + ')');
         }        
     }
 
@@ -106,14 +133,6 @@ $(document).ready(function() {
         processSearch(input_value);
     }
 
-    /* Resize the search bar to match the width of a guide card */
-    function resize_search_bar(){
-        // Get guide card width
-        var card = $('.guide_item:visible').get(0);
-        var card_width = $(card).width();
-        // Set the search to the same width as the guide card
-        $('#guide_search_input').width(card_width);
-    };
 
     function updateSearchUrl(value) {
         if(! value) {
@@ -140,9 +159,21 @@ $(document).ready(function() {
         }
     }
 
-    $(window).on('resize', function(){
-        resize_search_bar();
+    // Create popover when search bar is clicked
+    $("#guide_search_input").popover({
+        container: "#guides_search_container",
+        content: function() {
+            return $("#popover_content").html();
+        }
     });
-    resize_search_bar();
 
+    // Click buttons to fill search bar
+    $("#guides_search_container").on('click', '.tag_button', function() {
+        var input_value = 'tag: ' + $(this).html()
+        $("#guide_search_input").val(input_value);
+        $(".tag_button").removeClass("hidden");
+        $(this).addClass("hidden");
+        $("#guide_search_input").focus();
+        processSearch(input_value);
+    });
 });
