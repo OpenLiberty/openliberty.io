@@ -9,8 +9,7 @@ permalink: /docs/ref/config/
 ---
 
 <!-- Build list of config pages -->
-{% assign configDocs = site.pages | where: 'page-layout', 'config' %}
-
+{% assign configDocs = site.pages | where: 'layout', 'config' %}
 <div id="background_container">
     <!-- <div class="row"> -->
         <!-- Guide's table of contents section -->
@@ -20,12 +19,10 @@ permalink: /docs/ref/config/
                 {% if configDocs %}
                 <div id="toc_container">
                     <ul>
-                         {% for config in configDocs %}
-                         {% assign toc = config.content | tocify_asciidoc %}
+                        {% for config in configDocs %}
                         <li>
                             <a href="{{ config.url }}" target="contentFrame">{{ config.title }}</a>
                         </li>
-                     
                         {% endfor %}
                     </ul>
                 </div>

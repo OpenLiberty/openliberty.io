@@ -7,12 +7,6 @@ url: "https://openliberty.io"
 twitter_username: openlibertyio
 github_username:  NottyCode
 
-defaults:
-  - scope:
-      path: "config"
-    values:
-      page-layout: "config"
-
 asciidoctor:
   base_dir: :docdir
   safe: 0
@@ -23,7 +17,6 @@ asciidoctor:
     - coderay-linenums=true
     - coderay-css=class
     - allow-uri-read
-    - page-layout=config # for config testing only - to be removed once a front matter page is created for each config doc
 
 google_tag_manager: GTM-TKP3KJ7
 
@@ -31,11 +24,11 @@ markdown: kramdown
 
 assets:
   compress:
-    css: false
-    js: false
+    css: true
+    js: true
 
 env: production
-minify_html: false
+minify_html: true
 
 plugins:
   - jekyll-feed
@@ -46,3 +39,4 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - vendor # TravisCI bundles all gems in the vendor directory on its build servers, which Jekyll will mistakenly read and explode on.
+  
