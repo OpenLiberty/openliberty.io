@@ -277,6 +277,8 @@ $(document).ready(function() {
     $(window).on('load', function(){
         if(window.location.hash === ""){
             handleGithubPopup();            
-        }        
+        }
+        resizeGuideSections();
+        createEndOfGuideContent();    
     });
 });
