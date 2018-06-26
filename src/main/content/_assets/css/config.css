@@ -124,7 +124,7 @@ iframe.config_content_frame {
 }
 
 #content {
-    padding-top: 75px; /* to compensate for the sticky header */
+    /* padding-top: 75px; */ /* to compensate for the sticky header */
     padding-left: 20px;
     overflow-x: hidden;  /* hide horizontal scrollbar due to table */
 }
@@ -266,8 +266,19 @@ div.toggle:hover {
     color: #5D6A8E;
     letter-spacing: 0;
     padding: 17px 30px 12.5px 20px;
+    transition: top .5s;
 }
 
 .contentStickyBreadcrumbHeader a.lastParentItem {
     color: #F4914D;
+}
+
+.stickyBreadcrumb a:hover {
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.stickyBreadcrumb a.lastParentItem:hover {
+    opacity: 1;
+    cursor: default;
 }
