@@ -33,12 +33,13 @@ function render_builds(builds, parent) {
             row.append(version_column);
 
             var package_locations = build.package_locations;
-            if(package_locations !== null){
-                for(var packageName in package_locations){
-                    if(package_locations.hasOwnProperty(package)){
-                        var package_column = $('<td><a href="' +  package_locations[packageName] +'" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + packageName + '</a></td>');
-                        row.append(package_column);
-                    }
+            if(package_locations !== null && package_locations !== undefined){
+                for(var i = 0; i < package_locations.length; i++){
+                    var package_name = package_locations[i].split("=")[0];
+                    package_name = package_name.toLowerCase();
+                    var href = package_locations[i].split("=")[1];
+                    var package_column = $('<td><a href="' +  href +'" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + package_name + '</a></td>');
+                    row.append(package_column);
                 }
             }
             else{

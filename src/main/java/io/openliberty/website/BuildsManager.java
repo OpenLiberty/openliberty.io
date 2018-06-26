@@ -13,7 +13,6 @@ package io.openliberty.website;
 import java.io.StringReader;
 import java.util.Date;
 import java.util.Map;
-import java.util.LinkedHashMap;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.Json;
@@ -73,7 +72,7 @@ public class BuildsManager {
         JsonObjectBuilder updatedBuilds = Json.createObjectBuilder();
         JsonObjectBuilder updatedReleases = Json.createObjectBuilder();
         JsonArray updatedRuntimeReleases = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
-                Constants.DHE_RELEASE_PATH_SEGMENT);
+                Constants.DHE_RELEASE_TEST_PATH_SEGMENT);
         JsonArray updatedRuntimeNightlyBuilds = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
                 Constants.DHE_NIGHTLY_PATH_SEGMENT);
         JsonArray updatedToolsReleases = retrieveBuildData(Constants.DHE_TOOLS_PATH_SEGMENT,
@@ -84,7 +83,7 @@ public class BuildsManager {
                 && updatedToolsNightlyBuilds != null) {
             JsonObject latestRuntimeRelease = getLatestBuild(updatedRuntimeReleases);
             JsonObject latestToolsRelease = getLatestBuild(updatedToolsReleases);
-            //if (latestRuntimeRelease != null && latestToolsRelease != null) {
+            // if (latestRuntimeRelease != null && latestToolsRelease != null) {
             if (latestRuntimeRelease != null) {
                 updatedReleases.add(Constants.RUNTIME, latestRuntimeRelease);
                 updatedReleases.add(Constants.TOOLS, latestToolsRelease);
@@ -168,25 +167,21 @@ public class BuildsManager {
                             JsonValue packageLocationsObject = buildInformationSrc.get(Constants.PACKAGE_LOCATIONS);
                             if(packageLocationsObject instanceof JsonArray){
                                 JsonArray packageLocations = (JsonArray) packageLocationsObject;
-                                // Map package name to DHE location
-                                LinkedHashMap<String,String> packagesMap = new LinkedHashMap<String,String>();
-                                for(int i = 0; i < packageLocations.size(); i++){                                    
-                                    String packageName = "";
+                                // Array of packageName=packageLocation
+                                JsonArrayBuilder packageArray = Json.createArrayBuilder();
+                                for(int i = 0; i < packageLocations.size(); i++){     
                                     String packageLocation = packageLocations.get(i).toString();
-                                    // Use driverLocation as the base for package locations to find the package name.
-                                    if(packageLocation.indexOf("openliberty-") == 0){
-                                        packageName = packageLocation.substring(12);
-                                        if(packageName.contains(version + ".zip")){
-                                            packageName = packageName.substring(0,packageName.indexOf((version + ".zip")));
-                                        }
+                                    String[] parts = packageLocation.split("-");
+                                    if(parts.length == 3){
+                                        String packageName = parts[1];
+                                        String newLocation = Constants.DHE_URL + artifactPath + buildTypePath
+                                        + versionPath + packageLocation;
+                                        newLocation = newLocation.replaceAll("\"", "");
+                                        packageArray.add(packageName + "=" + newLocation);
                                     }                                    
-                                    String newLocation = Constants.DHE_URL + artifactPath + buildTypePath
-                                    + versionPath + packageLocation;
-                                    packagesMap.put(packageName != "" ? packageName : packageLocation, packageLocation);
                                 }
-                                buildInformation.add(Constants.PACKAGE_LOCATIONS, packagesMap.toString());
+                                buildInformation.add(Constants.PACKAGE_LOCATIONS, packageArray.build());
                             }
-
                             jsonArray.add(buildInformation.build());
                         }
                     }
