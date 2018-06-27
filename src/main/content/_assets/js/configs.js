@@ -13,7 +13,8 @@ var subSectionClass = "subsection";
 var subHeadingClass = "subHeading";
 var maxIndentLevel = 7; 
 var minIndentLevel = 3; 
-var contentBreadcrumbHeight;
+var contentBreadcrumbHeight = 0;
+var mobileWidth = 767;
 
 function addTOCClick() {
     var onclick = function(event){
@@ -27,7 +28,12 @@ function addTOCClick() {
         // the push state 
         event.preventDefault();
         event.stopPropagation();
-        //var enableScrollHandling = false;
+
+        if (isMobileView()) {
+            $("#breadcrumb_hamburger").trigger("click");
+            $("#config_content").show();
+        }
+
         if (currentHref.indexOf("#") === -1) {
             setIframeLocationHref(currentHref);
             updateMainBreadcrumb(resource);
@@ -35,8 +41,7 @@ function addTOCClick() {
             handleContentBreadcrumbVisibility(true);
             handleIFrameDocPosition(currentHref);
         }
-        updateHashInUrl(currentHref);
-
+        updateHashInUrl(currentHref);       
         createClickableBreadcrumb(getContentBreadcrumbTitle(), true);
     }
 
@@ -168,29 +173,33 @@ function handleExpandCollapseState(titleId, isExpand) {
 //   href: the content url including hash to point to the nested title
 //   expand: use only if the event is triggered by the toggle button to expand/collapse the content
 function updateHashInUrl(href, isExpand) {
-    var hashInUrl = href;
-    if (href.indexOf("/config/") !== -1) {
-        hashInUrl = href.substring(8);
-    }
-    var state = {href: href}
-    if (isExpand !== undefined) {
-        if (isExpand) {
-            hashInUrl += "&expand=true";
-            state.expand = true;
-        } else {
-            hashInUrl += "&expand=false";
-            state.expand = false;
+    if (!isMobileView()) {
+        var hashInUrl = href;
+        if (href.indexOf("/config/") !== -1) {
+            hashInUrl = href.substring(8);
         }
+        var state = { href: href }
+        if (isExpand !== undefined) {
+            if (isExpand) {
+                hashInUrl += "&expand=true";
+                state.expand = true;
+            } else {
+                hashInUrl += "&expand=false";
+                state.expand = false;
+            }
+        }
+        window.history.pushState(state, null, '#' + hashInUrl);
     }
-    window.history.pushState(state, null, '#' + hashInUrl);
 }
 
 // display the first doc content by default
 function selectFirstDoc() {
-    var firstTOCElement = $("#toc_container a").first();
-    var href = firstTOCElement.attr("href");
-    var iframeContents = $('iframe[name=contentFrame]').contents();
-    iframeContents.attr("location").replace(href);
+    if (!isMobileView()) {
+        var firstTOCElement = $("#toc_container a").first();
+        var href = firstTOCElement.attr("href");
+        var iframeContents = $('iframe[name=contentFrame]').contents();
+        iframeContents.attr("location").replace(href);
+    }
 }
 
 /// modify the flat hierachary of the content to include nested levels with expand/collapse button
@@ -440,7 +449,11 @@ function modifyFixedTableColumnWidth() {
     var iframeContents = $('iframe[name=contentFrame]').contents();
     var colgroups = iframeContents.find("colgroup");
     var colWidths = [];
-    colWidths[4] = ["25%", "15%", "15%", "45%"];
+    if (!isMobileView()) {
+        colWidths[4] = ["25%", "15%", "15%", "45%"];
+    } else {
+        colWidths[4] = ["25%", "25%", "15%", "35%"];
+    }
     $(colgroups).each(function() {
         var cols = $(this).find("col");
         var currentColWidths = colWidths[cols.length];
@@ -514,58 +527,60 @@ function getSelectedDocHtml() {
 }
 
 function handleContentScrolling() {
-    var frameContents = $('iframe[name="contentFrame"]').contents();
-    var breadcrumbVisible = $('.contentStickyBreadcrumbHeader').is(':visible');
-    var lastViewPos = -99999;
+    if (!isMobileView()) {
+        var frameContents = $('iframe[name="contentFrame"]').contents();
+        var breadcrumbVisible = $('.contentStickyBreadcrumbHeader').is(':visible');
+        var lastViewPos = -99999;
 
-    var onContentScroll = function(e) {
-        // determine whether it is scrolling up or down
-        var scrollDown = false;
-        if (lastViewPos < $(this).scrollTop()) {
-            scrollDown = true;
-        }
-        lastViewPos = $(this).scrollTop();
-        
-        // content breadcrumb only appears after content title and its first table are out of view
-        var initialContentInView = isInitialContentInView();
-        if (breadcrumbVisible && !scrollDown) {
-            // breadcrumb is visible and a scrolling up case, check whether initial content is back in view to
-            // determine whether breadcrumb stays visible or not
-            if (initialContentInView) {
-                breadcrumbVisible = false;
-                handleContentBreadcrumbVisibility(false);
+        var onContentScroll = function (e) {
+            // determine whether it is scrolling up or down
+            var scrollDown = false;
+            if (lastViewPos < $(this).scrollTop()) {
+                scrollDown = true;
             }
-        } else if (!breadcrumbVisible && scrollDown) {
-            // breadcrumb is not visible and a scrolling down case, check whether initial content is out of view to
-            // determine whether breadcrumb switches to visible
-            if (!initialContentInView) {
-                breadcrumbVisible = true;
-                handleContentBreadcrumbVisibility(true);
-            }
-        }
-        if (breadcrumbVisible) {
-            // go through subheadings to determine the content of breadcrumb
-            var frameView = $(this);
-            var anchors = frameContents.find("div.paragraph > p > a");
-            var closestAnchor = {};
-            $(anchors).each(function () {
-                if ($(this).parent().is(":visible") && isInViewport($(this), frameView, closestAnchor)) {
-                    return false;
+            lastViewPos = $(this).scrollTop();
+
+            // content breadcrumb only appears after content title and its first table are out of view
+            var initialContentInView = isInitialContentInView();
+            if (breadcrumbVisible && !scrollDown) {
+                // breadcrumb is visible and a scrolling up case, check whether initial content is back in view to
+                // determine whether breadcrumb stays visible or not
+                if (initialContentInView) {
+                    breadcrumbVisible = false;
+                    handleContentBreadcrumbVisibility(false);
                 }
-            })
-
-            if (closestAnchor.element && !closestAnchor.inView) {
-                var title = closestAnchor.element.parent().text();
-                createClickableBreadcrumb(title, true);
-            } else {
-                createClickableBreadcrumb(getContentBreadcrumbTitle(), true);
+            } else if (!breadcrumbVisible && scrollDown) {
+                // breadcrumb is not visible and a scrolling down case, check whether initial content is out of view to
+                // determine whether breadcrumb switches to visible
+                if (!initialContentInView) {
+                    breadcrumbVisible = true;
+                    handleContentBreadcrumbVisibility(true);
+                }
             }
+            if (breadcrumbVisible) {
+                // go through subheadings to determine the content of breadcrumb
+                var frameView = $(this);
+                var anchors = frameContents.find("div.paragraph > p > a");
+                var closestAnchor = {};
+                $(anchors).each(function () {
+                    if ($(this).parent().is(":visible") && isInViewport($(this), frameView, closestAnchor)) {
+                        return false;
+                    }
+                })
 
-            adjustParentScrollView();
+                if (closestAnchor.element && !closestAnchor.inView) {
+                    var title = closestAnchor.element.parent().text();
+                    createClickableBreadcrumb(title, true);
+                } else {
+                    createClickableBreadcrumb(getContentBreadcrumbTitle(), true);
+                }
+
+                adjustParentScrollView();
+            }
         }
-    }
 
-    frameContents.unbind('scroll').bind('scroll', onContentScroll);
+        frameContents.unbind('scroll').bind('scroll', onContentScroll);
+    }
 }
 
 function isInitialContentInView() {
@@ -635,44 +650,46 @@ function isInViewport(anchorElement, viewWindow, closestAnchor) {
 }
 
 function createClickableBreadcrumb(breadcrumbText, highlightLastItem) {
-    $('.contentStickyBreadcrumbHeader .stickyBreadcrumb').remove();
-    // hide it for now until the font size is determined
-    $(".contentStickyBreadcrumbHeader").append("<div class='stickyBreadcrumb'/>");
-    $('.contentStickyBreadcrumbHeader .stickyBreadcrumb').hide();
-    var breadcrumbTextSplits = breadcrumbText.split(" > ");
-    var href = getSelectedDocHtml() + "#";
-    var stickyHeaderBreadcrumb = "";
-    for (var i = 0; i < breadcrumbTextSplits.length; i++) {
-        if (i > 1) {
-            href = href + "/";
-        }
-        if (i > 0) {
-            href = href + breadcrumbTextSplits[i];
-            stickyHeaderBreadcrumb = stickyHeaderBreadcrumb + " > ";
-        }
+    if (!isMobileView()) {
+        $('.contentStickyBreadcrumbHeader .stickyBreadcrumb').remove();
+        // hide it for now until the font size is determined
+        $(".contentStickyBreadcrumbHeader").append("<div class='stickyBreadcrumb'/>");
+        $('.contentStickyBreadcrumbHeader .stickyBreadcrumb').hide();
+        var breadcrumbTextSplits = breadcrumbText.split(" > ");
+        var href = getSelectedDocHtml() + "#";
+        var stickyHeaderBreadcrumb = "";
+        for (var i = 0; i < breadcrumbTextSplits.length; i++) {
+            if (i > 1) {
+                href = href + "/";
+            }
+            if (i > 0) {
+                href = href + breadcrumbTextSplits[i];
+                stickyHeaderBreadcrumb = stickyHeaderBreadcrumb + " > ";
+            }
 
-        if (highlightLastItem && (i === breadcrumbTextSplits.length - 1)) {
-            stickyHeaderBreadcrumb = stickyHeaderBreadcrumb + "<a class='lastParentItem'>" + breadcrumbTextSplits[i] + "</a>";
-        } else {
-            stickyHeaderBreadcrumb = stickyHeaderBreadcrumb + "<a href='" + href + "' target='contentFrame'>" + breadcrumbTextSplits[i] + "</a>";
+            if (highlightLastItem && (i === breadcrumbTextSplits.length - 1)) {
+                stickyHeaderBreadcrumb = stickyHeaderBreadcrumb + "<a class='lastParentItem'>" + breadcrumbTextSplits[i] + "</a>";
+            } else {
+                stickyHeaderBreadcrumb = stickyHeaderBreadcrumb + "<a href='" + href + "' target='contentFrame'>" + breadcrumbTextSplits[i] + "</a>";
+            }
         }
+        $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").append(stickyHeaderBreadcrumb);
+
+        // adjust the breadcrumb font if its width is larger than the iframe width
+        var paddingWidth = parseInt($(".contentStickyBreadcrumbHeader").css("padding-left")) +
+            parseInt($(".contentStickyBreadcrumbHeader").css("padding-right"));
+        var breadcrumbWidth = $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").width() + paddingWidth;
+        var contentWindowWidth = $('iframe[name="contentFrame"]').contents()[0].documentElement.clientWidth;
+        var fontSize = 32;
+        while (breadcrumbWidth > contentWindowWidth && fontSize > 0) {
+            $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").css("font-size", fontSize + "px");
+            breadcrumbWidth = $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").width() + paddingWidth;
+            fontSize = fontSize - 2;
+        }
+        $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").show();
+
+        addContentBreadcrumbClick();
     }
-    $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").append(stickyHeaderBreadcrumb);
-
-    // adjust the breadcrumb font if its width is larger than the iframe width
-    var paddingWidth =  parseInt($(".contentStickyBreadcrumbHeader").css("padding-left")) + 
-                        parseInt($(".contentStickyBreadcrumbHeader").css("padding-right"));
-    var breadcrumbWidth = $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").width() + paddingWidth;      
-    var contentWindowWidth = $('iframe[name="contentFrame"]').contents()[0].documentElement.clientWidth;
-    var fontSize = 32;
-    while (breadcrumbWidth > contentWindowWidth && fontSize > 0) {
-        $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").css("font-size", fontSize + "px");
-        breadcrumbWidth = $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").width() + paddingWidth;
-        fontSize = fontSize - 2;
-    }
-    $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").show();
-
-    addContentBreadcrumbClick();
 }
 
 function addContentBreadcrumbClick() {
@@ -687,63 +704,69 @@ function addContentBreadcrumbClick() {
 // When the parent window scrolls, it affects the viewport of the content. Hence needs to adjust
 // the content breadcrumb.
 function handleParentWindowScrolling() {
-    $(window.parent.document).on('scroll', function(e) {
-        var breadcrumbVisible = $('.contentStickyBreadcrumbHeader').is(':visible');
-        // for parent window scrolling, need to adjust breadcrumb only when content breadcrumb is visible
-        if (breadcrumbVisible) {
+    if (!isMobileView()) {
+        $(window.parent.document).on('scroll', function (e) {
+            var breadcrumbVisible = $('.contentStickyBreadcrumbHeader').is(':visible');
+            // for parent window scrolling, need to adjust breadcrumb only when content breadcrumb is visible
             if (breadcrumbVisible) {
-                // go through subheadings to determine the content of breadcrumb
-                var frameView = $(this);
-                var frameContents = $('iframe[name="contentFrame"]').contents();
-                var anchors = frameContents.find("div.paragraph > p > a");
-                var closestAnchor = {};
-                $(anchors).each(function () {
-                    if ($(this).parent().is(":visible") && isInViewport($(this), frameContents, closestAnchor)) {
-                        return false;
+                if (breadcrumbVisible) {
+                    // go through subheadings to determine the content of breadcrumb
+                    var frameView = $(this);
+                    var frameContents = $('iframe[name="contentFrame"]').contents();
+                    var anchors = frameContents.find("div.paragraph > p > a");
+                    var closestAnchor = {};
+                    $(anchors).each(function () {
+                        if ($(this).parent().is(":visible") && isInViewport($(this), frameContents, closestAnchor)) {
+                            return false;
+                        }
+                    })
+
+                    if (closestAnchor.element && !closestAnchor.inView) {
+                        var title = closestAnchor.element.parent().text();
+                        createClickableBreadcrumb(title, true);
+                    } else {
+                        createClickableBreadcrumb(getContentBreadcrumbTitle(), true);
                     }
-                })
-    
-                if (closestAnchor.element && !closestAnchor.inView) {
-                    var title = closestAnchor.element.parent().text();
-                    createClickableBreadcrumb(title, true);
-                } else {
-                    createClickableBreadcrumb(getContentBreadcrumbTitle(), true);
                 }
             }
-        }
-    })
+        })
+    }
 }
 
 function adjustParentScrollView() {
-    if ($(window.parent.document).scrollTop() > 0) {
-        // temporarily disable parent window scrolling listener
-        $(window.parent.document).off('scroll');
-        $(window.parent.document).scrollTop(0);
-        // enable back the scrolling listener
-        handleParentWindowScrolling();
+    if (!isMobileView()) {
+        if ($(window.parent.document).scrollTop() > 0) {
+            // temporarily disable parent window scrolling listener
+            $(window.parent.document).off('scroll');
+            $(window.parent.document).scrollTop(0);
+            // enable back the scrolling listener
+            handleParentWindowScrolling();
+        }
     }
 }
 
 function handleInitialContent() {
-    if (window.location.hash !== "" && window.location.hash !== undefined) {
-        var fullHref = '/config/' + window.location.hash.substring(1)
-        var isExpand = undefined;
-        if (fullHref.indexOf("&") !== -1) {
-            fullHref = fullHref.substring(0, fullHref.indexOf("&"));
-            if (window.location.hash.indexOf("&expand=true")) {
-                isExpand = true;
-            } else if (window.location.hash.indexOf("&expand=false")) {
-                isExpand = false;
+    if (!isMobileView()) {
+        if (window.location.hash !== "" && window.location.hash !== undefined) {
+            var fullHref = '/config/' + window.location.hash.substring(1)
+            var isExpand = undefined;
+            if (fullHref.indexOf("&") !== -1) {
+                fullHref = fullHref.substring(0, fullHref.indexOf("&"));
+                if (window.location.hash.indexOf("&expand=true")) {
+                    isExpand = true;
+                } else if (window.location.hash.indexOf("&expand=false")) {
+                    isExpand = false;
+                }
             }
+            setIframeLocationHref(fullHref);
+            var state = { href: fullHref };
+            if (state !== undefined) {
+                state.expand = isExpand;
+            }
+            window.history.replaceState(state, null, window.location.hash);
+        } else {
+            selectFirstDoc();
         }
-        setIframeLocationHref(fullHref);
-        var state = {href: fullHref};
-        if (state !== undefined) {
-            state.expand = isExpand;
-        }
-        window.history.replaceState(state, null, window.location.hash);
-    } else {
-        selectFirstDoc();
     }
 }
 
@@ -756,61 +779,98 @@ function getFullHrefFromIframe() {
 }
 
 function handlePopstate() {
-    window.onpopstate = function(event) {
-        if (event.state) {
-            var iframeHrefObj = getFullHrefFromIframe();
-            var iframeHref = iframeHrefObj.pathname;
-            var popstateHrefPathname = event.state.href;
-            if (event.state.href.indexOf("#") !== -1) {
-                popstateHrefPathname = event.state.href.substring(0, event.state.href.indexOf("#"));
-            }
-
-            if (iframeHrefObj.pathname === popstateHrefPathname) {
-                // if (event.state.indexOf("#") === -1) {
-                //     $("iframe[name='contentFrame']").contents().scrollTop(0);
-                // } else {
-                if (event.state.expand !== undefined && event.state.href.indexOf("#") !== -1) {
-                    var titleId = event.state.href.substring(event.state.href.indexOf('#') + 1);
-                    handleExpandCollapseState(titleId, event.state.expand);
-                }
+    if (!isMobileView()) {
+        window.onpopstate = function (event) {
+            if (event.state) {
+                var iframeHrefObj = getFullHrefFromIframe();
+                var iframeHref = iframeHrefObj.pathname;
+                var popstateHrefPathname = event.state.href;
                 if (event.state.href.indexOf("#") !== -1) {
-                    handleContentBreadcrumbVisibility(true);
+                    popstateHrefPathname = event.state.href.substring(0, event.state.href.indexOf("#"));
                 }
-                handleIFrameDocPosition(event.state.href);
- 
-                // select TOC
-                var TOCSubElement = $("#toc_container").find("a[href='" + event.state.href + "']");
-                if (TOCSubElement.length === 1) {
-                    setSelectedTOC(TOCSubElement, true);
+
+                if (iframeHrefObj.pathname === popstateHrefPathname) {
+                    // if (event.state.indexOf("#") === -1) {
+                    //     $("iframe[name='contentFrame']").contents().scrollTop(0);
+                    // } else {
+                    if (event.state.expand !== undefined && event.state.href.indexOf("#") !== -1) {
+                        var titleId = event.state.href.substring(event.state.href.indexOf('#') + 1);
+                        handleExpandCollapseState(titleId, event.state.expand);
+                    }
+                    if (event.state.href.indexOf("#") !== -1) {
+                        handleContentBreadcrumbVisibility(true);
+                    }
+                    handleIFrameDocPosition(event.state.href);
+
+                    // select TOC
+                    var TOCSubElement = $("#toc_container").find("a[href='" + event.state.href + "']");
+                    if (TOCSubElement.length === 1) {
+                        setSelectedTOC(TOCSubElement, true);
+                    }
+                } else {
+                    setIframeLocationHref(event.state.href, true);
                 }
             } else {
-                setIframeLocationHref(event.state.href, true);
+                selectFirstDoc();
+
             }
-        } else {
-            selectFirstDoc();
         }
     }
 }
 
 function initialContentBreadcrumbVisibility() {
-    // save the content breadcrumb height to be used later as the height could be 1 during the transition 
-    // to display it in isInViewPort function
-    contentBreadcrumbHeight = $(".contentStickyBreadcrumbHeader").outerHeight();
-    var iframeContents = $('iframe[name="contentFrame"]').contents();
-    if (iframeContents.attr("location").href.indexOf("#") === -1) {
-       handleContentBreadcrumbVisibility(false);
-    } else {
-       handleContentBreadcrumbVisibility(true);
+    if (!isMobileView()) {
+        // save the content breadcrumb height to be used later as the height could be 1 during the transition 
+        // to display it in isInViewPort function
+        contentBreadcrumbHeight = $(".contentStickyBreadcrumbHeader").outerHeight();
+        var iframeContents = $('iframe[name="contentFrame"]').contents();
+        if (iframeContents.attr("location").href.indexOf("#") === -1) {
+            handleContentBreadcrumbVisibility(false);
+        } else {
+            handleContentBreadcrumbVisibility(true);
+        }
     }
 }
 
 function handleContentBreadcrumbVisibility(isShow) {
-    if (isShow && !$('.contentStickyBreadcrumbHeader').is(":visible")) {
-        $('.contentStickyBreadcrumbHeader').slideDown(500);
-        $('iframe[name="contentFrame"]').contents().find("#content").css("padding-top", "75px");
-    } else if (!isShow && $('.contentStickyBreadcrumbHeader').is(":visible")) {
-        $('.contentStickyBreadcrumbHeader').slideUp(500);
-        $('iframe[name="contentFrame"]').contents().find("#content").css("padding-top", "0px");
+    if (!isMobileView()) {
+        if (isShow && !$('.contentStickyBreadcrumbHeader').is(":visible")) {
+            $('.contentStickyBreadcrumbHeader').slideDown(500);
+            $('iframe[name="contentFrame"]').contents().find("#content").css("padding-top", "75px");
+        } else if (!isShow && $('.contentStickyBreadcrumbHeader').is(":visible")) {
+            $('.contentStickyBreadcrumbHeader').slideUp(500);
+            $('iframe[name="contentFrame"]').contents().find("#content").css("padding-top", "0px");
+        }
+    }
+}
+
+function addHamburgerClick() {
+    if (isMobileView()) {
+        var hamburger = $("#breadcrumb_hamburger");
+        hamburger.trigger("click");
+        //hamburger.hide();
+        hamburger.on("click", function (e) {
+            if ($("#toc_column").hasClass('in')) {
+                $("#config_content").show();
+            } else {
+                $("#config_content").hide();
+                // since the opening/closing of the toc container is managed by the hamburger,
+                // it always scroll back to the top and cannot override it until the toc
+                // container is in view.
+                // $("#toc_column").show();
+                // var selectedTOC = $(".toc_selected");
+                // // move the TOC back to the previously selected spot
+                // $('#toc_column').scrollTop(selectedTOC[0].getBoundingClientRect().top);
+            }
+        })
+    }
+}
+
+function isMobileView() {
+    if ($(window).width() <= mobileWidth) {
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -818,6 +878,8 @@ $(document).ready(function () {
     addTOCClick();
     handleInitialContent();
     handleParentWindowScrolling();
+    addHamburgerClick();
+
     $('iframe[name="contentFrame"]').load(function() {
         if ($(this)[0].contentDocument.title !== "Not Found") {
             initialContentBreadcrumbVisibility();
@@ -828,28 +890,32 @@ $(document).ready(function () {
             var TOCSubElement = findTOCElement(true);
             if (TOCSubElement) {
                 setSelectedTOC(TOCSubElement, true)
-            } else {
+            } else if (TOCElement) {
                 setSelectedTOC(TOCElement, true);
             }
-            updateMainBreadcrumb(TOCElement);
+            if (TOCElement) {
+                updateMainBreadcrumb(TOCElement);
+            }
             //createClickableBreadcrumb(getContentBreadcrumbTitle());
-            handleContentScrolling();
-            handlePopstate();
+            if (!isMobileView()) {
+                handleContentScrolling();
+                handlePopstate();
+            
+                if (window.location.hash !== "" && window.location.hash !== undefined &&
+                    window.location.hash.indexOf("&expand=") !== -1) {
+                    var isExpand;
+                    if (window.location.hash.indexOf("&expand=true")) {
+                        isExpand = true;
+                    } else if (window.location.hash.indexOf("&expand=false")) {
+                        isExpand = false;
+                    }
+                    var hash = window.location.hash.substring(1);
+                    if (hash.indexOf("#") !== -1) {
+                        var titleId = hash.substring(hash.indexOf('#') + 1, hash.indexOf("&"));
+                        handleExpandCollapseState(titleId, isExpand);
+                    }
 
-            if (window.location.hash !== "" && window.location.hash !== undefined && 
-                window.location.hash.indexOf("&expand=") !== -1) {
-                var isExpand;
-                if (window.location.hash.indexOf("&expand=true")) {
-                    isExpand = true;
-                } else if (window.location.hash.indexOf("&expand=false")) {
-                    isExpand = false;
                 }
-                var hash = window.location.hash.substring(1);
-                if (hash.indexOf("#") !== -1) {
-                    var titleId = hash.substring(hash.indexOf('#') + 1, hash.indexOf("&"));
-                    handleExpandCollapseState(titleId, isExpand);
-                }
-                
             }
             if ($(this).contents().attr("location").href.indexOf("#") !== -1) {
                 handleIFrameDocPosition($(this).contents().attr("location").href);
