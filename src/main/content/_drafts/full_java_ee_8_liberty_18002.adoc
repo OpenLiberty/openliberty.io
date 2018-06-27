@@ -1,23 +1,19 @@
 ---
 layout: post
-title: Get reactive with JAX-RS 2.1 and CDI 2.0 in Open Liberty 18.0.0.2
+title: Get the full Java EE 8 implementation in Open Liberty 18.0.0.2
 
 categories: blog
 author_picture: https://avatars3.githubusercontent.com/u/3322532
-seo-title: Get reactive with JAX-RS 2.1 and CDI 2.0 in Open Liberty 18.0.0.2 - OpenLiberty.io
-seo-description: Active description of the post - 50–300 characters. This is used in search results and on social media.
-blog_description: "Blog preview description. ~60 words - this is used in the preview card on openliberty.io/blog"
+seo-title: Get the full Java EE 8 implementation in Open Liberty 18.0.0.2 - OpenLiberty.io
+seo-description: Full Java EE 8 support, including: JAX-RS 2.1 reactive client and server-sent events, CDI event-ordering and asynchonous events, HTTP/2 support in servlets, JSF 2.3, JPA 2.2, JWT cookies (yum!), security improvements,...oh, and you can now deploy Spring Boot applications to Liberty.
+blog_description: "Full Java EE 8 support, including: JAX-RS 2.1 reactive client and server-sent events, CDI event-ordering and asynchonous events, HTTP/2 support in servlets, JSF 2.3, JPA 2.2, JWT cookies (yum!), security improvements,...oh, and you can now deploy Spring Boot applications to Liberty."
 ---
-= Get reactive with JAX-RS 2.1 and CDI 2.0 in Open Liberty 18.0.0.2
+= Get the full Java EE 8 implementation in Open Liberty 18.0.0.2
 Laura Cowen <https://github.com/lauracowen>
 
-INTRO HERE - something something reactive
+Yes, it's here! And we've done it again: Open Liberty is the first app server with full Java EE 8 support (to our knowledge...). What does that mean? Well, we've got the goodness of JAX-RS 2.1 reactive client and server-sent events, CDI event-ordering and asynchonous events, HTTP/2 support in servlets, JSF 2.3 (for the JSF fans, you know who you are), JPA 2.2, JWT cookies (yum!), security improvements,...oh, and you can now deploy Spring Boot applications to Liberty #justsayin'
 
-
-
-As we don't have a full set of documentation implemented for Open Liberty yet, the items below point to the https://developer.ibm.com/wasdev/docs/[official documentation for WebSphere Liberty] so you can find out more about them (WebSphere Liberty is built on Open Liberty).
-
-You can now download Open Liberty 18.0.0.2:
+What are you waiting for? Download Open Liberty 18.0.0.2:
 
 [link=https://openliberty.io/downloads/]
 image::/img/blog_btn_download-ol.svg[Download Open Liberty, align="center", role="download-ol-button"]
@@ -57,18 +53,19 @@ In Open Liberty 18.0.0.2, you'll find:
 
 *  <<javaee8,Full support for Java EE 8:>>
 ** <<jaxrs,Reactive client and server-sent events with JAX-RS 2.1>>
-** <<cdi,CDI 2.0 ????>>
+** <<cdi,Asynchronous events, event ordering, and more with CDI 2.0>>
 ** <<servlet40,Write dynamic web applications with Servlet 4.0>>
 ** <<http2,HTTP/2 protocol support>>
 ** <<jsf,Build user interfaces for web applications with JavaServer Faces (JSF) 2.3>>
 ** <<jpa,Interact with databases with Java Persistence API (JPA) 2.2>>
 ** <<jwtsso,Emit and consume JWT cookies with JWT Single Sign-on 1.0>>
-** <<appsecurity,Secure your applications using portable code with Application Security 3.0>>
+** <<appsecurity,Secure your applications using Security API 1.0 specification>>
 
 * And:
 ** <<spring,Deploy Spring Boot applications to Liberty>>
 ** <<certmapper,Control how custom X.509 certificates map to users in Liberty's LDAP and basic user registries>>
 
+As we don't have a full set of documentation implemented for Open Liberty yet, the items below point to the https://developer.ibm.com/wasdev/docs/[official documentation for WebSphere Liberty] so you can find out more about them (WebSphere Liberty is built on Open Liberty).
 
 [#javaee8]
 == Full support for Java EE 8
@@ -89,10 +86,11 @@ The features included in `webProfile-8.0` (Java EE 8 Web Profile) that are new i
 * `jpa-2.2`
 * `jpaContainer-2.2`
 * `jsf-2.3`
+* `jsonb-1.0`
 * `jsonp-1.1`
 * `servlet-4.0`
 
-The `webProfile-8.0` feature also contains the following features which are unchanged from Java EE 7: `distributedMap01.0`, `ejbLite-3.2`, `el-3.0`, `jndi-1.0`, `jsonb-1.0`, `jsp-2.3`, `managedBeans-1.0`, `ssl-1.0`, `websocket-1.1`.
+The `webProfile-8.0` feature also contains the following features which are unchanged from Java EE 7: `distributedMap01.0`, `ejbLite-3.2`, `el-3.0`, `jndi-1.0`, `jsp-2.3`, `managedBeans-1.0`, `ssl-1.0`, `websocket-1.1`.
 
 To enable the whole of the `webProfile-8.0` feature, add the feature definition to your `server.xml`:
 
@@ -150,14 +148,40 @@ To enable JAX-RS 2.1, add the definition to your `server.xml`:
 
 For more info:
 
-* XXXX TODO: KC URL
 * https://www.linkedin.com/pulse/my-favorite-part-jax-rs-21-implementers-view-j-andrew-mccright/[My favourite part of JAX-RS 2.1: An implementer's view]
+* TODO: KC URL [JAX-RS 2.1 (Knowledge Center)]
 * https://jcp.org/en/jsr/detail?id=370[JAX-RS 2.1 spec]
 * https://jax-rs.github.io/apidocs/2.1/[JAX-RS 2.1 Javadoc]
 
 
 [#cdi]
-== CDI 2.0
+== Asynchronous events, event ordering, and more with CDI 2.0
+
+CDI 2.0 provides the following support:
+
+* Activate Request Context - Some third-party framework developers might want to have their own request lifecycle and have a tight control of it without creating a custom context. Previously, it was not possible for application developers to activate Request Context. CDI 2.0 added this support so that some unnecessary custom Request Scoped creation can be avoided.
+* Event ordering and asynchronous events - Prior to CDI 2.0, it was not possible to order the event notification. In CDI 2.0, use `@Priority` to order the synchronous event notifications. In CDI 2.0, you can fire and observe asynchronous events.
+* Add Interceptor support to produced beans - CDI 2.0 adds interceptor support on a producer using InterceptionFactory so that the produced beans have interceptors applied.
+* Provide a number of annotation literals - CDI uses annotation literals in various places. Previously, you needed to create annotation literal classes for some built-in scopes. In CDI 2.0, the APIs have the annotation literals provided for some useful scopes e.g. all scopes are used.
+ApplicationScoped apsl = ApplicationScoped.Literal.INSTANCE;
+* CDI SPI configurators - In CDI 1.x, using SPI is used to generate verbose and less elegant code. In CDI 2.0, the configurators solve this. These configurators are accessible in lifecycle container event when writing extensions.
+
+To enable the CDI 2.0 feature, add the feature definition to your `server.xml`:
+
+[source,xml]
+----
+
+           <featureManager>
+                  <feature>cdi-2.0</feature>
+          </featureManager>
+
+----
+
+For more info:
+
+* TODO: KC link
+
+
 
 [#servlet40]
 == Write dynamic web applications with Servlet 4.0
@@ -409,11 +433,11 @@ To enable JWT SSO so that Liberty emits and consumes JWT cookies instead of LTPA
 
 For more info:
 
-* TODO: KC URL?
+* https://www.ibm.com/support/knowledgecenter/SSAW57_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/twlp_sec_config_jwt_sso.html[Configuring JWT SSO (Knowledge Center)]
 
 
 [#appsecurity]
-== Secure your applications using portable code with Application Security 3.0
+== Secure your applications using Security API 1.0 specification
 
 The `appSecurity-3.0` feature provides support for the Java EE Security API 1.0 specification. The https://jcp.org/en/jsr/detail?id=375"[Java Specification Request (JSR) 375] specifies the requirement.
 
@@ -563,8 +587,8 @@ Example `server.xml` configuration for configuring two separate X509CertificateM
 
 For more info:
 
-* TODO: GA URL?   [Basic registry mapping (Knowledge Center)]
-* TODO: GA URL? [LDAP registry mapping (Knowledge Center)]
+* https://www.ibm.com/support/knowledgecenter/SSAW57_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/rwlp_sec_basic_certmap.html[Basic registry mapping (Knowledge Center)]
+* https://www.ibm.com/support/knowledgecenter/SSAW57_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/rwlp_sec_ldap_certmap.html[LDAP registry mapping (Knowledge Center)]
 
 
 
