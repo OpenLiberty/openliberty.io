@@ -38,17 +38,19 @@ function render_builds(builds, parent) {
                     var package_name = package_locations[i].split("=")[0];
                     package_name = package_name.toLowerCase();
                     var href = package_locations[i].split("=")[1];
-                    var package_column = $('<td><a href="' +  href +'" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + package_name + '</a></td>');
+                    var package_column = $('<td><a href="' +  href +'" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + 
+                    package_name + '</a><img src="/img/downloads_arrow_down_small.svg" /></td>');
                     row.append(package_column);
                 }
             }
             else{
                 // Add blank table cells
-
+                var empty_cell = $('<td></td>');
+                row.append(empty_cell.clone());
+                row.append(empty_cell.clone());
             }
 
-            var zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">Download All</a></td>');
-        
+            var zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">Download All</a><img src="/img/downloads_arrow_down_small.svg" /></td>');        
             row.append(zip_column);            
         } else {
             var date = new Date(build.date);
