@@ -47,15 +47,7 @@
                         <img src="{{ " /img/TOC_Close.svg " | relative }}" class="TOC_Close_SVG img-responsive" alt="Table of contents close button"/>
                     </button>                        
                 {% endif %}  
-                {% if page.type == 'config' %}
-                    <!-- Hamburger icon for showing the table of contents -->
-                    <button id="breadcrumb_hamburger" class="collapsed navbar-toggle" type="button" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                {% endif %}  
+
                 <ol class="breadcrumb fluid-container">     
                                      
                     <li>
@@ -107,7 +99,18 @@
                         <li class="active">{{ page.title }}</li>
                     {% endif %}
                 </ol>
-            </div>     
+            </div> 
+            {% if page.type == 'config' %}
+                <div class="breadcrumb_hamburger_nav">
+                    <!-- Hamburger icon for showing the table of contents -->
+                    <button id="breadcrumb_hamburger" class="collapsed" type="button" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+            {% endif %}  
         {% endif %}      
         </div>
     </nav>

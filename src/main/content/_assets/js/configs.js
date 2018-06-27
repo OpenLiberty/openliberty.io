@@ -846,6 +846,7 @@ function handleContentBreadcrumbVisibility(isShow) {
 
 function addHamburgerClick() {
     if (isMobileView()) {
+        //$(".breadcrumb_hamburger_nav").show();
         var hamburger = $("#breadcrumb_hamburger");
         hamburger.trigger("click");
         //hamburger.hide();
@@ -855,7 +856,7 @@ function addHamburgerClick() {
             } else {
                 $("#config_content").hide();
                 // since the opening/closing of the toc container is managed by the hamburger,
-                // it always scroll back to the top and cannot override it until the toc
+                // it always scrolls back to the top and cannot override it until the toc
                 // container is in view.
                 // $("#toc_column").show();
                 // var selectedTOC = $(".toc_selected");
