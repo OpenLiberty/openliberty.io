@@ -6,7 +6,8 @@ addPageLayoutAttribute () {
     :page-layout: config
     ' "$1" > newConfig.adoc
     
-    mv newConfig.adoc "$1"
+    mv -f newConfig.adoc "$1"
+    echo "Done adding page layout..."
 }
 
 export -f addPageLayoutAttribute
