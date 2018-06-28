@@ -167,17 +167,20 @@ public class BuildsManager {
                             JsonValue packageLocationsObject = buildInformationSrc.get(Constants.PACKAGE_LOCATIONS);
                             if(packageLocationsObject instanceof JsonArray){
                                 JsonArray packageLocations = (JsonArray) packageLocationsObject;
-                                // Array of packageName=packageLocation
+                                // Form an array of packageName=packageLocation
                                 JsonArrayBuilder packageArray = Json.createArrayBuilder();
                                 for(int i = 0; i < packageLocations.size(); i++){     
-                                    String packageLocation = packageLocations.get(i).toString();
-                                    String[] parts = packageLocation.split("-");
+                                    String packageLocation = ((JsonString) packageLocations.get(i)).getString();
+                                    String[] parts = packageLocation.replaceAll("\"", "").split("-");
                                     if(parts.length == 3){
                                         String packageName = parts[1];
+                                        String extension = parts[2];
+                                        String packageVersion = ((JsonString) buildInformationSrc.get(Constants.VERSION)).getString();
+                                        extension = extension.substring(extension.indexOf(packageVersion) + packageVersion.length());
                                         String newLocation = Constants.DHE_URL + artifactPath + buildTypePath
                                         + versionPath + packageLocation;
-                                        newLocation = newLocation.replaceAll("\"", "");
-                                        packageArray.add(packageName + ".zip" + "=" + newLocation);
+                                        // newLocation = newLocation.replaceAll("\"", "");
+                                        packageArray.add(packageName + extension + "=" + newLocation);
                                     }                                    
                                 }
                                 buildInformation.add(Constants.PACKAGE_LOCATIONS, packageArray.build());

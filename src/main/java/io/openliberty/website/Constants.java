@@ -37,6 +37,7 @@ public interface Constants {
     String TOOLS_RELEASES = "tools_releases";
     String TOOLS_NIGHTLY_BUILDS = "tools_nightly_builds";
     String DATE = "date_time";
+    String VERSION = "version";
     String VERSIONS = "versions";
     String SIZE_IN_BYTES = "size_in_bytes";
     String RUNTIME = "runtime";
