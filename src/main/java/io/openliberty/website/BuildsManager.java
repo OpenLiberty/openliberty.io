@@ -171,7 +171,7 @@ public class BuildsManager {
                                 JsonArrayBuilder packageArray = Json.createArrayBuilder();
                                 for(int i = 0; i < packageLocations.size(); i++){     
                                     String packageLocation = ((JsonString) packageLocations.get(i)).getString();
-                                    String[] parts = packageLocation.replaceAll("\"", "").split("-");
+                                    String[] parts = packageLocation.split("-");
                                     if(parts.length == 3){
                                         String packageName = parts[1];
                                         String extension = parts[2];
