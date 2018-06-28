@@ -1,242 +1,246 @@
-= trustAssociation - Trust Association Interceptor (trustAssociation)
-:nofooter:
-Controls the operation of the trust association interceptor (TAI).
+:page-layout: config
+= +trustAssociation - Trust Association Interceptor+ (+trustAssociation+)
+:stylesheet: ../config.css
+:linkcss: 
+:nofooter: 
+
++Controls the operation of the trust association interceptor (TAI).+
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|failOverToAppAuthType
+|+failOverToAppAuthType+
 
 |boolean
 
-|false
+|+false+
 
-|Allow an interceptor to fall back to the application authentication mechanism.
+|+Allow an interceptor to fall back to the application authentication mechanism.+
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|invokeForUnprotectedURI
+|+invokeForUnprotectedURI+
 
 |boolean
 
-|false
+|+false+
 
-|Controls whether the TAI is invoked for an unprotected URI.
+|+Controls whether the TAI is invoked for an unprotected URI.+
 |===
-[#interceptors]*interceptors*
+[#+interceptors+]*interceptors*
 
-A unique configuration ID.
++A unique configuration ID.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|className
+|+className+
 
 |string
 
 |
 
-|Fully-qualified package name of the interceptor class.
+|+Fully-qualified package name of the interceptor class.+
 
-|enabled
+|+enabled+
 
 |boolean
 
-|true
+|+true+
 
-|Enables or disables the interceptor.
+|+Enables or disables the interceptor.+
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|invokeAfterSSO
-
-|boolean
-
-|true
-
-|Invoke an interceptor after single sign-on (SSO).
-
-|invokeBeforeSSO
+|+invokeAfterSSO+
 
 |boolean
 
-|false
+|+true+
 
-|Invoke an interceptor before single sign-on (SSO).
+|+Invoke an interceptor after single sign-on (SSO).+
 
-|libraryRef
+|+invokeBeforeSSO+
+
+|boolean
+
+|+false+
+
+|+Invoke an interceptor before single sign-on (SSO).+
+
+|+libraryRef+
 
 |A reference to top level library element (string).
 
 |
 
-|A reference to the ID of the shared library configuration.
+|+A reference to the ID of the shared library configuration.+
 |===
-[#interceptors/library]*interceptors > library*
+[#+interceptors/library+]*interceptors > library*
 
-A reference to the ID of the shared library configuration.
++A reference to the ID of the shared library configuration.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|apiTypeVisibility
+|+apiTypeVisibility+
 
 |string
 
-|spec,ibm-api,api,stable
+|+spec,ibm-api,api,stable+
 
-|The types of API packages that this class loader supports. This value is a comma-separated list of any combination of the following API packages: spec, ibm-api, api, stable, third-party.
+|+The types of API packages that this class loader supports. This value is a comma-separated list of any combination of the following API packages: spec, ibm-api, api, stable, third-party.+
 
-|description
+|+description+
 
 |string
 
 |
 
-|Description of shared library for administrators
+|+Description of shared library for administrators+
 
-|filesetRef
+|+filesetRef+
 
 |List of references to top level fileset elements (comma-separated string).
 
 |
 
-|Id of referenced Fileset
+|+Id of referenced Fileset+
 
-|name
+|+name+
 
 |string
 
 |
 
-|Name of shared library for administrators
+|+Name of shared library for administrators+
 |===
-[#interceptors/library/file]*interceptors > library > file*
+[#+interceptors/library/file+]*interceptors > library > file*
 
-Id of referenced File
++Id of referenced File+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|name
+|+name+
 
 |Path to a file
 
 |
 
-|Fully qualified filename
+|+Fully qualified filename+
 |===
-[#interceptors/library/fileset]*interceptors > library > fileset*
+[#+interceptors/library/fileset+]*interceptors > library > fileset*
 
-Id of referenced Fileset
++Id of referenced Fileset+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|caseSensitive
+|+caseSensitive+
 
 |boolean
 
-|true
+|+true+
 
-|Boolean to indicate whether or not the search should be case sensitive (default: true).
+|+Boolean to indicate whether or not the search should be case sensitive (default: true).+
 
-|dir
+|+dir+
 
 |Path to a directory
 
-|${server.config.dir}
+|+${server.config.dir}+
 
-|The base directory to search for files.
+|+The base directory to search for files.+
 
-|excludes
-
-|string
-
-|
-
-|The comma or space separated list of file name patterns to exclude from the search results, by default no files are excluded.
-
-|id
+|+excludes+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+The comma or space separated list of file name patterns to exclude from the search results, by default no files are excluded.+
 
-|includes
+|+id+
 
 |string
 
-|*
+|
 
-|The comma or space separated list of file name patterns to include in the search results (default: *).
+|+A unique configuration ID.+
 
-|scanInterval
+|+includes+
+
+|string
+
+|+*+
+
+|+The comma or space separated list of file name patterns to include in the search results (default: *).+
+
+|+scanInterval+
 
 |A period of time with millisecond precision
 
-|0
+|+0+
 
-|Scanning interval to check the fileset for changes as a long with a time unit suffix h-hour, m-minute, s-second, ms-millisecond (e.g. 2ms or 5s). Disabled (scanInterval=0) by default. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.
+|+Scanning interval to check the fileset for changes as a long with a time unit suffix h-hour, m-minute, s-second, ms-millisecond (e.g. 2ms or 5s). Disabled (scanInterval=0) by default. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.+
 |===
-[#interceptors/library/folder]*interceptors > library > folder*
+[#+interceptors/library/folder+]*interceptors > library > folder*
 
-Id of referenced folder
++Id of referenced folder+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|dir
+|+dir+
 
 |Path to a directory
 
 |
 
-|Directory or folder to be included in the library classpath for locating resource files
+|+Directory or folder to be included in the library classpath for locating resource files+
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 |===
-[#interceptors/properties]*interceptors > properties*
+[#+interceptors/properties+]*interceptors > properties*
 
-Collection of properties for the interceptor.
++Collection of properties for the interceptor.+
 
 

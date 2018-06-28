@@ -1,115 +1,144 @@
-= basicRegistry - Basic User Registry (basicRegistry)
-:nofooter:
-A simple XML-based user registry.
+:page-layout: config
+= +basicRegistry - Basic User Registry+ (+basicRegistry+)
+:stylesheet: ../config.css
+:linkcss: 
+:nofooter: 
+
++A simple XML-based user registry.+
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+certificateMapMode+
+
+|* +CUSTOM+
+* +NOT_SUPPORTED+
+* +PRINCIPAL_CN+
+
+
+|+PRINCIPAL_CN+
+
+|+Specifies the X.509 certificate authentication mapping mode for the basic registry: PRINCIPAL_CN, CUSTOM, or NOT_SUPPORTED.+ +
+*+CUSTOM+* +
++The basic registry attempts to authenticate the X.509 certificate by using the custom X509CertificateMapper implementation that is specified by the certificateMapperId attribute. If a single matching entity is found, the authentication is successful. If a matching entity is not found or more than a single matching entity is found, authentication fails and the program returns an error.+ +
+*+NOT_SUPPORTED+* +
++The LDAP registry does not support X.509 certificate authentication. Attempts to authenticate with an X.509 certificate fail, and a CertificateMapNotSupportedException exception is thrown.+ +
+*+PRINCIPAL_CN+* +
++The basic registry attempts to authenticate the X.509 certificate by mapping the PrincipalName value in the X.509 certificate to the exact distinguished name (DN) in the repository. If a single matching entity is found, the authentication is successful. If a matching entity is not found or more than a single matching entity is found, authentication fails and the program returns an error.+
+
+|+certificateMapperId+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+Specifies the X509CertificateMapper to use when the X.509 certificate authentication mapping mode is CUSTOM. The value must match the value of the 'x509.certificate.mapper.id' property that is specified for the X509CertificateMapper implementation.+
 
-|ignoreCaseForAuthentication
+|+id+
+
+|string
+
+|
+
+|+A unique configuration ID.+
+
+|+ignoreCaseForAuthentication+
 
 |boolean
 
-|false
+|+false+
 
-|Allow case-insensitive user name authentication.
+|+Allow case-insensitive user name authentication.+
 
-|realm
+|+realm+
 
 |string
 
-|BasicRegistry
+|+BasicRegistry+
 
-|The realm name represents the user registry.
+|+The realm name represents the user registry.+
 |===
-[#group]*group*
+[#+group+]*group*
 
-A group in a Basic User Registry.
++A group in a Basic User Registry.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|name
+|+name+
 
 |string
 
 |
 
-|Name of a group in a Basic User Registry.
+|+Name of a group in a Basic User Registry.+
 |===
-[#group/member]*group > member*
+[#+group/member+]*group > member*
 
-A member of a Basic User Registry group.
++A member of a Basic User Registry group.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|name
+|+name+
 
 |string
 
 |
 
-|Name of a user in a Basic User Registry group.
+|+Name of a user in a Basic User Registry group.+
 |===
-[#user]*user*
+[#+user+]*user*
 
-A user in a Basic User Registry.
++A user in a Basic User Registry.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|name
+|+name+
 
 |string
 
 |
 
-|Name of a user in a Basic User Registry.
+|+Name of a user in a Basic User Registry.+
 
-|password
+|+password+
 
 |One way hashable, or reversably encoded password (string)
 
 |
 
-|Password of a user in a Basic User Registry. The value can be stored in clear text or encoded form. It is recommended that you encode the password. To do so, use the securityUtility tool with the encode option.
+|+Password of a user in a Basic User Registry. The value can be stored in clear text or encoded form. It is recommended that you encode the password. To do so, use the securityUtility tool with the encode option.+
 |===

@@ -1,352 +1,364 @@
-= webContainer - Web Container (webContainer)
-:nofooter:
-Configuration for the web container.
+:page-layout: config
+= +webContainer - Web Container+ (+webContainer+)
+:stylesheet: ../config.css
+:linkcss: 
+:nofooter: 
+
++Configuration for the web container.+
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|allowExpressionFactoryPerApp
+|+allowExpressionFactoryPerApp+
 
 |boolean
 
-|false
+|+false+
 
-|Toggle to load the ExpressionFactory that is set by the application. Enable this custom property if you are using a custom EL implementation (for example, JUEL) that needs to set its own ExpressionFactory.
+|+Toggle to load the ExpressionFactory that is set by the application. Enable this custom property if you are using a custom EL implementation (for example, JUEL) that needs to set its own ExpressionFactory.+
 
-|allowIncludeSendError
+|+allowIncludeSendError+
 
 |boolean
 
-|false
+|+false+
 
-|Allow RequestDispatch to send errors on Include methods. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.allowincludesenderror.
+|+Allow RequestDispatch to send errors on Include methods. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.allowincludesenderror.+
 
-|asyncMaxSizeTaskPool
-
-|int
-
-|5000
-
-|Maximum size of tasks in the Async task pool before automatically purging canceled tasks. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.asyncmaxsizetaskpool.
-
-|asyncPurgeInterval
+|+asyncMaxSizeTaskPool+
 
 |int
 
-|30000
+|+5000+
 
-|Time interval to wait between each required purge of the cancelled task pool. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.asyncpurgeinterval.
+|+Maximum size of tasks in the Async task pool before automatically purging canceled tasks. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.asyncmaxsizetaskpool.+
 
-|asyncTimeoutDefault
-
-|int
-
-|30000
-
-|Async servlet timeout value used when a timeout value has not been explcitly specified. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.asynctimeoutdefault.
-
-|asyncTimerThreads
+|+asyncPurgeInterval+
 
 |int
 
-|2
+|+30000+
 
-|Maximum number of threads to use for async servlet timeout processing. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.asynctimerthreads.
+|+Time interval to wait between each required purge of the cancelled task pool. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.asyncpurgeinterval.+
 
-|channelWriteType
+|+asyncTimeoutDefault+
+
+|int
+
+|+30000+
+
+|+Async servlet timeout value used when a timeout value has not been explcitly specified. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.asynctimeoutdefault.+
+
+|+asyncTimerThreads+
+
+|int
+
+|+2+
+
+|+Maximum number of threads to use for async servlet timeout processing. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.asynctimerthreads.+
+
+|+channelWriteType+
 
 |string
 
-|async
+|+async+
 
-|When set to 'sync', responses will be written synchronously; otherwise, responses will be written asychronously. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.channelwritetype.
+|+When set to 'sync', responses will be written synchronously; otherwise, responses will be written asychronously. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.channelwritetype.+
 
-|copyAttributesKeySet
-
-|boolean
-
-|false
-
-|Web container will return an enumeration of a copy of the list of attributes to the servlet to avoid a concurrent access error by the servlet. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.copyattributeskeyset.
-
-|decodeUrlAsUtf8
+|+copyAttributesKeySet+
 
 |boolean
 
-|true
+|+false+
 
-|Decode URLs using an encoding setting of UTF-8.
+|+Web container will return an enumeration of a copy of the list of attributes to the servlet to avoid a concurrent access error by the servlet. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.copyattributeskeyset.+
 
-|decodeUrlPlusSign
-
-|boolean
-
-|false
-
-|Decode the plus sign when it is part of the URL. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.decodeurlplussign.
-
-|defaultHeadRequestBehavior
+|+decodeUrlAsUtf8+
 
 |boolean
 
-|false
+|+true+
 
-|Restore the behavior where the HEAD request is not subject to the security constraint defined for the GET method. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.DefaultHeadRequestBehavior.
+|+Decode URLs using an encoding setting of UTF-8.+
 
-|defaultTraceRequestBehavior
-
-|boolean
-
-|false
-
-|Restore HTTP TRACE processing. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.DefaultTraceRequestBehavior.
-
-|deferServletLoad
+|+decodeUrlPlusSign+
 
 |boolean
 
-|true
+|+false+
 
-|Defer servlet loading from application server startup.
+|+Decode the plus sign when it is part of the URL. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.decodeurlplussign.+
 
-|deferServletRequestListenerDestroyOnError
-
-|boolean
-
-|false
-
-|Toggle if you want to defer ServletRequestListener destroy when there is an error serving the request. The default value is false. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.deferServletRequestListenerDestroyOnError.
-
-|directoryBrowsingEnabled
+|+defaultHeadRequestBehavior+
 
 |boolean
 
-|false
+|+false+
 
-|Enable directory browsing of an application.
+|+Restore the behavior where the HEAD request is not subject to the security constraint defined for the GET method. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.DefaultHeadRequestBehavior.+
 
-|disableXPoweredBy
-
-|boolean
-
-|false
-
-|Disable setting the X-Powered-By header. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.disablexpoweredby.
-
-|disallowAllFileServing
+|+defaultTraceRequestBehavior+
 
 |boolean
 
-|false
+|+false+
 
-|Disables all file serving by applications. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.disallowAllFileServing.
+|+Restore HTTP TRACE processing. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.DefaultTraceRequestBehavior.+
 
-|disallowServeServletsByClassName
-
-|boolean
-
-|true
-
-|Disallows the use of serveServletsByClassnameEnabled on the application server level. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.disallowserveservletsbyclassname.
-
-|dispatcherRethrowsEr
+|+deferServletLoad+
 
 |boolean
 
-|true
+|+true+
 
-|Web container will re-throw errors allowing interested resources to process them. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.dispatcherRethrowser.
+|+Defer servlet loading from application server startup.+
 
-|doNotServeByClassName
-
-|string
-
-|
-
-|A semi-colon delimited list of classes to be completely disallowed from being served by classname. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.donotservebyclassname.
-
-|emptyServletMappings
+|+deferServletRequestListenerDestroyOnError+
 
 |boolean
 
-|false
+|+false+
 
-|Toggle if you want to return an empty collection, instead of null, when no servlet mappings are added. The default value is false. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.emptyservletmappings.
+|+Toggle if you want to defer ServletRequestListener destroy when there is an error serving the request. The default value is false. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.deferServletRequestListenerDestroyOnError.+
 
-|enableDefaultIsElIgnoredInTag
-
-|boolean
-
-|false
-
-|Always evaluate whether to ignore EL expressions in tag files. If parent JSP files have different isELIgnored settings, the setting will be re-evaluated in the tag file. The equivalent custom property in the full profile application server is com.ibm.ws.jsp.enabledefaultiselignoredintag.
-
-|enableErrorExceptionTypeFirst
+|+directoryBrowsingEnabled+
 
 |boolean
 
-|false
+|+false+
 
-|Web container is updated to search and use the exception-type before the error-code. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.enableErrorExceptionTypeFirst.
+|+Enable directory browsing of an application.+
 
-|enableJspMappingOverride
-
-|boolean
-
-|false
-
-|Allow the JSP mapping to be overridden so that the application can serve the JSP contents itself. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.enablejspmappingoverride.
-
-|exposeWebInfOnDispatch
+|+disableXPoweredBy+
 
 |boolean
 
-|false
+|+false+
 
-|If true, a servlet can access files in the WEB-INF directory. If false (default), a servlet cannot access files the WEB-INF directory.
+|+Disable setting the X-Powered-By header. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.disablexpoweredby.+
 
-|fileServingEnabled
-
-|boolean
-
-|true
-
-|Enable file serving if this setting was not explicitly specified for the application.
-
-|fileWrapperEvents
+|+disallowAllFileServing+
 
 |boolean
 
-|false
+|+false+
 
-|Web container will generate SMF and PMI data when  serving the static files. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.fileWrapperEvents.
+|+Disables all file serving by applications. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.disallowAllFileServing.+
 
-|httpsIndicatorHeader
+|+disallowServeServletsByClassName+
+
+|boolean
+
+|+true+
+
+|+Disallows the use of serveServletsByClassnameEnabled on the application server level. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.disallowserveservletsbyclassname.+
+
+|+dispatcherRethrowsEr+
+
+|boolean
+
+|+true+
+
+|+Web container will re-throw errors allowing interested resources to process them. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.dispatcherRethrowser.+
+
+|+doNotServeByClassName+
 
 |string
 
 |
 
-|For SSL offloading, set to the name of the HTTP header variable inserted by the SSL accelerator/proxy/load balancer.
+|+A semi-colon delimited list of classes to be completely disallowed from being served by classname. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.donotservebyclassname.+
 
-|ignoreSemiColonOnRedirectToWelcomePage
-
-|boolean
-
-|false
-
-|Toggle to ignore the trailing semi-colon when redirecting to the welcome page. The default value is false. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.ignoreSemiColonOnRedirectToWelcomePage.
-
-|ignoreSessiononStaticFileRequest
+|+emptyServletMappings+
 
 |boolean
 
-|false
+|+false+
 
-|Improves performance by preventing the web container from accessing a session for static file requests involving filters. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.IgnoreSessiononStaticFileRequest.
+|+Toggle if you want to return an empty collection, instead of null, when no servlet mappings are added. The default value is false. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.emptyservletmappings.+
 
-|invokeFilterInitAtStartup
+|+enableDefaultIsElIgnoredInTag+
 
 |boolean
 
-|true
+|+false+
 
-|Web container will call the filter's init() method at application startup. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.invokeFilterInitAtStartup.
+|+Always evaluate whether to ignore EL expressions in tag files. If parent JSP files have different isELIgnored settings, the setting will be re-evaluated in the tag file. The equivalent custom property in the full profile application server is com.ibm.ws.jsp.enabledefaultiselignoredintag.+
 
-|listeners
+|+enableErrorExceptionTypeFirst+
+
+|boolean
+
+|+false+
+
+|+Web container is updated to search and use the exception-type before the error-code. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.enableErrorExceptionTypeFirst.+
+
+|+enableJspMappingOverride+
+
+|boolean
+
+|+false+
+
+|+Allow the JSP mapping to be overridden so that the application can serve the JSP contents itself. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.enablejspmappingoverride.+
+
+|+exposeWebInfOnDispatch+
+
+|boolean
+
+|+false+
+
+|+If true, a servlet can access files in the WEB-INF directory. If false (default), a servlet cannot access files the WEB-INF directory.+
+
+|+fileServingEnabled+
+
+|boolean
+
+|+true+
+
+|+Enable file serving if this setting was not explicitly specified for the application.+
+
+|+fileWrapperEvents+
+
+|boolean
+
+|+false+
+
+|+Web container will generate SMF and PMI data when  serving the static files. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.fileWrapperEvents.+
+
+|+httpsIndicatorHeader+
 
 |string
 
 |
 
-|A comma separated list of listener classes.
+|+For SSL offloading, set to the name of the HTTP header variable inserted by the SSL accelerator/proxy/load balancer.+
 
-|logServletContainerInitializerClassLoadingErrors
-
-|boolean
-
-|false
-
-|Log servlet container class loading errors as warnings rather than logging them only when debug is enabled. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.logservletcontainerinitializerclassloadingerrors.
-
-|metaInfResourcesCacheSize
-
-|int
-
-|20
-
-|Initial size (number of entries) of the meta-inf resource cache. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.metainfresourcescachesize.name.
-
-|parseUtf8PostData
+|+ignoreSemiColonOnRedirectToWelcomePage+
 
 |boolean
 
-|false
+|+false+
 
-|Web container will detect non URL encoded UTF-8 post data and include it in the parameter values. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.parseutf8postdata.
+|+Toggle to ignore the trailing semicolon when redirecting to the welcome page. The default value is false. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.ignoreSemiColonOnRedirectToWelcomePage.+
 
-|serveServletsByClassnameEnabled
-
-|boolean
-
-|false
-
-|Enable servlets to be accessed in a web application using a class name if not explicitly specified.
-
-|setContentLengthOnClose
+|+ignoreSessiononStaticFileRequest+
 
 |boolean
 
-|true
+|+false+
 
-|Toggle to set content length when an application explicitly closes the response. The default value is true; however, set this value to false if an application response contains double-byte characters.
+|+Improves performance by preventing the web container from accessing a session for static file requests involving filters. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.IgnoreSessiononStaticFileRequest.+
 
-|skipMetaInfResourcesProcessing
-
-|boolean
-
-|false
-
-|Do not search the meta-inf directory for application resources. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.skipmetainfresourcesprocessing.
-
-|suppressHtmlRecursiveErrorOutput
+|+invokeFilterInitAtStartup+
 
 |boolean
 
-|false
+|+true+
 
-|Suppresses the exception information from appearing in the HTML output when there is a recursive error that cannot be handled by an application's configured error page. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.suppressHtmlRecursiveErrorOutput.
+|+Web container will call the filter's init() method at application startup. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.invokeFilterInitAtStartup.+
 
-|symbolicLinksCacheSize
-
-|int
-
-|1000
-
-|Initial size of the symbolic link cache. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.SymbolicLinksCacheSize.
-
-|tolerateSymbolicLinks
-
-|boolean
-
-|false
-
-|Enables the web container to support the use of  symbolic links. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.TolerateSymbolicLinks.
-
-|useSemiColonAsDelimiterInURI
-
-|boolean
-
-|false
-
-|Toggle to use the semi-colon as a delimiter in the request URI. The default value is false. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.useSemiColonAsDelimiterInURI.
-
-|xPoweredBy
+|+listeners+
 
 |string
 
 |
 
-|Alternative string for the X-Powered-By header setting. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.xpoweredby. There is no default value for this property. If the property is not set, the value of the X-Powered-By header is set to Servlet/&lt;servlet spec version&gt;, as defined by the Servlet specification.
+|+A comma separated list of listener classes.+
+
+|+logServletContainerInitializerClassLoadingErrors+
+
+|boolean
+
+|+false+
+
+|+Log servlet container class loading errors as warnings rather than logging them only when debug is enabled. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.logservletcontainerinitializerclassloadingerrors.+
+
+|+metaInfResourcesCacheSize+
+
+|int
+
+|+20+
+
+|+Initial size (number of entries) of the meta-inf resource cache. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.metainfresourcescachesize.name.+
+
+|+parseUtf8PostData+
+
+|boolean
+
+|+false+
+
+|+Web container will detect non URL encoded UTF-8 post data and include it in the parameter values. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.parseutf8postdata.+
+
+|+serveServletsByClassnameEnabled+
+
+|boolean
+
+|+false+
+
+|+Enable servlets to be accessed in a web application using a class name if not explicitly specified.+
+
+|+servletDestroyWaitTime+
+
+|int
+
+|+60+
+
+|+Wait time in seconds for an active request to complete when the owning application is stopped. The default value is 60 seconds. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.servletDestroyWaitTime.+
+
+|+setContentLengthOnClose+
+
+|boolean
+
+|+true+
+
+|+Toggle to set content length when an application explicitly closes the response. The default value is true; however, set this value to false if an application response contains double-byte characters.+
+
+|+skipMetaInfResourcesProcessing+
+
+|boolean
+
+|+false+
+
+|+Do not search the meta-inf directory for application resources. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.skipmetainfresourcesprocessing.+
+
+|+suppressHtmlRecursiveErrorOutput+
+
+|boolean
+
+|+false+
+
+|+Suppresses the exception information from appearing in the HTML output when there is a recursive error that cannot be handled by an application's configured error page. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.suppressHtmlRecursiveErrorOutput.+
+
+|+symbolicLinksCacheSize+
+
+|int
+
+|+1000+
+
+|+Initial size of the symbolic link cache. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.SymbolicLinksCacheSize.+
+
+|+tolerateSymbolicLinks+
+
+|boolean
+
+|+false+
+
+|+Enables the web container to support the use of  symbolic links. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.TolerateSymbolicLinks.+
+
+|+useSemiColonAsDelimiterInURI+
+
+|boolean
+
+|+false+
+
+|+Toggle to use the semicolon as a delimiter in the request URI. The default value is false. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.useSemiColonAsDelimiterInURI.+
+
+|+xPoweredBy+
+
+|string
+
+|
+
+|+Alternative string for the X-Powered-By header setting. The equivalent custom property in the full application server profile is com.ibm.ws.webcontainer.xpoweredby. There is no default value for this property. If the property is not set, the value of the X-Powered-By header is set to Servlet/&lt;servlet spec version&gt;, as defined by the Servlet specification.+
 |===

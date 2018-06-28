@@ -1,210 +1,214 @@
-= contextService - Thread Context Propagation (contextService)
-:nofooter:
-Configures how context is propagated to threads
+:page-layout: config
+= +contextService - Thread Context Propagation+ (+contextService+)
+:stylesheet: ../config.css
+:linkcss: 
+:nofooter: 
+
++Configures how context is propagated to threads+
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|jndiName
+|+jndiName+
 
 |string
 
 |
 
-|JNDI name
+|+JNDI name+
 
-|onError
+|+onError+
 
-|* FAIL
-* IGNORE
-* WARN
+|* +FAIL+
+* +IGNORE+
+* +WARN+
 
 
-|WARN
+|+WARN+
 
-|Determines the action to take in response to configuration errors. For example, if securityContext is configured for this contextService, but the security feature is not enabled, then onError determines whether to fail, raise a warning, or ignore the parts of the configuration which are incorrect. +
-*FAIL* +
-  Server will issue a warning or error message on the first error occurrence and then stop the server. +
-*IGNORE* +
-  Server will not issue any warning and error messages when it incurs a configuration error. +
-*WARN* +
-  Server will issue warning and error messages when it incurs a configuration error.
+|+Determines the action to take in response to configuration errors. For example, if securityContext is configured for this contextService, but the security feature is not enabled, then onError determines whether to fail, raise a warning, or ignore the parts of the configuration which are incorrect.+ +
+*+FAIL+* +
++Server will issue a warning or error message on the first error occurrence and then stop the server.+ +
+*+IGNORE+* +
++Server will not issue any warning and error messages when it incurs a configuration error.+ +
+*+WARN+* +
++Server will issue warning and error messages when it incurs a configuration error.+
 
-4+|*Advanced Properties*
+4+|*+Advanced Properties+*
 
-|baseContextRef
+|+baseContextRef+
 
 |A reference to top level contextService element (string).
 
 |
 
-|Specifies a base context service from which to inherit context that is not already defined on this context service.
+|+Specifies a base context service from which to inherit context that is not already defined on this context service.+
 |===
-[#baseContext]*baseContext*
+[#+baseContext+]*baseContext*
 
-Specifies a base context service from which to inherit context that is not already defined on this context service.
++Specifies a base context service from which to inherit context that is not already defined on this context service.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|jndiName
+|+jndiName+
 
 |string
 
 |
 
-|JNDI name
+|+JNDI name+
 
-|onError
+|+onError+
 
-|* FAIL
-* IGNORE
-* WARN
+|* +FAIL+
+* +IGNORE+
+* +WARN+
 
 
-|WARN
+|+WARN+
 
-|Determines the action to take in response to configuration errors. For example, if securityContext is configured for this contextService, but the security feature is not enabled, then onError determines whether to fail, raise a warning, or ignore the parts of the configuration which are incorrect. +
-*FAIL* +
-  Server will issue a warning or error message on the first error occurrence and then stop the server. +
-*IGNORE* +
-  Server will not issue any warning and error messages when it incurs a configuration error. +
-*WARN* +
-  Server will issue warning and error messages when it incurs a configuration error.
+|+Determines the action to take in response to configuration errors. For example, if securityContext is configured for this contextService, but the security feature is not enabled, then onError determines whether to fail, raise a warning, or ignore the parts of the configuration which are incorrect.+ +
+*+FAIL+* +
++Server will issue a warning or error message on the first error occurrence and then stop the server.+ +
+*+IGNORE+* +
++Server will not issue any warning and error messages when it incurs a configuration error.+ +
+*+WARN+* +
++Server will issue warning and error messages when it incurs a configuration error.+
 
-4+|*Advanced Properties*
+4+|*+Advanced Properties+*
 
-|baseContextRef
+|+baseContextRef+
 
 |A reference to top level contextService element (string).
 
 |
 
-|Specifies a base context service from which to inherit context that is not already defined on this context service.
+|+Specifies a base context service from which to inherit context that is not already defined on this context service.+
 |===
-[#baseContext/baseContext]*baseContext > baseContext*
+[#+baseContext/baseContext+]*baseContext > baseContext*
 
-Specifies a base context service from which to inherit context that is not already defined on this context service.
++Specifies a base context service from which to inherit context that is not already defined on this context service.+
 
 
-[#baseContext/classloaderContext]*baseContext > classloaderContext*
+[#+baseContext/classloaderContext+]*baseContext > classloaderContext*
 
-A unique configuration ID.
++A unique configuration ID.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 |===
-[#baseContext/jeeMetadataContext]*baseContext > jeeMetadataContext*
+[#+baseContext/jeeMetadataContext+]*baseContext > jeeMetadataContext*
 
-A unique configuration ID.
++A unique configuration ID.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 |===
-[#baseContext/securityContext]*baseContext > securityContext*
+[#+baseContext/securityContext+]*baseContext > securityContext*
 
-A unique configuration ID.
++A unique configuration ID.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 |===
-[#classloaderContext]*classloaderContext*
+[#+classloaderContext+]*classloaderContext*
 
-A unique configuration ID.
++A unique configuration ID.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 |===
-[#jeeMetadataContext]*jeeMetadataContext*
+[#+jeeMetadataContext+]*jeeMetadataContext*
 
-A unique configuration ID.
++A unique configuration ID.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 |===
-[#securityContext]*securityContext*
+[#+securityContext+]*securityContext*
 
-A unique configuration ID.
++A unique configuration ID.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 |===

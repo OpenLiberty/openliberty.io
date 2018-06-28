@@ -1,10 +1,10 @@
 :page-layout: config
-= +resourceAdapter - Resource Adapter+ (+resourceAdapter+)
+= +springBootApplication - Spring Boot Application+ (+springBootApplication+)
 :stylesheet: ../config.css
 :linkcss: 
 :nofooter: 
 
-+Defines a resource adapter installation.+
++Defines the properties of a Spring Boot application.+
 
 [cols="a,a,a,a",width="100%"]
 |===
@@ -14,9 +14,9 @@
 
 |boolean
 
-|
+|+true+
 
-|+Configures whether a resource adapter starts automatically upon deployment of the resource adapter or lazily upon injection or lookup of a resource.+
+|+Indicates whether or not the server automatically starts the application.+
 
 |+id+
 
@@ -32,8 +32,21 @@
 
 |
 
-|+Defines the path of the RAR file to install.+
+|+Location of an application expressed as an absolute path or a path relative to the server-level apps directory.+
+
+|+name+
+
+|string
+
+|
+
+|+Name of an application.+
 |===
+[#+applicationArgument+]*applicationArgument*
+
++Defines an application argument which is passed to the main method of the start class for a Spring Boot application.+
+
+
 [#+classloader+]*classloader*
 
 +Defines the settings for an application classloader.+
@@ -396,37 +409,4 @@
 |
 
 |+A unique configuration ID.+
-|===
-[#+customize+]*customize*
-
-+Customizes the configuration properties element for the activation specification, administered object, or connection factory with the specified interface and/or implementation class.+
-
-
-[cols="a,a,a,a",width="100%"]
-|===
-|Name|Type|Default|Description
-
-|+implementation+
-
-|string
-
-|
-
-|+Fully qualified implementation class name for which the configuration properties element should be customized.+
-
-|+interface+
-
-|string
-
-|
-
-|+Fully qualified interface class name for which the configuration properties element should be customized.+
-
-|+suffix+
-
-|string
-
-|
-
-|+Overrides the default suffix for the configuration properties element. For example, "CustomConnectionFactory" in properties.rarModule1.CustomConnectionFactory. The suffix is useful to disambiguate when multiple types of connection factories, administered objects, or endpoint activations are provided by a resource adapter. If a configuration properties element customization omits the suffix or leaves it blank, no suffix is used.+
 |===

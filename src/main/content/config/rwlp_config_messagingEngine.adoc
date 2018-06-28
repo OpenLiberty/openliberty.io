@@ -1,465 +1,469 @@
-= messagingEngine - Messaging Engine (messagingEngine)
-:nofooter:
-A messaging engine is a component, running inside a server, that manages messaging resources. Applications are connected to a messaging engine when they send and receive messages.
+:page-layout: config
+= +messagingEngine - Messaging Engine+ (+messagingEngine+)
+:stylesheet: ../config.css
+:linkcss: 
+:nofooter: 
 
-[#alias]*alias*
++A messaging engine is a component, running inside a server, that manages messaging resources. Applications are connected to a messaging engine when they send and receive messages.+
 
-An alias destination maps an alternative name for a bus destination. You can use an alias destination for point-to-point messaging or publish/subscribe messaging.
+[#+alias+]*alias*
+
++An alias destination maps an alternative name for a bus destination. You can use an alias destination for point-to-point messaging or publish/subscribe messaging.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|forceReliability
+|+forceReliability+
 
-|* AssuredPersistent
-* BestEffortNonPersistent
-* ExpressNonPersistent
-* ReliableNonPersistent
-* ReliablePersistent
+|* +AssuredPersistent+
+* +BestEffortNonPersistent+
+* +ExpressNonPersistent+
+* +ReliableNonPersistent+
+* +ReliablePersistent+
 
 
-|AssuredPersistent
+|+AssuredPersistent+
 
-|The reliability assigned to a message produced to this destination when an explicit reliability has not been set by the producer.
+|+The reliability assigned to a message produced to this destination when an explicit reliability has not been set by the producer.+
 
-|id
+|+id+
 
 |string
 
 |
 
-|The name of the alias queue or alias topic space.
+|+The name of the alias queue or alias topic space.+
 
-|sendAllowed
+|+sendAllowed+
 
-|* false
-* true
+|* +false+
+* +true+
 
 
-|true
+|+true+
 
-|Producers can send messages to this destination.
+|+Producers can send messages to this destination.+
 
-|targetDestination
+|+targetDestination+
 
 |string
 
-|Default.Queue
+|+Default.Queue+
 
-|The target destination parameter identifies a destination that might be within the same Bus as the alias destination. By default, if no property is set, it points to Default.Queue.
+|+The target destination parameter identifies a destination that might be within the same Bus as the alias destination. By default, if no property is set, it points to Default.Queue.+
 |===
-[#fileStore]*fileStore*
+[#+fileStore+]*fileStore*
 
-Messaging file store.
++Messaging file store.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|fileStoreSize
+|+fileStoreSize+
 
 |long +
-Min: 20 +
+Min: +20+ +
 
 
-|400
+|+400+
 
-|The combined size in megabytes for both permanent and temporary store. The file store size is equally divided between permanent  and temporary store. For example, if you specify 400 MB as file store size then 200 MB is used for permanent store and 200 MB is used for temporary store.
+|+The combined size in megabytes for both permanent and temporary store. The file store size is equally divided between permanent  and temporary store. For example, if you specify 400 MB as file store size then 200 MB is used for permanent store and 200 MB is used for temporary store.+
 
-|logFileSize
+|+logFileSize+
 
 |long +
-Min: 10 +
+Min: +10+ +
 
 
-|10
+|+10+
 
-|Size in megabytes of the log file. The log file size cannot exceed half the size of the file store size. For a file store size set to 400 MB, the log file size cannot exceed 200 MB. The maximum recommended log file size is 25% of the file store size. For a file store size set to 400 MB, the maximum recommended setting for log file size would be 100 MB.
+|+Size in megabytes of the log file. The log file size cannot exceed half the size of the file store size. For a file store size set to 400 MB, the log file size cannot exceed 200 MB. The maximum recommended log file size is 25% of the file store size. For a file store size set to 400 MB, the maximum recommended setting for log file size would be 100 MB.+
 
-|path
+|+path+
 
 |string
 
-|${server.output.dir}/messaging/messageStore
+|+${server.output.dir}/messaging/messageStore+
 
-|Path to the file store.
+|+Path to the file store.+
 |===
-[#messagingSecurity]*messagingSecurity*
+[#+messagingSecurity+]*messagingSecurity*
 
-Security for the wasJmsServer-1.0 feature.
++Security for the wasJmsServer-1.0 feature.+
 
 
-[#messagingSecurity/role]*messagingSecurity > role*
+[#+messagingSecurity/role+]*messagingSecurity > role*
 
-A set of permissions that are mapped to the users and groups
++A set of permissions that are mapped to the users and groups+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|name
+|+name+
 
 |string
 
 |
 
-|The name of the role
+|+The name of the role+
 |===
-[#messagingSecurity/role/group]*messagingSecurity > role > group*
+[#+messagingSecurity/role/group+]*messagingSecurity > role > group*
 
-Groups that are assigned to the role
++Groups that are assigned to the role+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|name
+|+name+
 
 |string
 
 |
 
-|The group that is defined as part of the user registry
+|+The group that is defined as part of the user registry+
 |===
-[#messagingSecurity/role/queuePermission]*messagingSecurity > role > queuePermission*
+[#+messagingSecurity/role/queuePermission+]*messagingSecurity > role > queuePermission*
 
-Permission that is defined on a queue for a set of users and groups
++Permission that is defined on a queue for a set of users and groups+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|queueRef
+|+queueRef+
 
 |string
 
 |
 
-|Reference to the Queue defined in the Messaging Engine
+|+Reference to the Queue defined in the Messaging Engine+
 |===
-[#messagingSecurity/role/queuePermission/action]*messagingSecurity > role > queuePermission > action*
+[#+messagingSecurity/role/queuePermission/action+]*messagingSecurity > role > queuePermission > action*
 
-Operations that are allowed on the destination
++Operations that are allowed on the destination+
 
 
-[#messagingSecurity/role/tempDestinationPermission]*messagingSecurity > role > tempDestinationPermission*
+[#+messagingSecurity/role/tempDestinationPermission+]*messagingSecurity > role > tempDestinationPermission*
 
-Permission that is defined on a temporary destination for a set of users and groups
++Permission that is defined on a temporary destination for a set of users and groups+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|prefix
+|+prefix+
 
 |string
 
 |
 
-|Prefix defined for a temporary destination
+|+Prefix defined for a temporary destination+
 |===
-[#messagingSecurity/role/tempDestinationPermission/action]*messagingSecurity > role > tempDestinationPermission > action*
+[#+messagingSecurity/role/tempDestinationPermission/action+]*messagingSecurity > role > tempDestinationPermission > action*
 
-Operations that are allowed on the destination
++Operations that are allowed on the destination+
 
 
-[#messagingSecurity/role/topicPermission]*messagingSecurity > role > topicPermission*
+[#+messagingSecurity/role/topicPermission+]*messagingSecurity > role > topicPermission*
 
-Permission that is defined on a topic for a set of users and groups
++Permission that is defined on a topic for a set of users and groups+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|topicName
+|+topicName+
 
 |string
 
 |
 
-|Name of the Topic inside the TopicSpace
+|+Name of the Topic inside the TopicSpace+
 
-|topicSpaceRef
+|+topicSpaceRef+
 
 |string
 
-|Default.Topic.Space
+|+Default.Topic.Space+
 
-|Reference to the TopicSpace defined in the Messaging Engine
+|+Reference to the TopicSpace defined in the Messaging Engine+
 |===
-[#messagingSecurity/role/topicPermission/action]*messagingSecurity > role > topicPermission > action*
+[#+messagingSecurity/role/topicPermission/action+]*messagingSecurity > role > topicPermission > action*
 
-Operations that are allowed on the destination
++Operations that are allowed on the destination+
 
 
-[#messagingSecurity/role/user]*messagingSecurity > role > user*
+[#+messagingSecurity/role/user+]*messagingSecurity > role > user*
 
-Users that are assigned to the particular role
++Users that are assigned to the particular role+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|id
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|name
+|+name+
 
 |string
 
 |
 
-|The user that is defined as part of the registry
+|+The user that is defined as part of the registry+
 |===
-[#queue]*queue*
+[#+queue+]*queue*
 
-A queue destination represents a message queue and is used for point-to-point messaging.
++A queue destination represents a message queue and is used for point-to-point messaging.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|exceptionDestination
+|+exceptionDestination+
 
 |string
 
-|_SYSTEM.Exception.Destination
+|+_SYSTEM.Exception.Destination+
 
-|The destination to which a message is forwarded by the system when it cannot be delivered to this destination.
+|+The destination to which a message is forwarded by the system when it cannot be delivered to this destination.+
 
-|failedDeliveryPolicy
+|+failedDeliveryPolicy+
 
-|* DISCARD
-* KEEP_TRYING
-* SEND_TO_EXCEPTION_DESTINATION
-
-
-|SEND_TO_EXCEPTION_DESTINATION
-
-|Lists the actions that the messaging engine must take when the maxredeliverycount is reached for a message.
-
-|forceReliability
-
-|* AssuredPersistent
-* BestEffortNonPersistent
-* ExpressNonPersistent
-* ReliableNonPersistent
-* ReliablePersistent
+|* +DISCARD+
+* +KEEP_TRYING+
+* +SEND_TO_EXCEPTION_DESTINATION+
 
 
-|AssuredPersistent
+|+SEND_TO_EXCEPTION_DESTINATION+
 
-|The reliability assigned to a message produced to this destination when an explicit reliability has not been set by the producer.
+|+Lists the actions that the messaging engine must take when the maxredeliverycount is reached for a message.+
 
-|id
+|+forceReliability+
+
+|* +AssuredPersistent+
+* +BestEffortNonPersistent+
+* +ExpressNonPersistent+
+* +ReliableNonPersistent+
+* +ReliablePersistent+
+
+
+|+AssuredPersistent+
+
+|+The reliability assigned to a message produced to this destination when an explicit reliability has not been set by the producer.+
+
+|+id+
 
 |string
 
 |
 
-|The name of the queue.
+|+The name of the queue.+
 
-|maintainStrictOrder
+|+maintainStrictOrder+
 
 |boolean
 
-|false
+|+false+
 
-|Maintains the order in which a producer sends messages to the destination.
+|+Maintains the order in which a producer sends messages to the destination.+
 
-|maxMessageDepth
+|+maxMessageDepth+
 
 |long +
-Min: 1 +
+Min: +1+ +
 
 
-|50000
+|+50000+
 
-|The maximum number of messages that the messaging engine can place on its message points.
+|+The maximum number of messages that the messaging engine can place on its message points.+
 
-|maxRedeliveryCount
+|+maxRedeliveryCount+
 
 |int
 
-|5
+|+5+
 
-|The maximum number of failed attempts to process a message. After this number of failed attempts, if an exception destination is configured, the message is forwarded from the intended destination to its exception destination. If an exception destination is not configured, a time interval between retry attempts is applied.
+|+The maximum number of failed attempts to process a message. After this number of failed attempts, if an exception destination is configured, the message is forwarded from the intended destination to its exception destination. If an exception destination is not configured, a time interval between retry attempts is applied.+
 
-|receiveAllowed
+|+receiveAllowed+
 
 |boolean
 
-|true
+|+true+
 
-|Clear this option (setting it to false) to prevent consumers from being able to receive messages from this destination.
+|+Clear this option (setting it to false) to prevent consumers from being able to receive messages from this destination.+
 
-|redeliveryInterval
+|+redeliveryInterval+
 
 |long
 
-|5000
+|+5000+
 
-|When no exception destination is configured, the time interval to apply between retry attempts, after the maximum failed deliveries limit is reached, for this destination.
+|+When no exception destination is configured, the time interval to apply between retry attempts, after the maximum failed deliveries limit is reached, for this destination.+
 
-|sendAllowed
+|+sendAllowed+
 
 |boolean
 
-|true
+|+true+
 
-|Producers can send messages to this destination.
+|+Producers can send messages to this destination.+
 |===
-[#topicSpace]*topicSpace*
+[#+topicSpace+]*topicSpace*
 
-A topic space destination represents a set of "publish and subscribe" topics and is used for publish/subscribe messaging.
++A topic space destination represents a set of "publish and subscribe" topics and is used for publish/subscribe messaging.+
 
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|exceptionDestination
+|+exceptionDestination+
 
 |string
 
-|_SYSTEM.Exception.Destination
+|+_SYSTEM.Exception.Destination+
 
-|The destination to which a message is forwarded by the system when it cannot be delivered to this destination.
+|+The destination to which a message is forwarded by the system when it cannot be delivered to this destination.+
 
-|failedDeliveryPolicy
+|+failedDeliveryPolicy+
 
-|* DISCARD
-* KEEP_TRYING
-* SEND_TO_EXCEPTION_DESTINATION
-
-
-|SEND_TO_EXCEPTION_DESTINATION
-
-|Lists the actions that the messaging engine must take when the maxredeliverycount is reached for a message.
-
-|forceReliability
-
-|* AssuredPersistent
-* BestEffortNonPersistent
-* ExpressNonPersistent
-* ReliableNonPersistent
-* ReliablePersistent
+|* +DISCARD+
+* +KEEP_TRYING+
+* +SEND_TO_EXCEPTION_DESTINATION+
 
 
-|AssuredPersistent
+|+SEND_TO_EXCEPTION_DESTINATION+
 
-|The reliability assigned to a message produced to this destination when an explicit reliability has not been set by the producer.
+|+Lists the actions that the messaging engine must take when the maxredeliverycount is reached for a message.+
 
-|id
+|+forceReliability+
+
+|* +AssuredPersistent+
+* +BestEffortNonPersistent+
+* +ExpressNonPersistent+
+* +ReliableNonPersistent+
+* +ReliablePersistent+
+
+
+|+AssuredPersistent+
+
+|+The reliability assigned to a message produced to this destination when an explicit reliability has not been set by the producer.+
+
+|+id+
 
 |string
 
 |
 
-|The name of the topic space.
+|+The name of the topic space.+
 
-|maintainStrictOrder
+|+maintainStrictOrder+
 
 |boolean
 
-|false
+|+false+
 
-|Maintains the order in which a producer sends messages to the destination.
+|+Maintains the order in which a producer sends messages to the destination.+
 
-|maxMessageDepth
+|+maxMessageDepth+
 
 |long +
-Min: 1 +
+Min: +1+ +
 
 
-|50000
+|+50000+
 
-|The maximum number of messages that the messaging engine can place on its message points.
+|+The maximum number of messages that the messaging engine can place on its message points.+
 
-|maxRedeliveryCount
+|+maxRedeliveryCount+
 
 |int
 
-|5
+|+5+
 
-|The maximum number of failed attempts to process a message. After this number of failed attempts, if an exception destination is configured, the message is forwarded from the intended destination to its exception destination. If an exception destination is not configured, a time interval between retry attempts is applied.
+|+The maximum number of failed attempts to process a message. After this number of failed attempts, if an exception destination is configured, the message is forwarded from the intended destination to its exception destination. If an exception destination is not configured, a time interval between retry attempts is applied.+
 
-|receiveAllowed
+|+receiveAllowed+
 
 |boolean
 
-|true
+|+true+
 
-|Clear this option (setting it to false) to prevent consumers from being able to receive messages from this destination.
+|+Clear this option (setting it to false) to prevent consumers from being able to receive messages from this destination.+
 
-|redeliveryInterval
+|+redeliveryInterval+
 
 |long
 
-|5000
+|+5000+
 
-|When no exception destination is configured, the time interval to apply between retry attempts, after the maximum failed deliveries limit is reached, for this destination.
+|+When no exception destination is configured, the time interval to apply between retry attempts, after the maximum failed deliveries limit is reached, for this destination.+
 
-|sendAllowed
+|+sendAllowed+
 
 |boolean
 
-|true
+|+true+
 
-|Producers can send messages to this destination.
+|+Producers can send messages to this destination.+
 |===

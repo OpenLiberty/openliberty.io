@@ -1,56 +1,60 @@
-= securewayLdapFilterProperties - IBM SecureWay Directory Server LDAP Filters (securewayLdapFilterProperties)
-:nofooter:
-Specifies the list of IBM SecureWay Directory Server LDAP filters.
+:page-layout: config
+= +securewayLdapFilterProperties - IBM SecureWay Directory Server LDAP Filters+ (+securewayLdapFilterProperties+)
+:stylesheet: ../config.css
+:linkcss: 
+:nofooter: 
+
++Specifies the list of IBM SecureWay Directory Server LDAP filters.+
 
 [cols="a,a,a,a",width="100%"]
 |===
 |Name|Type|Default|Description
 
-|groupFilter
+|+groupFilter+
 
 |string
 
-|(&(cn=%v)(|(objectclass=groupOfNames)(objectclass=groupOfUniqueNames)))
+|+(&(cn=%v)(\|(objectclass=groupOfNames)(objectclass=groupOfUniqueNames)))+
 
-|An LDAP filter clause for searching the user registry for groups.
+|+An LDAP filter clause for searching the user registry for groups.+
 
-|groupIdMap
-
-|string
-
-|*:cn
-
-|An LDAP filter that maps the name of a group to an LDAP entry.
-
-|groupMemberIdMap
+|+groupIdMap+
 
 |string
 
-|groupOfNames:member;groupOfUniqueNames:uniqueMember
+|+*:cn+
 
-|An LDAP filter that identifies user to group memberships.
+|+An LDAP filter that maps the name of a group to an LDAP entry.+
 
-|id
+|+groupMemberIdMap+
+
+|string
+
+|+groupOfNames:member;groupOfUniqueNames:uniqueMember+
+
+|+An LDAP filter that identifies user to group memberships.+
+
+|+id+
 
 |string
 
 |
 
-|A unique configuration ID.
+|+A unique configuration ID.+
 
-|userFilter
-
-|string
-
-|(&(uid=%v)(objectclass=ePerson))
-
-|An LDAP filter clause for searching the user registry for users.
-
-|userIdMap
+|+userFilter+
 
 |string
 
-|*:uid
+|+(&(uid=%v)(objectclass=ePerson))+
 
-|An LDAP filter that maps the name of a user to an LDAP entry.
+|+An LDAP filter clause for searching the user registry for users.+
+
+|+userIdMap+
+
+|string
+
+|+*:uid+
+
+|+An LDAP filter that maps the name of a user to an LDAP entry.+
 |===
