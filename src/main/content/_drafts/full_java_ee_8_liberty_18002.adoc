@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Get the full Java EE 8 implementation in Open Liberty 18.0.0.2
+title: Get full Java EE 8 in Open Liberty 18.0.0.2
 
 categories: blog
 author_picture: https://avatars3.githubusercontent.com/u/3322532
@@ -8,10 +8,10 @@ seo-title: Get the full Java EE 8 implementation in Open Liberty 18.0.0.2 - Open
 seo-description: Full Java EE 8 support, including JAX-RS 2.1 reactive client and server-sent events, CDI event-ordering and asynchonous events, HTTP/2 support in servlets, JSF 2.3, JPA 2.2, JWT cookies (yum!), security improvements,...oh, and you can now deploy Spring Boot applications to Liberty.
 blog_description: "Full Java EE 8 support, including JAX-RS 2.1 reactive client and server-sent events, CDI event-ordering and asynchonous events, HTTP/2 support in servlets, JSF 2.3, JPA 2.2, JWT cookies (yum!), security improvements,...oh, and you can now deploy Spring Boot applications to Liberty."
 ---
-= Get the full Java EE 8 implementation in Open Liberty 18.0.0.2
+= Get full Java EE 8 in Open Liberty 18.0.0.2
 Laura Cowen <https://github.com/lauracowen>
 
-Yes, it's here! And we've done it again: Open Liberty is the first app server with full Java EE 8 support (to our knowledge...). What does that mean? Well, we've got the goodness of JAX-RS 2.1 reactive client and server-sent events, CDI event-ordering and asynchonous events, HTTP/2 support in servlets, JSF 2.3 (for the JSF fans, you know who you are), JPA 2.2, JWT cookies (yum!), security improvements,...oh, and you can now deploy Spring Boot applications to Liberty #justsayin'
+Yes, it's here! Open Liberty is the first app server (to our knowledge) with full Java EE 8 support. What does that mean? Well, we've got the goodness of JAX-RS 2.1 reactive client and server-sent events, CDI event-ordering and asynchonous events, HTTP/2 support in servlets, JSF 2.3 (for the JSF fans, you know who you are), JPA 2.2, JWT cookies (yum!), security improvements,...oh, and you can now deploy Spring Boot applications to Liberty #justsayin'
 
 What are you waiting for? Download Open Liberty 18.0.0.2:
 
@@ -60,6 +60,8 @@ In Open Liberty 18.0.0.2, you'll find:
 ** <<jpa,Interact with databases with Java Persistence API (JPA) 2.2>>
 ** <<jwtsso,Emit and consume JWT cookies with JWT Single Sign-on 1.0>>
 ** <<appsecurity,Secure your applications using Security API 1.0 specification>>
+** <<jsonb,Store JSON with JSON-B 1.0>>
+** <<beanval,Validate objects, parameters, and more with Bean Validation 2.0>>
 
 * And:
 ** <<spring,Deploy Spring Boot applications to Liberty>>
@@ -74,15 +76,15 @@ https://openliberty.io/downloads/[Download Liberty] with either the Java EE 8 We
 
 You can enable all of the Java EE 8 features (or the more lightweight set of Web Profile features) with a single feature in your `server.xml`.
 
+=== Java EE 8 Web Profile
+
 The features included in `webProfile-8.0` (Java EE 8 Web Profile) that are new in Java EE 8 are:
 
 * `appSecurity-3.0`
 * `beanValidation-2.0`
 * `cdi-2.0`
-* `jaspic-1.1`
 * `jaxrs-2.1`
 * `jaxrsClient-2.1`
-* `jdbc-4.2`
 * `jpa-2.2`
 * `jpaContainer-2.2`
 * `jsf-2.3`
@@ -90,7 +92,9 @@ The features included in `webProfile-8.0` (Java EE 8 Web Profile) that are new i
 * `jsonp-1.1`
 * `servlet-4.0`
 
-The `webProfile-8.0` feature also contains the following features which are unchanged from Java EE 7: `distributedMap01.0`, `ejbLite-3.2`, `el-3.0`, `jndi-1.0`, `jsp-2.3`, `managedBeans-1.0`, `ssl-1.0`, `websocket-1.1`.
+The `webProfile-8.0` feature also contains the following features which are unchanged from Java EE 7: `distributedMap01.0`, `ejbLite-3.2`, `el-3.0`, `jaspic-1.1`, `jdbc-4.2`, `jndi-1.0`, `jsp-2.3`, `managedBeans-1.0`, `ssl-1.0`, `websocket-1.1`.
+
+=== Java EE 8 Full Profile
 
 To enable the whole of the `webProfile-8.0` feature, add the feature definition to your `server.xml`:
 
@@ -149,7 +153,8 @@ To enable JAX-RS 2.1, add the definition to your `server.xml`:
 For more info:
 
 * https://www.linkedin.com/pulse/my-favorite-part-jax-rs-21-implementers-view-j-andrew-mccright/[My favourite part of JAX-RS 2.1: An implementer's view]
-* TODO: KC URL [JAX-RS 2.1 (Knowledge Center)]
+* https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_dep_jaxrs21.html[JAX-RS 2.1 (Knowledge Center)]
+* https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/cwlp_jaxrs21_behavior.html[Changes between JAX-RS 2.0 and JAX-RS 2.1 (Knowledge Center)]
 * https://jcp.org/en/jsr/detail?id=370[JAX-RS 2.1 spec]
 * https://jax-rs.github.io/apidocs/2.1/[JAX-RS 2.1 Javadoc]
 
@@ -162,8 +167,46 @@ CDI 2.0 provides the following support:
 * Activate Request Context - Some third-party framework developers might want to have their own request lifecycle and have a tight control of it without creating a custom context. Previously, it was not possible for application developers to activate Request Context. CDI 2.0 added this support so that some unnecessary custom Request Scoped creation can be avoided.
 * Event ordering and asynchronous events - Prior to CDI 2.0, it was not possible to order the event notification. In CDI 2.0, use `@Priority` to order the synchronous event notifications. In CDI 2.0, you can fire and observe asynchronous events.
 * Add Interceptor support to produced beans - CDI 2.0 adds interceptor support on a producer using InterceptionFactory so that the produced beans have interceptors applied.
-* Provide a number of annotation literals - CDI uses annotation literals in various places. Previously, you needed to create annotation literal classes for some built-in scopes. In CDI 2.0, the APIs have the annotation literals provided for some useful scopes e.g. all scopes are used.
-ApplicationScoped apsl = ApplicationScoped.Literal.INSTANCE;
+* Provide a number of annotation literals - CDI uses annotation literals in various places. Previously, you needed to create annotation literal classes for some built-in scopes or qualifiers. In CDI 2.0, the APIs have the annotation literal provided so that the annotation literal for some useful scopes  or qualifiers are provided by the CDI APIs.
+
+For example, in order to find a Foo bean with the `Default` qualifier, before CDI 2.0 you needed to do the following:
+
+[source,java]
+----
+
+@Inject Instance<Foo> foo;
+
+public Foo getFoo() {
+
+return instance.select(DefaultLiteral.INSTANCE).get();
+
+}
+
+public class DefaultLiteral extends AnnotationLiteral<Default> implements Default {
+
+    public static final DefaultLiteral INSTANCE = new DefaultLiteral();
+
+    private DefaultLiteral() {}
+
+}
+----
+
+In CDI 2.0, you can do the following:
+
+[source,java]
+----
+
+@Inject Instance<Foo> foo;
+
+public Foo getFoo() {
+
+return instance.select(Default.Literal.INSTANCE).get();
+
+}
+----
+
+As you can see, in CDI 2.0, you can use `Default.Literal.INSTANCE`` to get the annotation of `Default`, which is a lot simpler.
+
 * CDI SPI configurators - In CDI 1.x, using SPI is used to generate verbose and less elegant code. In CDI 2.0, the configurators solve this. These configurators are accessible in lifecycle container event when writing extensions.
 
 To enable the CDI 2.0 feature, add the feature definition to your `server.xml`:
@@ -176,10 +219,6 @@ To enable the CDI 2.0 feature, add the feature definition to your `server.xml`:
           </featureManager>
 
 ----
-
-For more info:
-
-* TODO: KC link
 
 
 
@@ -205,9 +244,9 @@ To enable the Servlet 4.0 feature, add the feature definition to your `server.xm
 [source,xml]
 ----
 
-           <featureManager>
-                  <feature>servlet-4.0</feature>
-          </featureManager>
+<featureManager>
+    <feature>servlet-4.0</feature>
+</featureManager>
 
 ----
 
@@ -406,7 +445,6 @@ public class B2IConverter implements AttributeConverter<Boolean, Integer> {
 
 For more info:
 
-* TODO: KC link
 * https://github.com/javaee/jpa-spec/blob/master/jsr338-MR/JavaPersistence.pdf[JPA spec]
 * https://javadoc.io/doc/org.eclipse.persistence/javax.persistence/2.2.0-RC1[Javadoc]
 * https://www.eclipse.org/eclipselink/[EclipseLink]
@@ -463,6 +501,47 @@ For more info:
 * https://www.ibm.com/support/knowledgecenter/SSAW57_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/rwlp_sec_jee_api.html[Security API 1.0 (Knowledge Center)]
 
 
+[#jsonb]
+== Store JSON with JSON-B 1.0
+
+JSONB provides a structured format for storing JSON. The <code>jsonb-1.0</code> feature provides a preview of the JSON Binding (JSON-B) 1.0 specification interfaces, as well as the reference implementation (Eclipse Yasson).
+
+JSON technology has proven to be a powerful tool in modern Java EE applications, especially when using a microservices-oriented architecture. Traditionally applications had to provide their own JSON binding implementations and package them in a shared library or application. With the <code>jsonb-1.0</code> feature, the specification interfaces and implementation are provided out of the box, ready to be used directly by applications.
+
+To enable the JSON-B 1.0 feature, add the feature definition to your `server.xml`:
+
+[source,xml]
+----
+
+<featureManager>
+    <feature>jsonb-1.0</feature>
+</featureManager>
+
+----
+
+For more info:
+
+* http://json-b.net/[JSON-B]
+
+[#beanval]
+== Validate objects, parameters, and more with Bean Validation 2.0
+
+With the bean validation 2.0 feature, Liberty is using Hibernate Validator as its bean validation implementation.  Previously for bean validation 1.0 and 1.1 we used Apache Validator.
+
+To enable the bean validation 2.0 feature, add the feature definition to your `server.xml`:
+
+[source,xml]
+----
+
+<featureManager>
+    <feature>beanValidation-2.0</feature>
+</featureManager>
+
+----
+
+For more info:
+
+* http://hibernate.org/validator/[the Hibernate website]
 
 
 [#spring]
@@ -479,12 +558,13 @@ For example:
 [source,xml]
 ----
 
-<feature>springBoot-2.0</feature>
-<feature>servlet-4.0</feature>
-<feature>websocket-1.1</feature>
-<feature>jsp-2.3</feature>
-<feature>transportSecurity-1.0</feature>
-
+<featureManager>
+    <feature>springBoot-2.0</feature>
+    <feature>servlet-4.0</feature>
+    <feature>websocket-1.1</feature>
+    <feature>jsp-2.3</feature>
+    <feature>transportSecurity-1.0</feature>
+</featureManager>
 ----
 
 Deploy your Spring Boot applications to liberty in one of the following ways:
@@ -589,12 +669,6 @@ For more info:
 
 * https://www.ibm.com/support/knowledgecenter/SSAW57_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/rwlp_sec_basic_certmap.html[Basic registry mapping (Knowledge Center)]
 * https://www.ibm.com/support/knowledgecenter/SSAW57_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/rwlp_sec_ldap_certmap.html[LDAP registry mapping (Knowledge Center)]
-
-
-
-
-
-
 
 
 
