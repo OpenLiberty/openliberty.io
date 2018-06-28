@@ -34,27 +34,33 @@ function render_builds(builds, parent) {
             }
             var version_column = $('<td><span class="table_date">' + build.version + '</span></td>');            
             row.append(version_column);
-
-            var package_locations = build.package_locations;
-            if(package_locations !== null && package_locations !== undefined){
-                for(var i = 0; i < package_locations.length; i++){
-                    var package_name = package_locations[i].split("=")[0];
-                    package_name = package_name.toLowerCase();
-                    var href = package_locations[i].split("=")[1];
-                    var package_column = $('<td><a href="' +  href +'" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + 
-                    package_name + '</a><img src="/img/downloads_arrow_down_small.svg" /></td>');
-                    row.append(package_column);
+            
+            var zip_column;
+            if(parent.parent().hasClass('white_table')){
+                var package_locations = build.package_locations;
+                if(package_locations !== null && package_locations !== undefined){
+                    for(var i = 0; i < package_locations.length; i++){
+                        var package_name = package_locations[i].split("=")[0];
+                        package_name = package_name.toLowerCase();
+                        var href = package_locations[i].split("=")[1];
+                        var package_column = $('<td></td>');
+                        package_column.append($('<a href="' +  href +'" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + 
+                        package_name + '<img src="/img/downloads_arrow_down_small.svg" /></a>'));
+                        row.append(package_column);
+                    }
                 }
-            }
-            else{
-                // Add blank table cells
-                var empty_cell = $('<td></td>');
-                row.append(empty_cell.clone());
-                row.append(empty_cell.clone());
-            }
-
-            var zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">Download All</a><img src="/img/downloads_arrow_down_small.svg" /></td>');        
-            row.append(zip_column);            
+                else{
+                    // Add blank table cells
+                    var empty_cell = $('<td></td>');
+                    row.append(empty_cell.clone());
+                    row.append(empty_cell.clone());
+                }
+                zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">Download All<img src="/img/downloads_arrow_down_small.svg" /></a></td>');
+                
+            }  else {
+                zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics build_download_button">Download (.zip)</a></td>');
+            }                      
+            row.append(zip_column);   
         } else {
             var date = new Date(build.date);
             var year = date.getFullYear();
