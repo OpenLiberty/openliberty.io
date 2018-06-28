@@ -72,7 +72,7 @@ public class BuildsManager {
         JsonObjectBuilder updatedBuilds = Json.createObjectBuilder();
         JsonObjectBuilder updatedReleases = Json.createObjectBuilder();
         JsonArray updatedRuntimeReleases = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
-                Constants.DHE_RELEASE_TEST_PATH_SEGMENT);
+                Constants.DHE_RELEASE_PATH_SEGMENT);
         JsonArray updatedRuntimeNightlyBuilds = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
                 Constants.DHE_NIGHTLY_PATH_SEGMENT);
         JsonArray updatedToolsReleases = retrieveBuildData(Constants.DHE_TOOLS_PATH_SEGMENT,

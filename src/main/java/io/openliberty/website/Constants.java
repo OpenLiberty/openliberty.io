@@ -19,7 +19,6 @@ public interface Constants {
     String DHE_RELEASE_PATH_SEGMENT = "release/";
     String DHE_NIGHTLY_PATH_SEGMENT = "nightly/";
     String DHE_INFO_JSON_FILE_NAME = "info.json";
-    String DHE_RELEASE_TEST_PATH_SEGMENT = "test/";
 
     // JSON
     String LAST_UPDATE_ATTEMPT = "last_update_attempt";
