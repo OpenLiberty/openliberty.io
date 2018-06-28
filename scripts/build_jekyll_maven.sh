@@ -14,6 +14,8 @@ gem install jekyll-assets -v 2.4.0
 echo "Ruby version:"
 echo `ruby -v`
 
+./scripts/modify_config_adoc.sh
+
 # Special handling for javadocs
 ./scripts/copy_javadoc_stylesheet.sh
 

@@ -1,5 +1,7 @@
 addPageLayoutAttribute () {
     # insert page-layout attribute
+    echo "Adding page layout..."
+
     sed '1 i\
     :page-layout: config
     ' "$1" > newConfig.adoc
