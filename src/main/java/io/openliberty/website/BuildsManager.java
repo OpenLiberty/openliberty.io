@@ -175,11 +175,10 @@ public class BuildsManager {
                                     if(parts.length == 3){
                                         String packageName = parts[1];
                                         String extension = parts[2];
-                                        String packageVersion = ((JsonString) buildInformationSrc.get(Constants.VERSION)).getString();
+                                        String packageVersion = ((JsonString) buildInformationSrc.get(Constants.VERSION)).getString(); 
                                         extension = extension.substring(extension.indexOf(packageVersion) + packageVersion.length());
                                         String newLocation = Constants.DHE_URL + artifactPath + buildTypePath
                                         + versionPath + packageLocation;
-                                        // newLocation = newLocation.replaceAll("\"", "");
                                         packageArray.add(packageName + extension + "=" + newLocation);
                                     }                                    
                                 }
