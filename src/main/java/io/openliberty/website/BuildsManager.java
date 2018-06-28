@@ -177,7 +177,7 @@ public class BuildsManager {
                                         String newLocation = Constants.DHE_URL + artifactPath + buildTypePath
                                         + versionPath + packageLocation;
                                         newLocation = newLocation.replaceAll("\"", "");
-                                        packageArray.add(packageName + "=" + newLocation);
+                                        packageArray.add(packageName + ".zip" + "=" + newLocation);
                                     }                                    
                                 }
                                 buildInformation.add(Constants.PACKAGE_LOCATIONS, packageArray.build());
