@@ -29,7 +29,7 @@ function render_builds(builds, parent) {
         var row = $('<tr></tr>');        
         
         if(parent.hasClass('release_table_body')) {
-            if(build.version.indexOf('-RC')){
+            if(build.version.indexOf('-RC') > -1){
                 build.version.replace('-RC', ' Release Candidate');
             }
             var version_column = $('<td><span class="table_date">' + build.version + '</span></td>');            
