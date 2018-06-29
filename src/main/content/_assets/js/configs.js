@@ -897,7 +897,7 @@ $(document).ready(function () {
     addHamburgerClick();
 
     $('iframe[name="contentFrame"]').load(function () {
-        if ($(this)[0].contentDocument.title !== "Not Found") {
+        //if ($(this)[0].contentDocument.title !== "Not Found") {
             initialContentBreadcrumbVisibility();
             modifyFixedTableColumnWidth();
             handleSubHeadingsInContent();
@@ -936,6 +936,6 @@ $(document).ready(function () {
             if ($(this).contents().attr("location").href.indexOf("#") !== -1) {
                 handleIFrameDocPosition($(this).contents().attr("location").href);
             }
-        }
+        //}
     });
 });
