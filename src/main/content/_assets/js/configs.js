@@ -210,6 +210,11 @@ function handleSubHeadingsInContent() {
     var anchors = iframeContents.find("div.paragraph > p > a");
     var deferAddingExpandAndCollapseToggleButton = [];
 
+    if (anchors.length === 0) {
+        addAnchorToSubHeadings();
+        anchors = iframeContents.find("div.paragraph > p > a");
+    }
+
     // in reverse order so that we can hide all the nested headings
     $($(anchors).get().reverse()).each(function () {
         var subHeading = $(this).parent();
@@ -228,6 +233,17 @@ function handleSubHeadingsInContent() {
     });
 
     handleDeferredExpandCollapseElements(deferAddingExpandAndCollapseToggleButton);
+}
+
+function addAnchorToSubHeadings() {
+    var iframeContents = $('iframe[name=contentFrame]').contents();
+    var subHeadings = iframeContents.find("div.paragraph > p > strong");
+    $($(subHeadings)).each(function() {
+        var parent = $(this).parent();
+        var id = parent.text().replace(/ > /g, "/");
+        var anchorElement = $('<a id="' + id + '"></a>');
+        parent.prepend(anchorElement);
+    })
 }
 
 // Extract the first part of the content title as the breadcrumb title
