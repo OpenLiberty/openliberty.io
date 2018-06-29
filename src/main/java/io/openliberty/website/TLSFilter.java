@@ -85,7 +85,14 @@ public class TLSFilter implements Filter {
           // REDIRECT CODE FOR HTTPS TRAFFIC
           if(TEMP_REDIRECTS.containsKey(uri)) {
               String newURI = TEMP_REDIRECTS.get(uri);
-              String newURL = req.getScheme() + "://" + req.getServerName() + newURI;
+              String sPort = "";
+              int serverPort = req.getServerPort();
+              if ((serverPort == 80) || (serverPort == 443)) {
+                  // Do not add server port to the final new URL
+              } else {
+                  sPort = ":" + serverPort;
+              }
+              String newURL = req.getScheme() + "://" + req.getServerName() + sPort + newURI;
               response.sendRedirect(newURL);
               // We want to redirect the Servlet and stop further processing of
               // the incoming request.
