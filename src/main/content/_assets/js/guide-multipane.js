@@ -386,7 +386,7 @@ $(document).ready(function() {
 
     // Slow the scrolling over section headers in the guide
     function handleSectionSnapping(event){
-        var origEvent = event.originalEvent;        
+        var origEvent = event.originalEvent;
         var target = origEvent.target;
         var dir = (origEvent.deltaY) < 0 ? 'up' : 'down';
         var delta = origEvent.wheelDelta || -origEvent.detail || -origEvent.deltaY;
