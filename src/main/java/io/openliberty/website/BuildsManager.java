@@ -83,7 +83,7 @@ public class BuildsManager {
                 && updatedToolsNightlyBuilds != null) {
             JsonObject latestRuntimeRelease = getLatestBuild(updatedRuntimeReleases);
             JsonObject latestToolsRelease = getLatestBuild(updatedToolsReleases);
-            //if (latestRuntimeRelease != null && latestToolsRelease != null) {
+            // if (latestRuntimeRelease != null && latestToolsRelease != null) {
             if (latestRuntimeRelease != null) {
                 updatedReleases.add(Constants.RUNTIME, latestRuntimeRelease);
                 updatedReleases.add(Constants.TOOLS, latestToolsRelease);
@@ -164,6 +164,26 @@ public class BuildsManager {
                                 }
                             }
 
+                            JsonValue packageLocationsObject = buildInformationSrc.get(Constants.PACKAGE_LOCATIONS);
+                            if(packageLocationsObject instanceof JsonArray){
+                                JsonArray packageLocations = (JsonArray) packageLocationsObject;
+                                // Form an array of packageName=packageLocation
+                                JsonArrayBuilder packageArray = Json.createArrayBuilder();
+                                for(int i = 0; i < packageLocations.size(); i++){     
+                                    String packageLocation = ((JsonString) packageLocations.get(i)).getString();
+                                    String[] parts = packageLocation.split("-");
+                                    if(parts.length == 3){
+                                        String packageName = parts[1];
+                                        String extension = parts[2];
+                                        String packageVersion = ((JsonString) buildInformationSrc.get(Constants.VERSION)).getString(); 
+                                        extension = extension.substring(extension.indexOf(packageVersion) + packageVersion.length());
+                                        String newLocation = Constants.DHE_URL + artifactPath + buildTypePath
+                                        + versionPath + packageLocation;
+                                        packageArray.add(packageName + extension + "=" + newLocation);
+                                    }                                    
+                                }
+                                buildInformation.add(Constants.PACKAGE_LOCATIONS, packageArray.build());
+                            }
                             jsonArray.add(buildInformation.build());
                         }
                     }
