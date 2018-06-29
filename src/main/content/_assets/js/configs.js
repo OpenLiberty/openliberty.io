@@ -237,7 +237,7 @@ function handleSubHeadingsInContent() {
 
 function addAnchorToSubHeadings() {
     var iframeContents = $('iframe[name=contentFrame]').contents();
-    var subHeadings = iframeContents.find("div.paragraph > p > strong");
+    var subHeadings = iframeContents.find("div[id='content'] > div.paragraph > p > strong");
     $($(subHeadings)).each(function() {
         var parent = $(this).parent();
         var id = parent.text().replace(/ > /g, "/");
