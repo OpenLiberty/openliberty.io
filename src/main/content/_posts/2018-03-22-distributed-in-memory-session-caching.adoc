@@ -3,7 +3,7 @@ layout: post
 title:  "Add distributed in-memory session caching to your Java apps"
 date:   2018-03-22 16:45:00 -0000
 categories: blog
-blog_description: "Try out the new JCache-based distributed in-memory session caching in recent development builds of Open Liberty."
+blog_description: "Try out the new JCache-based distributed in-memory session caching in Open Liberty 18.0.0.2."
 author_picture: https://avatars2.githubusercontent.com/u/5427967
 seo-title: Add distributed in-memory session caching to your Java apps - Open Liberty
 seo-description: Try out the new JCache-based distributed in-memory session caching in recent development builds of Open Liberty.
@@ -17,7 +17,7 @@ When running applications in production, offering high availability to the end u
 
 == Introducing sessionCache-1.0
 
-Recently we have been working on a new feature in Open Liberty called `sessionCache-1.0` which provides distributed in-memory HttpSession caching.  The `sessionCache-1.0` feature builds on top of an existing technology called https://www.jcp.org/en/jsr/detail?id=107[JCache (JSR 107)], which offers a standardized distributed in-memory caching API. However, even though the feature builds on top of JCache, no direct usage of JCache API is necessary in your application, since Liberty handles the session caching in its HttpSession implementation.  In fact, if your application is already using HttpSession caching, it can benefit from `sessionCache-1.0` without making any code changes.
+Recently we released a new feature in Open Liberty called `sessionCache-1.0` which provides distributed in-memory HttpSession caching.  The `sessionCache-1.0` feature builds on top of an existing technology called https://www.jcp.org/en/jsr/detail?id=107[JCache (JSR 107)], which offers a standardized distributed in-memory caching API. However, even though the feature builds on top of JCache, no direct usage of JCache API is necessary in your application, since Liberty handles the session caching in its HttpSession implementation.  In fact, if your application is already using HttpSession caching, it can benefit from `sessionCache-1.0` without making any code changes.
 
 Here is a diagram of how the JCache Session Persistence feature works with two Liberty servers:
 
@@ -157,4 +157,4 @@ Then reference the Hazelcast XML configuration file in your `server.xml`:
 
 Check the documentation for the implementation you use. So far we have been testing with https://mvnrepository.com/artifact/com.hazelcast/hazelcast/3.9.2[Hazelcast Core] which has some nice auto-discovery capabilities out of the box.
 
-If you want to try out the `sessionCache-1.0` feature, https://openliberty.io/downloads/[download the latest development build of Open Liberty].
+If you want to try out the `sessionCache-1.0` feature, https://openliberty.io/downloads/[download the latest official release of Open Liberty].
