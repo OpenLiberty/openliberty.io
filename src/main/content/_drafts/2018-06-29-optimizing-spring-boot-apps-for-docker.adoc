@@ -20,7 +20,7 @@ These images can be reliably and repeatably deployed.
 You can get a lot of value out of Docker very easily, but to get the most out of Docker there are some concepts that are important to understand.
 How you build your Docker image has a measurable impact when you are doing continuous integration and continuous delivery.
 
-===== Key Docker concepts
+== Key Docker concepts
 There are four key Docker concepts at play: images, layers, the Dockerfile and the Docker cache.
 Simply put, the Dockerfile describes how to build the Docker image.
 An image consists of a number of layers.
@@ -33,7 +33,7 @@ Anything that has changed, or has not been built before, will be built as needed
 
 image::/img/blog/blog_optimizing_spring_boot_layers.png[align="center",Diagram of a generic example of a Docker image, built form a Dockerfile.]
 
-===== Layer contents matter
+== Layer contents matter
 This is where the importance of layers come in.
 An existing layers in the Docker cache can only be used if the contents of that layer are unchanged.
 The more layers which are changed between Docker builds, the more work Docker needs to do to rebuild the image.
@@ -42,7 +42,7 @@ When you package your application as a Docker image, the easiest approach is to 
 However, if that application includes a lot of static binary dependencies, when you change even the smallest amount of code, the whole layer needs to be rebuilt.
 This ends up wasting a lot of build time, and space in the Docker cache.
 
-===== Layers impact deployment
+== Layers impact deployment
 Layers also matter when the Docker images are deployed.
 Before Docker images are deployed, they are pushed to a remote Docker Repository.
 This repository acts as the source for all deployment images and often contains a lot of versions of the same image.
@@ -51,7 +51,7 @@ However, for images which are frequently deployed and have large layers which ar
 Large layers, even with minimal changes inside them,  have to be separately stored in the repository and pushed around the network.
 This negatively affects deployment time because of the need to move and store duplicate bits for the pieces which are not changing. 
 
-===== Spring Boot apps in Docker
+== Spring Boot apps in Docker
 Spring Boot applications, with the uber-jar approach, are themselves self-contained units of deployment.
 This model is excellent for deployments on virtual machines or through build packs, since the app brings everything it needs with it.
 However, this is a drawback for Docker deployments: Docker already provides the means to package dependencies.
@@ -66,7 +66,7 @@ The most common approach to building Docker images for Spring Boot applications 
 This isn’t technically true since there are actually more than one layers created by the Dockerfile, but its good enough for the discussion.
 
 
-===== The single layer approach
+== The single layer approach
 Let's take a look at the single layer approach.
 The single layer approach is quick, straight-forward, and easy to understand and use.
 The https://github.com/spring-guides/gs-spring-boot-docker[Spring Boot guide for Docker] lays out the single layer Dockerfile to build your Docker image:
@@ -87,7 +87,7 @@ The next time the Docker image is built, the entire application layer is rebuilt
 Let’s take a look at a concrete example, in this case Spring Pet Clinic.
 https://github.com/spring-projects/spring-petclinic.
 
-===== A deeper look at the single layer approach
+== A deeper look at the single layer approach
 The single layer approach builds a Docker image with the Spring Boot JAR as the Docker layer on top of a the Open JDK base image:
 
 ----
@@ -127,7 +127,7 @@ This means that only 0.1% of the layer is actually changing.
 The remaining 99.9% is unchanged.
 
 
-===== The layer life-cycle
+== The layer life-cycle
 This demonstrates why the contents of a layer matter.
 Fundamentally, there are two different life-cycles for the contents of the Spring Boot app:
 the infrequently changing binary dependencies, and the frequently changing application classes.
@@ -144,18 +144,19 @@ This ends up being a significant waste of build time, deployment time and Docker
 This is when the trade-off becomes important.
 Continue with the simple single layered approach, or adopt a more efficient alternative.
 
-===== Embrace Docker, go dual layer
-In this trade-off is between simplicity and efficiency, I feel the right choice is a two-layered approach.
+== Embrace Docker, go dual layer
+In this trade-off is between simplicity and efficiency, I feel the right choice is a dual layered approach.
+In the dual layer approach, we structure the Docker image such that the binary dependencies of the Spring Boot app exist in a layer below the application code.
 By pushing the infrequently changing binary dependencies down into a separate layer, and keeping only the application classes in the top layer, iterative rebuilds and re-deployments will be much faster.
 
 image::/img/blog/blog_optimizing_spring_boot_dual_layer.png[align="center",Diagram of a dual layer Docker image for a Spring Boot application.]
 
-This speeds-up iterative development builds and minimizing deployment time.
+This speeds-up iterative development builds and minimizes deployment time.
 Results will vary by application but on average this reduces application deployment sizes by 90% with a corresponding reduction in deployment cycle times.
 
-In the next post of this mini-series, I'll cover how we build a dual layer Docker image for Spring Boot applications with a new tool in the Open Liberty project, and where we plan to go from there.
+In the next post of this series, we'll look at how to build a dual layer Docker image for Spring Boot applications with a new tool in the Open Liberty project, and I'll cover where we plan to go from there.
 
-====== References
+== References
 [1] https://product.hubspot.com/blog/the-fault-in-our-jars-why-we-stopped-building-fat-jars
 
 [2] https://github.com/spring-projects/spring-boot/issues/12545
