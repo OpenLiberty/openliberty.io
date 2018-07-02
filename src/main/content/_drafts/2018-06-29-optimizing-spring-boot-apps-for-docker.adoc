@@ -35,9 +35,13 @@ image::/img/blog/blog_optimizing_spring_boot_layers.png[align="center",Diagram o
 
 == Layer contents matter
 This is where the importance of layers come in.
-An existing layers in the Docker cache can only be used if the contents of that layer are unchanged.
+Existing layers in the Docker cache can only be used if the contents of that layer are unchanged.
 The more layers which are changed between Docker builds, the more work Docker needs to do to rebuild the image.
-This is why the contents of each layer matters.
+The layer order also matters.
+A layer can only be reused if all of its parent layers are unchanged.
+It is best to place more frequently changed layers later so that changes to them impact fewer children layers.
+
+The order and contents of the layers matter.
 When you package your application as a Docker image, the easiest approach is to shove the whole application in as a single layer.
 However, if that application includes a lot of static binary dependencies, when you change even the smallest amount of code, the whole layer needs to be rebuilt.
 This ends up wasting a lot of build time, and space in the Docker cache.
