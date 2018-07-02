@@ -146,10 +146,10 @@ Using more real world sizes, this can be up to 2.5 GB or more per day.
 This ends up being a significant waste of build time, deployment time and Docker Repository space.
 
 This rapid, incremental development and delivery is when the trade-off becomes important.
-Continue with the simple single layered approach, or adopt a more efficient alternative.
+Continue with the simple single layer approach, or adopt a more efficient alternative.
 
 == Embrace Docker, go dual layer
-In this trade-off is between simplicity and efficiency, I feel the right choice is a "dual layered" approach.
+In this trade-off is between simplicity and efficiency, I feel the right choice is a "dual layer" approach.
 (More layers are possible, but too many layers can be detrimental and are against https://docs.docker.com/develop/develop-images/dockerfile_best-practices/[Docker best practices]).
 In the dual layer approach, we structure the Docker image such that the binary dependencies of the Spring Boot app exist in a layer below the application code.
 This way, the layers adhere to the different life-cycles of the content.
