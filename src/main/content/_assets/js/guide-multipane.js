@@ -61,6 +61,7 @@ $(document).ready(function() {
             // Clone this code block so the full file can be shown in the right column and only a duplicate snippet will be shown in the single column view or mobile view.
             // The duplicated code block will be shown on the right column.
             var duplicate_code_block = code_block.clone();
+            code_block.addClass('guide_column_code_snippet'); // Add class to code snippet in the guide column to only show up in mobile view.
 
             var guide_section = code_block.parents('.sect1').first();
             var header = guide_section.find('h2')[0];
@@ -112,7 +113,7 @@ $(document).ready(function() {
             // Remove line numbers which were mainly used for highlighting the section.
             code_block.find('.line-numbers').remove();
             duplicate_code_block.find('.line-numbers').remove();
-        }    
+        }
     });
 
     // Map the guide sections that don't have any code sections to the previous section's code.
@@ -263,9 +264,8 @@ $(document).ready(function() {
                     }   
                 } catch(e) {
                     console.log(e);
-                }
-                
-            }     
+                }                
+            }   
         }            
     }
     

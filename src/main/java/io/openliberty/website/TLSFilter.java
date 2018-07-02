@@ -28,10 +28,11 @@ public class TLSFilter implements Filter {
     // A list of deprecated URLs that need to be redirected using the HTTP 302.
     private final Map<String, String> TEMP_REDIRECTS = 
         new HashMap<String, String>() {{
-            put("/docs/ref/javaee/", "/docs/ref/javaee/7/");
+            put("/docs/ref/javaee/", "/docs/ref/javaee/8/");
             put("/docs/ref/microprofile/", "/docs/ref/microprofile/1.3/");
             put("/docs/ref/", "/docs/");        
             put("/index.html/", "/index.html");  
+            put("/guides/microprofile-intro.html", "/guides/cdi-intro.html");
             // put("old uri", "new uri");
     }};
 
@@ -84,7 +85,14 @@ public class TLSFilter implements Filter {
           // REDIRECT CODE FOR HTTPS TRAFFIC
           if(TEMP_REDIRECTS.containsKey(uri)) {
               String newURI = TEMP_REDIRECTS.get(uri);
-              String newURL = req.getScheme() + "://" + req.getServerName() + newURI;
+              String sPort = "";
+              int serverPort = req.getServerPort();
+              if ((serverPort == 80) || (serverPort == 443)) {
+                  // Do not add server port to the final new URL
+              } else {
+                  sPort = ":" + serverPort;
+              }
+              String newURL = req.getScheme() + "://" + req.getServerName() + sPort + newURI;
               response.sendRedirect(newURL);
               // We want to redirect the Servlet and stop further processing of
               // the incoming request.

@@ -1,0 +1,35 @@
+= JavaScript Object Notation Binding 1.0 via Bells
+:stylesheet: ../feature.css
+:linkcss: 
+:nofooter: 
+
+The Java API for JSON Binding (JSON-B) feature provides a standard for converting between Java objects and JavaScript Object Notation (JSON). The default JSON-B provider is configured via a <bell> which points at a library containing the JSON-B provider JAR file(s).
+
+== Enabling this feature
+To enable the JavaScript Object Notation Binding 1.0 via Bells feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>jsonbContainer-1.0</feature>
+----
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the JavaScript Object Notation Binding 1.0 via Bells feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.jsonbContainer-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:bells-1.0[]
+* feature:jsonp-1.1[]
+
+== Standard API packages provided by this feature
+* javadoc:javax.json.bind[]
+* javadoc:javax.json.bind.adapter[]
+* javadoc:javax.json.bind.annotation[]
+* javadoc:javax.json.bind.config[]
+* javadoc:javax.json.bind.serializer[]
+* javadoc:javax.json.bind.spi[]

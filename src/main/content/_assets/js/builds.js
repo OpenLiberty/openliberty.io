@@ -29,8 +29,38 @@ function render_builds(builds, parent) {
         var row = $('<tr></tr>');        
         
         if(parent.hasClass('release_table_body')) {
-            var version_column = $('<td><span class="table_date">' + build.version + '</span></td>');
+            if(build.version.indexOf('-RC') > -1){
+                build.version.replace('-RC', ' Release Candidate');
+            }
+            var version_column = $('<td><span class="table_date">' + build.version + '</span></td>');            
             row.append(version_column);
+            
+            var zip_column;
+            if(parent.parent().hasClass('white_table')){
+                var package_locations = build.package_locations;
+                if(package_locations !== null && package_locations !== undefined){
+                    for(var i = 0; i < package_locations.length; i++){
+                        var package_name = package_locations[i].split("=")[0];
+                        package_name = package_name.toLowerCase();
+                        var href = package_locations[i].split("=")[1];
+                        var package_column = $('<td></td>');
+                        package_column.append($('<a href="' +  href +'" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + 
+                        package_name + '<img src="/img/downloads_arrow_down_small.svg" /></a>'));
+                        row.append(package_column);
+                    }
+                }
+                else{
+                    // Add blank table cells
+                    var empty_cell = $('<td></td>');
+                    row.append(empty_cell.clone());
+                    row.append(empty_cell.clone());
+                }
+                zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">Download All<img src="/img/downloads_arrow_down_small.svg" /></a></td>');
+                
+            }  else {
+                zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics build_download_button">Download (.zip)</a></td>');
+            }                      
+            row.append(zip_column);   
         } else {
             var date = new Date(build.date);
             var year = date.getFullYear();
@@ -41,18 +71,16 @@ function render_builds(builds, parent) {
             var date_column = $('<td><span class="table_date">' + year + '-' + add_lead_zero(month) + '-' + add_lead_zero(day) + ', ' + add_lead_zero(hour) + ':' + add_lead_zero(minute) + '</span></td>');
             row.append(date_column);
             
-            var tests_column = $('<td><a href="' +  build.tests_log +'" target="new" class="'
-             + analytics_class_name + ' skip_outbound_link_analytics tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
+            var tests_column = $('<td><a href="' +  build.tests_log +'" target="new" class="'+ analytics_class_name + ' skip_outbound_link_analytics tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
             row.append(tests_column);
             
-            var log_column = $('<td><a href="' + build.build_log + '" target="new" class="'
-            + analytics_class_name + ' skip_outbound_link_analytics view_logs_link">View logs</a></td>');            
+            var log_column = $('<td><a href="' + build.build_log + '" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics view_logs_link">View logs</a></td>');            
             row.append(log_column);
-        }
 
-        var zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics build_download_button">Download (.zip)</a></td>');
+            var zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics build_download_button">Download (.zip)</a></td>');
         
-        row.append(zip_column);
+            row.append(zip_column);
+        }
 
         parent.append(row);
 

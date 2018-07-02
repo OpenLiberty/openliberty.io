@@ -87,11 +87,6 @@ header {
     color: #F4914D;
 }
 
-/* Hide code blocks by default unless in mobile view */
-#guide_content .listingblock:not(.no_copy):not(.inline_code) {
-    /* display: none; */
-}
-
 .code_reference {
     background:#f1f4fe;
     border: 1px solid #c8d6fb;
@@ -127,6 +122,11 @@ header {
     word-wrap: break-word;
 }
 
+/* Snippets of code for mobile view only, that comes from the right column file */
+.guide_column_code_snippet {
+    display: none;
+}
+
 .CodeRay .line-numbers {
     display: inline-block;
     visibility: hidden;
@@ -143,6 +143,7 @@ header {
     border: 1px solid #96bc32;
     border-left: 8px solid #96bc32;
     border-radius: 3px;    
+    overflow: hidden;
 }
 
 #guide_content .command code {
@@ -152,10 +153,11 @@ header {
 #guide_content .code_command pre,  #guide_content .code_command code {
     background-color: #F1F4FE;
     margin-bottom: 0;
+    overflow: hidden;
 }
 
 /* Create pointed div using pseudo elements */
-#guide_content .code_command .content {
+#guide_content .code_command > .content {
     position: relative;    
     border-left: 8px solid #96bc32;
     border-top:1px solid #c8d6fb;
@@ -163,18 +165,18 @@ header {
     width: 90%;
 }
 
-#guide_content .code_command .content:after, #guide_content .code_command .content:before {
+#guide_content .code_command > .content:after, #guide_content .code_command > .content:before {
     content: "";
     position: absolute;
     left: 100%;
     width: 40px;
     height: 50%;
 }
-#guide_content .code_command .content:before {
+#guide_content .code_command > .content:before {
     top: 0px;
     background: linear-gradient(to top right, #F1F4FE 50%, transparent 51%), linear-gradient(230deg, transparent 29.5px, #c8d6fb 0);
 }
-#guide_content .code_command .content:after {
+#guide_content .code_command > .content:after {
     bottom: 0px;
     background: linear-gradient(to bottom right, #F1F4FE 50%, transparent 51%), linear-gradient(310deg, transparent 29.5px, #c8d6fb 0);
 }
@@ -472,12 +474,11 @@ header {
         padding-left: 15px;
         padding-right: 15px;
         box-shadow: none;
-    }  
-
-    /* Show the code snippets in mobile view that were on the right pane in desktop view */
-    #guide_content .listingblock:not(.no_copy):not(.inline_code) {
-        display: block;
     } 
+
+    .guide_column_code_snippet {
+        display: block;
+    }
 }
 
 @media (min-width: 1171px) {

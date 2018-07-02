@@ -10,7 +10,7 @@
  *******************************************************************************/
 
 var latestReleasedVersion = {
-    version: '17.0.0.4',
+    version: '18.0.0.1',
     productName : 'Open Liberty Runtime',
     availableFrom : 'https://openliberty.io/downloads?welcome'
 };

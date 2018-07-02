@@ -75,6 +75,13 @@ $(document).ready(function() {
         processSearch(input_value);        
     });
 
+    $('#guide_search_input').keypress(function(event) {
+        if(event.which == 13) { // 13 is the enter key
+            var searchInput = $('#guide_search_input').val();
+            updateSearchUrl(searchInput);
+        }
+    });
+
     var query_string = location.search;
     // Process the url parameters for searching
     if(query_string.length > 0) {
@@ -108,8 +115,34 @@ $(document).ready(function() {
         $('#guide_search_input').width(card_width);
     };
 
+    function updateSearchUrl(value) {
+        if(! value) {
+            // Remove query string because search text is empty
+            location.href = [location.protocol, '//', location.host, location.pathname].join('');
+        } else {
+            // Handle various search functions
+            _processSearchText(value);
+        }
+    }
+
+    function _processSearchText(value) {
+        // We support searching with prefex
+        // 1.  tag: <tag text>
+        // 2.  Free form text
+        if(value.startsWith("tag:")) {
+            var searchTextWithoutTag = value.substring(value.indexOf(':') + 1);
+            searchTextWithoutTag = searchTextWithoutTag.trim();
+            location.search = "search=" + encodeURIComponent(searchTextWithoutTag) + "&key=tag";
+
+        } else {
+            value = value.trim();
+            location.search = "search=" + encodeURIComponent(value);
+        }
+    }
+
     $(window).on('resize', function(){
         resize_search_bar();
     });
-    resize_search_bar(); 
+    resize_search_bar();
+
 });
