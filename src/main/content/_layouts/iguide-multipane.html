@@ -6,7 +6,10 @@ css:
 - end-of-guide
 - guide-card
 - guide-multipane
-js: guide-multipane
+- iguide
+js: 
+- common-multipane
+- toc-multipane
 ---
 
 <div id="background_container" class="black_blue_gradient_background">
@@ -41,7 +44,12 @@ js: guide-multipane
                         <div id="duration_container">
                             <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
                             <span id="guide_duration">{{ page.duration }}</span>
+                            <div class="guide_interactive_container">
+                                <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
+                                <span class="guide_interactive">Interactive</span>
+                            </div>
                         </div>
+                        <p>{{ page.description }}</p>
                     </div>
 
                     <!-- Guide content section -->
