@@ -3,45 +3,47 @@ layout: post
 title: "Creating Dual Layer Docker images for Spring Boot apps"
 date:   2018-07-02 11:30:00 -0000
 categories: blog
-author_picture: https://avatars0.githubusercontent.com/u/0
+author_picture: https://avatars3.githubusercontent.com/u/1999406
 seo-title: Creating Dual Layer Docker images for Spring Boot apps - OpenLiberty.io
-seo-description: Active description of the post - 50–300 characters. This is used in search results and on social media.
-blog_description: "Blog preview description. ~60 words - this is used in the preview card on openliberty.io/blog"
+seo-description: Embrace Docker for your Spring Boot applications! Build dual layer Docker images and gain efficiencies for CI/CD teams. This post shows you how.
+blog_description: "Embrace Docker for your Spring Boot applications! Building dual layer Docker images and gain efficiencies for CI/CD teams. This post shows you how."
 ---
 = Creating Dual Layer Docker images for Spring Boot apps
 Michael Thompson <https://github.com/barecode>
 
-In the first part of this blog post series https://openliberty.io/blog/2018/06/29/optimizing-spring-boot-for-docker.html[Optimizing Spring Boot apps for Docker] we looked at the single layer approach to building Docker images for Spring Boot applications and the implications it has for CI/CD pipelines.
+In the first part of this blog post series link:blog/2018/06/29/optimizing-spring-boot-for-docker.html[Optimizing Spring Boot apps for Docker] we looked at the single layer approach to building Docker images for Spring Boot applications and the implications it has for CI/CD pipelines.
 I proposed that a dual layer approach has concrete benefits over the single layer approach and that these benefits are in the form of efficiencies in iterative development environments.
 
 Here we introduce an approach to creating dual layer Docker images for existing Spring Boot applications using a new tool in Open Liberty called `springBootUtility`.
-There is are alternate approaches to creating Docker layers for Spring Boot applications[1].
-This approach focuses on creating a dual layered image from the existing JAR rather than altering a maven or gradle build step.
+There are alternate approaches to creating multi-layered Docker images for Spring Boot applications[1], but this approach focuses on creating a dual layer image from the existing application rather than altering a maven or gradle build step.
 
 == The Dual Layer Approach
-In the dual layer approach, we structure the Docker image such that the binary dependencies of the Spring Boot app exist in a layer below the application code.
-By pushing the infrequently changing binary dependencies down into a separate layer, and keeping only the application classes in the top layer, iterative rebuilds and re-deployments will be much faster.
+In the dual layer approach, we structure the Docker image such that the library dependencies of the Spring Boot app exist in a layer below the application code.
+By pushing the infrequently changing library dependencies down into a separate layer, and keeping only the application classes in the top layer, iterative rebuilds and re-deployments are much faster.
 
 image::/img/blog/blog_optimizing_spring_boot_dual_layer.png[align="center",Diagram of a dual layer Docker image for a Spring Boot application.] 
 
-In order to accomplish this, we need a way to split the Spring Boot application into these components.
+In order to accomplish this, we need a way to split the Spring Boot application into these separate components.
 Enter the `springBootUtility`.
 
 == The `springBootUtility`
-The `springBootUtility` is a new tool in Open Liberty which will split the Spring Boot JAR into two parts: the binary dependencies, such as the Spring Boot starters and other third-party libraries, and the application code.
-The binary dependencies are placed in a library cache and the application code is used to construct a thin app.
+The `springBootUtility` is a new tool in Open Liberty which will split the Spring Boot application into two parts: the library dependencies, such as the Spring Boot starters and other third-party libraries, and the application code.
+The library dependencies are placed in a library cache and the application code is used to construct a thin application.
 The thin app contains a file which references the libraries it needs on the classpath.
+This thin app can then be deployed to Open Liberty which will generate the full classpath from the library cache.
 
 == Docker multi-stage builds
-The Dockerfile used to build this dual layer image uses a feature of Docker called https://docs.docker.com/v17.09/engine/userguide/eng-image/multistage-build/#use-multi-stage-builds[multi-stage builds].
-Multi-stage builds allow a single Dockerfile to create multiple images, where the contents of one image can be copied into another image.
+The Dockerfile to build this dual layer image uses https://docs.docker.com/v17.09/engine/userguide/eng-image/multistage-build/#use-multi-stage-builds[multi-stage builds].
+Multi-stage builds allow a single Dockerfile to create multiple images, where the contents of one image can be copied into another, discarding the temporary content.
 This allows you to drastically reduce the size of your final image, without needing to involve multiple Docker files.
-We use this function to split the JAR file entirely within the Docker build process and complete the build with a single image.
+We use this function to split the Spring Boot application within the Docker build process.
 
-== The Docker base image
-The Docker base image used in this approach is http://openjdk.java.net/[Open JDK] with https://www.eclipse.org/openj9/[Open J9] and https://openliberty.io/[Open Liberty].
+== The Docker image
+The Docker image uses http://openjdk.java.net/[Open JDK] with https://www.eclipse.org/openj9/[Open J9] and https://openliberty.io/[Open Liberty].
 Open JDK provides a solid foundation of open source Java technology.
 Open J9 brings along some performance improvements over the default java virtual machine included with Open JDK.
+Open Liberty is a multi-programming model runtime, supporting Java EE, MicroProfile and Spring.
+This allows development teams to use a variety of programming models with a consistent runtime stack.
 
 == Show me the code!
 The Dockerfile, in all its gory glory (we'll walk through what it does next).
@@ -121,19 +123,22 @@ CMD ["/opt/ol/wlp/bin/server", "run", "springServer"]
 ----
 
 == The Details
-Using Docker’s multi-stage build and the `springBootUtility` in Open Liberty, the Dockerfile splits the Spring Boot JAR.  
+Using Docker’s multi-stage build and the `springBootUtility` in Open Liberty, the Dockerfile splits the Spring Boot application.
 
-First, we install unzip.
-Next, we download Open Liberty and stage in some configuration for Open Liberty.
+We start with a staging image.
+First, we install `unzip`.
+Next, we download Open Liberty and stage in some configuration.
 All of this prep work is needed to get the Open Liberty tool in place.
-We know its pretty ugly, that's one of the things we'll be improving in the very near future.
+We know its pretty ugly, that's one of the things we'll be improving in the very near future when Liberty 18.0.0.2 Docker images are published.
 
-Once the image has all of the tools it needs, the JAR file is copied into the image and split.
+Once the image has all of the tools it needs, the JAR file is copied into the staging image and split.
 After the thin app is created under `/staging/myFatApp.jar`, a further optimization step is taken to unzip it.
-This unzip allows subsequent rebuilds to get a Docker cache hit.
+This unzip causes the application to be hosted directly from the class files.
+This allows subsequent rebuilds to re-use the application layer if the class files have not changed.
 
-Now that the staging work is done, the last step is to copy over the important bits to the final image.
-This results in the larger binary dependency layer (34.2MB) and the smaller application layer (1.01MB).
+Now that the staging work is done, we start fresh so that we can copy over the final Liberty installation, dependent libraries, and the thin application.
+The separate COPY commands in the Dockerfile generate the separate layers.
+The larger library dependency layer (34.2MB) and the smaller application layer (1.01MB) are what is meant by 'dual layer'.
 
 ----
 $ docker history openlibertyio/spring-petclinic
@@ -157,7 +162,7 @@ f50ba84462ab        3 weeks ago         /bin/sh -c #(nop)  ENV PATH=/opt/java/op
 <missing>           2 months ago        /bin/sh -c #(nop) ADD file:592c2540de1c70763…   113MB 
 ----
 
-Now when application changes are made and the Spring Boot application is rebuilt and repackaged as a Docker image, only the application layer needs to be changed.
+Now when application changes are made, only the application layer needs to be changed.
 
 == Try it out!
 You can copy this Dockerfile and run it on your own clone of Pet Clinic.
@@ -168,7 +173,7 @@ The resulting Docker image looks like this:
 
 image::/img/blog/blog_optimizing_spring_boot_dual_layer_with_liberty.png[align="center",Diagram of a dual layer Docker image for a Spring Boot application based on Open J9 and Open Liberty.]
 
-You will notice that the entire Docker image isn’t as small as if the base image was `openjdk:8-jdk-alpine` - we’re working on improving that.
+You will notice that the entire Docker image isn’t as small as the single layer approach. The base image is not based on Alpine Linux and Liberty's installation is not minified. We’re working on improving that.
 
 == Future Steps
 We’re happy with what we’ve built so far but, to be honest, the user experience of building these images isn’t great.
@@ -179,8 +184,8 @@ That will significantly reduce the complexity of the Dockerfile.
 We also recognize that there is room for improvement when integrating these dual layer builds in a continuous delivery pipeline.
 That's another aspect of improving the Spring Boot experience for Docker we're interested in solving.
 
-Lastly, this approach to splitting out static binary dependencies from the application code is not exclusive to Spring Boot applications!
-Similar efficiencies can also be applied to Java EE or MicroProfile applications.
+Lastly, this approach of splitting out static library dependencies from the application is not exclusive to Spring Boot applications!
+Similar efficiencies can also be gained with Java EE or MicroProfile applications.
 That's another area we're exploring.
 
 
