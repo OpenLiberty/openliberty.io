@@ -42,7 +42,7 @@ It is best to place more frequently changed layers later so that changes to them
 
 The order and contents of the layers matter.
 When you package your application as a Docker image, the easiest approach is to shove the whole application in a single layer.
-However, if that application includes a lot of static binary dependencies, when you change even the smallest amount of code, the whole layer needs to be rebuilt.
+However, if that application includes a lot of static library dependencies, when you change even the smallest amount of code, the whole layer needs to be rebuilt.
 This ends up wasting a lot of build time and space in the Docker cache.
 
 == Layers impact deployment
@@ -85,7 +85,7 @@ ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
 The end result is a functioning Docker image that runs exactly the way you’d expect a Spring Boot app to run.
 However, it suffers from the layering efficiency problem because its based on the entire application JAR.
 As the application source is changed, the entire Spring Boot JAR is rebuilt.
-The next time the Docker image is built, the entire application layer is rebuilt, including all of the binary dependencies which didn’t change.
+The next time the Docker image is built, the entire application layer is rebuilt, including all of the library dependencies which didn’t change.
 
 Let’s take a look at a concrete example, in this case https://github.com/spring-projects/spring-petclinic[Spring Pet Clinic].
 
@@ -126,7 +126,7 @@ In the real world, these sizes are often quite a bit larger as they include not 
 From my experience, real-world Spring Boot applications can range in size from 50 MB – 250 MB, if not larger.
 
 Looking more closely at the application, only 372 KB of the application JAR is the application code.
-The remaining 38 MB are the binary dependencies.
+The remaining 38 MB are the library dependencies.
 This means that only 0.1% of the layer is actually changing.
 The remaining 99.9% is unchanged.
 
@@ -134,7 +134,7 @@ The remaining 99.9% is unchanged.
 This demonstrates the basic consideration of layering: the life-cycle of the contents.
 The contents of a layer should have the same life-cycle.
 There are two different life-cycles for the contents of the Spring Boot app:
-the infrequently changing binary dependencies, and the frequently changing application classes.
+the infrequently changing library dependencies, and the frequently changing application classes.
 
 Each time the layer is rebuilt due to an application code change the non-changing binaries are also included.
 In rapid application development environments, where the application code is constantly changed and re-deployed, this additive cost can become very expensive.
@@ -151,9 +151,9 @@ Continue with the simple single layer approach, or adopt a more efficient altern
 == Embrace Docker, go dual layer
 In this trade-off is between simplicity and efficiency, I feel the right choice is a "dual layer" approach.
 (More layers are possible, but too many layers can be detrimental and are against https://docs.docker.com/develop/develop-images/dockerfile_best-practices/[Docker best practices]).
-In the dual layer approach, we structure the Docker image such that the binary dependencies of the Spring Boot app exist in a layer below the application code.
+In the dual layer approach, we structure the Docker image such that the library dependencies of the Spring Boot app exist in a layer below the application code.
 This way, the layers adhere to the different life-cycles of the content.
-By pushing the infrequently changing binary dependencies down into a separate layer, and keeping only the application classes in the top layer, iterative rebuilds and re-deployments will be much faster.
+By pushing the infrequently changing library dependencies down into a separate layer, and keeping only the application classes in the top layer, iterative rebuilds and re-deployments will be much faster.
 
 image::/img/blog/blog_optimizing_spring_boot_dual_layer.png[align="center",Diagram of a dual layer Docker image for a Spring Boot application.]
 
