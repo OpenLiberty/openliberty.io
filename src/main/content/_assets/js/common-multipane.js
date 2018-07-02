@@ -86,31 +86,28 @@ function handleFloatingCodeColumn() {
     }
 }
 
+/* Find the section that is most visible in the viewport and return the id */
 function getScrolledVisibleSectionID(event) {
-    var origEvent = event.originalEvent;
-    var dir = (origEvent.deltaY) < 0 ? 'up' : 'down';
     var id = null;
+    var maxVisibleSectionHeight = 0;
 
     // Multipane view
     if ($(window).width() > twoColumnBreakpoint) {
-        var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2');
+        var sections = $('.sect1:not(#guide_meta):not(#related-guides)');
         sections.each(function(index) {
-            var elem = sections.get(index);
-            var rect = elem.getBoundingClientRect();
-            var elemTop = rect.top - 100; // Offset by the sticky header's height
-            var elemBottom = rect.bottom;
-            // Check if the next section in the direction the user is scrolling shows up
-            var isVisible;
-            if (dir === 'down') {
-                // Element top is visible and bottom is not visible
-                isVisible = elemTop < window.innerHeight && elemBottom >= window.innerHeight;
-            } else if (dir === 'up') {
-                isVisible = elemBottom >= 0 && elemBottom < window.innerHeight;
+            var elem = $(sections.get(index));
+            var windowHeight   = $(window).height();
+            var elemHeight = elem.outerHeight();
+            var rect = elem[0].getBoundingClientRect();
+            var top = rect.top; 
+            var bottom = rect.bottom;
+            var visibleElemHeight = Math.max(0, top > 0 ? Math.min(elemHeight, windowHeight - top) : Math.min(bottom, windowHeight));
+            if(visibleElemHeight > maxVisibleSectionHeight){
+                maxVisibleSectionHeight = visibleElemHeight;
+                id = elem.children('h2')[0].id;
             }
-            if (isVisible) {
-                id = this.id;
-                return false;    // Break out of loop
-            }
+
+            console.log('Section most in view is: ' + id + ' with height of ' + maxVisibleSectionHeight);
         });
     }
     return id;
@@ -135,7 +132,7 @@ function createEndOfGuideContent(){
         $("#guide-attribution").parent().remove();
         $("#toc_container a[href='#guide-attribution']").parent().remove(); // Remove from TOC.
     }
-    
+
     var relatedLinks = $("#related-links").siblings().find('p').clone();
     rightSide.append(relatedLinks);
     $("#related-links").parent().remove(); // Remove section from the main guide column.
