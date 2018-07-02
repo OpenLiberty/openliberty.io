@@ -1,0 +1,194 @@
+---
+layout: post
+title: "Creating Dual Layer Docker images for Spring Boot apps"
+date:   2018-07-02 11:30:00 -0000
+categories: blog
+author_picture: https://avatars3.githubusercontent.com/u/1999406
+seo-title: Creating Dual Layer Docker images for Spring Boot apps - OpenLiberty.io
+seo-description: Embrace Docker for your Spring Boot applications! Build dual layer Docker images and gain efficiencies for CI/CD teams. This post shows you how.
+blog_description: "Embrace Docker for your Spring Boot applications! Building dual layer Docker images and gain efficiencies for CI/CD teams. This post shows you how."
+---
+= Creating Dual Layer Docker images for Spring Boot apps
+Michael Thompson <https://github.com/barecode>
+
+In the first part of this blog post series link:/blog/2018/06/29/optimizing-spring-boot-apps-for-docker.html[Optimizing Spring Boot apps for Docker] we looked at the single layer approach to building Docker images for Spring Boot applications and the implications it has for CI/CD pipelines.
+I proposed that a dual layer approach has concrete benefits over the single layer approach and that these benefits are in the form of efficiencies in iterative development environments.
+
+Here we introduce an approach to creating dual layer Docker images for existing Spring Boot applications using a new tool in Open Liberty called `springBootUtility`.
+There are alternate approaches to creating multi-layered Docker images for Spring Boot applications[1], but this approach focuses on creating a dual layer image from the existing application rather than altering a maven or gradle build step.
+
+== The Dual Layer Approach
+In the dual layer approach, we structure the Docker image such that the library dependencies of the Spring Boot app exist in a layer below the application code.
+By pushing the infrequently changing library dependencies down into a separate layer, and keeping only the application classes in the top layer, iterative rebuilds and re-deployments are much faster.
+
+image::/img/blog/blog_optimizing_spring_boot_dual_layer.png[align="center",Diagram of a dual layer Docker image for a Spring Boot application.] 
+
+In order to accomplish this, we need a way to split the Spring Boot application into these separate components.
+Enter the `springBootUtility`.
+
+== The `springBootUtility`
+The `springBootUtility` is a new tool in Open Liberty which will split the Spring Boot application into two parts: the library dependencies, such as the Spring Boot starters and other third-party libraries, and the application code.
+The library dependencies are placed in a library cache and the application code is used to construct a thin application.
+The thin app contains a file which references the libraries it needs on the classpath.
+This thin app can then be deployed to Open Liberty which will generate the full classpath from the library cache.
+
+== Docker multi-stage builds
+The Dockerfile to build this dual layer image uses https://docs.docker.com/v17.09/engine/userguide/eng-image/multistage-build/#use-multi-stage-builds[multi-stage builds].
+Multi-stage builds allow a single Dockerfile to create multiple images, where the contents of one image can be copied into another, discarding the temporary content.
+This allows you to drastically reduce the size of your final image, without needing to involve multiple Docker files.
+We use this function to split the Spring Boot application within the Docker build process.
+
+== The Docker image
+The Docker image uses http://openjdk.java.net/[Open JDK] with https://www.eclipse.org/openj9/[Open J9] and https://openliberty.io/[Open Liberty].
+Open JDK provides a solid foundation of open source Java technology.
+Open J9 brings along some performance improvements over the default java virtual machine included with Open JDK.
+Open Liberty is a multi-programming model runtime, supporting Java EE, MicroProfile and Spring.
+This allows development teams to use a variety of programming models with a consistent runtime stack.
+
+== Show me the code!
+The Dockerfile, in all its gory glory (we'll walk through what it does next).
+
+----
+FROM adoptopenjdk/openjdk8-openj9 as staging
+
+ARG JAR_FILE
+ENV SPRING_BOOT_VERSION 2.0
+
+# Install unzip; needed to unzip Open Liberty
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Open Liberty
+ENV LIBERTY_SHA 4170e609e1e4189e75a57bcc0e65a972e9c9ef6e
+ENV LIBERTY_URL https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2018-06-19_0502/openliberty-18.0.0.2.zip
+
+RUN curl -sL "$LIBERTY_URL" -o /tmp/wlp.zip \
+   && echo "$LIBERTY_SHA  /tmp/wlp.zip" > /tmp/wlp.zip.sha1 \
+   && sha1sum -c /tmp/wlp.zip.sha1 \
+   && mkdir /opt/ol \
+   && unzip -q /tmp/wlp.zip -d /opt/ol \
+   && rm /tmp/wlp.zip \
+   && rm /tmp/wlp.zip.sha1 \
+   && mkdir -p /opt/ol/wlp/usr/servers/springServer/ \
+   && echo spring.boot.version="$SPRING_BOOT_VERSION" > /opt/ol/wlp/usr/servers/springServer/bootstrap.properties \
+   && echo \
+'<?xml version="1.0" encoding="UTF-8"?> \
+<server description="Spring Boot Server"> \
+  <featureManager> \
+    <feature>jsp-2.3</feature> \
+    <feature>transportSecurity-1.0</feature> \
+    <feature>websocket-1.1</feature> \
+    <feature>springBoot-${spring.boot.version}</feature> \
+  </featureManager> \
+  <httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="9080" httpsPort="9443" /> \
+  <include location="appconfig.xml"/> \
+</server>' > /opt/ol/wlp/usr/servers/springServer/server.xml \
+   && /opt/ol/wlp/bin/server start springServer \
+   && /opt/ol/wlp/bin/server stop springServer \
+   && echo \
+'<?xml version="1.0" encoding="UTF-8"?> \
+<server description="Spring Boot application config"> \
+  <springBootApplication location="app" name="Spring Boot application" /> \
+</server>' > /opt/ol/wlp/usr/servers/springServer/appconfig.xml
+
+# Stage the fat JAR
+COPY ${JAR_FILE} /staging/myFatApp.jar
+
+# Thin the fat application; stage the thin app output and the library cache
+RUN /opt/ol/wlp/bin/springBootUtility thin \
+ --sourceAppPath=/staging/myFatApp.jar \
+ --targetThinAppPath=/staging/myThinApp.jar \
+ --targetLibCachePath=/staging/lib.index.cache
+
+# unzip thin app to avoid cache changes for new JAR
+RUN mkdir /staging/myThinApp \
+   && unzip -q /staging/myThinApp.jar -d /staging/myThinApp
+
+# Final stage, only copying the liberty installation (includes primed caches)
+# and the lib.index.cache and thin application
+FROM adoptopenjdk/openjdk8-openj9
+
+VOLUME /tmp
+
+# Create the individual layers
+COPY --from=staging /opt/ol/wlp /opt/ol/wlp
+COPY --from=staging /staging/lib.index.cache /opt/ol/wlp/usr/shared/resources/lib.index.cache
+COPY --from=staging /staging/myThinApp /opt/ol/wlp/usr/servers/springServer/apps/app
+
+# Start the app on port 9080
+EXPOSE 9080
+CMD ["/opt/ol/wlp/bin/server", "run", "springServer"]
+
+----
+
+== The Details
+Using Docker’s multi-stage build and the `springBootUtility` in Open Liberty, the Dockerfile splits the Spring Boot application.
+
+We start with a staging image.
+First, we install `unzip`.
+Next, we download Open Liberty and stage in some configuration.
+All of this prep work is needed to get the Open Liberty tool in place.
+We know its pretty ugly, that's one of the things we'll be improving in the very near future when Liberty 18.0.0.2 Docker images are published.
+
+Once the image has all of the tools it needs, the JAR file is copied into the staging image and split.
+After the thin app is created under `/staging/myFatApp.jar`, a further optimization step is taken to unzip it.
+This unzip causes the application to be hosted directly from the class files.
+This allows subsequent rebuilds to re-use the application layer if the class files have not changed.
+
+Now that the staging work is done, we start fresh so that we can copy over the final Liberty installation, dependent libraries, and the thin application.
+The separate COPY commands in the Dockerfile generate the separate layers.
+The larger library dependency layer (34.2MB) and the smaller application layer (1.01MB) are what is meant by 'dual layer'.
+
+----
+$ docker history openlibertyio/spring-petclinic
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+883ee6374f66        7 minutes ago       /bin/sh -c #(nop)  CMD ["/opt/ol/wlp/bin/ser…   0B                  
+e3ba1351fc05        7 minutes ago       /bin/sh -c #(nop)  EXPOSE 9080                  0B                  
+86c646de6626        7 minutes ago       /bin/sh -c #(nop) COPY dir:589967d5ae0ade9a5…   1.01MB              
+8f98ce0a6c10        7 minutes ago       /bin/sh -c #(nop) COPY dir:d764c6a82219ed564…   34.2MB              
+240306c081cd        7 minutes ago       /bin/sh -c #(nop) COPY dir:0b45938a62d056d88…   200MB               
+161006b94f8e        22 minutes ago      /bin/sh -c #(nop)  VOLUME [/tmp]                0B                  
+f50ba84462ab        3 weeks ago         /bin/sh -c #(nop)  ENV PATH=/opt/java/openjd…   0B                  
+<missing>           3 weeks ago         /bin/sh -c set -eux;     ARCH="$(dpkg --prin…   193MB               
+<missing>           3 weeks ago         /bin/sh -c #(nop)  ENV JAVA_VERSION=jdk8u162…   0B                  
+<missing>           3 weeks ago         /bin/sh -c rm -rf /var/lib/apt/lists/* && ap…   16MB                
+<missing>           3 weeks ago         /bin/sh -c #(nop)  MAINTAINER Dinakar Gunigu…   0B                  
+<missing>           2 months ago        /bin/sh -c #(nop)  CMD ["/bin/bash"]            0B                  
+<missing>           2 months ago        /bin/sh -c mkdir -p /run/systemd && echo 'do…   7B                  
+<missing>           2 months ago        /bin/sh -c sed -i 's/^#\s*\(deb.*universe\)$…   2.76kB              
+<missing>           2 months ago        /bin/sh -c rm -rf /var/lib/apt/lists/*          0B                  
+<missing>           2 months ago        /bin/sh -c set -xe   && echo '#!/bin/sh' > /…   745B                
+<missing>           2 months ago        /bin/sh -c #(nop) ADD file:592c2540de1c70763…   113MB 
+----
+
+Now when application changes are made, only the application layer needs to be changed.
+
+== Try it out!
+You can copy this Dockerfile and run it on your own clone of Pet Clinic.
+
+`$ docker build --build-arg JAR_FILE=target/spring-petclinic-2.0.0.BUILD-SNAPSHOT.jar -t openlibertyio/spring-petclinic .`
+
+The resulting Docker image looks like this:
+
+image::/img/blog/blog_optimizing_spring_boot_dual_layer_with_liberty.png[align="center",Diagram of a dual layer Docker image for a Spring Boot application based on Open J9 and Open Liberty.]
+
+You will notice that the entire Docker image isn’t as small as the single layer approach. The base image is not based on Alpine Linux and Liberty's installation is not minified. We’re working on improving that.
+
+== Future Steps
+We’re happy with what we’ve built so far but, to be honest, the user experience of building these images isn’t great.
+It can be done better, and we’ll be working on that in the coming months.
+We'll also be publishing Docker images which contain a pre-configured Open Liberty instance.
+That will significantly reduce the complexity of the Dockerfile.
+
+We also recognize that there is room for improvement when integrating these dual layer builds in a continuous delivery pipeline.
+That's another aspect of improving the Spring Boot experience for Docker we're interested in solving.
+
+Lastly, this approach of splitting out static library dependencies from the application is not exclusive to Spring Boot applications!
+Similar efficiencies can also be gained with Java EE or MicroProfile applications.
+That's another area we're exploring.
+
+
+== References
+
+[1] https://github.com/gclayburg/dockerPreparePlugin
