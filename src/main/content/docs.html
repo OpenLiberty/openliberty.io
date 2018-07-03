@@ -13,7 +13,7 @@ permalink: /docs/
 <div id="docs_intro_background">
     <div id="docs_intro_container" class="container-fluid">
         <div class="row">
-            <div class="col-md-4">
+            <div class="container col-md-4">
                 <img id="docs_title" src="{{ "/img/docs_page_title.svg" | relative }}" class="img-responsive" alt="Docs">
                 <p id="docs_description"><br>Docs, guides and reference that’s worth exploring!</p>
             </div>
@@ -44,25 +44,26 @@ permalink: /docs/
 <div class="reference_background">
     <div id="docs_container" class="container">
         <div class="row">
-            <div class="col-sm-12 col-md-4">
-                <div id="reference_title">API Reference</div>
-                <p id="reference_description">View the Javadoc for APIs available in Open Liberty. More APIs and other reference materials are on the way, so watch for updates!</p>
+            <div class="col-xs-12 col-sm-6">
+                <div id="docs_reference_title">Reference Docs</div>
+                {% for doc in javadocs %}
+                    {% if doc.url == '/docs/ref/javaee/8/' or doc.url == '/docs/ref/microprofile/1%2E3/' %}
+                    <a href="{{ doc.url | replace: '%2E', '.'}}" class="reference_item">
+                        <h3 class="reference_title">{{doc.title}}</h3>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+                <a href="/docs/ref/config" class="reference_item">
+                    <h3 class="reference_title">Open Liberty Config</h3>
+                </a>
             </div>
-            {% for doc in javadocs %}
-                {% if doc.url == '/docs/ref/javaee/8/' or doc.url == '/docs/ref/microprofile/1%2E3/' %}
-                    <div class="col-sm-12 col-sm-6 col-md-4">
-                        <a href="{{ doc.url | replace: '%2E', '.'}}" class="reference_item">
-                            {% if doc.url == '/docs/ref/javaee/8/' %}
-                            <img id="javaee_logo" src="{{ "/img/docs_java_ee_logo.png" | relative }}" class="img-responsive" alt="Java EE Logo">
-                            {% endif %}
-                            {% if doc.url == '/docs/ref/microprofile/1%2E3/' %}
-                            <img id="mp_logo" src="{{ "/img/logos/docs_microprofile_logo.png" | relative }}" class="img-responsive" alt="MicroProfile Logo">
-                            {% endif %}
-                            <h3 class="reference_title">{{doc.title}}</h3>
-                        </a>
-                    </div>
-                {% endif %}            
-            {% endfor %}
+            <div class="text-center col-xs-12 col-sm-6">
+                <div id="docs_contributor_title">Contributor Docs</div>
+                <p id="docs_contributor_description">Looking for Contributor docs? We encourage you to <a href="/contribute/" class="orange_link_light_background">take a look at all other contributor resources first.</a><br><br>
+                    After you’ve gotten an overview of the types of content provided for contributors, browse the docs on GitHub. 
+                </p>
+                <a href="# "id="docs_contributor_link"><div class="github_logo"></div>View contributor docs on GitHub</a>
+            </div>
         </div>
     </div>
 </div>
