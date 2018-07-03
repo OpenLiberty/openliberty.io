@@ -240,10 +240,7 @@ $(document).ready(function() {
             var id = getScrolledVisibleSectionID(event);
             if (id) {
                 // Remove previous TOC section highlighted and highlight correct step
-                updateTOCHighlighting(id);
-
-                // Set URL hash value to be the section id
-                location.hash = id;                       
+                updateTOCHighlighting(id);                      
 
                 // Hide other code blocks and show the correct code block.                  
                 try{

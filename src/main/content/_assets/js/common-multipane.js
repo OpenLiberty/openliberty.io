@@ -101,7 +101,17 @@ function getScrolledVisibleSectionID(event) {
             var rect = elem[0].getBoundingClientRect();
             var top = rect.top; 
             var bottom = rect.bottom;
-            var visibleElemHeight = Math.max(0, top > 0 ? Math.min(elemHeight, windowHeight - top) : Math.min(bottom, windowHeight));
+            var visibleElemHeight = 0;           
+            if(top > 0){
+                 // Top of element is below the top of the viewport
+                 // Calculate the visible element height as the min of the whole element (if the whole element is in the viewport) and the top of the element to the bottom of the window (if only part of the element is visible and extends beyond the bottom of the viewport).
+                 visibleElemHeight = Math.min(elemHeight, windowHeight - top);
+            }
+            else {
+                // Top of element is at or above the top of the viewport
+                // Calculate the visible element height as the min between the bottom (if the element starts above the viewport and ends before the bottom of the viewport) or the windowHeight(the element extends beyond the top and bottom of viewport in both diretions).
+                visibleElemHeight = Math.min(bottom, windowHeight);
+            }
             if(visibleElemHeight > maxVisibleSectionHeight){
                 maxVisibleSectionHeight = visibleElemHeight;
                 id = elem.children('h2')[0].id;
