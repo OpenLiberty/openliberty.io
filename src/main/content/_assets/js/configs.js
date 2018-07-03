@@ -429,7 +429,6 @@ function handleExpandCollapseTitle(titleId, isShow) {
                 $(this).removeClass("collapseMargin");
             }
             $(this).show();
-
         } else {
             // don't hide the clicked toggle element title and description
             if ((dataId === titleId && $(this).is("table")) || (dataId !== titleId && (dataId.indexOf(titleId + "/") === 0))) {
@@ -468,16 +467,20 @@ function modifyFixedTableColumnWidth() {
     var colWidths = [];
     if (!isMobileView()) {
         colWidths[4] = ["25%", "15%", "15%", "45%"];
-    } else {
-        colWidths[4] = ["25%", "25%", "15%", "35%"];
+    // } else {
+    //     colWidths[4] = ["25%", "25%", "15%", "35%"];
     }
     $(colgroups).each(function () {
-        var cols = $(this).find("col");
-        var currentColWidths = colWidths[cols.length];
-        if (currentColWidths) {
-            $(cols).each(function (index) {
-                $(this).css("width", currentColWidths[index]);
-            })
+        if (isMobileView()) {
+            $(this).remove();
+        } else {
+            var cols = $(this).find("col");
+            var currentColWidths = colWidths[cols.length];
+            if (currentColWidths) {
+                $(cols).each(function (index) {
+                    $(this).css("width", currentColWidths[index]);
+                })
+            }
         }
     })
 }
@@ -882,9 +885,13 @@ function addHamburgerClick() {
             if ($("#toc_column").hasClass('in')) {
                 $("#config_content").show();
                 $("#breadcrumb_hamburger").show();
+                // For iphone, the footer doesn't show up in the right place. Not displaying the 
+                // footer for now.
+                $("footer").hide();
             } else {
                 $("#config_content").hide();
                 $("#breadcrumb_hamburger").hide();
+                $("footer").show();
                 // since the opening/closing of the toc container is managed by the hamburger,
                 // it always scrolls back to the top of the TOC. The codes here cannot override  
                 // the scrolling position as the default hamburger click event has not been fired
@@ -913,7 +920,7 @@ $(document).ready(function () {
     addHamburgerClick();
 
     $('iframe[name="contentFrame"]').load(function () {
-        //if ($(this)[0].contentDocument.title !== "Not Found") {
+        if ($(this)[0].contentDocument.title !== "Not Found") {
             initialContentBreadcrumbVisibility();
             modifyFixedTableColumnWidth();
             handleSubHeadingsInContent();
@@ -952,6 +959,6 @@ $(document).ready(function () {
             if ($(this).contents().attr("location").href.indexOf("#") !== -1) {
                 handleIFrameDocPosition($(this).contents().attr("location").href);
             }
-        //}
+        }
     });
 });
