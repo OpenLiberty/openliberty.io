@@ -86,31 +86,38 @@ function handleFloatingCodeColumn() {
     }
 }
 
+/* Find the section that is most visible in the viewport and return the id */
 function getScrolledVisibleSectionID(event) {
-    var origEvent = event.originalEvent;
-    var dir = (origEvent.deltaY) < 0 ? 'up' : 'down';
     var id = null;
+    var maxVisibleSectionHeight = 0;
 
     // Multipane view
     if ($(window).width() > twoColumnBreakpoint) {
-        var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2');
+        var sections = $('.sect1:not(#guide_meta):not(#related-guides)');
         sections.each(function(index) {
-            var elem = sections.get(index);
-            var rect = elem.getBoundingClientRect();
-            var elemTop = rect.top - 100; // Offset by the sticky header's height
-            var elemBottom = rect.bottom;
-            // Check if the next section in the direction the user is scrolling shows up
-            var isVisible;
-            if (dir === 'down') {
-                // Element top is visible and bottom is not visible
-                isVisible = elemTop < window.innerHeight && elemBottom >= window.innerHeight;
-            } else if (dir === 'up') {
-                isVisible = elemBottom >= 0 && elemBottom < window.innerHeight;
+            var elem = $(sections.get(index));
+            var windowHeight   = $(window).height();
+            var elemHeight = elem.outerHeight();
+            var rect = elem[0].getBoundingClientRect();
+            var top = rect.top; 
+            var bottom = rect.bottom;
+            var visibleElemHeight = 0;           
+            if(top > 0){
+                 // Top of element is below the top of the viewport
+                 // Calculate the visible element height as the min of the whole element (if the whole element is in the viewport) and the top of the element to the bottom of the window (if only part of the element is visible and extends beyond the bottom of the viewport).
+                 visibleElemHeight = Math.min(elemHeight, windowHeight - top);
             }
-            if (isVisible) {
-                id = this.id;
-                return false;    // Break out of loop
+            else {
+                // Top of element is at or above the top of the viewport
+                // Calculate the visible element height as the min between the bottom (if the element starts above the viewport and ends before the bottom of the viewport) or the windowHeight(the element extends beyond the top and bottom of viewport in both diretions).
+                visibleElemHeight = Math.min(bottom, windowHeight);
             }
+            if(visibleElemHeight > maxVisibleSectionHeight){
+                maxVisibleSectionHeight = visibleElemHeight;
+                id = elem.children('h2')[0].id;
+            }
+
+            console.log('Section most in view is: ' + id + ' with height of ' + maxVisibleSectionHeight);
         });
     }
     return id;
@@ -125,6 +132,17 @@ function createEndOfGuideContent(){
     leftSide.prepend(whatYouLearned);
     $("#great-work-you-re-done").parent().remove(); // Remove section from the main guide column.
     $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
+
+    // Concatenate the guide title and guide attribution license and append it to the end of guide.
+    var guideAttribution = $("#guide-attribution").siblings().find('p').text();
+    if(guideAttribution){
+        var guideTitle = $("#guide_title").text();
+        var concatenatedAttribution = guideTitle + " is licensed under " + guideAttribution;
+        $("#guide_attribution").text(concatenatedAttribution);
+        $("#guide-attribution").parent().remove();
+        $("#toc_container a[href='#guide-attribution']").parent().remove(); // Remove from TOC.
+    }
+
     var relatedLinks = $("#related-links").siblings().find('p').clone();
     rightSide.append(relatedLinks);
     $("#related-links").parent().remove(); // Remove section from the main guide column.
