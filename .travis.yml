@@ -12,7 +12,7 @@ script: ./scripts/build_jekyll_maven.sh
 # branch whitelist
 branches:
   only:
-    - multiPane
+    - development
 
 sudo: false # route your build to the container-based infrastructure for a faster build
 
@@ -24,4 +24,4 @@ deploy:
   script: ./.travis/cf-blue-green.sh
   skip_cleanup: true
   on:
-    branch: multiPane
+    branch: development
