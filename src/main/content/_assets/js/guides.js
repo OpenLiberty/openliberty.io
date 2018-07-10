@@ -164,7 +164,8 @@ $(document).ready(function() {
         container: "#guides_search_container",
         content: function() {
             return $("#popover_content").html();
-        }
+        },
+        trigger: "focus"
     });
 
     // Click buttons to fill search bar
