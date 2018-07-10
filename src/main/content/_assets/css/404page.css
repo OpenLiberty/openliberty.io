@@ -28,8 +28,8 @@
 
 #crashed_ship_container {
     position: relative;
-    margin-right: auto;
-    margin-left: auto;
+    margin-left: 50%;
+    transform: translateX(-50%);
     width: 915px;
 }
 
@@ -48,18 +48,29 @@
 }
 
 #shiplight_top {
-    top: 11px;
-    left: 286px;
+    top: 14px;
+    left: 289px;
+    animation: blink 3s infinite;
 }
 
 #shiplight_mid {
-    top: 69px;
-    left: 317px;
+    top: 72px;
+    left: 319px;
+    animation: blink 3s infinite;
 }
 
 #shiplight_bot {
-    top: 116px;
-    left: 378px;
+    top: 118px;
+    left: 379px;
+    animation: blink 3s infinite;
+}
+
+#smoke1, #smoke2, #smoke3,
+#smoke4, #smoke5, #smoke6 {
+    -webkit-animation: blink 3s infinite;
+    -moz-animation: blink 3s infinite;
+    -o-animation: blink 3s infinite;
+    animation: blink 3s infinite;
 }
 
 #smoke1 {
@@ -70,26 +81,46 @@
 #smoke2 {
     top: 107px;
     left: 521px;
+    -webkit-animation-delay: -2.5s;
+    -moz-animation-delay: -2.5s;
+    -o-animation-delay: -2.5s;
+    animation-delay: -2.5s;
 }
 
 #smoke3 {
     top: 73px;
     left: 530px;
+    -webkit-animation-delay: -2s;
+    -moz-animation-delay: -2;
+    -o-animation-delay: -2s;
+    animation-delay: -2s;
 }
 
 #smoke4 {
     top: 23px;
     left: 533px;
+    -webkit-animation-delay: -1.5s;
+    -moz-animation-delay: -1.5s;
+    -o-animation-delay: -1.5s;
+    animation-delay: -1.5s;
 }
 
 #smoke5 {
     bottom: 395px;
     left: 523px;
+    -webkit-animation-delay: -1s;
+    -moz-animation-delay: -1s;
+    -o-animation-delay: -1s;
+    animation-delay: -1s;
 }
 
 #smoke6 {
     bottom: 439px;
     left: 475px;
+    -webkit-animation-delay: -0,5s;
+    -moz-animation-delay: -0.5s;
+    -o-animation-delay: -0.5s;
+    animation-delay: -0.5s;
 }
 
 #right_planet {
@@ -149,6 +180,53 @@
     left: 140px;
 }
 
+/* Blinking animation */
+@-webkit-keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    60%, 100% {
+        opacity: 0;
+    }
+}
+
+@-moz-keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    60%, 100% {
+        opacity: 0;
+    }
+}
+@-o-keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    60%, 100% {
+        opacity: 0;
+    }
+}
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    60%, 100% {
+        opacity: 0;
+    }
+}
+
 /* Override navbar colors */
 #navbar_responsive_button {
     background: none;
@@ -171,9 +249,7 @@
 }
 
 @media (max-width: 767px) {
-    #error_message {
-        margin-bottom: 114px;
-    }
+
 }
 
 @media (max-width:576px) {
@@ -183,7 +259,7 @@
 
     #error_message {
         margin-bottom: 114px;
-        font-size: 20px;
+        font-size: 16px;
         width: 280px;
     }
 
@@ -203,17 +279,17 @@
     }
 
     #shiplight_top {
-        top: 6px;
+        top: 7px;
         left: 135px;
     }
     
     #shiplight_mid {
-        top: 33px;
-        left: 149px;
+        top: 34px;
+        left: 149.5px;
     }
     
     #shiplight_bot {
-        top: 55px;
+        top: 56px;
         left: 177px;
         height: 4px;
     }
