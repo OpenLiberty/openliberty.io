@@ -13,7 +13,7 @@ permalink: /docs/
 <div id="docs_intro_background">
     <div id="docs_intro_container" class="container-fluid">
         <div class="row">
-            <div class="container col-md-4">
+            <div class="col-md-4">
                 <img id="docs_title" src="{{ "/img/docs_page_title.svg" | relative }}" class="img-responsive" alt="Docs">
                 <p id="docs_description"><br>Docs, guides and reference that’s worth exploring!</p>
             </div>
@@ -37,23 +37,21 @@ permalink: /docs/
     <img id="leftcloud" class="hidden-sm hidden-xs" src="{{ "/img/doc_page_leftcloud_2x.png" | relative }}" alt="">
     <img id="rightcloud" class="hidden-sm hidden-xs" src="{{ "/img/doc_page_rightcloud_2x.png" | relative }}" alt="">
 </div>
-   
-<!-- Build one list of all the documents that have a particular layout -->
-{% assign javadocs = site.pages | where: 'type', 'Javadoc' %}
 
+
+<!-- REFERENCES -->
 <div class="reference_background">
     <div id="docs_container" class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-6">
                 <div id="docs_reference_title">Reference Docs</div>
-                {% for doc in javadocs %}
-                    {% if doc.url == '/docs/ref/javaee/8/' or doc.url == '/docs/ref/microprofile/1%2E3/' %}
-                    <a href="{{ doc.url | replace: '%2E', '.'}}" class="reference_item">
-                        <h3 class="reference_title">{{doc.title}}</h3>
-                    </a>
-                    {% endif %}
-                {% endfor %}
-                <a href="/docs/ref/config" class="reference_item">
+                <a href="/docs/ref/javaee/" class="reference_item">
+                    <h3 class="reference_title">Java EE API</h3>
+                </a>
+                <a href="/docs/ref/microprofile/" class="reference_item">
+                    <h3 class="reference_title">MicroProfile API</h3>
+                </a>
+                <a href="/docs/ref/config/" class="reference_item">
                     <h3 class="reference_title">Open Liberty Config</h3>
                 </a>
             </div>
