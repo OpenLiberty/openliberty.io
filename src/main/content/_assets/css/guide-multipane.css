@@ -314,6 +314,10 @@ header {
     z-index: 2;
 }
 
+#mobile_github_section {
+    display: none;
+}
+
 #github_clone_popup {
     height: 111px;
     margin: 0 20px;
@@ -476,6 +480,65 @@ header {
     #title_row {
         margin-bottom: 30px;
     }
+
+    #mobile_github_section {
+        display: block;
+        top: 31%;
+        width: 100%;
+        z-index: 2;
+    }
+    
+    #mobile_github_clone_popup {
+        height: 111px;
+        margin: 0 20px;
+        padding: 19px 0 0 20px;
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+    }
+    
+    #mobile_github_clone_popup_title {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.63;
+        color: #1b1c34;
+        margin-bottom: 14px;
+    }
+    
+    #mobile_github_clone_popup_repo {
+        font-size: 14px;
+        line-height: 1.57;
+        color: #737373;
+        height: 44px;
+        border:1px solid #96bc32;
+    }
+
+    #mobile_github_clone_popup_repo > span {
+        float: left;
+        width: calc(100% - 51px);
+        white-space: nowrap;
+        overflow: auto;
+        padding: 10px;
+    }
+    
+    #mobile_github_clone_popup_copy {
+        width: 51px;
+        height: 44px;
+        background-color: #96bc32;
+        position: absolute;
+        float: right;
+        right: 25.5px;
+        padding: 14px 16px 13px 20px;
+        text-align: center;
+    }
+
+    #mobile_github_clone_popup_copy > img {
+        width: 14px;
+        height: 16px;
+    }
+
+    #mobile_github_clone_popup_copy:hover {
+        cursor: pointer;
+    }
         
     #guide_column {
         width: auto;
@@ -486,8 +549,31 @@ header {
         box-shadow: none;
     } 
 
+    #guide_column div.sect1, .code_column .CodeRay code {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    #guide_title, #duration_container, #mobile_github_section, #guide_content .sect1 h2, #guide_column .paragraph {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
     .guide_column_code_snippet {
         display: block;
+    }
+
+    #guide_content .code_command > .content {
+        position: relative;    
+        border-left: 8px solid #96bc32;
+        border-top:1px solid #c8d6fb;
+        border-bottom:1px solid #c8d6fb;
+        width: 100%;
+        margin-bottom: 18px;
+    }
+    
+    #guide_content .code_command > .content:after, #guide_content .code_command > .content:before {
+        display: none;
     }
 }
 

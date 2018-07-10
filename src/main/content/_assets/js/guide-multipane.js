@@ -191,17 +191,38 @@ $(document).ready(function() {
     
 
     /* Copy button for the github clone command  that pops up initially when opening a guide. */
-    $("#github_clone_popup_copy").click(function(event){
+    $("#github_clone_popup_copy, #mobile_github_clone_popup_copy").click(function(event){
         event.preventDefault();
         target = $("#github_clone_popup_repo").get(0);
-        window.getSelection().selectAllChildren(target); // Set the github clone command as the copy target.
-        if(document.execCommand('copy')) {
-            window.getSelection().removeAllRanges();
-            $("#github_clone_popup_container").fadeOut("slow");
-            $(".code_column").removeClass('dimmed_code_column', {duration:400});
-        } else {
-            alert('Copy failed. Copy the command manually: ' + target.innerText);
-        }        
+        // IE
+        if(window.clipboardData){
+            window.clipboardData.setData("Text", target.innerText);
+        } 
+        else{
+            var temp = $('<div>');
+            temp.css({
+                position: "absolute",
+                left:     "-1000px",
+                top:      "-1000px",
+            });
+            // Create a temporary element for copying the text.
+            temp.text(target.innerText);
+            $("body").append(temp);
+            var range = document.createRange();
+            range.selectNodeContents(temp.get(0));
+            selection = window.getSelection();
+            selection.removeAllRanges(); // Remove previous selections
+            selection.addRange(range);
+            
+            // Try to copy the selection and if it fails display a popup to copy manually.
+            if(document.execCommand('copy')) {                
+                $("#github_clone_popup_container").fadeOut("slow");
+                $(".code_column").removeClass('dimmed_code_column', {duration:400});
+            } else {
+                alert('Copy failed. Copy the command manually: ' + target.innerText);
+            } 
+            temp.remove(); // Remove temporary element.
+        }               
     });
 
     /*
