@@ -105,6 +105,30 @@ $(document).ready(function() {
         var id = this.hash.substring(1);
         updateTOCHighlighting(id);
         handleFloatingTableOfContent();
+        // Close TOC if in single column view
+        if(inSingleColumnView()){
+            $("#mobile_close_container").trigger('click');
+        }
+    });
+
+    function handleFloatingTOCAccordion() {
+        if(inSingleColumnView()){
+            var isMobile = inMobile();
+            var transitionPoint = isMobile ? 428 : 400;
+            var accordion = $('#mobile_toc_accordion_container');
+            var isPositionFixed = (accordion.css('position') === 'fixed');
+            if ($(this).scrollTop() > transitionPoint && !isPositionFixed) { 
+                accordion.addClass('floating_accordion');
+                $('.navbar').css('display', 'none');
+            } else if ($(this).scrollTop() < transitionPoint && isPositionFixed) {
+                accordion.removeClass('floating_accordion'); 
+                $('.navbar').css('display', 'block');
+            }
+        }
+    }
+
+    $(window).scroll(function(){
+        handleFloatingTOCAccordion();
     });
 
 });

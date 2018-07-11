@@ -12,6 +12,14 @@
 var backgroundSizeAdjustment = 200;
 var twoColumnBreakpoint = 1170;
 
+function inSingleColumnView(){
+    return($(window).width() <= twoColumnBreakpoint);
+}
+
+function inMobile(){
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+}
+
 function heightOfVisibleBackground() {
     var result;
     if(isBackgroundBottomVisible()) {
