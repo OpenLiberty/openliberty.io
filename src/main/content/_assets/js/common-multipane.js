@@ -128,9 +128,9 @@ function getScrolledVisibleSectionID(event) {
 function createEndOfGuideContent(){
     var leftSide = $("#end_of_guide_left_section");
     var rightSide = $("#end_of_guide_right_section");
-    var whatYouLearned = $("#great-work-you-re-done").siblings().find('p').clone();
+    var whatYouLearned = $("#great-work-you-re-done, #great-work-youre-done").siblings().find('p').clone();
     leftSide.prepend(whatYouLearned);
-    $("#great-work-you-re-done").parent().remove(); // Remove section from the main guide column.
+    $("#great-work-you-re-done, #great-work-youre-done").parent().remove(); // Remove section from the main guide column.
     $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
 
     // Concatenate the guide title and guide attribution license and append it to the end of guide.
