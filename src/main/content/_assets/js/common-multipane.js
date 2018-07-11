@@ -116,8 +116,6 @@ function getScrolledVisibleSectionID(event) {
                 maxVisibleSectionHeight = visibleElemHeight;
                 id = elem.children('h2')[0].id;
             }
-
-            console.log('Section most in view is: ' + id + ' with height of ' + maxVisibleSectionHeight);
         });
     }
     return id;
