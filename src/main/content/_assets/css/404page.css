@@ -11,17 +11,17 @@
 
 #page_container {
     position: relative;
-    background-image:linear-gradient(0deg, #515b7d 9%, #1f203e 100%);
+    background-image: linear-gradient(0deg, #515b7d 9%, #1f203e 100%);
     padding-top: 227px;
     overflow: hidden;
 }
 
 #error_message {
     display: inline-block;
-    font-family:BunueloLight;
-    font-size:40px;
+    font-family: BunueloLight;
+    font-size: 40px;
     color: white;
-    text-align:center;
+    text-align: center;
     width: 559px;
     margin-bottom: 270px;
 }
@@ -34,7 +34,8 @@
 }
 
 #crashed_ship {
-    
+    width: 916px;
+    height: 413px;
 }
 
 #shiplight_top, #shiplight_mid, #shiplight_bot,
@@ -47,29 +48,30 @@
     position: absolute;
 }
 
+#shiplight_top, #shiplight_mid, #shiplight_bot {
+    animation: shiplight_blink 10s infinite;
+}
+
 #shiplight_top {
-    top: 14px;
-    left: 289px;
-    animation: blink 3s infinite;
+    top: 15px;
+    left: 287px;
 }
 
 #shiplight_mid {
     top: 72px;
-    left: 319px;
-    animation: blink 3s infinite;
+    left: 318px;
+    animation-delay: -9.5s;
 }
 
 #shiplight_bot {
-    top: 118px;
-    left: 379px;
-    animation: blink 3s infinite;
+    top: 119px;
+    left: 377px;
+    width: 13px;
+    animation-delay: -9s;
 }
 
 #smoke1, #smoke2, #smoke3,
 #smoke4, #smoke5, #smoke6 {
-    -webkit-animation: blink 3s infinite;
-    -moz-animation: blink 3s infinite;
-    -o-animation: blink 3s infinite;
     animation: blink 3s infinite;
 }
 
@@ -81,140 +83,91 @@
 #smoke2 {
     top: 107px;
     left: 521px;
-    -webkit-animation-delay: -2.5s;
-    -moz-animation-delay: -2.5s;
-    -o-animation-delay: -2.5s;
     animation-delay: -2.5s;
 }
 
 #smoke3 {
     top: 73px;
     left: 530px;
-    -webkit-animation-delay: -2s;
-    -moz-animation-delay: -2;
-    -o-animation-delay: -2s;
     animation-delay: -2s;
 }
 
 #smoke4 {
     top: 23px;
     left: 533px;
-    -webkit-animation-delay: -1.5s;
-    -moz-animation-delay: -1.5s;
-    -o-animation-delay: -1.5s;
     animation-delay: -1.5s;
 }
 
 #smoke5 {
     bottom: 395px;
     left: 523px;
-    -webkit-animation-delay: -1s;
-    -moz-animation-delay: -1s;
-    -o-animation-delay: -1s;
     animation-delay: -1s;
 }
 
 #smoke6 {
-    bottom: 439px;
+    bottom: 445px;
     left: 475px;
-    -webkit-animation-delay: -0,5s;
-    -moz-animation-delay: -0.5s;
-    -o-animation-delay: -0.5s;
     animation-delay: -0.5s;
 }
 
 #right_planet {
-    top: 445px;
-    right: 140px;
+    top: 43.3%;
+    right: 9.7%;
 }
 
 #left_planet {
-    top: 432px;
-    left: 199px;
+    top: 42%;
+    left: 13.8%;
 }
 
 #smstar_br {
-    bottom: 10px;
-    right: 53px;
+    bottom: 1%;
+    right: 3.2%;
 }
 
 #smstar_bl {
-    bottom: 63px;
-    left: 47px;
+    bottom: 6.1%;
+    left: 3.3%;
 }
 
 #smstar_c {
-    top: 411px;
-    left: 673px;
+    top: 40%;
+    left: 47%;;
 }
 
 #medstar_l {
-    top: 247px;
-    left: 210px;
+    top: 24%;
+    left: 14.6%;
 }
 
 #medstar_r {
-    top: 88px;
-    right: 468px;
+    top: 8.6%;
+    right: 32%;
 }
 
 #bigstar {
-    bottom: 312px;
-    right: 110px;
+    bottom: 30.4%;
+    right: 7.6%;
 }
 
 #star_cluster1 {
-    top: 50px;
-    left: 12px;
+    top: 4.9%;
+    left: 0.8%;
     transform: rotateY(180deg);
 }
 
 #star_cluster2 {
-    top: 170px;
-    right: 34px;
+    top: 16.6%;
+    right: 2.4%;
     transform: rotateX(180deg);
 }
 
 #star_cluster3 {
-    top: 630px;
-    left: 140px;
+    top: 61.3%;
+    left: 9.7%;
 }
 
 /* Blinking animation */
-@-webkit-keyframes blink {
-    0% {
-        opacity: 0;
-    }
-    10% {
-        opacity: 1;
-    }
-    60%, 100% {
-        opacity: 0;
-    }
-}
-
-@-moz-keyframes blink {
-    0% {
-        opacity: 0;
-    }
-    10% {
-        opacity: 1;
-    }
-    60%, 100% {
-        opacity: 0;
-    }
-}
-@-o-keyframes blink {
-    0% {
-        opacity: 0;
-    }
-    10% {
-        opacity: 1;
-    }
-    60%, 100% {
-        opacity: 0;
-    }
-}
 @keyframes blink {
     0% {
         opacity: 0;
@@ -224,6 +177,16 @@
     }
     60%, 100% {
         opacity: 0;
+    }
+}
+
+/* Blinking ship lights */
+@keyframes shiplight_blink {
+    0%, 20%, 60%, 80%, 100% {
+        opacity: 0;
+    }
+    10%, 30%, 45%, 70% {
+        opacity: 1;
     }
 }
 
@@ -240,19 +203,7 @@
 
 
 /* Mobile and tablet styling */
-@media (max-width: 1199px) {
-    
-}
-
-@media (max-width: 991px) {
-
-}
-
-@media (max-width: 767px) {
-
-}
-
-@media (max-width:576px) {
+@media (max-width: 576px) {
     #page_container {
         padding-top: 113px;
     }
@@ -260,7 +211,8 @@
     #error_message {
         margin-bottom: 114px;
         font-size: 16px;
-        width: 280px;
+        width: 230px;
+        max-width: 100%;
     }
 
     #crashed_ship_container {
@@ -274,24 +226,24 @@
     }
 
     #shiplight_top, #shiplight_mid, #shiplight_bot {
-        width: 6px;
+        width: 7px;
         height: 5px;
     }
 
     #shiplight_top {
-        top: 7px;
-        left: 135px;
+        top: 8px;
+        left: 134px;
     }
     
     #shiplight_mid {
         top: 34px;
-        left: 149.5px;
+        left: 148px;
     }
     
     #shiplight_bot {
         top: 56px;
         left: 177px;
-        height: 4px;
+        width: 6px;
     }
     
     #smoke1 {
@@ -330,7 +282,7 @@
     }
     
     #smoke6 {
-        bottom: 204px;
+        bottom: 206px;
         left: 229px;
         width: 44px;
         height: 33px;
