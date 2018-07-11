@@ -72,7 +72,7 @@
 
 #smoke1, #smoke2, #smoke3,
 #smoke4, #smoke5, #smoke6 {
-    animation: blink 3s infinite;
+    animation: smoke_blink 3s infinite;
 }
 
 #smoke1 {
@@ -138,16 +138,21 @@
 #medstar_l {
     top: 24%;
     left: 14.6%;
+    animation: blink 4s infinite;
 }
 
 #medstar_r {
     top: 8.6%;
     right: 32%;
+    animation: blink 4s infinite;
+    animation-delay: -2s;
 }
 
 #bigstar {
     bottom: 30.4%;
     right: 7.6%;
+    animation: blink 4s infinite;
+    animation-delay: -3s;
 }
 
 #star_cluster1 {
@@ -165,10 +170,25 @@
 #star_cluster3 {
     top: 61.3%;
     left: 9.7%;
+    animation: blink 4s infinite;
+    animation-delay: -1s;
 }
 
-/* Blinking animation */
+/* Blinking stars animation*/
 @keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    10%, 40% {
+        opacity: 1;
+    }
+    60%, 100% {
+        opacity: 0;
+    }
+}
+
+/* Blinking smoke animation */
+@keyframes smoke_blink {
     0% {
         opacity: 0;
     }
@@ -180,7 +200,7 @@
     }
 }
 
-/* Blinking ship lights */
+/* Blinking ship lights animation */
 @keyframes shiplight_blink {
     0%, 20%, 60%, 80%, 100% {
         opacity: 0;
