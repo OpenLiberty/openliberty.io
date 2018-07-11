@@ -12,14 +12,17 @@ js:
 - guide-multipane
 ---
 
-<div id="background_container" class="black_blue_gradient_background">
+<div id="background_container">
         <div class="row">
-            <!-- Guide's table of contents section -->
+            <!-- Guide's table of contents section -->            
             <div id="toc_column" class="collapse inline">
                 <div id="toc_inner">
                     {% assign toc = page.document | tocify_asciidoc %}
                     {% if toc %}
                     <div id="close_container">
+                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button"/>
+                    </div>
+                    <div id="mobile_close_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
                         <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button"/>
                     </div>
                     <h3 id="toc_title">Contents</h3>
@@ -36,7 +39,7 @@ js:
                             {% endfor %}
                         </div>
                     {% endif %}
-                </div>
+                </div>                
             </div>
             <!-- Entire guide section -->
             <div id="guide_column" class="position_relative">
@@ -49,7 +52,7 @@ js:
                             <span id="guide_duration">{{ page.duration }}</span>
                         </div>
                         <div id="mobile_github_section">
-                            <div id="mobile_github_clone_popup_title"><span class="light_green_link_light_background">Git clone</span><span style="font-weight: 600; font-family: BunueloBold"> to get going right away:</span></div>
+                            <div id="mobile_github_clone_popup_title"><span class="dark_green_link_light_background">Git clone</span><span style="font-weight: 600; font-family: BunueloBold"> to get going right away:</span></div>
                             <div id="mobile_github_clone_popup_repo">
                                 <span>git clone https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}.git</span>   
                                 <div id="mobile_github_clone_popup_copy">
@@ -57,6 +60,19 @@ js:
                                 </div>
                             </div>                            
                         </div>
+                    </div>
+
+                    <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
+                        <div id="mobile_toc_accordion">
+                            <button class="breadcrumb_hamburger toc-toggle collapsed" type="button">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <img src="{{ " /img/TOC_Close.svg " | relative }}" class="TOC_Close_SVG img-responsive" alt="Table of contents close button"/>
+                            </button>
+                            <span>Table of contents</span>
+                        </div>                
                     </div>
 
                     <!-- Guide content section -->

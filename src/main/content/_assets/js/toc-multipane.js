@@ -82,6 +82,8 @@ $(document).ready(function() {
     });
 
     // Handle collapsing the table of contents from full width into the hamburger
+    // This removes the 'x' from the table of contents and turns the hamburger into a bigger 'X' that can be used to close the TOC
+    // and then the TOC can be opened again by clicking the hamburger.
     $('#close_container').on('click', function(event) {
         // Hide the X button
         $(this).hide();
