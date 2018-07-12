@@ -47,9 +47,9 @@ $(document).ready(function() {
             }
 
             if(matches_all_words) {
-                guide_item.parent().removeClass('hidden');
+                guide_item.parent().show();
             } else {
-                guide_item.parent().addClass('hidden');
+                guide_item.parent().hide();
             }
         });
     }
@@ -57,13 +57,13 @@ $(document).ready(function() {
     function processSearch(input_value){
         if(input_value.length == 0) {
             //revert elements to their original state
-            $('#guides_container').css({'background':'#f8f9f9','box-shadow':'0 2px 4px 0 rgba(0,0,0,0.11)','margin-bottom':'52px'});
-            $('#microprofile_header').removeClass('hidden');
-            $('#microprofile_subtitle').removeClass('hidden');
-            $('.mp_guide_column').removeClass('hidden');
-            $('#additional_header').removeClass('hidden');
-            $('.guide_column').removeClass('hidden');
-            $('#guide_counter_title').addClass('hidden');
+            $('#guides_microprofile_container').css({'background':'#f8f9f9','box-shadow':'0 2px 4px 0 rgba(0,0,0,0.11)','margin-bottom':'52px'});
+            $('#microprofile_header').show();
+            $('#microprofile_subtitle').show();
+            $('.mp_guide_column').show();
+            $('#additional_header').show();
+            $('.guide_column').show();
+            $('#guide_counter_title').hide();
         } else {
             if(input_value.indexOf('tag:') === 0) {
                 var search_value = input_value.substring(4).trim();
@@ -76,22 +76,22 @@ $(document).ready(function() {
             var additionalGuideVisible = $('.guide_column:visible').size();
             var totalGuideVisible = mpGuideVisible + additionalGuideVisible;
 
-            //hide categories if there are no search results in them 
+            // Hide categories if there are no search results in them 
             if (mpGuideVisible == 0) {
-                $('#guides_container').css({'background':'none','box-shadow':'none','margin-bottom':'0px'});
-                $('#microprofile_header').addClass('hidden');
+                $('#guides_microprofile_container').css({'background':'none','box-shadow':'none','margin-bottom':'0px'});
+                $('#microprofile_header').hide();
             } else {
-                $('#guides_container').css({'background':'#f8f9f9','box-shadow':'0 2px 4px 0 rgba(0,0,0,0.11)','margin-bottom':'52px'});
-                $('#microprofile_header').removeClass('hidden');
+                $('#guides_microprofile_container').css({'background':'#f8f9f9','box-shadow':'0 2px 4px 0 rgba(0,0,0,0.11)','margin-bottom':'52px'});
+                $('#microprofile_header').show();
             }
 
             if (additionalGuideVisible == 0) {
-                $('#additional_header').addClass('hidden');
+                $('#additional_header').hide();
             } else {
-                $('#additional_header').removeClass('hidden');
+                $('#additional_header').show();
             }
-            $('#microprofile_subtitle').addClass('hidden');
-            $('#guide_counter_title').removeClass('hidden');
+            $('#microprofile_subtitle').hide();
+            $('#guide_counter_title').show();
             $('#guide_counter_title').text('Total search results (' + totalGuideVisible + ')');
         }        
     }
