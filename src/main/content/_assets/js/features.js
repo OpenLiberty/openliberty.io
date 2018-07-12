@@ -71,18 +71,14 @@ function updateMainBreadcrumb(resource, notRemove) {
     }
 }
 
-// add a browser history entry with pushState to be used by the window.onpopstate to handle
-// the forward and backward history events.
-// The state contains
-//   href: the content url including hash to point to the nested title
 function updateHashInUrl(href) {
     if (!isMobileView()) {
         var hashInUrl = href;
         if (href.indexOf("/feature/") !== -1) {
             hashInUrl = href.substring(9);
         }
-        var state = { href: href }
-        window.history.pushState(state, null, '#' + hashInUrl);
+        //var state = { href: href }
+        window.history.pushState(null, null, '#' + hashInUrl);
     }
 }
 
@@ -108,6 +104,7 @@ function setContainerHeight() {
     //var containerHeight = $("#toc_column").outerHeight();
     var featureContentHeight = $("#feature_content").outerHeight() + "px";
     $("#background_container").css("height", featureContentHeight);
+    $("#background_container").css("margin-bottom", "60px");
     $("#toc_column").css("height", featureContentHeight);
 }
 
