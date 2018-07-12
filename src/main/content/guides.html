@@ -13,7 +13,7 @@ permalink: /guides/
 {% assign static-guides = site.pages | where: 'layout', 'guide' %}
 {% assign multipane-static-guides = site.pages | where: 'layout', 'guide-multipane' %}
 {% assign interactive-guides = site.pages | where: 'layout', 'interactive-guide' %}
-{% assign multipane-iguides = site.pages | where_exp: 'layout', 'iguide-multipane' %}
+{% assign multipane-iguides = site.pages | where: 'layout', 'iguide-multipane' %}
 {% assign guides = static-guides | concat: interactive-guides | concat: multipane-static-guides | concat: multipane-iguides | sort: 'releasedate' | reverse %}
 <!--
     Build list of guides with certain tag
@@ -37,6 +37,7 @@ permalink: /guides/
     {% endif %}
 {% endfor %}
 
+<!-- INTRODUCTION AND SEARCH BAR -->
 <div id="guides_information_container" class="container">
     <div id="guides_border"></div>
     <div class="row">
@@ -44,6 +45,7 @@ permalink: /guides/
             <h2 id="guides_title">Guides</h2>
             <p id="guides_description">The quickest way to learn all things Open Liberty, and beyond!</p>
         </div>
+        <img id="clouds" src="{{ "/img/guides_clouds.png" | relative }}" alt="">
         <div id="guides_search_container" class="col-xs-12 col-sm-5 col-md-6">
             <input id="guide_search_input" type="text" placeholder="Search all guides" 
             data-toggle="popover" data-placement="bottom" data-html="true" aria-label="Search">
@@ -54,10 +56,11 @@ permalink: /guides/
             </div>
         </div>
     </div>
-    <img id="clouds" src="{{ "/img/guides_clouds.png" | relative }}" alt="">
 </div>
 
-<div id="guides_container" class="container">
+
+<!-- MICROPROFILE GUIDES -->
+<div id="guides_microprofile_container" class="container">
     <h2 id="guide_counter_title" class="guide_category_title"></h2>
     <div id="microprofile_header" class="guide_category_header">
         <h2 class="guide_category_title">MicroProfile and Open Liberty</h2>
@@ -87,6 +90,9 @@ permalink: /guides/
         {% endfor %}
     </div>
 </div>
+
+
+<!-- ADDITIONAL GUIDES -->
 <div id="guides_additional_container" class="container">
     <h2 id="additional_header" class="guide_category_title">Additional Guides</h2>
     <div class="row">
