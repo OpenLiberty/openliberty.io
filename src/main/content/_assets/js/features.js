@@ -21,17 +21,14 @@ function addTOCClick() {
         event.preventDefault();
         event.stopPropagation();
 
-        /*
-        if (isMobileView()) {
-            $("#breadcrumb_hamburger").show();
-            $("#breadcrumb_hamburger").trigger("click");
-            $("#feature_content").show();
-        }
-        */
-
         loadContent(currentHref);
         updateMainBreadcrumb(resource);
         updateHashInUrl(currentHref);
+
+        if (isMobileView()) {
+            $("#feature_content").show();
+            $("#breadcrumb_hamburger").trigger("click");
+        }        
     }
 
     $("#toc_container > ul > li > div").off("click").on("click", onclick);
@@ -105,7 +102,9 @@ function setContainerHeight() {
     var featureContentHeight = $("#feature_content").outerHeight() + "px";
     $("#background_container").css("height", featureContentHeight);
     $("#background_container").css("margin-bottom", "60px");
-    $("#toc_column").css("height", featureContentHeight);
+    if (!isMobileView()) {       
+        $("#toc_column").css("height", featureContentHeight);
+    }
 }
 
 function selectFirstDoc() {
@@ -115,11 +114,34 @@ function selectFirstDoc() {
         setSelectedTOC(firstTOCElement);  
         updateMainBreadcrumb();
     }
+}
 
+function addHamburgerClick() {
+    if (isMobileView()) {
+        var hamburger = $(".breadcrumb_hamburger_nav");
+        // The content represented by the hamburger is assumed to be collapsed as its initial state even 
+        // if the aria-expanded is set to true. Since the TOC is the first page to display in mobile view,
+        // trigger a click on the hamburger to get the correct initial state.
+        hamburger.trigger("click");
+
+        hamburger.on("click", function (e) {
+            if ($("#toc_column").hasClass('in')) {
+                $("#feature_content").show();
+                $("#breadcrumb_hamburger").css("visibility", "visible");
+                $("#breadcrumb_hamburger_title").css("visibility", "visible");
+            } else {
+                $("#feature_content").hide();
+                $("#breadcrumb_hamburger").css("visibility", "hidden");
+                $("#breadcrumb_hamburger_title").css("visibility", "hidden");
+                $("#background_container").css("height", "auto");
+            }
+        })
+    }
 }
 
 $(document).ready(function () {  
     addTOCClick();
+    addHamburgerClick();
 
     //attaching the event listener
     $(window).on('hashchange', function () {
@@ -134,7 +156,6 @@ $(document).ready(function () {
         } else {
             selectFirstDoc();
         }
-
     });
 
     //manually tiggering it if we have hash part in URL
