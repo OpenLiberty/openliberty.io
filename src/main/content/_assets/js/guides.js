@@ -57,7 +57,8 @@ $(document).ready(function() {
     function processSearch(input_value){
         if(input_value.length == 0) {
             //revert elements to their original state
-            $('#guides_microprofile_container').css({'background':'#f8f9f9','box-shadow':'0 2px 4px 0 rgba(0,0,0,0.11)','margin-bottom':'52px'});
+            $('#guides_microprofile_container').addClass("color_guides_background");
+            $('#guides_microprofile_container').removeClass("no_guides_background");
             $('#microprofile_header').show();
             $('#microprofile_subtitle').show();
             $('.mp_guide_column').show();
@@ -78,10 +79,11 @@ $(document).ready(function() {
 
             // Hide categories if there are no search results in them 
             if (mpGuideVisible == 0) {
-                $('#guides_microprofile_container').css({'background':'none','box-shadow':'none','margin-bottom':'0px'});
+                $('#guides_microprofile_container').removeClass("color_guides_background");
+                $('#guides_microprofile_container').addClass("no_guides_background");
                 $('#microprofile_header').hide();
             } else {
-                $('#guides_microprofile_container').css({'background':'#f8f9f9','box-shadow':'0 2px 4px 0 rgba(0,0,0,0.11)','margin-bottom':'52px'});
+                $('#guides_microprofile_container').addClass("color_guides_background");
                 $('#microprofile_header').show();
             }
 
