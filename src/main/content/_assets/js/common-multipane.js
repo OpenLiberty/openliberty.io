@@ -149,6 +149,11 @@ function createEndOfGuideContent(){
     $("#toc_container a[href='#related-links']").parent().remove(); // Remove from TOC.
 }
 
+// Adjust the window for the sticky header when requesting a specific section.
+function shiftWindow() {
+    scrollBy(0, -100);
+}
+
 
 $(document).ready(function() {
     function handleDownArrow() {
@@ -174,23 +179,6 @@ $(document).ready(function() {
         });
     }
 
-    // Adjust the window for the sticky header when requesting a specific section.
-    function shiftWindow() {
-        scrollBy(0, -100);
-    }
-
-    if (location.hash){
-        shiftWindow();
-        handleFloatingTableOfContent();
-        var id = location.hash.substring(1);
-        updateTOCHighlighting(id);
-    }
-
-    window.addEventListener("hashchange", function(){
-        shiftWindow();
-        var id = location.hash.substring(1);
-        updateTOCHighlighting(id);
-    });
 
     $(window).on('resize', function(){
         handleFloatingTableOfContent(); // Handle table of content view changes.
