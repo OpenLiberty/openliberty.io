@@ -1,0 +1,364 @@
+/*******************************************************************************
+ * Copyright (c) 2017 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+ #page_container {
+    position: relative;
+    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(9%, #515b7d), to(#1f203e));
+    background-image: -webkit-linear-gradient(bottom, #515b7d 9%, #1f203e 100%);
+    background-image: -o-linear-gradient(bottom, #515b7d 9%, #1f203e 100%);
+    background-image: linear-gradient(0deg, #515b7d 9%, #1f203e 100%);
+    padding-top: 227px;
+    overflow: hidden;
+}
+
+#error_message {
+    font-family: BunueloLight;
+    font-size: 40px;
+    color: white;
+    text-align: center;
+    width: 559px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 270px;
+}
+
+#crashed_ship_container {
+    position: relative;
+    margin-left: 50%;
+    -webkit-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+            transform: translateX(-50%);
+    width: 915px;
+}
+
+#crashed_ship {
+    width: 916px;
+    height: 413px;
+}
+
+#shiplight_top, #shiplight_mid, #shiplight_bot,
+#right_planet, #left_planet,
+#smoke1, #smoke2, #smoke3,
+#smoke4, #smoke5, #smoke6,
+#smstar_br, #smstar_bl, #smstar_c,
+#medstar_r, #medstar_l, #bigstar,
+#star_cluster1, #star_cluster2, #star_cluster3 {
+    position: absolute;
+}
+
+#shiplight_top, #shiplight_mid, #shiplight_bot {
+    -webkit-animation: shiplight_blink 10s infinite;
+            animation: shiplight_blink 10s infinite;
+}
+
+#shiplight_top {
+    top: 15px;
+    left: 287px;
+}
+
+#shiplight_mid {
+    top: 72px;
+    left: 318px;
+    -webkit-animation-delay: -9.5s;
+            animation-delay: -9.5s;
+}
+
+#shiplight_bot {
+    top: 119px;
+    left: 377px;
+    width: 13px;
+    -webkit-animation-delay: -9s;
+            animation-delay: -9s;
+}
+
+#smoke1, #smoke2, #smoke3,
+#smoke4, #smoke5, #smoke6 {
+    -webkit-animation: smoke_blink 3s infinite;
+            animation: smoke_blink 3s infinite;
+}
+
+#smoke1 {
+    top: 118px;
+    left: 496px;
+}
+
+#smoke2 {
+    top: 107px;
+    left: 521px;
+    -webkit-animation-delay: -2.5s;
+            animation-delay: -2.5s;
+}
+
+#smoke3 {
+    top: 73px;
+    left: 530px;
+    -webkit-animation-delay: -2s;
+            animation-delay: -2s;
+}
+
+#smoke4 {
+    top: 23px;
+    left: 533px;
+    -webkit-animation-delay: -1.5s;
+            animation-delay: -1.5s;
+}
+
+#smoke5 {
+    bottom: 395px;
+    left: 523px;
+    -webkit-animation-delay: -1s;
+            animation-delay: -1s;
+}
+
+#smoke6 {
+    bottom: 445px;
+    left: 475px;
+    -webkit-animation-delay: -0.5s;
+            animation-delay: -0.5s;
+}
+
+#right_planet {
+    top: 43.3%;
+    right: 9.7%;
+}
+
+#left_planet {
+    top: 42%;
+    left: 13.8%;
+}
+
+#smstar_br {
+    bottom: 1%;
+    right: 3.2%;
+}
+
+#smstar_bl {
+    bottom: 6.1%;
+    left: 3.3%;
+}
+
+#smstar_c {
+    top: 40%;
+    left: 47%;;
+}
+
+#medstar_l {
+    top: 24%;
+    left: 14.6%;
+    -webkit-animation: blink 4s infinite;
+            animation: blink 4s infinite;
+}
+
+#medstar_r {
+    top: 8.6%;
+    right: 32%;
+    -webkit-animation: blink 4s infinite;
+            animation: blink 4s infinite;
+    -webkit-animation-delay: -2s;
+            animation-delay: -2s;
+}
+
+#bigstar {
+    bottom: 30.4%;
+    right: 7.6%;
+    -webkit-animation: blink 4s infinite;
+            animation: blink 4s infinite;
+    -webkit-animation-delay: -3s;
+            animation-delay: -3s;
+}
+
+#star_cluster1 {
+    top: 4.9%;
+    left: 0.8%;
+    -webkit-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+}
+
+#star_cluster2 {
+    top: 16.6%;
+    right: 2.4%;
+    -webkit-transform: rotateX(180deg);
+            transform: rotateX(180deg);
+}
+
+#star_cluster3 {
+    top: 61.3%;
+    left: 9.7%;
+    -webkit-animation: blink 4s infinite;
+            animation: blink 4s infinite;
+    -webkit-animation-delay: -1s;
+            animation-delay: -1s;
+}
+
+/* Blinking stars animation*/
+@-webkit-keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    10%, 40% {
+        opacity: 1;
+    }
+    60%, 100% {
+        opacity: 0;
+    }
+}
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    10%, 40% {
+        opacity: 1;
+    }
+    60%, 100% {
+        opacity: 0;
+    }
+}
+
+/* Blinking smoke animation */
+@-webkit-keyframes smoke_blink {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    60%, 100% {
+        opacity: 0;
+    }
+}
+@keyframes smoke_blink {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    60%, 100% {
+        opacity: 0;
+    }
+}
+
+/* Blinking ship lights animation */
+@-webkit-keyframes shiplight_blink {
+    0%, 20%, 60%, 80%, 100% {
+        opacity: 0;
+    }
+    10%, 30%, 45%, 70% {
+        opacity: 1;
+    }
+}
+@keyframes shiplight_blink {
+    0%, 20%, 60%, 80%, 100% {
+        opacity: 0;
+    }
+    10%, 30%, 45%, 70% {
+        opacity: 1;
+    }
+}
+
+/* Override navbar colors */
+#navbar_responsive_button {
+    background: none;
+}
+
+@media (max-width: 767px) {
+    .navbar {
+        background-color: #1f203e;
+    }
+}
+
+
+/* Mobile and tablet styling */
+@media (max-width: 576px) {
+    #page_container {
+        padding-top: 113px;
+    }
+
+    #error_message {
+        margin-bottom: 114px;
+        font-size: 16px;
+        width: 230px;
+        max-width: 100%;
+    }
+
+    #crashed_ship_container {
+        width: 429px;
+        height: 194px;
+    }
+
+    #crashed_ship {
+        width: 429px;
+        height: 194px;
+    }
+
+    #shiplight_top, #shiplight_mid, #shiplight_bot {
+        width: 7px;
+        height: 5px;
+    }
+
+    #shiplight_top {
+        top: 8px;
+        left: 134px;
+    }
+    
+    #shiplight_mid {
+        top: 34px;
+        left: 148px;
+    }
+    
+    #shiplight_bot {
+        top: 56px;
+        left: 177px;
+        width: 6px;
+    }
+    
+    #smoke1 {
+        top: 56px;
+        left: 239px;
+        width: 15px;
+        height: 18px;
+    }
+    
+    #smoke2 {
+        top: 51px;
+        left: 251px;
+        width: 9px;
+        height: 9px;
+    }
+    
+    #smoke3 {
+        top: 35px;
+        left: 256px;
+        width: 17px;
+        height: 13px;
+    }
+    
+    #smoke4 {
+        top: 14px;
+        left: 259px;
+        width: 20px;
+        height: 18px;
+    }
+    
+    #smoke5 {
+        bottom: 183px;
+        left: 252px;
+        width: 29px;
+        height: 25px;
+    }
+    
+    #smoke6 {
+        bottom: 206px;
+        left: 229px;
+        width: 44px;
+        height: 33px;
+    }
+}
