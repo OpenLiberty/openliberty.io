@@ -270,6 +270,19 @@ $(document).ready(function() {
         handleSectionSnapping(event);
     });
 
+    if (location.hash){
+        shiftWindow();
+        handleFloatingTableOfContent();
+        var id = location.hash.substring(1);
+        updateTOCHighlighting(id);
+    }
+
+    window.addEventListener("hashchange", function(){
+        shiftWindow();
+        var id = location.hash.substring(1);
+        updateTOCHighlighting(id);
+    });
+
     $(window).on('load', function(){
         if(window.location.hash === ""){
             handleGithubPopup();            
