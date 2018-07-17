@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
- /* HEADER and BREADCRUMB */
+/* HEADER and BREADCRUMB */
 header {
     position: sticky;
     position: -webkit-sticky;
@@ -68,11 +68,12 @@ header {
 }
 
 #guide_content p {
+    font-size: 14px;
+    line-height: 24px;
     padding-top: 15px;
     padding-bottom: 15px;
     margin-top: 0px;
     margin-bottom: 0px;
-    line-height: 26px;
 }
 
 #guide_content a, #end_of_guide a {
@@ -258,7 +259,6 @@ header {
     min-height: 600px;
     background-repeat: no-repeat;
     margin-bottom: 100px;
-    overflow-x: hidden;
 }
 
 #background_container > .row {
@@ -287,6 +287,7 @@ header {
 
 .dimmed_code_column {
     opacity: .19;
+    filter: blur(1px);
 }
 
 .code_column_title_container {
@@ -312,6 +313,10 @@ header {
     top: 31%;
     width: 100%;
     z-index: 2;
+}
+
+#mobile_github_section {
+    display: none;
 }
 
 #github_clone_popup {
@@ -464,17 +469,68 @@ header {
     
 @media (max-width: 1170px) {
 
-    #background_container {
-        padding-top: 40px;
-        margin-bottom: 0;
-    }
-
     #github_clone_popup_container {
         display: none;
     }
 
     #title_row {
         margin-bottom: 30px;
+    }
+
+    #mobile_github_section {
+        display: block;
+    }
+    
+    #mobile_github_clone_popup {
+        height: 111px;
+        margin: 0 20px;
+        padding: 19px 0 0 20px;
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+    }
+    
+    #mobile_github_clone_popup_title {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.63;
+        color: #1b1c34;
+        margin-bottom: 14px;
+    }
+    
+    #mobile_github_clone_popup_repo {
+        font-size: 14px;
+        line-height: 1.57;
+        color: #737373;
+        height: 44px;
+        border:1px solid #96bc32;
+    }
+
+    #mobile_github_clone_popup_repo > span {
+        float: left;
+        width: calc(100% - 51px);
+        white-space: nowrap;
+        overflow: auto;
+        padding: 10px;
+    }
+    
+    #mobile_github_clone_popup_copy {
+        width: 51px;
+        height: 42px;
+        background-color: #96bc32;
+        position: absolute;
+        float: right;
+        right: 39.5px;
+        padding: 14px 16px 13px 20px;
+        text-align: center;
+    }
+
+    #mobile_github_clone_popup_copy > img {
+        width: 14px;
+        height: 16px;
+    }
+
+    #mobile_github_clone_popup_copy:hover {
+        cursor: pointer;
     }
         
     #guide_column {
@@ -486,14 +542,40 @@ header {
         box-shadow: none;
     } 
 
+    #guide_column div.sect1, .code_column .CodeRay code {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    #guide_title, #duration_container, #mobile_github_section, #guide_content .sect1 h2, #guide_column .paragraph {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
     .guide_column_code_snippet {
         display: block;
+    }
+
+    #guide_content .code_command > .content {
+        position: relative;    
+        border-left: 8px solid #96bc32;
+        border-top:1px solid #c8d6fb;
+        border-bottom:1px solid #c8d6fb;
+        width: 100%;
+        margin-bottom: 18px;
+    }
+    
+    #guide_content .code_command > .content:after, #guide_content .code_command > .content:before {
+        display: none;
     }
 }
 
 @media (min-width: 1171px) {
     #background_container {
         background-image: inherit;
+        margin-bottom: 0;
     }
 
     #down_arrow {

@@ -12,6 +12,14 @@
 var backgroundSizeAdjustment = 200;
 var twoColumnBreakpoint = 1170;
 
+function inSingleColumnView(){
+    return($(window).width() <= twoColumnBreakpoint);
+}
+
+function inMobile(){
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+}
+
 function heightOfVisibleBackground() {
     var result;
     if(isBackgroundBottomVisible()) {
@@ -116,8 +124,6 @@ function getScrolledVisibleSectionID(event) {
                 maxVisibleSectionHeight = visibleElemHeight;
                 id = elem.children('h2')[0].id;
             }
-
-            console.log('Section most in view is: ' + id + ' with height of ' + maxVisibleSectionHeight);
         });
     }
     return id;
@@ -128,9 +134,9 @@ function getScrolledVisibleSectionID(event) {
 function createEndOfGuideContent(){
     var leftSide = $("#end_of_guide_left_section");
     var rightSide = $("#end_of_guide_right_section");
-    var whatYouLearned = $("#great-work-you-re-done").siblings().find('p').clone();
+    var whatYouLearned = $("#great-work-you-re-done, #great-work-youre-done").siblings().find('p').clone();
     leftSide.prepend(whatYouLearned);
-    $("#great-work-you-re-done").parent().remove(); // Remove section from the main guide column.
+    $("#great-work-you-re-done, #great-work-youre-done").parent().remove(); // Remove section from the main guide column.
     $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
 
     // Concatenate the guide title and guide attribution license and append it to the end of guide.

@@ -82,6 +82,8 @@ $(document).ready(function() {
     });
 
     // Handle collapsing the table of contents from full width into the hamburger
+    // This removes the 'x' from the table of contents and turns the hamburger into a bigger 'X' that can be used to close the TOC
+    // and then the TOC can be opened again by clicking the hamburger.
     $('#close_container').on('click', function(event) {
         // Hide the X button
         $(this).hide();
@@ -103,6 +105,30 @@ $(document).ready(function() {
         var id = this.hash.substring(1);
         updateTOCHighlighting(id);
         handleFloatingTableOfContent();
+        // Close TOC if in single column view
+        if(inSingleColumnView()){
+            $("#mobile_close_container").trigger('click');
+        }
+    });
+
+    function handleFloatingTOCAccordion() {
+        if(inSingleColumnView()){
+            var isMobile = inMobile();
+            var transitionPoint = isMobile ? 428 : 400;
+            var accordion = $('#mobile_toc_accordion_container');
+            var isPositionFixed = (accordion.css('position') === 'fixed');
+            if ($(this).scrollTop() > transitionPoint && !isPositionFixed) { 
+                accordion.addClass('floating_accordion');
+                $('.navbar').css('display', 'none');
+            } else if ($(this).scrollTop() < transitionPoint && isPositionFixed) {
+                accordion.removeClass('floating_accordion'); 
+                $('.navbar').css('display', 'block');
+            }
+        }
+    }
+
+    $(window).scroll(function(){
+        handleFloatingTOCAccordion();
     });
 
 });

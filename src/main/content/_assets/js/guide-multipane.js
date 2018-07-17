@@ -191,17 +191,38 @@ $(document).ready(function() {
     
 
     /* Copy button for the github clone command  that pops up initially when opening a guide. */
-    $("#github_clone_popup_copy").click(function(event){
+    $("#github_clone_popup_copy, #mobile_github_clone_popup_copy").click(function(event){
         event.preventDefault();
         target = $("#github_clone_popup_repo").get(0);
-        window.getSelection().selectAllChildren(target); // Set the github clone command as the copy target.
-        if(document.execCommand('copy')) {
-            window.getSelection().removeAllRanges();
-            $("#github_clone_popup_container").fadeOut("slow");
-            $(".code_column").removeClass('dimmed_code_column', {duration:400});
-        } else {
-            alert('Copy failed. Copy the command manually: ' + target.innerText);
-        }        
+        // IE
+        if(window.clipboardData){
+            window.clipboardData.setData("Text", target.innerText);
+        } 
+        else{
+            var temp = $('<div>');
+            temp.css({
+                position: "absolute",
+                left:     "-1000px",
+                top:      "-1000px",
+            });
+            // Create a temporary element for copying the text.
+            temp.text(target.innerText);
+            $("body").append(temp);
+            var range = document.createRange();
+            range.selectNodeContents(temp.get(0));
+            selection = window.getSelection();
+            selection.removeAllRanges(); // Remove previous selections
+            selection.addRange(range);
+            
+            // Try to copy the selection and if it fails display a popup to copy manually.
+            if(document.execCommand('copy')) {                
+                $("#github_clone_popup_container").fadeOut("slow");
+                $(".code_column").removeClass('dimmed_code_column', {duration:400});
+            } else {
+                alert('Copy failed. Copy the command manually: ' + target.innerText);
+            } 
+            temp.remove(); // Remove temporary element.
+        }               
     });
 
     /*
@@ -244,21 +265,25 @@ $(document).ready(function() {
 
                 // Hide other code blocks and show the correct code block.                  
                 try{
-                    var code_block = code_sections[id].code;
-                    var fromLine = code_sections[id].fromLine,
-                        toLine = code_sections[id].toLine; // To be used in the future when we have designs for highlighting a range of lines.
-                    $('#code_column .code_column').not(code_block).hide();
-                    code_block.show();
-                
-                    // Scroll to the line in the code column if a line number is given
-                    if(fromLine){
-                        // var target = code_block.find('.line-numbers:contains(' + fromLine + ')').first();                         
-                        // $('#code_column').animate({
-                        //     scrollTop: target.offset().top
-                        // }, 500);
-                    } else {
-                        $('#code_column').scrollTop('0');
-                    }   
+                    var section = code_sections[id];
+                    if(section){
+                        var code_block = section.code;
+                        var fromLine = section.fromLine,
+                            toLine = section.toLine; // To be used in the future when we have designs for highlighting a range of lines.
+                        $('#code_column .code_column').not(code_block).hide();
+                        code_block.show();
+                    
+                        // Scroll to the line in the code column if a line number is given
+                        if(fromLine){
+                            // var target = code_block.find('.line-numbers:contains(' + fromLine + ')').first();                         
+                            // $('#code_column').animate({
+                            //     scrollTop: target.offset().top
+                            // }, 500);
+                        } else {
+                            $('#code_column').scrollTop('0');
+                        }
+                    }
+                       
                 } catch(e) {
                     console.log(e);
                 }                
