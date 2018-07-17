@@ -24,14 +24,13 @@ repos = client.org_repos('OpenLiberty')
 # --------------------------------------------
 # Travis CI related steps
 # --------------------------------------------
-# For the interactive guides, only build the dev branch for the TravisCI environments
-iguide_branch = 'master'
+# Oonly build the multipane branch for the TravisCI environments
 guide_branch = 'master'
 if ENV['TRAVIS']
-    iguide_branch = 'dev'
     guide_branch = 'multipane'
+    guide_camelcase_branch = 'multiPane'
 end
-puts "Looking for draft interactive guides with branch: #{iguide_branch}..."
+puts "Looking for draft interactive guides with branch: #{guide_branch}..."
 
 # Function to check if the guide directory exists after a git clone command
 def directory_exists?(repo_name)
@@ -48,30 +47,37 @@ repos.each do |element|
         ##################
         # DRAFT GUIDES  
         # Clone guides that are still being drafted and are only for the staging website
-        if repo_name.start_with?('draft-iguide')
-            # Clone the draft interactive guides, using the dev branch for travis and master for all other environments.
-            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{iguide_branch} --single-branch src/main/content/guides/#{repo_name}`
-        elsif repo_name.start_with?('draft-guide')
+        if repo_name.start_with?('draft-iguide') || repo_name.start_with?('draft-guide')
+            # Clone the draft interactive guides, using the multipane/multiPane branch for travis and master for all other environments.
             `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_branch} --single-branch src/main/content/guides/#{repo_name}`
-            # Clone the default branch if the guide_branch does not exist for this guide repo.
+
+            # Clone the draft guide using multiPane because git clone is case sensitive
+            if !(directory_exists?(repo_name)){
+                `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_camelcase_branch} --single-branch src/main/content/guides/#{repo_name}`
+            }
+
+            # Clone the default branch if the guide_branch or guide_camelcase_branch does not exist for this guide repo.
             if !(directory_exists?(repo_name))
                 `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
             end
-        end
+        end        
     else
         ##################
         # PUBLISHED GUIDES
         # Clone interactive guides that are ready to be published to openliberty.io
-        if repo_name.start_with?('iguide')
-            # Clone the interactive guides, using the dev branch for travis and master for all other environments.
-            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{iguide_branch} --single-branch src/main/content/guides/#{repo_name}`
-        elsif repo_name.start_with?('guide')
-            # Clone static guides that are ready to be published to openliberty.io
+        if repo_name.start_with?('iguide') || repo_name.start_with?('guide')
+            # Clone the interactive guides, using the multipane/multiPane branch for travis and master for all other environments.
             `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_branch} --single-branch src/main/content/guides/#{repo_name}`
-            # Clone the default branch if the guide_branch does not exist for this guide repo.
+
+             # Clone the draft guide using multiPane because git clone is case sensitive
+             if !(directory_exists?(repo_name)){
+                `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_camelcase_branch} --single-branch src/main/content/guides/#{repo_name}`
+            }
+
+            # Clone the default branch if the guide_branch or guide_camelcase_branch does not exist for this guide repo.
             if !(directory_exists?(repo_name))
                 `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
-            end            
-        end
+            end
+        end        
     end
 end
