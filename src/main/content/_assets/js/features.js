@@ -26,12 +26,19 @@ function addTOCClick() {
         updateHashInUrl(currentHref);
 
         if (isMobileView()) {
-            $("#feature_content").show();
             $("#breadcrumb_hamburger").trigger("click");
         }        
     }
 
     $("#toc_container > ul > li > div").off("click").on("click", onclick);
+
+    $("#toc_container > ul > li > div").off("keypress").on('keypress', function (event) {
+        event.stopPropagation();
+        // Enter key
+        if (event.which === 13 || event.keyCode === 13) {
+            $(this).click();
+        }
+    });
 }
 
 function setSelectedTOC(resource) {
@@ -45,10 +52,12 @@ function setSelectedTOC(resource) {
 }
 
 function loadContent(href) {
+    $('footer').hide();
     $("#feature_content").load(href, function(response, status) {
         if (status === "success") {
             addClassToFeaturesThatEnableThisFeature();
             setContainerHeight();
+            $('footer').show();
         }
     });
 }
@@ -69,14 +78,15 @@ function updateMainBreadcrumb(resource, notRemove) {
 }
 
 function updateHashInUrl(href) {
-    if (!isMobileView()) {
+    //if (!isMobileView()) {
         var hashInUrl = href;
         if (href.indexOf("/feature/") !== -1) {
             hashInUrl = href.substring(9);
         }
         //var state = { href: href }
-        window.history.pushState(null, null, '#' + hashInUrl);
-    }
+        //window.history.pushState(null, null, '#' + hashInUrl);
+        window.location.hash = "#" + hashInUrl;
+    //}
 }
 
 function isMobileView() {
@@ -122,18 +132,21 @@ function addHamburgerClick() {
         // The content represented by the hamburger is assumed to be collapsed as its initial state even 
         // if the aria-expanded is set to true. Since the TOC is the first page to display in mobile view,
         // trigger a click on the hamburger to get the correct initial state.
-        hamburger.trigger("click");
+        //hamburger.trigger("click");
 
         hamburger.on("click", function (e) {
             if ($("#toc_column").hasClass('in')) {
                 $("#feature_content").show();
-                $("#breadcrumb_hamburger").css("visibility", "visible");
-                $("#breadcrumb_hamburger_title").css("visibility", "visible");
+                $("#breadcrumb_hamburger").show();
+                $("#breadcrumb_hamburger_title").show();
             } else {
                 $("#feature_content").hide();
-                $("#breadcrumb_hamburger").css("visibility", "hidden");
-                $("#breadcrumb_hamburger_title").css("visibility", "hidden");
+                $("#breadcrumb_hamburger").hide();
+                $("#breadcrumb_hamburger_title").hide();
                 $("#background_container").css("height", "auto");
+                if (window.location.hash) { 
+                    updateHashInUrl("");
+                }
             }
         })
     }
@@ -152,15 +165,26 @@ $(document).ready(function () {
                 loadContent(tocHref);
                 setSelectedTOC(tocElement);
                 updateMainBreadcrumb(tocElement);
+
+                if (isMobileView() && $("#toc_column").hasClass('in')) {
+                    $(".breadcrumb_hamburger_nav").trigger('click');
+                }
             }
         } else {
-            selectFirstDoc();
+            if (isMobileView()) {
+                if (!$("#toc_column").hasClass('in')) {
+                    $(".breadcrumb_hamburger_nav").trigger('click');
+                }
+            } else {
+                selectFirstDoc();
+            }
         }
     });
 
     //manually tiggering it if we have hash part in URL
     if (window.location.hash) {
-        $(window).trigger('hashchange')
+        $(window).trigger('hashchange');
+        //$(".breadcrumb_hamburger_nav").trigger('click');
     } else {
         selectFirstDoc();
     }

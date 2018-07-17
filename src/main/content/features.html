@@ -13,7 +13,7 @@ permalink: /docs/ref/feature/
 <div id="background_container">
     <!-- <div class="row"> -->
         <!-- Guide's table of contents section -->
-        <div id="toc_column" class="col-sm-3">
+        <div id="toc_column" class="col-sm-3 collapsed in">
             <div id="toc_inner">
                 <h3 id="toc_title">Overview</h3>
                 {% if featureDocs %}
@@ -22,7 +22,7 @@ permalink: /docs/ref/feature/
                     <ul>
                         {% for feature in featureDocs %}
                         <li>
-                            <div href="{{ feature.url }}">{{ feature.title }}</div>
+                            <div href="{{ feature.url }}" tabindex="0">{{ feature.title }}</div>
                         </li>
                         {% endfor %}
                     </ul>
