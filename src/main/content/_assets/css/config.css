@@ -176,6 +176,7 @@ p.subHeading > a::before, p.subHeading > div.toogle > a::before {
     pointer-events: none;
 }
 
+
 /* make the navbar sticky */
 .navbar {
     position: fixed;
@@ -283,9 +284,10 @@ div.toggle:hover {
     cursor: default;
 }
 
-.breadcrumb_hamburger_nav {
+/* .breadcrumb_hamburger {
     display: none; 
 }
+*/
 
 @media (max-width: 767px) {
     #toc_title {
@@ -316,11 +318,10 @@ div.toggle:hover {
 
     #breadcrumb_hamburger {
         background-color: white;
-        display: inline-block;
         width: 40px;
         height: 100%; 
         border: none;
-        margin: 4px 26px 7px 29px;
+        margin: 4px 0px 7px 0px;
         padding: 9px 10px;
         display: none;
     }
@@ -366,7 +367,15 @@ div.toggle:hover {
 
     .breadcrumb_hamburger_nav {
         background-color: white;
-        display: block;
+        text-align: center;
+    }
+
+    #breadcrumb_hamburger_title {
+        display: none;
+    }
+
+    html, body, main {  
+        height: unset;
     }
 }
 
@@ -377,5 +386,9 @@ div.toggle:hover {
     
     .breadcrumb_hamburger_nav {
         display: none !important; 
+    }
+
+    html, body, main {  
+        height: 95%;
     }
 }
