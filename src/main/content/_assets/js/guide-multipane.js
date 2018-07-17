@@ -400,7 +400,7 @@ $(document).ready(function() {
     }
 
     // Slow the scrolling over section headers in the guide
-    function handleSectionSnapping(event){
+    function handleSectionChanging(event){
         // Multipane view
         if(window.innerWidth > twoColumnBreakpoint) {
             var id = getScrolledVisibleSectionID();
@@ -467,13 +467,17 @@ $(document).ready(function() {
         }	
     });
 
+    $(window).on('mousewheel DOMMouseScroll', function(event){
+        checkForIntertiaScrolling(event);
+    });
+
     $(window).on('scroll', function(event) {
         // Check if a scroll animation from another piece of code is taking place and prevent normal behavior.
         if($("body").data('scrolling') === true){
             return;
         }
         handleGithubPopup(false);
-        handleSectionSnapping(event);
+        handleSectionChanging(event);
     });
 
     $(window).on('load', function(){

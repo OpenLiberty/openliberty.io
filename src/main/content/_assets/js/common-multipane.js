@@ -12,6 +12,7 @@
 var backgroundSizeAdjustment = 200;
 var twoColumnBreakpoint = 1170;
 var threeColumnBreakpoint = 1440;
+// var scrollLock = false;
 
 function inSingleColumnView(){
     return(window.innerWidth <= twoColumnBreakpoint);
@@ -123,6 +124,62 @@ function handleFloatingCodeColumn() {
         }
     }
 }
+
+/* Detect if the user has scrolled downwards into a new section and apply intertia resistence. */
+function checkForIntertiaScrolling (event){
+    var origEvent = event.originalEvent;
+    var target = origEvent.target;
+    var dir;
+    if(origEvent.deltaY){
+        dir = (origEvent.deltaY) > 0 ? 'down' : 'up';
+    } else if(origEvent.detail){
+        // Firefox
+        dir = (origEvent.detail) > 0 ? 'down' : 'up';
+    }
+    var originalDelta = origEvent.wheelDelta || -origEvent.detail || -origEvent.deltaY;
+    var delta = origEvent.wheelDelta / 120 || -origEvent.detail / 3 || -origEvent.deltaY;
+
+    // If scrolling down, check if the section header is coming into view
+    if(dir && dir == 'down'){
+        var section_headers = $('.sect1:not(#guide_meta) h2');
+        section_headers.each(function(index) {
+            var elem = $(section_headers.get(index));
+            var scrollTop = $(window).scrollTop();
+            var windowHeight = $(window).height();
+            var navbarHeight = $("nav").height();
+            var rect = elem[0].getBoundingClientRect();
+            var top = rect.top;
+            var bottom = rect.bottom;
+
+            var sectionOutOfView = (top > windowHeight);
+            var sectionWillBeScrolledPast = ((top + originalDelta) > 0) && ((top + originalDelta) < windowHeight) && ((bottom + originalDelta) < windowHeight);
+
+            // Check if part of a new section is coming into view or if the original scroll event would have scrolled past a section start.
+            if((top > 0 && top < windowHeight && bottom > windowHeight) || (sectionOutOfView && sectionWillBeScrolledPast)){
+                // New section is coming into view. Start slowing down scrolling.
+                // Check if scroll delta is at least a certain amount before stopping the default scroll, to allow for trackpad acceleration. If each scroll event.preventDefault() is called while scrolling on a trackpad, the delta is too small and the trackpad acceleration does not take place.
+                if(Math.abs(delta) >= 0.25){
+                    event.preventDefault();
+                    event.stopPropagation();
+                    $('html, body').stop().animate({
+                        scrollTop: scrollTop - delta
+                    });                    
+                    return false;
+                }                          
+            }  else if(top > 0 && top < windowHeight && bottom < windowHeight && bottom > (windowHeight - 200)){
+                event.preventDefault();
+                event.stopPropagation();
+                // Section header is now scrolled into view
+                // Snap to the top of the element
+                $('html, body').stop().animate({
+                    scrollTop: elem.offset().top - navbarHeight
+                 });                 
+                return false;
+            }      
+        });
+    }
+}
+
 /**
  * Find the section that is most visible in the viewport and return the id.
  * Returns "" (empty string, not NULL) if the window scrollTop is within the
