@@ -24,7 +24,7 @@ repos = client.org_repos('OpenLiberty')
 # --------------------------------------------
 # Travis CI related steps
 # --------------------------------------------
-# Oonly build the multipane branch for the TravisCI environments
+# Only build the multipane branch for the TravisCI environments
 guide_branch = 'master'
 if ENV['TRAVIS']
     guide_branch = 'multipane'
