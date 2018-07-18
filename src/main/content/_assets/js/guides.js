@@ -164,6 +164,9 @@ $(document).ready(function() {
     // Create popover when search bar is focused
     $("#guide_search_input").popover({
         container: "#guides_search_container",
+        delay: {
+            show: "200"
+        },
         content: function() {
             return $("#popover_content").html();
         },
