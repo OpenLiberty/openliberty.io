@@ -56,7 +56,10 @@ function loadContent(href) {
     $("#feature_content").load(href, function(response, status) {
         if (status === "success") {
             addClassToFeaturesThatEnableThisFeature();
-            setContainerHeight();
+            //setContainerHeight();
+            $('html, body').animate({
+                scrollTop: 0
+              }, 400);
             $('footer').show();
         }
     });
@@ -78,15 +81,13 @@ function updateMainBreadcrumb(resource, notRemove) {
 }
 
 function updateHashInUrl(href) {
-    //if (!isMobileView()) {
-        var hashInUrl = href;
-        if (href.indexOf("/feature/") !== -1) {
-            hashInUrl = href.substring(9);
-        }
-        //var state = { href: href }
-        //window.history.pushState(null, null, '#' + hashInUrl);
-        window.location.hash = "#" + hashInUrl;
-    //}
+    var hashInUrl = href;
+    if (href.indexOf("/feature/") !== -1) {
+        hashInUrl = href.substring(9);
+    }
+    //var state = { href: href }
+    //window.history.pushState(null, null, '#' + hashInUrl);
+    window.location.hash = "#" + hashInUrl;
 }
 
 function isMobileView() {
@@ -108,7 +109,6 @@ function addClassToFeaturesThatEnableThisFeature() {
 }
 
 function setContainerHeight() {
-    //var containerHeight = $("#toc_column").outerHeight();
     var featureContentHeight = $("#feature_content").outerHeight() + "px";
     $("#background_container").css("height", featureContentHeight);
     $("#background_container").css("margin-bottom", "60px");
@@ -129,10 +129,6 @@ function selectFirstDoc() {
 function addHamburgerClick() {
     if (isMobileView()) {
         var hamburger = $(".breadcrumb_hamburger_nav");
-        // The content represented by the hamburger is assumed to be collapsed as its initial state even 
-        // if the aria-expanded is set to true. Since the TOC is the first page to display in mobile view,
-        // trigger a click on the hamburger to get the correct initial state.
-        //hamburger.trigger("click");
 
         hamburger.on("click", function (e) {
             if ($("#toc_column").hasClass('in')) {
@@ -184,7 +180,6 @@ $(document).ready(function () {
     //manually tiggering it if we have hash part in URL
     if (window.location.hash) {
         $(window).trigger('hashchange');
-        //$(".breadcrumb_hamburger_nav").trigger('click');
     } else {
         selectFirstDoc();
     }

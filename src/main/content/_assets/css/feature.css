@@ -33,9 +33,7 @@
     letter-spacing: 0;
 }
 
-/* get the height from the browser window */
 html, body, main {  
-    /* height: 95%; */
     width: 100%;
     margin: 0;
     padding: 0;
@@ -50,12 +48,6 @@ html, body, main {
     /* padding-top: 55px; /* will enable when overview is displayed */
     padding-left: 14px;
 }
-
-/*
-#row, #toc_column, #toc_inner, #feature_content {
-    height: 100%;
-}
-*/
 
 #toc_title {
     font-family: Asap;
@@ -98,12 +90,6 @@ html, body, main {
     padding: 7px 47px 7px 0px;
 }
 
-/*
-a[target="contentFrame"] {
-    color: #5D6A8E; 
-}
-*/
-
 .toc_selected {
     background:#fdf2ea;
     border-left: 8px solid #f4914d; 
@@ -140,6 +126,8 @@ a[target="contentFrame"] {
     padding-right: 0px;
     background: #FFFFFF;
     box-shadow: -2px 2px 9px -1px rgba(63,70,89,0.22);
+    overflow: auto;
+    height: 100%;
 }
 
 #content {
@@ -199,6 +187,16 @@ div.sectionbody > div.enableByList > ul > li > p {
 
 .breadcrumb_hamburger {
     display: none; 
+}
+
+/* hide scrollbar in chrome and safari */
+#toc_column::-webkit-scrollbar, #feature_content::-webkit-scrollbar {
+    display: none;
+}
+
+/* hide scrollbar in IE */
+#toc_column, #feature_content { 
+    -ms-overflow-style: none; 
 }
 
 @media (max-width: 767px) {
