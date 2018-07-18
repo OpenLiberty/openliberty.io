@@ -17,6 +17,7 @@ echo `ruby -v`
 # Special handling for javadocs
 ./scripts/copy_javadoc_stylesheet.sh
 ./scripts/modify_config_adoc.sh
+./scripts/modify_feature_adoc.sh
 
 # Guides that are ready to be published to openliberty.io
 echo "Cloning repositories with name starting with guide or iguide..."
