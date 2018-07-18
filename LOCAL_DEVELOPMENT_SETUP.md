@@ -1,4 +1,5 @@
 # Setting up environment for writing DRAFT blog posts
+Also can be used to setup a local development environment when making changes to openliberty.io
 
 ## You will need the following tools installed on your system
 - ruby
@@ -34,7 +35,7 @@ minify_html: false
 
 Run the Jekyll server locally
 - `cd src/main/content`
-- `jekyll s --drafts`
+- `jekyll s --drafts --source src/main/content`
     > The `--drafts` flag is to include the `*.adoc` files in the `_drafts` folder. 
 - Go to http://localhost:4000/blog/
 
