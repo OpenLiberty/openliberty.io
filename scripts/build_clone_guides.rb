@@ -53,7 +53,17 @@ repos.each do |element|
             `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{iguide_branch} --single-branch src/main/content/guides/#{repo_name}`
         elsif repo_name.start_with?('draft-guide')
             `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_branch} --single-branch src/main/content/guides/#{repo_name}`
+<<<<<<< HEAD
             # Clone the default branch if the guide_branch does not exist for this guide repo.
+=======
+
+            # Clone the draft guide using multiPane because git clone is case sensitive
+            if !(directory_exists?(repo_name))
+                `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_camelcase_branch} --single-branch src/main/content/guides/#{repo_name}`
+            end
+
+            # Clone the default branch if the guide_branch or guide_camelcase_branch does not exist for this guide repo.
+>>>>>>> Fix ruby syntax error
             if !(directory_exists?(repo_name))
                 `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
             end
@@ -68,7 +78,17 @@ repos.each do |element|
         elsif repo_name.start_with?('guide')
             # Clone static guides that are ready to be published to openliberty.io
             `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_branch} --single-branch src/main/content/guides/#{repo_name}`
+<<<<<<< HEAD
             # Clone the default branch if the guide_branch does not exist for this guide repo.
+=======
+
+             # Clone the draft guide using multiPane because git clone is case sensitive
+             if !(directory_exists?(repo_name))
+                `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_camelcase_branch} --single-branch src/main/content/guides/#{repo_name}`
+             end
+
+            # Clone the default branch if the guide_branch or guide_camelcase_branch does not exist for this guide repo.
+>>>>>>> Fix ruby syntax error
             if !(directory_exists?(repo_name))
                 `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
             end            
