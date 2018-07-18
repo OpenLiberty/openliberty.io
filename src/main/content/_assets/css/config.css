@@ -284,10 +284,24 @@ div.toggle:hover {
     cursor: default;
 }
 
-/* .breadcrumb_hamburger {
-    display: none; 
+/* hide scrollbar in chrome and safari */
+#toc_column::-webkit-scrollbar {
+    display: none;
 }
-*/
+
+#config_content {
+    overflow: hidden;
+}
+
+iframe.config_content_frame {
+    width: 101%;
+    height: 101%
+}
+
+/* hide scrollbar in IE */
+#toc_column { 
+    -ms-overflow-style: none; 
+}
 
 @media (max-width: 767px) {
     #toc_title {
