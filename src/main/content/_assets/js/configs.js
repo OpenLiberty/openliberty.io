@@ -819,9 +819,9 @@ function handleInitialContent() {
         var isExpand = undefined;
         if (fullHref.indexOf("&") !== -1) {
             fullHref = fullHref.substring(0, fullHref.indexOf("&"));
-            if (window.location.hash.indexOf("&expand=true")) {
+            if (window.location.hash.indexOf("&expand=true") !== -1) {
                 isExpand = true;
-            } else if (window.location.hash.indexOf("&expand=false")) {
+            } else if (window.location.hash.indexOf("&expand=false") !== -1) {
                 isExpand = false;
             }
         }
@@ -1023,12 +1023,12 @@ $(document).ready(function () {
             if (window.location.hash !== "" && window.location.hash !== undefined &&
                 window.location.hash.indexOf("&expand=") !== -1) {
                 var isExpand;
-                if (window.location.hash.indexOf("&expand=true")) {
+                if (window.location.hash.indexOf("&expand=true") !== -1) {
                     isExpand = true;
-                } else if (window.location.hash.indexOf("&expand=false")) {
-                 isExpand = false;
+                } else if (window.location.hash.indexOf("&expand=false") !== -1) {
+                    isExpand = false;
                 }
-             var hash = window.location.hash.substring(1);
+                var hash = window.location.hash.substring(1);
                 if (hash.indexOf("#") !== -1) {
                     var titleId = hash.substring(hash.indexOf('#') + 1, hash.indexOf("&"));
                     handleExpandCollapseState(titleId, isExpand);
