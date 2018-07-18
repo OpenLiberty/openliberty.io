@@ -27,7 +27,7 @@ function addTOCClick() {
 
         if (isMobileView()) {
             $("#breadcrumb_hamburger").trigger("click");
-        }        
+        }
     }
 
     $("#toc_container > ul > li > div").off("click").on("click", onclick);
@@ -38,6 +38,25 @@ function addTOCClick() {
         if (event.which === 13 || event.keyCode === 13) {
             $(this).click();
         }
+    });
+
+    // events to detect keyboard focus and add outline to the element
+    $("#toc_container > ul > li > div").off("blur").on("blur", function(event) {
+        if ($(this).hasClass('addFocus')) {
+            $(this).removeClass('addFocus');
+        }
+    })
+
+    var mousedown = false;
+    $("#toc_container > ul > li > div").off('mousedown').on('mousedown', function(event) {
+        mousedown = true;
+    });
+
+    $("#toc_container > ul > li > div").off('focusin').on('focusin', function(event) {
+        if (!mousedown) {
+            $(this).addClass("addFocus");
+        }
+        mousedown = false;
     });
 }
 
@@ -61,6 +80,7 @@ function loadContent(href) {
                 scrollTop: 0
               }, 400);
             $('footer').show();
+            $(this).focus(); // switch focus to the content for the reader
         }
     });
 }
