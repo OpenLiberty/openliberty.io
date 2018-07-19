@@ -15,10 +15,6 @@ permalink: /guides/
 {% assign interactive-guides = site.pages | where: 'layout', 'interactive-guide' %}
 {% assign multipane-iguides = site.pages | where: 'layout', 'iguide-multipane' %}
 {% assign guides = static-guides | concat: interactive-guides | concat: multipane-static-guides | concat: multipane-iguides | sort: 'releasedate' | reverse %}
-<!--
-    Build list of guides with certain tag
--->
-{% assign microprofile-guides = guides | where: 'tags', 'MicroProfile' %}
 <!-- 
     Some of the found documents are for internal use only and are not intended to be 
     shown on the website.  Remove them from the total number of guides.
@@ -30,75 +26,23 @@ permalink: /guides/
     {% endif %}
 {% endfor %}
 
-{% assign microprofile-numGuides = microprofile-guides.size %}
-{% for guide in microprofile-guides %}
-    {% if guide.archived or guide.path contains "guides/guides-template" or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
-        {% assign microprofile-numGuides = microprofile-numGuides | minus: 1 %}
-    {% endif %}
-{% endfor %}
-
-<!-- INTRODUCTION AND SEARCH BAR -->
 <div id="guides_information_container" class="container">
-    <div id="guides_border"></div>
     <div class="row">
-        <div id="guide_search_information" class="col-xs-12 col-sm-7 col-md-6">
-            <h2 id="guides_title">Guides</h2>
-            <p id="guides_description">The quickest way to learn all things Open Liberty, and beyond!</p>
-        </div>
-        <img id="clouds" src="{{ "/img/guides_clouds.png" | relative }}" alt="">
-        <div id="guides_search_container" class="col-xs-12 col-sm-5 col-md-6">
-            <input id="guide_search_input" type="text" placeholder="Search all guides" 
-            data-toggle="popover" data-placement="bottom" data-html="true" aria-label="Search">
-            <div id="popover_content" class="hide">
-                    <p class="tags_title">Suggested tags</p>
-                    <button type="button" class="tag_button">interactive</button>
-                    <button type="button" class="tag_button">microprofile</button>
-            </div>
+        <div class="col-xs-12">
+            <div id="guide_search_information">
+                <h2 id="guide_counter_title">All Open Liberty guides ({{ numGuides }})</h2>
+                <p id="guide_sort_message">Most recent guides shown first</p>
+            </div>            
+            <input id="guide_search_input" class="col-xs-12 col-sm-6 col-md-3" type="text" placeholder="Search all guides" aria-label="Search">
         </div>
     </div>
 </div>
 
-
-<!-- MICROPROFILE GUIDES -->
-<div id="guides_microprofile_container" class="container color_guides_background">
-    <h2 id="guide_counter_title" class="guide_category_title"></h2>
-    <div id="microprofile_header" class="guide_category_header">
-        <h2 class="guide_category_title">MicroProfile and Open Liberty</h2>
-        <p id="microprofile_subtitle"><b>{{microprofile-numGuides}} guides</b></p>
-    </div>
-    <div class="row">
-        {% for guide in microprofile-guides %}
-        <!-- Do not render anything from the two common guide repositories containing shared code -->
-        {% unless guide.archived or guide.path contains "guides/guides-template" or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
-            <div class="mp_guide_column col-xs-12 col-sm-6 col-md-3">
-                <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}">
-                    <div class="guide_title_and_description_container">
-                        <h3 class="guide_title">{{guide.title}}</h3>
-                        <p class="guide_description" title="{{guide.description}}">{{guide.description}}</p>
-                    </div>
-                    <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
-                    <span class="guide_duration">{{guide.duration}}</span>
-                    {% if guide.layout == 'interactive-guide' or guide.layout == 'iguide-multipane' %}
-                    <div class="guide_interactive_container">
-                        <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
-                        <span class="guide_interactive">Interactive</span>
-                    </div>                    
-                    {% endif %}
-                </a>
-            </div>
-        {% endunless %}
-        {% endfor %}
-    </div>
-</div>
-
-
-<!-- ADDITIONAL GUIDES -->
-<div id="guides_additional_container" class="container">
-    <h2 id="additional_header" class="guide_category_title">Additional Guides</h2>
+<div id="guides_container" class="container">       
     <div class="row">
         {% for guide in guides %}
         <!-- Do not render anything from the two common guide repositories containing shared code -->
-        {% unless guide.archived or guide.path contains "guides/guides-template" or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" or microprofile-guides contains guide %}
+        {% unless guide.archived or guide.path contains "guides/guides-template" or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
             <div class="guide_column col-xs-12 col-sm-6 col-md-3">
                 <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}">
                     <div class="guide_title_and_description_container">
@@ -109,13 +53,13 @@ permalink: /guides/
                     <span class="guide_duration">{{guide.duration}}</span>
                     {% if guide.layout == 'interactive-guide' or guide.layout == 'iguide-multipane' %}
                     <div class="guide_interactive_container">
-                        <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
-                        <span class="guide_interactive">Interactive</span>
+                            <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
+                            <span class="guide_interactive">Interactive</span>
                     </div>                    
                     {% endif %}
                 </a>
             </div>
         {% endunless %}
         {% endfor %}
-    </div>
+    </div>    
 </div>
