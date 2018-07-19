@@ -72,8 +72,18 @@ function setSelectedTOC(resource, scrollTo) {
             removeHashRefTOC(href);
         }
         currentTOCSelected.removeClass("toc_selected");
+        if (currentTOCSelected.hasClass("toc_main_selected")) {
+            currentTOCSelected.removeClass("toc_main_selected");
+        } else if (currentTOCSelected.hasClass("toc_sub_selected")) {
+            currentTOCSelected.removeClass("toc_sub_selected");
+        }
     }
     resource.parent().addClass("toc_selected");
+    if (newHref.indexOf("#") === -1) {
+        resource.parent().addClass("toc_main_selected");
+    } else {
+        resource.parent().addClass("toc_sub_selected");
+    }
 
     if (scrollTo) {
         var resourceTop = resource.parent()[0].getBoundingClientRect().top;

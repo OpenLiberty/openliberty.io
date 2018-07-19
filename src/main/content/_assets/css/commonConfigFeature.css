@@ -1,0 +1,194 @@
+/*******************************************************************************
+ * Copyright (c) 2018 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+@font-face {
+    font-family: BunueloLight;
+    src: url("/fonts/BunueloCleanPro-Light.otf");
+}
+
+@font-face {
+    font-family: BunueloBold;
+    src: url("/fonts/BunueloCleanPro-SemiBold.otf");
+}
+
+@import url("https://fonts.googleapis.com/css?family=Asap:300,400,500");
+
+/* make the navbar sticky */
+.navbar {
+    position: fixed;
+    background-color: #313653;
+}
+
+#page_title {
+    font-family: BunueloLight;
+    font-size: 35px;
+    color: #24243B;
+    letter-spacing: 0;
+}
+
+html, body, main {  
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#toc_title {
+    font-size: 14px;
+    text-transform: uppercase;
+    position: fixed;  /* keep the TOC heading sticky */
+    z-index: 1;
+}
+
+#toc_column {
+    overflow: auto;
+}
+
+#toc_column ul {
+    padding: 0;
+    margin: 0;
+}
+
+#toc_column li {
+    font-family: Asap;
+    letter-spacing: 0;
+    line-height: 18px;
+    list-style: none;
+    font-weight: 300;
+    color: #5D6A8E;
+    font-size: 14px;
+    word-wrap: break-word;
+}
+
+.toc_selected {
+    background:#fdf2ea;
+    border-left: 8px solid #f4914d; 
+    font-weight: 500 !important; 
+    font-family: Asap;
+    color: #313653 !important;
+}
+
+#toc_column ul li a[href]:hover, #toc_column ul li div[href]:hover {
+    font-family: Asap;
+    color: #F4914D;
+}
+
+#config_content, #feature_content {
+    padding-right: 0;
+    padding-left: 0;
+    background: #FFFFFF;
+    box-shadow: -2px 2px 9px -1px rgba(63,70,89,0.22);
+}
+
+#feature_title, #config_title { /* for weird reason, the css for config_title is not picked up */
+    font-family: BunueloLight;
+    font-size: 35px;
+    letter-spacing: 0;
+}
+
+/* hide scrollbar in chrome and safari */
+#toc_column::-webkit-scrollbar, #feature_content::-webkit-scrollbar  {
+    display: none;
+}
+
+/* hide scrollbar in IE */
+#toc_column, #feature_content { 
+    -ms-overflow-style: none; 
+}
+
+@media (max-width: 767px) {
+    #toc_title {
+        position: static;
+        width: 100%;
+    }
+
+    #toc_container {
+        padding-top: 0px;
+    }
+
+    .navbar {
+        position: static;
+    }
+
+    #config_content, #feature_content {
+        display: none;
+    }
+
+    #breadcrumb_row {
+        background-color: #24243A;
+    }
+
+    #breadcrumb_hamburger {
+        background-color: white;
+        width: 40px;
+        height: 100%; 
+        border: none;
+        margin: 4px 0px 7px 0px;
+        padding: 9px 10px;
+        display: none;
+    }
+
+    #breadcrumb_hamburger:focus {
+        outline: none;
+    }
+    
+    #breadcrumb_hamburger:not(.collapsed) {
+        border: none;
+    }
+    
+    #breadcrumb_hamburger:not(.collapsed) > .sr-only, #breadcrumb_hamburger:not(.collapsed) > .icon-bar {
+        display: none;
+    }
+    
+    #breadcrumb_hamburger:hover .icon-bar {
+        background-color: slategray;
+    }
+    
+    #breadcrumb_hamburger .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0,0,0,0);
+        border: 0;
+    }
+    
+    #breadcrumb_hamburger .icon-bar {
+        background-color: #c8d6fb;
+        display: block;
+        width: 20px;
+        height: 2px;
+        border-radius: 1px;
+    }
+
+    #breadcrumb_hamburger .icon-bar+.icon-bar {
+        margin-top: 4px;
+    }   
+
+    .breadcrumb_hamburger_nav {
+        background-color: white;
+        text-align: center;
+    }
+
+    #breadcrumb_hamburger_title {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) {
+    #toc_column, #config_content, #feature_content {
+        display: block !important;
+    }  
+    
+    .breadcrumb_hamburger_nav {
+        display: none !important; 
+    }
+}
