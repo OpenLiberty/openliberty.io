@@ -15,6 +15,7 @@ var maxIndentLevel = 7;
 var minIndentLevel = 3;
 var contentBreadcrumbHeight = 0;
 var mobileWidth = 767;
+var ipadWidth = 1024;
 
 function addTOCClick() {
     var onclick = function (event) {
@@ -169,6 +170,10 @@ function scrollToPos(pos) {
             scrollTop: pos
           }, 400);
         $('footer').show();
+    } else if (isIPadView()) {
+        $('html, body').animate({
+            scrollTop: pos
+        }, 400);
     } else {
         // scroll to the position that will show the target anchor below the fixed content breadcrumb
         iframeContents.scrollTop(pos);
@@ -711,7 +716,7 @@ function isInViewport(anchorElement, viewWindow, closestAnchor) {
 }
 
 function createClickableBreadcrumb(breadcrumbText, highlightLastItem) {
-    if (!isMobileView()) {
+    if (!isMobileView() && !isIPadView()) {
         $('.contentStickyBreadcrumbHeader .stickyBreadcrumb').remove();
         // hide it for now until the font size is determined
         $(".contentStickyBreadcrumbHeader").append("<div class='stickyBreadcrumb'/>");
@@ -765,7 +770,7 @@ function addContentBreadcrumbClick() {
 // When the parent window scrolls, it affects the viewport of the content. Hence needs to adjust
 // the content breadcrumb.
 function handleParentWindowScrolling() {
-    if (!isMobileView()) {
+    if (!isMobileView() && !isIPadView()) {
         $(window.parent.document).on('scroll', function (e) {
             var breadcrumbVisible = $('.contentStickyBreadcrumbHeader').is(':visible');
             // for parent window scrolling, need to adjust breadcrumb only when content breadcrumb is visible
@@ -796,7 +801,7 @@ function handleParentWindowScrolling() {
 }
 
 function adjustParentScrollView() {
-    if (!isMobileView()) {
+    if (!isMobileView() && !isIPadView()) {
         // if the parent window scrolling is moved, move it back to the top. Otherwise the 
         // viewport is moved to the doc_header space making the calculation of viewport to determine
         // the content breadcrumb incorrect.
@@ -907,7 +912,8 @@ function handlePopstate() {
 // - once the overview of the content is scrolled thru, display the content breadcrumb right before the
 //   first 2nd subtitle is scrolled into.
 function initialContentBreadcrumbVisibility() {
-    if (!isMobileView()) {
+    if (!isMobileView() && !isIPadView()) {
+    //if (!isMobileView()) {
         // save the content breadcrumb height to be used later as the height could be 1 during the transition 
         // to display it in isInViewPort function
         contentBreadcrumbHeight = $(".contentStickyBreadcrumbHeader").outerHeight();
@@ -922,7 +928,8 @@ function initialContentBreadcrumbVisibility() {
 
 // Enable/disable content breadcrumb visibility
 function handleContentBreadcrumbVisibility(isShow) {
-    if (!isMobileView()) {
+    //if (!isMobileView()) {
+    if (!isMobileView() && !isIPadView()) {
         if (isShow && !$('.contentStickyBreadcrumbHeader').is(":visible")) {
             $('.contentStickyBreadcrumbHeader').slideDown(500);
             $('iframe[name="contentFrame"]').contents().find("#content").css("padding-top", "75px");
@@ -976,10 +983,19 @@ function isMobileView() {
     }
 }
 
+function isIPadView() {
+    if ($(window).width() <= ipadWidth && $(window).width() > mobileWidth) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 // In mobile view, the background_container element height has to be set dynamically so that
 // the footer is displayed correctly after the iframe content.
 function adjustFrameHeight() {
-    if (isMobileView()) {
+    if (isMobileView() || isIPadView()) {
+    //if (isMobileView()) {
         var frameContents = $('iframe[name="contentFrame"]').contents();
         // reset first so that iframe could reveal its height
         $("#background_container").css("height", "auto");
@@ -1016,9 +1032,10 @@ $(document).ready(function () {
                 updateMainBreadcrumb(TOCElement);
             }
 
-            if (!isMobileView()) {
+            //if (!isMobileView()) {
+            if (!isMobileView() && !isIPadView()) {         
                 handleContentScrolling();
-            }
+            } 
 
             if (window.location.hash !== "" && window.location.hash !== undefined &&
                 window.location.hash.indexOf("&expand=") !== -1) {
