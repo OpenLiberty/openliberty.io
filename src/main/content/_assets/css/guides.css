@@ -19,30 +19,24 @@
 
 #guide_search_input {
     height: 52px;
-    width: 40%;
-    max-width: 556px;
-    min-width: 200px;
+    width: 320px;
     display: inline-block;
-    position: relative;
     line-height: 26px;
     font-size: 14px;
     color: #5D6A8E;
     padding-top: 12px;
     padding-bottom: 12px;
-    padding-left: 49px;
+    padding-left: 22px;
     padding-right: 27px;
     border: none;
     outline: none;
-    margin-top: 30px;
+    margin-bottom: 50px;
     background-color: #EEEFF3;
     background-image: url('/img/guides_search_icon.svg');
     background-repeat: no-repeat;
-    background-position: left 17px center;
+    background-position: right 20px center;
     transition: border-color .2s;
-    -webkit-transition: width .5s;
-    -moz-transition: width .5s;
-    -o-transition: width .5s;
-    transition: width .5s;
+    float: right;    
 }
 
 #guide_search_input:hover {
@@ -51,7 +45,6 @@
 
 #guide_search_input:focus {
     border-color: #8194C7;
-    width: 100%;
 }
 
 #guide_search_input::-webkit-input-placeholder {
@@ -71,14 +64,11 @@
 }
 
 #guides_information_container {
-    height: 195px;
-    position: relative;
     width: 100%;
-    padding-top: 50px;
-    padding-bottom: 29px;
+    margin-top: 50px;
+    margin-bottom: 29px;
     padding-left: 34px;
     padding-right: 34px;
-    background:#24243b;
 }
 
 #guide_search_information {
@@ -89,134 +79,22 @@
     margin-top: 0;
     margin-bottom: 14px;
     font-family: BunueloLight;
-    font-size: 30px;
+    font-size: 28px;
     color: #24253A;
     letter-spacing: 0;
 }
 
-#guides_search_container {
-    text-align: right;
-}
-
-#guides_search_container .popover {
-    position: relative;
-    display: inline-block !important;
-    width: 100%;
-    max-width: 556px;
-    border: none;
-    border-radius: 0px;
-    background:#f1f4fe;
-    box-shadow:0 0 4px 0 rgba(0,0,0,0.50);
-}
-
-#guides_search_container .popover.bottom {
-    margin-top: 4px;
-}
-
-#guides_search_container .popover.bottom>.arrow {
-    left: 50px !important;
-}
-
-#guides_search_container .popover.bottom>.arrow:after {
-    border-bottom-color:#f1f4fe;
-}
-
-#guides_search_container .popover-content {
-    padding: 11px 17px 22px;
-}
-
-.tags_title {
-    font-size: 11px;
-    color: #24243b;
-}
-
-.tag_button {
-    display: inline-block;
-    background: transparent;
-    color:#3f465a;
-    border:1px solid #3f465a;
-    border-radius:46px;
-    padding: 2px 12px;
-    margin-bottom: 5px;
-    font-size: 14px;
-    text-transform: uppercase;
-    opacity: 0.5;
-}
-
-.tag_button:hover {
-    opacity: 1;
-}
-
-.tag_button:active {
-    outline: none;
-}
-
-#guides_border {
-    position: absolute;
-    opacity:0.42;
-    background-color: #5d6a8e;
-    height:1px;
-    width: 100%;
-    top: 0px;
-    right: 0px;
-}
-
-#guides_title {
-    margin-top: 0;
-    margin-bottom: 14px;
-    font-family: BunueloLight;
-    font-size: 50px;
-    color: white;
-    letter-spacing: 0;
-}
-
-#guides_description {
+#guide_sort_message {
     font-size: 16px;
-    color: white;
+    color: #3f4659;
 }
 
-.color_guides_background {
-    background: #f8f9f9;
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.11);
-    margin-bottom: 52px;
-}
-
-.no_guides_background {
-    background: none;
-    box-shadow: none;
-    margin-bottom: 0px;
-}
-
-#guides_microprofile_container {
-    width: 100%;
-    margin-bottom: 52px;
-    padding-top: 15px;
-    padding-left: 34px;
-    padding-right: 34px;
-}
-
-#guides_additional_container {
+#guides_container {
     width: 100%;
     margin-bottom: 40px;
     padding-left: 34px;
     padding-right: 34px;
-    margin-bottom: 21px;
-    background:white;
-}
-
-#additional_header {
-    margin-top: 0px;
-    margin-bottom: 21px;
-}
-
-.guide_category_header {
-    margin-bottom: 27px;
-}
-
-.guide_category_title {
-    font-family: BunueloLight;
-    font-size:30px;
-    color:#24253a;
+    background-image: linear-gradient(-180deg, rgba(205,210,223,0.00) 0%, rgba(81, 100, 149, .21) 100%);
 }
 
 .guide_item {
@@ -224,21 +102,9 @@
     border-left: solid 9px rgba(94, 107, 141, .6); /* Override the light gray border-left from the default card */
 }
 
-#clouds {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    height: 185px;
-    width: 708px;
-}
-
 @media (max-width: 767px) {
 
-    #guides_information_container {
-        height: 232px;
-    }
-
-    #guides_microprofile_container {
+    #guides_container {
         margin-bottom: 30px;
     }
 
@@ -248,14 +114,9 @@
     }
     
     #guide_search_input {
-        max-width: none;
+        width: 100%;
         float: none;
         margin: 0 auto;
-        width: 100%
-    }
-
-    #guides_search_container .popover {
-        max-width: none;
     }
     
     .guide_item {
