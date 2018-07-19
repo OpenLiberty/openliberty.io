@@ -996,12 +996,17 @@ function isIPadView() {
 function adjustFrameHeight() {
     if (isMobileView() || isIPadView()) {
     //if (isMobileView()) {
-        var frameContents = $('iframe[name="contentFrame"]').contents();
         // reset first so that iframe could reveal its height
         $("#background_container").css("height", "auto");
+        var frameContents = $('iframe[name="contentFrame"]').contents();
         if (frameContents.height() > 0) {
+            var height = frameContents.height();
+            // add a minimum height for ipad, otherwise it is too short
+            if (isIPadView() && height < 1000) {
+                height = 1000;
+            }
             // then calculate the height
-            $("#background_container").css("height", frameContents.height() + "px");
+            $("#background_container").css("height", height + "px");
         } 
     }
 }
