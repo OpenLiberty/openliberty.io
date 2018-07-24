@@ -188,6 +188,7 @@ $(document).ready(function() {
 
     $(window).on('resize', function(){
         handleFloatingTableOfContent(); // Handle table of content view changes.
+        handleFloatingTOCAccordion();
         handleDownArrow();
         resizeGuideSections();
         handleFloatingCodeColumn();
@@ -196,6 +197,7 @@ $(document).ready(function() {
     $(window).on('scroll', function(event) {
         handleDownArrow();
         handleFloatingTableOfContent(); 
+        handleFloatingTOCAccordion();
         handleFloatingCodeColumn();
     });
 
