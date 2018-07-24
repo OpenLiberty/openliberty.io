@@ -485,18 +485,30 @@ nav .container-fluid {
     margin-bottom: 40px;
     background-image: url('/img/footer_main.png');
     background-repeat: no-repeat;
-    background-position: top 24px left 36px;
+    background-position: top 21px right 36px;
 }
 
 #footer_container .footer_link {
     font-size: 14px;
-    margin-right: 29px;
-    color: #96bc32;
-    font-weight: 500;
     transition: color .2s;
+    margin-right: 29px;
+    white-space: nowrap;
 }
 
-#footer_container .footer_link:hover {
+#footer_container .left_footer_link {
+    color:#5e6b8d;
+}
+
+#footer_container .left_footer_link:hover {
+    color: #3f4659;
+}
+
+#footer_container .right_footer_link {
+    color: #96bc32;
+    font-weight: 500;
+}
+
+#footer_container .right_footer_link:hover {
     color: #7A9B22;
 }
 
@@ -505,50 +517,29 @@ nav .container-fluid {
     margin-bottom: 4px;
 }
 
-#javaee_attribution,
 #footer_copyright {
     font-size: 11px;
 }
 
+#footer_twitter_link,
+#footer_stackoverflow_link,
+#footer_groupsio_link,
+#footer_github_link {
+    float: right;
+}
+
+#footer_text,
+#footer_copyright {
+    text-align: left;
+}
+
 #footer_links_container {
     margin-top: 32px;
-    margin-left: 120px;
-    padding-left: 90px;
+    margin-right: 120px;
+    padding-right: 50px;
     border-bottom: solid 1px #C8D3D3;
     padding-bottom: 4px;
-    white-space: nowrap;
     overflow: hidden;
-}
-
-#footer_twitter_link {
-    display: inline-block;
-    width: 26px;
-    height: 22px;
-    margin-right: 22px;
-    background-image: url('/img/footer_twitter.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: all .5s;
-    vertical-align: middle;
-}
-
-#footer_twitter_link:hover {
-    background-image: url('/img/footer_twitter_darker.png');
-}
-
-#footer_github_link {
-    display: inline-block;
-    width: 24px;
-    height: 23px;
-    background-image: url('/img/footer_github.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: all .5s;
-    vertical-align: middle;
-}
-
-#footer_github_link:hover {
-    background-image: url('/img/footer_github_darker.png');
 }
 
 @media only screen and (min--moz-device-pixel-ratio: 2),
@@ -573,8 +564,15 @@ only screen and (min-device-pixel-ratio: 2) {
         }
 
         #footer_links_container {
-            padding-left: 0;
-            margin-left: 0;
+            padding-right: 0;
+            margin-right: 0;
+        }
+
+        #footer_twitter_link,
+        #footer_stackoverflow_link,
+        #footer_groupsio_link,
+        #footer_github_link {
+            float: none;
         }
     
     }

@@ -1,0 +1,183 @@
+---
+layout: post
+title: "Installing features from Maven dependencies in Open Liberty 18.0.0.2"
+date:   2018-07-19 11:30:00 -0000
+categories: blog
+author_picture: https://avatars3.githubusercontent.com/u/29640130
+seo-title: Installing Liberty features from Maven dependencies - OpenLiberty.io
+seo-description: "Install features to the Open Liberty runtime kernel by adding dependencies in your Maven or Gradle build."
+blog_description: "Install features to the runtime kernel by adding dependencies in your Maven or Gradle build, which also provides Liberty API, SPI, and Java specification dependencies for compilation."
+---
+= Installing features from Maven dependencies in Open Liberty 18.0.0.2
+Eric Lau <https://github.com/ericglau>
+
+Open Liberty 18.0.0.2 is available in several runtime packages, including as a runtime kernel without any runtime features. With the latest releases of the Liberty https://github.com/WASdev/ci.maven[Maven] and https://github.com/WASdev/ci.gradle[Gradle] plugins, you can install runtime features simply by adding dependencies in your build. This also provides the relevant dependencies for compilation, so there is no longer any need to add Liberty API, SPI, or Java specification dependencies.
+
+== The runtime kernel
+
+If you're using Maven, here are the coordinates for the runtime kernel:
+[source,xml]
+----
+<assemblyArtifact>
+  <groupId>io.openliberty</groupId>
+  <artifactId>openliberty-kernel</artifactId>
+  <version>18.0.0.2</version>
+  <type>zip</type>
+</assemblyArtifact>
+----
+
+For Gradle:
+[source,groovy]
+----
+dependencies {
+   libertyRuntime 'io.openliberty:openliberty-kernel:18.0.0.2'
+}
+----
+
+== Dependencies
+
+The Open Liberty 18.0.0.2 features are available on https://search.maven.org/[The Central Repository] under the `io.openliberty.features` groupId.  When features are listed as dependencies, they will be installed by the Maven or Gradle plugin as well as provide Liberty API, SPI, and Java specification dependencies for compilation.  Features can also continue to be listed as before in the plugin configuration/attributes or in the `server.xml` file, in which case those features will also be retrieved from The Central Repository for installation.  The features that are retrieved will be stored in the local Maven or Gradle cache so that the next time you run the plugin, they won't need to be downloaded again.
+
+=== Maven
+The `features-bom` artifact provides the bill of materials (BOM) for each release version, and can be imported in the `dependencyManagement` section.  This allows each feature to be listed in the `dependencies` section without needing to specify the version.
+[source,xml]
+----
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.openliberty.features</groupId>
+                <artifactId>features-bom</artifactId>
+                <version>18.0.0.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.openliberty.features</groupId>
+            <artifactId>jaxrs-2.1</artifactId>
+            <type>esa</type>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+----
+
+=== Gradle
+Use the `libertyFeature` dependency configuration to install features. If you are using the `java` plugin, then the `libertyFeature` configuration extends from the `java` plugin's `compileOnly` configuration to provide Liberty API, SPI, and Java specification dependencies as well.
+[source,groovy]
+----
+dependencies {
+   libertyFeature 'io.openliberty.features:jaxrs-2.1:18.0.0.2'
+}
+----
+
+== Putting it all together
+Now that we've introduced the various parts, here's how they fit together.
+
+=== Maven
+With Maven, import the BOM, specify feature dependencies, and configure the plugin with the `install-server` and `install-feature` goals.
+[source,xml]
+----
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    ...
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.openliberty.features</groupId>
+                <artifactId>features-bom</artifactId>
+                <version>18.0.0.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.openliberty.features</groupId>
+            <artifactId>jaxrs-2.1</artifactId>
+            <type>esa</type>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+                <version>2.5</version>
+                <executions>
+                    <execution>
+                        <id>install-server</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>install-server</goal>
+                        </goals>
+                        <configuration>
+                            <assemblyArtifact>
+                                <groupId>io.openliberty</groupId>
+                                <artifactId>openliberty-kernel</artifactId>
+                                <version>18.0.0.2</version>
+                                <type>zip</type>
+                            </assemblyArtifact>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-feature</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>install-feature</goal>
+                        </goals>
+                        <configuration>
+                            <features>
+                                <acceptLicense>true</acceptLicense>
+                            </features>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+----
+
+=== Gradle
+With Gradle, specify the `libertyRuntime` and `libertyFeature` dependencies.
+[source,groovy]
+----
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.wasdev.wlp.gradle.plugins', name: 'liberty-gradle-plugin', version: '2.5'
+    }
+}
+
+apply plugin: 'liberty'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+   libertyRuntime 'io.openliberty:openliberty-kernel:18.0.0.2'
+   libertyFeature 'io.openliberty.features:jaxrs-2.1:18.0.0.2'
+}
+
+liberty {
+    server {
+        features {
+            acceptLicense = true
+        }
+    }
+}
+----
+
+== Further reading
+For more details on installing features from dependencies, refer to the readmes of the https://github.com/WASdev/ci.maven/blob/master/docs/install-feature.md#install-feature[install-feature Maven goal] or https://github.com/WASdev/ci.gradle/blob/master/docs/installFeature.md#installfeature-task[installFeature Gradle task].
+
