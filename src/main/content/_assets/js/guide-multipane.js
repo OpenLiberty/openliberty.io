@@ -241,7 +241,10 @@ $(document).ready(function() {
                 }
                 atTop = $("#code_column").scrollTop() === 0;
             } else {
-                atTop = $(window).scrollTop() === 0;
+                // Check if the "What You'll Learn" section is scrolled past yet.
+                var whatYoullLearnTop = $("#what-youll-learn, #what-you-ll-learn")[0].getBoundingClientRect().top;
+                var navHeight = $('.navbar').height();
+                atTop = (whatYoullLearnTop - navHeight) > 0;
             }
             if(atTop){
                 githubPopup.fadeIn();
