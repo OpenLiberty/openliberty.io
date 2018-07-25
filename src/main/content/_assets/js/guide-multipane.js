@@ -144,6 +144,9 @@ $(document).ready(function() {
     // Prevents the default scroll behavior which would scroll the whole browser.
     // The code column scrolling is independent of the guide column.
     $('.code_column').on('wheel mousewheel DOMMouseScroll', function(event){
+        if(inSingleColumnView()){
+            return;
+        }
         $(this).stop(); // Stop animations taking place with this code section.
 
         var event0 = event.originalEvent;
