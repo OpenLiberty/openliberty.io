@@ -130,6 +130,16 @@ $(document).ready(function() {
     // Hide all code blocks except the first
     $('#code_column .code_column:not(:first)').hide();
 
+    // Prevent scrolling the page when scrolling inside of the code panel, but not one of the code blocks.
+    $('#code_column').on('wheel mousewheel DOMMouseScroll', function(event){
+        event.stopPropagation();
+        var target = $(event.target);
+        if(!(target.is('.code_column') || target.parents('.code_column').length > 0)){   
+            // Prevent scrolling the page when scrolling outside of lines of code but still inside of the code column.
+            event.preventDefault();
+        } 
+    });
+
     // Handle scrolling in the code column.
     // Prevents the default scroll behavior which would scroll the whole browser.
     // The code column scrolling is independent of the guide column.
@@ -139,6 +149,7 @@ $(document).ready(function() {
         var event0 = event.originalEvent;
         var dir = (event0.deltaY) < 0 ? 'up' : 'down';        
         var hasVerticalScrollbar = false;
+        var codeColumn = $("#code_column").get(0);
 
         // Check if element is scrollable.
         if(this.scrollTop > 0 || this.offsetHeight > this.parentElement.offsetHeight){
@@ -151,13 +162,13 @@ $(document).ready(function() {
             event.preventDefault();
         }
         // If the code column is at the top and the browser is scrolled down, the element has no scrollTop and does not respond to changing its scrollTop.
-        else if(!(dir == 'down' && this.scrollTop === 0)){
+        else if(!(dir == 'down' && codeColumn.scrollTop === 0)){
             var delta = event0.wheelDelta || -event0.detail || -event0.deltaY;
             // Firefox's scroll value is always 1 so multiply by 150 to scroll faster.
             if(delta === 1 || delta === -1){
                 delta *= 150;
             }
-            $("#code_column").get(0).scrollTop -= delta;
+            codeColumn.scrollTop -= delta;
             handleGithubPopup(true);
             event.preventDefault();  
         }            
