@@ -1,17 +1,17 @@
 ---
 layout: post
 title: "Installing features from Maven dependencies in Open Liberty 18.0.0.2"
-date:   2018-07-19 11:30:00 -0000
+date:   2018-07-27 11:30:00 -0400
 categories: blog
 author_picture: https://avatars3.githubusercontent.com/u/29640130
-seo-title: Installing Liberty features from Maven dependencies - OpenLiberty.io
+seo-title: Installing features from Maven dependencies - OpenLiberty.io
 seo-description: "Install features to the Open Liberty runtime kernel by adding dependencies in your Maven or Gradle build."
-blog_description: "Install features to the runtime kernel by adding dependencies in your Maven or Gradle build, which also provides Liberty API, SPI, and Java specification dependencies for compilation."
+blog_description: "Install features to the runtime kernel to build it up with exactly what you need. It's as simple as adding dependencies in your Maven or Gradle build."
 ---
 = Installing features from Maven dependencies in Open Liberty 18.0.0.2
 Eric Lau <https://github.com/ericglau>
 
-Open Liberty 18.0.0.2 is available in several runtime packages, including as a runtime kernel without any runtime features. With the latest releases of the Liberty https://github.com/WASdev/ci.maven[Maven] and https://github.com/WASdev/ci.gradle[Gradle] plugins, you can install runtime features simply by adding dependencies in your build. This also provides the relevant dependencies for compilation, so there is no longer any need to add Liberty API, SPI, or Java specification dependencies.
+Open Liberty 18.0.0.2 is available in several runtime packages, including as a kernel without any runtime features. With the latest releases of the Liberty https://github.com/WASdev/ci.maven[Maven] and https://github.com/WASdev/ci.gradle[Gradle] plugins, you can install features to build up the runtime with exactly what you need.  This can be done simply by adding feature dependencies in your build.  The feature dependencies also provide the relevant dependencies for compiling your application, so there is no longer any need to add Liberty API, SPI, or Java specification dependencies.
 
 == The runtime kernel
 
@@ -36,7 +36,7 @@ dependencies {
 
 == Dependencies
 
-The Open Liberty 18.0.0.2 features are available on https://search.maven.org/[The Central Repository] under the `io.openliberty.features` groupId.  When features are listed as dependencies, they will be installed by the Maven or Gradle plugin as well as provide Liberty API, SPI, and Java specification dependencies for compilation.  Features can also continue to be listed as before in the plugin configuration/attributes or in the `server.xml` file, in which case those features will also be retrieved from The Central Repository for installation.  The features that are retrieved will be stored in the local Maven or Gradle cache so that the next time you run the plugin, they won't need to be downloaded again.
+The Open Liberty 18.0.0.2 features are available on https://search.maven.org/[Maven Central] under the `io.openliberty.features` groupId.  When features are listed as dependencies, they will be installed by the Maven or Gradle plugin as well as provide Liberty API, SPI, and Java specification dependencies for compilation.  Features can also continue to be listed as before in the plugin configuration/attributes or in the `server.xml` file, in which case those features will also be retrieved from Maven Central for installation.  As with all Maven dependencies, the features that are retrieved from Maven or Gradle will be stored locally allowing for offline builds.
 
 === Maven
 The `features-bom` artifact provides the bill of materials (BOM) for each release version, and can be imported in the `dependencyManagement` section.  This allows each feature to be listed in the `dependencies` section without needing to specify the version.
@@ -180,4 +180,3 @@ liberty {
 
 == Further reading
 For more details on installing features from dependencies, refer to the readmes of the https://github.com/WASdev/ci.maven/blob/master/docs/install-feature.md#install-feature[install-feature Maven goal] or https://github.com/WASdev/ci.gradle/blob/master/docs/installFeature.md#installfeature-task[installFeature Gradle task].
-
