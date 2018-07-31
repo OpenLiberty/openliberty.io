@@ -140,9 +140,9 @@ function createEndOfGuideContent(){
     $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
 
     // Concatenate the guide title and guide attribution license and append it to the end of guide.
-    var guideAttribution = $("#guide-attribution").siblings().find('p').text();
-    if(guideAttribution){
-        $("#guide_attribution").text(guideAttribution);
+    var guideAttributionText = $("#guide-attribution").siblings().find('p').text();
+    if(guideAttributionText){
+        $("#guide_attribution").text(guideAttributionText);
         $("#guide-attribution").parent().remove();
         $("#toc_container a[href='#guide-attribution']").parent().remove(); // Remove from TOC.
     }
