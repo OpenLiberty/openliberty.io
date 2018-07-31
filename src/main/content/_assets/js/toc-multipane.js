@@ -126,29 +126,24 @@ $(document).ready(function() {
         $("#guide_column").addClass('expanded');
     });
 
-    // These onclick handlers only work for static guides.   At the time this
+    // This onclick handler only works for static guides.   At the time this
     // code executes, the TOC items for the interactive guides are not yet built.
     // So the following is basically a no-op for the interactive guides.
     // However, this code was duplicated in
     // ...iguides-common\js\interactive\guides\table-of-contents.js in __create();
-    // to set the same onclick handlers there.
-    $("#toc_container a").on('click', function(event) {
-        var id = this.hash.substring(1);
-        updateTOCHighlighting(id);
-        handleFloatingTableOfContent();
-        // Close TOC if in single column view
-        if(inSingleColumnView()){
-            $("#mobile_close_container").trigger('click');
-        }    
-    });
+    // to set the same onclick handler there.
     $("#toc_container li").on('click', function(event) {
         // 'this' is the li element.  Its first child is the anchor tag.
         var hash = $(this).find('a').prop('hash').substring(1);  // Get rid of the '#' of the hash
 
         // Update the URL hash with where we wish to go....
         window.location.hash = hash; // NOTE: hashchange handling invokes
-                                     //       updateTOCHighlighting()
-        handleFloatingTableOfContent();
+                                     //       updateTOCHighlighting() and
+                                     //       updateFloatingTableOfContent()
+
+        if(inSingleColumnView()){
+            $("#mobile_close_container").trigger('click');
+        }
     });
 
 });
