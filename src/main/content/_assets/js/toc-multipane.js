@@ -10,7 +10,7 @@
  *******************************************************************************/
 // Keep the table of contents (TOC) in view while scrolling (Desktop only)
 function handleFloatingTableOfContent() {
-    if ($(window).width() > 1440) {
+    if ($(window).width() >= 1440) {
         // CURRENTLY IN 3 COLUMN VIEW
         if ($(window).scrollTop() >= $('#toc_column').offset().top) {
             // The top of the TOC is scrolling off the screen, enable floating TOC.
