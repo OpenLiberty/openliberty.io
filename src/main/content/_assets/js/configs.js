@@ -437,21 +437,20 @@ function handleExpandCollapseToggleButton(buttonElement, updateUrl) {
         buttonElement.attr('collapsed', false);
         // this call needs to be done after collapsed is set to false
         handleExpandCollapseTitle(titleId, true);
-        adjustFrameHeight();
-        if (updateUrl) {
-            var href = getSelectedDocHtml() + "#";
-            updateHashInUrl(href + titleId, true);
-        }
     } else {
         // Collapse the table and nested elements
         handleExpandCollapseTitle(titleId, false);
         buttonElement.empty().append($('<img src="/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
         buttonElement.attr('collapsed', true);
-        adjustFrameHeight();
-        if (updateUrl) {
-            var href = getSelectedDocHtml() + "#";
-            updateHashInUrl(href + titleId, false);
-        }
+    }
+    adjustFrameHeight();
+    if (updateUrl) {
+        var href = getSelectedDocHtml() + "#";
+        updateHashInUrl(href + titleId, true);
+    }
+    // scroll to the element for android, otherwise it will be at the top of the doc
+    if (isMobileView() & $(window).scrollTop() === 0) {
+        handleIFrameDocPosition("#" + titleId);
     }
 }
 
@@ -494,7 +493,9 @@ function handleExpandCollapseTitle(titleId, isShow) {
     $(hideElements).each(function () {
         $(this).hide();
     })
-    $('iframe[name=contentFrame]').contents().trigger("scroll"); // trigger a scroll event to update the breadcrumb
+    if (!isMobileView()) {
+        $('iframe[name=contentFrame]').contents().trigger("scroll"); // trigger a scroll event to update the breadcrumb
+    }
 }
 
 function handleDeferredExpandCollapseElements(deferredElements) {
