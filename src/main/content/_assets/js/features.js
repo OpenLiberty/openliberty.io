@@ -75,7 +75,7 @@ function loadContent(href) {
     $("#feature_content").load(href, function(response, status) {
         if (status === "success") {
             addClassToFeaturesThatEnableThisFeature();
-            //setContainerHeight();
+            setContainerHeight();
             $('html, body').animate({
                 scrollTop: 0
               }, 400);
@@ -129,11 +129,11 @@ function addClassToFeaturesThatEnableThisFeature() {
 }
 
 function setContainerHeight() {
-    var featureContentHeight = $("#feature_content").outerHeight() + "px";
-    $("#background_container").css("height", featureContentHeight);
-    $("#background_container").css("margin-bottom", "60px");
-    if (!isMobileView()) {       
-        $("#toc_column").css("height", featureContentHeight);
+    if (!isMobileView()) {  
+        // the height has to be less than the viewport so that the last toc will be in 
+        // view without the need to scroll the outer container
+        $("#background_container").css("height", $(window).height() - 150); 
+        $("#background_container").css("margin-bottom", "60px");     
     }
 }
 
