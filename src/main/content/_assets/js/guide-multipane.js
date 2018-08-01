@@ -20,7 +20,6 @@ $(document).ready(function() {
 
     var guide_sections = [];
     var code_sections = {}; // Map guide sections to code blocks to show on the right column.
-    var hotspot_snippets = {}; // Map of hotspots to code blocks in the code column on the right.
 
     // Move the code snippets to the code column on the right side.
     // Each code section is duplicated to show the full file in the right column and just the snippet of code relevant to the guide in the left column in single column / mobile view.
@@ -159,20 +158,31 @@ $(document).ready(function() {
         metadata.detach();
     });
 
-    // When hovering over a code snippet, highlight the corresponding lines of code in the code section.
+    // When hovering over a code 'hotspot', highlight the correct lines of code in the corresponding code section.
     $('.hotspot').on('hover mouseover', function(event){
-        var section = $(this).parents('.sect1').first();
+        
+        var snippet = $(this);
+        var section = snippet.parents('.sect1').first();
         var header = section.find('h2').get(0);
-        var code_block = code_sections[header.id];
-        highlight_code_range(code_block);
+        var code_section = code_sections[header.id];
+        if(code_section){
+            var code_block = code_section.code;
+            var fromLine = snippet.data('highlight_from_line');
+            var toLine = snippet.data('highlight_to_line');
+            if(code_block && fromLine && toLine){
+                highlight_code_range(code_block, fromLine, toLine);
+            }            
+        }        
     });
 
-    // Remove highlighting in the code section.
+    // When the mouse leaves a code 'hotspot', remove all highlighting in the corresponding code section.
     $('.hotspot').on('mouseleave', function(event){
         var section = $(this).parents('.sect1').first();
         var header = section.find('h2').get(0);
         var code_block = code_sections[header.id];
-        remove_highlighting(code_block);
+        if(code_block && code_block.code){
+            remove_highlighting(code_block.code);
+        }        
     });
    
 
