@@ -130,9 +130,9 @@ function addClassToFeaturesThatEnableThisFeature() {
 
 function setContainerHeight() {
     if (!isMobileView()) {  
-        // the height has to be less than the viewport so that the last toc will be in 
+        // the height is viewport - header so that the last toc will be in 
         // view without the need to scroll the outer container
-        $("#background_container").css("height", $(window).height() - 150); 
+        $("#background_container").css("height", $(window).height() - $('header').height()); 
         $("#background_container").css("margin-bottom", "60px");     
     }
 }

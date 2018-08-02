@@ -62,7 +62,6 @@ iframe.config_content_frame {
 
 #content {
     padding-left: 20px;
-    overflow-x: hidden;  /* hide horizontal scrollbar due to table */
 }
 
 #config_title { /* not picking up from common, has to have entire config_title css here */
@@ -212,15 +211,6 @@ div.toggle:hover {
     cursor: default;
 }
 
-/* hide scrollbar for iframe */
-#config_content {
-    overflow: hidden;
-}
-
-iframe.config_content_frame {
-    width: 102%;
-}
-
 @media (max-width: 767px) {
     .contentStickyBreadcrumbHeader {
         position: static;
@@ -257,4 +247,19 @@ iframe.config_content_frame {
     html, body, main {  
         height: 95%;
     }
+
+    /* Has to put the overflow hidden css for desktop here as overriding the values in
+       the mobile area still causes horizontal scrolling problem */
+    #config {
+        overflow-x: hidden;  /* hide horizontal scrollbar due to table */
+    }
+
+    /* hide scrollbar for iframe */
+    #config_content {
+        overflow: hidden;
+    } 
+
+    iframe.config_content_frame {
+        width: 102%;
+    } 
 }
