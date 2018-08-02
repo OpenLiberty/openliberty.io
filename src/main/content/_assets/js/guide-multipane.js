@@ -53,8 +53,8 @@ $(document).ready(function() {
             // Wrap each leftover piece of text in a span to handle highlighting a range of lines.
             code_block.find('code').contents().each(function(){
                 if (!$(this).is('span')) {
-                     var newText = $(this).wrap('<span class="string"></span>');
-                     $(this).replaceWith(newText);
+                    var newText = $(this).wrap('<span class="string"></span>');
+                    $(this).replaceWith(newText);
                 }
             });
 
@@ -71,7 +71,7 @@ $(document).ready(function() {
                 'code': duplicate_code_block,
                 'fromLine': fromLine,
                 'toLine': toLine
-            }
+            };
 
             var first_span = code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
             var last_span = code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
@@ -102,19 +102,89 @@ $(document).ready(function() {
             duplicate_code_block.prepend(title_section);
             duplicate_code_block.addClass('dimmed_code_column'); // Dim the code at first while the github popup takes focus.
             duplicate_code_block.appendTo('#code_column'); // Move code to the right column
-
-            // Wrap code block lines in a div to highlight
-            var highlight_start = duplicate_code_block.find('.line-numbers:contains(' + fromLine + ')').first();
-            var highlight_end = duplicate_code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
-            var range = highlight_start.nextUntil(highlight_end);
-
-            range.wrapAll("<div class='highlightSection'></div>");
-
-            // Remove line numbers which were mainly used for highlighting the section.
-            code_block.find('.line-numbers').remove();
-            duplicate_code_block.find('.line-numbers').remove();
         }
     });
+
+     // Highlights a block of code in a code section
+    // Input code_section: The section of code to highlight.
+    //       from_line: Integer for what line to start highlighting from.
+    //       to_line: Integer for what line to end highlighting.
+    function highlight_code_range(code_section, fromLine, toLine){
+        // Wrap each leftover piece of text in a span to handle highlighting a range of lines.
+        code_section.find('code').contents().each(function(){
+            if (!$(this).is('span')) {
+                 var newText = $(this).wrap('<span class="string"></span>');
+                 $(this).replaceWith(newText);
+            }
+        });
+        // Wrap code block lines in a div to highlight
+        var highlight_start = code_section.find('.line-numbers:contains(' + fromLine + ')').first();
+        var highlight_end = code_section.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
+        var range = highlight_start.nextUntil(highlight_end);
+        range.wrapAll("<div class='highlightSection'></div>");
+    }
+
+    // Remove all highlighting for the code section.
+    // Input code_section: The section of code to highlight.
+    function remove_highlighting(code_section){
+        var highlightedSections = code_section.find('.highlightSection');
+        highlightedSections.each(function(){
+            var children = $(this).find('span');
+            children.unwrap(); // Remove the wrapped highlighted div from these children.
+        });
+        
+    }
+
+    // Parse the hotspot lines to highlight and store them as a data attribute.
+    $('.hotspot').each(function(){
+        var snippet = $(this);
+        var metadata = snippet.prev().find('p');
+        if(metadata.length > 0){
+            var metadata_text = metadata[0].innerText;
+            if(metadata_text.indexOf('highlight_lines=') > -1){
+                var line_nums = metadata_text.substring(16);
+                if(line_nums.indexOf('-') > -1){
+                    var lines = line_nums.split('-');
+                    var fromLine = parseInt(lines[0]);
+                    var toLine = parseInt(lines[1]);
+                    // Set data attributes to save the lines to highlight
+                    snippet.data('highlight_from_line', fromLine);
+                    snippet.data('highlight_to_line', toLine);
+                }
+            }             
+        }
+
+        // Remove old title from the DOM
+        metadata.detach();
+    });
+
+    // When hovering over a code 'hotspot', highlight the correct lines of code in the corresponding code section.
+    $('.hotspot').on('hover mouseover', function(event){
+        
+        var snippet = $(this);
+        var section = snippet.parents('.sect1').first();
+        var header = section.find('h2').get(0);
+        var code_section = code_sections[header.id];
+        if(code_section){
+            var code_block = code_section.code;
+            var fromLine = snippet.data('highlight_from_line');
+            var toLine = snippet.data('highlight_to_line');
+            if(code_block && fromLine && toLine){
+                highlight_code_range(code_block, fromLine, toLine);
+            }            
+        }        
+    });
+
+    // When the mouse leaves a code 'hotspot', remove all highlighting in the corresponding code section.
+    $('.hotspot').on('mouseleave', function(event){
+        var section = $(this).parents('.sect1').first();
+        var header = section.find('h2').get(0);
+        var code_block = code_sections[header.id];
+        if(code_block && code_block.code){
+            remove_highlighting(code_block.code);
+        }        
+    });
+   
 
     // Map the guide sections that don't have any code sections to the previous section's code.
     var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2, .sect2:not(#guide_meta):not(#related-guides) > h3');

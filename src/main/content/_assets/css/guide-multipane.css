@@ -131,6 +131,7 @@ header {
 .CodeRay .line-numbers {
     display: inline-block;
     visibility: hidden;
+    display: none;
 }
 
 #guide_content pre {
@@ -154,6 +155,35 @@ header {
 
 #guide_content .command code {
     background-color: transparent;
+}
+
+.hotspot:not(.code_command) {
+    display: inline-block;
+}
+
+#guide_content .hotspot:not(.code_command) pre {
+    font-family:Courier;
+    font-size:14px;
+    padding: 5px;
+    background-color: #F1F4FE;
+    color:#5e6b8d;
+    letter-spacing:0;
+    line-height:24px;
+    text-align:left;
+}
+
+#guide_content .hotspot pre:hover {
+    color: #24253A;
+    background-color: #C7CCD9;
+    cursor: pointer;
+}
+
+#guide_content .code_command.hotspot:hover > .content:before {
+    background: linear-gradient(to top right, #C7CCD9 48%, #c8d6fb calc(48% + 1px), transparent calc(48% + 2px));
+}
+
+#guide_content .code_command.hotspot:hover > .content:after{
+    background: linear-gradient(to bottom right, #C7CCD9 48%, #c8d6fb calc(48% + 1px), transparent calc(48% + 2px));
 }
 
 #guide_content .code_command pre,  #guide_content .code_command code {
@@ -557,6 +587,10 @@ header {
 
     .guide_column_code_snippet {
         display: block;
+    }
+
+    #guide_content .hotspot:not(.code_command) pre {
+        display: none; /* Hide the hotspot snippets in mobile since there is no right pane */
     }
 
     #guide_content .code_command > .content {
