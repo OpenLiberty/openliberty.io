@@ -10,8 +10,9 @@
  *******************************************************************************/
 package io.openliberty.website;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -24,6 +25,7 @@ import javax.json.JsonString;
 import javax.json.JsonValue;
 
 import io.openliberty.website.data.LastUpdate;
+import io.openliberty.website.data.BuildInfo;
 
 @ApplicationScoped
 public class BuildsManager {
@@ -63,26 +65,25 @@ public class BuildsManager {
         lastUpdate.setLastUpdateAttempt(new Date());
         JsonObjectBuilder updatedBuilds = Json.createObjectBuilder();
         JsonObjectBuilder updatedReleases = Json.createObjectBuilder();
-        JsonArray updatedRuntimeReleases = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
+        List<BuildInfo> updatedRuntimeReleases = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
                 Constants.DHE_RELEASE_PATH_SEGMENT);
-        JsonArray updatedRuntimeNightlyBuilds = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
+        List<BuildInfo> updatedRuntimeNightlyBuilds = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
                 Constants.DHE_NIGHTLY_PATH_SEGMENT);
-        JsonArray updatedToolsReleases = retrieveBuildData(Constants.DHE_TOOLS_PATH_SEGMENT,
+        List<BuildInfo> updatedToolsReleases = retrieveBuildData(Constants.DHE_TOOLS_PATH_SEGMENT,
                 Constants.DHE_RELEASE_PATH_SEGMENT);
-        JsonArray updatedToolsNightlyBuilds = retrieveBuildData(Constants.DHE_TOOLS_PATH_SEGMENT,
+        List<BuildInfo> updatedToolsNightlyBuilds = retrieveBuildData(Constants.DHE_TOOLS_PATH_SEGMENT,
                 Constants.DHE_NIGHTLY_PATH_SEGMENT);
-        if (updatedRuntimeReleases != null && updatedRuntimeNightlyBuilds != null && updatedToolsReleases != null
-                && updatedToolsNightlyBuilds != null) {
+        if (!updatedRuntimeReleases.isEmpty() && !updatedToolsReleases.isEmpty()) {
             JsonObject latestRuntimeRelease = getLatestBuild(updatedRuntimeReleases);
             JsonObject latestToolsRelease = getLatestBuild(updatedToolsReleases);
             // if (latestRuntimeRelease != null && latestToolsRelease != null) {
             if (latestRuntimeRelease != null) {
                 updatedReleases.add(Constants.RUNTIME, latestRuntimeRelease);
                 updatedReleases.add(Constants.TOOLS, latestToolsRelease);
-                updatedBuilds.add(Constants.RUNTIME_RELEASES, updatedRuntimeReleases);
-                updatedBuilds.add(Constants.RUNTIME_NIGHTLY_BUILDS, updatedRuntimeNightlyBuilds);
-                updatedBuilds.add(Constants.TOOLS_RELEASES, updatedToolsReleases);
-                updatedBuilds.add(Constants.TOOLS_NIGHTLY_BUILDS, updatedToolsNightlyBuilds);
+                updatedBuilds.add(Constants.RUNTIME_RELEASES, asJsonArray(updatedRuntimeReleases));
+                updatedBuilds.add(Constants.RUNTIME_NIGHTLY_BUILDS, asJsonArray(updatedRuntimeNightlyBuilds));
+                updatedBuilds.add(Constants.TOOLS_RELEASES, asJsonArray(updatedToolsReleases));
+                updatedBuilds.add(Constants.TOOLS_NIGHTLY_BUILDS, asJsonArray(updatedToolsNightlyBuilds));
                 lastUpdate.markSuccessfulUpdate();
                 builds = updatedBuilds.build();
                 latestReleases = updatedReleases.build();
@@ -91,114 +92,127 @@ public class BuildsManager {
         return getStatus();
     }
 
-    private JsonObject getLatestBuild(JsonArray buildsArray) {
-        JsonObject latest = null;
+	private JsonArray asJsonArray(List<BuildInfo> buildList) {
+		JsonArrayBuilder array = Json.createArrayBuilder();
+		for (BuildInfo info : buildList) {
+			array.add(info.asJsonObject());
+		}
+		return array.build();
+	}
 
-        for (JsonValue releaseObject : buildsArray) {
-            if (releaseObject instanceof JsonObject) {
-                JsonObject releaseJSONObject = (JsonObject) releaseObject;
-                JsonValue dateObject = releaseJSONObject.get(Constants.DATE);
-                if (dateObject instanceof JsonString) {
-                    String dateString = ((JsonString) dateObject).getString();
-                    if (latest == null || dateString.compareTo(latest.getString(Constants.DATE)) > 0) {
-                        latest = releaseJSONObject;
-                    }
-                }
-            }
-        }
-        return latest;
+	private JsonObject getLatestBuild(List<BuildInfo> buildsList) {
+		BuildInfo latest = null;
+
+		for (BuildInfo info : buildsList) {
+			if (latest == null) {
+				latest = info;
+			}
+			if (info.getDateTime().compareTo(latest.getDateTime()) > 0) {
+				latest = info;
+			}
+		}
+		return latest.asJsonObject();
     }
 
-    private JsonArray retrieveBuildData(String artifactPath, String buildTypePath) {
-        String versionsURL = Constants.DHE_URL + artifactPath + buildTypePath + Constants.DHE_INFO_JSON_FILE_NAME;
-        JsonObject versions = dheParser.retrieveJSON(versionsURL);
-        if (versions != null) {
-            JsonArrayBuilder jsonArray = Json.createArrayBuilder();
-            JsonValue versionsObject = versions.get(Constants.VERSIONS);
-            if (versionsObject instanceof JsonArray) {
-                for (JsonValue value : (JsonArray) versionsObject) {
-                    if (value instanceof JsonString) {
-                        String version = ((JsonString) value).getString();
-                        String versionPath = version + '/';
-                        String informationFileURL = Constants.DHE_URL + artifactPath + buildTypePath + versionPath
-                                + Constants.DHE_INFO_JSON_FILE_NAME;
-                        JsonObject buildInformationSrc = dheParser.retrieveJSON(informationFileURL);
-                        JsonObjectBuilder buildInformation = toJsonObjectBuilder(buildInformationSrc);
-                        if (buildInformationSrc != null) {
-                            buildInformation.add(Constants.DATE, version);
+	private List<BuildInfo> retrieveBuildData(String artifactPath, String buildTypePath) {
+		List<BuildInfo> builds = new ArrayList<BuildInfo>();
+		String versionsURL = Constants.DHE_URL + artifactPath + buildTypePath + Constants.DHE_INFO_JSON_FILE_NAME;
+		JsonObject versions = dheParser.retrieveJSON(versionsURL);
+		if (versions != null) {
+			JsonArrayBuilder jsonArray = Json.createArrayBuilder();
+			JsonValue versionsObject = versions.get(Constants.VERSIONS);
+			if (versionsObject instanceof JsonArray) {
+				for (JsonValue value : (JsonArray) versionsObject) {
+					if (value instanceof JsonString) {
+						BuildInfo info = loadBuildVersion(artifactPath, buildTypePath, jsonArray, (JsonString) value);
+						if (info != null) {
+						builds.add(info);
+						}
+					}
+				}
+			}
+		}
+		return builds;
+	}
 
-                            JsonValue buildLogObject = buildInformationSrc.get(Constants.BUILD_LOG);
-                            if (buildLogObject instanceof JsonString) {
-                                String buildLog = ((JsonString) buildLogObject).getString();
-                                String newBuildLog = Constants.DHE_URL + artifactPath + buildTypePath + versionPath
-                                        + buildLog;
-                                buildInformation.add(Constants.BUILD_LOG, newBuildLog);
-                            }
+	private BuildInfo loadBuildVersion(String artifactPath, String buildTypePath, JsonArrayBuilder jsonArray,
+			JsonString value) {
+		String version = ((JsonString) value).getString();
+		String versionPath = version + '/';
+		String informationFileURL = Constants.DHE_URL + artifactPath + buildTypePath + versionPath
+				+ Constants.DHE_INFO_JSON_FILE_NAME;
+		JsonObject buildInformationSrc = dheParser.retrieveJSON(informationFileURL);
+		if (buildInformationSrc != null) {
+			return parseBuildInformation(artifactPath, buildTypePath, version, versionPath, buildInformationSrc);
+		}
+		return null;
+	}
 
-                            JsonValue testLogObject = buildInformationSrc.get(Constants.TESTS_LOG);
-                            if (testLogObject instanceof JsonString) {
-                                String testsLog = ((JsonString) testLogObject).getString();
-                                String newTestsLog = Constants.DHE_URL + artifactPath + buildTypePath + versionPath
-                                        + testsLog;
-                                buildInformation.add(Constants.TESTS_LOG, newTestsLog);
-                            }
+	private BuildInfo parseBuildInformation(String artifactPath, String buildTypePath, String version,
+			String versionPath, JsonObject buildInformationSrc) {
+		BuildInfo info = new BuildInfo();
+		info.addDateTime(version);
 
-                            JsonValue driverLocationObject = buildInformationSrc.get(Constants.DRIVER_LOCATION);
-                            if (driverLocationObject instanceof JsonString) {
-                                String driverLocation = ((JsonString) driverLocationObject).getString();
-                                String newDrvierLocation = Constants.DHE_URL + artifactPath + buildTypePath
-                                        + versionPath + driverLocation;
-                                buildInformation.add(Constants.DRIVER_LOCATION, newDrvierLocation);
+		JsonValue versionObject = buildInformationSrc.get(Constants.VERSION);
+		if (versionObject instanceof JsonString) {
+			info.addVersion(((JsonString) versionObject).getString());
+		}
+		JsonValue testsPassedObject = buildInformationSrc.get(Constants.TESTS_PASSED);
+		if (testsPassedObject instanceof JsonString) {
+			info.addTestPassed(((JsonString) testsPassedObject).getString());
+		}
+		JsonValue totalTestsObject = buildInformationSrc.get(Constants.TOTAL_TESTS);
+		if (totalTestsObject instanceof JsonString) {
+			info.addTotalTests(((JsonString) totalTestsObject).getString());
+		}
 
-                                String size = dheParser.retrieveSize(newDrvierLocation);
-                                if (size != null) {
-                                    buildInformation.add(Constants.SIZE_IN_BYTES, size);
-                                }
-                            }
+		JsonValue buildLogObject = buildInformationSrc.get(Constants.BUILD_LOG);
+		if (buildLogObject instanceof JsonString) {
+			String buildLog = ((JsonString) buildLogObject).getString();
+			String newBuildLog = Constants.DHE_URL + artifactPath + buildTypePath + versionPath + buildLog;
+			info.addBuildLog(newBuildLog);
+		}
 
-                            JsonValue packageLocationsObject = buildInformationSrc.get(Constants.PACKAGE_LOCATIONS);
-                            if(packageLocationsObject instanceof JsonArray){
-                                JsonArray packageLocations = (JsonArray) packageLocationsObject;
-                                // Form an array of packageName=packageLocation
-                                JsonArrayBuilder packageArray = Json.createArrayBuilder();
-                                for(int i = 0; i < packageLocations.size(); i++){     
-                                    String packageLocation = ((JsonString) packageLocations.get(i)).getString();
-                                    String[] parts = packageLocation.split("-");
-                                    if(parts.length == 3){
-                                        String packageName = parts[1];
-                                        String extension = parts[2];
-                                        String packageVersion = ((JsonString) buildInformationSrc.get(Constants.VERSION)).getString(); 
-                                        extension = extension.substring(extension.indexOf(packageVersion) + packageVersion.length());
-                                        String newLocation = Constants.DHE_URL + artifactPath + buildTypePath
-                                        + versionPath + packageLocation;
-                                        packageArray.add(packageName + extension + "=" + newLocation);
-                                    }                                    
-                                }
-                                buildInformation.add(Constants.PACKAGE_LOCATIONS, packageArray.build());
-                            }
-                            jsonArray.add(buildInformation.build());
-                        }
-                    }
-                }
-            }
-            return jsonArray.build();
-        }
-        return null;
-    }
+		JsonValue testLogObject = buildInformationSrc.get(Constants.TESTS_LOG);
+		if (testLogObject instanceof JsonString) {
+			String testsLog = ((JsonString) testLogObject).getString();
+			String newTestsLog = Constants.DHE_URL + artifactPath + buildTypePath + versionPath + testsLog;
+			info.addTestLog(newTestsLog);
+		}
 
-    private JsonObjectBuilder toJsonObjectBuilder(JsonObject obj) {
-        if (obj == null) return null;
+		JsonValue driverLocationObject = buildInformationSrc.get(Constants.DRIVER_LOCATION);
+		if (driverLocationObject instanceof JsonString) {
+			String driverLocation = ((JsonString) driverLocationObject).getString();
+			String newDrvierLocation = Constants.DHE_URL + artifactPath + buildTypePath + versionPath
+					+ driverLocation;
+			info.addDriverLocation(newDrvierLocation);
 
-        JsonObjectBuilder builder = Json.createObjectBuilder();
+			String size = dheParser.retrieveSize(newDrvierLocation);
+			if (size != null) {
+				info.addSizeInBytes(size);
+			}
+		}
 
-        for (Map.Entry<String, JsonValue> entry : obj.entrySet()) {
-            builder.add(entry.getKey(), entry.getValue());
-        }
-
-        return builder;
-    }
-
-
+		JsonValue packageLocationsObject = buildInformationSrc.get(Constants.PACKAGE_LOCATIONS);
+		if (packageLocationsObject instanceof JsonArray) {
+			JsonArray packageLocations = (JsonArray) packageLocationsObject;
+			// Form an array of packageName=packageLocation
+			for (int i = 0; i < packageLocations.size(); i++) {
+				String packageLocation = ((JsonString) packageLocations.get(i)).getString();
+				String[] parts = packageLocation.split("-");
+				if (parts.length == 3) {
+					String packageName = parts[1];
+					String extension = parts[2];
+					String packageVersion = ((JsonString) buildInformationSrc.get(Constants.VERSION)).getString();
+					extension = extension.substring(extension.indexOf(packageVersion) + packageVersion.length());
+					String newLocation = Constants.DHE_URL + artifactPath + buildTypePath + versionPath
+							+ packageLocation;
+					info.addPackageLocation(packageName + extension, newLocation);
+				}
+			}
+		}
+		return info;
+	}
 
     // Compare the current time with the time the last build request is run. Allow the next
     // build request to go through if the last build request was run an hour ago or more.

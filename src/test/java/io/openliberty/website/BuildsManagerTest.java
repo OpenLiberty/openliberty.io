@@ -11,6 +11,7 @@ import javax.json.JsonObjectBuilder;
 import org.junit.Test;
 
 import io.openliberty.website.data.LastUpdate;
+import io.openliberty.website.mock.EmptyVersionsDHEClient;
 import io.openliberty.website.mock.MockDHEClient;
 import io.openliberty.website.mock.NullDHEClient;
 
@@ -52,6 +53,20 @@ public class BuildsManagerTest {
         assertEquals("{}", bm.getBuilds().toString());
         assertEquals("{}", bm.getLatestReleases().toString());
     }
+
+	@Test
+	public void validate_state_of_BuildManager_with_no_releases() {
+		BuildsManager bm = new BuildsManager(new EmptyVersionsDHEClient());
+		LastUpdate status = bm.updateBuilds();
+
+		assertEquals(status, bm.getStatus());
+
+		assertFalse(Constants.NEVER_ATTEMPTED.equals(status.getLastUpdateAttempt()));
+		assertEquals(Constants.NEVER_UPDATED, status.getLastSuccessfulUpdate());
+
+		assertEquals("{}", bm.getBuilds().toString());
+		assertEquals("{}", bm.getLatestReleases().toString());
+	}
 
     private JsonObject getExpectedBuilds() {
         JsonObjectBuilder expected = Json.createObjectBuilder();
