@@ -10,11 +10,11 @@
  *******************************************************************************/
 package io.openliberty.website;
 
-import java.io.StringReader;
 import java.util.Date;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -22,15 +22,10 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation.Builder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 @ApplicationScoped
 public class BuildsManager {
+    @Inject private DHEClient dheParser;
 
     private volatile Date lastSuccessfulUpdate = null;
     private volatile Date lastUpdateAttempt = null;
@@ -38,10 +33,12 @@ public class BuildsManager {
     private volatile JsonObject builds = Json.createObjectBuilder().build();
     private volatile JsonObject latestReleases = Json.createObjectBuilder().build();
 
-    private Client client = null;
+    /** Defined default constructor */
+    public BuildsManager() {}
 
-    public BuildsManager() {
-        client = ClientBuilder.newClient();
+    /** Allow for unittest injection */
+    BuildsManager(DHEClient client) {
+        dheParser = client;
     }
 
     public JsonObject getBuilds() {
@@ -118,8 +115,8 @@ public class BuildsManager {
     }
 
     private JsonArray retrieveBuildData(String artifactPath, String buildTypePath) {
-        JsonObject versions = retrieveJSON(
-                Constants.DHE_URL + artifactPath + buildTypePath + Constants.DHE_INFO_JSON_FILE_NAME);
+        String versionsURL = Constants.DHE_URL + artifactPath + buildTypePath + Constants.DHE_INFO_JSON_FILE_NAME;
+        JsonObject versions = dheParser.retrieveJSON(versionsURL);
         if (versions != null) {
             JsonArrayBuilder jsonArray = Json.createArrayBuilder();
             JsonValue versionsObject = versions.get(Constants.VERSIONS);
@@ -130,7 +127,7 @@ public class BuildsManager {
                         String versionPath = version + '/';
                         String informationFileURL = Constants.DHE_URL + artifactPath + buildTypePath + versionPath
                                 + Constants.DHE_INFO_JSON_FILE_NAME;
-                        JsonObject buildInformationSrc = retrieveJSON(informationFileURL);
+                        JsonObject buildInformationSrc = dheParser.retrieveJSON(informationFileURL);
                         JsonObjectBuilder buildInformation = toJsonObjectBuilder(buildInformationSrc);
                         if (buildInformationSrc != null) {
                             buildInformation.add(Constants.DATE, version);
@@ -158,7 +155,7 @@ public class BuildsManager {
                                         + versionPath + driverLocation;
                                 buildInformation.add(Constants.DRIVER_LOCATION, newDrvierLocation);
 
-                                String size = retrieveSize(newDrvierLocation);
+                                String size = dheParser.retrieveSize(newDrvierLocation);
                                 if (size != null) {
                                     buildInformation.add(Constants.SIZE_IN_BYTES, size);
                                 }
@@ -206,34 +203,11 @@ public class BuildsManager {
         return builder;
     }
 
-    private JsonObject retrieveJSON(String url) {
-        WebTarget target = client.target(url);
-        Builder builder = target.request("application/json");
-        Response response = builder.get();
-        if (response.getStatus() == 200) {
-            if (MediaType.APPLICATION_JSON_TYPE.equals(response.getMediaType())) {
-                return response.readEntity(JsonObject.class);
-            } else if (MediaType.TEXT_PLAIN_TYPE.equals(response.getMediaType())) {
-                String responseBody = response.readEntity(String.class);
-                return Json.createReader(new StringReader(responseBody)).readObject();
-            }
-        }
-        return null;
-    }
 
-    private String retrieveSize(String url) {
-        WebTarget target = client.target(url);
-        Builder builder = target.request();
-        Response response = builder.head();
-        if (response.getStatus() == 200) {
-            return response.getHeaderString(Constants.CONTENT_LENGTH);
-        }
-        return null;
-    }
 
     // Compare the current time with the time the last build request is run. Allow the next
     // build request to go through if the last build request was run an hour ago or more.
-    private boolean isBuildUpdateAllowed() {
+    boolean isBuildUpdateAllowed() {
         boolean isBuildUpdateAllowed = true;
         if (lastSuccessfulUpdate != null) {
             long currentTime = new Date().getTime();
