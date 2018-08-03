@@ -60,7 +60,7 @@ public class BuildsManagerTest {
         assertTrue(builds.getToolsReleases().isEmpty());
         assertTrue(builds.getToolsNightlyBuilds().isEmpty());
 
-        assertEquals("{}", bm.getLatestReleases().toString());
+        assertEquals("{}", bm.getLatestReleases().asJsonObject().toString());
     }
 
 	@Test
@@ -79,7 +79,7 @@ public class BuildsManagerTest {
         assertTrue(builds.getToolsReleases().isEmpty());
         assertTrue(builds.getToolsNightlyBuilds().isEmpty());
 
-		assertEquals("{}", bm.getLatestReleases().toString());
+		assertEquals("{}", bm.getLatestReleases().asJsonObject().toString());
 	}
 
     private JsonObject getExpectedBuilds() {
@@ -116,7 +116,7 @@ public class BuildsManagerTest {
         assertFalse(Constants.NEVER_UPDATED.equals(status.getLastSuccessfulUpdate()));
 
         JsonObject expectedReleases = getExpectedReleases();
-        assertEquals(expectedReleases, bm.getLatestReleases());
+        assertEquals(expectedReleases, bm.getLatestReleases().asJsonObject());
 
         JsonObject expectedBuilds = getExpectedBuilds();
         assertEquals(expectedBuilds, bm.getBuilds().asJsonObject());

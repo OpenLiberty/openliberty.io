@@ -42,7 +42,7 @@ public class OpenLibertyEndpoint extends Application {
     @Produces({ "application/json" })
     public JsonObject builds() {
         JsonObjectBuilder data = Json.createObjectBuilder();
-        data.add(Constants.LATEST_RELEASES, buildsManager.getLatestReleases());
+        data.add(Constants.LATEST_RELEASES, buildsManager.getLatestReleases().asJsonObject());
         data.add(Constants.BUILDS, buildsManager.getBuilds().asJsonObject());
         return data.build();
     }
@@ -51,7 +51,7 @@ public class OpenLibertyEndpoint extends Application {
     @Path("builds/latest")
     @Produces({ "application/json" })
     public JsonObject latestsReleases() {
-        return buildsManager.getLatestReleases();
+        return buildsManager.getLatestReleases().asJsonObject();
     }
 
     @PUT

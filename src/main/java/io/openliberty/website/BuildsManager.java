@@ -20,11 +20,11 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
 import io.openliberty.website.data.LastUpdate;
+import io.openliberty.website.data.LatestReleases;
 import io.openliberty.website.data.BuildLists;
 import io.openliberty.website.data.BuildInfo;
 
@@ -34,7 +34,7 @@ public class BuildsManager {
 
     private LastUpdate lastUpdate = new LastUpdate();
     private volatile BuildLists builds = new BuildLists();
-    private volatile JsonObject latestReleases = Json.createObjectBuilder().build();
+    private volatile LatestReleases latestReleases = new LatestReleases();
 
     /** Defined default constructor */
     public BuildsManager() {}
@@ -51,7 +51,7 @@ public class BuildsManager {
         return builds;
     }
 
-    public JsonObject getLatestReleases() {
+    public LatestReleases getLatestReleases() {
         if (isBuildUpdateAllowed()) {
             updateBuilds();
         }
@@ -64,7 +64,6 @@ public class BuildsManager {
 
     public synchronized LastUpdate updateBuilds() {
         lastUpdate.setLastUpdateAttempt(new Date());
-        JsonObjectBuilder updatedReleases = Json.createObjectBuilder();
         List<BuildInfo> updatedRuntimeReleases = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
                 Constants.DHE_RELEASE_PATH_SEGMENT);
         List<BuildInfo> updatedRuntimeNightlyBuilds = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
@@ -74,26 +73,25 @@ public class BuildsManager {
         List<BuildInfo> updatedToolsNightlyBuilds = retrieveBuildData(Constants.DHE_TOOLS_PATH_SEGMENT,
                 Constants.DHE_NIGHTLY_PATH_SEGMENT);
         if (!updatedRuntimeReleases.isEmpty() && !updatedToolsReleases.isEmpty()) {
-            JsonObject latestRuntimeRelease = getLatestBuild(updatedRuntimeReleases);
-            JsonObject latestToolsRelease = getLatestBuild(updatedToolsReleases);
-            // if (latestRuntimeRelease != null && latestToolsRelease != null) {
+            BuildInfo latestRuntimeRelease = getLatestBuild(updatedRuntimeReleases);
+            BuildInfo latestToolsRelease = getLatestBuild(updatedToolsReleases);
             if (latestRuntimeRelease != null) {
-                updatedReleases.add(Constants.RUNTIME, latestRuntimeRelease);
-                updatedReleases.add(Constants.TOOLS, latestToolsRelease);
+                LatestReleases latest = new LatestReleases(latestRuntimeRelease, latestToolsRelease);
                 BuildLists all = new BuildLists();
                 all.setRuntimeReleases(updatedRuntimeReleases);
                 all.setRuntimeNightlyBuilds(updatedRuntimeNightlyBuilds);
                 all.setToolsReleases(updatedToolsReleases);
                 all.setToolsNightlyBuild(updatedToolsNightlyBuilds);
+
                 lastUpdate.markSuccessfulUpdate();
                 builds = all;
-                latestReleases = updatedReleases.build();
+                latestReleases = latest;
             }
         }
         return getStatus();
     }
 
-	private JsonObject getLatestBuild(List<BuildInfo> buildsList) {
+	private BuildInfo getLatestBuild(List<BuildInfo> buildsList) {
 		BuildInfo latest = null;
 
 		for (BuildInfo info : buildsList) {
@@ -104,7 +102,7 @@ public class BuildsManager {
 				latest = info;
 			}
 		}
-		return latest.asJsonObject();
+		return latest;
     }
 
 	private List<BuildInfo> retrieveBuildData(String artifactPath, String buildTypePath) {
