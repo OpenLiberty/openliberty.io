@@ -34,8 +34,7 @@ public class BuildsManager {
     @Inject private DHEClient dheParser;
 
     private LastUpdate lastUpdate = new LastUpdate();
-    private volatile BuildLists builds = new BuildLists();
-    private volatile LatestReleases latestReleases = new LatestReleases();
+    private volatile BuildData buildData = new BuildData(new LatestReleases(), new BuildLists());
 
     /** Defined default constructor */
     public BuildsManager() {}
@@ -49,21 +48,15 @@ public class BuildsManager {
         if (isBuildUpdateAllowed()) {
             updateBuilds();
         }
-        return new BuildData(latestReleases, builds);
+        return buildData;
     }
 
     public BuildLists getBuilds() {
-        if (isBuildUpdateAllowed()) {
-            updateBuilds();
-        }
-        return builds;
+        return getData().getBuilds();
     }
 
     public LatestReleases getLatestReleases() {
-        if (isBuildUpdateAllowed()) {
-            updateBuilds();
-        }
-        return latestReleases;
+        return getData().getLatestReleases();
     }
 
     public LastUpdate getStatus() {
@@ -91,9 +84,8 @@ public class BuildsManager {
                 all.setToolsReleases(updatedToolsReleases);
                 all.setToolsNightlyBuild(updatedToolsNightlyBuilds);
 
+                buildData = new BuildData(latest, all);
                 lastUpdate.markSuccessfulUpdate();
-                builds = all;
-                latestReleases = latest;
             }
         }
         return getStatus();
