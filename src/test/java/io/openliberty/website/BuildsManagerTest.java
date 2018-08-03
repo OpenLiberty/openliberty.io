@@ -13,6 +13,7 @@ import javax.json.JsonObjectBuilder;
 import org.junit.Test;
 
 import io.openliberty.website.data.BuildLists;
+import io.openliberty.website.data.BuildData;
 import io.openliberty.website.data.BuildInfo;
 import io.openliberty.website.data.LastUpdate;
 import io.openliberty.website.mock.EmptyVersionsDHEClient;
@@ -146,6 +147,13 @@ public class BuildsManagerTest {
         expected.add("runtime", createTestRelease("https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release", "runtime-release-v1"));
         expected.add("tools", createTestRelease("https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/tools/release", "tools-release-v1"));
         return expected.build();
+    }
+
+    @Test
+    public void getData_after_failed_update() {
+        BuildsManager bm = new BuildsManager(new NullDHEClient());
+        BuildData data = bm.getData();
+        assertEquals("{\"latest_releases\":{},\"builds\":{}}", data.asJsonObject().toString());
     }
 
 }

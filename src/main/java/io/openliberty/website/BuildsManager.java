@@ -26,6 +26,7 @@ import javax.json.JsonValue;
 import io.openliberty.website.data.LastUpdate;
 import io.openliberty.website.data.LatestReleases;
 import io.openliberty.website.data.BuildLists;
+import io.openliberty.website.data.BuildData;
 import io.openliberty.website.data.BuildInfo;
 
 @ApplicationScoped
@@ -42,6 +43,13 @@ public class BuildsManager {
     /** Allow for unittest injection */
     BuildsManager(DHEClient client) {
         dheParser = client;
+    }
+
+    public BuildData getData() {
+        if (isBuildUpdateAllowed()) {
+            updateBuilds();
+        }
+        return new BuildData(latestReleases, builds);
     }
 
     public BuildLists getBuilds() {
