@@ -25,6 +25,7 @@ import javax.json.JsonString;
 import javax.json.JsonValue;
 
 import io.openliberty.website.data.LastUpdate;
+import io.openliberty.website.data.BuildLists;
 import io.openliberty.website.data.BuildInfo;
 
 @ApplicationScoped
@@ -32,7 +33,7 @@ public class BuildsManager {
     @Inject private DHEClient dheParser;
 
     private LastUpdate lastUpdate = new LastUpdate();
-    private volatile JsonObject builds = Json.createObjectBuilder().build();
+    private volatile BuildLists builds = new BuildLists();
     private volatile JsonObject latestReleases = Json.createObjectBuilder().build();
 
     /** Defined default constructor */
@@ -43,7 +44,7 @@ public class BuildsManager {
         dheParser = client;
     }
 
-    public JsonObject getBuilds() {
+    public BuildLists getBuilds() {
         if (isBuildUpdateAllowed()) {
             updateBuilds();
         }
@@ -63,7 +64,6 @@ public class BuildsManager {
 
     public synchronized LastUpdate updateBuilds() {
         lastUpdate.setLastUpdateAttempt(new Date());
-        JsonObjectBuilder updatedBuilds = Json.createObjectBuilder();
         JsonObjectBuilder updatedReleases = Json.createObjectBuilder();
         List<BuildInfo> updatedRuntimeReleases = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
                 Constants.DHE_RELEASE_PATH_SEGMENT);
@@ -80,25 +80,18 @@ public class BuildsManager {
             if (latestRuntimeRelease != null) {
                 updatedReleases.add(Constants.RUNTIME, latestRuntimeRelease);
                 updatedReleases.add(Constants.TOOLS, latestToolsRelease);
-                updatedBuilds.add(Constants.RUNTIME_RELEASES, asJsonArray(updatedRuntimeReleases));
-                updatedBuilds.add(Constants.RUNTIME_NIGHTLY_BUILDS, asJsonArray(updatedRuntimeNightlyBuilds));
-                updatedBuilds.add(Constants.TOOLS_RELEASES, asJsonArray(updatedToolsReleases));
-                updatedBuilds.add(Constants.TOOLS_NIGHTLY_BUILDS, asJsonArray(updatedToolsNightlyBuilds));
+                BuildLists all = new BuildLists();
+                all.setRuntimeReleases(updatedRuntimeReleases);
+                all.setRuntimeNightlyBuilds(updatedRuntimeNightlyBuilds);
+                all.setToolsReleases(updatedToolsReleases);
+                all.setToolsNightlyBuild(updatedToolsNightlyBuilds);
                 lastUpdate.markSuccessfulUpdate();
-                builds = updatedBuilds.build();
+                builds = all;
                 latestReleases = updatedReleases.build();
             }
         }
         return getStatus();
     }
-
-	private JsonArray asJsonArray(List<BuildInfo> buildList) {
-		JsonArrayBuilder array = Json.createArrayBuilder();
-		for (BuildInfo info : buildList) {
-			array.add(info.asJsonObject());
-		}
-		return array.build();
-	}
 
 	private JsonObject getLatestBuild(List<BuildInfo> buildsList) {
 		BuildInfo latest = null;

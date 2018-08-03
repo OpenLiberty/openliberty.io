@@ -4,12 +4,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
 import org.junit.Test;
 
+import io.openliberty.website.data.BuildLists;
+import io.openliberty.website.data.BuildInfo;
 import io.openliberty.website.data.LastUpdate;
 import io.openliberty.website.mock.EmptyVersionsDHEClient;
 import io.openliberty.website.mock.MockDHEClient;
@@ -50,7 +54,12 @@ public class BuildsManagerTest {
         assertFalse(Constants.NEVER_ATTEMPTED.equals(status.getLastUpdateAttempt()));
         assertEquals(Constants.NEVER_UPDATED, status.getLastSuccessfulUpdate());
 
-        assertEquals("{}", bm.getBuilds().toString());
+        BuildLists builds = bm.getBuilds();
+        assertTrue(builds.getRuntimeReleases().isEmpty());
+        assertTrue(builds.getRuntimeNightlyBuilds().isEmpty());
+        assertTrue(builds.getToolsReleases().isEmpty());
+        assertTrue(builds.getToolsNightlyBuilds().isEmpty());
+
         assertEquals("{}", bm.getLatestReleases().toString());
     }
 
@@ -64,7 +73,12 @@ public class BuildsManagerTest {
 		assertFalse(Constants.NEVER_ATTEMPTED.equals(status.getLastUpdateAttempt()));
 		assertEquals(Constants.NEVER_UPDATED, status.getLastSuccessfulUpdate());
 
-		assertEquals("{}", bm.getBuilds().toString());
+        BuildLists builds = bm.getBuilds();
+        assertTrue(builds.getRuntimeReleases().isEmpty());
+        assertTrue(builds.getRuntimeNightlyBuilds().isEmpty());
+        assertTrue(builds.getToolsReleases().isEmpty());
+        assertTrue(builds.getToolsNightlyBuilds().isEmpty());
+
 		assertEquals("{}", bm.getLatestReleases().toString());
 	}
 
@@ -84,6 +98,8 @@ public class BuildsManagerTest {
         releaseInfo.add(Constants.TESTS_LOG, urlPath+"/"+date_time+"/test-log-path");
         releaseInfo.add(Constants.DRIVER_LOCATION, urlPath+"/"+date_time+"/driver-location");
         releaseInfo.add(Constants.PACKAGE_LOCATIONS, Json.createArrayBuilder().add(Json.createValue("package="+urlPath+"/"+date_time+"/my-package-v1")).build());
+        releaseInfo.add(Constants.TESTS_PASSED, "8500");
+        releaseInfo.add(Constants.TOTAL_TESTS, "8501");
         releaseInfo.add("date_time", Json.createValue(date_time));
         releaseInfo.add("size_in_bytes", Json.createValue("1234"));
         return releaseInfo.build();
@@ -101,11 +117,29 @@ public class BuildsManagerTest {
 
         JsonObject expectedReleases = getExpectedReleases();
         assertEquals(expectedReleases, bm.getLatestReleases());
-        
+
         JsonObject expectedBuilds = getExpectedBuilds();
-        assertEquals(expectedBuilds, bm.getBuilds());
-        
+        assertEquals(expectedBuilds, bm.getBuilds().asJsonObject());
+
+        BuildLists all = bm.getBuilds();
+        validBuildsList(all.getRuntimeReleases(), "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release", "runtime-release-v1");
+        validBuildsList(all.getRuntimeNightlyBuilds(), "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/nightly", "runtime-nightly-v1");
+        validBuildsList(all.getToolsReleases(), "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/tools/release", "tools-release-v1");
+        validBuildsList(all.getToolsNightlyBuilds(), "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/tools/nightly", "tools-nightly-v1");
     }
+
+	private void validBuildsList(List<BuildInfo> list, String urlPath, String date_time) {
+		assertEquals(1, list.size());
+        BuildInfo info = list.get(0);
+        assertEquals(urlPath+"/"+date_time+"/build-log-path", info.getBuildLog());
+        assertEquals(date_time, info.getDateTime());
+        assertEquals(urlPath+"/"+date_time+"/driver-location", info.getDriverLocation());
+        assertEquals("1234", info.getSizeInBytes());
+        assertEquals(urlPath+"/"+date_time+"/test-log-path", info.getTestLog());
+        assertEquals("8500", info.getTestPassed());
+        assertEquals("8501", info.getTotalTests());
+        assertEquals("v1", info.getVersion());
+	}
 
     private JsonObject getExpectedReleases() {
         JsonObjectBuilder expected = Json.createObjectBuilder();

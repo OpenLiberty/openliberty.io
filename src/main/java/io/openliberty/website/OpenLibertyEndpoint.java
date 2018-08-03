@@ -43,7 +43,7 @@ public class OpenLibertyEndpoint extends Application {
     public JsonObject builds() {
         JsonObjectBuilder data = Json.createObjectBuilder();
         data.add(Constants.LATEST_RELEASES, buildsManager.getLatestReleases());
-        data.add(Constants.BUILDS, buildsManager.getBuilds());
+        data.add(Constants.BUILDS, buildsManager.getBuilds().asJsonObject());
         return data.build();
     }
 

@@ -64,6 +64,8 @@ public class MockDHEClient extends DHEClient {
 			releaseInfo.add(Constants.BUILD_LOG, "build-log-path");
 			releaseInfo.add(Constants.TESTS_LOG, "test-log-path");
 			releaseInfo.add(Constants.DRIVER_LOCATION, "driver-location");
+			releaseInfo.add(Constants.TESTS_PASSED, "8500");
+			releaseInfo.add(Constants.TOTAL_TESTS, "8501");
 			releaseInfo.add(Constants.PACKAGE_LOCATIONS,
 					Json.createArrayBuilder().add(Json.createValue("my-package-v1")).build());
 			return releaseInfo.build();

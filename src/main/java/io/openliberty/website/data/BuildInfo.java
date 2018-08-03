@@ -52,47 +52,79 @@ public class BuildInfo {
 		return obj.build();
 	}
 
+	public String getVersion() {
+		return version;
+	}
+
 	public void addVersion(String version) {
 		this.version = version;
 	}
 
-	public void addDriverLocation(String driverLocation) {
-		this.driverLocation = driverLocation;
+	public String getDateTime() {
+		return dateTime;
 	}
 
 	public void addDateTime(String dateTime) {
 		this.dateTime = dateTime;
 	}
 
+	public String getDriverLocation() {
+		return driverLocation;
+	}
+
+	public void addDriverLocation(String driverLocation) {
+		this.driverLocation = driverLocation;
+	}
+
+	public String getSizeInBytes() {
+		return sizeInBytes;
+	}
+
 	public void addSizeInBytes(String sizeInBytes) {
 		this.sizeInBytes = sizeInBytes;
+	}
+
+	public String getTestPassed() {
+		return testPassed;
 	}
 
 	public void addTestPassed(String testPassed) {
 		this.testPassed = testPassed;
 	}
 
+	public String getTotalTests() {
+		return totalTests;
+	}
+
 	public void addTotalTests(String totalTests) {
 		this.totalTests = totalTests;
+	}
+
+	public String getBuildLog() {
+		return buildLog;
 	}
 
 	public void addBuildLog(String buildLog) {
 		this.buildLog = buildLog;
 	}
 
+	public String getTestLog() {
+		return testLog;
+	}
+
 	public void addTestLog(String testLog) {
 		this.testLog = testLog;
+	}
+
+	public List<String> getPackageLocations() {
+		return packageLocations;
 	}
 
 	public void addPackageLocation(String name, String location) {
 		if (packageLocations == null) {
 			packageLocations = new ArrayList<String>();
 		}
-		packageLocations.add(name+"="+location);
-	}
-
-	public String getDateTime() {
-		return dateTime;
+		packageLocations.add(name + "=" + location);
 	}
 
 }
