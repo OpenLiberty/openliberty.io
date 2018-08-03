@@ -34,7 +34,7 @@ public class OpenLibertyEndpoint extends Application {
     @Path("builds")
     @Produces({ "application/json" })
     public JsonObject status() {
-        return buildsManager.getStatus();
+        return buildsManager.getStatus().asJsonObject();
     }
 
     @GET
@@ -58,7 +58,7 @@ public class OpenLibertyEndpoint extends Application {
     @Path("builds")
     @Produces({ "application/json" })
     public JsonObject update() {
-        return buildsManager.updateBuilds();
+        return buildsManager.updateBuilds().asJsonObject();
     }
 
     @GET

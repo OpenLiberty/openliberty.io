@@ -7,38 +7,22 @@ import static org.junit.Assert.assertTrue;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonString;
-import javax.json.JsonValue;
-import javax.json.JsonValue.ValueType;
 
 import org.junit.Test;
 
+import io.openliberty.website.data.LastUpdate;
 import io.openliberty.website.mock.MockDHEClient;
 import io.openliberty.website.mock.NullDHEClient;
 
 public class BuildsManagerTest {
 
-    private void assertJsonStringEqual(String expectedValue, JsonValue actualJsonValue) {
-        assertEquals("JsonValue is not a JsonString type", 0,
-                actualJsonValue.getValueType().compareTo(ValueType.STRING));
-        assertEquals("JsonString is not of the expected value", expectedValue,
-                ((JsonString) actualJsonValue).getString());
-    }
-
-    private void assertJsonStringNotEqual(String expectedToNotEqual, JsonValue actualJsonValue) {
-        assertEquals("JsonValue is not a JsonString type", 0,
-                actualJsonValue.getValueType().compareTo(ValueType.STRING));
-        assertFalse("JsonString should not equal the expected value",
-                expectedToNotEqual.equals(((JsonString) actualJsonValue).getString()));
-    }
-
     @Test
     public void default_initialized_BuildManager() {
         BuildsManager bm = new BuildsManager();
 
-        JsonObject status = bm.getStatus();
-        assertJsonStringEqual(Constants.NEVER_ATTEMPTED, status.get(Constants.LAST_UPDATE_ATTEMPT));
-        assertJsonStringEqual(Constants.NEVER_UPDATED, status.get(Constants.LAST_SUCCESSFULL_UPDATE));
+        LastUpdate status = bm.getStatus();
+        assertEquals(Constants.NEVER_ATTEMPTED, status.getLastUpdateAttempt());
+        assertEquals(Constants.NEVER_UPDATED, status.getLastSuccessfulUpdate());
     }
 
     @Test
@@ -58,12 +42,12 @@ public class BuildsManagerTest {
     @Test
     public void validate_state_of_BuildManager_after_failed_update() {
         BuildsManager bm = new BuildsManager(new NullDHEClient());
-        JsonObject status = bm.updateBuilds();
+        LastUpdate status = bm.updateBuilds();
 
         assertEquals(status, bm.getStatus());
 
-        assertJsonStringNotEqual(Constants.NEVER_ATTEMPTED, status.get(Constants.LAST_UPDATE_ATTEMPT));
-        assertJsonStringEqual(Constants.NEVER_UPDATED, status.get(Constants.LAST_SUCCESSFULL_UPDATE));
+        assertFalse(Constants.NEVER_ATTEMPTED.equals(status.getLastUpdateAttempt()));
+        assertEquals(Constants.NEVER_UPDATED, status.getLastSuccessfulUpdate());
 
         assertEquals("{}", bm.getBuilds().toString());
         assertEquals("{}", bm.getLatestReleases().toString());
@@ -93,12 +77,12 @@ public class BuildsManagerTest {
     @Test
     public void validate_state_of_BuildManager_after_successful_update() {
         BuildsManager bm = new BuildsManager(new MockDHEClient());
-        JsonObject status = bm.updateBuilds();
+        LastUpdate status = bm.updateBuilds();
 
         assertEquals(status, bm.getStatus());
 
-        assertJsonStringNotEqual(Constants.NEVER_ATTEMPTED, status.get(Constants.LAST_UPDATE_ATTEMPT));
-        assertJsonStringNotEqual(Constants.NEVER_UPDATED, status.get(Constants.LAST_SUCCESSFULL_UPDATE));
+        assertFalse(Constants.NEVER_ATTEMPTED.equals(status.getLastUpdateAttempt()));
+        assertFalse(Constants.NEVER_UPDATED.equals(status.getLastSuccessfulUpdate()));
 
         JsonObject expectedReleases = getExpectedReleases();
         assertEquals(expectedReleases, bm.getLatestReleases());

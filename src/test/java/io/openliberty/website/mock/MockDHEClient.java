@@ -30,7 +30,6 @@ public class MockDHEClient extends DHEClient {
 
 	@Override
 	public JsonObject retrieveJSON(String url) {
-		System.out.println(url);
 		if (url.equals("https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/info.json")) {
 			JsonObjectBuilder runtimeReleaseVersions = Json.createObjectBuilder();
 			JsonArrayBuilder runtimeVersions = Json.createArrayBuilder();

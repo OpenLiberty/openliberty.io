@@ -23,13 +23,13 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import io.openliberty.website.data.LastUpdate;
+
 @ApplicationScoped
 public class BuildsManager {
     @Inject private DHEClient dheParser;
 
-    private volatile Date lastSuccessfulUpdate = null;
-    private volatile Date lastUpdateAttempt = null;
-
+    private LastUpdate lastUpdate = new LastUpdate();
     private volatile JsonObject builds = Json.createObjectBuilder().build();
     private volatile JsonObject latestReleases = Json.createObjectBuilder().build();
 
@@ -55,17 +55,12 @@ public class BuildsManager {
         return latestReleases;
     }
 
-    public JsonObject getStatus() {
-        JsonObjectBuilder builder = Json.createObjectBuilder();
-        builder.add(Constants.LAST_UPDATE_ATTEMPT,
-                lastUpdateAttempt != null ? lastUpdateAttempt.toString() : Constants.NEVER_ATTEMPTED);
-        builder.add(Constants.LAST_SUCCESSFULL_UPDATE,
-                lastSuccessfulUpdate != null ? lastSuccessfulUpdate.toString() : Constants.NEVER_UPDATED);
-        return builder.build();
+    public LastUpdate getStatus() {
+        return lastUpdate;
     }
 
-    public synchronized JsonObject updateBuilds() {
-        lastUpdateAttempt = new Date();
+    public synchronized LastUpdate updateBuilds() {
+        lastUpdate.setLastUpdateAttempt(new Date());
         JsonObjectBuilder updatedBuilds = Json.createObjectBuilder();
         JsonObjectBuilder updatedReleases = Json.createObjectBuilder();
         JsonArray updatedRuntimeReleases = retrieveBuildData(Constants.DHE_RUNTIME_PATH_SEGMENT,
@@ -88,7 +83,7 @@ public class BuildsManager {
                 updatedBuilds.add(Constants.RUNTIME_NIGHTLY_BUILDS, updatedRuntimeNightlyBuilds);
                 updatedBuilds.add(Constants.TOOLS_RELEASES, updatedToolsReleases);
                 updatedBuilds.add(Constants.TOOLS_NIGHTLY_BUILDS, updatedToolsNightlyBuilds);
-                lastSuccessfulUpdate = lastUpdateAttempt;
+                lastUpdate.markSuccessfulUpdate();
                 builds = updatedBuilds.build();
                 latestReleases = updatedReleases.build();
             }
@@ -209,9 +204,9 @@ public class BuildsManager {
     // build request to go through if the last build request was run an hour ago or more.
     boolean isBuildUpdateAllowed() {
         boolean isBuildUpdateAllowed = true;
-        if (lastSuccessfulUpdate != null) {
+        if (lastUpdate.lastSuccessfulUpdate() != null) {
             long currentTime = new Date().getTime();
-            long lastUpdateTime = lastSuccessfulUpdate.getTime();
+            long lastUpdateTime = lastUpdate.lastSuccessfulUpdate().getTime();
             // 1 hour = 3600000 ms
             if (currentTime - lastUpdateTime < 3600000) {
                 isBuildUpdateAllowed = false;
