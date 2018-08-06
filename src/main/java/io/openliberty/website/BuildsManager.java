@@ -50,7 +50,7 @@ public class BuildsManager {
 	}
 
 	public LastUpdate updateBuilds() {
-		return dheBuilds.update();
+		return dheBuilds.blockingUpdate();
 	}
 
 }
