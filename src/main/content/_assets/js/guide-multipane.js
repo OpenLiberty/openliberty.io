@@ -37,31 +37,32 @@ $(document).ready(function() {
             metadata = metadata.split(',');
             fileName = metadata[0];
 
-            if(metadata.length === 2){
-                line_nums = metadata[1];
+            // if(metadata.length === 2){
+            //     line_nums = metadata[1];
 
-                if(line_nums.indexOf('lines=') > -1){
-                    line_nums = line_nums.substring(6);
-                    if(line_nums.indexOf('-') > -1){
-                        var lines = line_nums.split('-');
-                        fromLine = parseInt(lines[0]);
-                        toLine = parseInt(lines[1]);
-                    }
-                }
-            }   
+            //     if(line_nums.indexOf('lines=') > -1){
+            //         line_nums = line_nums.substring(6);
+            //         if(line_nums.indexOf('-') > -1){
+            //             var lines = line_nums.split('-');
+            //             fromLine = parseInt(lines[0]);
+            //             toLine = parseInt(lines[1]);
+            //         }
+            //     }
+            // }   
 
-            // Wrap each leftover piece of text in a span to handle highlighting a range of lines.
-            code_block.find('code').contents().each(function(){
-                if (!$(this).is('span')) {
-                    var newText = $(this).wrap('<span class="string"></span>');
-                    $(this).replaceWith(newText);
-                }
-            });
+            // // Wrap each leftover piece of text in a span to handle highlighting a range of lines.
+            // code_block.find('code').contents().each(function(){
+            //     if (!$(this).is('span')) {
+            //         var newText = $(this).wrap('<span class="string"></span>');
+            //         $(this).replaceWith(newText);
+            //     }
+            // });
 
             // Clone this code block so the full file can be shown in the right column and only a duplicate snippet will be shown in the single column view or mobile view.
             // The duplicated code block will be shown on the right column.
             var duplicate_code_block = code_block.clone();
-            code_block.addClass('guide_column_code_snippet'); // Add class to code snippet in the guide column to only show up in mobile view.
+            // code_block.addClass('mobile_code_snippet'); // Add class to code snippet in the guide column to only show up in mobile view.
+            code_block.hide();
 
             var guide_section = code_block.parents('.sect1').first();
             var header = guide_section.find('h2')[0];
@@ -69,18 +70,18 @@ $(document).ready(function() {
 
             code_sections[header.id] = {
                 'code': duplicate_code_block,
-                'fromLine': fromLine,
-                'toLine': toLine
+                // 'fromLine': fromLine,
+                // 'toLine': toLine
             };
 
-            var first_span = code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
-            var last_span = code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
+            // var first_span = code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
+            // var last_span = code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
 
-            // Remove spans before the first line number and after the last line number
-            if(first_span.length > 0 && last_span.length > 0){
-                first_span.prevAll('span').remove();
-                last_span.nextAll('span').remove();
-            } 
+            // // Remove spans before the first line number and after the last line number
+            // if(first_span.length > 0 && last_span.length > 0){
+            //     first_span.prevAll('span').remove();
+            //     last_span.nextAll('span').remove();
+            // } 
 
             // Create a title pane for the code section
             duplicate_code_block.attr('fileName', fileName);            
@@ -117,6 +118,7 @@ $(document).ready(function() {
                  $(this).replaceWith(newText);
             }
         });
+        
         // Wrap code block lines in a div to highlight
         var highlight_start = code_section.find('.line-numbers:contains(' + fromLine + ')').first();
         var highlight_end = code_section.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
@@ -135,6 +137,48 @@ $(document).ready(function() {
         
     }
 
+    // Creates a clone of the code highlighted by hotspots in desktop view, so that they can be shown in mobile.
+    // Inputs: snippet: Hotspot in the guide column.
+    //         code_block: The source code block.
+    //         fromLine: The line in the code block to start copying from.
+    //         toLine: The line in the code block to end copying.
+    function create_mobile_code_snippet(snippet, code_block, fromLine, toLine){
+        var duplicate_code_block = code_block.clone();
+        duplicate_code_block.removeClass('dimmed_code_column'); // Remove the blur from the original code block;
+        duplicate_code_block.addClass('mobile_code_snippet'); // Add class to this code snippet in the guide column to only show up in mobile view.
+        duplicate_code_block.removeAttr('filename');
+
+        // Wrap each leftover piece of text in a span to handle selecting a range of lines.
+        duplicate_code_block.find('code').contents().each(function(){
+            if (!$(this).is('span')) {
+                var newText = $(this).wrap('<span class="string"></span>');
+                $(this).replaceWith(newText);
+            }
+        });
+        var first_span = duplicate_code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
+        var last_span = duplicate_code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
+
+        // Remove spans before the first line number and after the last line number
+        if(first_span.length > 0 && last_span.length > 0){
+            first_span.prevAll('span').remove();
+            last_span.nextAll('span').remove();
+        }
+        snippet.after(duplicate_code_block);
+    }
+
+    // Returns the code block associated with a code hotspot.
+    // Inputs: hotspot: The 'hotspot' in desktop view where hovering over the block will highlight certain lines of code in the code column relevant to what the guide is talking about.
+    function get_code_block_from_hotspot(hotspot){
+        var code_block;
+        var section = hotspot.parents('.sect1').first();
+        var header = section.find('h2').get(0);
+        var code_section = code_sections[header.id];
+        if(code_section && code_section.code){
+            code_block = code_section.code;
+        }     
+        return code_block;    
+    }
+
     // Parse the hotspot lines to highlight and store them as a data attribute.
     $('.hotspot').each(function(){
         var snippet = $(this);
@@ -150,17 +194,18 @@ $(document).ready(function() {
                     // Set data attributes to save the lines to highlight
                     snippet.data('highlight_from_line', fromLine);
                     snippet.data('highlight_to_line', toLine);
+
+                    var code_block = get_code_block_from_hotspot(snippet);
+                    create_mobile_code_snippet(snippet, code_block, fromLine, toLine);
                 }
             }             
         }
-
         // Remove old title from the DOM
         metadata.detach();
     });
 
     // When hovering over a code 'hotspot', highlight the correct lines of code in the corresponding code section.
-    $('.hotspot').on('hover mouseover', function(event){
-        
+    $('.hotspot').on('hover mouseover', function(event){        
         var snippet = $(this);
         var section = snippet.parents('.sect1').first();
         var header = section.find('h2').get(0);
