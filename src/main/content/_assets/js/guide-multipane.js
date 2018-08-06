@@ -10,13 +10,9 @@
  *******************************************************************************/
 $(document).ready(function() {
 
-    var offset;
     var target;
-    var target_position;
-    var target_width;
-    var target_height;
 
-    $('#preamble').detach().insertAfter('#duration_container');    
+    $('#preamble').detach().insertAfter('#duration_container');
 
     var guide_sections = [];
     var code_sections = {}; // Map guide sections to code blocks to show on the right column.
@@ -28,35 +24,10 @@ $(document).ready(function() {
         var metadata_sect = code_block.prev().find('p');
         if(metadata_sect.length > 0){
             var metadata = metadata_sect[0].innerText;
-            var fileName, 
-                line_nums,
-                fromLine,
-                toLine;
 
             // Split the string into file name and line numbers to show
             metadata = metadata.split(',');
-            fileName = metadata[0];
-
-            // if(metadata.length === 2){
-            //     line_nums = metadata[1];
-
-            //     if(line_nums.indexOf('lines=') > -1){
-            //         line_nums = line_nums.substring(6);
-            //         if(line_nums.indexOf('-') > -1){
-            //             var lines = line_nums.split('-');
-            //             fromLine = parseInt(lines[0]);
-            //             toLine = parseInt(lines[1]);
-            //         }
-            //     }
-            // }   
-
-            // // Wrap each leftover piece of text in a span to handle highlighting a range of lines.
-            // code_block.find('code').contents().each(function(){
-            //     if (!$(this).is('span')) {
-            //         var newText = $(this).wrap('<span class="string"></span>');
-            //         $(this).replaceWith(newText);
-            //     }
-            // });
+            var fileName = metadata[0];
 
             // Clone this code block so the full file can be shown in the right column and only a duplicate snippet will be shown in the single column view or mobile view.
             // The duplicated code block will be shown on the right column.
@@ -68,20 +39,7 @@ $(document).ready(function() {
             var header = guide_section.find('h2')[0];
             guide_sections.push(header);
 
-            code_sections[header.id] = {
-                'code': duplicate_code_block,
-                // 'fromLine': fromLine,
-                // 'toLine': toLine
-            };
-
-            // var first_span = code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
-            // var last_span = code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
-
-            // // Remove spans before the first line number and after the last line number
-            // if(first_span.length > 0 && last_span.length > 0){
-            //     first_span.prevAll('span').remove();
-            //     last_span.nextAll('span').remove();
-            // } 
+            code_sections[header.id] = duplicate_code_block;
 
             // Create a title pane for the code section
             duplicate_code_block.attr('fileName', fileName);            
@@ -106,7 +64,7 @@ $(document).ready(function() {
         }
     });
 
-     // Highlights a block of code in a code section
+    // Highlights a block of code in a code section
     // Input code_section: The section of code to highlight.
     //       from_line: Integer for what line to start highlighting from.
     //       to_line: Integer for what line to end highlighting.
@@ -121,7 +79,7 @@ $(document).ready(function() {
         
         // Wrap code block lines in a div to highlight
         var highlight_start = code_section.find('.line-numbers:contains(' + fromLine + ')').first();
-        var highlight_end = code_section.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
+        var highlight_end = code_section.find('.line-numbers:contains(' + (toLine + 1) + ')').first();        
         var range = highlight_start.nextUntil(highlight_end);
         range.wrapAll("<div class='highlightSection'></div>");
     }
@@ -155,12 +113,14 @@ $(document).ready(function() {
                 $(this).replaceWith(newText);
             }
         });
-        var first_span = duplicate_code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
+        var first_span = duplicate_code_block.find('.line-numbers:contains(' + fromLine + ')').first();
         var last_span = duplicate_code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
 
         // Remove spans before the first line number and after the last line number
-        if(first_span.length > 0 && last_span.length > 0){
-            first_span.prevAll('span').remove();
+        if(first_span.length > 0){
+            first_span.prevAll('span').remove();            
+        }
+        if(last_span.length > 0){
             last_span.nextAll('span').remove();
         }
         snippet.after(duplicate_code_block);
@@ -169,14 +129,9 @@ $(document).ready(function() {
     // Returns the code block associated with a code hotspot.
     // Inputs: hotspot: The 'hotspot' in desktop view where hovering over the block will highlight certain lines of code in the code column relevant to what the guide is talking about.
     function get_code_block_from_hotspot(hotspot){
-        var code_block;
         var section = hotspot.parents('.sect1').first();
         var header = section.find('h2').get(0);
-        var code_section = code_sections[header.id];
-        if(code_section && code_section.code){
-            code_block = code_section.code;
-        }     
-        return code_block;    
+        return code_sections[header.id];
     }
 
     // Parse the hotspot lines to highlight and store them as a data attribute.
@@ -209,9 +164,8 @@ $(document).ready(function() {
         var snippet = $(this);
         var section = snippet.parents('.sect1').first();
         var header = section.find('h2').get(0);
-        var code_section = code_sections[header.id];
-        if(code_section){
-            var code_block = code_section.code;
+        var code_block = code_sections[header.id];
+        if(code_block){
             var fromLine = snippet.data('highlight_from_line');
             var toLine = snippet.data('highlight_to_line');
             if(code_block && fromLine && toLine){
@@ -225,8 +179,8 @@ $(document).ready(function() {
         var section = $(this).parents('.sect1').first();
         var header = section.find('h2').get(0);
         var code_block = code_sections[header.id];
-        if(code_block && code_block.code){
-            remove_highlighting(code_block.code);
+        if(code_block){
+            remove_highlighting(code_block);
         }        
     });
    
@@ -397,23 +351,10 @@ $(document).ready(function() {
 
                 // Hide other code blocks and show the correct code block.                  
                 try{
-                    var section = code_sections[id];
-                    if(section){
-                        var code_block = section.code;
-                        var fromLine = section.fromLine,
-                            toLine = section.toLine; // To be used in the future when we have designs for highlighting a range of lines.
+                    var code_block = code_sections[id];
+                    if(code_block){
                         $('#code_column .code_column').not(code_block).hide();
                         code_block.show();
-                    
-                        // Scroll to the line in the code column if a line number is given
-                        if(fromLine){
-                            // var target = code_block.find('.line-numbers:contains(' + fromLine + ')').first();                         
-                            // $('#code_column').animate({
-                            //     scrollTop: target.offset().top
-                            // }, 500);
-                        } else {
-                            $('#code_column').scrollTop('0');
-                        }
                     }
                        
                 } catch(e) {
