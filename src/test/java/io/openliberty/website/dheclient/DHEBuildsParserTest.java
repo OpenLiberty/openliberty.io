@@ -26,7 +26,7 @@ public class DHEBuildsParserTest {
 		assertTrue("The second call to isBuildUpdateAllowed should return true if no update has been attempted",
 				parser.isBuildUpdateAllowed());
 
-		parser.updateAsNeeded();
+		parser.getBuildData();
 
 		assertFalse("Calls to isBuildUpdateAllowed should return false if a successful update recently occurred",
 				parser.isBuildUpdateAllowed());
