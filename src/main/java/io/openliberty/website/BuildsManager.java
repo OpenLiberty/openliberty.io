@@ -34,16 +34,15 @@ public class BuildsManager {
 	}
 
 	public BuildData getData() {
-		dheBuilds.updateAsNeeded();
 		return dheBuilds.getBuildData();
 	}
 
 	public BuildLists getBuilds() {
-		return getData().getBuilds();
+		return dheBuilds.getBuildData().getBuilds();
 	}
 
 	public LatestReleases getLatestReleases() {
-		return getData().getLatestReleases();
+		return dheBuilds.getBuildData().getLatestReleases();
 	}
 
 	public LastUpdate getStatus() {

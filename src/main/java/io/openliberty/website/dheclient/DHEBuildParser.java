@@ -29,8 +29,8 @@ public class DHEBuildParser {
 	@Inject
 	private DHEClient dheClient;
 
+	private volatile BuildData buildData = new BuildData(new LatestReleases(), new BuildLists());
 	private LastUpdate lastUpdate = new LastUpdate();
-	private BuildData buildData = new BuildData(new LatestReleases(), new BuildLists());
 
 	/** Defined default constructor */
 	public DHEBuildParser() {
@@ -42,6 +42,7 @@ public class DHEBuildParser {
 	}
 
 	public BuildData getBuildData() {
+		updateAsNeeded();
 		return buildData;
 	}
 
@@ -64,11 +65,10 @@ public class DHEBuildParser {
 		return isBuildUpdateAllowed;
 	}
 
-	public synchronized LastUpdate updateAsNeeded() {
+	private synchronized void updateAsNeeded() {
 		if (isBuildUpdateAllowed()) {
 			update();
 		}
-		return lastUpdate;
 	}
 
 	public synchronized LastUpdate update() {
@@ -87,7 +87,7 @@ public class DHEBuildParser {
 		List<BuildInfo> updatedRuntimeNightlyBuilds = getSafe(runtimeNightly);
 		List<BuildInfo> updatedToolsReleases = getSafe(toolsReleases);
 		List<BuildInfo> updatedToolsNightlyBuilds = getSafe(toolsNightly);
-		if (!updatedRuntimeReleases.isEmpty() && !updatedToolsReleases.isEmpty()) {
+		if (isNotEmpty(updatedRuntimeReleases) && isNotEmpty(updatedToolsReleases)) {
 			BuildInfo latestRuntimeRelease = pickLastestBuild(updatedRuntimeReleases);
 			BuildInfo latestToolsRelease = pickLastestBuild(updatedToolsReleases);
 			if (latestRuntimeRelease != null) {
@@ -104,6 +104,10 @@ public class DHEBuildParser {
 		}
 
 		return lastUpdate;
+	}
+
+	private boolean isNotEmpty(List<BuildInfo> updatedRuntimeReleases) {
+		return (updatedRuntimeReleases != null) && (!updatedRuntimeReleases.isEmpty());
 	}
 
 	private List<BuildInfo> getSafe(Future<List<BuildInfo>> future) {
