@@ -1,0 +1,115 @@
+:page-layout: intro
+:page-description: Intro to MicroProfile
+:page-categories: MicroProfile
+:page-permalink: /docs/intro/microprofile.html
+= Introduction to MicroProfile
+
+https://microprofile.io/[Eclipse MicroProfile] is a modular set of technologies designed for writing cloud-native Java microservices. The introduction, below will give you an understanding of how MicroProfile helps with developing and managing cloud-native microservices.  The Open Liberty MicroProfile guides (TODO: make this a link) give you first-hand experience of using MicroProfile to build microservices with Open Liberty.
+
+== MicroProfile and cloud-native Java microservices
+
+Cloud-native is an industry-wide approach to developing and rapidly deploying applications to the cloud at scale. Cloud-native applications are designed around team-aligned microservices and developed using agile practices and continuous integration/continuous delivery to streamline deployment. With a range of vendors providing cloud services, avoiding vendor lock-in is key. Open source and open standards are essential enablers for avoiding vendors lock-in.
+
+MicroProfile enables you to develop and deploy cloud-native Java applications as loosely-coupled, lightweight services, each representing one unique business function. This approach is modular and makes the application easy to understand, easy to develop, easy to test, and easy to maintain.
+
+== Microservice architecture
+
+The microservices architecture is a popular approach for building cloud-native applications such that each component is an individual service fulfilling a specific purpose. It enables small, autonomous teams to develop, deploy, and scale their respective services independently. One benefit is that the application can be scaled on a more granular level. Because each service is built and managed independently, the high-traffic services can be individually scaled to efficiently use resources rather than scaling up the entire system. Another benefit is that failures in one service can be isolated from the rest of the system; if a service fails, services that are independent are unaffected whilst dependent services can employ fault tolerance strategies to prevent the failure from cascading to other services.
+
+While providing many benefits, this architecture also introduces new challenges not apparent in traditional monolithic applications. MicroProfile's purpose is to address these challenges to make it simple and easy to developer cloud-native applications.  These challenges includes toleration of service failures, end-to-end security for an authenticated user request flowing through a set fo microservices and problem determination for requests spanning many services.
+
+TODO: Consider adding back in an umbrella section to introduce the layers (it was in v4)
+
+=== MicroProfile simplifies developing cloud-native Java microservices
+
+The vast majority of cloud-native microservices are based on REST APIs  At its foundation, MicroProfile provides a set of technologies that make developing and using REST APIs easy. MicroProfile takes a small set of Java EE APIs: JAX-RS; CDI; JSON-B and JSON-P and augments them with a simple type-safe REST client API making it easy to consume REST services.
+
+TODO: add a short description for each spec
+
+TODO: should we link to the section within the category or have tiles for the category guides?
+
+[%header,cols="25,40,35"]
+|===
+|MicroProfile capability
+|Description
+|Docs
+
+|Build RESTful web services
+|The JAX-RS, CDI, JSON-B and JSON-P Java EE technologies provide the base for MicroProfile. If you're new to Java EE and MicroProfile, this is a good place to start.
+|https://openliberty.io/guides/rest-intro.html[Creating a RESTful web service]
+
+https://openliberty.io/guides/cdi-intro.html[Injecting dependencies into microservices]
+
+|Consuming a RESTful web service with type-safe Java
+|MicroProfile Rest Client provides a type-safe approach for invoking RESTful services over HTTP.  This API greatly simplifies the client-side API as defined by JAX-RS. MicroProfile Rest Client handles the communication between the client and service.
+|https://openliberty.io/guides/microprofile-rest-client.html[Consuming RESTful services with template interfaces]
+|===
+
+=== MicroProfile simplifies scaling your organization
+
+Handling hundreds of autonomous, collaborating and frequently evolving services introduces a number of new challenges.  For example, documenting and sharing APIs across teams, propagation of security across services, handling network or service failures, and frequent and rapid continuous integration and continuous deployment of service updates.  Thankfully, MicroProfle provides a number of APIs to simplify these tasks. 
+
+TODO:  List a description of each spec.
+
+TODO: Determine if we need to include the guides at this point.
+
+[%header,cols="25,40,35"]
+|===
+|MicroProfile capability
+|Description
+|Docs
+
+|Document your RESTful APIs
+|MicroProfile OpenAPI provides a Java API for the OpenAPI specification that you can use to expose API documentation for your RESTful APIs.  You can natively produce OpenAPI documents from their JAX-RS applications. OpenAPI https://swagger.io/blog/difference-between-swagger-and-openapi/[started off as the Swagger specification].
+|https://openliberty.io/guides/microprofile-openapi.html[Documenting RESTful APIs]
+
+|Handle unexpected failures in your microservices
+|MicroProfile Fault Tolerance provides an API and annotations for building robust behavior to cope with unexpected failures in your microservice.  Aspects of fault-tolerant execution include timeouts, retries, fallbacks, bulkhead processing, and circuit breakers.
+|https://openliberty.io/guides/microprofile-fallback.html[Building fault-tolerant microservices]
+
+https://openliberty.io/guides/circuit-breaker.html[Preventing repeated failed calls to microservices (interactive)]
+
+|Authentication and role-based access control
+|MicroProfile JWT provides for interoperable authentication and role-based access control in Java.  Allows for an authenticated JWT token to be shared across multiple microservices--even if these services are running on multiple vendors’ implementations. A benefit of using JWT is that a microservice can independently verify that a request is correctly authenticated without the need to check with any other resources such as a database or other microservice.
+|https://openliberty.io/guides/microprofile-jwt.html[Securing microservices with JSON Web Tokens]
+
+|Externalize configuration to improve portability
+|MicroProfile Config externalizes configuration from the application to improve portability of the application. A core principle is to be able to override configuration at deployment time using system properties and environment variables. This allows you to easily configure your applications for deployment in different environments.
+
+|https://openliberty.io/guides/microprofile-config.html[Configuring microservices]
+
+https://openliberty.io/guides/microprofile-config-intro.html[Separating configuration from code in microservices (interactive)]
+|===
+
+=== MicroProfile helps you detect and diagnose problems
+
+Handling hundreds of microservices requires a strong operations focus. If the system is beginning to exhibit problems, how do you track down the root cause when a request might span tens or hundreds of services?  How can you tell which service is not performing well, or the journey a request took through a those microservies?  MicroProfile helps you answer these questions by providing APIs to help you understand the health of a services, how it's performing and to trace requests through your system.
+
+TODO: Add description of each service.
+
+TODO: Decide if we should link to the appropriate guides.
+
+[%header,cols="25,40,35"]
+|===
+|MicroProfile capability
+|Description
+|Docs
+
+|Determine a microservice's availability
+|MicroProfile Health Check provides a common REST endpoint format to determine whether a microservice is alive or not.
+
+|https://openliberty.io/guides/microprofile-health.html[Adding health reports to microservices]
+
+|Monitor a microservice's telemetry data
+|MicroProfile Metrics provides common REST endpoints for monitoring a running microservice's telemetry data. Similar in nature to JMX but a much simpler API using JAX-RS.  Both built-in and application-defined metrics are accessible, with the output in either JSON or Prometheus text formats.  This API provides more extensive detail than the simple up/down reporting provided by MicroProfile Health.
+|https://openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice]
+
+|Enable distributed tracing of your microservices
+|MicroProfile OpenTracing allows services to easily participate in a distributed tracing environment.  OpenTracing defines behaviors and an API for accessing an http://opentracing.io/[OpenTracing]-compliant Tracer object within your microservice.  These trace logs can then be consumed by a third-party distributed tracing facility such as https://zipkin.io/[Zipkin] or https://github.com/jaegertracing/jaeger[Jaeger]. These tools allow you to visually observe how your microservices communicate with each other.
+|https://openliberty.io/guides/microprofile-opentracing.html[Enabling distributed tracing in microservices]
+
+
+
+
+|===
+
