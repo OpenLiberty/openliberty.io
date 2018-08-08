@@ -124,7 +124,7 @@ header {
 }
 
 /* Snippets of code for mobile view only, that comes from the right column file */
-.guide_column_code_snippet {
+.mobile_code_snippet {
     display: none;
 }
 
@@ -170,20 +170,6 @@ header {
     letter-spacing:0;
     line-height:24px;
     text-align:left;
-}
-
-#guide_content .hotspot pre:hover {
-    color: #24253A;
-    background-color: #C7CCD9;
-    cursor: pointer;
-}
-
-#guide_content .code_command.hotspot:hover > .content:before {
-    background: linear-gradient(to top right, #C7CCD9 48%, #c8d6fb calc(48% + 1px), transparent calc(48% + 2px));
-}
-
-#guide_content .code_command.hotspot:hover > .content:after{
-    background: linear-gradient(to bottom right, #C7CCD9 48%, #c8d6fb calc(48% + 1px), transparent calc(48% + 2px));
 }
 
 #guide_content .code_command pre,  #guide_content .code_command code {
@@ -497,6 +483,24 @@ header {
         width: 100%;
     }
 }
+
+@media (min-width: 1171px) {
+    #guide_content .hotspot pre:hover, #guide_content .code_command.hotspot:hover pre {
+        color: #24253A;
+        background-color: #C7CCD9;
+        cursor: pointer;
+    }
+    
+    #guide_content .code_command.hotspot:hover > .content:before {
+        cursor: pointer;
+        background: linear-gradient(to top right, #C7CCD9 48%, #c8d6fb calc(48% + 1px), transparent calc(48% + 2px));
+    }
+    
+    #guide_content .code_command.hotspot:hover > .content:after{
+        cursor: pointer;
+        background: linear-gradient(to bottom right, #C7CCD9 48%, #c8d6fb calc(48% + 1px), transparent calc(48% + 2px));
+    }
+}
     
 @media (max-width: 1170px) {
 
@@ -585,7 +589,7 @@ header {
         padding-right: 24px;
     }
 
-    .guide_column_code_snippet {
+    .mobile_code_snippet {
         display: block;
     }
 
