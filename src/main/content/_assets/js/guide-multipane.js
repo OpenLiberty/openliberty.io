@@ -346,8 +346,10 @@ $(document).ready(function() {
         if($(window).width() > twoColumnBreakpoint) {
             var id = getScrolledVisibleSectionID(event);
             if (id) {
-                // Remove previous TOC section highlighted and highlight correct step
-                updateTOCHighlighting(id);                      
+                if ($("html, body").scrollTop() !== 0) {
+                    // Remove previous TOC section highlighted and highlight correct step
+                    updateTOCHighlighting(id);                      
+                }
 
                 // Hide other code blocks and show the correct code block.                  
                 try{
@@ -369,18 +371,17 @@ $(document).ready(function() {
     });
 
     $(window).on('load', function(){
-        if(window.location.hash === ""){
-            handleGithubPopup();            
-        }
         resizeGuideSections();
-        createEndOfGuideContent(); 
-        
+        createEndOfGuideContent();
+
         if (location.hash){
-            shiftWindow();
             handleFloatingTableOfContent();
-            var id = location.hash.substring(1);
-            updateTOCHighlighting(id);
+            var hash = location.hash;
+            accessContentsFromHash(hash);
         }
-        
+
+        if(window.location.hash === ""){
+            handleGithubPopup();
+        }
     });
 });
