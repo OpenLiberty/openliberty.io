@@ -17,16 +17,7 @@
                 </div>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-left text-right">  
-                    {% if site.url contains 'qa-guides.mybluemix.net' %}
-                    <li>
-                        <a class="qa-descriptor" href="#">QA Site</a></li>  
-                    <li>                
-                    {% elsif site.url contains 'openlibertydev.mybluemix.net' %}
-                    <li>
-                        <a class="qa-descriptor" href="#">Dev Site</a></li>  
-                    <li>                
-                    {% endif %}
+                <ul class="nav navbar-nav navbar-left text-right"> 
                     <li>
                         <a href="/guides">Guides</a>
                     </li>
@@ -41,8 +32,13 @@
                                 <li><a href="/docs/ref/config/">Server Config</a></li>
                                 <li><a href="/docs/ref/feature/">Server Features</a></li>
                             </ul>
-                    </li>
+                    </li>                    
                 </ul>
+                {% if site.url contains 'qa-guides.mybluemix.net' or site.url contains 'localhost' %}
+                    <div class="qa-descriptor">QA Site</div>               
+                {% elsif site.url contains 'openlibertydev.mybluemix.net' %}
+                    <div class="qa-descriptor">Dev Site</div>
+                {% endif %}
             </div>
             <!-- Add breadcrumb for all pages except /docs -->
             {% if page.url != '/docs/' %}
