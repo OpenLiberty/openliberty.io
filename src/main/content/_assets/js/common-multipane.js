@@ -20,6 +20,23 @@ function inMobile(){
     return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 }
 
+// Handle sticky header in IE, because IE doesn't support position: sticky
+function handleStickyHeader() {
+    var userAgent = window.navigator.userAgent;
+    if(userAgent.indexOf('MSIE') > 0 || userAgent.indexOf('Trident/') > 0){
+        var header = $('header');
+        var currentTopPosition = $(window).scrollTop();
+        var headerHeight = header.height();
+        if(currentTopPosition < headerHeight){
+            // Remove fixed header
+            header.removeClass('IEStickyHeader');
+        } else{ 
+            // Make header fixed to top
+            header.addClass('IEStickyHeader');
+        }
+    }    
+}
+
 function heightOfVisibleBackground() {
     var result;
     if(isBackgroundBottomVisible()) {
@@ -194,6 +211,7 @@ $(document).ready(function() {
 
     $(window).on('scroll', function(event) {
         handleDownArrow();
+        handleStickyHeader();
         handleFloatingTableOfContent(); 
         handleFloatingTOCAccordion();
         handleFloatingCodeColumn();
