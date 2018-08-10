@@ -17,7 +17,16 @@
                 </div>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-left text-right">                    
+                <ul class="nav navbar-nav navbar-left text-right">  
+                    {% if site.url contains 'qa-guides.mybluemix.net' %}
+                    <li>
+                        <a class="qa-descriptor" href="#">QA Site</a></li>  
+                    <li>                
+                    {% elsif site.url contains 'openlibertydev.mybluemix.net' %}
+                    <li>
+                        <a class="qa-descriptor" href="#">Dev Site</a></li>  
+                    <li>                
+                    {% endif %}
                     <li>
                         <a href="/guides">Guides</a>
                     </li>
@@ -49,7 +58,7 @@
                     </button>                        
                 {% endif %}  
 
-                <ol class="breadcrumb fluid-container">     
+                <ol class="breadcrumb fluid-container">   
                     <li>
                         <a href="/docs">Docs</a>
                     </li>
