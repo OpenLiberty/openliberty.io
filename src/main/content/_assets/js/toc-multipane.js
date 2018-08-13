@@ -10,7 +10,7 @@
  *******************************************************************************/
 // Keep the table of contents (TOC) in view while scrolling (Desktop only)
 function handleFloatingTableOfContent() {
-    if ($(window).width() > 1440) {
+    if ($(window).width() >= 1440) {
         // CURRENTLY IN 3 COLUMN VIEW
         if ($(window).scrollTop() >= $('#toc_column').offset().top) {
             // The top of the TOC is scrolling off the screen, enable floating TOC.
@@ -87,6 +87,42 @@ function handleFloatingTOCAccordion() {
     }
 }
 
+/**
+ * onClick method for selecting a TOC entry.
+ * 
+ * @param {*} liElement TOC entry selected  
+ * @param {*} event       
+ */
+function TOCentryClick(liElement, event) {
+    // 'this' is the li element in the #toc_container.  
+    // Its first child is the anchor tag pointing to the id of the section to go to.
+    var hash = $(liElement).find('a').prop('hash');
+
+    // Handle our own scrolling to the appropriate section so stop event processing.
+    event.preventDefault();
+    event.stopPropagation();
+    
+    var windowHash = window.location.hash;
+    if (windowHash !== hash) {
+        // Update the URL hash with where we wish to go....
+        var currentPath = window.location.pathname;
+        var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + hash;
+        // Not setting window.location.hash here because that causes the 
+        // window to scroll immediately to the section.  We want to implement
+        // smooth scrolling that is adjusted to account for the sticky header.
+        // So, this history.pushState will allow us to set the URL without 
+        // invoking immediate scrolling.  Then we call accessContentsFromHash 
+        // to perform the smooth scrolling to the requested section.
+        history.pushState(null, null, newPath);               
+    }
+    accessContentsFromHash(hash);                                 
+
+    if(inSingleColumnView()){
+        $("#mobile_close_container").trigger('click');
+    }
+
+}
+
 
 $(document).ready(function() {
     
@@ -126,13 +162,22 @@ $(document).ready(function() {
         $("#guide_column").addClass('expanded');
     });
 
-    $("#toc_container a").on('click', function(event) {
-        var id = this.hash.substring(1);
-        updateTOCHighlighting(id);
-        handleFloatingTableOfContent();
-        // Close TOC if in single column view
-        if(inSingleColumnView()){
-            $("#mobile_close_container").trigger('click');
+    // These handlers only work for static guides.   At the time this
+    // code executes, the TOC items for the interactive guides are not yet built.
+    // So the following is basically a no-op for the interactive guides.
+    // However, this code is duplicated in
+    // ...iguides-common\js\interactive\guides\table-of-contents.js
+    // to set the same handlers there.
+    $("#toc_container li").on('click', function(event) {
+        // 'this' is the li element in the #toc_container
+        TOCentryClick(this, event);
+    });
+    $("#toc_container li").on("keydown", function(event) {
+        // 'this' is the li element in the #toc_container
+        if (event.which === 13 || event.which === 32) {   // Spacebar or Enter
+          this.click();
         }
-    });    
+    });
+
+
 });

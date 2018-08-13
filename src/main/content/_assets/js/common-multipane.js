@@ -170,9 +170,65 @@ function createEndOfGuideContent(){
     $("#toc_container a[href='#related-links']").parent().remove(); // Remove from TOC.
 }
 
-// Adjust the window for the sticky header when requesting a specific section.
+// Adjust the window for the sticky header.
 function shiftWindow() {
     scrollBy(0, -100);
+}
+
+/**
+ * Performs smooth scrolling to the section associated with the provided hash.
+ * Returns 'true' if the hash was valid for the doc; false otherwise.  If the
+ * hash is not valid, defaultToFirstPage() is called to scroll to the top of
+ * the guide.
+ * 
+ * @param String hash   The provided hash should begin with "#" as returned
+ *                      from window.location.
+ */
+function accessContentsFromHash(hash) {
+    var $focusSection = $(hash);
+
+    // If section is found, scroll to it
+    if ($focusSection.length > 0) {
+        // Update the TOC
+        updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
+        // Implement smooth scrolling to the section's header.
+        // Account for the sticky header. Display the targeted section below it.
+        var stickyHeaderAdjustment = $('.container-fluid').height() || 0;
+        var scrollSpot = $focusSection.offset().top - stickyHeaderAdjustment;
+        $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
+            // Callback after animation.  Change the focus.
+            $focusSection.focus();
+            // Check if the section was actually focused
+            if ($focusSection.is(":focus")) {
+                return false;
+            } else {
+                // Add a tabindex to section header since they aren't focusable.
+                // tabindex = -1 means that the element should be focusable,
+                // but not via sequential keyboard navigation.
+                $focusSection.attr('tabindex', '-1');
+                $focusSection.focus();
+            }
+        });
+    } else {
+        defaultToFirstPage();
+    }
+}
+
+/**
+ * Resets the guide to the top.
+ */
+function defaultToFirstPage() {
+    $("html, body").scrollTop(0);
+
+    // Remove highlighted TOC element
+    $('.liSelected').removeClass('liSelected');
+
+    // Reset the hash in the URL
+    var currentPath = window.location.pathname;
+    var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1);
+    // We already scrolled to the top of the guide.  history.pushState allows
+    // us to set the URL without invoking immediate scrolling.  
+    history.pushState(null, null, newPath);
 }
 
 
@@ -215,6 +271,15 @@ $(document).ready(function() {
         handleFloatingTableOfContent(); 
         handleFloatingTOCAccordion();
         handleFloatingCodeColumn();
+    });
+
+    window.addEventListener("hashchange", function(e){
+        e.preventDefault();
+
+        var hash = location.hash;
+        accessContentsFromHash(hash);
+        // Note: Scrolling to the new content will cause the onScroll method 
+        //       above to be invoked.
     });
 
     $(window).on('load', function(){
