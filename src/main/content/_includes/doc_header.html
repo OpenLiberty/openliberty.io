@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-left text-right">                    
+                <ul class="nav navbar-nav navbar-left text-right"> 
                     <li>
                         <a href="/guides">Guides</a>
                     </li>
@@ -32,7 +32,7 @@
                                 <li><a href="/docs/ref/config/">Server Config</a></li>
                                 <li><a href="/docs/ref/feature/">Server Features</a></li>
                             </ul>
-                    </li>
+                    </li>                    
                 </ul>
             </div>
             <!-- Add breadcrumb for all pages except /docs -->
@@ -49,8 +49,7 @@
                     </button>                        
                 {% endif %}  
 
-                <ol class="breadcrumb fluid-container">     
-                                     
+                <ol class="breadcrumb fluid-container">   
                     <li>
                         <a href="/docs">Docs</a>
                     </li>
@@ -65,8 +64,6 @@
                         {% if versions | size > 1 %}
                             <span id="breadcrumb_line">|</span>
                             <li id="breadcrumb_version">VERSION:</li>
-
-
 
                             {% for javadoc in versions %}
                             <li class="javadoc_version">
@@ -86,16 +83,19 @@
                         </li>
                         <li>
                             <a href="/docs/ref/config/">Config</a>
-                        </li>    
-                     
+                        </li>
+
+                    <!-- Intro docs -->
+                    {% elsif page.url contains '/docs/intro' %}
+                        <li class="active">{{ page.title }}</li>
+
                     {% elsif page.type == 'feature' %}
                         <li>
                             <a class="inactive_link">Reference</a>
                         </li>
                         <li>
                             <a href="/docs/ref/feature/">Features</a>
-                        </li>    
-                                       
+                        </li>
                     <!-- All Guides page -->
                     {% elsif page.url == '/guides/' %}
                         <li class="active">Guides</li>

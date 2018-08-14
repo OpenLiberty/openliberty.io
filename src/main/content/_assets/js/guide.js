@@ -190,7 +190,9 @@ $(document).ready(function() {
     //
     // Keep the table of content (TOC) in view while scrolling (Desktop only)
     //
-    $(window).scroll(function() {
-        handleFloatingTableOfContent();
-    });
+    if ($('#toc_column').length !== 0) {
+        $(window).scroll(function() {
+            handleFloatingTableOfContent();
+        });
+    }
 });
