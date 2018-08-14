@@ -30,11 +30,11 @@ function handleStickyHeader() {
         if(currentTopPosition < headerHeight){
             // Remove fixed header
             header.removeClass('IEStickyHeader');
-        } else{ 
+        } else{
             // Make header fixed to top
             header.addClass('IEStickyHeader');
         }
-    }    
+    }
 }
 
 function heightOfVisibleBackground() {
@@ -90,7 +90,7 @@ function resizeGuideSections() {
         });
     }
 }
-    
+
 function handleFloatingCodeColumn() {
     if($(window).width() > twoColumnBreakpoint) {
         // CURRENTLY IN DESKTOP VIEW
@@ -124,9 +124,9 @@ function getScrolledVisibleSectionID(event) {
             var windowHeight   = $(window).height();
             var elemHeight = elem.outerHeight();
             var rect = elem[0].getBoundingClientRect();
-            var top = rect.top; 
+            var top = rect.top;
             var bottom = rect.bottom;
-            var visibleElemHeight = 0;           
+            var visibleElemHeight = 0;
             if(top > 0){
                  // Top of element is below the top of the viewport
                  // Calculate the visible element height as the min of the whole element (if the whole element is in the viewport) and the top of the element to the bottom of the window (if only part of the element is visible and extends beyond the bottom of the viewport).
@@ -155,7 +155,6 @@ function createEndOfGuideContent(){
     leftSide.prepend(whatYouLearned);
     $("#great-work-you-re-done, #great-work-youre-done").parent().remove(); // Remove section from the main guide column.
     $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
-
     // Concatenate the guide title and guide attribution license and append it to the end of guide.
     var guideAttributionText = $("#guide-attribution").siblings().find('p').text();
     if(guideAttributionText){
@@ -180,7 +179,7 @@ function shiftWindow() {
  * Returns 'true' if the hash was valid for the doc; false otherwise.  If the
  * hash is not valid, defaultToFirstPage() is called to scroll to the top of
  * the guide.
- * 
+ *
  * @param String hash   The provided hash should begin with "#" as returned
  *                      from window.location.
  */
@@ -227,7 +226,7 @@ function defaultToFirstPage() {
     var currentPath = window.location.pathname;
     var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1);
     // We already scrolled to the top of the guide.  history.pushState allows
-    // us to set the URL without invoking immediate scrolling.  
+    // us to set the URL without invoking immediate scrolling.
     history.pushState(null, null, newPath);
 }
 
@@ -241,7 +240,7 @@ $(document).ready(function() {
         var atTop = $(window).scrollTop() === 0;
         atTop ? $("#down_arrow").fadeIn() : $("#down_arrow").fadeOut();
     }
-        
+
     function addGuideRatingsListener(){
         $("#feedback_ratings img").on('click', function(event){
             var rating = $(this).data('guide-rating');
@@ -251,11 +250,15 @@ $(document).ready(function() {
             if(typeof ga === "function"){
                 ga(1, "Guide Review", rating, 3);
             }
-            $("#feedback_ratings img").not($(this)).css('opacity', '.25');
+            $("#feedback_ratings img").not($(this)).css('opacity', '.30');
             $(this).css('opacity', '1');
         });
     }
 
+    $("#feedback_ratings img").hover (function(event) {
+      $("#feedback_ratings img").not($(this)).css('opacity', '.50');
+      $(this).css('opacity', '1');
+    });
 
     $(window).on('resize', function(){
         handleFloatingTableOfContent(); // Handle table of content view changes.
@@ -268,7 +271,7 @@ $(document).ready(function() {
     $(window).on('scroll', function(event) {
         handleDownArrow();
         handleStickyHeader();
-        handleFloatingTableOfContent(); 
+        handleFloatingTableOfContent();
         handleFloatingTOCAccordion();
         handleFloatingCodeColumn();
     });
@@ -278,7 +281,7 @@ $(document).ready(function() {
 
         var hash = location.hash;
         accessContentsFromHash(hash);
-        // Note: Scrolling to the new content will cause the onScroll method 
+        // Note: Scrolling to the new content will cause the onScroll method
         //       above to be invoked.
     });
 
