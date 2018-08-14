@@ -82,6 +82,9 @@ $(document).ready(function() {
         var highlight_end = code_section.find('.line-numbers:contains(' + (toLine + 1) + ')').first();        
         var range = highlight_start.nextUntil(highlight_end);
         range.wrapAll("<div class='highlightSection'></div>");
+        var scrollTop = $("#code_column")[0].scrollTop;
+        var position = range.position().top;
+        $("#code_column").animate({scrollTop: scrollTop + position - 50});
     }
 
     // Remove all highlighting for the code section.
