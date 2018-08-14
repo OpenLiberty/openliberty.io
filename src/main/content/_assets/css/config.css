@@ -8,33 +8,6 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
- @font-face {
-    font-family: BunueloLight;
-    src: url("/fonts/BunueloCleanPro-Light.otf");
-}
-
-@font-face {
-    font-family: BunueloBold;
-    src: url("/fonts/BunueloCleanPro-SemiBold.otf");
-}
-
-@import url("https://fonts.googleapis.com/css?family=Asap:300,400,500");
-
-#page_title {
-    font-family: BunueloLight;
-    font-size: 35px;
-    color: #24243B;
-    letter-spacing: 0;
-}
-
-/* get the height from the browser window */
-html, body, main {  
-    height: 95%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
- }
-
 #background_container {
     height: 100%;
 }
@@ -49,40 +22,17 @@ html, body, main {
 }
 
 #toc_title {
-    font-family: BunueloBold; /* BunueloCleanPro-SemiBold; */
-    font-size: 14px;
+    font-family: BunueloBold; 
     color: #313653;
     letter-spacing: 0.2px;
     line-height: 26px;
-    text-transform: uppercase;
     padding: 23px 39px 6px 26px;
-    position: fixed;  /* keep the TOC heading sticky */
-    width: 23%; /* but mobile has to switch to 100% */
-    z-index: 1;
+    width: 23%; /* mobile has to switch to 100% */
     margin: 0;
-    background: rgba(255,255,255,1);
-    
-}
-
-#toc_column {
-    overflow: auto;
-}
-
-#toc_column ul {
-    padding: 0;
-    margin: 0;
+    background: rgba(255,255,255,1);    
 }
 
 #toc_column li {
-    font-family: Asap; /* Asap-Regular; */
-    letter-spacing: 0;
-    line-height: 18px;
-    list-style: none;
-    font-weight: 300;
-    color: #5D6A8E;
-    font-size: 14px;
-    /* border-left: 8px solid transparent; */
-    word-wrap: break-word;
     padding: 7px 47px 7px 27px;
 }
 
@@ -90,27 +40,14 @@ a[target="contentFrame"] {
     color: #5D6A8E;
 }
 
-/* #toc_column ul li:hover, #toc_column ul li:focus { */
-.toc_selected {
-    background:#fdf2ea;
-    border-left: 8px solid #f4914d; 
-    font-weight: 500 !important; 
-    font-family: Asap; /* Asap-Medium; */
-    color: #313653 !important;
-    padding-left: 19px !important;
+.toc_main_selected {
+    padding-left: 34px !important;
+    margin-left: -15px !important;
 }
 
-#toc_column ul li a[href]:hover {
-    font-family: Asap; /* Asap-Regular; */
-    color: #F4914D;
-}
-
-/* config/feature content styling */
-#config_content {
-    padding-right: 0;
-    padding-left: 0;
-    background: #FFFFFF;
-    box-shadow: -2px 2px 9px -1px rgba(63,70,89,0.22);
+.toc_sub_selected {
+    padding-left: 52px !important;
+    margin-left: -15px !important;
 }
 
 #config_content > .ulist {
@@ -124,21 +61,19 @@ iframe.config_content_frame {
 }
 
 #content {
-    /* padding-top: 75px; */ /* to compensate for the sticky header */
     padding-left: 20px;
-    overflow-x: hidden;  /* hide horizontal scrollbar due to table */
 }
 
-#config_title {
-    font-family: BunueloLight; /* BunueloCleanPro-Light; */
+#config_title { /* not picking up from common, has to have entire config_title css here */
+    font-family: BunueloLight;
     font-size: 35px;
-    color: #24233C;
     letter-spacing: 0;
-    margin: 29px 0 13px -2px; /* 18px; */
+    color: #24233C;
+    margin: 29px 0 13px -2px; 
 }
 
 #content div.paragraph p.subHeading a+strong {
-    font-family: Asap; /* Asap-Regular; */
+    font-family: Asap;
     font-size: 20px;
     color: #121200;
     letter-spacing: 0;
@@ -176,17 +111,10 @@ p.subHeading > a::before, p.subHeading > div.toogle > a::before {
     pointer-events: none;
 }
 
-/* make the navbar sticky */
-.navbar {
-    position: fixed;
-    background-color: #313653;
-}
-
 /* TABLE STYLING */
-
 table {
     margin-top: 30px;
-    margin-bottom: 54px; /* 74px */
+    margin-bottom: 54px;
     margin-left: -20px;
     box-shadow: 0 4px #D6D9E4;
     width: calc(100% + 20px);
@@ -199,7 +127,7 @@ table.subsection {
 th {
     background: #D6D9E4;
     line-height: 26px;
-    font-family: BunueloBold; /* BunueloCleanPro-SemiBold; */
+    font-family: BunueloBold;
     font-size: 11px;
     color: #24243B;
     padding-left: 14px;
@@ -217,12 +145,12 @@ td:first-child {
 }
 
 td {
-    font-family: Asap; /* Asap-Medium; */
+    font-family: Asap;
     font-size: 14px;
     color: #24243B;
     letter-spacing: 0;
     line-height: 26px;
-    padding: 10px 31px 10px 14px; /* 9px 31px 13px 14px; */
+    padding: 10px 31px 10px 14px;
     border-right: 1px solid rgba(93, 106, 142, 0.3);
 }
 
@@ -283,99 +211,55 @@ div.toggle:hover {
     cursor: default;
 }
 
-.breadcrumb_hamburger_nav {
-    display: none; 
+@media (max-width: 767px) {
+    .contentStickyBreadcrumbHeader {
+        position: static;
+        display: none;
+    }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
     #toc_title {
         position: static;
-        width: 100%;
     }
 
     #toc_container {
         padding-top: 0px;
     }
 
-    .navbar {
-        position: static;
-    }
-
-    .contentStickyBreadcrumbHeader {
-        position: static;
-        display: none;
-    }
-
+    /* allow iframe scrolling in ipad */
+    /*
     #config_content {
-        display: none;
+        -webkit-overflow-scrolling: touch;
+  	    overflow-y: scroll;
+    }
+    */
+    html, body, main {  
+        height: unset;
     }
 
-    #breadcrumb_row {
-        background-color: #24243A;
-    }
-
-    #breadcrumb_hamburger {
-        background-color: white;
-        display: inline-block;
-        width: 40px;
-        height: 100%; 
-        border: none;
-        margin: 4px 26px 7px 29px;
-        padding: 9px 10px;
-        display: none;
-    }
-
-    #breadcrumb_hamburger:focus {
-        outline: none;
-    }
-    
-    #breadcrumb_hamburger:not(.collapsed) {
-        border: none;
-    }
-    
-    #breadcrumb_hamburger:not(.collapsed) > .sr-only, #breadcrumb_hamburger:not(.collapsed) > .icon-bar {
-        display: none;
-    }
-    
-    #breadcrumb_hamburger:hover .icon-bar {
-        background-color: slategray;
-    }
-    
-    #breadcrumb_hamburger .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0,0,0,0);
-        border: 0;
-    }
-    
-    #breadcrumb_hamburger .icon-bar {
-        background-color: #c8d6fb;
-        display: block;
-        width: 20px;
-        height: 2px;
-        border-radius: 1px;
-    }
-
-    #breadcrumb_hamburger .icon-bar+.icon-bar {
-        margin-top: 4px;
-    }   
-
-    .breadcrumb_hamburger_nav {
-        background-color: white;
-        display: block;
+    #background_container {
+        margin-bottom: 50px;
     }
 }
 
-@media (min-width: 768px) {
-    #toc_column, #config_content {
-        display: block !important;
-    }  
-    
-    .breadcrumb_hamburger_nav {
-        display: none !important; 
+@media (min-width: 1025px) {
+    html, body, main {  
+        height: 95%;
     }
+
+    /* Has to put the overflow hidden css for desktop here as overriding the values in
+       the mobile area still causes horizontal scrolling problem */
+    #config {
+        overflow-x: hidden;  /* hide horizontal scrollbar due to table */
+    }
+
+    /* hide scrollbar for iframe */
+    #config_content {
+        overflow: hidden;
+    } 
+
+    iframe.config_content_frame {
+        width: 102%;
+    } 
 }
