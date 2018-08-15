@@ -82,6 +82,9 @@ $(document).ready(function() {
         var highlight_end = code_section.find('.line-numbers:contains(' + (toLine + 1) + ')').first();        
         var range = highlight_start.nextUntil(highlight_end);
         range.wrapAll("<div class='highlightSection'></div>");
+        var scrollTop = $("#code_column")[0].scrollTop;
+        var position = range.position().top;
+        $("#code_column").animate({scrollTop: scrollTop + position - 50});
     }
 
     // Remove all highlighting for the code section.
@@ -159,23 +162,59 @@ $(document).ready(function() {
         metadata.detach();
     });
 
-    // When hovering over a code 'hotspot', highlight the correct lines of code in the corresponding code section.
-    $('.hotspot').on('hover mouseover', function(event){        
-        var snippet = $(this);
-        var section = snippet.parents('.sect1').first();
+    // Returns a function, that, as long as it continues to be invoked, will not
+    // be triggered. The function will be called after it stops being called for
+    // N milliseconds. If `immediate` is passed, trigger the function on the
+    // leading edge, instead of the trailing.
+    function debounce(func, wait, immediate) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                if (!immediate){
+                    func.apply(context, args);
+                }
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow){
+                func.apply(context, args);
+            } 
+        };
+    }
+
+    /**
+     * Handle hovering over hotspots. This will look up the corresponding code section on the right and search for the lines to highlight. Debounce is used to prevent multiple hotspots from being hovered over quickly and having the page jump around. It will handle the latest hotspot hovered over once 250 ms has passed.
+     * @param hotspot: The snippet hovered over in the guide column.
+     */
+    var handleHotspotHover = debounce(function(hotspot){
+        // Only highlight the code if the mouse is still hovered over the hotspot after the debounce.
+        if(hotspot.data('hovering') == false){
+            return;
+        }
+        var section = hotspot.parents('.sect1').first();
         var header = section.find('h2').get(0);
         var code_block = code_sections[header.id];
         if(code_block){
-            var fromLine = snippet.data('highlight_from_line');
-            var toLine = snippet.data('highlight_to_line');
+            var fromLine = hotspot.data('highlight_from_line');
+            var toLine = hotspot.data('highlight_to_line');
             if(code_block && fromLine && toLine){
                 highlight_code_range(code_block, fromLine, toLine);
             }            
-        }        
+        }
+    }, 250);
+
+    // When hovering over a code hotspot, highlight the correct lines of code in the corresponding code section.
+    $('.hotspot').on('hover mouseover', function(event){
+        $(this).data('hovering', true);
+        handleHotspotHover($(this));
     });
 
     // When the mouse leaves a code 'hotspot', remove all highlighting in the corresponding code section.
     $('.hotspot').on('mouseleave', function(event){
+        $(this).data('hovering', false);
         var section = $(this).parents('.sect1').first();
         var header = section.find('h2').get(0);
         var code_block = code_sections[header.id];
