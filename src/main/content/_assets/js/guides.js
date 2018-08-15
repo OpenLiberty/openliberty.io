@@ -47,17 +47,24 @@ $(document).ready(function() {
             }
 
             if(matches_all_words) {
-                guide_item.parent().removeClass('hidden');
+                guide_item.parent().show();
             } else {
-                guide_item.parent().addClass('hidden');
+                guide_item.parent().hide();
             }
         });
     }
 
     function processSearch(input_value){
         if(input_value.length == 0) {
-            $('.guide_column').removeClass('hidden');
-            $('#guide_counter_title').text('All Open Liberty guides (' + $('.guide_column').size() + ')');
+            //revert elements to their original state
+            $('#guides_microprofile_container').addClass("color_guides_background");
+            $('#guides_microprofile_container').removeClass("no_guides_background");
+            $('#microprofile_header').show();
+            $('#microprofile_subtitle').show();
+            $('.mp_guide_column').show();
+            $('#additional_header').show();
+            $('.guide_column').show();
+            $('#guide_counter_title').hide();
         } else {
             if(input_value.indexOf('tag:') === 0) {
                 var search_value = input_value.substring(4).trim();
@@ -65,7 +72,29 @@ $(document).ready(function() {
             } else {
                 filter_guides(title_key | description_key | tags_key, input_value);
             }
-            $('#guide_counter_title').text('Search results (' + $('.guide_column:visible').size() + ')');
+            
+            var mpGuideVisible = $('.mp_guide_column:visible').size();
+            var additionalGuideVisible = $('.guide_column:visible').size();
+            var totalGuideVisible = mpGuideVisible + additionalGuideVisible;
+
+            // Hide categories if there are no search results in them 
+            if (mpGuideVisible == 0) {
+                $('#guides_microprofile_container').removeClass("color_guides_background");
+                $('#guides_microprofile_container').addClass("no_guides_background");
+                $('#microprofile_header').hide();
+            } else {
+                $('#guides_microprofile_container').addClass("color_guides_background");
+                $('#microprofile_header').show();
+            }
+
+            if (additionalGuideVisible == 0) {
+                $('#additional_header').hide();
+            } else {
+                $('#additional_header').show();
+            }
+            $('#microprofile_subtitle').hide();
+            $('#guide_counter_title').show();
+            $('#guide_counter_title').text('Total search results (' + totalGuideVisible + ')');
         }        
     }
 
@@ -106,14 +135,6 @@ $(document).ready(function() {
         processSearch(input_value);
     }
 
-    /* Resize the search bar to match the width of a guide card */
-    function resize_search_bar(){
-        // Get guide card width
-        var card = $('.guide_item:visible').get(0);
-        var card_width = $(card).width();
-        // Set the search to the same width as the guide card
-        $('#guide_search_input').width(card_width);
-    };
 
     function updateSearchUrl(value) {
         if(! value) {
@@ -140,9 +161,25 @@ $(document).ready(function() {
         }
     }
 
-    $(window).on('resize', function(){
-        resize_search_bar();
+    // Create popover when search bar is focused
+    $("#guide_search_input").popover({
+        container: "#guides_search_container",
+        delay: {
+            show: "520"
+        },
+        content: function() {
+            return $("#popover_content").html();
+        },
+        trigger: "focus"
     });
-    resize_search_bar();
 
+    // Click buttons to fill search bar
+    $("#guides_search_container").on('click', '.tag_button', function() {
+        var input_value = 'tag: ' + $(this).html()
+        $("#guide_search_input").val(input_value);
+        $(".tag_button").removeClass("hidden");
+        $(this).addClass("hidden");
+        $("#guide_search_input").focus();
+        processSearch(input_value);
+    });
 });
