@@ -28,10 +28,11 @@ public class TLSFilter implements Filter {
     // A list of deprecated URLs that need to be redirected using the HTTP 302.
     private final Map<String, String> TEMP_REDIRECTS = 
         new HashMap<String, String>() {{
+            put("/index.html/", "/index.html");
             put("/docs/ref/javaee/", "/docs/ref/javaee/8/");
             put("/docs/ref/microprofile/", "/docs/ref/microprofile/1.3/");
-            put("/docs/ref/", "/docs/");        
-            put("/index.html/", "/index.html");  
+            put("/docs/ref/", "/docs/"); 
+            put("/docs/intro/", "/docs/");
             put("/guides/microprofile-intro.html", "/guides/cdi-intro.html");
             // put("old uri", "new uri");
     }};
