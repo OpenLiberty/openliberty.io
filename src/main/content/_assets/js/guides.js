@@ -9,11 +9,12 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-$(document).ready(function() {
+$(window).on('load', function() {
 
     var title_key = 1;
     var description_key = 2;
     var tags_key = 4;
+    var num_of_additional_microprofile_guides = 0;
 
     // Look for guides that contain every search word
     function filter_guides(key, search_value) {
@@ -48,23 +49,100 @@ $(document).ready(function() {
 
             if(matches_all_words) {
                 guide_item.parent().show();
+                // Make sure we are not hiding categories when there are visible guide cards
+                guide_item.closest('.container').show();
             } else {
                 guide_item.parent().hide();
             }
         });
     }
 
-    function processSearch(input_value){
+    // Change the numbers on the page based on the search results
+    function updateTotals(no_search_text) {
+
+        // Change the label for how many guides are visible to help indicate if the view is filtered
+        var count_label = " search results";
+        if(no_search_text !== undefined && no_search_text) {
+            count_label = " guides";
+            $('#microprofile_more_guides_button b').text(num_of_additional_microprofile_guides + ' additional MicroProfile Guides');
+            showAllCategories();
+        }
+
+        // Count the number of visible guides to calculate the total number
+        var numBasicResults = $('#guides_basic_container .guide_column').children(':visible').length;
+        var numMPResults = $('#guides_microprofile_container .guide_column').children(':visible').length;
+        var numAdditionalResults = $('#guides_additional_container .guide_column').children(':visible').length;
+        hideEmptyCategories(
+            numBasicResults == 0, 
+            numMPResults == 0, 
+            numAdditionalResults == 0
+        );
+
+        // Change the total search results in each categorys' banner    
+        $('#guides_basic_banner .total_guide_count b').text(numBasicResults + count_label);
+        $('#guides_microprofile_banner .total_guide_count b').text(numMPResults + count_label);
+        $('#guides_additional_banner .total_guide_count b').text(numAdditionalResults + count_label);
+
+        // Change essential search result number
+        var numBasicEssentialResults = $('#guides_basic_container .essential .guide_column').children(':visible').length;
+        var numMPEssentialResults = $('#guides_microprofile_container .essential .guide_column').children(':visible').length;
+        $('#guides_basic_container .subtitle .essential').text(numBasicEssentialResults + ' essentials');
+        $('#guides_microprofile_container .subtitle .essential').text(numMPEssentialResults + ' essentials');
+
+        // Change the additional MicroProfile search result number
+        var numMPMoreResults = $('#microprofile_more_guides .guide_column').children(':visible').length;
+        $('#microprofile_more_guides_button b').text(numMPMoreResults + ' additional MicroProfile Guides');
+    }
+
+    function showAllCategories() {
+        $('.basic_section').show();
+        $('.microprofile_section').show();
+        $('.more_section').show();
+    }
+
+    function hideEmptyCategories(hideBasic, hideMP, hideAdditional) {
+        if(hideBasic) {
+            $('.basic_section').hide();
+        } else {
+            $('.basic_section').show();
+        }
+        if(hideMP) {
+            $('.microprofile_section').hide();
+        } else {
+            $('.microprofile_section').show();
+        }
+        if(hideAdditional) {
+            $('.more_section').hide();
+        } else {
+            $('.more_section').show();
+        }
+    }
+
+    // Show everything on the guides page
+    function defaultView() {
+        $('.guide_column').show();
+        var no_search_test = true;
+        updateTotals(no_search_test);
+        collapseMicroProfileAdditionalGuides();
+    }
+
+    function expandMicroProfileAdditionalGuides() {
+        // Expand the section with more microprofile guides
+        if(! $('#microprofile_more_guides').is('.collapse.in')) {
+            $('#microprofile_more_guides_button').click();
+        }
+    }
+
+    function collapseMicroProfileAdditionalGuides() {
+        // Collapse the section with more microprofile guides
+        if($('#microprofile_more_guides').is('.collapse.in')) {
+            $('#microprofile_more_guides_button').click();
+        }
+    }
+
+    function processSearch(input_value) {
         if(input_value.length == 0) {
-            //revert elements to their original state
-            $('#guides_microprofile_container').addClass("color_guides_background");
-            $('#guides_microprofile_container').removeClass("no_guides_background");
-            $('#microprofile_header').show();
-            $('#microprofile_subtitle').show();
-            $('.mp_guide_column').show();
-            $('#additional_header').show();
-            $('.guide_column').show();
-            $('#guide_counter_title').hide();
+            defaultView();
         } else {
             if(input_value.indexOf('tag:') === 0) {
                 var search_value = input_value.substring(4).trim();
@@ -72,29 +150,8 @@ $(document).ready(function() {
             } else {
                 filter_guides(title_key | description_key | tags_key, input_value);
             }
-            
-            var mpGuideVisible = $('.mp_guide_column:visible').size();
-            var additionalGuideVisible = $('.guide_column:visible').size();
-            var totalGuideVisible = mpGuideVisible + additionalGuideVisible;
-
-            // Hide categories if there are no search results in them 
-            if (mpGuideVisible == 0) {
-                $('#guides_microprofile_container').removeClass("color_guides_background");
-                $('#guides_microprofile_container').addClass("no_guides_background");
-                $('#microprofile_header').hide();
-            } else {
-                $('#guides_microprofile_container').addClass("color_guides_background");
-                $('#microprofile_header').show();
-            }
-
-            if (additionalGuideVisible == 0) {
-                $('#additional_header').hide();
-            } else {
-                $('#additional_header').show();
-            }
-            $('#microprofile_subtitle').hide();
-            $('#guide_counter_title').show();
-            $('#guide_counter_title').text('Total search results (' + totalGuideVisible + ')');
+            expandMicroProfileAdditionalGuides();
+            updateTotals();
         }        
     }
 
@@ -110,31 +167,6 @@ $(document).ready(function() {
             updateSearchUrl(searchInput);
         }
     });
-
-    var query_string = location.search;
-    // Process the url parameters for searching
-    if(query_string.length > 0) {
-        var parameters = decodeURI(query_string.substring(1)).split('&');
-        var search_value = false;
-        var search_key = false;
-        for(var i = 0; i < parameters.length; i++) {
-            if(parameters[i].indexOf('search=') === 0) {
-                search_value = parameters[i].substring(7);
-            } else if (parameters[i].indexOf('key=') === 0) {
-                search_key = parameters[i].substring(4);
-            }
-        }
-        if(search_value) {
-            var input_text = search_key? search_key + ': ' + search_value : search_value;
-            $('#guide_search_input').val(input_text).keyup();
-        }
-    }
-    // If the search field is still populated from returning to this page, process the search value
-    else if($('#guide_search_input').val()){
-        var input_value = $('#guide_search_input').val().toLowerCase();
-        processSearch(input_value);
-    }
-
 
     function updateSearchUrl(value) {
         if(! value) {
@@ -161,6 +193,40 @@ $(document).ready(function() {
         }
     }
 
+    function getTotal_additional_MP_guides() {
+        var label = $('#microprofile_more_guides_button b').text();
+        return label.split(" ")[0];
+    }
+
+    function init() {
+
+        num_of_additional_microprofile_guides = getTotal_additional_MP_guides();
+
+        var query_string = location.search;
+        // Process the url parameters for searching
+        if(query_string.length > 0) {
+            var parameters = decodeURI(query_string.substring(1)).split('&');
+            var search_value = false;
+            var search_key = false;
+            for(var i = 0; i < parameters.length; i++) {
+                if(parameters[i].indexOf('search=') === 0) {
+                    search_value = parameters[i].substring(7);
+                } else if (parameters[i].indexOf('key=') === 0) {
+                    search_key = parameters[i].substring(4);
+                }
+            }
+            if(search_value) {
+                var input_text = search_key? search_key + ': ' + search_value : search_value;
+                $('#guide_search_input').val(input_text).keyup();
+            }
+        }
+        // If the search field is still populated from returning to this page, process the search value
+        else if($('#guide_search_input').val()){
+            var input_value = $('#guide_search_input').val().toLowerCase();
+            processSearch(input_value);
+        }
+    }
+
     // Create popover when search bar is focused
     $("#guide_search_input").popover({
         container: "#guides_search_container",
@@ -182,4 +248,22 @@ $(document).ready(function() {
         $("#guide_search_input").focus();
         processSearch(input_value);
     });
+
+    // Button to hide and show additional microprofile guides
+    $('#microprofile_more_guides_button').on('click', function(e) {
+        e.preventDefault();
+        $('#microprofile_more_guides').collapse('toggle');
+    });
+
+    // Change icon when collapse is done
+    $('#microprofile_more_guides').on('hidden.bs.collapse', function () {
+        $('#microprofile_more_guides_icon').text('+');
+    });
+
+    // Change icon when collapse is done
+    $('#microprofile_more_guides').on('shown.bs.collapse', function () {
+        $('#microprofile_more_guides_icon').text('-');
+    });
+
+    init();
 });
