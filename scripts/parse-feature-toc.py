@@ -16,6 +16,7 @@ def createHrefNewTag(parent, tocHref, tocString):
     hrefTag['role'] = 'button'
     hrefTag['class'] = 'feature_version'
     hrefTag['full_title'] = "{}".format(tocString)
+    hrefTag['tabindex'] = '0'
     docVersion = getTOCVersion(tocString)
     if docVersion is not None:
         hrefTag.string = docVersion
