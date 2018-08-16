@@ -117,8 +117,9 @@ function getScrolledVisibleSectionID(event) {
     var maxVisibleSectionHeight = 0;
 
     // Multipane view
-    if ($(window).width() > twoColumnBreakpoint) {
-        var sections = $('.sect1:not(#guide_meta):not(#related-guides)');
+    if ($(window).width() > twoColumnBreakpoint) {        
+        // Find the height of each section that has no subsections and the height of subsections and return the max.
+        var sections = $('.sect1:not(#guide_meta):not(#related-guides):not(:has(.sect2)), .sect2');
         sections.each(function(index) {
             var elem = $(sections.get(index));
             var windowHeight   = $(window).height();
@@ -139,7 +140,7 @@ function getScrolledVisibleSectionID(event) {
             }
             if(visibleElemHeight > maxVisibleSectionHeight){
                 maxVisibleSectionHeight = visibleElemHeight;
-                id = elem.children('h2')[0].id;
+                id = elem.children('h2, h3')[0].id;
             }
         });
     }
