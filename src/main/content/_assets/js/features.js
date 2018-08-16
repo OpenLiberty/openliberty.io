@@ -10,6 +10,14 @@
  *******************************************************************************/
 var mobileWidth = 767;
 
+// With the version control support, cannot just set the hash in the url to trigger 
+// the doc loading with the hashchange event. This is because for a title with multiple
+// versions, the parent doc has to be loaded first before we know what is the version
+// html to be updated in the hash. With that, lastClickElementHref is set whenever
+// the hash is updated by the codes and is used to compare the hashchange value to
+// determine whether hashchange event should be handled.
+var lastClickElementHref; 
+
 // setup and listen to click on table of content
 function addTOCClick() {
     var onclick = function (event) {
@@ -17,13 +25,11 @@ function addTOCClick() {
         //setSelectedTOC(resource);
         var currentHref = resource.attr("href");
 
-        // handle the click event ourselves so as to take care of updating the hash and creating
-        // the push state 
+        // handle the click event ourselves so as to take care of updating the hash 
         event.preventDefault();
         event.stopPropagation();
 
         loadContent(resource, currentHref, true);
-        //updateMainBreadcrumb(resource);
 
         if (isMobileView()) {
             $("#breadcrumb_hamburger").trigger("click");
@@ -81,7 +87,7 @@ function setupDisplayContent() {
     }, 400);
 }
 
-// This method 
+// This function
 // - highlight the selected TOC 
 // - load the doc for the selected TOC
 //   - once the doc is loaded, determine whether it is a version doc. 
@@ -103,11 +109,6 @@ function loadContent(targetTOC, tocHref, addHash, versionHref) {
             } else {
                 updateMainBreadcrumb(targetTOC);
                 setupDisplayContent();
-                // addClassToFeaturesThatEnableThisFeature();
-                // setContainerHeight();
-                // $('html, body').animate({
-                //     scrollTop: 0
-                // }, 400);
                 $('footer').show();
 
                 // update hash only if thru normal clicking path
@@ -122,7 +123,7 @@ function loadContent(targetTOC, tocHref, addHash, versionHref) {
     });
 }
 
-// setup and listen to version click
+// setup and listen to version click and trigger the default or version passed in to be shown
 function addVersionClick(hrefToClick) {
     var onclick = function(event) {
         var resource = $(event.currentTarget);
@@ -162,9 +163,9 @@ function addVersionClick(hrefToClick) {
 
 // highlight the selected version
 function setSelectedVersion(resource) {
-    allVersions = $("#common_feature_title > .feature_version_selected");
-    if (allVersions.length > 0) {
-        allVersions.removeClass('feature_version_selected');
+    selectedVersions = $("#common_feature_title > .feature_version_selected");
+    if (selectedVersions.length > 0) {
+        selectedVersions.removeClass('feature_version_selected');
     }
     resource.addClass('feature_version_selected');
 }
@@ -176,12 +177,6 @@ function loadVersionContent(versionElement, versionHref) {
         if (status === "success") {
             $('#feature_title').hide();
             setupDisplayContent();
-            // addClassToFeaturesThatEnableThisFeature();
-            // setContainerHeight();
-            // $('html, body').animate({
-            //     scrollTop: 0
-            // }, 400);
-
             updateMainBreadcrumb(versionElement, 'full_title');
 
             $(this).focus(); // switch focus to the content for the reader
@@ -200,7 +195,7 @@ function updateMainBreadcrumb(resource, attrForTitle) {
     }
 
     if (resource !== undefined) {
-        // use default title or assigned title saved in the passed in attribute
+        // use default title or title retrieved from the passed in attribute
         var title = resource.text();
         if (attrForTitle) {
             title = resource.attr(attrForTitle);
@@ -209,12 +204,15 @@ function updateMainBreadcrumb(resource, attrForTitle) {
     }
 }
 
-// update hash in the url
+// update hash in the url and set lastClickElementHref to be the same value as set in the hash
+// so that when hashchange is triggered, there is no need to handle the event.
 function updateHashInUrl(href) {
     var hashInUrl = href;
     if (href.indexOf("/feature/") !== -1) {
         hashInUrl = href.substring(9);
     }
+
+    lastClickElementHref = hashInUrl;
     window.location.hash = "#" + hashInUrl;
 }
 
@@ -254,7 +252,6 @@ function selectFirstDoc() {
     if (!isMobileView()) {
         var firstTOCElement = $("#toc_container > ul > li > div").first();
         loadContent(firstTOCElement, firstTOCElement.attr("href"));
-        //setSelectedTOC(firstTOCElement);  
         updateMainBreadcrumb();
         return firstTOCElement;
     }
@@ -283,9 +280,12 @@ function addHamburgerClick() {
     }
 }
 
-// handle version doc
+// handle version doc in hash
 function handleHashInCommonToc(href) {
     if (href.lastIndexOf('-') !== -1) {
+        // take out the version from the href and look for the remaining html in the table of content. 
+        // It is assumed that the version appears at the end of the file name with the format "-x.x"
+        // and before the .html file extension, eg. beanValidation-2.0.html.
         var commonTOCHtml = href.substring(0, href.lastIndexOf('-')) + ".html";
         var tocElement = $("#toc_container").find("div[href='" + commonTOCHtml + "']");
         if (tocElement.length === 1) {
@@ -322,36 +322,42 @@ function scrollToTOC(tocElement) {
     }
 }
 
-$(document).ready(function () {  
-    addTOCClick();
-    addHamburgerClick();
-
-    //attaching the event listener
+//attach the hashchange event listener
+function addHashListener() {
     $(window).on('hashchange', function () {
-        if (window.location.hash) {
-            var tocHref = "/feature/" + window.location.hash.substring(1);
-            var tocElement = $("#toc_container").find("div[href='" + tocHref + "']");
-            if (tocElement.length === 1) {
-                loadContent(tocElement, tocHref);
+        if (lastClickElementHref !== window.location.hash.substring(1)) {
+            lastClickElementHref = null;
 
+            if (window.location.hash) {
+                var tocHref = "/feature/" + window.location.hash.substring(1);
+                var tocElement = $("#toc_container").find("div[href='" + tocHref + "']");
+                if (tocElement.length === 1) {
+                    loadContent(tocElement, tocHref);
+                } else {
+                    // check whether it is a hash belonging to a common toc
+                    tocElement = handleHashInCommonToc(tocHref);
+                }
                 if (isMobileView() && $("#toc_column").hasClass('in')) {
                     $(".breadcrumb_hamburger_nav").trigger('click');
                 }
+                scrollToTOC(tocElement);
             } else {
-                // check whether it is a hash belonging to a common toc
-                tocElement = handleHashInCommonToc(tocHref);
-            }
-            scrollToTOC(tocElement);
-        } else {
-            if (isMobileView()) {
-                if (!$("#toc_column").hasClass('in')) {
-                    $(".breadcrumb_hamburger_nav").trigger('click');
+                if (isMobileView()) {
+                    if (!$("#toc_column").hasClass('in')) {
+                        $(".breadcrumb_hamburger_nav").trigger('click');
+                    }
+                } else {
+                    scrollToTOC(selectFirstDoc());
                 }
-            } else {
-                scrollToTOC(selectFirstDoc());
             }
         }
     });
+}
+
+$(document).ready(function () {  
+    addTOCClick();
+    addHamburgerClick();
+    addHashListener();
 
     //manually tiggering it if we have hash part in URL
     if (window.location.hash) {
