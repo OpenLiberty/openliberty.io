@@ -62,6 +62,7 @@ function addTOCClick() {
     $("#toc_container > ul > li > div").off('focusin').on('focusin', function(event) {
         if (!mousedown) {
             $(this).addClass("addFocus");
+            adjustParentWindow();
         }
         mousedown = false;
     });
@@ -257,6 +258,31 @@ function selectFirstDoc() {
     }
 }
 
+// If parent window is scrolled down to the footer, it will shift the top of toc and doc content up
+// behind the fixed header. As a result, the backward tabbing towards the top (either toc or doc content)
+// would result in not seeing the toc or top of the doc. This function will shift the parent window back
+// to the top.
+function adjustParentWindow() {
+    if ($(window.parent.document).scrollTop() > 0) {
+        $(window.parent.document).scrollTop(0);
+    }    
+}
+
+// If the doc content is in focus by means of other than a mouse click, then goto the top of the 
+// doc.
+function addFeatureContentFocusListener() {
+    var mousedown = false;
+    $("#feature_content").off('mousedown').on('mousedown', function(event) {
+        mousedown = true;
+    });
+    $('#feature_content').on("focusin", function(e) {
+        if (!mousedown) {
+            adjustParentWindow();
+        }
+        mousedown = false;
+    });
+}
+
 // setup and listen to hamburger click event
 function addHamburgerClick() {
     if (isMobileView()) {
@@ -305,6 +331,7 @@ function scrollToTOC(tocElement) {
         var elementTop = tocElement[0].getBoundingClientRect().top - headerHeight;
         var tocClientHeight = $('#toc_column')[0].clientHeight;
         var tocScrollHeight = $('#toc_column')[0].scrollHeight;
+        console.log("elementTop: " + elementTop + "; currentTOCTop: " + currentTOCTop + "; headerHeight: " + headerHeight + "; tocClientHeight: " + tocClientHeight);
 
         if (elementTop < 0 || (elementTop > 0 && 
                             elementTop > tocClientHeight)) {
@@ -356,6 +383,7 @@ function addHashListener() {
 
 $(document).ready(function () {  
     addTOCClick();
+    addFeatureContentFocusListener();
     addHamburgerClick();
     addHashListener();
 
