@@ -64,26 +64,41 @@ function handleTOCScrolling() {
 
 function handleFloatingTOCAccordion() {
     var accordion = $('#mobile_toc_accordion_container');
-    var enableFloatingAccordion = function(){
-        accordion.addClass('floating_accordion');
-        $('.navbar').css('display', 'none');
+
+    var enableFloatingTOCAccordion = function(){ 
+        // Put the TOC accordion back into the page and remove the
+        // scroller_anchor <div>.
+        accordion.removeClass('fixed_toc_accordion');
+        $('.scroller_anchor').css('height', 0);
     };
     var disableFloatingTOCAccordion = function(){
-        accordion.removeClass('floating_accordion'); 
-        $('.navbar').css('display', 'block');
-    };
+        // Change the height of the scroller_anchor to that of the accordion
+        // so there is no change in the overall height of the page.
+        // Otherwise, when you fix the accordion to the top of the page the
+        // overall document height is lessened by the accordion's height
+        // which causes a bounce in the page.
+        $('.scroller_anchor').css('height', accordion.height());
+        // Fix the TOC accordion to the top of the page.
+        accordion.addClass('fixed_toc_accordion'); 
+    };    
+    
     if(inSingleColumnView()){
-        var isMobile = inMobile();
-        var transitionPoint = isMobile ? 428 : 400;        
-        var isPositionFixed = (accordion.css('position') === 'fixed');
-        if ($(this).scrollTop() > transitionPoint && !isPositionFixed) { 
-            enableFloatingAccordion();
-        } else if ($(this).scrollTop() < transitionPoint && isPositionFixed) {
+        // Get the accordion start location.  It is the same as
+        // scroller_anchor, a <div> that initially has a height of 0.
+        var scroller_anchor = $(".scroller_anchor").offset().top;
+        // Check if user has scrolled and the current scroll position is below
+        // where the scroller_anchor starts and the accordion has not yet been
+        // fixed to the top of the page.
+        if ($(this).scrollTop() >= scroller_anchor && accordion.css('position') !== 'fixed') {
             disableFloatingTOCAccordion();
+        } else if ($(this).scrollTop() < scroller_anchor && accordion.css('position') !== 'relative') {
+            // When the user scrolls back up past the scroller_anchor, put the 
+            // accordion back into the page and remove the scroller_anchor <div>.
+            enableFloatingTOCAccordion();
         }
     }
     else{
-        disableFloatingTOCAccordion();
+        enableFloatingTOCAccordion();
     }
 }
 
