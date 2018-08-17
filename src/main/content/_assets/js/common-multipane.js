@@ -269,10 +269,10 @@ $(document).ready(function() {
     });
 
     $(window).on('scroll', function(event) {
+        handleFloatingTOCAccordion();
         handleDownArrow();
         handleStickyHeader();
         handleFloatingTableOfContent();
-        handleFloatingTOCAccordion();
         handleFloatingCodeColumn();
     });
 
