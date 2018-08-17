@@ -107,7 +107,9 @@ $(document).ready(function() {
         var duplicate_code_block = code_block.clone();
         duplicate_code_block.removeClass('dimmed_code_column'); // Remove the blur from the original code block;
         duplicate_code_block.addClass('mobile_code_snippet'); // Add class to this code snippet in the guide column to only show up in mobile view.
+        duplicate_code_block.removeClass('code_columnn');
         duplicate_code_block.removeAttr('filename');
+        duplicate_code_block.find('.code_column_title_container').remove();
 
         // Wrap each leftover piece of text in a span to handle selecting a range of lines.
         duplicate_code_block.find('code').contents().each(function(){
