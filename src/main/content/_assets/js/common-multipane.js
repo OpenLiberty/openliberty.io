@@ -22,17 +22,19 @@ function inMobile(){
 
 // Handle sticky header in IE, because IE doesn't support position: sticky
 function handleStickyHeader() {
-    var userAgent = window.navigator.userAgent;
-    if(userAgent.indexOf('MSIE') > 0 || userAgent.indexOf('Trident/') > 0){
-        var header = $('header');
-        var currentTopPosition = $(window).scrollTop();
-        var headerHeight = header.height();
-        if(currentTopPosition < headerHeight){
-            // Remove fixed header
-            header.removeClass('IEStickyHeader');
-        } else{
-            // Make header fixed to top
-            header.addClass('IEStickyHeader');
+    if (!inSingleColumnView()) {
+        var userAgent = window.navigator.userAgent;
+        if(userAgent.indexOf('MSIE') > 0 || userAgent.indexOf('Trident/') > 0){
+            var header = $('header');
+            var currentTopPosition = $(window).scrollTop();
+            var headerHeight = header.height();
+            if(currentTopPosition < headerHeight){
+                // Remove fixed header
+                header.removeClass('IEStickyHeader');
+            } else{
+                // Make header fixed to top
+                header.addClass('IEStickyHeader');
+            }
         }
     }
 }
