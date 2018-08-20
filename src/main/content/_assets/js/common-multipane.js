@@ -22,17 +22,19 @@ function inMobile(){
 
 // Handle sticky header in IE, because IE doesn't support position: sticky
 function handleStickyHeader() {
-    var userAgent = window.navigator.userAgent;
-    if(userAgent.indexOf('MSIE') > 0 || userAgent.indexOf('Trident/') > 0){
-        var header = $('header');
-        var currentTopPosition = $(window).scrollTop();
-        var headerHeight = header.height();
-        if(currentTopPosition < headerHeight){
-            // Remove fixed header
-            header.removeClass('IEStickyHeader');
-        } else{
-            // Make header fixed to top
-            header.addClass('IEStickyHeader');
+    if (!inSingleColumnView()) {
+        var userAgent = window.navigator.userAgent;
+        if(userAgent.indexOf('MSIE') > 0 || userAgent.indexOf('Trident/') > 0){
+            var header = $('header');
+            var currentTopPosition = $(window).scrollTop();
+            var headerHeight = header.height();
+            if(currentTopPosition < headerHeight){
+                // Remove fixed header
+                header.removeClass('IEStickyHeader');
+            } else{
+                // Make header fixed to top
+                header.addClass('IEStickyHeader');
+            }
         }
     }
 }
@@ -190,10 +192,21 @@ function accessContentsFromHash(hash) {
     if ($focusSection.length > 0) {
         // Update the TOC
         updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
+        var scrollSpot = $focusSection.offset().top;
         // Implement smooth scrolling to the section's header.
-        // Account for the sticky header. Display the targeted section below it.
-        var stickyHeaderAdjustment = $('.container-fluid').height() || 0;
-        var scrollSpot = $focusSection.offset().top - stickyHeaderAdjustment;
+        if (inSingleColumnView()) {
+            // Single-column View
+            // The TOC is a band across the page which is fixed to the top of 
+            // the page when viewing sections beneath it.
+            // Bring the section requested right up underneath this floating TOC.
+            var $accordion = $('#mobile_toc_accordion_container');
+            scrollSpot -= $accordion.height();
+        } else {
+            // Multi-column View
+            // Account for the sticky header. Display the targeted section below it.
+            var stickyHeaderAdjustment = $('.container-fluid').height() || 0;
+            scrollSpot -= stickyHeaderAdjustment;
+        }
         $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
             // Callback after animation.  Change the focus.
             $focusSection.focus();
