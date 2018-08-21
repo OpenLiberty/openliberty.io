@@ -46,7 +46,7 @@ for commonTOC in commonTOCs:
     if len(matchingTitleTOCs) > 1:
         # multiple versions of the same title found, create a new html from the template
         # to put the versions at the top of the page
-        featureVersionTemplate  = BeautifulSoup(open('scripts/feature-template/common-feature-content-template.html'),"html.parser")
+        featureVersionTemplate  = BeautifulSoup(open('./scripts/feature-template/common-feature-content-template.html'),"html.parser")
         featureTitle = featureVersionTemplate.find(id='common_feature_title')
         newTOCHref = ''
         # in reverse descending order
@@ -74,7 +74,7 @@ for commonTOC in commonTOCs:
                 featureTitle.append(hrefTag)
                 matchingTOC.parent.decompose()
         # write to the common version doc to a file
-        with open('src/main/content/_site/' +  newTOCHref, "w") as file:
+        with open('./target/jekyll-webapp' +  newTOCHref, "w") as file:
             file.write(str(featureVersionTemplate))
     else:
         # single version doc is found, just strip off the version from the TOC title
@@ -82,6 +82,6 @@ for commonTOC in commonTOCs:
         matchingTOC.string = commonTOC
 
 # rename the original index.html and write the new index.html with version control in it
-os.rename('src/main/content/_site/docs/ref/feature/index.html', 'src/main/content/_site/docs/ref/feature/index.html.orig')
-with open("src/main/content/_site/docs/ref/feature/index.html", "w") as file:
+os.rename('./target/jekyll-webapp/docs/ref/feature/index.html', './target/jekyll-webapp/docs/ref/feature/index.html.orig')
+with open('./target/jekyll-webapp/docs/ref/feature/index.html', "w") as file:
     file.write(str(featureIndex))
