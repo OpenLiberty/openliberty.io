@@ -22,7 +22,7 @@ def createHrefNewTag(parent, tocHref, tocString):
         hrefTag.string = docVersion
     return hrefTag
 
-featureIndex = BeautifulSoup(open('src/main/content/_site/docs/ref/feature/index.html'),"html.parser")
+featureIndex = BeautifulSoup(open('./target/jekyll-webapp/docs/ref/feature/index.html'), "html.parser")
 
 commonTOCs = [];
 # gather TOCs with version in the title
