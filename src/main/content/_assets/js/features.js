@@ -62,6 +62,7 @@ function addTOCClick() {
     $("#toc_container > ul > li > div").off('focusin').on('focusin', function(event) {
         if (!mousedown) {
             $(this).addClass("addFocus");
+            // scroll the parent window back up if it is scroll down
             adjustParentWindow();
         }
         mousedown = false;
@@ -272,12 +273,13 @@ function adjustParentWindow() {
 // doc.
 function addFeatureContentFocusListener() {
     var mousedown = false;
-    $("#feature_content").off('mousedown').on('mousedown', function(event) {
+    $("#feature_content").on('mousedown', function(event) {
         mousedown = true;
     });
     $('#feature_content').on("focusin", function(e) {
         if (!mousedown) {
             adjustParentWindow();
+            $('#feature_content').scrollTop(0);
         }
         mousedown = false;
     });
