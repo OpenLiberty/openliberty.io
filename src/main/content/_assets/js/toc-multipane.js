@@ -12,19 +12,13 @@
 function handleFloatingTableOfContent() {
     if ($(window).width() >= 1440) {
         // CURRENTLY IN 3 COLUMN VIEW
-        if ($(window).scrollTop() >= $('#toc_column').offset().top) {
-            // The top of the TOC is scrolling off the screen, enable floating TOC.
-            if(isBackgroundBottomVisible()) {
-                handleTOCScrolling();
-            } else {
-                // The entire viewport is filled with the background, so
-                // do not need to worry about the TOC flowing out of the background.
-                enableFloatingTOC();
-            }
+        // The top of the TOC is scrolling off the screen, enable floating TOC.
+        if(isBackgroundBottomVisible()) {
+            handleTOCScrolling();
         } else {
-            // TOC no longer needs to float,
-            // remove all the custom styling for floating TOC
-            disableFloatingTOC();
+            // The entire viewport is filled with the background, so
+            // do not need to worry about the TOC flowing out of the background.
+            enableFloatingTOC();
         }
     } else {
         // CURRENTLY IN MOBILE VIEW OR 2 COLUMN VIEW
