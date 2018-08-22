@@ -80,7 +80,7 @@ function resizeGuideSections() {
         var viewportHeight = window.innerHeight;
         var headerHeight = $('header').height();
         var sectionTitleHeight = $("#guide_content h2").first().height();
-        var newSectionHeight = viewportHeight - headerHeight - (2 * sectionTitleHeight);
+        var newSectionHeight = viewportHeight - headerHeight - sectionTitleHeight;
         $('.sect1:not(#guide_meta):not(#related-guides)').css({
                 'min-height': newSectionHeight + 'px'
         });
