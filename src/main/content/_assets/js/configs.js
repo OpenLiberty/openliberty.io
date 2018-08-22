@@ -55,22 +55,6 @@ function addTOCClick() {
     }
 
     $("#toc_container a").off("click").on("click", onclick);
-
-    // listen for focusin causing by tab. not mouse
-    var mousedown = false;
-    $("#toc_container a").off('mousedown').on('mousedown', function(event) {
-        mousedown = true;
-    });
-
-    $("#toc_container a").off('focusin').on('focusin', function(event) {
-        if (!mousedown) {
-            // Scroll the parent window back up if it is scroll down
-            adjustParentScrollView();
-            // move the TOC in viewport if it is out of viewport
-            adjustTOCView($(event.currentTarget));
-        }
-        mousedown = false;
-    });
 }
 
 // Add css to selected TOC. If scrollTo is specified, scroll the TOC element into viewport.
@@ -102,7 +86,16 @@ function setSelectedTOC(resource, scrollTo) {
     }
 
     if (scrollTo) {
-        adjustTOCView(resource);
+        var resourceTop = resource.parent()[0].getBoundingClientRect().top;
+        var tocTitleTop = $("#toc_title")[0].getBoundingClientRect().top;
+        var tocTitleHeight = $("#toc_title").outerHeight();
+        var tocColumnHeight = $("#toc_column").outerHeight();
+        // make toc element visible if it is not when going thru history backward and forward click
+        if (resourceTop < tocTitleTop + tocTitleHeight || resourceTop >= tocColumnHeight) {
+            // position the element in the middle part of the toc
+            $("#toc_column").scrollTop(resourceTop - $("#toc_column").offset().top +
+                $("#toc_column").scrollTop() - tocTitleHeight - tocColumnHeight / 2);
+        }
     }
 }
 
@@ -120,8 +113,6 @@ function setIframeLocationHref(href) {
     if (iframeContent.attr("location").href !== href) {
         iframeContent.attr("location").replace(href);
     }
-    // move focus to the content
-    $('#config_content').focus();
 }
 
 // Update doc header breadcrumb with the current TOC title
@@ -434,20 +425,6 @@ function addExpandAndCollapseToggleButtons(subHeading, titleId) {
             toggleButton.click();
         }
     });
-
-    // listen for focus causing by tab. not mouse
-    var mousedown = false;
-    toggleButton.on('mousedown', function(event) {
-        mousedown = true;
-    });
-    toggleButton.on('focus', function(e) {
-        if (!mousedown) {
-            // Scroll the parent window back up if it is scroll down
-            adjustParentScrollView();
-        }
-        mousedown = false;
-    });
-
     subHeading.prepend(toggleButton);
 }
 
@@ -849,36 +826,6 @@ function adjustParentScrollView() {
     }
 }
 
-// display the toc element in viewport
-function adjustTOCView(resource) {
-    var resourceTop = resource.parent()[0].getBoundingClientRect().top;
-    var tocTitleTop = $("#toc_title")[0].getBoundingClientRect().top;
-    var tocTitleHeight = $("#toc_title").outerHeight();
-    var tocColumnHeight = $("#toc_column").outerHeight();
-    // make toc element visible if it is not when going thru history backward and forward click
-    if (resourceTop < tocTitleTop + tocTitleHeight || resourceTop >= tocColumnHeight) {
-        // position the element in the middle part of the toc
-        $("#toc_column").scrollTop(resourceTop - $("#toc_column").offset().top +
-            $("#toc_column").scrollTop() - tocTitleHeight - tocColumnHeight / 2);
-    }
-}
-
-// If the doc content is in focus by means of other than a mouse click, then goto the top of the 
-// doc.
-function addConfigContentFocusListener() {
-    var mousedown = false;
-    $("#config_content").on('mousedown', function(event) {
-        mousedown = true;
-    });
-    $('#config_content').on("focusin", function(e) {
-        if (!mousedown) {
-            adjustParentScrollView();
-            scrollToPos(0);
-        }
-        mousedown = false;
-    });
-}
-
 // Handle content loading based on the url
 function handleInitialContent() {
     // if hash is included in the url, load the content document and replace the
@@ -1077,7 +1024,6 @@ function adjustFrameHeight() {
 
 $(document).ready(function () {
     addTOCClick();
-    addConfigContentFocusListener();
     handleInitialContent();
     handleParentWindowScrolling();
     addHamburgerClick();
