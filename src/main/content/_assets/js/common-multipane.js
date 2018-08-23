@@ -198,12 +198,12 @@ function shiftWindow() {
  *                      from window.location.
  */
 function accessContentsFromHash(hash) {
-    var $focusSection = $(hash);
-    // Update the TOC
-    updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
-
+    var $focusSection = $(hash);    
+    
     // If section is found, scroll to it
     if ($focusSection.length > 0) {        
+        // Update the TOC
+        updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
         var scrollSpot = $focusSection.offset().top;
         // Implement smooth scrolling to the section's header.
         if (inSingleColumnView()) {
