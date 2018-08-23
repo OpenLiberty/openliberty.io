@@ -199,11 +199,11 @@ function shiftWindow() {
  */
 function accessContentsFromHash(hash) {
     var $focusSection = $(hash);
+    // Update the TOC
+    updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
 
     // If section is found, scroll to it
-    if ($focusSection.length > 0) {
-        // Update the TOC
-        updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
+    if ($focusSection.length > 0) {        
         var scrollSpot = $focusSection.offset().top;
         // Implement smooth scrolling to the section's header.
         if (inSingleColumnView()) {
@@ -219,6 +219,7 @@ function accessContentsFromHash(hash) {
             var stickyHeaderAdjustment = $('.container-fluid').height() || 0;
             scrollSpot -= stickyHeaderAdjustment;
         }
+        $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
         $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
             // Callback after animation.  Change the focus.
             $focusSection.focus();
@@ -230,8 +231,9 @@ function accessContentsFromHash(hash) {
                 // tabindex = -1 means that the element should be focusable,
                 // but not via sequential keyboard navigation.
                 $focusSection.attr('tabindex', '-1');
-                $focusSection.focus();
-            }
+                $focusSection.focus();                
+            }        
+            $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again. 
         });
     } else {
         defaultToFirstPage();
