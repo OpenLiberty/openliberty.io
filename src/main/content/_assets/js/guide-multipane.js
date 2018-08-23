@@ -386,30 +386,45 @@ $(document).ready(function() {
         }                
     }
 
+    // Hide other code blocks and show the correct code block based on provided id.
+    function showCorrectCodeBlock(id) {
+        try{
+            var code_block = code_sections[id];
+            if(code_block){
+                $('#code_column .code_column').not(code_block).hide();
+                code_block.show();
+            }
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
     // Slow the scrolling over section headers in the guide
     function handleSectionSnapping(event){
         // Multipane view
         if($(window).width() > twoColumnBreakpoint) {
             var id = getScrolledVisibleSectionID(event);
-            if (id) {
-                if ($("html, body").scrollTop() !== 0) {
-                    // Remove previous TOC section highlighted and highlight correct step
-                    updateTOCHighlighting(id);                      
-                }
+            if (id !== null) {
+                var windowHash = window.location.hash;
+                var scrolledToHash = id === "" ? id : '#' + id;
+                if (windowHash !== scrolledToHash) {
+                    // Update the URL hash with new section we scrolled into....
+                    var currentPath = window.location.pathname;
+                    var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + scrolledToHash;
+                    // Not setting window.location.hash here because that causes an
+                    // onHashChange event to fire which will scroll to the top of the
+                    // section.  pushState updates the URL without causing an
+                    // onHashChange event.
+                    history.pushState(null, null, newPath);
 
-                // Hide other code blocks and show the correct code block.                  
-                try{
-                    var code_block = code_sections[id];
-                    if(code_block){
-                        $('#code_column .code_column').not(code_block).hide();
-                        code_block.show();
-                    }
-                       
-                } catch(e) {
-                    console.log(e);
-                }                
-            }   
-        }            
+                    // Update the selected TOC entry
+                    updateTOCHighlighting(id);
+
+                    // Match the code block on the right to the new id
+                    showCorrectCodeBlock(id);
+                }
+            }
+        }
     }
     $(window).on('scroll', function(event) {
         handleGithubPopup(false);
@@ -424,6 +439,7 @@ $(document).ready(function() {
             handleFloatingTableOfContent();
             var hash = location.hash;
             accessContentsFromHash(hash);
+            showCorrectCodeBlock(hash.substring(1));  // Remove the '#' in front of the id
         }
 
         if(window.location.hash === ""){
