@@ -6,15 +6,21 @@ css:
 - end-of-guide
 - guide-card
 - guide-multipane
-js: guide-multipane
+- iguide
+js: 
+- common-multipane
+- toc-multipane
 ---
 
-<div id="background_container" class="black_blue_gradient_background">
+<div id="background_container">
         <div class="row">
             <!-- Guide's table of contents section -->
             <div id="toc_column" class="collapse inline">
                 <div id="toc_inner">
                     <div id="close_container">
+                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button"/>
+                    </div>
+                    <div id="mobile_close_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
                         <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button"/>
                     </div>
                     <h3 id="toc_title">Contents</h3>
@@ -41,7 +47,27 @@ js: guide-multipane
                         <div id="duration_container">
                             <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
                             <span id="guide_duration">{{ page.duration }}</span>
+                            <div class="guide_interactive_container">
+                                <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
+                                <span class="guide_interactive">Interactive</span>
+                            </div>
                         </div>
+                        <p>{{ page.description }}</p>
+                    </div>
+                    
+                    <!-- This div is used to indicate the original position of the scrollable fixed div. -->
+                    <div class="scroller_anchor"></div>
+                    <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
+                        <div id="mobile_toc_accordion">
+                            <button class="breadcrumb_hamburger toc-toggle collapsed" type="button">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <img src="{{ " /img/TOC_Close.svg " | relative }}" class="TOC_Close_SVG img-responsive" alt="Table of contents close button"/>
+                            </button>
+                            <span>Table of contents</span>
+                        </div>                
                     </div>
 
                     <!-- Guide content section -->

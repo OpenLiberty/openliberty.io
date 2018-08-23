@@ -8,73 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-
-// The background is shortened by 200px
-var backgroundSizeAdjustment = 200;
-var twoColumnBreakpoint = 1170;
-
-function heightOfVisibleBackground() {
-    var result;
-    if(isBackgroundBottomVisible()) {
-        var scrollTop = $(window).scrollTop();
-        result = getBackgroundAbsoluteBottomPosition() - scrollTop;
-    } else {
-        // Assume the background is filling up the entire viewport
-        result = $(window).height();
-    }
-    return result;
-}
-
-// Get the absolute position of the bottom of the dark background regardless
-// of whether the bottom is in the browser's viewport
-function getBackgroundAbsoluteBottomPosition() {
-    var background = $('#background_container'),
-    elementTop = background.offset().top,
-    elementBottomPosition = elementTop + (background.outerHeight() - backgroundSizeAdjustment);
-    return elementBottomPosition;
-}
-
-// Determine if the bottom of the visible dark background is now visible 
-// in the browser's viewport.
-function isBackgroundBottomVisible() {
-    var background = $('#background_container'),
-        currentTopPosition = $(window).scrollTop(),
-        currentBottomPosition = currentTopPosition + $(window).height(),
-        elementBottomPosition = getBackgroundAbsoluteBottomPosition(),
-        visibleBottom = currentBottomPosition > elementBottomPosition;
-    return visibleBottom;
-}
-
-function handleFloatingCodeColumn(){
-    if($(window).width() > twoColumnBreakpoint) {
-        // CURRENTLY IN DESKTOP VIEW
-        if(isBackgroundBottomVisible()) {
-            // Set the bottom of the code column to the distance between the top of the end of guide section and the bottom of the page.
-            var windowHeight = window.innerHeight;
-            var relatedGuidesTopPosition = $("#end_of_guide")[0].getBoundingClientRect().top;
-            if(relatedGuidesTopPosition){
-                var bottom = windowHeight - relatedGuidesTopPosition;
-                $("#code_column").css('bottom', bottom + 'px');
-            } else {
-                $("#code_column").css('bottom', 'auto');
-            }            
-        } else {
-            // The entire viewport is filled with the code column
-            $("#code_column").css('bottom', '0');
-        }
-    }
-}
-
 $(document).ready(function() {
 
-    var offset;
     var target;
-    var target_position;
-    var target_width;
-    var target_height;
 
     $('#preamble').detach().insertAfter('#duration_container');
-    
 
     var guide_sections = [];
     var code_sections = {}; // Map guide sections to code blocks to show on the right column.
@@ -86,59 +24,27 @@ $(document).ready(function() {
         var metadata_sect = code_block.prev().find('p');
         if(metadata_sect.length > 0){
             var metadata = metadata_sect[0].innerText;
-            var fileName, 
-                line_nums,
-                fromLine,
-                toLine;
 
             // Split the string into file name and line numbers to show
             metadata = metadata.split(',');
-            fileName = metadata[0];
-
-            if(metadata.length === 2){
-                line_nums = metadata[1];
-
-                if(line_nums.indexOf('lines=') > -1){
-                    line_nums = line_nums.substring(6);
-                    if(line_nums.indexOf('-') > -1){
-                        var lines = line_nums.split('-');
-                        fromLine = parseInt(lines[0]);
-                        toLine = parseInt(lines[1]);
-                    }
-                }
-            }   
-
-            // Wrap each leftover piece of text in a span to handle highlighting a range of lines.
-            code_block.find('code').contents().each(function(){
-                if (!$(this).is('span')) {
-                     var newText = $(this).wrap('<span class="string"></span>');
-                     $(this).replaceWith(newText);
-                }
-            });
+            var fileName = metadata[0];
 
             // Clone this code block so the full file can be shown in the right column and only a duplicate snippet will be shown in the single column view or mobile view.
             // The duplicated code block will be shown on the right column.
             var duplicate_code_block = code_block.clone();
-            code_block.addClass('guide_column_code_snippet'); // Add class to code snippet in the guide column to only show up in mobile view.
+            code_block.hide();
 
-            var guide_section = code_block.parents('.sect1').first();
-            var header = guide_section.find('h2')[0];
-            guide_sections.push(header);
-
-            code_sections[header.id] = {
-                'code': duplicate_code_block,
-                'fromLine': fromLine,
-                'toLine': toLine
+            var header;
+            var subsection = code_block.parents('.sect2');
+            if(subsection.length > 0){
+                header = subsection.find('h3')[0];
             }
-
-            var first_span = code_block.find('.line-numbers:contains(' + fromLine + ')').first(); 
-            var last_span = code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
-
-            // Remove spans before the first line number and after the last line number
-            if(first_span.length > 0 && last_span.length > 0){
-                first_span.prevAll('span').remove();
-                last_span.nextAll('span').remove();
-            } 
+            else{
+                var guide_section = code_block.parents('.sect1').first();
+                header = guide_section.find('h2')[0];
+            }                        
+            guide_sections.push(header);
+            code_sections[header.id] = duplicate_code_block;
 
             // Create a title pane for the code section
             duplicate_code_block.attr('fileName', fileName);            
@@ -160,19 +66,170 @@ $(document).ready(function() {
             duplicate_code_block.prepend(title_section);
             duplicate_code_block.addClass('dimmed_code_column'); // Dim the code at first while the github popup takes focus.
             duplicate_code_block.appendTo('#code_column'); // Move code to the right column
-
-            // Wrap code block lines in a div to highlight
-            var highlight_start = duplicate_code_block.find('.line-numbers:contains(' + fromLine + ')').first();
-            var highlight_end = duplicate_code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
-            var range = highlight_start.nextUntil(highlight_end);
-
-            range.wrapAll("<div class='highlightSection'></div>");
-
-            // Remove line numbers which were mainly used for highlighting the section.
-            code_block.find('.line-numbers').remove();
-            duplicate_code_block.find('.line-numbers').remove();
         }
     });
+
+    // Highlights a block of code in a code section
+    // Input code_section: The section of code to highlight.
+    //       from_line: Integer for what line to start highlighting from.
+    //       to_line: Integer for what line to end highlighting.
+    function highlight_code_range(code_section, fromLine, toLine){
+        // Wrap each leftover piece of text in a span to handle highlighting a range of lines.
+        code_section.find('code').contents().each(function(){
+            if (!$(this).is('span')) {
+                 var newText = $(this).wrap('<span class="string"></span>');
+                 $(this).replaceWith(newText);
+            }
+        });
+        
+        // Wrap code block lines in a div to highlight
+        var highlight_start = code_section.find('.line-numbers:contains(' + fromLine + ')').first();
+        var highlight_end = code_section.find('.line-numbers:contains(' + (toLine + 1) + ')').first();        
+        var range = highlight_start.nextUntil(highlight_end);
+        range.wrapAll("<div class='highlightSection'></div>");
+        var scrollTop = $("#code_column")[0].scrollTop;
+        var position = range.position().top;
+        $("#code_column").animate({scrollTop: scrollTop + position - 50});
+    }
+
+    // Remove all highlighting for the code section.
+    // Input code_section: The section of code to highlight.
+    function remove_highlighting(code_section){
+        var highlightedSections = code_section.find('.highlightSection');
+        highlightedSections.each(function(){
+            var children = $(this).find('span');
+            children.unwrap(); // Remove the wrapped highlighted div from these children.
+        });
+        
+    }
+
+    // Creates a clone of the code highlighted by hotspots in desktop view, so that they can be shown in mobile.
+    // Inputs: snippet: Hotspot in the guide column.
+    //         code_block: The source code block.
+    //         fromLine: The line in the code block to start copying from.
+    //         toLine: The line in the code block to end copying.
+    function create_mobile_code_snippet(snippet, code_block, fromLine, toLine){
+        var duplicate_code_block = code_block.clone();
+        duplicate_code_block.removeClass('dimmed_code_column'); // Remove the blur from the original code block;
+        duplicate_code_block.addClass('mobile_code_snippet'); // Add class to this code snippet in the guide column to only show up in mobile view.
+        duplicate_code_block.removeClass('code_columnn');
+        duplicate_code_block.removeAttr('filename');
+        duplicate_code_block.find('.code_column_title_container').remove();
+
+        // Wrap each leftover piece of text in a span to handle selecting a range of lines.
+        duplicate_code_block.find('code').contents().each(function(){
+            if (!$(this).is('span')) {
+                var newText = $(this).wrap('<span class="string"></span>');
+                $(this).replaceWith(newText);
+            }
+        });
+        var first_span = duplicate_code_block.find('.line-numbers:contains(' + fromLine + ')').first();
+        var last_span = duplicate_code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
+
+        // Remove spans before the first line number and after the last line number
+        if(first_span.length > 0){
+            first_span.prevAll('span').remove();            
+        }
+        if(last_span.length > 0){
+            last_span.nextAll('span').remove();
+        }
+        snippet.after(duplicate_code_block);
+    }
+
+    // Returns the code block associated with a code hotspot.
+    // Inputs: hotspot: The 'hotspot' in desktop view where hovering over the block will highlight certain lines of code in the code column relevant to what the guide is talking about.
+    function get_code_block_from_hotspot(hotspot){
+        var section = hotspot.parents('.sect1').first();
+        var header = section.find('h2').get(0);
+        return code_sections[header.id];
+    }
+
+    // Parse the hotspot lines to highlight and store them as a data attribute.
+    $('.hotspot').each(function(){
+        var snippet = $(this);
+        var metadata = snippet.prev().find('p');
+        if(metadata.length > 0){
+            var metadata_text = metadata[0].innerText;
+            if(metadata_text.indexOf('highlight_lines=') > -1){
+                var line_nums = metadata_text.substring(16);
+                if(line_nums.indexOf('-') > -1){
+                    var lines = line_nums.split('-');
+                    var fromLine = parseInt(lines[0]);
+                    var toLine = parseInt(lines[1]);
+                    // Set data attributes to save the lines to highlight
+                    snippet.data('highlight_from_line', fromLine);
+                    snippet.data('highlight_to_line', toLine);
+
+                    var code_block = get_code_block_from_hotspot(snippet);
+                    create_mobile_code_snippet(snippet, code_block, fromLine, toLine);
+                }
+            }             
+        }
+        // Remove old title from the DOM
+        metadata.detach();
+    });
+
+    // Returns a function, that, as long as it continues to be invoked, will not
+    // be triggered. The function will be called after it stops being called for
+    // N milliseconds. If `immediate` is passed, trigger the function on the
+    // leading edge, instead of the trailing.
+    function debounce(func, wait, immediate) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                if (!immediate){
+                    func.apply(context, args);
+                }
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow){
+                func.apply(context, args);
+            } 
+        };
+    }
+
+    /**
+     * Handle hovering over hotspots. This will look up the corresponding code section on the right and search for the lines to highlight. Debounce is used to prevent multiple hotspots from being hovered over quickly and having the page jump around. It will handle the latest hotspot hovered over once 250 ms has passed.
+     * @param hotspot: The snippet hovered over in the guide column.
+     */
+    var handleHotspotHover = debounce(function(hotspot){
+        // Only highlight the code if the mouse is still hovered over the hotspot after the debounce.
+        if(hotspot.data('hovering') == false){
+            return;
+        }
+        var section = hotspot.parents('.sect1').first();
+        var header = section.find('h2').get(0);
+        var code_block = code_sections[header.id];
+        if(code_block){
+            var fromLine = hotspot.data('highlight_from_line');
+            var toLine = hotspot.data('highlight_to_line');
+            if(code_block && fromLine && toLine){
+                highlight_code_range(code_block, fromLine, toLine);
+            }            
+        }
+    }, 250);
+
+    // When hovering over a code hotspot, highlight the correct lines of code in the corresponding code section.
+    $('.hotspot').on('hover mouseover', function(event){
+        $(this).data('hovering', true);
+        handleHotspotHover($(this));
+    });
+
+    // When the mouse leaves a code 'hotspot', remove all highlighting in the corresponding code section.
+    $('.hotspot').on('mouseleave', function(event){
+        $(this).data('hovering', false);
+        var section = $(this).parents('.sect1').first();
+        var header = section.find('h2').get(0);
+        var code_block = code_sections[header.id];
+        if(code_block){
+            remove_highlighting(code_block);
+        }        
+    });
+   
 
     // Map the guide sections that don't have any code sections to the previous section's code.
     var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2, .sect2:not(#guide_meta):not(#related-guides) > h3');
@@ -188,34 +245,32 @@ $(document).ready(function() {
     // Hide all code blocks except the first
     $('#code_column .code_column:not(:first)').hide();
 
-    $("#breadcrumb_hamburger").on('click', function(event){
-        // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
-        if($(window).width() >= 1440){
-            if($("#toc_column").hasClass('in')){
-                // TOC is expanded
-                $("#guide_column").addClass('expanded');
-            }
-            else{
-                // TOC is closed
-                $("#guide_column").removeClass('expanded');
-            }
-        }
-        // Handle table of content floating if in the middle of the guide.
-        handleFloatingTableOfContent();
+    // Prevent scrolling the page when scrolling inside of the code panel, but not one of the code blocks.
+    $('#code_column').on('wheel mousewheel DOMMouseScroll', function(event){
+        event.stopPropagation();
+        var target = $(event.target);
+        if(!(target.is('.code_column') || target.parents('.code_column').length > 0)){   
+            // Prevent scrolling the page when scrolling outside of lines of code but still inside of the code column.
+            event.preventDefault();
+        } 
     });
 
     // Handle scrolling in the code column.
     // Prevents the default scroll behavior which would scroll the whole browser.
     // The code column scrolling is independent of the guide column.
-    $('#code_column').on('wheel mousewheel DOMMouseScroll', function(event){
+    $('.code_column').on('wheel mousewheel DOMMouseScroll', function(event){
+        if(inSingleColumnView()){
+            return;
+        }
         $(this).stop(); // Stop animations taking place with this code section.
 
         var event0 = event.originalEvent;
         var dir = (event0.deltaY) < 0 ? 'up' : 'down';        
-        var hasVerticalScrollbar = false;     
+        var hasVerticalScrollbar = false;
+        var codeColumn = $("#code_column").get(0);
 
         // Check if element is scrollable.
-        if(this.scrollTop > 0 || this.scrollHeight > document.documentElement.clientHeight){
+        if(this.scrollTop > 0 || this.offsetHeight > this.parentElement.offsetHeight){
             hasVerticalScrollbar = true;
         }
 
@@ -225,34 +280,16 @@ $(document).ready(function() {
             event.preventDefault();
         }
         // If the code column is at the top and the browser is scrolled down, the element has no scrollTop and does not respond to changing its scrollTop.
-        else if(!(dir == 'down' && this.scrollTop === 0)){
+        else if(!(dir == 'down' && codeColumn.scrollTop === 0)){
             var delta = event0.wheelDelta || -event0.detail || -event0.deltaY;
             // Firefox's scroll value is always 1 so multiply by 150 to scroll faster.
             if(delta === 1 || delta === -1){
                 delta *= 150;
             }
-            this.scrollTop -= delta;
+            codeColumn.scrollTop -= delta;
             handleGithubPopup(true);
             event.preventDefault();  
         }            
-    });
-
-    // Handle collapsing the table of contents from full width into the hamburger
-    $('#close_container').on('click', function(event){
-         // Hide the X button
-        $(this).hide();
-
-        // Show the hamburger button and adjust the header to accomodate it
-        $('#breadcrumb_hamburger').addClass('showHamburger');
-        $('#breadcrumb_row .breadcrumb').addClass('breadcrumbWithHamburger');
-        
-        $("#toc_title").css('margin-top', '20px');        
-
-        // Remove display type from the table of contents
-        $("#toc_column").removeClass('inline');
-
-        // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
-        $("#guide_column").addClass('expanded');
     });
 
     // Set the github clone popup top value to the same as the what you'll learn section.
@@ -283,27 +320,39 @@ $(document).ready(function() {
     
 
     /* Copy button for the github clone command  that pops up initially when opening a guide. */
-    $("#github_clone_popup_copy").click(function(event){
+    $("#github_clone_popup_copy, #mobile_github_clone_popup_copy").click(function(event){
         event.preventDefault();
         target = $("#github_clone_popup_repo").get(0);
-        window.getSelection().selectAllChildren(target); // Set the github clone command as the copy target.
-        if(document.execCommand('copy')) {
-            window.getSelection().removeAllRanges();
-            $("#github_clone_popup_container").fadeOut("slow");
-            $(".code_column").removeClass('dimmed_code_column', {duration:400});
-        } else {
-            alert('Copy failed. Copy the command manually: ' + target.innerText);
-        }        
+        // IE
+        if(window.clipboardData){
+            window.clipboardData.setData("Text", target.innerText);
+        } 
+        else{
+            var temp = $('<div>');
+            temp.css({
+                position: "absolute",
+                left:     "-1000px",
+                top:      "-1000px",
+            });
+            // Create a temporary element for copying the text.
+            temp.text(target.innerText);
+            $("body").append(temp);
+            var range = document.createRange();
+            range.selectNodeContents(temp.get(0));
+            selection = window.getSelection();
+            selection.removeAllRanges(); // Remove previous selections
+            selection.addRange(range);
+            
+            // Try to copy the selection and if it fails display a popup to copy manually.
+            if(document.execCommand('copy')) {                
+                $("#github_clone_popup_container").fadeOut("slow");
+                $(".code_column").removeClass('dimmed_code_column', {duration:400});
+            } else {
+                alert('Copy failed. Copy the command manually: ' + target.innerText);
+            } 
+            temp.remove(); // Remove temporary element.
+        }               
     });
-
-    function handleDownArrow() {
-        if($(window).width() < 1171){
-            $("#down_arrow").hide();
-            return;
-        }
-        var atTop = $(window).scrollTop() === 0;
-        atTop ? $("#down_arrow").fadeIn() : $("#down_arrow").fadeOut();
-    }
 
     /*
        Handle showing/hiding the Github popup.
@@ -321,7 +370,10 @@ $(document).ready(function() {
                 }
                 atTop = $("#code_column").scrollTop() === 0;
             } else {
-                atTop = $(window).scrollTop() === 0;
+                // Check if the "What You'll Learn" section is scrolled past yet.
+                var whatYoullLearnTop = $("#what-youll-learn, #what-you-ll-learn")[0].getBoundingClientRect().top;
+                var navHeight = $('.navbar').height();
+                atTop = (whatYoullLearnTop - navHeight) > 0;
             }
             if(atTop){
                 githubPopup.fadeIn();
@@ -334,220 +386,64 @@ $(document).ready(function() {
         }                
     }
 
-    // TABLE OF CONTENT
-    //
-    // Keep the table of content (TOC) in view while scrolling (Desktop only)
-    //
-    function handleFloatingTableOfContent() {
-        if($(window).width() > 1440) {
-            // CURRENTLY IN 3 COLUMN VIEW
-            if($(window).scrollTop() >= $('#toc_column').offset().top) {
-                // The top of the TOC is scrolling off the screen, enable floating TOC.                
-                if(isBackgroundBottomVisible()) {
-                    handleTOCScrolling();
-                } else {
-                    // The entire viewport is filled with the background, so
-                    // do not need to worry about the TOC flowing out of the background.
-                    enableFloatingTOC();
-                }
-            } else {
-                // TOC no longer needs to float,
-                // remove all the custom styling for floating TOC
-                disableFloatingTOC();
+    // Hide other code blocks and show the correct code block based on provided id.
+    function showCorrectCodeBlock(id) {
+        try{
+            var code_block = code_sections[id];
+            if(code_block){
+                $('#code_column .code_column').not(code_block).hide();
+                code_block.show();
             }
-        } else {
-            // CURRENTLY IN MOBILE VIEW OR 2 COLUMN VIEW
-            // Remove any floating TOC
-            disableFloatingTOC();
-        }
-    }
-
-    function disableFloatingTOC() {
-        $('#toc_inner').width("").css({"position": "", "top": ""});
-    }
-
-    function enableFloatingTOC() {
-        $('#toc_inner').css({"position":"fixed", "top":"100px"});
-    }
-
-    // Handle when the table of content (TOC) is too small to fit completely in the dark background.
-    // We want to give the end result of the bottom of the TOC sticks to the bottom of the dark background
-    // and the top of the TOC scrolls off screen.
-    function handleTOCScrolling() {
-        var visible_background_height = heightOfVisibleBackground();
-        var toc_height = $('#toc_inner').height();
-        if(toc_height > visible_background_height) {
-            // The TOC cannot fit in the dark background, allow the TOC to scroll out of viewport
-            // to avoid the TOC overflowing out of the dark background
-            var negativeNumber = visible_background_height - toc_height + 100;
-            $('#toc_inner').css({"position":"fixed", "top":negativeNumber});
+        } catch(e) {
+            console.log(e);
         }
     }
 
     // Slow the scrolling over section headers in the guide
     function handleSectionSnapping(event){
-        var origEvent = event.originalEvent;
-        var target = origEvent.target;
-        var dir = (origEvent.deltaY) < 0 ? 'up' : 'down';
-        var delta = origEvent.wheelDelta || -origEvent.detail || -origEvent.deltaY;
         // Multipane view
         if($(window).width() > twoColumnBreakpoint) {
-            var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2');
-            sections.each(function(index){
-                var elem = sections.get(index);
-                var rect = elem.getBoundingClientRect();
-                var elemTop = rect.top - 100; // Offset by the sticky header's height
-                var elemBottom = rect.bottom;
+            var id = getScrolledVisibleSectionID(event);
+            if (id !== null) {
+                var windowHash = window.location.hash;
+                var scrolledToHash = id === "" ? id : '#' + id;
+                if (windowHash !== scrolledToHash) {
+                    // Update the URL hash with new section we scrolled into....
+                    var currentPath = window.location.pathname;
+                    var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + scrolledToHash;
+                    // Not setting window.location.hash here because that causes an
+                    // onHashChange event to fire which will scroll to the top of the
+                    // section.  pushState updates the URL without causing an
+                    // onHashChange event.
+                    history.pushState(null, null, newPath);
 
-                // Check if the next section in the direction the user is scrolling shows up
-                var isVisible;
-                if(dir === 'down'){
-                    // Element top is visible and bottom is not visible
-                    isVisible = elemTop < window.innerHeight && elemBottom >= window.innerHeight;
-                } else if(dir === 'up'){
-                    // isVisible = elemBottom >= 0 && elemBottom < window.innerHeight;
-                    isVisible = elemBottom >= 0 && elemBottom < window.innerHeight;
+                    // Update the selected TOC entry
+                    updateTOCHighlighting(id);
+
+                    // Match the code block on the right to the new id
+                    showCorrectCodeBlock(id);
                 }
-
-                if(isVisible){
-                    // Remove previous TOC section highlighted and highlight correct step
-                    updateTOCHighlighting(this.id);
-
-                    // Scroll to the section coming into view if scrolling down the page
-                    // if(dir === 'down' || (dir === 'up' && elemTop < 0)){
-                        // const y = elemTop + window.scrollY;
-                        // $('html, body').stop().animate({
-                        //     scrollTop: y,
-                        //     easing: 'linear'
-                        // });
-                    // }                       
-
-                    // Hide other code blocks and show the correct code block.
-                    var id = elem.id;
-                    try{
-                        var code_block = code_sections[id].code;
-                        var fromLine = code_sections[id].fromLine,
-                            toLine = code_sections[id].toLine; // To be used in the future when we have designs for highlighting a range of lines.
-                        $('#code_column .code_column').not(code_block).hide();
-                        code_block.show();
-        
-                        // Scroll to the line in the code column if a line number is given
-                        if(fromLine){
-                            // var target = code_block.find('.line-numbers:contains(' + fromLine + ')').first();                         
-                            // $('#code_column').animate({
-                            //     scrollTop: target.offset().top
-                            // }, 500);
-                        } else {
-                            $('#code_column').scrollTop('0');
-                        }   
-                    } catch(e) {
-                        console.log(e);
-                    }
-
-                    return false; // Break out of loop        
-                }             
-            });      
-        }            
-    };
-
-    function updateTOCHighlighting(id){
-        // Remove previous TOC section highlighted and highlight correct step
-        $('.liSelected').removeClass('liSelected');
-        var anchor = $("#toc_container a[href='#" + id + "']");
-        anchor.parent().addClass('liSelected');
-    }
-
-    $("#toc_container a").on('click', function(event){
-        var id = this.hash.substring(1);
-        updateTOCHighlighting(id);
-        handleFloatingTableOfContent();        
-    });
-
-    // Adjust the window for the sticky header when clicking on a section anchor.
-    function shiftWindow() {
-        scrollBy(0, -100);
-    };
-    if (location.hash){
-        shiftWindow();
-        handleFloatingTableOfContent();
-    } 
-    window.addEventListener("hashchange", function(){
-        shiftWindow();
-    });
-
-    // Resize the guide sections so that there is clear separation between each section and the code column transitions better.
-    function resizeGuideSections(){
-        // Two column view or three column view.
-        if($(window).width() > twoColumnBreakpoint){
-            var viewportHeight = window.innerHeight;
-            var headerHeight = $('header').height();
-            var sectionTitleHeight = $("#guide_content h2").first().height();
-            var newSectionHeight = viewportHeight - headerHeight - (2 * sectionTitleHeight);
-            $('.sect1:not(#guide_meta):not(#related-guides)').css({
-                'min-height': newSectionHeight + 'px'
-            });
-        }
-        // Use initial height for single column view / mobile
-        else {
-            $('.sect1:not(#guide_meta):not(#related-guides)').css({
-                'min-height': 'initial'
-            });
-        }
-    };    
-
-    // Copies over content that should be shown in a different section than where it is generated by the asciidoc.
-    function createEndOfGuideContent(){
-        var leftSide = $("#end_of_guide_left_section");
-        var rightSide = $("#end_of_guide_right_section");
-
-        var whatYouLearned = $("#great-work-you-re-done").siblings().find('p').clone();
-        leftSide.prepend(whatYouLearned);
-        $("#great-work-you-re-done").parent().remove(); // Remove section from the main guide column.
-        $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
-
-        var relatedLinks = $("#related-links").siblings().find('p').clone();
-        rightSide.append(relatedLinks);
-        $("#related-links").parent().remove(); // Remove section from the main guide column.
-        $("#toc_container a[href='#related-links']").parent().remove(); // Remove from TOC.
-    }
-
-    function addGuideRatingsListener(){
-        $("#feedback_ratings img").on('click', function(event){
-            var rating = $(this).data('guide-rating');
-            // Send rating to google analytics
-            // The first parameter '1' is the slot for the custom variable
-            // The last parameter '3' is opt_scope is which is page level storage
-            if(typeof ga === "function"){
-                ga(1, "Guide Review", rating, 3);
             }
-            $("#feedback_ratings img").not($(this)).css('opacity', '.25');
-            $(this).css('opacity', '1');
-        });
-    }    
-
-    $(window).on('resize', function(){
-        handleFloatingTableOfContent(); // Handle table of content view changes.
-        handleDownArrow();
-        resizeGuideSections();
-        handleFloatingCodeColumn();
-    });
-
+        }
+    }
     $(window).on('scroll', function(event) {
         handleGithubPopup(false);
-        handleDownArrow();
-        handleFloatingTableOfContent();        
-        handleSectionSnapping(event); 
-        handleFloatingCodeColumn(); 
+        handleSectionSnapping(event);
     });
 
     $(window).on('load', function(){
-        if(window.location.hash === ""){
-            handleGithubPopup();            
-        }        
-        handleFloatingTableOfContent();        
         resizeGuideSections();
         createEndOfGuideContent();
-        addGuideRatingsListener();
-        handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
+
+        if (location.hash){
+            handleFloatingTableOfContent();
+            var hash = location.hash;
+            accessContentsFromHash(hash);
+            showCorrectCodeBlock(hash.substring(1));  // Remove the '#' in front of the id
+        }
+
+        if(window.location.hash === ""){
+            handleGithubPopup();
+        }
     });
 });
