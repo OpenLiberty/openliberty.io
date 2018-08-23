@@ -112,39 +112,50 @@ function handleFloatingCodeColumn() {
         }
     }
 }
-
-/* Find the section that is most visible in the viewport and return the id */
+/**
+ * Find the section that is most visible in the viewport and return the id.
+ * Returns "" (empty string, not NULL) if the window scrollTop is within the
+ * guide's meta.
+ */
 function getScrolledVisibleSectionID(event) {
     var id = null;
     var maxVisibleSectionHeight = 0;
 
     // Multipane view
-    if ($(window).width() > twoColumnBreakpoint) {        
-        // Find the height of each section that has no subsections and the height of subsections and return the max.
+    if ($(window).width() > twoColumnBreakpoint) {
         var sections = $('.sect1:not(#guide_meta):not(#related-guides):not(:has(.sect2)), .sect2');
-        sections.each(function(index) {
-            var elem = $(sections.get(index));
-            var windowHeight   = $(window).height();
-            var elemHeight = elem.outerHeight();
-            var rect = elem[0].getBoundingClientRect();
-            var top = rect.top;
-            var bottom = rect.bottom;
-            var visibleElemHeight = 0;
-            if(top > 0){
-                 // Top of element is below the top of the viewport
-                 // Calculate the visible element height as the min of the whole element (if the whole element is in the viewport) and the top of the element to the bottom of the window (if only part of the element is visible and extends beyond the bottom of the viewport).
-                 visibleElemHeight = Math.min(elemHeight, windowHeight - top);
-            }
-            else {
-                // Top of element is at or above the top of the viewport
-                // Calculate the visible element height as the min between the bottom (if the element starts above the viewport and ends before the bottom of the viewport) or the windowHeight(the element extends beyond the top and bottom of viewport in both diretions).
-                visibleElemHeight = Math.min(bottom, windowHeight);
-            }
-            if(visibleElemHeight > maxVisibleSectionHeight){
-                maxVisibleSectionHeight = visibleElemHeight;
-                id = elem.children('h2, h3')[0].id;
-            }
-        });
+        var navHeight = $('.navbar').height();
+        var topBorder = $(sections[0]).offset().top - navHeight;  // Border point between
+                                                                  // guide meta and 1st section
+        if ($(window).scrollTop() < topBorder) {
+            // scroll is within guide meta.
+            id = "";
+        } else {
+            // Find the height of each section that has no subsections and the height of subsections and return the max.
+            sections.each(function(index) {
+                var elem = $(sections.get(index));
+                var windowHeight   = $(window).height();
+                var elemHeight = elem.outerHeight();
+                var rect = elem[0].getBoundingClientRect();
+                var top = rect.top;
+                var bottom = rect.bottom;
+                var visibleElemHeight = 0;
+                if(top > 0){
+                     // Top of element is below the top of the viewport
+                     // Calculate the visible element height as the min of the whole element (if the whole element is in the viewport) and the top of the element to the bottom of the window (if only part of the element is visible and extends beyond the bottom of the viewport).
+                     visibleElemHeight = Math.min(elemHeight, windowHeight - top);
+                }
+                else {
+                    // Top of element is at or above the top of the viewport
+                    // Calculate the visible element height as the min between the bottom (if the element starts above the viewport and ends before the bottom of the viewport) or the windowHeight(the element extends beyond the top and bottom of viewport in both diretions).
+                    visibleElemHeight = Math.min(bottom, windowHeight);
+                }
+                if(visibleElemHeight > maxVisibleSectionHeight){
+                    maxVisibleSectionHeight = visibleElemHeight;
+                    id = elem.children('h2, h3')[0].id;
+                }
+            });
+        }
     }
     return id;
 }
