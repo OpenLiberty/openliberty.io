@@ -427,6 +427,10 @@ $(document).ready(function() {
         }
     }
     $(window).on('scroll', function(event) {
+        // Check if a scroll animation from another piece of code is taking place and prevent normal behavior.
+        if($("body").data('scrolling') === true){
+            return;
+        }
         handleGithubPopup(false);
         handleSectionSnapping(event);
     });
