@@ -403,7 +403,7 @@ $(document).ready(function() {
     function handleSectionSnapping(event){
         // Multipane view
         if($(window).width() > twoColumnBreakpoint) {
-            var id = getScrolledVisibleSectionID(event);
+            var id = getScrolledVisibleSectionID();
             if (id !== null) {
                 var windowHash = window.location.hash;
                 var scrolledToHash = id === "" ? id : '#' + id;

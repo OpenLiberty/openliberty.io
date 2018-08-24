@@ -11,6 +11,7 @@
 // The background is shortened by 200px
 var backgroundSizeAdjustment = 200;
 var twoColumnBreakpoint = 1170;
+var threeColumnBreakpoint = 1440;
 
 function inSingleColumnView(){
     return($(window).width() <= twoColumnBreakpoint);
@@ -117,7 +118,7 @@ function handleFloatingCodeColumn() {
  * Returns "" (empty string, not NULL) if the window scrollTop is within the
  * guide's meta.
  */
-function getScrolledVisibleSectionID(event) {
+function getScrolledVisibleSectionID() {
     var id = null;
     var maxVisibleSectionHeight = 0;
 
