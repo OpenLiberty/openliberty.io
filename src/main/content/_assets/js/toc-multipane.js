@@ -102,7 +102,7 @@ function handleFloatingTOCAccordion() {
  * @param {*} liElement TOC entry selected  
  * @param {*} event       
  */
-function TOCentryClick(liElement, event) {
+function TOCEntryClick(liElement, event) {
     // 'this' is the li element in the #toc_container.  
     // Its first child is the anchor tag pointing to the id of the section to go to.
     var hash = $(liElement).find('a').prop('hash');
@@ -132,8 +132,19 @@ function TOCentryClick(liElement, event) {
 
 }
 
+// Restructure the TOC because Asciidoc nests levels in the TOC and it creates bad CSS behavior.
+function reorganizeTOCElements(){
+    $('#toc_column .sectlevel2').each(function(){
+        var li = $(this).parent();
+        var sectlevel2 = $(this).detach();
+        li.after(sectlevel2);
+    });
+}
+
 
 $(document).ready(function() {
+
+    reorganizeTOCElements();
     
     $("#breadcrumb_hamburger").on('click', function(event){
         // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
@@ -182,7 +193,7 @@ $(document).ready(function() {
     // to set the same handlers there.
     $("#toc_container li").on('click', function(event) {
         // 'this' is the li element in the #toc_container
-        TOCentryClick(this, event);
+        TOCEntryClick(this, event);
     });
     $("#toc_container li").on("keydown", function(event) {
         // 'this' is the li element in the #toc_container

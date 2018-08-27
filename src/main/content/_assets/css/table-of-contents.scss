@@ -129,19 +129,41 @@
     margin-top: 4px;
 }
 
-#toc_container > .sectlevel1 > li, #toc_container .sectlevel2 > li {
-    list-style: none;
-    font-weight: 300;
-    color: #5D6A8E;
-    font-size: 14px;
-    min-height: 30px;
-    border-left: 8px solid transparent;
-    padding-left: 19px;
-    padding-right: 19px;
-    word-wrap: break-word;
+#toc_container {
+    .sectlevel1 > li, .sectlevel2 > li {
+        list-style: none;
+        font-weight: 300;
+        color: #5D6A8E;
+        font-size: 14px;
+        min-height: 30px;
+        border-left: 8px solid transparent;        
+        word-wrap: break-word;
+    }
+
+    .sectlevel1 > li {
+        padding-left: 19px;
+        padding-right: 19px;
+    }    
+
+    .sectlevel2 {
+        padding-left: 0;
+    }
+
+    .sectlevel1 .sectlevel2 > li {
+        padding-left: 22px;        
+    }
 }
 
-#toc_container > .sectlevel1 > li:not(.liSelected):hover, #toc_container .sectlevel2 > li:hover {
+/* After the sectlevel2 have been shifted to be at the same level as the sectlevel1 li */
+#toc_container .sectlevel1 > .sectlevel2 {
+    padding-left: 0;
+
+    > li {
+        padding-left: 49px;
+    }
+}
+
+#toc_container > .sectlevel1 > li:not(.liSelected):hover, #toc_container .sectlevel2 > li:not(.liSelected):hover {
     border-left: 8px solid #fdf2ea;
     font-weight: 500;
     cursor: pointer;
