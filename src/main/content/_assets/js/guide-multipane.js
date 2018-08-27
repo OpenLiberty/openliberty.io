@@ -402,8 +402,8 @@ $(document).ready(function() {
     // Slow the scrolling over section headers in the guide
     function handleSectionSnapping(event){
         // Multipane view
-        if($(window).width() > twoColumnBreakpoint) {
-            var id = getScrolledVisibleSectionID();
+        if(window.innerWidth > twoColumnBreakpoint) {
+            var id = getScrolledVisibleSectionID(event);
             if (id !== null) {
                 var windowHash = window.location.hash;
                 var scrolledToHash = id === "" ? id : '#' + id;

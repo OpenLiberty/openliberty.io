@@ -10,7 +10,7 @@
  *******************************************************************************/
 // Keep the table of contents (TOC) in view while scrolling (Desktop only)
 function handleFloatingTableOfContent() {
-    if ($(window).width() >= threeColumnBreakpoint) {
+    if (window.innerWidth >= threeColumnBreakpoint) {
         // CURRENTLY IN 3 COLUMN VIEW
         // The top of the TOC is scrolling off the screen, enable floating TOC.
         if(isBackgroundBottomVisible()) {
@@ -137,7 +137,7 @@ $(document).ready(function() {
     
     $("#breadcrumb_hamburger").on('click', function(event){
         // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
-        if($(window).width() >= threeColumnBreakpoint){
+        if(window.innerWidth >= threeColumnBreakpoint){
             if ($("#toc_column").hasClass('in')) {
                 // TOC is expanded
                 $("#guide_column").addClass('expanded');
