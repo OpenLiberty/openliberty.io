@@ -1,3 +1,7 @@
 {% if jekyll.environment == 'production' and site.google_tag_manager %}
     {% include google_tag_manager_body.html %}
 {% endif %}
+
+{% if jekyll.environment != 'production' %}
+    {% include analytics_DBDM.html %}
+{% endif %}
