@@ -14,7 +14,7 @@ var twoColumnBreakpoint = 1170;
 var threeColumnBreakpoint = 1440;
 
 function inSingleColumnView(){
-    return($(window).width() <= twoColumnBreakpoint);
+    return(window.innerWidth <= twoColumnBreakpoint);
 }
 
 function inMobile(){
@@ -77,7 +77,7 @@ function isBackgroundBottomVisible() {
 // in two and three column view at least as tall as the viewport.
 function resizeGuideSections() {
         // Two column view or three column view.
-    if ($(window).width() > twoColumnBreakpoint) {
+    if (window.innerWidth > twoColumnBreakpoint) {
         var viewportHeight = window.innerHeight;
         var headerHeight = $('header').height();
         var sectionTitleHeight = $("#guide_content h2").first().height();
@@ -95,7 +95,7 @@ function resizeGuideSections() {
 }
 
 function handleFloatingCodeColumn() {
-    if($(window).width() > twoColumnBreakpoint) {
+    if(window.innerWidth > twoColumnBreakpoint) {
         // CURRENTLY IN DESKTOP VIEW
         if(isBackgroundBottomVisible()) {
             // Set the bottom of the code column to the distance between the top of the end of guide section and the bottom of the page.
@@ -123,7 +123,7 @@ function getScrolledVisibleSectionID() {
     var maxVisibleSectionHeight = 0;
 
     // Multipane view
-    if ($(window).width() > twoColumnBreakpoint) {
+    if (window.innerWidth > twoColumnBreakpoint) {
         var sections = $('.sect1:not(#guide_meta):not(#related-guides):not(:has(.sect2)), .sect2');
         var navHeight = $('.navbar').height();
         var topBorder = $(sections[0]).offset().top - navHeight;  // Border point between
@@ -261,7 +261,7 @@ function defaultToFirstPage() {
 
 $(document).ready(function() {
     function handleDownArrow() {
-        if ($(window).width() < 1171) {
+        if (window.innerWidth <= twoColumnBreakpoint) {
             $("#down_arrow").hide();
             return;
         }
