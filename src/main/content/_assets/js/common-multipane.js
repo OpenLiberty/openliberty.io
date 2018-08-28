@@ -85,6 +85,16 @@ function resizeGuideSections() {
         $('.sect1:not(#guide_meta):not(#related-guides)').css({
                 'min-height': newSectionHeight + 'px'
         });
+        if(window.innerWidth >= threeColumnBreakpoint){
+            // In three column view set the width of the #guide_column appropriately.
+            if ($("#toc_column").hasClass('in') || $("#toc_column").hasClass('inline')) {
+                // TOC is expanded.  Adjust #guide_column width to account for TOC column.
+                $("#guide_column").removeClass('expanded');
+            } else {
+                // TOC is closed.  Maximize width of #guide_column.
+                $("#guide_column").addClass('expanded');
+            }
+        }
     }
     // Use initial height for single column view / mobile
     else {
