@@ -132,7 +132,7 @@ function TOCEntryClick(liElement, event) {
 
 }
 
-// Restructure the TOC because Asciidoc nests levels in the TOC and it creates bad CSS behavior.
+// Restructure the TOC because Asciidoc nests levels in the TOC and it affects the CSS poorly.
 function reorganizeTOCElements(){
     $('#toc_column .sectlevel2').each(function(){
         var li = $(this).parent();
