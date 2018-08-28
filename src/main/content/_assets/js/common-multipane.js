@@ -134,15 +134,36 @@ function getScrolledVisibleSectionID() {
 
     // Multipane view
     if (window.innerWidth > twoColumnBreakpoint) {
+        // Look for any sect1 that has a sect2 subsection, where the sect1 is at the top of the page
+        var sect1s = $('.sect1:not(#guide_meta):not(#related-guides):has(.sect2)');
         var sections = $('.sect1:not(#guide_meta):not(#related-guides), .sect2');
-        var topBorder = $('#guide_meta').outerHeight();  // Border point between
-                                                         // guide meta and 1st section
-        if ($(window).scrollTop() <= topBorder) {
+        var navHeight = $('.navbar').height();
+        var topBorder = $(sections[0]).offset().top - navHeight;  // Border point between
+                                                                  // guide meta and 1st section
+        if ($(window).scrollTop() < topBorder) {
             // scroll is within guide meta.
             id = "";
         } else {
             // Determine which section has the majority of the vertical height on 
             // the page.
+            sect1s.each(function(index){
+                var elem = $(this);
+                var rect = elem[0].getBoundingClientRect();
+                var navHeight = $('.navbar').height();
+                var top = rect.top;
+                if(top >= 0 && top <= navHeight){
+                    // Section is at the top of the page
+                    id = elem.children('h2, h3')[0].id;
+                    return false; // Break out of the loop.
+                }
+            });
+
+            if(id){
+                // Return the section id that contains subsections if it is displayed at the top.
+                return id;
+            }
+
+            // Find the height of each section that has no subsections and the height of subsections and return the max.
             sections.each(function(index) {
                 var elem = $(sections.get(index));
                 var windowHeight = $(window).height();
@@ -240,9 +261,9 @@ function accessContentsFromHash(hash) {
             scrollSpot -= stickyHeaderAdjustment;
         }
         $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
-        $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
+        $("html, body").first().animate({scrollTop: scrollSpot}, 400, function() {            
             // Callback after animation.  Change the focus.
-            $focusSection.focus();
+            $focusSection.focus();            
             // Check if the section was actually focused
             if ($focusSection.is(":focus")) {
                 return false;
@@ -252,8 +273,8 @@ function accessContentsFromHash(hash) {
                 // but not via sequential keyboard navigation.
                 $focusSection.attr('tabindex', '-1');
                 $focusSection.focus();                
-            }        
-            $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again. 
+            }    
+            $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again.
         });
     } else {
         defaultToFirstPage();
