@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-$(window).on('load', function() {
+$(document).ready(function() {
 
     var title_key = 1;
     var description_key = 2;
