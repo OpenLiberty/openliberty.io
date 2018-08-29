@@ -134,22 +134,31 @@ function getScrolledVisibleSectionID() {
 
     // Multipane view
     if (window.innerWidth > twoColumnBreakpoint) {
-        var sections = $('.sect1:not(#guide_meta):not(#related-guides):not(:has(.sect2)), .sect2');
-        var navHeight = $('.navbar').height();
-        var topBorder = $(sections[0]).offset().top - navHeight;  // Border point between
-                                                                  // guide meta and 1st section
-        if ($(window).scrollTop() < topBorder) {
+        var sections = $('.sect1:not(#guide_meta):not(#related-guides), .sect2');
+        var topBorder = $('#guide_meta').outerHeight();  // Border point between
+                                                         // guide meta and 1st section
+        if ($(window).scrollTop() <= topBorder) {
             // scroll is within guide meta.
             id = "";
         } else {
-            // Find the height of each section that has no subsections and the height of subsections and return the max.
+            // Determine which section has the majority of the vertical height on 
+            // the page.
             sections.each(function(index) {
                 var elem = $(sections.get(index));
-                var windowHeight   = $(window).height();
+                var windowHeight = $(window).height();
+
                 var elemHeight = elem.outerHeight();
                 var rect = elem[0].getBoundingClientRect();
                 var top = rect.top;
                 var bottom = rect.bottom;
+                if (elem.find('.sect2').length > 0) {
+                    // Section contains a subsection.  It's height should end
+                    // where the subsection begins.
+                    var sect2s = elem.find('.sect2');
+                    bottom = sect2s[0].getBoundingClientRect().top;
+                    elemHeight = bottom - top;
+                } 
+
                 var visibleElemHeight = 0;
                 if(top > 0){
                      // Top of element is below the top of the viewport
