@@ -138,7 +138,7 @@ function getScrolledVisibleSectionID() {
         var sect1s = $('.sect1:not(#guide_meta):not(#related-guides):has(.sect2)');
         var sections = $('.sect1:not(#guide_meta):not(#related-guides), .sect2');
         var navHeight = $('.navbar').height();
-        var topBorder = $(sections[0]).offset().top - navHeight;  // Border point between
+        var topBorder = $("#guide_meta").height() - navHeight;  // Border point between
                                                                   // guide meta and 1st section
         if ($(window).scrollTop() < topBorder) {
             // scroll is within guide meta.
@@ -146,14 +146,23 @@ function getScrolledVisibleSectionID() {
         } else {
             // Determine which section has the majority of the vertical height on 
             // the page.
-            sect1s.each(function(index){
+            sect1s.each(function(){
                 var elem = $(this);
-                var rect = elem[0].getBoundingClientRect();
                 var navHeight = $('.navbar').height();
-                var top = rect.top;
-                if(top >= 0 && top <= navHeight){
+                var elemHeader = elem.find('h2').first();
+                var elemHeaderHeight = elemHeader.height();
+                var elemHeaderTop = elemHeader.offset().top - navHeight;
+
+                
+                var scrollTop = $(window).scrollTop();
+                // var rect = elem[0].getBoundingClientRect();
+                // var sect2 = elem.find('.sect2')[0]; // Find the first sect2 to calculate the distance from the top.
+                // var sect2Top = sect2.getBoundingClientRect().top;                
+                // var top = rect.top - navHeight;
+
+                if(scrollTop >= elemHeaderTop && scrollTop <= (elemHeaderTop + elemHeaderHeight)){
                     // Section is at the top of the page
-                    id = elem.children('h2, h3')[0].id;
+                    id = elemHeader[0].id;
                     return false; // Break out of the loop.
                 }
             });
@@ -164,8 +173,8 @@ function getScrolledVisibleSectionID() {
             }
 
             // Find the height of each section that has no subsections and the height of subsections and return the max.
-            sections.each(function(index) {
-                var elem = $(sections.get(index));
+            sections.each(function() {
+                var elem = $(this);
                 var windowHeight = $(window).height();
 
                 var elemHeight = elem.outerHeight();
