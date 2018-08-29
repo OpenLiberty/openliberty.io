@@ -25,7 +25,7 @@ permalink: /guides/
 
 <!-- Basic guides -->
 {% assign basic-guides = all-guides | where: 'guide-category', 'basic' | where: 'essential', false | sort: 'releasedate' | reverse %}
-{% assign basic-essential-guides = all-guides | where: 'guide-category', 'basic' | where: 'essential', true | sort: 'releasedate' | reverse %}
+{% assign basic-essential-guides = all-guides | where: 'guide-category', 'basic' | where: 'essential', true | sort: 'essential-order' %}
 
 <!-- Microprofile guides -->
 {% assign microprofile-guides = all-guides | where: 'guide-category', 'microprofile' | where: 'essential', false | sort: 'releasedate' | reverse %}
