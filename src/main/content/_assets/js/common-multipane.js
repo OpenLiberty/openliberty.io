@@ -137,7 +137,7 @@ function checkForInertialScrolling (event){
     }
     var originalDelta = origEvent.wheelDelta || -origEvent.detail || -origEvent.deltaY;
     // var delta = originalDelta;
-    var delta = origEvent.wheelDelta / 6 || -origEvent.detail / 3 || -origEvent.deltaY;
+    var delta = origEvent.wheelDelta / 8 || -origEvent.detail * 6 || -origEvent.deltaY;
 
     // If scrolling down, check if the section header is coming into view
     if(dir && dir == 'down'){
