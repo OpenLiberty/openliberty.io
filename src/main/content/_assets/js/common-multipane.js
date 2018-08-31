@@ -12,7 +12,6 @@
 var backgroundSizeAdjustment = 200;
 var twoColumnBreakpoint = 1170;
 var threeColumnBreakpoint = 1440;
-// var scrollLock = false;
 
 function inSingleColumnView(){
     return(window.innerWidth <= twoColumnBreakpoint);
@@ -135,9 +134,7 @@ function checkForInertialScrolling (event){
         // Firefox
         dir = (origEvent.detail) > 0 ? 'down' : 'up';
     }
-    var originalDelta = origEvent.wheelDelta || -origEvent.detail || -origEvent.deltaY;
-    // var delta = originalDelta;
-    var delta = origEvent.wheelDelta / 8 || -origEvent.detail * 6 || -origEvent.deltaY;
+    var delta = origEvent.wheelDelta || -origEvent.detail || -origEvent.deltaY;
 
     // If scrolling down, check if the section header is coming into view
     if(dir && dir == 'down'){
@@ -152,20 +149,18 @@ function checkForInertialScrolling (event){
             var bottom = rect.bottom;
 
             var sectionOutOfView = (top > windowHeight);
-            var sectionWillBeScrolledPast = ((top + originalDelta) > 0) && ((top + originalDelta) < windowHeight) && ((bottom + originalDelta) < windowHeight);
+            var sectionWillBeScrolledPast = ((top + delta) > 0) && ((top + delta) < windowHeight) && ((bottom + delta) < windowHeight);
 
             // Check if part of a new section is coming into view or if the original scroll event would have scrolled past a section start.
             if((top > 0 && top < windowHeight && bottom > windowHeight) || (sectionOutOfView && sectionWillBeScrolledPast)){
                 // New section is coming into view. Start slowing down scrolling.
-                // Check if scroll delta is at least a certain amount before stopping the default scroll, to allow for trackpad acceleration. If each scroll event.preventDefault() is called while scrolling on a trackpad, the delta is too small and the trackpad acceleration does not take place.
-                if(Math.abs(delta) >= 0.25){
-                    event.preventDefault();
-                    event.stopPropagation();
-                    $('html, body').first().stop().animate({
-                        scrollTop: scrollTop - delta
-                    });   
-                    return false;
-                }
+                delta = -35;
+                event.preventDefault();
+                event.stopPropagation();
+                $('html, body').first().stop().animate({
+                    scrollTop: scrollTop - delta
+                });   
+                return false;
             }  else if(top > 0 && top < windowHeight && bottom > (windowHeight - 50) && bottom < windowHeight){
                 // Section header is fully in view with the bottom at most 50 pixels from the bottom of the viewport
                 event.preventDefault();

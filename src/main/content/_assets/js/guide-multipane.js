@@ -399,10 +399,10 @@ $(document).ready(function() {
         }
     }
 
-    // Slow the scrolling over section headers in the guide
     function handleSectionChanging(event){
         // Multipane view
         if(window.innerWidth > twoColumnBreakpoint) {
+            // Get the id of the section most in view
             var id = getScrolledVisibleSectionID();
             if (id !== null) {
                 var windowHash = window.location.hash;
