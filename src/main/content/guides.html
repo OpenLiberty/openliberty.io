@@ -25,7 +25,7 @@ permalink: /guides/
 
 <!-- Basic guides -->
 {% assign basic-guides = all-guides | where: 'guide-category', 'basic' | where: 'essential', false | sort: 'releasedate' | reverse %}
-{% assign basic-essential-guides = all-guides | where: 'guide-category', 'basic' | where: 'essential', true | sort: 'releasedate' | reverse %}
+{% assign basic-essential-guides = all-guides | where: 'guide-category', 'basic' | where: 'essential', true | sort: 'essential-order' %}
 
 <!-- Microprofile guides -->
 {% assign microprofile-guides = all-guides | where: 'guide-category', 'microprofile' | where: 'essential', false | sort: 'releasedate' | reverse %}
@@ -194,5 +194,16 @@ permalink: /guides/
             </a>
         </div>
         {% endfor %}
+    </div>
+</div>
+
+
+<!-- Zero Search Results -->
+<!-- MORE GUIDES -->
+<div id="no_search_results_container" class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h2>No Search Results</h2>
+        </div>
     </div>
 </div>

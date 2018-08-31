@@ -116,6 +116,13 @@ $(document).ready(function() {
         } else {
             $('.more_section').show();
         }
+        if(hideBasic && hideMP && hideAdditional) {
+            // All categories are hidden
+            // Show no results
+            $('#no_search_results_container').show();
+        } else {
+            $('#no_search_results_container').hide();
+        }
     }
 
     // Show everything on the guides page
