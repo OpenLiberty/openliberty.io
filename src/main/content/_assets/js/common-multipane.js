@@ -126,6 +126,9 @@ function handleFloatingCodeColumn() {
 
 /* Detect if the user has scrolled downwards into a new section and apply inertial resistence. */
 function checkForInertialScrolling (event){
+    if(inSingleColumnView()){
+        return;
+    }
     var origEvent = event.originalEvent;
     var dir;
     if(origEvent.deltaY){
