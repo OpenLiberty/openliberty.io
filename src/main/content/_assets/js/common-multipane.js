@@ -125,10 +125,9 @@ function handleFloatingCodeColumn() {
     }
 }
 
-/* Detect if the user has scrolled downwards into a new section and apply intertia resistence. */
-function checkForIntertiaScrolling (event){
+/* Detect if the user has scrolled downwards into a new section and apply inertial resistence. */
+function checkForInertialScrolling (event){
     var origEvent = event.originalEvent;
-    var target = origEvent.target;
     var dir;
     if(origEvent.deltaY){
         dir = (origEvent.deltaY) > 0 ? 'down' : 'up';
@@ -137,7 +136,8 @@ function checkForIntertiaScrolling (event){
         dir = (origEvent.detail) > 0 ? 'down' : 'up';
     }
     var originalDelta = origEvent.wheelDelta || -origEvent.detail || -origEvent.deltaY;
-    var delta = origEvent.wheelDelta / 120 || -origEvent.detail / 3 || -origEvent.deltaY;
+    // var delta = originalDelta;
+    var delta = origEvent.wheelDelta / 6 || -origEvent.detail / 3 || -origEvent.deltaY;
 
     // If scrolling down, check if the section header is coming into view
     if(dir && dir == 'down'){
@@ -161,19 +161,20 @@ function checkForIntertiaScrolling (event){
                 if(Math.abs(delta) >= 0.25){
                     event.preventDefault();
                     event.stopPropagation();
-                    $('html, body').stop().animate({
+                    $('html, body').first().stop().animate({
                         scrollTop: scrollTop - delta
-                    });                    
+                    });   
                     return false;
-                }                          
-            }  else if(top > 0 && top < windowHeight && bottom < windowHeight && bottom > (windowHeight - 200)){
+                }
+            }  else if(top > 0 && top < windowHeight && bottom > (windowHeight - 50) && bottom < windowHeight){
+                // Section header is fully in view with the bottom at most 50 pixels from the bottom of the viewport
                 event.preventDefault();
                 event.stopPropagation();
                 // Section header is now scrolled into view
                 // Snap to the top of the element
-                $('html, body').stop().animate({
+                $('html, body').first().stop().animate({
                     scrollTop: elem.offset().top - navbarHeight
-                 });                 
+                });                 
                 return false;
             }      
         });

@@ -468,7 +468,7 @@ $(document).ready(function() {
     });
 
     $(window).on('mousewheel DOMMouseScroll', function(event){
-        checkForIntertiaScrolling(event);
+        checkForInertialScrolling(event);
     });
 
     $(window).on('scroll', function(event) {
