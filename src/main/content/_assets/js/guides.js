@@ -119,9 +119,9 @@ $(document).ready(function() {
         if(hideBasic && hideMP && hideAdditional) {
             // All categories are hidden
             // Show no results
-            $('#no_search_results_container').show();
+            $('.no_results_section').show();
         } else {
-            $('#no_search_results_container').hide();
+            $('.no_results_section').hide();
         }
     }
 
