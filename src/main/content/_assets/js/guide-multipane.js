@@ -136,11 +136,24 @@ $(document).ready(function() {
         snippet.after(duplicate_code_block);
     }
 
+    // Returns the header of the element passed in. This checks if the element is in a subsection first before checking the main section header.
+    function get_header(element){
+        var header;
+        var subsection = element.parents('.sect2');
+        if(subsection.length > 0){
+            header = subsection.find('h3')[0];
+        }
+        else{
+            var section = element.parents('.sect1').first();
+            header = section.find('h2')[0];
+        }  
+        return header;
+    }
+
     // Returns the code block associated with a code hotspot.
     // Inputs: hotspot: The 'hotspot' in desktop view where hovering over the block will highlight certain lines of code in the code column relevant to what the guide is talking about.
     function get_code_block_from_hotspot(hotspot){
-        var section = hotspot.parents('.sect1').first();
-        var header = section.find('h2').get(0);
+        var header = get_header(hotspot);
         return code_sections[header.id];
     }
 
