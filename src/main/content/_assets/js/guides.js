@@ -61,9 +61,9 @@ $(document).ready(function() {
     function updateTotals(no_search_text) {
 
         // Change the label for how many guides are visible to help indicate if the view is filtered
-        var count_label = " search results";
+        var count_label = ' search results';
         if(no_search_text !== undefined && no_search_text) {
-            count_label = " guides";
+            count_label = ' guides';
             $('#microprofile_more_guides_button b').text(num_of_additional_microprofile_guides + ' additional MicroProfile Guides');
             showAllCategories();
         }
@@ -189,20 +189,20 @@ $(document).ready(function() {
         // We support searching with prefex
         // 1.  tag: <tag text>
         // 2.  Free form text
-        if(value.startsWith("tag:")) {
+        if(value.startsWith('tag:')) {
             var searchTextWithoutTag = value.substring(value.indexOf(':') + 1);
             searchTextWithoutTag = searchTextWithoutTag.trim();
-            location.search = "search=" + encodeURIComponent(searchTextWithoutTag) + "&key=tag";
+            location.search = 'search=' + encodeURIComponent(searchTextWithoutTag) + '&key=tag';
 
         } else {
             value = value.trim();
-            location.search = "search=" + encodeURIComponent(value);
+            location.search = 'search=' + encodeURIComponent(value);
         }
     }
 
     function getTotal_additional_MP_guides() {
         var label = $('#microprofile_more_guides_button b').text();
-        return label.split(" ")[0];
+        return label.split(' ')[0];
     }
 
     function init() {
@@ -235,24 +235,24 @@ $(document).ready(function() {
     }
 
     // Create popover when search bar is focused
-    $("#guide_search_input").popover({
-        container: "#guides_search_container",
+    $('#guide_search_input').popover({
+        container: '#guides_search_container',
         delay: {
-            show: "520"
+            show: '520'
         },
         content: function() {
-            return $("#popover_content").html();
+            return $('#popover_content').html();
         },
-        trigger: "focus"
+        trigger: 'focus'
     });
 
     // Click buttons to fill search bar
-    $("#guides_search_container").on('click', '.tag_button', function() {
-        var input_value = 'tag: ' + $(this).html()
-        $("#guide_search_input").val(input_value);
-        $(".tag_button").removeClass("hidden");
-        $(this).addClass("hidden");
-        $("#guide_search_input").focus();
+    $('#guides_search_container').on('click', '.tag_button', function() {
+        var input_value = 'tag: ' + $(this).html();
+        $('#guide_search_input').val(input_value);
+        $('.tag_button').removeClass('hidden');
+        $(this).addClass('hidden');
+        $('#guide_search_input').focus();
         processSearch(input_value);
     });
 
