@@ -140,13 +140,14 @@ function checkForInertialScrolling (event){
     var delta = origEvent.wheelDelta || -origEvent.detail || -origEvent.deltaY;
 
     // If scrolling down, check if the section header is coming into view
-    if(dir && dir == 'down'){
+    if(dir && dir == 'down'){        
+        var windowHeight = $(window).height();
+        var navbarHeight = $("nav").height();
+        var scrollTop = $(window).scrollTop();
+
         var section_headers = $('.sect1:not(#guide_meta) h2');
         section_headers.each(function(index) {
             var elem = $(section_headers.get(index));
-            var scrollTop = $(window).scrollTop();
-            var windowHeight = $(window).height();
-            var navbarHeight = $("nav").height();
             var rect = elem[0].getBoundingClientRect();
             var top = rect.top;
             var bottom = rect.bottom;
@@ -156,16 +157,18 @@ function checkForInertialScrolling (event){
 
             // Check if part of a new section is coming into view or if the original scroll event would have scrolled past a section start.
             if((top > 0 && top < windowHeight && bottom > windowHeight) || (sectionOutOfView && sectionWillBeScrolledPast)){
-                // New section is coming into view. Start slowing down scrolling.
-                delta = -35;
-                event.preventDefault();
-                event.stopPropagation();
-                $('html, body').first().stop().animate({
-                    scrollTop: scrollTop - delta
-                });   
-                return false;
-            }  else if(top > 0 && top < windowHeight && bottom > (windowHeight - 50) && bottom < windowHeight){
-                // Section header is fully in view with the bottom at most 50 pixels from the bottom of the viewport
+                // New section is coming into view. Slow scrolling down to a small fixed value.
+                if(Math.abs(delta) > 5){
+                    delta = -35;
+                    event.preventDefault();
+                    event.stopPropagation();
+                    $('html, body').first().stop().animate({
+                        scrollTop: scrollTop - delta
+                    }); 
+                    return false;
+                }                
+            } else if(top > 0 && top < windowHeight && bottom > (windowHeight - 100) && bottom < windowHeight){
+                // Section header is fully in view with the bottom in the last 100 pixels of the viewport.
                 event.preventDefault();
                 event.stopPropagation();
                 // Section header is now scrolled into view
