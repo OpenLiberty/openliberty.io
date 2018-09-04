@@ -465,15 +465,11 @@ $(document).ready(function() {
         } else {	
             alert('To copy press CTRL + C');	
         }	
-    });
-
-    $(window).on('mousewheel DOMMouseScroll', function(event){
-        checkForInertialScrolling(event);
-    });
+    });    
 
     $(window).on('scroll', function(event) {
         // Check if a scroll animation from another piece of code is taking place and prevent normal behavior.
-        if($("body").data('scrolling') === true){
+        if(isScrolling){
             return;
         }
         handleGithubPopup(false);

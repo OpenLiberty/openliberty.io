@@ -12,6 +12,7 @@
 var backgroundSizeAdjustment = 200;
 var twoColumnBreakpoint = 1170;
 var threeColumnBreakpoint = 1440;
+var isScrolling = false;
 
 function inSingleColumnView(){
     return(window.innerWidth <= twoColumnBreakpoint);
@@ -157,12 +158,12 @@ function checkForInertialScrolling (event){
 
             // Check if part of a new section is coming into view or if the original scroll event would have scrolled past a section start.
             if((top > 0 && top < windowHeight && bottom > windowHeight) || (sectionOutOfView && sectionWillBeScrolledPast)){
-                // New section is coming into view. Slow scrolling down to a small fixed value.
+                // New section is coming into view. Slow scrolling down to a small fixed value. Check to make sure the initial delta was over 5 because on trackpads the scrolling starts off very slow and accelerates much larger than this fixed value.
                 if(Math.abs(delta) > 5){
-                    delta = -35;
+                    delta = -50;
                     event.preventDefault();
                     event.stopPropagation();
-                    $('html, body').first().stop().animate({
+                    $('html, body').stop().animate({
                         scrollTop: scrollTop - delta
                     }); 
                     return false;
@@ -173,7 +174,7 @@ function checkForInertialScrolling (event){
                 event.stopPropagation();
                 // Section header is now scrolled into view
                 // Snap to the top of the element
-                $('html, body').first().stop().animate({
+                $('html, body').stop().animate({
                     scrollTop: elem.offset().top - navbarHeight
                 });                 
                 return false;
@@ -277,7 +278,7 @@ function shiftWindow() {
  *                      from window.location.
  */
 function accessContentsFromHash(hash) {
-    var $focusSection = $(hash);    
+    var $focusSection = $(hash);
     
     // If section is found, scroll to it
     if ($focusSection.length > 0) {        
@@ -298,10 +299,11 @@ function accessContentsFromHash(hash) {
             var stickyHeaderAdjustment = $('.container-fluid').height() || 0;
             scrollSpot -= stickyHeaderAdjustment;
         }
-        $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
+        isScrolling = true; // Prevent the default window scroll from triggering until the animation is done.
         $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
             // Callback after animation.  Change the focus.
             $focusSection.focus();
+            isScrolling = false;
             // Check if the section was actually focused
             if ($focusSection.is(":focus")) {
                 return false;
@@ -312,7 +314,6 @@ function accessContentsFromHash(hash) {
                 $focusSection.attr('tabindex', '-1');
                 $focusSection.focus();                
             }        
-            $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again. 
         });
     } else {
         defaultToFirstPage();
@@ -374,7 +375,11 @@ $(document).ready(function() {
         handleFloatingCodeColumn();
     });
 
-    $(window).on('scroll', function(event) {
+    $(window).on('mousewheel DOMMouseScroll', function(event){
+        checkForInertialScrolling(event);
+    });
+
+    $(window).on('scroll', function() {
         handleFloatingTOCAccordion();
         handleDownArrow();
         handleStickyHeader();
