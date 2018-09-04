@@ -120,6 +120,9 @@ $(document).ready(function() {
             // All categories are hidden
             // Show no results
             $('.no_results_section').show();
+
+            var search_text = $('#guide_search_input').val();
+            $('.search_term').text('"' + search_text + '"');
         } else {
             $('.no_results_section').hide();
         }
@@ -128,8 +131,8 @@ $(document).ready(function() {
     // Show everything on the guides page
     function defaultView() {
         $('.guide_column').show();
-        var no_search_test = true;
-        updateTotals(no_search_test);
+        var no_search_text = true;
+        updateTotals(no_search_text);
         collapseMicroProfileAdditionalGuides();
     }
 
