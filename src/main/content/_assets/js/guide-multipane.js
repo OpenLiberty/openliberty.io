@@ -468,10 +468,6 @@ $(document).ready(function() {
     });    
 
     $(window).on('scroll', function(event) {
-        // Check if a scroll animation from another piece of code is taking place and prevent normal behavior.
-        if(isScrolling){
-            return;
-        }
         handleGithubPopup(false);
         handleSectionChanging(event);
     });

@@ -12,7 +12,6 @@
 var backgroundSizeAdjustment = 200;
 var twoColumnBreakpoint = 1170;
 var threeColumnBreakpoint = 1440;
-var isScrolling = false;
 
 function inSingleColumnView(){
     return(window.innerWidth <= twoColumnBreakpoint);
@@ -299,11 +298,9 @@ function accessContentsFromHash(hash) {
             var stickyHeaderAdjustment = $('.container-fluid').height() || 0;
             scrollSpot -= stickyHeaderAdjustment;
         }
-        isScrolling = true; // Prevent the default window scroll from triggering until the animation is done.
         $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
             // Callback after animation.  Change the focus.
             $focusSection.focus();
-            isScrolling = false;
             // Check if the section was actually focused
             if ($focusSection.is(":focus")) {
                 return false;
