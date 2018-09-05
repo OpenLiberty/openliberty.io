@@ -430,7 +430,7 @@ $(document).ready(function() {
         }
     }
 
-    $('#guide_content pre:not(.code_command pre):not(.hotspot pre)').hover(function(event) {
+    $('#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre)').hover(function(event) {
          offset = $('#guide_column').position();	
         target = event.currentTarget;	
         var current_target_object = $(event.currentTarget);	
