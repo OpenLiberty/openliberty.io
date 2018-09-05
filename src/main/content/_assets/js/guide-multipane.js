@@ -206,8 +206,7 @@ $(document).ready(function() {
         if(hotspot.data('hovering') == false){
             return;
         }
-        var section = hotspot.parents('.sect1').first();
-        var header = section.find('h2').get(0);
+        var header = get_header_from_element(hotspot);
         var code_block = code_sections[header.id];
         if(code_block){
             var fromLine = hotspot.data('highlight_from_line');
@@ -227,8 +226,7 @@ $(document).ready(function() {
     // When the mouse leaves a code 'hotspot', remove all highlighting in the corresponding code section.
     $('.hotspot').on('mouseleave', function(event){
         $(this).data('hovering', false);
-        var section = $(this).parents('.sect1').first();
-        var header = section.find('h2').get(0);
+        var header = get_header_from_element($(this));
         var code_block = code_sections[header.id];
         if(code_block){
             remove_highlighting(code_block);
@@ -432,7 +430,7 @@ $(document).ready(function() {
         }
     }
 
-    $('#guide_content pre:not(.code_command pre):not(.hotspot pre)').hover(function(event) {
+    $('#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre)').hover(function(event) {
          offset = $('#guide_column').position();	
         target = event.currentTarget;	
         var current_target_object = $(event.currentTarget);	
