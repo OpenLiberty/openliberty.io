@@ -72,38 +72,6 @@ function isBackgroundBottomVisible() {
     return visibleBottom;
 }
 
-// Resize the guide sections so that there is clear separation between each
-// section and the code column transitions better by making the section height
-// in two and three column view at least as tall as the viewport.
-function resizeGuideSections() {
-        // Two column view or three column view.
-    if (window.innerWidth > twoColumnBreakpoint) {
-        var viewportHeight = window.innerHeight;
-        var headerHeight = $('header').height();
-        var sectionTitleHeight = $("#guide_content h2").first().height();
-        var newSectionHeight = viewportHeight - headerHeight - sectionTitleHeight;
-        $('.sect1:not(#guide_meta):not(#related-guides)').css({
-                'min-height': newSectionHeight + 'px'
-        });
-        if(window.innerWidth >= threeColumnBreakpoint){
-            // In three column view set the width of the #guide_column appropriately.
-            if ($("#toc_column").hasClass('in') || $("#toc_column").hasClass('inline')) {
-                // TOC is expanded.  Adjust #guide_column width to account for TOC column.
-                $("#guide_column").removeClass('expanded');
-            } else {
-                // TOC is closed.  Maximize width of #guide_column.
-                $("#guide_column").addClass('expanded');
-            }
-        }
-    }
-    // Use initial height for single column view / mobile
-    else {
-            $('.sect1:not(#guide_meta):not(#related-guides)').css({
-                'min-height': 'initial'
-        });
-    }
-}
-
 function handleFloatingCodeColumn() {
     if(window.innerWidth > twoColumnBreakpoint) {
         // CURRENTLY IN DESKTOP VIEW
@@ -277,6 +245,14 @@ function defaultToFirstPage() {
     history.pushState(null, null, newPath);
 }
 
+function enableDisableScrollify(){
+    if(inSingleColumnView()){
+        $.scrollify.disable();
+    } else{
+        $.scrollify.enable();
+    }
+}
+
 
 $(document).ready(function() {
     function handleDownArrow() {
@@ -311,8 +287,8 @@ $(document).ready(function() {
         handleFloatingTableOfContent(); // Handle table of content view changes.
         handleFloatingTOCAccordion();
         handleDownArrow();
-        // resizeGuideSections();
         handleFloatingCodeColumn();
+        enableDisableScrollify();
     });
 
     $(window).on('scroll', function(event) {
