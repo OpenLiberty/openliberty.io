@@ -292,7 +292,7 @@ $(document).ready(function() {
                 delta *= 150;
             }
             codeColumn.scrollTop -= delta;
-            handleGithubPopup(true);
+            handleGithubPopup();
             event.preventDefault();  
         }            
     });
@@ -361,25 +361,15 @@ $(document).ready(function() {
 
     /*
        Handle showing/hiding the Github popup.
-       @Param isCodeColumn boolean for telling if the scroll happened in the code column instead of the overall window.
     */
-    function handleGithubPopup(isCodeColumn) {
+    function handleGithubPopup() {
         // If the page is scrolled down past the top of the page then hide the github clone popup
         var githubPopup = $("#github_clone_popup_container");
         if(githubPopup.length > 0){
-            var atTop;
-            if(isCodeColumn){
-                // Only show the Github popup for the first code column
-                if(!$('#code_column .code_column:first').is(":visible")){
-                    return;
-                }
-                atTop = $("#code_column").scrollTop() === 0;
-            } else {
-                // Check if the "What You'll Learn" section is scrolled past yet.
-                var whatYoullLearnTop = $("#what-youll-learn, #what-you-ll-learn")[0].getBoundingClientRect().top;
-                var navHeight = $('.navbar').height();
-                atTop = (whatYoullLearnTop - navHeight) > 0;
-            }
+            // Check if the "What You'll Learn" section is scrolled past yet.
+            var whatYoullLearnTop = $("#what-youll-learn, #what-you-ll-learn")[0].getBoundingClientRect().top;
+            var navHeight = $('.navbar').height();
+            var atTop = (whatYoullLearnTop - navHeight) > 0;
             if(atTop){
                 githubPopup.fadeIn();
                 $("#code_column .code_column").addClass('dimmed_code_column', {duration:400});
@@ -477,7 +467,7 @@ $(document).ready(function() {
         if($("body").data('scrolling') === true){
             return;
         }
-        handleGithubPopup(false);
+        handleGithubPopup();
         handleSectionSnapping(event);
     });
 
