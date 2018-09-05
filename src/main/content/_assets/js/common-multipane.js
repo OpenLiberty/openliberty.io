@@ -311,7 +311,7 @@ $(document).ready(function() {
         handleFloatingTableOfContent(); // Handle table of content view changes.
         handleFloatingTOCAccordion();
         handleDownArrow();
-        resizeGuideSections();
+        // resizeGuideSections();
         handleFloatingCodeColumn();
     });
 
