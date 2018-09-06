@@ -240,9 +240,10 @@ function accessContentsFromHash(hash) {
             scrollSpot -= stickyHeaderAdjustment;
         }
         $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
-        $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
+        $("html").animate({scrollTop: scrollSpot}, 400, function() {
             // Callback after animation.  Change the focus.
             $focusSection.focus();
+            $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again. 
             // Check if the section was actually focused
             if ($focusSection.is(":focus")) {
                 return false;
@@ -252,8 +253,7 @@ function accessContentsFromHash(hash) {
                 // but not via sequential keyboard navigation.
                 $focusSection.attr('tabindex', '-1');
                 $focusSection.focus();                
-            }        
-            $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again. 
+            }                    
         });
     } else {
         defaultToFirstPage();
