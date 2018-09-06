@@ -9,9 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 $(document).ready(function() {
-
     var target;
-
     $('#preamble').detach().insertAfter('#duration_container');
 
     var guide_sections = [];
@@ -60,6 +58,25 @@ $(document).ready(function() {
             duplicate_code_block.appendTo('#code_column'); // Move code to the right column
         }
     });
+
+    // Map the guide sections that don't have any code sections to the previous section's code. This assumes that the first section is what you'll learn which has no code to show on the right to begin with.
+    var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2, .sect2:not(#guide_meta):not(#related-guides) > h3');
+    var first_section = sections[0];
+    var first_code_block = $("#code_column .code_column").first();
+    guide_sections.push($(first_section));
+    code_sections[first_section.id] = first_code_block;
+    
+    for(var i = 1; i < sections.length; i++){
+        var id = sections[i].id;
+        if(!code_sections[id]){
+            guide_sections.push($(sections[i]));
+            var previous_id = sections[i-1].id;
+            code_sections[id] = code_sections[previous_id];
+        }
+    }    
+
+    // Hide all code blocks except the first
+    $('#code_column .code_column:not(:first)').hide();
 
     // Highlights a block of code in a code section
     // Input code_section: The section of code to highlight.
@@ -231,22 +248,7 @@ $(document).ready(function() {
         if(code_block){
             remove_highlighting(code_block);
         }        
-    });
-   
-
-    // Map the guide sections that don't have any code sections to the previous section's code.
-    var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2, .sect2:not(#guide_meta):not(#related-guides) > h3');
-    for(var i = 1; i < sections.length; i++){
-        var id = sections[i].id;
-        if(!code_sections[id]){
-            guide_sections.push($(sections[i]));
-            var previous_id = sections[i-1].id;
-            code_sections[id] = code_sections[previous_id];
-        }
-    }
-
-    // Hide all code blocks except the first
-    $('#code_column .code_column:not(:first)').hide();
+    });       
 
     // Prevent scrolling the page when scrolling inside of the code panel, but not one of the code blocks.
     $('#code_column').on('wheel mousewheel DOMMouseScroll', function(event){
