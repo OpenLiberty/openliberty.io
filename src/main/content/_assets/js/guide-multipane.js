@@ -413,11 +413,10 @@ $(document).ready(function() {
                     history.pushState(null, null, newPath);
 
                     // Update the selected TOC entry
-                    updateTOCHighlighting(id);
-
-                    // Match the code block on the right to the new id
-                    showCorrectCodeBlock(id);
+                    updateTOCHighlighting(id);                    
                 }
+                // Match the code block on the right to the new id
+                showCorrectCodeBlock(id);
             }
         }
     }
