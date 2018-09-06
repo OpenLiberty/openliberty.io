@@ -471,8 +471,20 @@ $(document).ready(function() {
     });
 
     $(window).on('load', function(){
-        resizeGuideSections();
         createEndOfGuideContent();
+
+        // JQuery Scrollify for pagination and page snapping.
+        $.scrollify({
+            section: '.sect1',
+            interstitialSection: "#guide_meta",
+            offset : -1 * $('header').height(),
+            updateHash: false
+        });
+
+        if(inSingleColumnView()){
+            // Disable scrollify if the page is in single column view.
+            $.scrollify.disable();
+        }
 
         if (location.hash){
             handleFloatingTableOfContent();
