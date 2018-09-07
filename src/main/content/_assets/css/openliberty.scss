@@ -366,9 +366,44 @@ a {
     padding-top: 30px;
     z-index: 9999;
 
+    & #home_logo {
+        display: inline;
+        float: left;
+    }
+
+    & li {
+        font-size: 16px;
+
+        & > a {
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+
     & #learn_more_dropdown_container, & #get_involved_dropdown_container {
         display: inline-block;
         margin-top: 8px;        
+        margin-left: 21px;
+
+        & button{
+            &:focus {
+                color: white;
+            }
+        }
+    }
+
+    & .btn-default:active:hover, & .btn-default:active:focus {
+        background-color: inherit;
+        color: white;
+    }
+
+    /* Bootstrap open dropdown class */
+    & .open .dropdown-toggle {
+        &.btn-default, &:active, &:hover, &:focus {
+            background-color: inherit;
+            color: white;
+        }
     }
 
     & .dropdown {
@@ -381,17 +416,24 @@ a {
 
         &:hover {
             color: white;
-        }
-
-        &:focus{
-            color: white;
-        }
+        }      
     }
 
     & .dropdown-menu {
         margin-top: 0;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
+        background-color: #2C2E50;
+        border-radius: 4px;
+
+        & a {
+            color: #C9D6FE;;
+        }
+
+        & li > a:hover, & li > a:focus {
+            background-color: inherit;
+            color: white;
+        }        
     }
 }
 
@@ -486,7 +528,7 @@ nav .container-fluid {
 
 .navbar-nav > li > a {
     font-size: 14px;
-    margin-left: 33px;
+    margin-left: 21px;
 }
 
 @media (max-width: 1199px) {
@@ -513,6 +555,10 @@ nav .container-fluid {
         position: static;
         background-color: #131427;
         padding-top: 0;
+
+        #home_logo {
+            display: none;
+        }
     }
 
     #navbar_home_link {
