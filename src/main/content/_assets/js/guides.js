@@ -248,6 +248,12 @@ $(document).ready(function() {
         },
         trigger: 'focus'
     });
+    
+    $('#back_to_guides_button').on('click', function() {
+        $('#guide_search_input').val('');
+        defaultView();
+        // TODO: Need to clear any `?search=*` from the URL
+    });
 
     // Click buttons to fill search bar
     $('#guides_search_container').on('click', '.tag_button', function() {
