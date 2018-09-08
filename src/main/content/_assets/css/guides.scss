@@ -188,7 +188,8 @@ $blue-grey-color: #5d6a8e;
     background-color: #DEE1E8;
 }
 
-#guides_additional_banner {
+#guides_additional_banner,
+#no_search_results_banner {
     @extend %full-width-and-padding;
     background-color: #F2F3F6
 }
@@ -262,10 +263,27 @@ $blue-grey-color: #5d6a8e;
     width: 708px;
 }
 
-#no_search_results_container {
-    font-family: BunueloLight;
-    font-size: 28px;
-    color: #24253A;
-    letter-spacing: 0;
+
+.no_results_section {
     display: none;
+
+    & .subtitle {
+        margin-bottom: 80px;
+    }
+
+    & #back_to_guides_button {
+        padding: 0px;
+        font-size: 16px;
+        background-color: white;
+        color: $blue-grey-color;
+    }
+    
+    & .arrow {
+        margin-right: 20px;
+        margin-bottom: 2px;
+    }
+
+    & .search_term {
+        word-wrap: break-word;
+    }
 }
