@@ -136,50 +136,46 @@ function checkForInertialScrolling (event){
     } else if(origEvent.detail){
         // Firefox
         dir = (origEvent.detail) > 0 ? 'down' : 'up';
-    }
-    var delta = origEvent.wheelDelta || -origEvent.detail || -origEvent.deltaY;
+    }  
+    var windowHeight = $(window).height();
+    var navbarHeight = $("nav").height();
 
-    // If scrolling down, check if the section header is coming into view
-    if(dir && dir == 'down'){        
-        var windowHeight = $(window).height();
-        var navbarHeight = $("nav").height();
-        var scrollTop = $(window).scrollTop();
+    var section_headers = $('.sect1:not(#guide_meta) h2');
+    section_headers.each(function(index) {
+        var elem = $(section_headers.get(index));
+        var rect = elem[0].getBoundingClientRect();
+        var top = rect.top;
+        var bottom = rect.bottom;
 
-        var section_headers = $('.sect1:not(#guide_meta) h2');
-        section_headers.each(function(index) {
-            var elem = $(section_headers.get(index));
-            var rect = elem[0].getBoundingClientRect();
-            var top = rect.top;
-            var bottom = rect.bottom;
-
-            var sectionOutOfView = (top > windowHeight);
-            var sectionWillBeScrolledPast = ((top + delta) > 0) && ((top + delta) < windowHeight) && ((bottom + delta) < windowHeight);
-
-            // Check if part of a new section is coming into view or if the original scroll event would have scrolled past a section start.
-            if((top > 0 && top < windowHeight && bottom > windowHeight) || (sectionOutOfView && sectionWillBeScrolledPast)){
-                // New section is coming into view. Slow scrolling down to a small fixed value. Check to make sure the initial delta was over 5 because on trackpads the scrolling starts off very slow and accelerates much larger than this fixed value.
-                if(Math.abs(delta) > 5){
-                    delta = -50;
-                    event.preventDefault();
-                    event.stopPropagation();
-                    $('html, body').stop().animate({
-                        scrollTop: scrollTop - delta
-                    }); 
-                    return false;
-                }                
-            } else if(top > 0 && top < windowHeight && bottom > (windowHeight - 100) && bottom < windowHeight){
-                // Section header is fully in view with the bottom in the last 100 pixels of the viewport.
+        // If scrolling down, check if the section header is coming into view
+        if(dir && dir == 'down'){   
+            if(top > 0 && top < windowHeight && bottom > (windowHeight - 200) && bottom < windowHeight){
+                // Section header is fully in view with the bottom in the last 200 pixels of the viewport.
                 event.preventDefault();
                 event.stopPropagation();
-                // Section header is now scrolled into view
                 // Snap to the top of the element
-                $('html, body').stop().animate({
+                $('html').stop().animate({
                     scrollTop: elem.offset().top - navbarHeight
                 });                 
                 return false;
             }      
-        });
-    }
+        } else {
+            // Scrolling up
+            // Check to see that the current section's top is in viewport and at least 200 pixels from the top of the screen but not more than 300.
+            // Scroll up by a full page's height so that the previous section ends at the bottom of the viewport.
+            if(top > 200 && top < 300){
+                event.preventDefault();
+                event.stopPropagation();
+                var prevSection = elem.parents('.sect1').prev();
+                var prevSectionHeight = prevSection.height();
+                // Snap to the top of the previous section so the user can read the last part of it. 
+                $('html').stop().animate({
+                    scrollTop: prevSection.offset().top - windowHeight + prevSectionHeight
+                });                 
+                return false;
+            }
+        }
+    });    
 }
 
 /**
