@@ -351,8 +351,6 @@ a {
 
 }
 
-
-
 /* NAVIGATION BAR */
 
 .navbar {
@@ -369,22 +367,42 @@ a {
     & #home_logo {
         display: inline;
         float: left;
+        margin-right: 21px;
     }
 
-    & li {
+    & .navbar-toggle .icon-bar {
+        background-color: white;
+    }
+
+    & .navbar-nav li {
         font-size: 16px;
 
         & > a {
+            color: #C9D6FE;
+            transition: color .2s;
+
+            &:hover {
+                color: white;
+            }
+
             &:focus {
+                color: white;
                 outline: none;
             }
         }
+
+        & .caret {
+            display: none;
+        }
     }
 
-    & #learn_more_dropdown_container, & #get_involved_dropdown_container {
+    #mobile_header {
+        display: none;
+    }
+
+    #learn_more_dropdown_container, #get_involved_dropdown_container {
         display: inline-block;
-        margin-top: 8px;        
-        margin-left: 21px;
+        margin-top: 8px;    
 
         & button{
             &:focus {
@@ -417,7 +435,7 @@ a {
         &:hover {
             color: white;
         }      
-    }
+    }    
 
     & .dropdown-menu {
         margin-top: 0;
@@ -428,13 +446,161 @@ a {
 
         & li > a {
             font-size: 14px;
-            color: #C9D6FE;;
+            color: #C9D6FE;
         }
 
         & li > a:hover, & li > a:focus {
             background-color: inherit;
             color: white;
         }        
+    }
+
+    #mobile_links_section {
+        display: none;
+    }
+
+    @media screen and (max-width: 767px) {
+        position: static;
+        background-color: #5E6B8D;
+        padding-top: 0; 
+
+        #navbar {
+            border-top: 1px solid rgba(201, 214, 254, 0.29);
+        }        
+
+        #home_logo {
+            display: none;
+        }
+
+        #mobile_header {
+            display: block;
+            padding-top: 9px;
+            padding-left: 14px;
+            padding-right: 14px;                       
+
+            & a {
+                display: inline-block;
+                padding: 0;
+            }
+
+            #mobile_home_logo {            
+                width: 37px;
+                height: 27px;            
+            }
+    
+            #mobile_header_title {
+                display: inline-block;    
+                color: white;
+                margin-left: 5px;        
+                vertical-align: top;
+                font-size: 20px;
+            }
+
+            #mobile_close_button {
+                display: none;
+                float: right;
+                color: white;
+                margin-top: 8px;
+                margin-right: 12px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+
+        #learn_more_dropdown_container, #get_involved_dropdown_container {
+            display: block;
+            color: white;
+            margin-top: 0;
+            margin-left: 0;
+            border-bottom: 1px solid rgba(201, 214, 254, 0.29);
+        }
+
+        & .dropdown {
+            float: none;
+            font-size: 20px;
+            color: white;
+        }
+
+        & .navbar-nav {
+            text-align: left;
+
+            & > li {            
+
+                & > a {
+                    font-size: 20px;
+                    color: white;
+                }
+
+                & button {
+                    width: 100%;
+                    text-align: left;
+                    box-shadow: none;
+
+                    & .caret {
+                        display: block;
+                        float: right;
+                        color: white;
+                        margin-top: 5px;
+                        border-right: 6px solid transparent;
+                        border-left: 6px solid transparent;
+                        border-top: 6px solid;                        
+
+                        &.upsideDown {
+                            border-right: 6px solid transparent;
+                            border-left: 6px solid transparent;
+                            border-bottom: 6px solid;
+                            border-top: none;
+                        }
+                    }
+                }  
+                
+                /* Override default color with the same specificity */
+                .navbar-default .navbar-nav > li > a {
+                    color: white;
+                }
+            }
+        }
+
+        & .navbar-nav .open {
+            & button {
+                box-shadow: none;
+            }
+            & .dropdown-menu {
+                & li > a {
+                    color: white;
+                    padding-left: 21px;
+                    font-size: 20px;
+                }
+    
+                & li > a:hover, & li > a:focus {
+                    color: white;
+                }
+            }                      
+        }
+
+        #mobile_links_section {
+            display: block;
+            background-color: #525D7A;
+            margin-left: -15px;
+            margin-right: -30px;
+            padding-left: 15px;
+
+            & ul {
+                list-style: none;
+                padding-left: 0;
+
+                & > li {
+                    margin-bottom: 24px;
+
+                    & > a {
+                        color: #C9D6FE;
+                        font-size: 16px;
+                    }
+                }
+            }
+        } 
     }
 }
 
@@ -482,7 +648,8 @@ nav .container-fluid {
 
 #navbar_responsive_button {
     border: none;
-    background-color: #131427;
+    margin: 0;
+    background-color: #5E6B8D;
 }
 
 #navbar_responsive_button:hover .icon-bar {
@@ -490,19 +657,6 @@ nav .container-fluid {
 }
 
 #navbar_responsive_button:hover {
-    color: white;
-}
-
-.navbar-default .navbar-nav > li > a {
-    color: #C9D6FE;
-    transition: color .2s;
-}
-
-.navbar-default .navbar-nav > li > a:focus {
-    color: white;
-}
-
-.navbar-default .navbar-nav > li > a:hover {
     color: white;
 }
 
@@ -550,17 +704,7 @@ nav .container-fluid {
 
 }
 
-@media (max-width: 767px) {
-
-    .navbar {
-        position: static;
-        background-color: #131427;
-        padding-top: 0;
-
-        #home_logo {
-            display: none;
-        }
-    }
+@media (max-width: 767px) {    
 
     #navbar_home_link {
         margin-left: 15px;
