@@ -130,6 +130,10 @@ function checkForInertialScrolling (event){
         return;
     }
     var origEvent = event.originalEvent;
+    var windowHeight = $(window).height();
+    var navbarHeight = $("nav").height();
+    var scrollPosition;
+
     var dir;
     if(origEvent.deltaY){
         dir = (origEvent.deltaY) > 0 ? 'down' : 'up';
@@ -137,8 +141,9 @@ function checkForInertialScrolling (event){
         // Firefox
         dir = (origEvent.detail) > 0 ? 'down' : 'up';
     }  
-    var windowHeight = $(window).height();
-    var navbarHeight = $("nav").height();
+    if(!dir){
+        console.log('Scroll direction was not determined.');
+    }    
 
     var section_headers = $('.sect1:not(#guide_meta) h2');
     section_headers.each(function(index) {
@@ -148,34 +153,33 @@ function checkForInertialScrolling (event){
         var bottom = rect.bottom;
 
         // If scrolling down, check if the section header is coming into view
-        if(dir && dir == 'down'){   
+        if(dir == 'down'){   
             if(top > 0 && top < windowHeight && bottom > (windowHeight - 200) && bottom < windowHeight){
                 // Section header is fully in view with the bottom in the last 200 pixels of the viewport.
-                event.preventDefault();
-                event.stopPropagation();
-                // Snap to the top of the element
-                $('html').stop().animate({
-                    scrollTop: elem.offset().top - navbarHeight
-                });                 
+                // Snap to the top of the element.
+                scrollPosition = elem.offset().top - navbarHeight;
                 return false;
             }      
         } else {
             // Scrolling up
-            // Check to see that the current section's top is in viewport and at least 200 pixels from the top of the screen but not more than 300.
-            // Scroll up by a full page's height so that the previous section ends at the bottom of the viewport.
-            if(top > 200 && top < 300){
-                event.preventDefault();
-                event.stopPropagation();
+            // Check to see that the current section's top is in viewport and at least 200 pixels from the top of the screen but not more than 400.
+            // Scroll up by a full page's height so that the previous section ends at the bottom of the viewport for optimal reading.
+            if(top > 200 && top < 400){
                 var prevSection = elem.parents('.sect1').prev();
-                var prevSectionHeight = prevSection.height();
-                // Snap to the top of the previous section so the user can read the last part of it. 
-                $('html').stop().animate({
-                    scrollTop: prevSection.offset().top - windowHeight + prevSectionHeight
-                });                 
+                var prevSectionHeight = prevSection.height();                
+                scrollPosition = prevSection.offset().top - windowHeight + prevSectionHeight;                
                 return false;
             }
-        }
-    });    
+        }        
+    });   
+    if(scrollPosition){
+        event.preventDefault();
+        event.stopPropagation();
+        // Snap to the top of the previous section so the user can read the last part of it. 
+        $('html').stop().animate({
+            scrollTop: scrollPosition
+        }, 500);          
+    } 
 }
 
 /**
