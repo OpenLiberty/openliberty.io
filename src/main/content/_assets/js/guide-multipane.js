@@ -9,9 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 $(document).ready(function() {
-
     var target;
-
     $('#preamble').detach().insertAfter('#duration_container');
 
     var guide_sections = [];
@@ -34,15 +32,7 @@ $(document).ready(function() {
             var duplicate_code_block = code_block.clone();
             code_block.hide();
 
-            var header;
-            var subsection = code_block.parents('.sect2');
-            if(subsection.length > 0){
-                header = subsection.find('h3')[0];
-            }
-            else{
-                var guide_section = code_block.parents('.sect1').first();
-                header = guide_section.find('h2')[0];
-            }                        
+            var header = get_header_from_element(code_block);                       
             guide_sections.push(header);
             code_sections[header.id] = duplicate_code_block;
 
@@ -68,6 +58,25 @@ $(document).ready(function() {
             duplicate_code_block.appendTo('#code_column'); // Move code to the right column
         }
     });
+
+    // Map the guide sections that don't have any code sections to the previous section's code. This assumes that the first section is what you'll learn which has no code to show on the right to begin with.
+    var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2, .sect2:not(#guide_meta):not(#related-guides) > h3');
+    var first_section = sections[0];
+    var first_code_block = $("#code_column .code_column").first();
+    guide_sections.push($(first_section));
+    code_sections[first_section.id] = first_code_block;
+    
+    for(var i = 1; i < sections.length; i++){
+        var id = sections[i].id;
+        if(!code_sections[id]){
+            guide_sections.push($(sections[i]));
+            var previous_id = sections[i-1].id;
+            code_sections[id] = code_sections[previous_id];
+        }
+    }    
+
+    // Hide all code blocks except the first
+    $('#code_column .code_column:not(:first)').hide();
 
     // Highlights a block of code in a code section
     // Input code_section: The section of code to highlight.
@@ -136,11 +145,24 @@ $(document).ready(function() {
         snippet.after(duplicate_code_block);
     }
 
+    // Returns the header of the element passed in. This checks if the element is in a subsection first before checking the main section header.
+    function get_header_from_element(element){
+        var header;
+        var subsection = element.parents('.sect2');
+        if(subsection.length > 0){
+            header = subsection.find('h3')[0];
+        }
+        else{
+            var section = element.parents('.sect1').first();
+            header = section.find('h2')[0];
+        }  
+        return header;
+    }
+
     // Returns the code block associated with a code hotspot.
     // Inputs: hotspot: The 'hotspot' in desktop view where hovering over the block will highlight certain lines of code in the code column relevant to what the guide is talking about.
     function get_code_block_from_hotspot(hotspot){
-        var section = hotspot.parents('.sect1').first();
-        var header = section.find('h2').get(0);
+        var header = get_header_from_element(hotspot);
         return code_sections[header.id];
     }
 
@@ -201,8 +223,7 @@ $(document).ready(function() {
         if(hotspot.data('hovering') == false){
             return;
         }
-        var section = hotspot.parents('.sect1').first();
-        var header = section.find('h2').get(0);
+        var header = get_header_from_element(hotspot);
         var code_block = code_sections[header.id];
         if(code_block){
             var fromLine = hotspot.data('highlight_from_line');
@@ -222,28 +243,12 @@ $(document).ready(function() {
     // When the mouse leaves a code 'hotspot', remove all highlighting in the corresponding code section.
     $('.hotspot').on('mouseleave', function(event){
         $(this).data('hovering', false);
-        var section = $(this).parents('.sect1').first();
-        var header = section.find('h2').get(0);
+        var header = get_header_from_element($(this));
         var code_block = code_sections[header.id];
         if(code_block){
             remove_highlighting(code_block);
         }        
-    });
-   
-
-    // Map the guide sections that don't have any code sections to the previous section's code.
-    var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2, .sect2:not(#guide_meta):not(#related-guides) > h3');
-    for(var i = 1; i < sections.length; i++){
-        var id = sections[i].id;
-        if(!code_sections[id]){
-            guide_sections.push($(sections[i]));
-            var previous_id = sections[i-1].id;
-            code_sections[id] = code_sections[previous_id];
-        }
-    }
-
-    // Hide all code blocks except the first
-    $('#code_column .code_column:not(:first)').hide();
+    });       
 
     // Prevent scrolling the page when scrolling inside of the code panel, but not one of the code blocks.
     $('#code_column').on('wheel mousewheel DOMMouseScroll', function(event){
@@ -287,7 +292,7 @@ $(document).ready(function() {
                 delta *= 150;
             }
             codeColumn.scrollTop -= delta;
-            handleGithubPopup(true);
+            handleGithubPopup();
             event.preventDefault();  
         }            
     });
@@ -356,25 +361,15 @@ $(document).ready(function() {
 
     /*
        Handle showing/hiding the Github popup.
-       @Param isCodeColumn boolean for telling if the scroll happened in the code column instead of the overall window.
     */
-    function handleGithubPopup(isCodeColumn) {
+    function handleGithubPopup() {
         // If the page is scrolled down past the top of the page then hide the github clone popup
         var githubPopup = $("#github_clone_popup_container");
         if(githubPopup.length > 0){
-            var atTop;
-            if(isCodeColumn){
-                // Only show the Github popup for the first code column
-                if(!$('#code_column .code_column:first').is(":visible")){
-                    return;
-                }
-                atTop = $("#code_column").scrollTop() === 0;
-            } else {
-                // Check if the "What You'll Learn" section is scrolled past yet.
-                var whatYoullLearnTop = $("#what-youll-learn, #what-you-ll-learn")[0].getBoundingClientRect().top;
-                var navHeight = $('.navbar').height();
-                atTop = (whatYoullLearnTop - navHeight) > 0;
-            }
+            // Check if the "What You'll Learn" section is scrolled past yet.
+            var whatYoullLearnTop = $("#what-youll-learn, #what-you-ll-learn")[0].getBoundingClientRect().top;
+            var navHeight = $('.navbar').height();
+            var atTop = (whatYoullLearnTop - navHeight) > 0;
             if(atTop){
                 githubPopup.fadeIn();
                 $("#code_column .code_column").addClass('dimmed_code_column', {duration:400});
@@ -418,16 +413,15 @@ $(document).ready(function() {
                     history.pushState(null, null, newPath);
 
                     // Update the selected TOC entry
-                    updateTOCHighlighting(id);
-
-                    // Match the code block on the right to the new id
-                    showCorrectCodeBlock(id);
+                    updateTOCHighlighting(id);                    
                 }
+                // Match the code block on the right to the new id
+                showCorrectCodeBlock(id);
             }
         }
     }
 
-    $('#guide_content pre:not(.code_command pre):not(.hotspot pre)').hover(function(event) {
+    $('#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre)').hover(function(event) {
          offset = $('#guide_column').position();	
         target = event.currentTarget;	
         var current_target_object = $(event.currentTarget);	
@@ -472,7 +466,7 @@ $(document).ready(function() {
         if($("body").data('scrolling') === true){
             return;
         }
-        handleGithubPopup(false);
+        handleGithubPopup();
         handleSectionChanging(event);
     });
 
