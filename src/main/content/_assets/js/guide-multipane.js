@@ -167,13 +167,14 @@ $(document).ready(function() {
     }
 
     // Parse the hotspot lines to highlight and store them as a data attribute.
-    $('.hotspot').each(function(){
+    $('code[class*=hotspot], span[class*=hotspot], div[class*=hotspot]').each(function(){
         var snippet = $(this);
-        var metadata = snippet.prev().find('p');
-        if(metadata.length > 0){
-            var metadata_text = metadata[0].innerText;
-            if(metadata_text.indexOf('highlight_lines=') > -1){
-                var line_nums = metadata_text.substring(16);
+        var classList = this.classList;
+        var line_nums;
+        for(var i = 0; i < classList.length; i++){
+            var className = classList[i];
+            if(className.indexOf('hotspot=') === 0){
+                line_nums = className.substring(8);
                 if(line_nums.indexOf('-') > -1){
                     var lines = line_nums.split('-');
                     var fromLine = parseInt(lines[0]);
@@ -181,14 +182,15 @@ $(document).ready(function() {
                     // Set data attributes to save the lines to highlight
                     snippet.data('highlight_from_line', fromLine);
                     snippet.data('highlight_to_line', toLine);
+                    snippet.removeClass(className);
+                    snippet.addClass('hotspot');
 
                     var code_block = get_code_block_from_hotspot(snippet);
                     create_mobile_code_snippet(snippet, code_block, fromLine, toLine);
                 }
-            }             
+                break;
+            }
         }
-        // Remove old title from the DOM
-        metadata.detach();
     });
 
     // Returns a function, that, as long as it continues to be invoked, will not
