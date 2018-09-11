@@ -173,7 +173,7 @@ $(document).ready(function() {
         var line_nums;
         for(var i = 0; i < classList.length; i++){
             var className = classList[i];
-            if(className.indexOf('hotspot=') > -1){
+            if(className.indexOf('hotspot=') === 0){
                 line_nums = className.substring(8);
                 if(line_nums.indexOf('-') > -1){
                     var lines = line_nums.split('-');
