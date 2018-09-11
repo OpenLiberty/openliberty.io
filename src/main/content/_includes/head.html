@@ -25,7 +25,9 @@
     {% include google_tag_manager_head.html %}
   {% endif %}
 
-  {% include analytics_DBDM.html %}
+  {% if jekyll.environment == 'production' %}
+    {% include analytics_DBDM.html %}
+  {% endif %}
 
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
