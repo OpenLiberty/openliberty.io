@@ -123,6 +123,65 @@ function handleFloatingCodeColumn() {
         }
     }
 }
+
+/* Detect if the user has scrolled downwards into a new section and apply inertial resistence. */
+function checkForInertialScrolling (event){
+    if(inSingleColumnView()){
+        return;
+    }
+    var origEvent = event.originalEvent;
+    var windowHeight = $(window).height();
+    var navbarHeight = $("nav").height();
+    var scrollPosition;
+
+    var dir;
+    if(origEvent.deltaY){
+        dir = (origEvent.deltaY) > 0 ? 'down' : 'up';
+    } else if(origEvent.detail){
+        // Firefox
+        dir = (origEvent.detail) > 0 ? 'down' : 'up';
+    }  
+    if(!dir){
+        console.log('Scroll direction was not determined.');
+    }    
+
+    var section_headers = $('.sect1:not(#guide_meta) h2');
+    section_headers.each(function(index) {
+        var elem = $(section_headers.get(index));
+        var rect = elem[0].getBoundingClientRect();
+        var top = rect.top;
+        var bottom = rect.bottom;
+
+        // If scrolling down, check if the section header is coming into view
+        if(dir == 'down'){   
+            if(top > 0 && top < windowHeight && bottom > (windowHeight - 200) && bottom < windowHeight){
+                // Section header is fully in view with the bottom in the last 200 pixels of the viewport.
+                // Snap to the top of the element.
+                scrollPosition = elem.offset().top - navbarHeight;
+                return false;
+            }      
+        } else {
+            // Scrolling up
+            // Check to see that the current section's top is in viewport and at least 200 pixels from the top of the screen but not more than 400.
+            // Scroll up by a full page's height so that the previous section ends at the bottom of the viewport for optimal reading.
+            if(top > 200 && top < 400){
+                var prevSection = elem.parents('.sect1').prev();
+                var prevSectionHeight = prevSection.height();                
+                scrollPosition = prevSection.offset().top - windowHeight + prevSectionHeight;                
+                return false;
+            }
+        }        
+    });   
+    if(scrollPosition){
+        event.preventDefault();
+        event.stopPropagation();
+        // Snap to the top of the previous section so the user can read the last part of it. 
+        $('html').stop().animate({
+            scrollTop: scrollPosition
+        }, 500);          
+    } 
+}
+
 /**
  * Find the section that is most visible in the viewport and return the id.
  * Returns "" (empty string, not NULL) if the window scrollTop is within the
@@ -218,7 +277,7 @@ function shiftWindow() {
  *                      from window.location.
  */
 function accessContentsFromHash(hash) {
-    var $focusSection = $(hash);    
+    var $focusSection = $(hash);
     
     // If section is found, scroll to it
     if ($focusSection.length > 0) {        
@@ -243,7 +302,7 @@ function accessContentsFromHash(hash) {
         $("html").animate({scrollTop: scrollSpot}, 400, function() {
             // Callback after animation.  Change the focus.
             $focusSection.focus();
-            $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again. 
+            $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again.
             // Check if the section was actually focused
             if ($focusSection.is(":focus")) {
                 return false;
@@ -253,7 +312,7 @@ function accessContentsFromHash(hash) {
                 // but not via sequential keyboard navigation.
                 $focusSection.attr('tabindex', '-1');
                 $focusSection.focus();                
-            }                    
+            }        
         });
     } else {
         defaultToFirstPage();
@@ -315,7 +374,11 @@ $(document).ready(function() {
         handleFloatingCodeColumn();
     });
 
-    $(window).on('scroll', function(event) {
+    $(window).on('mousewheel DOMMouseScroll', function(event){
+        checkForInertialScrolling(event);
+    });
+
+    $(window).on('scroll', function() {
         handleFloatingTOCAccordion();
         handleDownArrow();
         handleStickyHeader();

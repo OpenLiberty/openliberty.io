@@ -394,10 +394,10 @@ $(document).ready(function() {
         }
     }
 
-    // Slow the scrolling over section headers in the guide
-    function handleSectionSnapping(event){
+    function handleSectionChanging(event){
         // Multipane view
         if(window.innerWidth > twoColumnBreakpoint) {
+            // Get the id of the section most in view
             var id = getScrolledVisibleSectionID();
             if (id !== null) {
                 var windowHash = window.location.hash;
@@ -459,7 +459,7 @@ $(document).ready(function() {
         } else {	
             alert('To copy press CTRL + C');	
         }	
-    });
+    });    
 
     $(window).on('scroll', function(event) {
         // Check if a scroll animation from another piece of code is taking place and prevent normal behavior.
@@ -467,7 +467,7 @@ $(document).ready(function() {
             return;
         }
         handleGithubPopup();
-        handleSectionSnapping(event);
+        handleSectionChanging(event);
     });
 
     $(window).on('load', function(){
