@@ -397,26 +397,26 @@ $(document).ready(function() {
     }
 
     function handleSectionChanging(event){
-        // Multipane view
-        if(window.innerWidth > twoColumnBreakpoint) {
-            // Get the id of the section most in view
-            var id = getScrolledVisibleSectionID();
-            if (id !== null) {
-                var windowHash = window.location.hash;
-                var scrolledToHash = id === "" ? id : '#' + id;
-                if (windowHash !== scrolledToHash) {
-                    // Update the URL hash with new section we scrolled into....
-                    var currentPath = window.location.pathname;
-                    var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + scrolledToHash;
-                    // Not setting window.location.hash here because that causes an
-                    // onHashChange event to fire which will scroll to the top of the
-                    // section.  pushState updates the URL without causing an
-                    // onHashChange event.
-                    history.pushState(null, null, newPath);
+        // Get the id of the section most in view
+        var id = getScrolledVisibleSectionID();
+        if (id !== null) {
+            var windowHash = window.location.hash;
+            var scrolledToHash = id === "" ? id : '#' + id;
+            if (windowHash !== scrolledToHash) {
+                // Update the URL hash with new section we scrolled into....
+                var currentPath = window.location.pathname;
+                var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + scrolledToHash;
+                // Not setting window.location.hash here because that causes an
+                // onHashChange event to fire which will scroll to the top of the
+                // section.  pushState updates the URL without causing an
+                // onHashChange event.
+                history.pushState(null, null, newPath);
 
-                    // Update the selected TOC entry
-                    updateTOCHighlighting(id);                    
-                }
+                // Update the selected TOC entry
+                updateTOCHighlighting(id);                    
+            }
+            if(window.innerWidth > twoColumnBreakpoint) {
+                // multipane view
                 // Match the code block on the right to the new id
                 showCorrectCodeBlock(id);
             }
