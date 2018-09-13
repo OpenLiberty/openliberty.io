@@ -16,8 +16,6 @@ echo `ruby -v`
 
 # Special handling for javadocs
 ./scripts/copy_javadoc_stylesheet.sh
-./scripts/modify_config_adoc.sh
-./scripts/modify_feature_adoc.sh
 pushd gems/ol-asciidoc
 gem build ol-asciidoc.gemspec
 gem install ol-asciidoc-0.0.1.gem
