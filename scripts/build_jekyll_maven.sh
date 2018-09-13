@@ -59,6 +59,7 @@ echo "Building with jekyll..."
 echo `jekyll -version`
 mkdir -p target/jekyll-webapp
 jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --destination target/jekyll-webapp
+python3 ./scripts/parse-feature-toc.py
 
 # Maven packaging
 echo "Running maven (mvn)..."
