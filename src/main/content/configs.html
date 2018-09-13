@@ -22,7 +22,10 @@ permalink: /docs/ref/config/
                     <ul>
                         {% for config in configDocs %}
                         <li>
-                            <a href="{{ config.url }}" target="contentFrame">{{ config.title }}</a>
+                            {% assign splitOpenParen = config.title | split: '(' %}
+                            {% assign splitCloseParen = splitOpenParen[1] | split: ')' %}
+                            <!-- <a href="{{ config.url }}" target="contentFrame">{{ config.title }}</a> -->
+                            <a href="{{ config.url }}" target="contentFrame">{{ splitCloseParen[0] }}</a>
                         </li>
                         {% endfor %}
                     </ul>
