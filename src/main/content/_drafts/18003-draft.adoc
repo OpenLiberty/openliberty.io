@@ -210,7 +210,7 @@ Distributed tracing enables users to see the flow of requests between microservi
   * `opentracing-1.1` provides the Open Tracing v0.31 API
   * `mpOpenTracing-1.1` implements the MicroProfile OpenTracing 1.1 specification
 
-Use `mpOpenTracing-1.1` in combination with `opentracingZipkin-0.31` to send traces to Zipkin. You can download Zipkin from https://github.com/WASdev/sample.opentracing.zipkintracer[Zipkin on GitHub]. When `mpOpenTracing-1.1` and `opentracingZipkin-0.31` are enabled, inbound and outbound JAX-RS requests are automatically traced. Developers can also instrument their code with `@Traced` to explicitly trace a class or a method. Traces are sent to Zipkin and users can see their traces in the Zipkin UI.
+Use `mpOpenTracing-1.1` in combination with `opentracingZipkin-0.31` to send traces to Zipkin. You can download the https://github.com/WASdev/sample.opentracing.zipkintracer[sample Zipkin tracer implementation] from GitHub. When `mpOpenTracing-1.1` and `opentracingZipkin-0.31` are enabled, inbound and outbound JAX-RS requests are automatically traced. Developers can also instrument their code with `@Traced` to explicitly trace a class or a method. Traces are sent to Zipkin and users can see their traces in the Zipkin UI.
 
 
 To enable MicroProfile Open Tracing 1.1, add the definition to your `server.xml`:
@@ -282,15 +282,13 @@ For more info:
 
 
 [#monitor]
-== Get Liberty component metrics from \metrics endpoint (Monitor 1.0)
+== Get Liberty component metrics from /metrics endpoint (Monitor 1.0)
 
-see metrics related to Liberty components, eg. connection pools, sessions, servlets, etc., in Prometheus by using the standard HTTP scraper to get all metrics from /metrics which provided by mpMetrics-1.1.
+You can now access metrics from individual Liberty components (e.g. connection pools, sessions, servlets, etc) in Prometheus. Use the standard HTTP scraper to get all metrics from the `/metrics` endpoint, which is provided by the MicroProfile Metrics 1.1 feature. Previously, it was only possible to access Liberty component metrics using JMX MBeans.
 
-before, they can only access Liberty component metric by JMX mbean. Through this new feature, they can simply access Liberty component metric through the mpMetrics-1.1 /metrics endpoint.
+To make Monitor 1.0 metrics available at the `/metrics` endpoint:
 
-To make Monitor 1.0 metrics available at the `\metrics` endpoint:
-
-1. https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_monitor.html[Set up mpMetrics-1.1].
+1. https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_monitor.html[Set up MicroProfile Metrics 1.1].
 2. Add `monitor-1.0` to your `server.xml`:
 +
 [source,xml]
@@ -302,8 +300,9 @@ To make Monitor 1.0 metrics available at the `\metrics` endpoint:
 ----
 
 
-//For more info:
+For more info:
 
+* https://www.openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice (guide)]
 //* [MicroProfile Metrics 1.1 vendor metrics (Knowledge Center)]
 
 
