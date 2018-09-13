@@ -1,6 +1,7 @@
 = Java Servlets 3.1
 :stylesheet: ../feature.css
 :linkcss: 
+:page-layout: feature
 :nofooter: 
 
 This feature enables support for HTTP Servlets written to the Java Servlet 3.1 specification. You can package servlets in Java EE specified WAR or EAR files.  If servlet security is required, you should also configure an appSecurity feature. Without a security feature, any security constraints for the application are ignored.
@@ -12,6 +13,11 @@ To enable the Java Servlets 3.1 feature, add the following element declaration i
 ----
 <feature>servlet-3.1</feature>
 ----
+
+== Supported Java versions
+
+* JavaSE-1.7
+* JavaSE-1.8
 
 == Developing a feature that depends on this feature
 If you are developing a feature that depends on the Java Servlets 3.1 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
@@ -33,8 +39,10 @@ com.ibm.websphere.appserver.servlet-3.1; type="osgi.subsystem.feature"
 * feature:jwtSso-1.0[]
 * feature:microProfile-1.2[]
 * feature:microProfile-1.3[]
+* feature:microProfile-1.4[]
 * feature:mpHealth-1.0[]
 * feature:mpJwt-1.0[]
+* feature:mpJwt-1.1[]
 * feature:mpMetrics-1.0[]
 * feature:mpMetrics-1.1[]
 * feature:mpOpenAPI-1.0[]

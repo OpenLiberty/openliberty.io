@@ -1,0 +1,451 @@
+= +Cloudant Builder+ (+cloudant+)
+:stylesheet: ../config.css
+:linkcss: 
+:page-layout: config
+:nofooter: 
+
++Configuration for a Cloudant Builder. A Cloudant Builder creates Cloudant Client instances, which can connect to a Cloudant Database.+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|+account+
+
+|string
+
+|
+
+|+Account name used to connect to a Cloudant database.+
+
+|+containerAuthDataRef+
+
+|A reference to top level authData element (string).
+
+|
+
+|+Default authentication data for container managed authentication that applies when bindings do not specify an authentication-alias for a resource reference with res-auth=CONTAINER.+
+
+|+id+
+
+|string
+
+|
+
+|+A unique configuration ID.+
+
+|+jndiName+
+
+|string
+
+|
+
+|+JNDI name.+
+
+|+libraryRef+
+
+|A reference to top level library element (string).
+
+|
+
+|+Specifies a library that contains the Cloudant Client library and its dependencies.+
+
+|+password+
+
+|Reversably encoded password (string)
+
+|
+
+|+Password corresponding to your Cloudant user ID.+
+
+|+url+
+
+|string
+
+|
+
+|+URL for the Cloudant server, which includes the host and port.+
+
+|+username+
+
+|string
+
+|
+
+|+The Cloudant user ID used to log in and access your databases.+
+
+4+|*+Advanced Properties+*
+
+|+connectTimeout+
+
+|A period of time with millisecond precision
+
+|+5m+
+
+|+The timeout to establish a connection. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.+
+
+|+disableSSLAuthentication+
+
+|boolean
+
+|+false+
+
+|+Disables host name verification and certificate chain validation.+
+
+|+maxConnections+
+
+|int +
+Min: +0+ +
+
+
+|+6+
+
+|+The maximum number of concurrent connections that a Cloudant Client can make to the host.+
+
+|+proxyPassword+
+
+|Reversably encoded password (string)
+
+|
+
+|+Password corresponding to the user name for a proxy server to use when connecting to a Cloudant server.+
+
+|+proxyUrl+
+
+|string
+
+|
+
+|+The URL of a proxy server to use when connecting to a Cloudant server.+
+
+|+proxyUser+
+
+|string
+
+|
+
+|+User name for a proxy server to use when connecting to a Cloudant server.+
+
+|+readTimeout+
+
+|A period of time with millisecond precision
+
+|+5m+
+
+|+Timeout value to wait for a response from an established client connection. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.+
+
+|+sslRef+
+
+|A reference to top level ssl element (string).
+
+|
+
+|+Specifies the SSL configuration that is needed to establish a secure connection.+
+|===
+[#+containerAuthData+]*containerAuthData*
+
++Default authentication data for container managed authentication that applies when bindings do not specify an authentication-alias for a resource reference with res-auth=CONTAINER.+
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|+password+
+
+|Reversably encoded password (string)
+
+|
+
+|+Password of the user to use when connecting to the EIS. The value can be stored in clear text or encoded form. It is recommended that you encode the password. To do so, use the securityUtility tool with the encode option.+
+
+|+user+
+
+|string
+
+|
+
+|+Name of the user to use when connecting to the EIS.+
+|===
+[#+library+]*library*
+
++Specifies a library that contains the Cloudant Client library and its dependencies.+
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|+apiTypeVisibility+
+
+|string
+
+|+spec,ibm-api,api,stable+
+
+|+The types of API packages that this class loader supports. This value is a comma-separated list of any combination of the following API packages: spec, ibm-api, api, stable, third-party.+
+
+|+description+
+
+|string
+
+|
+
+|+Description of shared library for administrators+
+
+|+filesetRef+
+
+|List of references to top level fileset elements (comma-separated string).
+
+|
+
+|+Id of referenced Fileset+
+
+|+name+
+
+|string
+
+|
+
+|+Name of shared library for administrators+
+|===
+[#+library/file+]*library > file*
+
++Id of referenced File+
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|+id+
+
+|string
+
+|
+
+|+A unique configuration ID.+
+
+|+name+
+
+|Path to a file
+
+|
+
+|+Fully qualified filename+
+|===
+[#+library/fileset+]*library > fileset*
+
++Id of referenced Fileset+
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|+caseSensitive+
+
+|boolean
+
+|+true+
+
+|+Boolean to indicate whether or not the search should be case sensitive (default: true).+
+
+|+dir+
+
+|Path to a directory
+
+|+${server.config.dir}+
+
+|+The base directory to search for files.+
+
+|+excludes+
+
+|string
+
+|
+
+|+The comma or space separated list of file name patterns to exclude from the search results, by default no files are excluded.+
+
+|+id+
+
+|string
+
+|
+
+|+A unique configuration ID.+
+
+|+includes+
+
+|string
+
+|+*+
+
+|+The comma or space separated list of file name patterns to include in the search results (default: *).+
+
+|+scanInterval+
+
+|A period of time with millisecond precision
+
+|+0+
+
+|+Scanning interval to check the fileset for changes as a long with a time unit suffix h-hour, m-minute, s-second, ms-millisecond (e.g. 2ms or 5s). Disabled (scanInterval=0) by default. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.+
+|===
+[#+library/folder+]*library > folder*
+
++Id of referenced folder+
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|+dir+
+
+|Path to a directory
+
+|
+
+|+Directory or folder to be included in the library classpath for locating resource files+
+
+|+id+
+
+|string
+
+|
+
+|+A unique configuration ID.+
+|===
+[#+ssl+]*ssl*
+
++Specifies the SSL configuration that is needed to establish a secure connection.+
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|+clientAuthentication+
+
+|boolean
+
+|+false+
+
+|+Specifies whether client authentication is enabled. If set to true then client authentication is required and the client must provide a certificate for the server trusts.+
+
+|+clientAuthenticationSupported+
+
+|boolean
+
+|+false+
+
+|+Specifies whether a client authentication is supported.  If set to true then the client authentication support means the server will check trust from a client if the client presents a certificate.+
+
+|+clientKeyAlias+
+
+|string
+
+|
+
+|+Specifies the alias of the certificate in the keystore that is used as the key to send to a server that has client authentication enabled.  This attribute is only needed if the keystore has more than one key entry.+
+
+|+enabledCiphers+
+
+|string
+
+|
+
+|+Specifies a custom list of ciphers. Separate each cipher in the list with a space. The supported cipher will depend on the underlying JRE used.  Please check the JRE for valid ciphers.+
+
+|+keyStoreRef+
+
+|A reference to top level keyStore element (string).
+
+|
+
+|+A keystore containing key entries for the SSL repertoire. This attribute is required.+
+
+|+securityLevel+
+
+|* +CUSTOM+
+* +HIGH+
+* +LOW+
+* +MEDIUM+
+
+
+|+HIGH+
+
+|+Specifies the cipher suite group used by the SSL handshake.  HIGH are 3DES and 128 bit and higher ciphers, MEDIUM are DES and 40 bit ciphers, LOW are ciphers without encryption.  If the enabledCiphers attribute is used the securityLevel list is ignored.+ +
+*+CUSTOM+* +
++%repertoire.CUSTOM+ +
+*+HIGH+* +
++Cipher suites 3DES and 128 bit and higher+ +
+*+LOW+* +
++%repertoire.LOW+ +
+*+MEDIUM+* +
++%repertoire.MEDIUM+
+
+|+serverKeyAlias+
+
+|string
+
+|
+
+|+Specifies the alias of the certificate in the keystore used as the server's key.  This attribute is only needed if the keystore has more then one key entry.+
+
+|+sslProtocol+
+
+|string
+
+|
+
+|+The SSL handshake protocol. Protocol values can be found in the documentation for the underlying JRE's Java Secure Socket Extension (JSSE) provider.  When using the IBM JRE the default value is SSL_TLS and when using the Oracle JRE the default value is SSL.+
+
+|+trustStoreRef+
+
+|A reference to top level keyStore element (string).
+
+|+${keyStoreRef}+
+
+|+A keystore containing trusted certificate entries used by the SSL repertoire for signing verification. This attribute is optional. If unspecified, the same keystore is used for both key and trusted certificate entries.+
+|===
+[#+ssl/outboundConnection+]*ssl > outboundConnection*
+
++A unique configuration ID.+
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|+clientCertificate+
+
+|string
+
+|
+
+|+The client uses this certificate alias if you make a connection to a server that supports or requires client authentication.+
+
+|+host+
+
+|string
+
+|
+
+|+The server uses this SSL configuration when it accesses the specified host name.+
+
+|+id+
+
+|string
+
+|
+
+|+A unique configuration ID.+
+
+|+port+
+
+|int
+
+|
+
+|+The server uses this SSL configuration when it accesses the remote host name at the specified port.+
+|===

@@ -16,8 +16,6 @@ echo `ruby -v`
 
 # Special handling for javadocs
 ./scripts/copy_javadoc_stylesheet.sh
-./scripts/modify_config_adoc.sh
-./scripts/modify_feature_adoc.sh
 pushd gems/ol-asciidoc
 gem build ol-asciidoc.gemspec
 gem install ol-asciidoc-0.0.1.gem
@@ -59,6 +57,7 @@ echo "Building with jekyll..."
 echo `jekyll -version`
 mkdir -p target/jekyll-webapp
 jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --destination target/jekyll-webapp
+python3 ./scripts/parse-feature-toc.py
 
 # Maven packaging
 echo "Running maven (mvn)..."

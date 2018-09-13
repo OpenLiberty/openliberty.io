@@ -1,6 +1,7 @@
 = Concurrency Utilities for Java EE 1.0
 :stylesheet: ../feature.css
 :linkcss: 
+:page-layout: feature
 :nofooter: 
 
 This feature enables the creation of managed executors that allow applications to submit tasks to run concurrently, with thread context that is managed by the application server.It also enables the creation of managed thread factories to create threads that run with the threadcontext of the component that looks up the managed thread factory.
@@ -12,6 +13,11 @@ To enable the Concurrency Utilities for Java EE 1.0 feature, add the following e
 ----
 <feature>concurrent-1.0</feature>
 ----
+
+== Supported Java versions
+
+* JavaSE-1.7
+* JavaSE-1.8
 
 == Developing a feature that depends on this feature
 If you are developing a feature that depends on the Concurrency Utilities for Java EE 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
@@ -26,6 +32,7 @@ com.ibm.websphere.appserver.concurrent-1.0; type="osgi.subsystem.feature"
 * feature:javaee-7.0[]
 * feature:javaee-8.0[]
 * feature:mpFaultTolerance-1.0[]
+* feature:mpFaultTolerance-1.1[]
 
 == Standard API packages provided by this feature
 * javadoc:javax.enterprise.concurrent[]

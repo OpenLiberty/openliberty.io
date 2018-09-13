@@ -41,6 +41,7 @@ public class TLSFilter implements Filter {
     private final Map<String, String> GENERIC_REDIRECTS = new HashMap<String,String>(){
         {
             put("/news","/blog");
+            put("/config/rwlp_config_", "/config/");
         }
     };
 
@@ -86,13 +87,7 @@ public class TLSFilter implements Filter {
           // REDIRECT CODE FOR HTTPS TRAFFIC
           if(TEMP_REDIRECTS.containsKey(uri)) {
               String newURI = TEMP_REDIRECTS.get(uri);
-              String sPort = "";
-              int serverPort = req.getServerPort();
-              if ((serverPort == 80) || (serverPort == 443)) {
-                  // Do not add server port to the final new URL
-              } else {
-                  sPort = ":" + serverPort;
-              }
+              String sPort = getServerPort(req);
               String newURL = req.getScheme() + "://" + req.getServerName() + sPort + newURI;
               response.sendRedirect(newURL);
               // We want to redirect the Servlet and stop further processing of
@@ -104,7 +99,8 @@ public class TLSFilter implements Filter {
               if(uri.startsWith(key)){
                   // Redirect using the old value replaced by the new value
                   String newURI = uri.replaceAll(key, GENERIC_REDIRECTS.get(key));
-                  String newURL = req.getScheme() + "://" + req.getServerName() + newURI;
+                  String sPort = getServerPort(req);
+                  String newURL = req.getScheme() + "://" + req.getServerName() + sPort + newURI;
                   response.sendRedirect(newURL);
                   // We want to redirect the Servlet and stop further processing of
                   // the incoming request.
@@ -114,6 +110,17 @@ public class TLSFilter implements Filter {
         }
 
         chain.doFilter(req, resp);
+    }
+
+    private String getServerPort(ServletRequest req) {
+        String sPort = "";
+        int serverPort = req.getServerPort();
+        if ((serverPort == 80) || (serverPort == 443)) {
+            // Do not add server port to the final new URL
+        } else {
+            sPort = ":" + serverPort;
+        }
+        return sPort;
     }
 }
 
