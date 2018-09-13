@@ -98,11 +98,11 @@ public class BuildsManagerTest {
         releaseInfo.add(Constants.BUILD_LOG, urlPath+"/"+date_time+"/build-log-path");
         releaseInfo.add(Constants.TESTS_LOG, urlPath+"/"+date_time+"/test-log-path");
         releaseInfo.add(Constants.DRIVER_LOCATION, urlPath+"/"+date_time+"/driver-location");
-        releaseInfo.add(Constants.PACKAGE_LOCATIONS, Json.createArrayBuilder().add(Json.createValue("package="+urlPath+"/"+date_time+"/my-package-v1")).build());
+        releaseInfo.add(Constants.PACKAGE_LOCATIONS, Json.createArrayBuilder().add("package="+urlPath+"/"+date_time+"/my-package-v1").build());
         releaseInfo.add(Constants.TESTS_PASSED, "8500");
         releaseInfo.add(Constants.TOTAL_TESTS, "8501");
-        releaseInfo.add("date_time", Json.createValue(date_time));
-        releaseInfo.add("size_in_bytes", Json.createValue("1234"));
+        releaseInfo.add("date_time", date_time);
+        releaseInfo.add("size_in_bytes", "1234");
         return releaseInfo.build();
     }
 

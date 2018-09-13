@@ -33,28 +33,28 @@ public class MockDHEClient extends DHEClient {
 		if (url.equals("https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/info.json")) {
 			JsonObjectBuilder runtimeReleaseVersions = Json.createObjectBuilder();
 			JsonArrayBuilder runtimeVersions = Json.createArrayBuilder();
-			runtimeVersions.add(Json.createValue("runtime-release-v1"));
+			runtimeVersions.add("runtime-release-v1");
 			runtimeReleaseVersions.add(Constants.VERSIONS, runtimeVersions.build());
 			return runtimeReleaseVersions.build();
 		}
 		if (url.equals("https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/nightly/info.json")) {
 			JsonObjectBuilder runtimeReleaseVersions = Json.createObjectBuilder();
 			JsonArrayBuilder runtimeVersions = Json.createArrayBuilder();
-			runtimeVersions.add(Json.createValue("runtime-nightly-v1"));
+			runtimeVersions.add("runtime-nightly-v1");
 			runtimeReleaseVersions.add(Constants.VERSIONS, runtimeVersions.build());
 			return runtimeReleaseVersions.build();
 		}
 		if (url.equals("https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/tools/release/info.json")) {
 			JsonObjectBuilder runtimeReleaseVersions = Json.createObjectBuilder();
 			JsonArrayBuilder runtimeVersions = Json.createArrayBuilder();
-			runtimeVersions.add(Json.createValue("tools-release-v1"));
+			runtimeVersions.add("tools-release-v1");
 			runtimeReleaseVersions.add(Constants.VERSIONS, runtimeVersions.build());
 			return runtimeReleaseVersions.build();
 		}
 		if (url.equals("https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/tools/nightly/info.json")) {
 			JsonObjectBuilder runtimeReleaseVersions = Json.createObjectBuilder();
 			JsonArrayBuilder runtimeVersions = Json.createArrayBuilder();
-			runtimeVersions.add(Json.createValue("tools-nightly-v1"));
+			runtimeVersions.add("tools-nightly-v1");
 			runtimeReleaseVersions.add(Constants.VERSIONS, runtimeVersions.build());
 			return runtimeReleaseVersions.build();
 		}
@@ -67,7 +67,7 @@ public class MockDHEClient extends DHEClient {
 			releaseInfo.add(Constants.TESTS_PASSED, "8500");
 			releaseInfo.add(Constants.TOTAL_TESTS, "8501");
 			releaseInfo.add(Constants.PACKAGE_LOCATIONS,
-					Json.createArrayBuilder().add(Json.createValue("my-package-v1")).build());
+					Json.createArrayBuilder().add("my-package-v1").build());
 			return releaseInfo.build();
 		}
 		return null;
