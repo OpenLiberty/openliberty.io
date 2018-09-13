@@ -253,7 +253,6 @@ function getScrolledVisibleSectionID() {
             // TOC header.
             var TOC_height = $('#mobile_toc_accordion_container').outerHeight(true);           
             sections.each(function(index) {
-                console.log('index: ' + index);
                 var $element = $(sections.get(index));
                 var sectionTop = $element.offset().top - TOC_height;
                 var sectionBottom = 0;
