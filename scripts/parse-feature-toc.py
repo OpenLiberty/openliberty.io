@@ -4,12 +4,16 @@ import os
 import re
 
 def getTOCVersion(tocString):
-    tocSplits = tocString.split()
-    docVersion = tocSplits[-1]
-    if docVersion.replace('.','',1).isdigit():
-        return docVersion
+    versionPattern = re.compile('^([\s\D]*)(?P<version>\d+[.]?\d*)([\s\D]*)')
+    versionMatches = versionPattern.match(tocString)
+    if versionMatches is not None:
+       version = versionMatches.group('version')
+       #return versionMatches.group('version')
+       if version == "7" and tocString.startswith("Java EE 7"):
+           version = "EE 7"
+       return version
     else:
-        return None
+       return None
 
 def createHrefNewTag(parent, tocHref, tocString):
     hrefTag = parent.new_tag('div', href=tocHref)
@@ -24,23 +28,29 @@ def createHrefNewTag(parent, tocHref, tocString):
 
 featureIndex = BeautifulSoup(open('./target/jekyll-webapp/docs/ref/feature/index.html'), "html.parser")
 
-commonTOCs = [];
+commonTOCs = {};
 # gather TOCs with version in the title
 for featureTOC in featureIndex.find_all(href=True, role='button'):
     toc = featureTOC.string
-    splits = toc.split()
-    lastWord = splits[-1]
-    # if toc title ends with version, check whether there is same toc title with different version 
-    if lastWord.replace('.','',1).isdigit():
-       del splits[-1]
-       tocWithVersion = " ".join(splits)
-       sameTOCTitleWithVersion = featureIndex.find_all(href=True, role='button', string=re.compile(tocWithVersion + ' \d+.\d+$'))
-       if tocWithVersion not in commonTOCs:
-           commonTOCs.append(tocWithVersion)
+    pattern = re.compile('^(?P<preString>[\s\D]*) (?P<version>\d+[.]?\d*)(?P<postString>[\s\D]*)')
+    matches = pattern.match(toc)
+    if matches is None:
+        # take care of title with J2EE ...
+        pattern = re.compile('^(?P<preString>J2EE[\s\D]+) (?P<version>\d+[.]?\d*)(?P<postString>[\s\D]*)')
+        matches = pattern.match(toc)
+    if matches is not None and matches.group('version') is not None:
+        tocCompileString = '^' + matches.group('preString') + ' \d+[.]?\d*' + matches.group('postString') + "$"
+        tocCommonString = matches.group('preString') + matches.group('postString')
+        if tocCommonString not in commonTOCs:
+            #commonTOCs.append(tocCompileString)
+            commonTOCs[tocCommonString] = tocCompileString
        
 # process each TOC with version in the title
-for commonTOC in commonTOCs:
-    matchingTitleTOCs = featureIndex.find_all(href=True, role='button', string=re.compile(commonTOC + ' \d+.\d+$'))
+commonTOCKeys = commonTOCs.keys()
+commonTOCKeys = list(commonTOCKeys)
+for commonTOC in commonTOCKeys:
+    commonTOCMatchString = commonTOCs[commonTOC]
+    matchingTitleTOCs = featureIndex.find_all(href=True, role='button', string=re.compile(commonTOCMatchString))
     firstElement = True;
     # determine whether there are multiple versions
     if len(matchingTitleTOCs) > 1:
@@ -76,7 +86,7 @@ for commonTOC in commonTOCs:
         # write to the common version doc to a file
         with open('./target/jekyll-webapp' +  newTOCHref, "w") as file:
             file.write(str(featureVersionTemplate))
-    else:
+    elif len(matchingTitleTOCs) == 1:
         # single version doc is found, just strip off the version from the TOC title
         matchingTOC = matchingTitleTOCs[0]
         matchingTOC.string = commonTOC
