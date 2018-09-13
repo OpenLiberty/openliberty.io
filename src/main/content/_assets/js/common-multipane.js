@@ -190,22 +190,34 @@ function checkForInertialScrolling (event){
 function getScrolledVisibleSectionID() {
     var id = null;
     var maxVisibleSectionHeight = 0;
+    var topBorder = 0;
+    var scrollTop = $(window).scrollTop();
 
-    // Multipane view
     if (window.innerWidth > twoColumnBreakpoint) {
+        // multi-column view - header is constant and guide scrolls
+        //                     beneath it.
+        topBorder = $('#guide_meta').outerHeight(true); // Border point between
+                                                        // guide meta and 1st section
+    } else {
+        // single-column view - header and guide meta scroll away.
+        //                      TOC anchors to top of page at $('.scroller_anchor).
+        topBorder = $('.scroller_anchor').offset().top;
+    }
+
+    if (scrollTop <= topBorder) {
+        // scroll is within guide meta.
+        id = "";
+    } else {
         var sections = $('.sect1:not(#guide_meta):not(#related-guides), .sect2');
-        var topBorder = $('#guide_meta').outerHeight();  // Border point between
-                                                         // guide meta and 1st section
-        if ($(window).scrollTop() <= topBorder) {
-            // scroll is within guide meta.
-            id = "";
-        } else {
-            // Determine which section has the majority of the vertical height on 
-            // the page.
+
+        if (window.innerWidth > twoColumnBreakpoint) {
+            // multi-column view - 
+            // Determine which section has the majority of the vertical height 
+            // of the page.
             sections.each(function(index) {
                 var elem = $(sections.get(index));
                 var windowHeight = $(window).height();
-
+    
                 var elemHeight = elem.outerHeight();
                 var rect = elem[0].getBoundingClientRect();
                 var top = rect.top;
@@ -217,7 +229,7 @@ function getScrolledVisibleSectionID() {
                     bottom = sect2s[0].getBoundingClientRect().top;
                     elemHeight = bottom - top;
                 } 
-
+    
                 var visibleElemHeight = 0;
                 if(top > 0){
                      // Top of element is below the top of the viewport
@@ -234,8 +246,36 @@ function getScrolledVisibleSectionID() {
                     id = elem.children('h2, h3')[0].id;
                 }
             });
+    
+        } else {
+            // single-column view -  
+            // Determine the section that most recently passed under the 
+            // TOC header.
+            var TOC_height = $('#mobile_toc_accordion_container').outerHeight(true);           
+            sections.each(function(index) {
+                console.log('index: ' + index);
+                var $element = $(sections.get(index));
+                var sectionTop = $element.offset().top - TOC_height;
+                var sectionBottom = 0;
+                var sect2s = $element.find('.sect2');
+                if (sect2s.length > 0) {
+                    // If section contains subsections, measure the height of
+                    // the section as only to the top of the <h3> subsection.
+                    sectionBottom = $(sect2s[0]).offset().top - TOC_height;
+                } else {
+                    // Section does not contain subsections so height is as expected.
+                    sectionBottom = sectionTop + $element.outerHeight(true);
+                }
+
+
+                if (scrollTop >= sectionTop && scrollTop < sectionBottom) {
+                    id = $element.children('h2, h3')[0].id;
+                    return false;
+                }
+            });
         }
     }
+
     return id;
 }
 
