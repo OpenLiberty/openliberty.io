@@ -12,7 +12,9 @@ package io.openliberty.website;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -32,28 +34,31 @@ public class OpenLibertyEndpoint extends Application {
     @Path("builds")
     @Produces({ "application/json" })
     public JsonObject status() {
-        return buildsManager.getStatus().asJsonObject();
+        return buildsManager.getStatus();
     }
 
     @GET
     @Path("builds/data")
     @Produces({ "application/json" })
     public JsonObject builds() {
-        return buildsManager.getData().asJsonObject();
+        JsonObjectBuilder data = Json.createObjectBuilder();
+        data.add(Constants.LATEST_RELEASES, buildsManager.getLatestReleases());
+        data.add(Constants.BUILDS, buildsManager.getBuilds());
+        return data.build();
     }
 
     @GET
     @Path("builds/latest")
     @Produces({ "application/json" })
     public JsonObject latestsReleases() {
-        return buildsManager.getLatestReleases().asJsonObject();
+        return buildsManager.getLatestReleases();
     }
 
     @PUT
     @Path("builds")
     @Produces({ "application/json" })
     public JsonObject update() {
-        return buildsManager.updateBuilds().asJsonObject();
+        return buildsManager.updateBuilds();
     }
 
     @GET
