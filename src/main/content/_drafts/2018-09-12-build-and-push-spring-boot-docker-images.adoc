@@ -35,7 +35,7 @@ This adds the `boost-maven-plugin` to your project.
 
 You can build the Docker image either by adding an execution goal to the `pom.xml` or by running the goal interactively in the terminal.
 
-If a Dockerfile does not already exist in the root folder of the Spring Boot project, the `docker-build` goal creates a Liberty-specific Dockerfile and builds the Docker image. If a Dockerfile already exists in that location, you'll see a warning.
+The `docker-build` goal creates a Liberty-specific Dockerfile and builds the Docker image. If a Dockerfile already exists in that location, you'll see a warning and the existing Dockerfile is used to create the Docker image.
 
 The build creates a Docker image with a default repository name as `${project.artifactId}`
  and a default tag `latest`.
