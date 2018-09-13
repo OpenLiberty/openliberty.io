@@ -117,7 +117,7 @@ function removeHashRefTOC(href) {
 // Set the href for iframe to load the content. The call will not trigger a refresh.
 function setIframeLocationHref(href) {
     var iframeContent = $('iframe[name="contentFrame"]').contents();
-    if (iframeContent.attr("location").href !== href) {
+    if (iframeContent.attr("location").pathname !== href) {
         iframeContent.attr("location").replace(href);
     }
     // move focus to the content
@@ -312,14 +312,12 @@ function getContentBreadcrumbTitle() {
     return (getTitle(iframeContents.find("#config_title").text()));
 }
 
-function getTOCTitle(resource) {
-    return getTitle(resource.text());
-}
-
 function getTitle(title) {
     var retTitle = title;
-    if (title.indexOf(" - ") !== -1) {
-        retTitle = title.substring(0, title.indexOf(" - "));
+    var openParamIndex = title.indexOf("(");
+    var closeParamIndex = title.indexOf(")");
+    if (openParamIndex !== -1 & closeParamIndex != -1) {
+        retTitle = title.substring(openParamIndex + 1, closeParamIndex);
     }
     return retTitle.trim();
 }
@@ -884,22 +882,8 @@ function handleInitialContent() {
     // if hash is included in the url, load the content document and replace the
     // history state. Otherwise, load the first document.
     if (window.location.hash !== "" && window.location.hash !== undefined) {
-        var fullHref = '/config/' + window.location.hash.substring(1)
-        var isExpand = undefined;
-        if (fullHref.indexOf("&") !== -1) {
-            fullHref = fullHref.substring(0, fullHref.indexOf("&"));
-            if (window.location.hash.indexOf("&expand=true") !== -1) {
-                isExpand = true;
-            } else if (window.location.hash.indexOf("&expand=false") !== -1) {
-                isExpand = false;
-            }
-        }
+        var fullHref = replaceHistoryState(window.location.hash);
         setIframeLocationHref(fullHref);
-        var state = { href: fullHref };
-        if (state !== undefined) {
-            state.expand = isExpand;
-        }
-        window.history.replaceState(state, null, window.location.hash);
     } else {
         selectFirstDoc();
     }
@@ -1075,6 +1059,45 @@ function adjustFrameHeight() {
     }
 }
 
+function updateHashAfterRedirect() {
+    var hashValue = window.location.hash;
+    var href = "";
+    if (hashValue !== "" && hashValue.indexOf("#rwlp_config_") !== -1) {
+        hashValue = hashValue.substring("#rwlp_config_".length);
+        //hashValue = hashValue.substring(1);
+        if (hashValue.indexOf("&") !== -1) {
+            href = "/config/" + hashValue.substring(0, hashValue.indexOf("&"));
+        } else {
+            href = "/config/" + hashValue;
+        }
+    
+        var iframeContent = $('iframe[name="contentFrame"]').contents();
+        var location = iframeContent.attr("location")
+        if (location.pathname + location.hash === href) {
+            replaceHistoryState('#' + hashValue);
+        }
+    }
+}
+
+function replaceHistoryState(hashToReplace) {
+    var fullHref = "/config/" + hashToReplace.substring(1)
+    var isExpand = undefined;
+    if (fullHref.indexOf("&") !== -1) {
+        fullHref = fullHref.substring(0, fullHref.indexOf("&"));
+        if (hashToReplace.indexOf("&expand=true") !== -1) {
+            isExpand = true;
+        } else if (hashToReplace.indexOf("&expand=false") !== -1) {
+            isExpand = false;
+        }
+    }
+    var state = { href: fullHref };
+    if (isExpand !== undefined) {
+        state.expand = isExpand;
+    }
+    window.history.replaceState(state, null, hashToReplace);
+    return fullHref;
+}
+
 $(document).ready(function () {
     addTOCClick();
     addConfigContentFocusListener();
@@ -1121,6 +1144,9 @@ $(document).ready(function () {
                     handleExpandCollapseState(titleId, isExpand);
                 }
             }
+
+            // update hash if it is redirect
+            updateHashAfterRedirect()
 
             if (isMobileView() && $("#toc_column").hasClass('in')) {
                 $(".breadcrumb_hamburger_nav").trigger('click');
