@@ -1,38 +1,25 @@
 ---
 layout: post
-title: "The boost-maven-plugin: An easy way to build layered Docker images of Spring Boot apps"
+title: "Build and push Spring Boot Docker images with boost-maven-plugin"
 date:   2018-09-12 10:20:00 -0000
 categories: blog
-seo-title: The boost-maven-plugin: An easy way to build layered Docker images of Spring Boot apps - OpenLiberty.io
-seo-description: A simple and efficient way of building and pushing layered Docker images of Spring Boot applications using the Boost Maven Plugin.
-blog_description: "A simple and efficient way of building and pushing layered Docker images of Spring Boot applications using the Boost Maven Plugin".
+seo-title: Build and push Spring Boot Docker images with boost-maven-plugin - OpenLiberty.io
+seo-description: Efficiently build and push layered Docker images of Spring Boot applications using the Boost Maven plugin.
+blog_description: "A simple and efficient way of building and pushing layered Docker images of Spring Boot applications using the Boost Maven plugin".
 ---
-
-
-= The boost-maven-plugin: An easy way to build layered Docker images of Spring Boot apps
+= Build and push Spring Boot Docker images with boost-maven-plugin
 Anjum Fatima <https://github.com/anjumfatima90>
 
-Do you want an efficient Docker image of your Spring Boot application? Do you want a Maven plugin to do the job?
-If the answer is yes, you are at the right place.
+Do you want an efficient Docker image of your Spring Boot application? Do you want a Maven plugin to do the job? If the answer is yes, you are in the right place. The `boost-maven-plugin` provides a simple and efficient way to build your Docker image without even having to write a Dockerfile.
 
-Writing a Dockerfile to create an efficient Docker image requires more than just an understanding of the application.
-Efficient Docker images require techniques and capabilities in Docker that go beyond a simplistic Dockerfile approach.
-The Boost Maven plugin provides a functionality to build and push efficient Docker images of Spring Boot
-applications using Liberty.
+Writing a Dockerfile to create an efficient Docker image requires more than just an understanding of the application. The Boost Maven plugin provides a functionality to build and push efficient Docker images of Spring Boot applications using Liberty.
 
-In the blog post link:blog/2018/07/02/creating-dual-layer-docker-images-for-spring-boot-apps.html[Creating Dual Layer Docker images for Spring Boot apps],
-the steps to create an efficient docker image was shown.
-To improve the user experience, you can easily configure the Boost Maven plugin into your
-Spring Boot application to build and push efficient Docker images without having to write a Dockerfile.
+In a previous blog post, link:blog/2018/07/02/creating-dual-layer-docker-images-for-spring-boot-apps.html[Creating dual layer Docker images for Spring Boot apps], we showed how to create an efficient Docker image by writing the Dockerfile yourself. Using the Boost Maven plugin, you can create an efficient Docker image with only minimal knowledge of Docker. Just install and run Docker on your machine to get started.
 
-== Steps to configure the Boost Maven plugin
+== Configuring the Boost Maven plugin
 
-1. `spring-boot-maven-plugin` must be configured before `boost-maven-plugin` plugin in order to create the required executable archive
-of the application.
+In your Spring Boot application, after the `spring-boot-maven-plugin` entry in the `pom.xml` file, add another entry for the `boost-maven-plugin` in the `<plugins>` section:
 
-2. You can configure the `boost-maven-plugin` in the `plugins` section of the pom.xml
-of your Spring Boot application as shown below:
-+
 ----
 <plugin>
   <groupId>io.openliberty.boost</groupId>
@@ -40,14 +27,22 @@ of your Spring Boot application as shown below:
   <version>0.1</version>
 </plugin>
 ----
-+
-It requires minimal knowledge of Docker including installing and running Docker on your machine.
+
+This adds the `boost-maven-plugin` to your project.
 
 
-=== Build Docker image
+== Building the Docker image
 
-* To build a docker image you can add execution goal to the plugin inside pom.xml like:
-+
+You can build the Docker image either by adding an execution goal to the `pom.xml` or by running the goal interactively in the terminal.
+
+If a Dockerfile does not already exist in the root folder of the Spring Boot project, the `docker-build` goal creates a Liberty-specific Dockerfile and builds the Docker image. If a Dockerfile already exists in that location, you'll see a warning.
+
+The build creates a Docker image with a default repository name as `${project.artifactId}`
+ and a default tag `latest`.
+
+=== Updating the pom.xml
+To add the goal to your `pom.xml`, update the `boost-maven-plugin` entry in the `pom.xml` with the `docker-build` goal:
+
 ----
 <plugin>
   <groupId>io.openliberty.boost</groupId>
@@ -62,29 +57,28 @@ It requires minimal knowledge of Docker including installing and running Docker 
   </executions>
 </plugin>
 ----
-+
-`mvn clean package` creates a Docker image with a default repository name as `${project.artifactId}`
- and a default tag `latest`.
 
-* Alternatively, you can configure the plugin with no execution goals and do the following steps:
-
-+
-`mvn clean package`
-+
-`mvn boost:docker-build`
+Run `mvn clean package`.
 
 
-The docker-build goal creates a Liberty specific Dockerfile in the root folder of the Spring Boot project
-in the absence of a Dockerfile and builds the Docker image.
+=== Running the goal interactively
+
+Alternatively, you can just run the goal interactively:
+
+Run `mvn clean package`
+
+Run `mvn boost:docker-build`
 
 
-=== Push Docker image
+== Pushing the Docker image to a registry
 
- * In order to push an image to a public or private registry, you need to configure the `repository` parameter
-in the format `[REGISTRYHOST/][USERNAME/]NAME`. The tag parameter is set to `latest` by default.
-+
-You can configure the plugin as follows:
-+
+To push an image to a public or private registry, you need to configure the `repository` parameter
+in the format `[REGISTRYHOST/][USERNAME/]NAME`. The tag parameter is set to `latest` by default. You can do this either by adding an execution goal to the `pom.xml` or by running the goal interactively in the terminal.
+
+=== Updating the pom.xml
+
+To add the goal to your `pom.xml`, update the plugin entry in the `pom.xml`:
+
 ----
 <plugin>
   <groupId>io.openliberty.boost</groupId>
@@ -103,40 +97,13 @@ You can configure the plugin as follows:
   </executions>
 </plugin>
 ----
-+
-For a public registry like Docker Hub, replace `[your_domain_name]` with your Docker Hub username.
-+
-For a private registry like IBM Container registry, replace `[your_domain_name]` with with your IBM Container Registry Host. For example, `registry.ng.bluemix.net`.
 
-+
-`mvn clean install` creates an image with the given `repository` name with default tag `latest` and pushes the image to the registry.
+For a public registry like Docker Hub, replace `[your_domain_name]` with your Docker Hub username. For a private registry like IBM Container registry, replace `[your_domain_name]` with with your IBM Container Registry Host. For example, `registry.ng.bluemix.net`.
 
-* Alternatively, you can configure the plugin with no execution goals and do the following steps:
 
-+
-`mvn clean package`
-+
-`mvn boost:docker-build`
-+
-`mvn boost:docker-push`
+Update the Maven `settings.xml` file with your authentication details for the registry, for example:
 
-== Authentication required to push Docker image
-
-For the `docker-push` goal to work, authentication is required.
-
-* You can provide credentials in the Maven settings.xml file.
-+
-----
-<server>
-  <id>[your_registry_id]</id>
-  <username>[your_registry_username]</username>
-  <password>[your_registry_password]</password>
-</server>
-----
-+
-Example :
-+
-For a public registry like Docker Hub,
+* For a public registry like Docker Hub:
 +
 ----
 <server>
@@ -146,8 +113,7 @@ For a public registry like Docker Hub,
 </server>
 ----
 
-+
-For a private registry like IBM Container Registry, [1]
+* For a private registry like https://docs.docker.com/v17.09/docker-for-ibm-cloud/ibm-registry/[IBM Container Registry]:
 +
 ----
 <server>
@@ -157,28 +123,41 @@ For a private registry like IBM Container Registry, [1]
 </server>
 ----
 
-* Alternatively, you can provide credentials by using the `docker login` command.
-+
-This stores the credentials in the default Docker config location `~/.docker/config.json`.
-+
-Example:
-+
-For a public registry like Docker Hub,
+
+
+Run `mvn clean install`
+This creates a Docker image with the given `repository` name and the default tag `latest`, and then pushes the image to the registry.
+
+=== Running the goal interactively
+
+Alternatively, to run the goal interactively, first authenticate with the repository:
+
+* For a public registry like Docker Hub: 
 +
 ----
 docker login
 ----
-+
-For a private registry like IBM Container Registry, [1]
+
+
+* For a private registry like https://docs.docker.com/v17.09/docker-for-ibm-cloud/ibm-registry/[IBM Container Registry]:
 +
 ----
 docker login -u token -p [your_registry_token] registry.ng.bluemix.net
 ----
+
+
+Run `mvn clean package`
+
+Run `mvn boost:docker-build`
+
+Run `mvn boost:docker-push`
+
 
 == Try it out!
 
 Building efficient Docker images has never been so easy!! Try the link:https://github.com/OpenLiberty/boost-maven[Boost Maven plugin]
 to build and push efficient Docker images of your Spring Boot applications.
 
-== References
-[1] https://docs.docker.com/v17.09/docker-for-ibm-cloud/ibm-registry/
+Just head over to the
+link:https://github.com/barecode/spring-petclinic/blob/master/Demo-SpringOne2018.md[Sample app project] and follow the instructions to build Liberty-based Docker images.
+
