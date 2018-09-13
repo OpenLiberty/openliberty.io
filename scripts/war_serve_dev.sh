@@ -25,6 +25,7 @@ echo '<variable name="appLocation" value="openliberty.war" /><featureManager><fe
 
 
 # Check if required public.dhe.ibm.com is present
+wait_for_key_jks
 has_dhe_cert
 if [[ $HAS_CERT ]]; then
   echo "$KEY_JKS appears to be configured correctly";

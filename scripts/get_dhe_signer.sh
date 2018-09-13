@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# Wait for KEY_JKS to be present, because the server might be creating it
+function wait_for_key_jks {
+  if [[ -z $KEY_JKS ]]; then echo "Set KEY_JKS"; exit 1; fi
+  if [[ ! -f $KEY_JKS ]]; then
+    echo "Keystore not present, perhaps its being created. Waiting 10 seconds"
+    sleep 10
+    if [[ ! -f $KEY_JKS ]]; then
+      echo "WARNING: Keystore still not ready, subsequent steps might fail!"
+    fi
+  fi
+}
+
+
 # Check if KEY_JKS has the public.dhe.ibm.com certificate
 function has_dhe_cert {
   if [[ -z $SERVER_DIR ]]; then echo "Set SERVER_DIR"; exit 1; fi
@@ -33,6 +46,7 @@ function get_dhe_signer {
 
 # Main method, for testing and direct use
 function main {
+  wait_for_key_jks
   has_dhe_cert
   if [[ $HAS_CERT ]]; then
     echo "Keystore appears to be configured correctly";
