@@ -1,0 +1,289 @@
+/*******************************************************************************
+ * Copyright (c) 2018 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+// Colors
+$popover-color: #f1f4fe;
+$blue-grey-color: #5d6a8e;
+
+// Shared styling
+%full-width-and-padding {
+    width: 100%;
+    padding-left: 34px;
+    padding-right: 34px;
+}
+
+// Overrides
+
+.guide_item {
+    // Override the light gray border-left from the default card
+    border-left: solid 9px #9EA6BA; 
+    @media (max-width: 767px) {
+        width: 100%;
+    }
+}
+
+// -----------
+
+#contribute_intro_paragraph_1 {
+    margin-bottom: 0;
+
+    font-size: 20px;
+    line-height: 35px;
+    @media (max-width: 767px) {
+        font-size: 16px;
+        line-height: inherit;
+    }
+}
+
+%transition_guide_search_input {
+    transition: border-color .2s;
+    -webkit-transition: width .5s;
+    -moz-transition: width .5s;
+    -o-transition: width .5s;
+    transition: width .5s;
+}
+
+#guide_search_input {
+    height: 52px;
+    max-width: 556px;
+    min-width: 200px;
+    font-size: 14px;
+    color: $blue-grey-color;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 49px;
+    padding-right: 27px;
+    border: none;
+    background-color: #EEEFF3;
+    background-image: url('/img/guides_search_icon.svg');
+    background-repeat: no-repeat;
+    background-position: left 17px center;
+    @extend %transition_guide_search_input;
+
+    width: 40%;
+    &:focus {
+        // border-color: #8194C7;
+        width: 100%;
+    }
+
+    @media (max-width: 767px) {
+        max-width: none;
+        float: none;
+        margin: 0 auto;
+        width: 100%
+    }
+}
+
+#guides_information_container {
+    position: relative;
+    width: 100%;
+    padding-top: 50px;
+    padding-bottom: 29px;
+    padding-left: 34px;
+    padding-right: 34px;
+    background:#24243b;
+
+    min-height: 143px;
+    @media (max-width: 767px) {
+        min-height: 232px;
+    }
+}
+
+#guide_search_information {
+    display: inline-block;
+}
+
+#guides_search_container {
+    text-align: right;
+
+    // Modification to the default popover styling
+    & .popover-content {
+        padding: 11px 17px 15px;
+    }
+    & .popover {
+        position: relative;
+        display: inline-block !important;
+        width: 100%;
+        border: none;
+        border-radius: 0px;
+        background: $popover-color;
+        box-shadow:0 0 4px 0 rgba(0,0,0,0.50);
+        &.bottom {
+            margin-top: 4px;
+            & > .arrow {
+                left: 50px !important;
+                &:after {
+                    border-bottom-color: $popover-color;
+                }
+            }
+        }
+
+        max-width: 556px;
+        @media (max-width: 767px) { 
+            max-width: none;
+        }
+    }
+}
+
+.tags_title {
+    font-size: 11px;
+    color: #24243b;
+}
+
+.tag_button {
+    display: inline-block;
+    background: transparent;
+    color:#3f465a;
+    border:1px solid #3f465a;
+    border-radius:46px;
+    padding: 2px 12px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    text-transform: uppercase;
+
+    opacity: 0.5;
+    &:hover {
+        opacity: 1;
+    }
+    &:active {
+        outline: none;
+    }
+}
+
+#guides_border {
+    position: absolute;
+    opacity: 0.42;
+    background-color: $blue-grey-color;
+    height: 1px;
+    width: 100%;
+    top: 0px;
+    right: 0px;
+}
+
+#guides_title {
+    margin-top: 0;
+    margin-bottom: 14px;
+    font-family: BunueloLight;
+    font-size: 50px;
+    color: white;
+    letter-spacing: 0;
+}
+
+#guides_description {
+    font-size: 16px;
+    color: white;
+}
+
+#guides_microprofile_banner,
+#guides_basic_banner {
+    @extend %full-width-and-padding;
+    background-color: #DEE1E8;
+}
+
+#guides_additional_banner,
+#no_search_results_banner {
+    @extend %full-width-and-padding;
+    background-color: #F2F3F6
+}
+
+#footer_container {
+    @extend %full-width-and-padding;
+}
+
+#guides_basic_container,
+#guides_microprofile_container,
+#guides_additional_container,
+#no_search_results_container {
+    @extend %full-width-and-padding;
+    margin-top: 35px;
+    margin-bottom: 40px;
+}
+
+#guides_microprofile_container {
+    @media (max-width: 767px) {
+        margin-bottom: 30px;
+    }
+}
+
+#microprofile_more_guides {
+    margin-top: 30px;
+}
+
+#microprofile_more_guides_button {
+    background-color: white;
+    color: $blue-grey-color;
+
+    & #microprofile_more_guides_icon {
+        margin-right: 30px;
+        font-size: 30px;
+    }
+}
+
+.guide_category_header {
+    margin-bottom: 27px;
+}
+
+.guide_category_title {
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #3f4659;
+}
+
+.total_guide_count {
+    text-align: right;
+    @media (max-width: 767px) {
+        text-align: left;
+    }
+}
+
+.subtitle {
+    & > * {
+        margin-bottom: 20px;
+    }
+
+    & > *:last-child {
+        margin-bottom: 35px;
+    }
+}
+
+#clouds {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    height: 185px;
+    width: 708px;
+}
+
+
+.no_results_section {
+    display: none;
+
+    & .subtitle {
+        margin-bottom: 80px;
+    }
+
+    & #back_to_guides_button {
+        padding: 0px;
+        font-size: 16px;
+        background-color: white;
+        color: $blue-grey-color;
+    }
+    
+    & .arrow {
+        margin-right: 20px;
+        margin-bottom: 2px;
+    }
+
+    & .search_term {
+        word-wrap: break-word;
+    }
+}

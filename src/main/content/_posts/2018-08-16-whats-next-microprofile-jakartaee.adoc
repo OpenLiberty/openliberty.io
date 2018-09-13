@@ -1,0 +1,63 @@
+---
+layout: post
+title: What's next for MicroProfile and Jakarta EE?
+date:   2018-08-16 15:45:00 +0100
+categories: blog
+author_picture: https://avatars1.githubusercontent.com/u/7726127
+seo-title: What's next for MicroProfile and Jakarta EE? - OpenLiberty.io.
+seo-description: Get Kevin Sutter's view on how the MicroProfile and Jakarta EE projects could be combined at some point. He describes the progress in establishing each of the two projects, the issues to consider as the projects become more established, and current steps that are being made towards a more integrated future.
+blog_description: "Get Kevin Sutter's view on how the MicroProfile and Jakarta EE projects could be combined at some point. He describes the progress in establishing each of the two projects, the issues to consider as the projects become more established, and current steps that are being made towards a more integrated future."
+---
+= What\'s next for MicroProfile and Jakarta EE?
+Kevin Sutter <https://github.com/kwsutter>
+
+This is one of the most common questions I get on forums, conferences---even internally at IBM.  Eclipse MicroProfile is fairly well-established with several key features and releases under its belt and the future of Java EE is now being established with Eclipse Jakarta EE.  When will these two forces combine?  This is a difficult question.  Hopefully this post will help explain the circumstances that must occur for this integration.
+
+== MicroProfile
+
+First, a brief history of the https://microprofile.io/[Eclipse MicroProfile] project.  MicroProfile was created to extend the Enterprise Java environment for developing microservices.  We first selected the minimal three Java EE technologies that would provide a solid base for microservices development – CDI, JAX-RS, and JSON-P.  Since that initial release, we have added several other component features to further define the microservices programming model.  Our latest MicroProfile release has also included support for Java EE 8.
+
+image::/img/blog/MP-JavaEE8-diagram.png[align="center",Diagram of MicroProfile 2.0 components with support for Java EE 8.]
+
+Each component release of MicroProfile is required to create a specification, an API, and a TCK (Test Compatibility Kit).  We also require at least one "compatible implementation"---an open-source implementation that successfully implements the specification, uses the API, and passes the TCK.  Periodically, these component features are collected into a higher-level, convenience release known as MicroProfile.  At this point in time, the MicroProfile "platform" releases do not define additional specifications, APIs, or TCKs.
+
+== Jakarta EE
+
+Let’s talk a bit about the https://jakarta.ee/[Eclipse Jakarta EE] project and its current state of affairs.  As stated previously, Jakarta EE is the new home for the Java EE platform.  Oracle will continue to own everything associated with Java EE, up to and including Java EE 8.  All future development of this Enterprise Java environment after Java EE 8 will be done at Eclipse under the guidance of the Jakarta EE working group.  Fantastic progress is being made transferring the Java EE code base to Eclipse under the EE4J top-level project.  
+
+Some explanation for naming fans:  *Jakarta EE* is the working group name at Eclipse, while https://projects.eclipse.org/projects/ee4j[*EE4J*] is the top-level project name for code and materials developed at Eclipse for Jakarta EE.  Many times, these two terms could be used synonymously but the brand name we use is Jakarta EE and code in the EE4J projects provide APIs, docs and implementations. It's intended that there will be multiple independent implementations of Jakarta EE across a variety of open source organizations and projects so the code projects at Eclipse are gathered under a project name, *ee4j*, that is distinct from the brand name (Jakarta EE).
+
+image::/img/blog/JakartaEEupdate.png[align="center",Jakarta EE members and initial project proposals.]
+
+A couple of things to note with this graphic...
+
+* The large number of participating Strategic and Participating Members at the Eclipse Foundation.  No longer will the future of Enterprise Java lie with a single entity.  But, at the same time, notice that Oracle is very much participating in this consortium.
+* The progress we are making at http://www.eclipse.org/ee4j/status.php[transferring the source projects from Oracle to Eclipse].  The end goal (100%) is when a component completes a release using the Eclipse processes.
+
+Beyond the transferring of the code itself, Jakarta EE also needs the Java EE Specifications and TCKs.  Java EE (https://jcp.org/en/home/index[along with the JCP]) defined standards for Enterprise Java.  In order to develop and maintain these standards, Eclipse must be able to define an appropriate specification process.  This effort is owned by the https://accounts.eclipse.org/mailing-list/jakarta.ee-spec[Jakarta EE Specification Committee].  An http://dev.eclipse.org/mhonarc/lists/jakarta.ee-wg/msg00107.html[initial draft of the specification process] has been distributed for review.
+
+At the same time, the compatibility process needs to be defined in order to protect the Jakarta EE brand.  There needs to be some expectations and rules put in place so that only "approved" implementations can proudly display the Jakarta EE logo on their product and web pages.  This approval process is tightly coupled with the specification process and is also owned by the Jakarta EE Specification Committee.
+
+image::/img/logos/Jakarta_EE_logo.png[align="center",Jakarta EE logo.]
+
+== What's next?
+
+Both of these Eclipse projects have merit and are making progress in their respective domains, with MicroProfile technologies building upon those being contributed to Jakarta EE.  But are the projects themselves ready to be merged?  IMHO, no.  MicroProfile has grown tremendously from its humble beginnings.  We have several new component features and versions that extend the Enterprise Java programming model for microservices development.  And we have done this in a relatively short amount of time: Six major MicroProfile releases with sixteen component releases in less than two years.
+
+Due to the enormity and complexities of this move, Jakarta EE is not yet ready to match this rate of progress.  And, as Jakarta EE has not yet completed the definition of its specification process, it is not yet ready to accept the fast-paced release cycle required by MicroProfile.  The big difference here is that MicroProfile has never tried to be https://en.wikipedia.org/wiki/Standards_organization[a standards body].  MicroProfile produces industry-accepted specifications, not standards.  Jakarta EE is trying to replace the JCP Standards body with a more modern, open, and lightweight _implementation-first_ process.
+
+Until Jakarta EE has demonstrated a specification process that allows the rapid, innovative aspects of the MicroProfile project, MicroProfile will maintain its own project dynamics distinct from the EE4J projects.  MicroProfile can continue to iterate quickly in parallel to working with the Jakarta EE platform to adopt completed MicroProfile technologies into the next release of Jakarta EE. Over time, the need for this distinction is likely to reduce, especially as many of the same teams and people are involved with both projects.  Yours truly is one of the project leads for the MicroProfile project. I also participate on the EE4J PMC as well as the Jakarta EE Steering and Specification Committees.  We are working together to make this happen.
+
+== Baby steps
+
+In the meantime, there are a few activities that are demonstrating the coming together of these two projects and technologies...
+
+* The JAX-RS project under EE4J is actively investigating the possibility of incorporating the MicroProfile Rest Client effort in an upcoming release.  This is actually the way we wanted and expected the MicroProfile technologies to grow.  We would first rapidly innovate in the MicroProfile arena and, when it was ready, attempt to incorporate the features into the next iteration of the Enterprise Java offering.
+* In a similar vein, the MicroProfile Config component is actively working on a https://www.jcp.org/en/jsr/detail?id=382[Java EE Configuration API JSR].  This effort was kicked off before Oracle announced the decision to move Java EE to the Eclipse Foundation.  A couple of early drafts of their specification have been made available for review.  Depending on the success and timing of finalizing the Jakarta EE specification process, maybe this Configuration API JSR would migrate to this new process.
+* The reactive programming model effort will eventually target Jakarta EE.  The team from https://www.lightbend.com/[Lightbend] was looking for the best way to incorporate some of their reactive programming ideas into the Enterprise Java space.  They determined that the https://www.lightbend.com/blog/how-the-microprofile-community-will-shape-jakarta-ee[quickest way to make some immediate progress was to develop a MicroProfile component].  But, their end game is to become part of Jakarta EE.
+
+== IMHO
+
+In conclusion, I do need to emphasize that this post is my view of where we stand and what needs to be done to better integrate MicroProfile with Jakarta EE.  This is not a collective view of the MicroProfile community, although they were made aware of this pending article.  I do believe that eventually this merging of MicroProfile and Jakarta EE must and will happen.  It’s just a matter of timing. 
+
+Kevin is Eclipse MicroProfile co-lead and EE4J PMC member.
