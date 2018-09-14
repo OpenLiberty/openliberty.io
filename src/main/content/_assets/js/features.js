@@ -17,6 +17,7 @@ var mobileWidth = 767;
 // the hash is updated by the codes and is used to compare the hashchange value to
 // determine whether hashchange event should be handled.
 var lastClickElementHref; 
+var windowFocus = false;
 
 // setup and listen to click on table of content
 function addTOCClick() {
@@ -47,27 +48,10 @@ function addTOCClick() {
     });
 
     addOutlineToTabFocus("#toc_container > ul > li > div");
-    // events to detect keyboard focus and add outline to the element. Outline will not
-    // be added if the focus is thru mouse event.
-    /* $("#toc_container > ul > li > div").off("blur").on("blur", function(event) {
-        if ($(this).hasClass('addFocus')) {
-            $(this).removeClass('addFocus');
-        }
+
+    $(window).off('focus').on('focus', function(event) {
+        windowFocus = true;
     })
-
-    var mousedown = false;
-    $("#toc_container > ul > li > div").off('mousedown').on('mousedown', function(event) {
-        mousedown = true;
-    });
-
-    $("#toc_container > ul > li > div").off('focusin').on('focusin', function(event) {
-        if (!mousedown) {
-            $(this).addClass("addFocus");
-            // scroll the parent window back up if it is scroll down
-            adjustParentWindow();
-        }
-        mousedown = false;
-    }); */
 }
 
 // highlight the selected TOC
@@ -164,7 +148,6 @@ function addVersionClick(hrefToClick) {
     }
 
     addOutlineToTabFocus("#common_feature_title > .feature_version");
-    
 }
 
 // events to detect keyboard focus and add outline to the element. Outline will not
@@ -182,12 +165,13 @@ function addOutlineToTabFocus(selector) {
     });
 
     $(selector).off('focusin').on('focusin', function(event) {
-        if (!mousedown) {
+        if (!mousedown && !windowFocus) {
             $(this).addClass("addFocus");
             // scroll the parent window back up if it is scroll down
             adjustParentWindow();
         }
         mousedown = false;
+        windowFocus = false;
     });
 }
 
