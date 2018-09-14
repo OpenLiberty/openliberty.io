@@ -8,11 +8,10 @@ seo-title: Instrument your microservices and more with MicroProfile 2.0 on Open 
 seo-description: Monitor your microservices with metrics from your applications, from Liberty components, and to report on their fault tolerance handling. Plus more for your microservices with Open Liberty 18.0.0.3.
 blog_description: "Monitor your microservices with metrics from your applications, from Liberty components, and to report on their fault tolerance handling. Plus more for your microservices with Open Liberty 18.0.0.3."
 ---
-= Instrument your microservices and more with MicroProfile 2.0 on Open Liberty 18.0.0.3
+= Get more metrics from your apps with MicroProfile 2.0 on Open Liberty 18.0.0.3
 Laura Cowen <http://github.com/lauracowen>
 
-Instrumenting your microservices is easy with MicroProfile 2.0. In Open Liberty 18.0.0.3, the MicroProfile Metrics feature has been updated to make it easier to access your microservice metrics endpoint without authenticating (e.g. during development). There are also new metrics available at the `/metrics` endpoint, including metrics from individual Liberty components and fault tolerance monitoring. If you've not worked with metrics in Open Liberty before, take a look at our introductory https://openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice] guide. If metrics aren't your thing (seriously?!), there's even more for your microservices in MicroProfile 2.0 on Open Liberty 18.0.0.3.
-
+Get metrics on your fault tolerant methods to find out whether your application is actually failing where you think it is. You can apply MicroProfile Fault Tolerance annotations to your methods then collect metrics from the MicroProfile Metrics `/metrics` endpoint to monitor exactly what happens if your application fails. Also in MicroProfile 2.0, you can collect metrics from the `/metrics` endpoint on individual Liberty components and you can configure authentication on the endpoint to make development easier. If you've not worked with metrics in Open Liberty before, take a look at our introductory https://openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice] guide. If metrics isn’t your thing (seriously?!), there is even more in MicroProfile 2.0, it brings in Java EE 8 versions of CDI, JSON-P, and JAX-RS as well as adding JSON-B. It also provides updates to config, JWT, Open Tracing, and the REST Client specs.
 
 If you're using https://www.openliberty.io/guides/maven-intro.html[Maven], here are the coordinates:
 
@@ -49,14 +48,14 @@ image::/img/blog_btn_stack.svg[Ask a question on Stack Overflow, align="center"]
 
 What else can Open Liberty 18.0.0.3 do for your microservices? Take a look:
 
-*  <<mp,Conveniently enable all MicroProfile 2.0 or MicroProfile 1.4 features>>
-*  <<mpmetrics,Access metrics without authentication (MicroProfile Metrics 1.1)>>
-*  <<monitor,Get Liberty component metrics from /metrics endpoint (Monitor 1.0 with MP Metrics 1.1)>>
 *  <<mpfault,Monitor faults in your microservices (MicroProfile Fault Tolerance 1.1)>>
+*  <<monitor,Get Liberty component metrics from /metrics endpoint (Monitor 1.0 with MP Metrics 1.1)>>
+*  <<mpmetrics,Disable authenticaton on /metrics during development (MicroProfile Metrics 1.1 update)>>
 *  <<mprestclient,Reactive programming in a type-safe RESTful client (MicroProfile Rest Client 1.1)>>
 *  <<mpjwt,Verify security tokens in a container-neutral way to simplify deployment (MicroProfile JWT 1.1)>>
 *  <<mptracing,Automatically trace JAX-RS requests between microservices (MicroProfile Open Tracing 1.1)>>
 *  <<mpconfig,Dynamically update your microservice configuration (MicroProfile Config 1.3)>>
+*  <<mp,Conveniently enable all MicroProfile 2.0 or MicroProfile 1.4 features>>
 *  <<sociallogin,Provide social media single sign-on options to app users (Social Login 1.0)>>
 *  <<jdbc,Use a java.sql.Driver as a data source (JDBC 4.2, 4.1, 4.0)>>
 
@@ -66,96 +65,6 @@ As we don't have a full set of documentation implemented for Open Liberty yet, s
 
 
 
-[#mp]
-== Conveniently enable all MicroProfile 2.0 or MicroProfile 1.4 features
-
-Enable all the MicroProfile 2.0 features or all the MicroProfile 1.4 features at once with the new convenience features. MicroProfile 2.0 is based on Java EE 8 technologies while MicroProfile 1.4 is based on Java EE 7 technologies.
-
-To enable MicroProfile 2.0 features:
-
-
-[source,xml]
-----
-<featureManager>
-  <feature>microProfile-2.0</feature>
-</featureManager>
-----
-
-This is the equivalent of individually enabling the following features: `jaxrs-2.1`, `cdi-2.0`, `jsonp-1.1`, `jsonb-1.0`, `mpConfig-1.3`, `mpFaultTolerance-1.1`, `mpHealth-1.0`, `mpJwt-1.1`, `mpMetrics-1.1`, `mpOpenAPI-1.0`, `mpOpenTracing-1.1`, `mpRestClient-1.1`.
-
-To enable MicroProfile 1.4 features:
-
-[source,xml]
-----
-<featureManager>
-  <feature>microProfile-1.4</feature>
-</featureManager>
-----
-
-This is the equivalent of individually enabling the following features: `jaxrs-2.0`, `cdi-1.2`, `jsonp-1.0`, `mpConfig-1.3`, `mpFaultTolerance-1.1`, `mpHealth-1.0`, `mpJwt-1.1`, `mpMetrics-1.1`, `mpOpenAPI-1.0`, `mpOpenTracing-1.1`, `mpRestClient-1.1`.
-
-
-New to MicroProfile? Try https://www.openliberty.io/guides/rest-intro.html[building a RESTful web service with Liberty and MicroProfile].
-
-
-Learn more about MicroProfile Metrics in the https://openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice] guide or https://openliberty.io/docs/intro/microprofile.html[find out more about writing microservices with MicroProfile].
-
-//For more info:
-//* https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_monitor.html[Monitoring with MicroProfile metrics]
-
-
-
-
-[#mpmetrics]
-== Access metrics without authentication (MicroProfile Metrics 1.1)
-
-A new option for accessing `/metrics` without authentication makes it easier for developers and administrators to set up monitoring of Liberty servers in situations where security isn't required. Tools such as Prometheus or Collectd can be set up quickly to scrape metrics from Liberty.
-
-MicroProfile Metrics in Liberty provides metrics for application developers and administrators to monitor their applications. Metrics are often collected and stored in a time series database such as Prometheus. Previously, the `/metrics` endpoint provided by Liberty required basic authentication. Administrators needed to add the username and password to Prometheus's configuration in order for Prometheus to scrape the metrics from Liberty.
-
-An optional configuration attribute is now available to turn off the basic authentication of the `/metrics` endpoint. Prometheus can automatically discover Liberty's `/metrics` endpoint without modifying its configuration.
-
-To turn off basic authentication for the `/metrics` endpoint, add `<mpMetrics authentication="false"/>` to `server.xml`:
-
-
-[source,xml]
-----
-
-<featureManager>
-    <feature>mpMetrics-1.1</feature>
-</featureManager>
-
-<mpMetrics authentication="false"/>
-----
-
-
-Learn more about MicroProfile Metrics in the https://openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice] guide.
-
-//For more info:
-//* https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_monitor.html[Monitoring with MicroProfile metrics]
-
-
-[#monitor]
-== Get Liberty component metrics from /metrics endpoint (monitor-1.0 with mpMetrics-1.1)
-
-You can now access metrics from individual Liberty components (e.g. connection pools, sessions, servlets, etc) in Prometheus. Use the standard HTTP scraper to get all metrics from the `/metrics` endpoint, which is provided by the MicroProfile Metrics 1.1 feature. Previously, it was only possible to access Liberty component metrics using JMX MBeans.
-
-To make Monitor 1.0 metrics available at the `/metrics` endpoint:
-
-1. https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_monitor.html[Set up MicroProfile Metrics 1.1].
-2. Add `monitor-1.0` to your `server.xml`:
-+
-[source,xml]
-----
-<featureManager>
-  <feature>mpMetrics-1.1</feature> 
-  <feature>monitor-1.0</feature>
-</featureManager>
-----
-
-
-Learn about MicroProfile Metrics in the https://www.openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice] guide.
-//* [MicroProfile Metrics 1.1 vendor metrics (Knowledge Center)]
 
 
 
@@ -212,7 +121,6 @@ public class Example {
 ----
 
 
-
 Learn about fault tolerance in microservices:
 
 * https://openliberty.io/guides/retry-timeout.html[Failing fast and recovering from errors (interactive guide)]
@@ -222,6 +130,63 @@ Learn about fault tolerance in microservices:
 
 
 
+
+[#monitor]
+== Get Liberty component metrics from /metrics endpoint (Monitor 1.0 with MP Metrics 1.1)
+
+You can now access metrics from individual Liberty components (e.g. connection pools, sessions, servlets, etc) in Prometheus. Use the standard HTTP scraper to get all metrics from the `/metrics` endpoint, which is provided by the MicroProfile Metrics 1.1 feature. Previously, it was only possible to access Liberty component metrics using JMX MBeans.
+
+To make Monitor 1.0 metrics available at the `/metrics` endpoint:
+
+1. https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_monitor.html[Set up MicroProfile Metrics 1.1].
+2. Add `monitor-1.0` to your `server.xml`:
++
+[source,xml]
+----
+<featureManager>
+  <feature>mpMetrics-1.1</feature> 
+  <feature>monitor-1.0</feature>
+</featureManager>
+----
+
+
+Learn about MicroProfile Metrics in the https://www.openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice] guide.
+//* [MicroProfile Metrics 1.1 vendor metrics (Knowledge Center)]
+
+
+
+
+
+
+
+
+[#mpmetrics]
+== Disable authenticaton on /metrics during development (MicroProfile Metrics 1.1 update)
+
+A new option for accessing `/metrics` without authentication makes it easier for developers and administrators to set up monitoring of Liberty servers in situations where security isn't required. Tools such as Prometheus or Collectd can be set up quickly to scrape metrics from Liberty.
+
+MicroProfile Metrics in Liberty provides metrics for application developers and administrators to monitor their applications. Metrics are often collected and stored in a time series database such as Prometheus. Previously, the `/metrics` endpoint provided by Liberty required basic authentication. Administrators needed to add the username and password to Prometheus's configuration in order for Prometheus to scrape the metrics from Liberty.
+
+An optional configuration attribute is now available to turn off the basic authentication of the `/metrics` endpoint. Prometheus can automatically discover Liberty's `/metrics` endpoint without modifying its configuration.
+
+To turn off basic authentication for the `/metrics` endpoint, add `<mpMetrics authentication="false"/>` to `server.xml`:
+
+
+[source,xml]
+----
+
+<featureManager>
+    <feature>mpMetrics-1.1</feature>
+</featureManager>
+
+<mpMetrics authentication="false"/>
+----
+
+
+Learn more about MicroProfile Metrics in the https://openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice] guide.
+
+//For more info:
+//* https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_monitor.html[Monitoring with MicroProfile metrics]
 
 
 
@@ -378,6 +343,45 @@ For more info, see ADD-URL-HERE[Neil Young's blog post].
 
 
 
+
+
+[#mp]
+== Conveniently enable all MicroProfile 2.0 or MicroProfile 1.4 features
+
+Enable all the MicroProfile 2.0 features or all the MicroProfile 1.4 features at once with the new convenience features. MicroProfile 2.0 is based on Java EE 8 technologies while MicroProfile 1.4 is based on Java EE 7 technologies.
+
+To enable MicroProfile 2.0 features:
+
+
+[source,xml]
+----
+<featureManager>
+  <feature>microProfile-2.0</feature>
+</featureManager>
+----
+
+This is the equivalent of individually enabling the following features: `jaxrs-2.1`, `cdi-2.0`, `jsonp-1.1`, `jsonb-1.0`, `mpConfig-1.3`, `mpFaultTolerance-1.1`, `mpHealth-1.0`, `mpJwt-1.1`, `mpMetrics-1.1`, `mpOpenAPI-1.0`, `mpOpenTracing-1.1`, `mpRestClient-1.1`.
+
+To enable MicroProfile 1.4 features:
+
+[source,xml]
+----
+<featureManager>
+  <feature>microProfile-1.4</feature>
+</featureManager>
+----
+
+This is the equivalent of individually enabling the following features: `jaxrs-2.0`, `cdi-1.2`, `jsonp-1.0`, `mpConfig-1.3`, `mpFaultTolerance-1.1`, `mpHealth-1.0`, `mpJwt-1.1`, `mpMetrics-1.1`, `mpOpenAPI-1.0`, `mpOpenTracing-1.1`, `mpRestClient-1.1`.
+
+
+New to MicroProfile? Try https://www.openliberty.io/guides/rest-intro.html[building a RESTful web service with Liberty and MicroProfile].
+
+
+
+
+
+
+
 [#sociallogin]
 == Provide social media single sign-on options to app users (Social Login 1.0)
 
@@ -435,7 +439,7 @@ To enable JDBC 4.2 (jdbc-4.2), 4.1 (jdbc-4.1), or 4.0 (jdbc-4.0), add the defini
 
 ## Ready to give it a try?
 
-Get the Maven or Gradle coordinates from the top of this post.
+Get the Maven or Gradle coordinates (and other download options) from the top of this post.
 
 [link=https://stackoverflow.com/tags/open-liberty]
 image::/img/blog_btn_stack.svg[Ask a question on Stack Overflow, align="center"]
