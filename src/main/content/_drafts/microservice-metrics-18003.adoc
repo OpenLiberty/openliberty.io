@@ -1,17 +1,17 @@
 ---
 layout: post
-title: Instrument your microservices and get loads of metrics with Open Liberty 18.0.0.3
+title: Instrument your microservices and more with MicroProfile 2.0 on Open Liberty 18.0.0.3
 
 categories: blog
 author_picture: https://avatars3.githubusercontent.com/u/3322532
-seo-title: Instrument your microservices and get loads of metrics with Open Liberty 18.0.0.3 - OpenLiberty.io.
+seo-title: Instrument your microservices and more with MicroProfile 2.0 on Open Liberty 18.0.0.3 - OpenLiberty.io.
 seo-description: Monitor your microservices with metrics from your applications, from Liberty components, and to report on their fault tolerance handling. Plus more for your microservices with Open Liberty 18.0.0.3.
 blog_description: "Monitor your microservices with metrics from your applications, from Liberty components, and to report on their fault tolerance handling. Plus more for your microservices with Open Liberty 18.0.0.3."
 ---
-= Instrument your microservices and get loads of metrics with Open Liberty 18.0.0.3
+= Instrument your microservices and more with MicroProfile 2.0 on Open Liberty 18.0.0.3
 Laura Cowen <http://github.com/lauracowen>
 
-Instrumenting your microservices is easy with MicroProfile. In Open Liberty 18.0.0.3, the MicroProfile Metrics feature has been updated to make it easier to access your microservice metrics endpoint without authenticating (e.g. during development). There are also new metrics available at the `/metrics` endpoint, including metrics from individual Liberty components and fault tolerance monitoring. If you've not worked with metrics in Open Liberty before, take a look at our introductory https://openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice] guide. If metrics aren't your thing (seriously?!), there's even more for your microservices in Open Liberty 18.0.0.3.
+Instrumenting your microservices is easy with MicroProfile 2.0. In Open Liberty 18.0.0.3, the MicroProfile Metrics feature has been updated to make it easier to access your microservice metrics endpoint without authenticating (e.g. during development). There are also new metrics available at the `/metrics` endpoint, including metrics from individual Liberty components and fault tolerance monitoring. If you've not worked with metrics in Open Liberty before, take a look at our introductory https://openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice] guide. If metrics aren't your thing (seriously?!), there's even more for your microservices in MicroProfile 2.0 on Open Liberty 18.0.0.3.
 
 
 If you're using https://www.openliberty.io/guides/maven-intro.html[Maven], here are the coordinates:
@@ -49,6 +49,7 @@ image::/img/blog_btn_stack.svg[Ask a question on Stack Overflow, align="center"]
 
 What else can Open Liberty 18.0.0.3 do for your microservices? Take a look:
 
+*  <<mp,Conveniently enable all MicroProfile 2.0 or MicroProfile 1.4 features>>
 *  <<mpmetrics,Access metrics without authentication (MicroProfile Metrics 1.1)>>
 *  <<monitor,Get Liberty component metrics from /metrics endpoint (Monitor 1.0 with MP Metrics 1.1)>>
 *  <<mpfault,Monitor faults in your microservices (MicroProfile Fault Tolerance 1.1)>>
@@ -62,6 +63,46 @@ What else can Open Liberty 18.0.0.3 do for your microservices? Take a look:
 
 
 As we don't have a full set of documentation implemented for Open Liberty yet, some of the items below point to the https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/as_ditamaps/was900_welcome_liberty.html[official documentation for WebSphere Liberty] (WebSphere Liberty is built on Open Liberty).
+
+
+
+[#mp]
+== Conveniently enable all MicroProfile 2.0 or MicroProfile 1.4 features
+
+Enable all the MicroProfile 2.0 features or all the MicroProfile 1.4 features at once with the new convenience features. MicroProfile 2.0 is based on Java EE 8 technologies while MicroProfile 1.4 is based on Java EE 7 technologies.
+
+To enable MicroProfile 2.0 features:
+
+
+[source,xml]
+----
+<featureManager>
+  <feature>microProfile-2.0</feature>
+</featureManager>
+----
+
+This is the equivalent of individually enabling the following features: `jaxrs-2.1`, `cdi-2.0`, `jsonp-1.1`, `jsonb-1.0`, `mpConfig-1.3`, `mpFaultTolerance-1.1`, `mpHealth-1.0`, `mpJwt-1.1`, `mpMetrics-1.1`, `mpOpenAPI-1.0`, `mpOpenTracing-1.1`, `mpRestClient-1.1`.
+
+To enable MicroProfile 1.4 features:
+
+[source,xml]
+----
+<featureManager>
+  <feature>microProfile-1.4</feature>
+</featureManager>
+----
+
+This is the equivalent of individually enabling the following features: `jaxrs-2.0`, `cdi-1.2`, `jsonp-1.0`, `mpConfig-1.3`, `mpFaultTolerance-1.1`, `mpHealth-1.0`, `mpJwt-1.1`, `mpMetrics-1.1`, `mpOpenAPI-1.0`, `mpOpenTracing-1.1`, `mpRestClient-1.1`.
+
+
+New to MicroProfile? Try https://www.openliberty.io/guides/rest-intro.html[building a RESTful web service with Liberty and MicroProfile].
+
+
+Learn more about MicroProfile Metrics in the https://openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice] guide or https://openliberty.io/docs/intro/microprofile.html[find out more about writing microservices with MicroProfile].
+
+//For more info:
+//* https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_monitor.html[Monitoring with MicroProfile metrics]
+
 
 
 
