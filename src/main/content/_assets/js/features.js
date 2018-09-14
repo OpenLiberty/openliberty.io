@@ -46,9 +46,10 @@ function addTOCClick() {
         }
     });
 
+    addOutlineToTabFocus("#toc_container > ul > li > div");
     // events to detect keyboard focus and add outline to the element. Outline will not
     // be added if the focus is thru mouse event.
-    $("#toc_container > ul > li > div").off("blur").on("blur", function(event) {
+    /* $("#toc_container > ul > li > div").off("blur").on("blur", function(event) {
         if ($(this).hasClass('addFocus')) {
             $(this).removeClass('addFocus');
         }
@@ -66,7 +67,7 @@ function addTOCClick() {
             adjustParentWindow();
         }
         mousedown = false;
-    });
+    }); */
 }
 
 // highlight the selected TOC
@@ -161,6 +162,33 @@ function addVersionClick(hrefToClick) {
             $("#common_feature_title > .feature_version:first").trigger('click');
         }
     }
+
+    addOutlineToTabFocus("#common_feature_title > .feature_version");
+    
+}
+
+// events to detect keyboard focus and add outline to the element. Outline will not
+// be added if the focus is thru mouse event.
+function addOutlineToTabFocus(selector) {
+    $(selector).off("blur").on("blur", function(event) {
+        if ($(this).hasClass('addFocus')) {
+            $(this).removeClass('addFocus');
+        }
+    })
+
+    var mousedown = false;
+    $(selector).off('mousedown').on('mousedown', function(event) {
+        mousedown = true;
+    });
+
+    $(selector).off('focusin').on('focusin', function(event) {
+        if (!mousedown) {
+            $(this).addClass("addFocus");
+            // scroll the parent window back up if it is scroll down
+            adjustParentWindow();
+        }
+        mousedown = false;
+    });
 }
 
 // highlight the selected version
