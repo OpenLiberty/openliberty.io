@@ -222,23 +222,42 @@ function getScrolledVisibleSectionID() {
                 var rect = elem[0].getBoundingClientRect();
                 var top = rect.top;
                 var bottom = rect.bottom;
-                if (elem.find('.sect2').length > 0) {
-                    // Section contains a subsection.  It's height should end
-                    // where the subsection begins.
-                    var sect2s = elem.find('.sect2');
-                    bottom = sect2s[0].getBoundingClientRect().top;
+
+                var $sect2s = elem.find('.sect2');
+                if ($sect2s.length > 0) {
+                    // Section contains a subsection.  The section's height 
+                    // really ends where the subsection begins.
+                    bottom = $sect2s[0].getBoundingClientRect().top;
                     elemHeight = bottom - top;
-                } 
-    
+                }
+
                 var visibleElemHeight = 0;
                 if(top > 0){
-                     // Top of element is below the top of the viewport
-                     // Calculate the visible element height as the min of the whole element (if the whole element is in the viewport) and the top of the element to the bottom of the window (if only part of the element is visible and extends beyond the bottom of the viewport).
-                     visibleElemHeight = Math.min(elemHeight, windowHeight - top);
+                    // Top of element is below the top of the viewport
+
+                    if (top < ($('header').height() + 1)) {
+                        // We have a header at the very top of the page.
+                        // Return this as the ID.  This helps small sections
+                        // that never take up the vertical majority of the
+                        // window to be identified as the main element.
+                        id =  elem.children('h2, h3')[0].id;
+                        return false;  // Leave the loop
+                    } else {
+                        // Calculate the visible element height as the min of the
+                        // whole element (if the whole element is in the viewport)
+                        // and the top of the element to the bottom of the window
+                        // (if only part of the element is visible and extends beyond
+                        // the bottom of the viewport).
+                        visibleElemHeight = Math.min(elemHeight, windowHeight - top);
+                    }            
                 }
                 else {
                     // Top of element is at or above the top of the viewport
-                    // Calculate the visible element height as the min between the bottom (if the element starts above the viewport and ends before the bottom of the viewport) or the windowHeight(the element extends beyond the top and bottom of viewport in both diretions).
+                    // Calculate the visible element height as the min between
+                    // the bottom (if the element starts above the viewport and
+                    // ends before the bottom of the viewport) or the windowHeight
+                    // (the element extends beyond the top and bottom of viewport
+                    // in both diretions).
                     visibleElemHeight = Math.min(bottom, windowHeight);
                 }
                 if(visibleElemHeight > maxVisibleSectionHeight){
