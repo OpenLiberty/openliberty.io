@@ -9,7 +9,8 @@ $(document).ready(function(){
     });
 
     // Toggle between down caret and up caret
-    $('.caret').on('click', function(){
+    $('.mobile_caret').on('click', function(){
+        var img = $(this).find('img');
         $(this).toggleClass('upsideDown');
     });
 });
