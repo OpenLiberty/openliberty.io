@@ -12,6 +12,16 @@ $(document).ready(function(){
     // Toggle between down caret and up caret
     $('.mobile_caret').on('click', function(){
         var img = $(this).find('img');
-        $(this).toggleClass('upsideDown');
+        var src = img[0].src;
+        var newSVG = $('<img></img>');
+        if(src.indexOf('upcaret') > -1){
+            newSVG.attr('src','/img/downcaret.svg');    
+            newSVG.attr('alt','Open nav menu');   
+        } else{
+            newSVG.attr('src','/img/upcaret.svg');
+            newSVG.attr('alt','Close nav menu');   
+        }
+        $(this).children().remove();
+        $(this).append(newSVG);
     });
 });
