@@ -2,6 +2,7 @@ $(document).ready(function(){
     $('#navbar_responsive_button').on('click', function(){     
         $(this).toggle();
         $('#mobile_close_button').toggle();  
+        $('.navbar').toggleClass('open');
     });
 
     $('#mobile_close_button').on('click', function(){
