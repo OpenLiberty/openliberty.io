@@ -2,6 +2,7 @@ $(document).ready(function(){
     $('#navbar_responsive_button').on('click', function(){
         $(this).toggle();
         $('#mobile_close_button').toggle();
+        $('#navbar').toggle();
         $('.navbar').toggleClass('open');
     });
 
@@ -21,7 +22,7 @@ $(document).ready(function(){
             newSVG.attr('src','/img/upcaret.svg');
             newSVG.attr('alt','Close nav menu');   
         }
-        $(this).children().remove();
+        img.remove();
         $(this).append(newSVG);
     });
 });
