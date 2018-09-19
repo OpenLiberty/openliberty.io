@@ -663,6 +663,7 @@ a {
 
                     & .mobile_caret {
                         display: block;
+                        pointer-events: none;
                         float: right;
                     }
                 }  
@@ -747,7 +748,10 @@ nav .container-fluid {
 
 .container-fluid > .navbar-header {
     padding-left: 30px;
-    padding-right: 30px;
+
+    @media screen and (max-width: 991px){
+        padding-right: 30px;
+    }    
 }
 
 #navbar_home_link {

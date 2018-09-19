@@ -9,10 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-// .navbar-default .navbar-nav > li > a {
-//     margin-left: 10px;
-// }
-
 #navbar {
     padding-top: 10px;
     margin: 0;
@@ -22,17 +18,21 @@
     padding-top: 0;
 }
 
+.navbar-nav > .dropdown_container, .navbar-nav > li > a {
+    margin-left: 0;
+}
+
 .qa-descriptor {
     top: 10px;
 }
 
 #header_background {
+    padding-top: 101px;
     background-color: #313653;
     background-image: none;
 }
 
-#reference_dropdown_container {    
-    width: 100%;
+#reference_dropdown_container {
     display: inline-block;
     margin-top: 9px;
 }
@@ -115,15 +115,36 @@
 }
 
 @media screen and (max-width: 991px) {
+    #header_background {
+        padding-top: 0;
+    }
+
     .navbar{
         &.open{
             background-color: #313653;
+
+            /* Horizontal line under title */
+            & .horizontal_bar {
+                border-bottom: 1px solid rgba(201, 214, 254, 0.29);
+                margin-left: -30px;
+                margin-right: -30px;
+            }
+
+            /* Horizontal lines underneath the dropdown sections */
+            & #navbar .horizontal_bar {
+                margin-left: -15px;
+                margin-right: -30px;
+            }
         }
         
         & #mobile_links_section {
             margin-left: -15px;
             margin-right: -30px;
             background-color: inherit;
+        }        
+
+        & #reference_dropdown_container {
+            width: 100%;
         }
 
         & .navbar-nav > li > a {
@@ -156,11 +177,7 @@
     #doc_title > img {
         width: 67px;
         height: 31px;
-    }    
-
-    #header_background {
-        padding-top: 0;
-    }
+    }      
 
     .dropdown-toggle.btn-default {
         float: right;
