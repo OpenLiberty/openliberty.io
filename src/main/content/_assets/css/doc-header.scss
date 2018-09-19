@@ -9,9 +9,9 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-.navbar-default .navbar-nav > li > a {
-    margin-left: 10px;
-}
+// .navbar-default .navbar-nav > li > a {
+//     margin-left: 10px;
+// }
 
 #navbar {
     padding-top: 10px;
@@ -26,19 +26,15 @@
     top: 10px;
 }
 
-.container-fluid > .navbar-header {
-    padding-top: 10px;
-}
-
 #header_background {
-    padding-top: 101px;
     background-color: #313653;
     background-image: none;
 }
 
-#reference_dropdown_container {
-    margin-top: 9px;
+#reference_dropdown_container {    
+    width: 100%;
     display: inline-block;
+    margin-top: 9px;
 }
 
 .reference_dropdown:hover, .reference_dropdown:focus, .reference_dropdown:active {
@@ -119,9 +115,25 @@
 }
 
 @media screen and (max-width: 991px) {
-    .navbar.open {
-        background-color: #313653 100%;
-    }
+    .navbar{
+        &.open{
+            background-color: #313653;
+        }
+        
+        & #mobile_links_section {
+            margin-left: -15px;
+            margin-right: -30px;
+            background-color: inherit;
+        }
+
+        & .navbar-nav > li > a {
+            color: #C9D6FE;
+        }
+
+        & #mobile_header #mobile_close_button {
+            margin-right: 0;
+        }
+    }    
 }
 
 @media (max-width: 767px) {
@@ -156,11 +168,6 @@
 
     #reference_dropdown_container .dropdown-menu > li > a:hover, #reference_dropdown_container .dropdown-menu > li > a:focus {
         color: white;
-    }
-
-    .navbar-default .navbar-nav .open .dropdown-menu>li>a{
-        float: right;
-        color: #C8D2D2;
     }
 
     #breadcrumb_row {
