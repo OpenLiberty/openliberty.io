@@ -271,6 +271,11 @@ function addHamburgerClick() {
 // scroll the selected table of content in viewport
 function scrollToTOC(tocElement) {
     if (!isMobileView()) {
+        // expand the toc
+        if (!$("#command_toc").hasClass('in')) {
+            $('#toggle_icon').trigger('click');
+        }
+
         var headerHeight = $('header').height();
         var currentTOCTop = $('#toc_column').scrollTop();
         // factor in the header height as the element top is still a positive number when the
@@ -323,10 +328,8 @@ function addHashListener() {
 
 function addCommandCollapseClick() {
     if (!isMobileView()) {
-        $('#toggle_icon').trigger('click');
-
         $('#toggle_icon').click(function(event) {
-            $("#toggle_icon").find('span.toggle-icon').toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+            $("#toggle_icon").find('#command_toc_button').toggleClass('collapsed expanded');
         })
         
         $("#toggle_icon").on('keypress', function (event) {

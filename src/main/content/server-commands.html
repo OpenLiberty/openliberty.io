@@ -27,10 +27,10 @@ permalink: /docs/ref/command/
                         {% endfor %}
                     </ul>
                     <div id="toggle_icon" role="button" tabindex="0" data-toggle="collapse" data-target="#command_toc" aria-expanded="true" aria-controls="command_toc">
-                        <span class="toggle-icon glyphicon glyphicon-chevron-down"></span>
+                        <button id="command_toc_button" class="collapsed" type="button" aria-label="toggle table of content"></button>
                         <h3 id="toc_title">Server Commands</h3>
                     </div>
-                    <ul id="command_toc">
+                    <ul id="command_toc" class="collapse">
                         {% for command in commandDocs %}
                             {% assign noCommand = command.title | split: ' command' %}
                             {% assign noServer = noCommand[0] | split: 'server ' %}
