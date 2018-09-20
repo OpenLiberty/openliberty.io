@@ -505,6 +505,7 @@ a {
         border-top-right-radius: 0;
         background-color: rgba(44, 46, 80, 0.25);
         border-radius: 4px;
+        float: none;
     
 
         & li > a {
@@ -599,10 +600,14 @@ a {
                 float: right;
                 color: white;
                 margin-top: 8px;
-                margin-right: 12px;
+                margin-right: 28px;
 
                 &:hover {
                     cursor: pointer;
+                }
+
+                @media screen and (max-width: 767px){
+                    margin-right: 13px;
                 }
             }
         }
@@ -711,6 +716,10 @@ a {
                     & > a {
                         color: #C9D6FE;
                         font-size: 16px;
+
+                        &:hover, &:focus {
+                            color: white;
+                        }
                     }
                 }
             }
@@ -730,6 +739,7 @@ nav .container-fluid {
 
 #navbar {
     padding-right: 30px;
+    overflow: hidden;
 }
 
 .navbar-default .navbar-collapse {
