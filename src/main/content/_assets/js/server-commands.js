@@ -340,6 +340,7 @@ function addCommandCollapseClick() {
             }
         });
     
+        addOutlineToTabFocus("#command_toc_button");
     }
 }
 
