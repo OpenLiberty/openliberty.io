@@ -10,14 +10,6 @@
  *******************************************************************************/
 var mobileWidth = 767;
 var commandDocsFolder = "/docs/ref/commands/server/"
-
-// With the version control support, cannot just set the hash in the url to trigger 
-// the doc loading with the hashchange event. This is because for a title with multiple
-// versions, the parent doc has to be loaded first before we know what is the version
-// html to be updated in the hash. With that, lastClickElementHref is set whenever
-// the hash is updated by the codes and is used to compare the hashchange value to
-// determine whether hashchange event should be handled.
-//var lastClickElementHref; 
 var windowFocus = false;
 
 // setup and listen to click on table of content
@@ -67,18 +59,15 @@ function addReferenceClick() {
 
         loadContent(matchingTOCElement, commandDocsFolder + currentHref, true);
 
-        // if (isMobileView()) {
-        //     $("#breadcrumb_hamburger").trigger("click");
-        // }
         return false;
     }
 
-    $("#content > .sect1 > .sectionbody > .ulist > ul > li > p > a").off("click").on("click", onclick);
+    $("#content .sect1 .sectionbody p > a").off("click").on("click", onclick);
 
-    $("#content > .sect1 > .sectionbody > .ulist > ul > li > p > a").off("keypress").on('keypress', function (event) {
+    $("#content .sect1 .sectionbody p > a").off("keypress").on('keypress', function (event) {
         event.stopPropagation();
-        // Enter key
-        if (event.which === 13 || event.keyCode === 13) {
+        // Enter or space key
+        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCOde === 32) {
             $(this).click();
         }
     });
@@ -86,14 +75,18 @@ function addReferenceClick() {
 
 // highlight the selected TOC
 function setSelectedTOC(resource) {
-    var currentTOCSelected = $(".toc_selected");
-    var newHref = resource.attr("href");
+    deselectedTOC();
+    resource.parent().addClass("toc_selected");
+}
 
+// deselect current TOC
+function deselectedTOC(r) {
+    var currentTOCSelected = $(".toc_selected");
     if (currentTOCSelected.length === 1) {      
         currentTOCSelected.removeClass("toc_selected");
     }
-    resource.parent().addClass("toc_selected");
 }
+
 
 function getTOCElement(href) {
     return $("#toc_container > ul > li > div[href$='" + href + "']");    
@@ -118,6 +111,8 @@ function loadContent(targetTOC, tocHref, addHash) {
     $('footer').hide();
     if (targetTOC.length === 1)
         setSelectedTOC(targetTOC);
+    else
+        deselectedTOC()
     $("#command_content").load(tocHref, function(response, status) {
         if (status === "success") {
             updateMainBreadcrumb(targetTOC);
@@ -303,29 +298,26 @@ function scrollToTOC(tocElement) {
 //attach the hashchange event listener
 function addHashListener() {
     $(window).on('hashchange', function () {
-        //if (lastClickElementHref !== window.location.hash.substring(1)) {
-            //lastClickElementHref = null;
-
-            if (window.location.hash) {
-                var tocHref = commandDocsFolder + window.location.hash.substring(1);
-                var tocElement = $("#toc_container").find("div[href='" + tocHref + "']");
-                if (tocElement.length === 1) {
-                    loadContent(tocElement, tocHref);
-                } 
-                if (isMobileView() && $("#toc_column").hasClass('in')) {
+        if (window.location.hash) {
+            var tocHref = commandDocsFolder + window.location.hash.substring(1);
+            var tocElement = $("#toc_container").find("div[href='" + tocHref + "']");
+            if (tocElement.length === 1) {
+                scrollToTOC(tocElement);
+            }
+            // attempt to load as it could be a reference doc that is not in table of content
+            loadContent(tocElement, tocHref);
+            if (isMobileView() && $("#toc_column").hasClass('in')) {
+                $(".breadcrumb_hamburger_nav").trigger('click');
+            }
+        } else {
+            if (isMobileView()) {
+                if (!$("#toc_column").hasClass('in')) {
                     $(".breadcrumb_hamburger_nav").trigger('click');
                 }
-                scrollToTOC(tocElement);
             } else {
-                if (isMobileView()) {
-                    if (!$("#toc_column").hasClass('in')) {
-                        $(".breadcrumb_hamburger_nav").trigger('click');
-                    }
-                } else {
-                    scrollToTOC(selectFirstDoc());
-                }
+                scrollToTOC(selectFirstDoc());
             }
-        //}
+        }
     });
 }
 
@@ -337,6 +329,14 @@ function addCommandCollapseClick() {
             $("#toggle_icon").find('span.toggle-icon').toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
         })
         
+        $("#toggle_icon").on('keypress', function (event) {
+            event.stopPropagation();
+            // Enter or space key
+            if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCOde === 32) {
+                $(this).click();
+            }
+        });
+    
     }
 }
 
