@@ -14,17 +14,17 @@ var focus_issue_index = 0;
 var scroll_in_progress = false;
 var issues_url = '/api/github/issues';
 
-$('#issues_up_arrow').click(function(event) {
+$('#issues_up_arrow').on('click', (function(event) {
     event.preventDefault();
     scroll(true);
-});
+}));
 
 
 
-$('#issues_down_arrow').click(function(event) {
+$('#issues_down_arrow').on('click', (function(event) {
     event.preventDefault();
     scroll();
-});
+}));
 
 
 

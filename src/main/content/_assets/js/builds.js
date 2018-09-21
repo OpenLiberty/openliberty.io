@@ -113,7 +113,7 @@ function sort_builds(builds, key, descending) {
 
 $(document).ready(function() {
 
-    $('.builds_expand_link').click(function(event) {
+    $('.builds_expand_link').on('click', (function(event) {
         event.preventDefault();
         var table_container = $('#' + event.currentTarget.getAttribute('data-table-container-id'));
 
@@ -134,11 +134,11 @@ $(document).ready(function() {
             });
         }
        
-    });
+    }));
 
 
 
-    $('.build_table thead tr th a').click(function(event) {
+    $('.build_table thead tr th a').on('click', (function(event) {
         event.preventDefault();
 
         var table = $(event.currentTarget).closest('table');
@@ -155,7 +155,7 @@ $(document).ready(function() {
         $('th .table_header_arrow', table).removeClass('table_header_arrow_down table_header_arrow_up');
         $('.table_header_arrow', event.currentTarget).addClass(descending? 'table_header_arrow_down' : 'table_header_arrow_up');
 
-    });
+    }));
 
 
 
