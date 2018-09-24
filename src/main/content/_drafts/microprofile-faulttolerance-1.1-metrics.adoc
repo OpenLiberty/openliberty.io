@@ -5,12 +5,14 @@ categories: blog
 author_picture: https://avatars1.githubusercontent.com/u/2011102
 seo-title: Monitor faults with MicroProfile Fault Tolerance 1.1
 seo-description: Monitor faults within your Java web application with MicroProfile Fault Tolerance 1.1
-blog_description: " Fault Tolerance provides annotations which allow you to easily apply common fault mitigation strategies to your application but did you know that, since version 1.1, it also exports metrics which allow you to monitor how these mitigation strategies are being triggered?"
+blog_description: "Fault Tolerance provides annotations which allow you to easily apply common fault mitigation strategies to your application but did you know that, since version 1.1, it also exports metrics which allow you to monitor these mitigation strategies?"
 ---
+
 = Monitor faults with MicroProfile Fault Tolerance 1.1
 Andrew Rouse <https://github.com/azquelt>
 
 :url-dashboard: https://grafana.com/dashboards/8022
+:url-dashboard-github: https://github.com/Azquelt/microprofile-faulttolerance11-dashboard
 :url-sample-app: https://github.com/Azquelt/faulttolerance-metrics-example
 :url-ft11-spec: https://github.com/eclipse/microprofile-fault-tolerance/releases/tag/1.1.2
 :url-rate: https://prometheus.io/docs/prometheus/latest/querying/functions/#rate()
@@ -27,7 +29,7 @@ Andrew Rouse <https://github.com/azquelt>
 :url-grafana-alerts: http://docs.grafana.org/alerting/rules/
 
 
-All applications need to deal with unexpected problems, whether it's an important service being unavailable, or a sudden influx of requests which could overload your application. MicroProifile Fault Tolerance provides annotations which allow you to easily apply common fault mitigation strategies to your application but did you know that, since version 1.1, it also exports metrics which allow you to monitor how these mitigation strategies are being triggered?
+All applications need to deal with unexpected problems, whether it's an important service being unavailable, or a sudden influx of requests which could overload your application. MicroProifile Fault Tolerance provides annotations which allow you to easily apply common fault mitigation strategies to your application but did you know that, since version 1.1, it also exports metrics which allow you to monitor these mitigation strategies?
 
 The full details of the metrics are in the {url-ft11-spec}[Fault Tolerance 1.1 spec] but here's a quick overview:
 
@@ -111,11 +113,13 @@ Download Grafana from https://grafana.com/grafana/download. (I used the standalo
 
 Once you have Grafana installed or extracted, you should be able to start it (`bin/grafana-server` for the standalone package) and go the the web UI in your browser (default http://localhost:3000) and log in (default user "admin", password "admin").
 
-Now, import the dashboard I created to showcase the Fault Tolerance 1.1 metrics. Head over to the {url-dashboard}[dashboard page on grafana.com] and follow the instructions to import it. When you load up the dashboard, you should see a drop-down menu at the top left to select the method to show metrics for. If you don't see any options here, try hitting the endpoints in your app which will cause those methods to be invoked and then refresh the dashboard page.
+Next, we're going to import the dashboard I created to showcase the Fault Tolerance 1.1 metrics. Head over to the {url-dashboard}[dashboard page on grafana.com] and follow the instructions to import it. When you load up the dashboard, you should see a drop-down menu at the top left to select the method to show metrics for. If you don't see any options here, try hitting the endpoints in your app which will cause those methods to be invoked and then refresh the dashboard page.
 
 image::/img/blog/ftmetrics-imported-dashboard.png[Screenshot of the imported dashboard showing a graph of the invocations per second and of the failure rate.]
 
 This dashboard shows a selection of graphs for a single method at once. Unless the method is annotated with every Fault Tolerance annotation, some of these graphs won't apply to that method and will be blank. Since it only shows metrics for a single method, the dashboard isn't very good for showing an overview of the whole system, but it does let you browse through all the available details when you're trying to track down the cause of a problem and serves as a useful set of examples for building your own graphs and dashboards.
+
+If you have suggestions for improvements to the dashboard, you can open an issue or PR {url-dashboard-github}[on github]
 
 == Creating your own graphs
 
