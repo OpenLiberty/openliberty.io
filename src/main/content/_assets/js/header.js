@@ -44,5 +44,5 @@ $(document).ready(function(){
 
     $('.dropdown_container').on('click', function(){
         toggleDropdownIcon($(this));
-    });
+    });    
 });

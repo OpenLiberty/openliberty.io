@@ -3,6 +3,9 @@
 
 {% js devEnvironment %}
 {% js header %}
+{% unless page.url contains "/docs/" or page.url contains "/guides/" %}
+  {% js sticky-header %}
+{% endunless %}
 
 {% for js_name in page.js %}
   {% js {{js_name}} %}
