@@ -10,15 +10,19 @@
                 <a href="/" aria-label="Open Liberty Home Page">
                     <img id="mobile_home_logo" src="{{ " /img/docs_openliberty_logo.png " | relative }}" class="img-responsive" alt="Home" />
                 </a> 
-                <span id="mobile_header_title">Open Liberty</span>
-                <img id="mobile_close_button" src="/img/mobileheader_x.svg" alt="Close Navigation Menu"/>
-                <button id="navbar_responsive_button" class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                {% if page.url contains "/docs/" or page.url contains "/guides/" %}
+                    <span id="mobile_header_title">Docs</span>
+                {% else %}
+                    <span id="mobile_header_title">Open Liberty</span>
+                {% endif %}                
+                <img id="mobile_close_button" src="/img/mobileheader_x.svg" alt="Close Navigation Menu" tabindex="0"/>
+                <button id="navbar_responsive_button" class="navbar-toggle collapsed addFocus" type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" tabindex="0">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                 </button>
-            </div>   
+            </div>
             <div class="horizontal_bar"></div>         
         </div>
         <!-- Start of Navbar links -->
@@ -29,32 +33,32 @@
             <ul class="nav navbar-nav navbar-left text-right">                
                 {% if page.url contains "/docs/" or page.url contains "/guides/" %}
                     <li>
-                        <a href="/guides">Guides</a>
+                        <a href="/guides" class="addFocus">Guides</a>
                     </li>
                     <!-- Single button -->
                     <li id="reference_dropdown_container" class="btn-group dropdown_container">
-                            <button type="button" class="btn btn-default dropdown dropdown-toggle reference_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn btn-default dropdown dropdown-toggle reference_dropdown addFocus" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Reference
                             <div class="mobile_caret"><img src="/img/downcaret.svg" alt="Open Dropdown"/></div>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="/docs/ref/javaee/">Java EE API</a></li>
-                                <li><a href="/docs/ref/microprofile/">MicroProfile API</a></li>
-                                <li><a href="/docs/ref/config/">Server Config</a></li>
-                                <li><a href="/docs/ref/feature/">Server Features</a></li>
+                                <li><a href="/docs/ref/javaee/" class="addFocus">Java EE API</a></li>
+                                <li><a href="/docs/ref/microprofile/" class="addFocus">MicroProfile API</a></li>
+                                <li><a href="/docs/ref/config/" class="addFocus">Server Config</a></li>
+                                <li><a href="/docs/ref/feature/" class="addFocus">Server Features</a></li>
                             </ul>
                             <div class="horizontal_bar"></div>
                     </li>
                 {% else %}
-                    <li><a href="/about" tabindex="0">About</a></li>
+                    <li><a href="/about" tabindex="0" class="addFocus">About</a></li>
                     <li class="btn-group dropdown_container" tabindex="-1">
                         <button type="button" class="btn btn-default dropdown-toggle dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="0">
                         Get involved 
                         <div class="mobile_caret"><img src="/img/downcaret.svg" alt="Open Dropdown"/></div>                        
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="/contribute" tabindex="0">Contribute</a></li>
-                            <li><a href="/community" tabindex="0">Community</a></li>
+                            <li><a href="/contribute" class="addFocus" tabindex="0">Contribute</a></li>
+                            <li><a href="/community" class="addFocus" tabindex="0">Community</a></li>
                         </ul>
                         <div class="horizontal_bar"></div>
                     </li>
@@ -64,22 +68,22 @@
                         <div class="mobile_caret"><img src="/img/downcaret.svg" alt="Open Dropdown"/></div>                        
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="/docs/" tabindex="0">Overview</a></li>
-                            <li><a href="/guides" tabindex="0">Guides</a></li>
-                            <li><a href="/docs/#docs_container" tabindex="0">Reference</a></li>
+                            <li><a href="/docs/" class="addFocus" tabindex="0">Overview</a></li>
+                            <li><a href="/guides" class="addFocus" tabindex="0">Guides</a></li>
+                            <li><a href="/docs/#docs_container" class="addFocus" tabindex="0">Reference</a></li>
                         </ul>
                         <div class="horizontal_bar"></div>
                     </li>
-                    <li><a href="/downloads">Downloads</a></li>
-                    <li><a href="https://github.com/OpenLiberty" target="new">Github</a></li>
+                    <li><a href="/downloads" class="addFocus">Downloads</a></li>
+                    <li><a href="https://github.com/OpenLiberty" class="addFocus" target="new">Github</a></li>
                 {% endif %}                
             </ul>
             <div id="mobile_links_section">
                 <ul>
-                    <li><a href="/blog">Blog</a></li>
-                    <li><a href="https://twitter.com/OpenLibertyIO" target="new" aria-label="Twitter">Twitter</a></li>
-                    <li><a href="https://stackoverflow.com/questions/tagged/open-liberty" target="new" aria-label="Open Liberty questions on Stack Overflow">Stack Overflow</a></li>
-                    <li><a href="https://groups.io/g/openliberty" target="new" aria-label="Open Liberty Groups.io">Groups.io</a></li>
+                    <li><a href="/blog" class="addFocus">Blog</a></li>
+                    <li><a href="https://twitter.com/OpenLibertyIO" target="new" aria-label="Twitter" class="addFocus">Twitter</a></li>
+                    <li><a href="https://stackoverflow.com/questions/tagged/open-liberty" target="new" aria-label="Open Liberty questions on Stack Overflow" class="addFocus">Stack Overflow</a></li>
+                    <li><a href="https://groups.io/g/openliberty" target="new" aria-label="Open Liberty Groups.io" class="addFocus">Groups.io</a></li>
                 </ul>
             </div>
         </div>

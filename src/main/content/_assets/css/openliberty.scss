@@ -331,6 +331,11 @@ a {
     color: #C8D2D2;
 }
 
+/* FOCUS STATE */
+.addFocus:focus {
+    /* Generic focus state for elements that need focus */
+    box-shadow: 0 0 2px 2px #51a7e8;
+}
 
 
 /* EQUAL COLUMN HEIGHT HANDLING */
@@ -483,7 +488,7 @@ a {
         &.btn-default, &:active, &:hover, &:focus {
             background-color: inherit;
             color: white;
-        }
+        }        
     }
 
     & .dropdown {
@@ -541,6 +546,12 @@ a {
 
             & .container {
                 width: auto;
+                height: 100%;
+            }
+
+            & #navbar {
+                /* Override display: block !important from bootstrap to make the bottom section extend the full height */
+                height: 100% !important;
             }
 
             /* Horizontal line under title */
@@ -649,6 +660,12 @@ a {
             color: white;
         }
 
+        & .dropdown-toggle {
+            &:focus {
+                box-shadow: 0 0 2px 2px #51a7e8;
+            }
+        }
+
         & .dropdown-menu {
             position: static;
             width: 100%;
@@ -689,6 +706,9 @@ a {
         & .navbar-nav .open {
             & button {
                 box-shadow: none;
+                &:focus {
+                    box-shadow: 0 0 2px 2px #51a7e8;
+                }
             }
             & .dropdown-menu {
                 & li > a {

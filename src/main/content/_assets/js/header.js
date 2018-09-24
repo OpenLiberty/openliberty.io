@@ -10,6 +10,13 @@ $(document).ready(function(){
         $('#navbar_responsive_button').trigger('click');
     });
 
+    $('#mobile_close_button').on('keydown', function(event){
+        // Enter key
+        if(event.which == 13){
+            $(this).click();
+        }      
+    });
+
     // Toggle between down caret and up caret.
     // If focusout is set, then the button was clicked out of so reset to a down caret.
     var toggleDropdownIcon = function(dropdownMenu, focusout){
@@ -31,7 +38,7 @@ $(document).ready(function(){
         dropdownMenu.find('.mobile_caret').append(newSVG);
     };
 
-    $('.dropdown_container').on('focusout', function(){   
+    $('.dropdown_container').on('focusout', function(){
         toggleDropdownIcon($(this), true);
     });
 
