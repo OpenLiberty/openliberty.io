@@ -178,10 +178,6 @@ $(document).ready(function() {
         showAllCategories();
     });
 
-    /*$('#guide_search_input').on('input', function(){
-        $('#guide_search_input').trigger('keyup'); 
-    });*/
-
     $('#guide_search_input').on('keypress', (function(event) {
         if(event.which == 13) { // 13 is the enter key
             var searchInput = $('#guide_search_input').val();
