@@ -42,8 +42,8 @@ function addTOCClick() {
     $("#toc_container > ul > li > div").off("keypress").on('keypress', function (event) {
         event.stopPropagation();
         // Enter or space key
-        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCOde === 32) {
-            $(this).click();
+        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
+            $(this).trigger('click');
         }
     });
 
@@ -130,8 +130,8 @@ function addVersionClick(hrefToClick) {
     $("#common_feature_title > .feature_version").off("keypress").on('keypress', function (event) {
         event.stopPropagation();
         // Enter or space key
-        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCOde === 32) {
-            $(this).click();
+        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
+            $(this).trigger('click');
         }
     });
 

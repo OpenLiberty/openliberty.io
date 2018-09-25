@@ -13,42 +13,41 @@ permalink: /docs/ref/command/
 {% assign commandDocs = site.pages | where: 'layout', 'server-command' | where: 'type', 'command' %}
 {% assign commandOverviewDoc = site.pages | where: 'layout', 'server-command' | where: 'type', 'overview' %}
 <div id="background_container">
-    <!-- <div class="row"> -->
-        <!-- table of contents section -->
-        <div id="toc_column" class="col-sm-3 collapsed in">
-            <div id="toc_inner">
-                {% if commandDocs %}
-                <div id="toc_container">
-                    <ul>
-                        {% for overview in commandOverviewDoc %}
-                        <li>
-                            <div role="button" href="{{ overview.url }}" tabindex="0">Overview</div>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                    <div id="toggle_icon" role="button" data-toggle="collapse" data-target="#command_toc" aria-expanded="true" aria-controls="command_toc">
-                        <button id="command_toc_button" class="collapsed" type="button" aria-label="toggle table of content"></button>
-                        <h3 id="toc_title">Server Commands</h3>
-                    </div>
-                    <ul id="command_toc" class="collapse">
-                        {% for command in commandDocs %}
-                            {% assign noCommand = command.title | split: ' command' %}
-                            {% assign noServer = noCommand[0] | split: 'server ' %}
-                            <li>
-                                <div role="button" href="{{ command.url }}" tabindex="0">{{ noServer }}</div>
-                            </li>
-                        {% endfor %}
-                    </ul>
+    <!-- table of contents section -->
+    <div id="toc_column" class="col-sm-3 collapsed in">
+        <div id="toc_inner">
+            {% if commandDocs %}
+            <div id="toc_container">
+                <ul>
+                    {% for overview in commandOverviewDoc %}
+                    <li>
+                        <div role="button" href="{{ overview.url }}" tabindex="0">Overview</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div id="toggle_icon" role="button" data-toggle="collapse" data-target="#command_toc" aria-expanded="true"
+                    aria-controls="command_toc">
+                    <button id="command_toc_button" class="collapsed" type="button" aria-label="toggle table of content"></button>
+                    <h3 id="toc_title">Server Commands</h3>
                 </div>
-                {% else %}
-                <div>No command found</div>
-                {% endif %}
+                <ul id="command_toc" class="collapse">
+                    {% for command in commandDocs %}
+                    {% assign noCommand = command.title | split: ' command' %}
+                    {% assign noServer = noCommand[0] | split: 'server ' %}
+                    <li>
+                        <div role="button" href="{{ command.url }}" tabindex="0">{{ noServer }}</div>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
+            {% else %}
+            <div>No command found</div>
+            {% endif %}
         </div>
-        <!-- content -->
-        <div id="command_content" tabindex="0" class="col-sm-9 position_relative">
-        </div>
-    <!-- </div> -->
+    </div>
+    <!-- content -->
+    <div id="command_content" tabindex="0" class="col-sm-9 position_relative">
+    </div>
 </div>
 
 
