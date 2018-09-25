@@ -3,7 +3,7 @@ $(document).ready(function(){
     var navHeight = navbar.outerHeight();
     $(window).on('scroll', function(){
         var offset = window.scrollY;        
-        if(offset > navHeight){
+        if(offset > navHeight / 2){
             navbar.addClass('stickyNav');
         } else{
             navbar.removeClass('stickyNav');
