@@ -22,10 +22,10 @@ $blue-grey-color: #5d6a8e;
 
 // Overrides
 
-input[type=search]::-webkit-search-cancel-button {
+/*input[type=search]::-webkit-search-cancel-button {
     // Override to display cancel button
     -webkit-appearance: searchfield-cancel-button;
-}
+}*/
 
 .guide_item {
     // Override the light gray border-left from the default card
@@ -85,6 +85,41 @@ input[type=search]::-webkit-search-cancel-button {
         margin: 0 auto;
         width: 100%
     }
+}
+
+#guide_search_input,.clear_btn,.guides_search_container {
+	position: relative;
+}
+
+.clear_btn {
+	border:1px solid transparent;
+	background-color: transparent;
+	display: inline-block;
+    vertical-align: middle;
+    outline: 0;
+    cursor: pointer;
+}
+
+.clear_btn:after {
+	content: "X";
+	display: block;
+	width: 15px;
+	height: 15px;
+	position: absolute;
+	z-index: 1;
+	right: 35px;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	text-align: center;
+	color: black;
+	font-weight: normal;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+.search-box:invalid ~ .clear_btn {
+	display: none;
 }
 
 #guides_information_container {
