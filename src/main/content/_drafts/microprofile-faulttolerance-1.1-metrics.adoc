@@ -15,6 +15,7 @@ Andrew Rouse <https://github.com/azquelt>
 :url-dashboard-github: https://github.com/Azquelt/microprofile-faulttolerance11-dashboard
 :url-sample-app: https://github.com/Azquelt/faulttolerance-metrics-example
 :url-ft11-spec: https://github.com/eclipse/microprofile-fault-tolerance/releases/tag/1.1.2
+:url-ft11-spec-metrics: http://download.eclipse.org/microprofile/microprofile-fault-tolerance-1.1.2/microprofile-fault-tolerance-spec.html#_integration_with_microprofile_metrics
 :url-rate: https://prometheus.io/docs/prometheus/latest/querying/functions/#rate()
 :url-ol-download: https://openliberty.io/downloads/
 :url-ol-ft-guide: https://github.com/OpenLiberty/iguide-retry-timeout/tree/master/finish
@@ -32,7 +33,7 @@ Andrew Rouse <https://github.com/azquelt>
 
 All applications need to deal with unexpected problems, whether it's an important service being unavailable, or a sudden influx of requests which could overload your application. MicroProfile Fault Tolerance provides annotations which allow you to easily apply common fault mitigation strategies to your application but did you know that, since version 1.1, it also exports metrics which allow you to monitor these mitigation strategies?
 
-The full details of the metrics are in the {url-ft11-spec}[Fault Tolerance 1.1 spec] but here's a quick overview:
+The full details of the metrics are in the {url-ft11-spec-metrics}[Fault Tolerance 1.1 spec] but here's a quick overview:
 
 * If you use `@Retry`, metrics are added for how often your method is failing and being retried
 * If you use `@Timeout`, metrics are added for how long calls to your method are taking and how often they're timing out
@@ -126,7 +127,7 @@ If you have suggestions for improvements to the dashboard, you can open an issue
 
 Let's take a quick look at how to create your own graphs from the metrics produced by Fault Tolerance. This will allow you to create a graph which isn't covered in my dashboard, or to extract metrics from several different methods and put them all on the same dashboard.
 
-First, take a look at Chapter 10 of the {url-ft11-spec}[Fault Tolerance 1.1 spec] to see the metrics which are produced.
+First, take a look at the {url-ft11-spec-metrics}[Fault Tolerance 1.1 spec] to see the metrics which are produced.
 
 For example, here's the metrics which are produced for methods annotated with `@Timeout`.
 
