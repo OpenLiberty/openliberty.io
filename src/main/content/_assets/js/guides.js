@@ -171,10 +171,12 @@ $(document).ready(function() {
         processSearch(input_value);
     }));
 
+    // clear search input when x button clicked
     $('.clear_btn').on('click', function(){
         $('#guide_search_input').val('');
-        var input_value = '';
-        processSearch(input_value);        
+        var searchInput = $('#guide_search_input').val();
+        updateSearchUrl(searchInput);
+        processSearch(searchInput);        
         showAllCategories();
     });
 
