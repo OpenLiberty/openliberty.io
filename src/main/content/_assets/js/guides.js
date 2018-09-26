@@ -168,11 +168,11 @@ $(document).ready(function() {
 
     $('#guide_search_input').on('keyup', (function(event) {
         var input_value = event.currentTarget.value.toLowerCase();
-        processSearch(input_value);        
+        processSearch(input_value);
     }));
 
     $('.clear_btn').on('click', function(){
-        //$('#guide_search_input').trigger('keyup');
+        $('#guide_search_input').val('');
         var input_value = '';
         processSearch(input_value);        
         showAllCategories();
