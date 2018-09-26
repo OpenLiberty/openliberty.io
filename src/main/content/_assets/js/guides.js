@@ -171,13 +171,6 @@ $(document).ready(function() {
         processSearch(input_value);        
     }));
 
-    $('.clear_btn').on('click', function(){
-        //$('#guide_search_input').trigger('keyup');
-        var input_value = '';
-        processSearch(input_value);        
-        showAllCategories();
-    });
-
     $('#guide_search_input').on('keypress', (function(event) {
         if(event.which == 13) { // 13 is the enter key
             var searchInput = $('#guide_search_input').val();
