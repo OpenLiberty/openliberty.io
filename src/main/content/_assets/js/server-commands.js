@@ -345,12 +345,32 @@ function addCommandCollapseClick() {
     }
 }
 
+// Take care of displaying the table of content, comand content, and hamburger correctly when
+// browser window resizes from mobile to non-mobile width and vice versa.
+function addWindowResize() {
+    $(window).resize(function() {
+        if (isMobileView()) {
+            addHamburgerClick();
+        } else {
+            //$('#toc_column').show();
+            //$('#command_content').show();
+            if (!$('#toc_column').hasClass('in')) {
+                $(".breadcrumb_hamburger_nav").trigger('click');
+            }
+            $("#breadcrumb_hamburger").hide();
+            $("#breadcrumb_hamburger_title").hide();
+            setContainerHeight();
+        }
+    });
+}
+
 $(document).ready(function () {  
     addTOCClick();
     addContentFocusListener();
     addHamburgerClick();
     addHashListener();
     addCommandCollapseClick();
+    addWindowResize();
 
     //manually tiggering it if we have hash part in URL
     if (window.location.hash) {
