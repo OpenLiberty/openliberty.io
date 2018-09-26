@@ -1,6 +1,6 @@
 <header>
 <nav class="navbar navbar-default">
-    {% if page.url contains "/docs/" or page.url contains "/guides/" %}
+    {% if page.url contains "/docs/ref/" or page.url contains "/guides/" %}
     <div class="container-fluid">
     {% else %}
     <div class="container">
@@ -10,7 +10,7 @@
                 <a href="/" aria-label="Open Liberty Home Page">
                     <img id="mobile_home_logo" src="{{ " /img/docs_openliberty_logo.png " | relative }}" class="img-responsive" alt="Home" />
                 </a> 
-                {% if page.url contains "/docs/" or page.url contains "/guides/" %}
+                {% if page.url contains "/docs/ref/" or page.url contains "/guides/" %}
                     <span id="mobile_header_title">Docs</span>
                 {% else %}
                     <span id="mobile_header_title">Open Liberty</span>
@@ -31,7 +31,7 @@
                 <img src="{{ " /img/docs_openliberty_logo.png " | relative }}" class="img-responsive" alt="Home" />
             </a>            
             <ul class="nav navbar-nav navbar-left text-right">                
-                {% if page.url contains "/docs/" or page.url contains "/guides/" %}
+                {% if page.url contains "/docs/ref/" or page.url contains "/guides/" %}
                     <li>
                         <a href="/guides" class="addFocus">Guides</a>
                     </li>
@@ -89,13 +89,13 @@
         </div>
         <!-- End of Navbar links -->
         <!-- Start breadcrumb -->
-        {% if page.url contains "/docs/" or page.url contains "/guides/" %}
+        {% if page.url contains "/docs/ref/" or page.url contains "/guides/" %}
             {% include breadcrumb.html %}
         {% endif %}
         <!-- End breadcrumb -->
     </div>
   </nav>
-  {% if page.url contains "/docs/" or page.url contains "/guides/" %}
+  {% if page.url contains "/docs/ref/" or page.url contains "/guides/" %}
         <div id="header_background"></div>
   {% endif %}
   <div class="hidden">
