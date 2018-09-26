@@ -166,17 +166,17 @@ $(document).ready(function() {
     }
 
 
-    $('#guide_search_input').on('keyup', (function(event) {
+    $('#guide_search_input').keyup(function(event) {
         var input_value = event.currentTarget.value.toLowerCase();
         processSearch(input_value);        
-    }));
+    });
 
-    $('#guide_search_input').on('keypress', (function(event) {
+    $('#guide_search_input').keypress(function(event) {
         if(event.which == 13) { // 13 is the enter key
             var searchInput = $('#guide_search_input').val();
             updateSearchUrl(searchInput);
         }
-    }));
+    });
 
     function updateSearchUrl(value) {
         if(! value) {
