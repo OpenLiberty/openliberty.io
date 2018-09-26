@@ -15,7 +15,9 @@ Andrew Rouse <https://github.com/azquelt>
 :url-dashboard-github: https://github.com/Azquelt/microprofile-faulttolerance11-dashboard
 :url-sample-app: https://github.com/Azquelt/faulttolerance-metrics-example
 :url-ft11-spec: https://github.com/eclipse/microprofile-fault-tolerance/releases/tag/1.1.2
+:url-ft11-spec-metrics: http://download.eclipse.org/microprofile/microprofile-fault-tolerance-1.1.2/microprofile-fault-tolerance-spec.html#_integration_with_microprofile_metrics
 :url-rate: https://prometheus.io/docs/prometheus/latest/querying/functions/#rate()
+:url-ol-download: https://openliberty.io/downloads/
 :url-ol-ft-guide: https://github.com/OpenLiberty/iguide-retry-timeout/tree/master/finish
 :url-prom-config: https://prometheus.io/docs/prometheus/latest/configuration/configuration/
 :url-admin-role: https://openliberty.io/docs/ref/config/#rwlp_config_administrator-role.html
@@ -29,9 +31,9 @@ Andrew Rouse <https://github.com/azquelt>
 :url-grafana-alerts: http://docs.grafana.org/alerting/rules/
 
 
-All applications need to deal with unexpected problems, whether it's an important service being unavailable, or a sudden influx of requests which could overload your application. MicroProifile Fault Tolerance provides annotations which allow you to easily apply common fault mitigation strategies to your application but did you know that, since version 1.1, it also exports metrics which allow you to monitor these mitigation strategies?
+All applications need to deal with unexpected problems, whether it's an important service being unavailable, or a sudden influx of requests which could overload your application. MicroProfile Fault Tolerance provides annotations which allow you to easily apply common fault mitigation strategies to your application but did you know that, since version 1.1, it also exports metrics which allow you to monitor these mitigation strategies?
 
-The full details of the metrics are in the {url-ft11-spec}[Fault Tolerance 1.1 spec] but here's a quick overview:
+The full details of the metrics are in the {url-ft11-spec-metrics}[Fault Tolerance 1.1 spec] but here's a quick overview:
 
 * If you use `@Retry`, metrics are added for how often your method is failing and being retried
 * If you use `@Timeout`, metrics are added for how long calls to your method are taking and how often they're timing out
@@ -42,14 +44,14 @@ The full details of the metrics are in the {url-ft11-spec}[Fault Tolerance 1.1 s
 
 In general, the idea is that if you're worried about your method failing in a certain way and are using fault tolerance to try to mitigate that, metrics are added so that you can easily monitor whether or not your application is actually failing there.
 
-MircoProfile Fault Tolerance 1.1 is included in openliberty 18.0.0.3 and above.
+MicroProfile Fault Tolerance 1.1 is included in {url-ol-download}[Open Liberty 18.0.0.3] and above.
 
 == Gathering metrics from Liberty with Prometheus
 
-First, you'll need a running liberty server with an application which uses Fault Tolerance deployed to it. If you don't have an application handy, can use this {url-sample-app}[sample app] (which also comes with an already configured server.xml).
+. You'll need a running Liberty server with an application which uses Fault Tolerance deployed to it. If you don't have an application handy, can use this {url-sample-app}[sample app] (which also comes with an already configured server.xml).
 
-First we need to ensure that Liberty is exporting metrics. Make sure the `mpFaultTolerance-1.1` and `mpMetrics-1.1` features are in your server.xml:
-
+. Next ensure that Liberty is exporting metrics. Make sure the `mpFaultTolerance-1.1` and `mpMetrics-1.1` features are in your server.xml:
++
 [source,xml]
 ----
     <featureManager>
@@ -59,30 +61,30 @@ First we need to ensure that Liberty is exporting metrics. Make sure the `mpFaul
     </featureManager>
 ----
 
-Next, we need to set up a user with permission to access the metrics page. If you already have users configured on your system, you can use the {url-admin-role}[administrator-role] element to configure which users should have admin access. If you don't currently have users configured, the quickest way to create one user with admin access is to use
-
+. You'll need to set up a user with permission to access the metrics page. If you already have users configured on your system, you can use the {url-admin-role}[administrator-role] element to configure which users should have admin access. If you don't currently have users configured, the quickest way to create one user with admin access is to use
++
 [source,xml]
 ----
     <quickStartSecurity userName="user" userPassword="password"/>
 ----
 
-Lastly, you'll also need to make sure you have an https port defined in your `<httpEndpoint>` section. This may already be present in your config.
-
+. You'll also need to make sure you have an https port defined in your `<httpEndpoint>` section. This may already be present in your config.
++
 [source, xml]
 ----
     <httpEndpoint id="defaultHttpEndpoint"
                   httpPort="9080"
                   httpsPort="9443" />
 ----
++
+After doing this, you should be able to start your Liberty server and go to https://localhost:9443/metrics, log in with your admin password and see some basic server metrics.
 
-After doing this, you should be able to start your liberty server and go to https://localhost:9443/metrics, log in with your admin password and see some basic server metrics.
-
-Now we need to install Prometheus and configure it to collect metrics from your liberty server.
-
+. Now you need to install Prometheus and configure it to collect metrics from your Liberty server.
++
 Download Prometheus from https://prometheus.io/download/#prometheus and extract it (this may require a third party tool like {url-7zip}[7-zip] if you're on Windows)
 
-Next, edit `prometheus.yml`. You'll need to find the `scrape_configs` section at the bottom of the file. It will have one job configured for Prometheus itself, we need to add a new one under that for openliberty which should look like this:
-
+. Next, edit `prometheus.yml`. You'll need to find the `scrape_configs` section at the bottom of the file. It will have one job configured for Prometheus itself, we need to add a new one under that for Open Liberty which should look like this:
++
 [source, yaml]
 ----
   - job_name: 'openliberty'
@@ -100,20 +102,20 @@ Next, edit `prometheus.yml`. You'll need to find the `scrape_configs` section at
             - targets: ['localhost:9443']
 
 ----
-
++
 If you have a slightly different setup, you can check Prometheus's {url-prom-config}[configuration documentation] for the other options which can be specified here.
 
-Now you can run `./prometheus` (or `prometheus.exe` on Windows) and you should see some logs scrolling past saying that it's starting up. You should now be able to go to http://localhost:9090/ and see the prometheus web UI. 
+. Now you can run `./prometheus` (or `prometheus.exe` on Windows) and you should see some logs scrolling past saying that it's starting up. You should now be able to go to http://localhost:9090/ and see the prometheus web UI. 
 
 == Displaying metrics with Grafana
 
 Although Prometheus has a basic web UI which can draw graphs from collected metrics, we're going to use Grafana in this article because it has some powerful features such as being able to use placeholders in queries and collect several graphs into a dashboard which can be shared.
 
-Download Grafana from https://grafana.com/grafana/download. (I used the standalone binaries when writing this article. If you're on Windows or you pick a different package, then read through the installation documentation linked from the download page.)
+. Download Grafana from https://grafana.com/grafana/download. (I used the standalone binaries when writing this article. If you're on Windows or you pick a different package, then read through the installation documentation linked from the download page.)
 
-Once you have Grafana installed or extracted, you should be able to start it (`bin/grafana-server` for the standalone package) and go the the web UI in your browser (default http://localhost:3000) and log in (default user "admin", password "admin").
+. Once you have Grafana installed or extracted, you should be able to start it (`bin/grafana-server` for the standalone package) and go the the web UI in your browser (default http://localhost:3000) and log in (default user "admin", password "admin").
 
-Next, we're going to import the dashboard I created to showcase the Fault Tolerance 1.1 metrics. Head over to the {url-dashboard}[dashboard page on grafana.com] and follow the instructions to import it. When you load up the dashboard, you should see a drop-down menu at the top left to select the method to show metrics for. If you don't see any options here, try hitting the endpoints in your app which will cause those methods to be invoked and then refresh the dashboard page.
+. Next, you're going to import the dashboard I created to showcase the Fault Tolerance 1.1 metrics. Head over to the {url-dashboard}[dashboard page on grafana.com] and follow the instructions to import it. When you load up the dashboard, you should see a drop-down menu at the top left to select the method to show metrics for. If you don't see any options here, try hitting the endpoints in your app which will cause those methods to be invoked and then refresh the dashboard page.
 
 image::/img/blog/ftmetrics-imported-dashboard.png[Screenshot of the imported dashboard showing a graph of the invocations per second and of the failure rate.]
 
@@ -125,7 +127,7 @@ If you have suggestions for improvements to the dashboard, you can open an issue
 
 Let's take a quick look at how to create your own graphs from the metrics produced by Fault Tolerance. This will allow you to create a graph which isn't covered in my dashboard, or to extract metrics from several different methods and put them all on the same dashboard.
 
-First, take a look at Chapter 10 of the {url-ft11-spec}[Fault Tolerance 1.1 spec] to see the metrics which are produced.
+First, take a look at the {url-ft11-spec-metrics}[Fault Tolerance 1.1 spec] to see the metrics which are produced.
 
 For example, here's the metrics which are produced for methods annotated with `@Timeout`.
 
@@ -183,23 +185,28 @@ This means that, if you have a method named `callSlowService` on a class named `
 * `application:ft_com_example_test_service_call_slow_service_timeout_calls_not_timed_out_total` +
   The number of times the method completed without timing out
 
-Let's start creating our graphs. In Grafana, first create an empty dashboard.
+// -
 
+Let's start creating our graphs.
+
+. In Grafana, first create an empty dashboard.
++
 image::/img/blog/ftmetrics-grafana-new-dashboard.png[Screenshot of Grafana highlighting the new dashboard button on the left sidebar menu]
 
-Next add a new panel and select that the new panel should be a graph
-
+. Add a new panel and select that the new panel should be a graph
++
 image::/img/blog/ftmetrics-grafana-new-graph.png[Screenshot of Grafana highlighting the new panel button and the graph button]
 
-Next select edit from the menu that opens in the panel header.
-
+. Select edit from the menu that opens in the panel header.
++
 image::/img/blog/ftmetrics-grafana-edit-graph.png[Screenshot of Grafana with the menu of the new panel open highlighting the edit button]
 
-Now select the metrics tab at the bottom, this is where we write a query using {url-prom-ql}[Prometheus Query Language].
-
+. Select the metrics tab at the bottom, this is where we write a query using {url-prom-ql}[Prometheus Query Language].
++
 image::/img/blog/ftmetrics-grafana-metrics-tab.png[Screenshot of Grafana showing the graph editing screen with the metrics tab open]
 
-Let's start off with a simple example. We can draw a graph of the total number of calls to the `callSlowService` method.
+Now that we have a new empty graph, let's start off with a simple example. We can draw a graph of the total number of calls to the `callSlowService` method.
+
 ----
 application:ft_com_example_test_service_call_slow_service_invocations_total
 ----
@@ -208,7 +215,9 @@ If we load the page a few times to generate some traffic, I get a graph like thi
 
 image::/img/blog/ftmetrics-invocations-graph.png[Screenshot of Grafana showing the graph editing screen. The query from above has been entered in the query box. A line graph is above it with the line moving unevenly up and to the right.]
 
-As you can see, it keeps going upward as more requests are served. What might be more useful is to graph the _rate_ of requests, which we can do with the `{url-rate}[rate]` method.
+As you can see, it keeps going upward as more requests are served.
+
+What might be more useful is to graph the _rate_ of requests, which we can do with the `{url-rate}[rate]` method.
 ----
 rate(application:ft_com_example_test_service_call_slow_service_invocations_total[1m])
 ----
@@ -220,6 +229,7 @@ image::/img/blog/ftmetrics-invocations-rate-graph.png[Screenshot of Grafana show
 Most of the metrics produced are simple counters which count up by one every time an event occurs. This is format that prometheus recommends as it's really lightweight on the server, flexible for graphing and copes gracefully with missing the occasional sample or the server restarting. Prometheus stores the value of the counter at set intervals and can then retrospectively process these samples to produce rates of change, moving averages or ratios. However, the downside of this flexibility is that we need to do a little more work, such as using the `rate` method, when writing the queries for our graphs.
 
 As a final example, let's use a more complex query to graph the percentage of calls which timed out, averaged over the last minute. Looking back at at the table above, we see that we have metrics for both the number of calls which timed out, and the number of calls which didn't. All we need to do is divide the number of calls that timed out by the total number of calls, averaged over the last minute.
+
 ----
 rate(application:ft_com_example_test_service_call_slow_service_timeout_calls_timed_out_total[1m]) * 100
 /
