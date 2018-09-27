@@ -25,12 +25,8 @@ permalink: /docs/ref/command/
                     </li>
                     {% endfor %}
                 </ul>
-                <div id="toggle_icon" role="button" data-toggle="collapse" data-target="#command_toc" aria-expanded="true"
-                    aria-controls="command_toc">
-                    <button id="command_toc_button" class="collapsed" type="button" aria-label="toggle table of content"></button>
-                    <h3 id="toc_title">Server Commands</h3>
-                </div>
-                <ul id="command_toc" class="collapse">
+                <h3 id="toc_title">Server Commands</h3>
+                <ul id="command_toc">
                     {% for command in commandDocs %}
                     {% assign noCommand = command.title | split: ' command' %}
                     {% assign noServer = noCommand[0] | split: 'server ' %}
