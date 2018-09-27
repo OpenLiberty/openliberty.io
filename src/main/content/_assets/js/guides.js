@@ -168,7 +168,16 @@ $(document).ready(function() {
 
     $('#guide_search_input').keyup(function(event) {
         var input_value = event.currentTarget.value.toLowerCase();
-        processSearch(input_value);        
+        processSearch(input_value);
+    });
+
+    // clear search input when x button clicked
+    $('.clear_btn').on('click', function(){
+        $('#guide_search_input').val('');
+        var searchInput = $('#guide_search_input').val();
+        updateSearchUrl(searchInput);
+        processSearch(searchInput);        
+        showAllCategories();
     });
 
     $('#guide_search_input').keypress(function(event) {
