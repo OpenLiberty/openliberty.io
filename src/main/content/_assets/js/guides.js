@@ -169,7 +169,7 @@ $(document).ready(function() {
     $('#guide_search_input').keyup(function(event) {
         var input_value = event.currentTarget.value.toLowerCase();
         processSearch(input_value);
-    }));
+    });
 
     // clear search input when x button clicked
     $('.clear_btn').on('click', function(){
