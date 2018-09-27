@@ -27,6 +27,20 @@ $(document).ready(function(){
         }      
     });
 
+    /* Open the dropdown menu when hovering over the dropdown list item */
+    $('.dropdown_container').on('hover mouseover', function(){
+        if(!$(this).hasClass('open')){
+            $(this).toggleClass('open');
+        }        
+    });
+
+    /* Close the dropdown once the mouse leaves the dropdown list item */
+    $('.dropdown_container').on('hoveroff mouseout', function(){
+        if($(this).hasClass('open')){
+            $(this).toggleClass('open');
+        }
+    });
+
     // Toggle between down caret and up caret.
     // If focusout is set, then the button was clicked out of so reset to a down caret.
     var toggleDropdownIcon = function(dropdownMenu, focusout){
