@@ -1106,13 +1106,30 @@ function replaceHistoryState(hashToReplace) {
     return fullHref;
 }
 
+// Take care of displaying the table of content, comand content, and hamburger correctly when
+// browser window resizes from mobile to non-mobile width and vice versa.
+function addWindowResizeListener() {
+    $(window).resize(function() {
+        if (isMobileView()) {
+            addHamburgerClick();
+        } else {
+            if (!$('#toc_column').hasClass('in')) {
+                $(".breadcrumb_hamburger_nav").trigger('click');
+            }
+            $("#breadcrumb_hamburger").hide();
+            $("#breadcrumb_hamburger_title").hide();
+            adjustFrameHeight();
+        }
+    });
+}
+
 $(document).ready(function () {
     addTOCClick();
     addConfigContentFocusListener();
     handleInitialContent();
     handleParentWindowScrolling();
     addHamburgerClick();
-    //adjustFrameHeight();
+    addWindowResizeListener();
     handlePopstate();
 
     $('iframe[name="contentFrame"]').load(function () {
