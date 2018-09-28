@@ -416,15 +416,27 @@ a {
     z-index: 9999;
 
     @media screen and(min-width: 992px){
+        /* Animation to slide in the navbar from the top of the screen. */
+        @keyframes slide {
+            0% {
+              transform: translate(0, -75px);
+              opacity: .1
+            }
+            100% {
+              transform: translate(0, 0);
+              opacity: 1
+            }
+        }
+
         &.stickyNav {
             position: fixed;
             background: #24253A;
             padding-top: 12.5px;
             padding-bottom: 12.5px;
-            -webkit-transition: all 0.5s ease;
-            -moz-transition: all 0.5s ease;
-            -o-transition: all 0.5s ease;
-            transition: all 0.5s ease;
+            
+            animation-name: slide;
+            animation-duration: 750ms;
+            animation-timing-function: ease;
 
             & .dropdown-menu {
                 /* Enable full opacity when the navbar is floating */

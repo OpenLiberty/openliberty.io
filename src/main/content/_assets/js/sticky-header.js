@@ -11,64 +11,26 @@
 
 $(document).ready(function(){
     var navbar = $('.navbar');
-    var hoveringNavbar = false; // Lock to keep the navbar present when the debounce ends.
     var navHeight = navbar.outerHeight();
     var lastScrollTop = 0;
 
-    // Returns a function, that, as long as it continues to be invoked, will not
-    // be triggered. The function will be called after it stops being called for
-    // N milliseconds. If `immediate` is passed, trigger the function on the
-    // leading edge, instead of the trailing.
-    function debounce(func, wait, immediate) {
-        var timeout;
-        return function() {
-            var context = this, args = arguments;
-            var later = function() {
-                timeout = null;
-                if (!immediate){
-                    func.apply(context, args);
-                }
-            };
-            var callNow = immediate && !timeout;
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-            if (callNow){
-                func.apply(context, args);
-            } 
-        };
-    }    
-
-    /* Fade away the floating nav after 500 ms of no scrolling */
-    var fadeNavBar = debounce(function(){
-        // Cancel fading the navbar debounce.
-        if(!hoveringNavbar){
-            navbar.removeClass('stickyNav');
-        }
-    }, 1000);
-
-    $('.navbar').on('hover mouseover', function(){        
-        hoveringNavbar = true;
-    });
-
-    $('.navbar').on('hoveroff mouseleave', function(){
-        hoveringNavbar = false;
-        fadeNavBar();
-    });
-
-    $(window).on('scroll', function(event){
+    $(window).on('scroll', function(){
         // Check if scrolling up to apply the stickyNav class.
         var newScrollTop = $(this).scrollTop();
         if (newScrollTop < lastScrollTop){
             // Scrolling up
             var offset = window.scrollY;
             if(offset > navHeight / 2){
-                navbar.addClass('stickyNav');
-                fadeNavBar();                
+                navbar.addClass('stickyNav');             
             } else{
                 navbar.removeClass('stickyNav');
             }
         } else{
-            navbar.removeClass('stickyNav');
+            // Scrolling down
+            // Use a threshold of over 3 pixels so the user doesn't accidentally make the navbar dissapear unless they really scroll down.
+            if((newScrollTop - lastScrollTop) > 3){
+                navbar.removeClass('stickyNav');
+            }            
         }
         lastScrollTop = newScrollTop;        
     });
