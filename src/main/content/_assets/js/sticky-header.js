@@ -44,7 +44,7 @@ $(document).ready(function(){
         if(!hoveringNavbar){
             navbar.removeClass('stickyNav');
         }
-    }, 500);
+    }, 1000);
 
     $('.navbar').on('hover mouseover', function(){        
         hoveringNavbar = true;
