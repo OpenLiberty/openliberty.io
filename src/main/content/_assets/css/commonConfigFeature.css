@@ -44,10 +44,6 @@ html, body, main {
     z-index: 1;
 }
 
-#toc_column {
-    overflow: auto;
-}
-
 #toc_column ul {
     padding: 0;
     margin: 0;
@@ -61,6 +57,7 @@ html, body, main {
     color: #5D6A8E;
     font-size: 14px;
     word-wrap: break-word;
+    padding: 7px 30px 7px 0px;
 }
 
 .toc_selected {
@@ -68,11 +65,16 @@ html, body, main {
     border-left: 8px solid #f4914d; 
     font-weight: 500 !important; 
     color: #313653 !important;
-    margin-right: -15px;
+    margin-right: -30px;
+    padding-right: 60px !important;
 }
 
 #toc_column ul li a[href]:hover, #toc_column ul li div[href]:hover {
     color: #F4914D;
+}
+
+#toc_container {
+    padding-left: 30px;
 }
 
 #config_content, #feature_content, #command_content {
@@ -88,14 +90,17 @@ html, body, main {
     letter-spacing: 0;
 }
 
-/* hide scrollbar in chrome and safari */
-#toc_column::-webkit-scrollbar, #feature_content::-webkit-scrollbar, #command_content::-webkit-scrollbar  {
-    display: none;
+/* hide scrollbar in chrome, firefox, safari, and IE */
+#feature_content, #command_content, #toc_column {
+    overflow: hidden;
+    height: 100%;
 }
 
-/* hide scrollbar in IE */
-#toc_column, #feature_content, #command_content { 
-    -ms-overflow-style: none; 
+#content, #toc_inner {
+    height: 100%;
+    overflow-y: scroll;
+    margin-right: -50px;  /* hide the scroll bar */
+    padding-right: 50px;
 }
 
 @media (max-width: 767px) {
