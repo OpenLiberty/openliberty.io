@@ -3,6 +3,7 @@ from pkg_resources import parse_version
 import os
 import re
 import sys
+from importlib import reload
 
 reload(sys)
 sys.setdefaultencoding('utf8')
