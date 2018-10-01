@@ -3,6 +3,8 @@ from pkg_resources import parse_version
 import os
 import re
 
+PYTHONIOENCODING="UTF-8"
+
 def getTOCVersion(tocString):
     versionPattern = re.compile('^([\s\D]*)(?P<version>\d+[.]?\d*)([\s\D]*)')
     versionMatches = versionPattern.match(tocString)
@@ -26,7 +28,7 @@ def createHrefNewTag(parent, tocHref, tocString):
         hrefTag.string = docVersion
     return hrefTag
 
-featureIndex = BeautifulSoup(open('./target/jekyll-webapp/docs/ref/feature/index.html', encoding="utf-8"), "html.parser")
+featureIndex = BeautifulSoup(open('./target/jekyll-webapp/docs/ref/feature/index.html'), "html.parser")
 
 commonTOCs = {};
 # gather TOCs with version in the title
@@ -56,7 +58,7 @@ for commonTOC in commonTOCKeys:
     if len(matchingTitleTOCs) > 1:
         # multiple versions of the same title found, create a new html from the template
         # to put the versions at the top of the page
-        featureVersionTemplate  = BeautifulSoup(open('./scripts/feature-template/common-feature-content-template.html', encoding="utf-8"),"html.parser")
+        featureVersionTemplate  = BeautifulSoup(open('./scripts/feature-template/common-feature-content-template.html'),"html.parser")
         featureTitle = featureVersionTemplate.find(id='common_feature_title')
         newTOCHref = ''
         # in reverse descending order
@@ -94,4 +96,4 @@ for commonTOC in commonTOCKeys:
 # rename the original index.html and write the new index.html with version control in it
 os.rename('./target/jekyll-webapp/docs/ref/feature/index.html', './target/jekyll-webapp/docs/ref/feature/index.html.orig')
 with open('./target/jekyll-webapp/docs/ref/feature/index.html', "w") as file:
-    file.write(str(featureIndex).encode("utf-8").strip())
+    file.write(str(featureIndex))
