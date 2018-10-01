@@ -26,7 +26,7 @@ def createHrefNewTag(parent, tocHref, tocString):
         hrefTag.string = docVersion
     return hrefTag
 
-featureIndex = BeautifulSoup(open('./target/jekyll-webapp/docs/ref/feature/index.html'), "html.parser")
+featureIndex = BeautifulSoup(open('./target/jekyll-webapp/docs/ref/feature/index.html', encoding="utf-8"), "html.parser")
 
 commonTOCs = {};
 # gather TOCs with version in the title
@@ -56,7 +56,7 @@ for commonTOC in commonTOCKeys:
     if len(matchingTitleTOCs) > 1:
         # multiple versions of the same title found, create a new html from the template
         # to put the versions at the top of the page
-        featureVersionTemplate  = BeautifulSoup(open('./scripts/feature-template/common-feature-content-template.html'),"html.parser")
+        featureVersionTemplate  = BeautifulSoup(open('./scripts/feature-template/common-feature-content-template.html', encoding="utf-8"),"html.parser")
         featureTitle = featureVersionTemplate.find(id='common_feature_title')
         newTOCHref = ''
         # in reverse descending order
