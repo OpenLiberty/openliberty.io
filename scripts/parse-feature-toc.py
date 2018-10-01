@@ -2,11 +2,6 @@ from bs4 import BeautifulSoup
 from pkg_resources import parse_version
 import os
 import re
-import sys
-from importlib import reload
-
-reload(sys)
-sys.setdefaultencoding('utf8')
 
 def getTOCVersion(tocString):
     versionPattern = re.compile('^([\s\D]*)(?P<version>\d+[.]?\d*)([\s\D]*)')
@@ -99,4 +94,4 @@ for commonTOC in commonTOCKeys:
 # rename the original index.html and write the new index.html with version control in it
 os.rename('./target/jekyll-webapp/docs/ref/feature/index.html', './target/jekyll-webapp/docs/ref/feature/index.html.orig')
 with open('./target/jekyll-webapp/docs/ref/feature/index.html', "w") as file:
-    file.write(str(featureIndex))
+    file.write(u' '.join(featureIndex).encode("utf-8"))
