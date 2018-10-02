@@ -94,4 +94,4 @@ for commonTOC in commonTOCKeys:
 # rename the original index.html and write the new index.html with version control in it
 os.rename('./target/jekyll-webapp/docs/ref/feature/index.html', './target/jekyll-webapp/docs/ref/feature/index.html.orig')
 with open('./target/jekyll-webapp/docs/ref/feature/index.html', "w") as file:
-    file.write(unicode(featureIndex))
+    file.write(featureIndex.encode('utf-8'))
