@@ -12,5 +12,10 @@ rvm install 2.4.1
 rvm use 2.4.1 --default
 sudo apt-get -y install nodejs
 
+# Print out default locale and change it to en_US.UTF-8
+echo "Default locale:"
+echo `locale`
+export LANG="en_US.UTF-8"
+
 SCRIPT_DIR=$(dirname $0)
 source $SCRIPT_DIR/build_jekyll_maven.sh
