@@ -55,6 +55,30 @@ function addTOCClick() {
     }
 
     $("#toc_container a").off("click").on("click", onclick);
+
+    $("#toc_container a").off('keypress').on('keypress', function (event) {
+        event.stopPropagation();
+        // Space key
+        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
+            $(this).trigger('click');
+        }
+    });
+
+    // listen for focusin causing by tab. not mouse
+    var mousedown = false;
+    $("#toc_container a").off('mousedown').on('mousedown', function(event) {
+        mousedown = true;
+    });
+
+    $("#toc_container a").off('focusin').on('focusin', function(event) {
+        if (!mousedown) {
+            // Scroll the parent window back up if it is scroll down
+            adjustParentScrollView();
+            // move the TOC in viewport if it is out of viewport
+            adjustTOCView($(event.currentTarget));
+        }
+        mousedown = false;
+    });
 }
 
 // Add css to selected TOC. If scrollTo is specified, scroll the TOC element into viewport.
@@ -86,16 +110,7 @@ function setSelectedTOC(resource, scrollTo) {
     }
 
     if (scrollTo) {
-        var resourceTop = resource.parent()[0].getBoundingClientRect().top;
-        var tocTitleTop = $("#toc_title")[0].getBoundingClientRect().top;
-        var tocTitleHeight = $("#toc_title").outerHeight();
-        var tocColumnHeight = $("#toc_column").outerHeight();
-        // make toc element visible if it is not when going thru history backward and forward click
-        if (resourceTop < tocTitleTop + tocTitleHeight || resourceTop >= tocColumnHeight) {
-            // position the element in the middle part of the toc
-            $("#toc_column").scrollTop(resourceTop - $("#toc_column").offset().top +
-                $("#toc_column").scrollTop() - tocTitleHeight - tocColumnHeight / 2);
-        }
+        adjustTOCView(resource);
     }
 }
 
@@ -110,9 +125,11 @@ function removeHashRefTOC(href) {
 // Set the href for iframe to load the content. The call will not trigger a refresh.
 function setIframeLocationHref(href) {
     var iframeContent = $('iframe[name="contentFrame"]').contents();
-    if (iframeContent.attr("location").href !== href) {
+    if (iframeContent.attr("location").pathname !== href) {
         iframeContent.attr("location").replace(href);
     }
+    // move focus to the content
+    $('#config_content').focus();
 }
 
 // Update doc header breadcrumb with the current TOC title
@@ -303,14 +320,12 @@ function getContentBreadcrumbTitle() {
     return (getTitle(iframeContents.find("#config_title").text()));
 }
 
-function getTOCTitle(resource) {
-    return getTitle(resource.text());
-}
-
 function getTitle(title) {
     var retTitle = title;
-    if (title.indexOf(" - ") !== -1) {
-        retTitle = title.substring(0, title.indexOf(" - "));
+    var openParamIndex = title.indexOf("(");
+    var closeParamIndex = title.indexOf(")");
+    if (openParamIndex !== -1 & closeParamIndex != -1) {
+        retTitle = title.substring(openParamIndex + 1, closeParamIndex);
     }
     return retTitle.trim();
 }
@@ -420,11 +435,25 @@ function addExpandAndCollapseToggleButtons(subHeading, titleId) {
     });
     toggleButton.on('keypress', function (event) {
         event.stopPropagation();
-        // Enter key
-        if (event.which === 13 || event.keyCode === 13) {
-            toggleButton.click();
+        // Enter or space key
+        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
+            toggleButton.trigger('click');
         }
     });
+
+    // listen for focus causing by tab. not mouse
+    var mousedown = false;
+    toggleButton.on('mousedown', function(event) {
+        mousedown = true;
+    });
+    toggleButton.on('focus', function(e) {
+        if (!mousedown) {
+            // Scroll the parent window back up if it is scroll down
+            adjustParentScrollView();
+        }
+        mousedown = false;
+    });
+
     subHeading.prepend(toggleButton);
 }
 
@@ -826,27 +855,43 @@ function adjustParentScrollView() {
     }
 }
 
+// display the toc element in viewport
+function adjustTOCView(resource) {
+    var resourceTop = resource.parent()[0].getBoundingClientRect().top;
+    var tocTitleTop = $("#toc_title")[0].getBoundingClientRect().top;
+    var tocTitleHeight = $("#toc_title").outerHeight();
+    var tocColumnHeight = $("#toc_column").outerHeight();
+    // make toc element visible if it is not when going thru history backward and forward click
+    if (resourceTop < tocTitleTop + tocTitleHeight || resourceTop >= tocColumnHeight) {
+        // position the element in the middle part of the toc
+        $("#toc_column").scrollTop(resourceTop - $("#toc_column").offset().top +
+            $("#toc_column").scrollTop() - tocTitleHeight - tocColumnHeight / 2);
+    }
+}
+
+// If the doc content is in focus by means of other than a mouse click, then goto the top of the 
+// doc.
+function addConfigContentFocusListener() {
+    var mousedown = false;
+    $("#config_content").on('mousedown', function(event) {
+        mousedown = true;
+    });
+    $('#config_content').on("focusin", function(e) {
+        if (!mousedown) {
+            adjustParentScrollView();
+            scrollToPos(0);
+        }
+        mousedown = false;
+    });
+}
+
 // Handle content loading based on the url
 function handleInitialContent() {
     // if hash is included in the url, load the content document and replace the
     // history state. Otherwise, load the first document.
     if (window.location.hash !== "" && window.location.hash !== undefined) {
-        var fullHref = '/config/' + window.location.hash.substring(1)
-        var isExpand = undefined;
-        if (fullHref.indexOf("&") !== -1) {
-            fullHref = fullHref.substring(0, fullHref.indexOf("&"));
-            if (window.location.hash.indexOf("&expand=true") !== -1) {
-                isExpand = true;
-            } else if (window.location.hash.indexOf("&expand=false") !== -1) {
-                isExpand = false;
-            }
-        }
+        var fullHref = replaceHistoryState(window.location.hash);
         setIframeLocationHref(fullHref);
-        var state = { href: fullHref };
-        if (state !== undefined) {
-            state.expand = isExpand;
-        }
-        window.history.replaceState(state, null, window.location.hash);
     } else {
         selectFirstDoc();
     }
@@ -1022,8 +1067,48 @@ function adjustFrameHeight() {
     }
 }
 
+function updateHashAfterRedirect() {
+    var hashValue = window.location.hash;
+    var href = "";
+    if (hashValue !== "" && hashValue.indexOf("#rwlp_config_") !== -1) {
+        hashValue = hashValue.substring("#rwlp_config_".length);
+        //hashValue = hashValue.substring(1);
+        if (hashValue.indexOf("&") !== -1) {
+            href = "/config/" + hashValue.substring(0, hashValue.indexOf("&"));
+        } else {
+            href = "/config/" + hashValue;
+        }
+    
+        var iframeContent = $('iframe[name="contentFrame"]').contents();
+        var location = iframeContent.attr("location")
+        if (location.pathname + location.hash === href) {
+            replaceHistoryState('#' + hashValue);
+        }
+    }
+}
+
+function replaceHistoryState(hashToReplace) {
+    var fullHref = "/config/" + hashToReplace.substring(1)
+    var isExpand = undefined;
+    if (fullHref.indexOf("&") !== -1) {
+        fullHref = fullHref.substring(0, fullHref.indexOf("&"));
+        if (hashToReplace.indexOf("&expand=true") !== -1) {
+            isExpand = true;
+        } else if (hashToReplace.indexOf("&expand=false") !== -1) {
+            isExpand = false;
+        }
+    }
+    var state = { href: fullHref };
+    if (isExpand !== undefined) {
+        state.expand = isExpand;
+    }
+    window.history.replaceState(state, null, hashToReplace);
+    return fullHref;
+}
+
 $(document).ready(function () {
     addTOCClick();
+    addConfigContentFocusListener();
     handleInitialContent();
     handleParentWindowScrolling();
     addHamburgerClick();
@@ -1067,6 +1152,9 @@ $(document).ready(function () {
                     handleExpandCollapseState(titleId, isExpand);
                 }
             }
+
+            // update hash if it is redirect
+            updateHashAfterRedirect()
 
             if (isMobileView() && $("#toc_column").hasClass('in')) {
                 $(".breadcrumb_hamburger_nav").trigger('click');

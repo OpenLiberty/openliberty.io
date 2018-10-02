@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-left text-right">                    
+                <ul class="nav navbar-nav navbar-left text-right"> 
                     <li>
                         <a href="/guides">Guides</a>
                     </li>
@@ -31,8 +31,9 @@
                                 <li><a href="/docs/ref/microprofile/">MicroProfile API</a></li>
                                 <li><a href="/docs/ref/config/">Server Config</a></li>
                                 <li><a href="/docs/ref/feature/">Server Features</a></li>
+                                <li><a href="/docs/ref/command/">Server Commands</a></li>
                             </ul>
-                    </li>
+                    </li>                    
                 </ul>
             </div>
             <!-- Add breadcrumb for all pages except /docs -->
@@ -49,8 +50,7 @@
                     </button>                        
                 {% endif %}  
 
-                <ol class="breadcrumb fluid-container">     
-                                     
+                <ol class="breadcrumb fluid-container">   
                     <li>
                         <a href="/docs">Docs</a>
                     </li>
@@ -65,8 +65,6 @@
                         {% if versions | size > 1 %}
                             <span id="breadcrumb_line">|</span>
                             <li id="breadcrumb_version">VERSION:</li>
-
-
 
                             {% for javadoc in versions %}
                             <li class="javadoc_version">
@@ -86,16 +84,27 @@
                         </li>
                         <li>
                             <a href="/docs/ref/config/">Config</a>
-                        </li>    
-                     
+                        </li>
+
+                    <!-- Intro docs -->
+                    {% elsif page.url contains '/docs/intro' %}
+                        <li class="active">{{ page.title }}</li>
+
                     {% elsif page.type == 'feature' %}
                         <li>
                             <a class="inactive_link">Reference</a>
                         </li>
                         <li>
                             <a href="/docs/ref/feature/">Features</a>
-                        </li>    
-                                       
+                        </li>
+
+                    {% elsif page.type == 'command' %}
+                        <li>
+                            <a class="inactive_link">Reference</a>
+                        </li>
+                        <li>
+                            <a href="/docs/ref/command/">Commands</a>
+                        </li>
                     <!-- All Guides page -->
                     {% elsif page.url == '/guides/' %}
                         <li class="active">Guides</li>
@@ -109,8 +118,8 @@
                     {% endif %}
                 </ol>
             </div> 
-            {% if page.type == 'config' or page.type == 'feature' %}
-                <div class="breadcrumb_hamburger_nav" data-toggle="collapse" data-target="#toc_column" aria-expanded="true" aria-controls="toc_column">
+            {% if page.type == 'config' or page.type == 'feature' or page.type == 'command' %}
+                <div class="breadcrumb_hamburger_nav" role="button" data-toggle="collapse" data-target="#toc_column" aria-expanded="true" aria-controls="toc_column">
                     <!-- Hamburger icon for showing the table of contents -->
                     <button id="breadcrumb_hamburger" class="collapsed" type="button">
                         <span class="sr-only">Toggle navigation</span>
