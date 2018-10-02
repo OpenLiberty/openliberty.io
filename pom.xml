@@ -38,6 +38,26 @@
 			<artifactId>cdi-api</artifactId>
 			<version>1.2</version>
 		</dependency>
+		<!-- BEGIN: Needed to compile and run unit tests -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.5</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>2.22.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.json</artifactId>
+			<version>1.0</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- END: Needed to compile and run unit tests -->
 	</dependencies>
 
 	<build>
@@ -74,6 +94,11 @@
 						<appLocation>../../../../../${project.build.finalName}</appLocation>
 					</bootstrapProperties>
 				</configuration>
+			</plugin>
+			<plugin>
+			    <groupId>io.openliberty.boost</groupId>
+			    <artifactId>boost-maven-plugin</artifactId>
+			    <version>0.1</version>
 			</plugin>
 		</plugins>
 	</build>
