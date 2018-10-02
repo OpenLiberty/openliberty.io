@@ -9,13 +9,16 @@ Also can be used to setup a local development environment when making changes to
 1. `git clone git@github.com:OpenLiberty/openliberty.io.git`
 2. `cd openliberty.io`
 
-## Install ruby libraries used by the website by running two `gem` commands to install these libraries
+## Install ruby libraries used by the website by running `gem` commands to install these libraries
 
 1. `gem install jekyll bundler jekyll-feed jekyll-asciidoc coderay uglifier octopress-minify-html octokit`
 2. `gem install jekyll-assets -v 2.4.0`
+3. `cd gems/ol-asciidoc`
+4. `gem build ol-asciidoc.gemspec`
+5. `gem install ol-asciidoc-0.0.1.gem`
 
 
-> **Note**: You can find these two commands in the build scripts here:
+> **Note**: You can find these commands in the build scripts here:
     https://github.com/OpenLiberty/openliberty.io/blob/6d643218e67c1cdf610931964818d431c0c248a2/scripts/build_jekyll_maven.sh#L11
     https://github.com/OpenLiberty/openliberty.io/blob/6d643218e67c1cdf610931964818d431c0c248a2/scripts/build_jekyll_maven.sh#L12
 
