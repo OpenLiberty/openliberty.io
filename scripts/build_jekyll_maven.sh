@@ -5,10 +5,6 @@
 # Exit immediately if a simple command exits with a non-zero status.
 set -e
 
-# Print locale
-echo `locale`
-export LANG="en_US.UTF-8"
-
 JEKYLL_BUILD_FLAGS=""
 
 echo "Installing ruby packages..."
