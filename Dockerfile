@@ -63,8 +63,8 @@ RUN mkdir -p /home/jekyll \
     && groupadd -rg 1000 jekyll \
     && useradd -rg jekyll -u 1000 -d /home/jekyll jekyll \
     && chown jekyll:jekyll /home/jekyll \
-    && gem install jekyll bundler 
-
+    && gem install jekyll bundler jekyll-feed jekyll-asciidoc coderay uglifier octopress-minify-html octokit \
+    && gem install jekyll-assets -v 2.4.0
 
 # Create a mount point where Docker can access the source files on my local system (host system)
 VOLUME /home/jekyll
@@ -72,14 +72,13 @@ VOLUME /home/jekyll
 #  Set the working directory
 WORKDIR /home/jekyll
 
-# Installs required Jekyll plugins (gems) based on the Gemfile on host machine
-# There must be a Gemfile and Gemfile.lock in the same directory as this Dockerfile
-COPY Gemfile /home/jekyll
-COPY Gemfile.lock /home/jekyll
-RUN bundle install
+RUN pushd gems/ol-asciidoc \
+    && gem build ol-asciidoc.gemspec \
+    && gem install ol-asciidoc-0.0.1.gem \
+    && popd
 
 # Serve the site
-ENTRYPOINT ["bundle", "exec", "jekyll", "serve", "--host=0.0.0.0"]
+ENTRYPOINT ["jekyll", "serve", "--host=0.0.0.0", "--source src/main/content"]
 
 # Make port 4000 available to the world outside this container
 EXPOSE 4000
