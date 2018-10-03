@@ -41,9 +41,9 @@ function addTOCClick() {
 
     $("#toc_container > ul > li > div").off("keypress").on('keypress', function (event) {
         event.stopPropagation();
-        // Enter key
-        if (event.which === 13 || event.keyCode === 13) {
-            $(this).click();
+        // Enter or space key
+        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
+            $(this).trigger('click');
         }
     });
 
@@ -129,9 +129,9 @@ function addVersionClick(hrefToClick) {
 
     $("#common_feature_title > .feature_version").off("keypress").on('keypress', function (event) {
         event.stopPropagation();
-        // Enter key
-        if (event.which === 13 || event.keyCode === 13) {
-            $(this).click();
+        // Enter or space key
+        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
+            $(this).trigger('click');
         }
     });
 
@@ -395,11 +395,29 @@ function addHashListener() {
     });
 }
 
+// Take care of displaying the table of content, comand content, and hamburger correctly when
+// browser window resizes from mobile to non-mobile width and vice versa.
+function addWindowResizeListener() {
+    $(window).resize(function() {
+        if (isMobileView()) {
+            addHamburgerClick();
+        } else {
+            if (!$('#toc_column').hasClass('in')) {
+                $(".breadcrumb_hamburger_nav").trigger('click');
+            }
+            $("#breadcrumb_hamburger").hide();
+            $("#breadcrumb_hamburger_title").hide();
+            setContainerHeight();
+        }
+    });
+}
+
 $(document).ready(function () {  
     addTOCClick();
     addFeatureContentFocusListener();
     addHamburgerClick();
     addHashListener();
+    addWindowResizeListener();
 
     //manually tiggering it if we have hash part in URL
     if (window.location.hash) {
