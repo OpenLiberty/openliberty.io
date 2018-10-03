@@ -58,7 +58,7 @@ public class MockDHEClient extends DHEClient {
 			runtimeReleaseVersions.add(Constants.VERSIONS, runtimeVersions.build());
 			return runtimeReleaseVersions.build();
 		}
-		if (url.contains("v1")) {
+		if (url.contains("runtime")) {
 			JsonObjectBuilder releaseInfo = Json.createObjectBuilder();
 			releaseInfo.add(Constants.VERSION, "v1");
 			releaseInfo.add(Constants.BUILD_LOG, "build-log-path");
@@ -66,6 +66,19 @@ public class MockDHEClient extends DHEClient {
 			releaseInfo.add(Constants.DRIVER_LOCATION, "driver-location");
 			releaseInfo.add(Constants.TESTS_PASSED, "8500");
 			releaseInfo.add(Constants.TOTAL_TESTS, "8501");
+			releaseInfo.add(Constants.PACKAGE_LOCATIONS,
+					Json.createArrayBuilder().add("my-package-v1").build());
+			return releaseInfo.build();
+		}
+		// For some reason, the tools info.json has the test data as INT, rather than STRING
+		if (url.contains("tools")) {
+			JsonObjectBuilder releaseInfo = Json.createObjectBuilder();
+			releaseInfo.add(Constants.VERSION, "v1");
+			releaseInfo.add(Constants.BUILD_LOG, "build-log-path");
+			releaseInfo.add(Constants.TESTS_LOG, "test-log-path");
+			releaseInfo.add(Constants.DRIVER_LOCATION, "driver-location");
+			releaseInfo.add(Constants.TESTS_PASSED, 114);
+			releaseInfo.add(Constants.TOTAL_TESTS, 115);
 			releaseInfo.add(Constants.PACKAGE_LOCATIONS,
 					Json.createArrayBuilder().add("my-package-v1").build());
 			return releaseInfo.build();
