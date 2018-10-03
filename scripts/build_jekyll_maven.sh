@@ -7,9 +7,7 @@ set -e
 
 JEKYLL_BUILD_FLAGS=""
 
-echo "Installing ruby packages..."
-gem install jekyll bundler jekyll-feed jekyll-asciidoc coderay uglifier octopress-minify-html octokit
-gem install jekyll-assets -v 2.4.0
+./scripts/build_gem_dependencies.sh
 
 echo "Ruby version:"
 echo `ruby -v`
