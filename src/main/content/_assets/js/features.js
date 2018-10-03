@@ -395,11 +395,29 @@ function addHashListener() {
     });
 }
 
+// Take care of displaying the table of content, comand content, and hamburger correctly when
+// browser window resizes from mobile to non-mobile width and vice versa.
+function addWindowResizeListener() {
+    $(window).resize(function() {
+        if (isMobileView()) {
+            addHamburgerClick();
+        } else {
+            if (!$('#toc_column').hasClass('in')) {
+                $(".breadcrumb_hamburger_nav").trigger('click');
+            }
+            $("#breadcrumb_hamburger").hide();
+            $("#breadcrumb_hamburger_title").hide();
+            setContainerHeight();
+        }
+    });
+}
+
 $(document).ready(function () {  
     addTOCClick();
     addFeatureContentFocusListener();
     addHamburgerClick();
     addHashListener();
+    addWindowResizeListener();
 
     //manually tiggering it if we have hash part in URL
     if (window.location.hash) {

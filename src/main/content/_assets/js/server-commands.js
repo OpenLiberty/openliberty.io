@@ -214,7 +214,6 @@ function setContainerHeight() {
 function selectFirstDoc() {
     if (!isMobileView()) {
         var firstTOCElement = $("#toc_container > ul > li > div").first();
-        //var firstTOCElement = $("#overview");
         loadContent(firstTOCElement, firstTOCElement.attr("href"));
         return firstTOCElement;
     }
@@ -272,11 +271,6 @@ function addHamburgerClick() {
 // scroll the selected table of content in viewport
 function scrollToTOC(tocElement) {
     if (!isMobileView()) {
-        // expand the toc
-        if (!$("#command_toc").hasClass('in')) {
-            $('#toggle_icon').trigger('click');
-        }
-
         var headerHeight = $('header').height();
         var currentTOCTop = $('#toc_column').scrollTop();
         // factor in the header height as the element top is still a positive number when the
@@ -327,22 +321,21 @@ function addHashListener() {
     });
 }
 
-function addCommandCollapseClick() {
-    if (!isMobileView()) {
-        $('#toggle_icon').click(function(event) {
-            $("#toggle_icon").find('#command_toc_button').toggleClass('collapsed expanded');
-        })
-        
-        $("#toggle_icon").on('keypress', function (event) {
-            event.stopPropagation();
-            // Enter or space key
-            if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
-                $(this).trigger('click');
+// Take care of displaying the table of content, comand content, and hamburger correctly when
+// browser window resizes from mobile to non-mobile width and vice versa.
+function addWindowResizeListener() {
+    $(window).resize(function() {
+        if (isMobileView()) {
+            addHamburgerClick();
+        } else {
+            if (!$('#toc_column').hasClass('in')) {
+                $(".breadcrumb_hamburger_nav").trigger('click');
             }
-        });
-    
-        addOutlineToTabFocus("#command_toc_button");
-    }
+            $("#breadcrumb_hamburger").hide();
+            $("#breadcrumb_hamburger_title").hide();
+            setContainerHeight();
+        }
+    });
 }
 
 $(document).ready(function () {  
@@ -350,7 +343,7 @@ $(document).ready(function () {
     addContentFocusListener();
     addHamburgerClick();
     addHashListener();
-    addCommandCollapseClick();
+    addWindowResizeListener();
 
     //manually tiggering it if we have hash part in URL
     if (window.location.hash) {
