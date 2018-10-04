@@ -1,6 +1,11 @@
 <div id="content">
-    {% assign titleWithNoCommand = page.title | split: ' command' %}
-    <div id="command_title"> {{ titleWithNoCommand }}
+    {% if page.type != "overview" %}
+        {% assign titleWithNoCommand = page.title | split: ' command' %}
+        <div id="command_title"> {{ titleWithNoCommand }}
+    {% else %}
+        <div id="command_title"> {{ page.title }}
+    {% endif %}
+
     </div>
 
     <!-- Command content section -->
