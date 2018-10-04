@@ -16,15 +16,24 @@ script: ./scripts/build_jekyll_maven.sh
 branches:
   only:
     - multiPane
+    - development
+    - master
 
 sudo: false # route your build to the container-based infrastructure for a faster build
 
-before_deploy:
-- chmod +x ./.travis/cf-blue-green.sh
-
 deploy:
-  provider: script
-  script: ./.travis/cf-blue-green.sh
-  skip_cleanup: true
-  on:
-    branch: multiPane
+  - provider: script
+    on:
+      branch: master
+    env: ROUTE=qa-guides-prod.mybluemix.net
+    script: ./.travis/cf-push.sh
+  - provider: script
+    on:
+      branch: development
+    env: ROUTE=qa-guides.mybluemix.net
+    script: ./.travis/cf-push.sh
+  - provider: script
+    on:
+      branch: multiPane
+    env: ROUTE=qa-guides-multiPane.mybluemix.net
+    script: ./.travis/cf-push.sh
