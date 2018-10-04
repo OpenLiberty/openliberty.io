@@ -23,14 +23,17 @@ sudo: false # route your build to the container-based infrastructure for a faste
 
 deploy:
   - provider: script
+    skip_cleanup: true
     on:
       branch: master
     script: env ROUTE=qa-guides.mybluemix.net JEKYLL_ENV=production ./.travis/cf-push.sh
   - provider: script
+    skip_cleanup: true
     on:
       branch: development
     script: env ROUTE=qa-guides-draft.mybluemix.net ./.travis/cf-push.sh
   - provider: script
+    skip_cleanup: true
     on:
       branch: multiPane
     script: env ROUTE=qa-guides-multipane.mybluemix.net ./.travis/cf-push.sh
