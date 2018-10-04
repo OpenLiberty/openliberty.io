@@ -56,7 +56,7 @@ for commonTOC in commonTOCKeys:
     if len(matchingTitleTOCs) > 1:
         # multiple versions of the same title found, create a new html from the template
         # to put the versions at the top of the page
-        featureVersionTemplate  = BeautifulSoup(open('./scripts/feature-template/common-feature-content-template.html'),"html.parser")
+        featureVersionTemplate  = BeautifulSoup(open('./scripts/feature-template/common-feature-content-template.html'), "html.parser")
         featureTitle = featureVersionTemplate.find(id='common_feature_title')
         newTOCHref = ''
         # in reverse descending order

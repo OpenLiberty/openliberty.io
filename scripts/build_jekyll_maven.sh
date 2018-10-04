@@ -48,8 +48,7 @@ if [ "$JEKYLL_ENV" != "production" ]; then
 else
     # Production!
     echo "Clone published docs!"
-    # TODO: comment this out when we are ready to clone master
-    # ./scripts/build_clone_docs.sh "master" # Argument is branch name of OpenLiberty/docs
+    ./scripts/build_clone_docs.sh "master" # Argument is branch name of OpenLiberty/docs
 fi
 
 # Move any js/css files from guides to the _assets folder for jekyll-assets minification.

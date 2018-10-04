@@ -9,21 +9,13 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 var mobileWidth = 767;
-
-// With the version control support, cannot just set the hash in the url to trigger 
-// the doc loading with the hashchange event. This is because for a title with multiple
-// versions, the parent doc has to be loaded first before we know what is the version
-// html to be updated in the hash. With that, lastClickElementHref is set whenever
-// the hash is updated by the codes and is used to compare the hashchange value to
-// determine whether hashchange event should be handled.
-var lastClickElementHref; 
+var commandDocsFolder = "/docs/ref/commands/server/"
 var windowFocus = false;
 
 // setup and listen to click on table of content
 function addTOCClick() {
     var onclick = function (event) {
         var resource = $(event.currentTarget);
-        //setSelectedTOC(resource);
         var currentHref = resource.attr("href");
 
         // handle the click event ourselves so as to take care of updating the hash 
@@ -54,22 +46,57 @@ function addTOCClick() {
     })
 }
 
+// setup and listen to click on the See Also section
+function addReferenceClick() {
+    var onclick = function (event) {
+        var resource = $(event.currentTarget);
+        var currentHref = resource.attr("href");
+        var matchingTOCElement = getTOCElement(currentHref);
+
+        // handle the click event ourselves so as to take care of updating the hash 
+        event.preventDefault();
+        event.stopPropagation();
+
+        loadContent(matchingTOCElement, commandDocsFolder + currentHref, true);
+
+        return false;
+    }
+
+    $("#content .sect1 .sectionbody p > a").off("click").on("click", onclick);
+
+    $("#content .sect1 .sectionbody p > a").off("keypress").on('keypress', function (event) {
+        event.stopPropagation();
+        // Enter or space key
+        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
+            $(this).trigger('click');
+        }
+    });
+}
+
 // highlight the selected TOC
 function setSelectedTOC(resource) {
-    var currentTOCSelected = $(".toc_selected");
-    var newHref = resource.attr("href");
+    deselectedTOC();
+    resource.parent().addClass("toc_selected");
+}
 
+// deselect current TOC
+function deselectedTOC(r) {
+    var currentTOCSelected = $(".toc_selected");
     if (currentTOCSelected.length === 1) {      
         currentTOCSelected.removeClass("toc_selected");
     }
-    resource.parent().addClass("toc_selected");
+}
+
+
+function getTOCElement(href) {
+    return $("#toc_container > ul > li > div[href$='" + href + "']");    
 }
 
 // Add extra css to the doc, set the doc height, and scroll to the content
 function setupDisplayContent() {
-    addClassToFeaturesThatEnableThisFeature();
     setContainerHeight();
-    $('html, body').animate({
+    adjustParentWindow();
+    $('#command_content').animate({
         scrollTop: 0
     }, 400);
 }
@@ -77,77 +104,34 @@ function setupDisplayContent() {
 // This function
 // - highlight the selected TOC 
 // - load the doc for the selected TOC
-//   - once the doc is loaded, determine whether it is a version doc. 
-//     - if it is a version doc, select the default or version passed in.
-//     - if it is not a version doc, update main bread crumb, show the display content, 
-//       and update hash if requested
-function loadContent(targetTOC, tocHref, addHash, versionHref) {
+// - update main bread crumb 
+// - show the display content, 
+// - update hash if requested
+function loadContent(targetTOC, tocHref, addHash) {
     $('footer').hide();
-    setSelectedTOC(targetTOC);
-    $("#feature_content").load(tocHref, function(response, status) {
+    if (targetTOC.length === 1) {
+        setSelectedTOC(targetTOC);
+    } else {
+        deselectedTOC();
+    }
+    $("#command_content").load(tocHref, function(response, status) {
         if (status === "success") {
-            common_feature_title = $('#common_feature_title');
-            if (common_feature_title.length === 1) {
-                if (versionHref) {
-                    addVersionClick(versionHref);
-                } else {
-                    addVersionClick('default');
-                }
-            } else {
-                updateMainBreadcrumb(targetTOC);
-                setupDisplayContent();
-                $('footer').show();
+            updateMainBreadcrumb(targetTOC);
+            setupDisplayContent();
+            $('footer').show();
 
-                // update hash only if thru normal clicking path
-                if (addHash) {
-                    updateHashInUrl(tocHref);
-                }
+            // update hash only if thru normal clicking path
+            if (addHash) {
+                updateHashInUrl(tocHref);
             }
+
             $(this).focus(); // switch focus to the content for the reader
+
+            addReferenceClick();
         } else {
             $('footer').show();
         }
     });
-}
-
-// setup and listen to version click and trigger the default or version passed in to be shown
-function addVersionClick(hrefToClick) {
-    var onclick = function(event) {
-        var resource = $(event.currentTarget);
-        var currentHref = resource.attr("href");
-
-        // handle the click event ourselves so as to take care of updating the hash and creating
-        // the push state 
-        event.preventDefault();
-        event.stopPropagation();
-
-        loadVersionContent(resource, currentHref);
-        updateHashInUrl(currentHref);
-    }
-
-    $("#common_feature_title > .feature_version").off("click").on("click", onclick);
-
-    $("#common_feature_title > .feature_version").off("keypress").on('keypress', function (event) {
-        event.stopPropagation();
-        // Enter or space key
-        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
-            $(this).trigger('click');
-        }
-    });
-
-    // trigger a click on the default or the version passed in
-    if (hrefToClick === "default") {
-        $("#common_feature_title > .feature_version:first").trigger('click');
-    } else {
-        var resource = $('#common_feature_title > .feature_version[href="' + hrefToClick + '"]');
-        if (resource.length === 1) {
-            resource.trigger('click');
-        } else {
-            $("#common_feature_title > .feature_version:first").trigger('click');
-        }
-    }
-
-    addOutlineToTabFocus("#common_feature_title > .feature_version");
 }
 
 // events to detect keyboard focus and add outline to the element. Outline will not
@@ -175,30 +159,6 @@ function addOutlineToTabFocus(selector) {
     });
 }
 
-// highlight the selected version
-function setSelectedVersion(resource) {
-    selectedVersions = $("#common_feature_title > .feature_version_selected");
-    if (selectedVersions.length > 0) {
-        selectedVersions.removeClass('feature_version_selected');
-    }
-    resource.addClass('feature_version_selected');
-}
-
-// highlight selected version, load the version doc, and update the main breadcrumb 
-function loadVersionContent(versionElement, versionHref) {
-    setSelectedVersion(versionElement);
-    $("#common_feature_content").load(versionHref, function(response, status) {
-        if (status === "success") {
-            $('#feature_title').hide();
-            setupDisplayContent();
-            updateMainBreadcrumb(versionElement, 'full_title');
-
-            $(this).focus(); // switch focus to the content for the reader
-        }
-        $('footer').show();
-    });
-}
-
 // update the main breadcrumb
 function updateMainBreadcrumb(resource, attrForTitle) {
     var lastBreadcrumb = $(".breadcrumb.fluid-container").find("li:last-child");
@@ -222,11 +182,11 @@ function updateMainBreadcrumb(resource, attrForTitle) {
 // so that when hashchange is triggered, there is no need to handle the event.
 function updateHashInUrl(href) {
     var hashInUrl = href;
-    if (href.indexOf("/feature/") !== -1) {
-        hashInUrl = href.substring(9);
+    if (href.indexOf(commandDocsFolder) !== -1) {
+        hashInUrl = href.substring((commandDocsFolder).length);
     }
 
-    lastClickElementHref = hashInUrl;
+    //lastClickElementHref = hashInUrl;
     window.location.hash = "#" + hashInUrl;
 }
 
@@ -236,17 +196,6 @@ function isMobileView() {
         return true;
     } else {
         return false;
-    }
-}
-
-// add css to features-that-enable-this-feature per design
-function addClassToFeaturesThatEnableThisFeature() {
-    var featuresThatEnableThisFeature = $("#features-that-enable-this-feature");
-    if (featuresThatEnableThisFeature.length === 1) {
-        var ulist = featuresThatEnableThisFeature.parent().find('.ulist');
-        if (ulist.length === 1) {
-            ulist.addClass('enableByList');
-        }
     }
 }
 
@@ -266,7 +215,6 @@ function selectFirstDoc() {
     if (!isMobileView()) {
         var firstTOCElement = $("#toc_container > ul > li > div").first();
         loadContent(firstTOCElement, firstTOCElement.attr("href"));
-        updateMainBreadcrumb();
         return firstTOCElement;
     }
 }
@@ -283,15 +231,15 @@ function adjustParentWindow() {
 
 // If the doc content is in focus by means of other than a mouse click, then goto the top of the 
 // doc.
-function addFeatureContentFocusListener() {
+function addContentFocusListener() {
     var mousedown = false;
-    $("#feature_content").on('mousedown', function(event) {
+    $("#command_content").on('mousedown', function(event) {
         mousedown = true;
     });
-    $('#feature_content').on("focusin", function(e) {
+    $('#command_content').on("focusin", function(e) {
         if (!mousedown) {
             adjustParentWindow();
-            $('#feature_content').scrollTop(0);
+            $('#command_content').scrollTop(0);
         }
         mousedown = false;
     });
@@ -304,11 +252,11 @@ function addHamburgerClick() {
 
         hamburger.on("click", function (e) {
             if ($("#toc_column").hasClass('in')) {
-                $("#feature_content").show();
+                $("#command_content").show();
                 $("#breadcrumb_hamburger").show();
                 $("#breadcrumb_hamburger_title").show();
             } else {
-                $("#feature_content").hide();
+                $("#command_content").hide();
                 $("#breadcrumb_hamburger").hide();
                 $("#breadcrumb_hamburger_title").hide();
                 $("#background_container").css("height", "auto");
@@ -318,21 +266,6 @@ function addHamburgerClick() {
             }
         })
     }
-}
-
-// handle version doc in hash
-function handleHashInCommonToc(href) {
-    if (href.lastIndexOf('-') !== -1) {
-        // take out the version from the href and look for the remaining html in the table of content. 
-        // It is assumed that the version appears at the end of the file name with the format "-x.x"
-        // and before the .html file extension, eg. beanValidation-2.0.html.
-        var commonTOCHtml = href.substring(0, href.lastIndexOf('-')) + ".html";
-        var tocElement = $("#toc_container").find("div[href='" + commonTOCHtml + "']");
-        if (tocElement.length === 1) {
-            loadContent(tocElement, commonTOCHtml, false, href);
-        }
-    }
-    return tocElement;
 }
 
 // scroll the selected table of content in viewport
@@ -345,8 +278,7 @@ function scrollToTOC(tocElement) {
         var elementTop = tocElement[0].getBoundingClientRect().top - headerHeight;
         var tocClientHeight = $('#toc_column')[0].clientHeight;
         var tocScrollHeight = $('#toc_column')[0].scrollHeight;
-        console.log("elementTop: " + elementTop + "; currentTOCTop: " + currentTOCTop + "; headerHeight: " + headerHeight + "; tocClientHeight: " + tocClientHeight);
-
+       
         if (elementTop < 0 || (elementTop > 0 && 
                             elementTop > tocClientHeight)) {
             var scrollTo = currentTOCTop + elementTop - headerHeight + 50;
@@ -366,30 +298,24 @@ function scrollToTOC(tocElement) {
 //attach the hashchange event listener
 function addHashListener() {
     $(window).on('hashchange', function () {
-        if (lastClickElementHref !== window.location.hash.substring(1)) {
-            lastClickElementHref = null;
-
-            if (window.location.hash) {
-                var tocHref = "/feature/" + window.location.hash.substring(1);
-                var tocElement = $("#toc_container").find("div[href='" + tocHref + "']");
-                if (tocElement.length === 1) {
-                    loadContent(tocElement, tocHref);
-                } else {
-                    // check whether it is a hash belonging to a common toc
-                    tocElement = handleHashInCommonToc(tocHref);
-                }
-                if (isMobileView() && $("#toc_column").hasClass('in')) {
+        if (window.location.hash) {
+            var tocHref = commandDocsFolder + window.location.hash.substring(1);
+            var tocElement = $("#toc_container").find("div[href='" + tocHref + "']");
+            if (tocElement.length === 1) {
+                scrollToTOC(tocElement);
+            }
+            // attempt to load as it could be a reference doc that is not in table of content
+            loadContent(tocElement, tocHref);
+            if (isMobileView() && $("#toc_column").hasClass('in')) {
+                $(".breadcrumb_hamburger_nav").trigger('click');
+            }
+        } else {
+            if (isMobileView()) {
+                if (!$("#toc_column").hasClass('in')) {
                     $(".breadcrumb_hamburger_nav").trigger('click');
                 }
-                scrollToTOC(tocElement);
             } else {
-                if (isMobileView()) {
-                    if (!$("#toc_column").hasClass('in')) {
-                        $(".breadcrumb_hamburger_nav").trigger('click');
-                    }
-                } else {
-                    scrollToTOC(selectFirstDoc());
-                }
+                scrollToTOC(selectFirstDoc());
             }
         }
     });
@@ -414,7 +340,7 @@ function addWindowResizeListener() {
 
 $(document).ready(function () {  
     addTOCClick();
-    addFeatureContentFocusListener();
+    addContentFocusListener();
     addHamburgerClick();
     addHashListener();
     addWindowResizeListener();

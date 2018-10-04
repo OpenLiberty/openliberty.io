@@ -56,6 +56,14 @@ function addTOCClick() {
 
     $("#toc_container a").off("click").on("click", onclick);
 
+    $("#toc_container a").off('keypress').on('keypress', function (event) {
+        event.stopPropagation();
+        // Space key
+        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
+            $(this).trigger('click');
+        }
+    });
+
     // listen for focusin causing by tab. not mouse
     var mousedown = false;
     $("#toc_container a").off('mousedown').on('mousedown', function(event) {
@@ -427,9 +435,9 @@ function addExpandAndCollapseToggleButtons(subHeading, titleId) {
     });
     toggleButton.on('keypress', function (event) {
         event.stopPropagation();
-        // Enter key
-        if (event.which === 13 || event.keyCode === 13) {
-            toggleButton.click();
+        // Enter or space key
+        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
+            toggleButton.trigger('click');
         }
     });
 
@@ -1098,13 +1106,30 @@ function replaceHistoryState(hashToReplace) {
     return fullHref;
 }
 
+// Take care of displaying the table of content, comand content, and hamburger correctly when
+// browser window resizes from mobile to non-mobile width and vice versa.
+function addWindowResizeListener() {
+    $(window).resize(function() {
+        if (isMobileView()) {
+            addHamburgerClick();
+        } else {
+            if (!$('#toc_column').hasClass('in')) {
+                $(".breadcrumb_hamburger_nav").trigger('click');
+            }
+            $("#breadcrumb_hamburger").hide();
+            $("#breadcrumb_hamburger_title").hide();
+            adjustFrameHeight();
+        }
+    });
+}
+
 $(document).ready(function () {
     addTOCClick();
     addConfigContentFocusListener();
     handleInitialContent();
     handleParentWindowScrolling();
     addHamburgerClick();
-    //adjustFrameHeight();
+    addWindowResizeListener();
     handlePopstate();
 
     $('iframe[name="contentFrame"]').load(function () {
