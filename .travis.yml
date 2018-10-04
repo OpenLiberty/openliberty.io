@@ -15,9 +15,9 @@ script: ./scripts/build_jekyll_maven.sh
 # branch whitelist
 branches:
   only:
-    - multiPane
-    - development
     - master
+    - development
+    - multiPane
 
 sudo: false # route your build to the container-based infrastructure for a faster build
 
@@ -25,15 +25,12 @@ deploy:
   - provider: script
     on:
       branch: master
-    env: ROUTE=qa-guides-prod.mybluemix.net
-    script: ./.travis/cf-push.sh
+    script: env ROUTE=qa-guides.mybluemix.net JEKYLL_ENV=production ./.travis/cf-push.sh
   - provider: script
     on:
       branch: development
-    env: ROUTE=qa-guides.mybluemix.net
-    script: ./.travis/cf-push.sh
+    script: env ROUTE=qa-guides-draft.mybluemix.net ./.travis/cf-push.sh
   - provider: script
     on:
       branch: multiPane
-    env: ROUTE=qa-guides-multiPane.mybluemix.net
-    script: ./.travis/cf-push.sh
+    script: env ROUTE=qa-guides-multipane.mybluemix.net ./.travis/cf-push.sh
