@@ -12,32 +12,33 @@ permalink: /docs/ref/config/
 <!-- Build list of config pages -->
 {% assign configDocs = site.pages | where: 'layout', 'config' %}
 <div id="background_container">
-    <!-- <div class="row"> -->
-        <!-- Guide's table of contents section -->
-        <div id="toc_column" class="col-sm-3 collapsed in">
-            <div id="toc_inner">
-                <h3 id="toc_title">Server Configuration</h3>
-                {% if configDocs %}
-                <div id="toc_container">
-                    <ul>
-                        {% for config in configDocs %}
-                        <li>
-                            <a href="{{ config.url }}" target="contentFrame">{{ config.title }}</a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% else %}
-                <div>No config found</div>
-                {% endif %}
+    <!-- Config's table of contents section -->
+    <div id="toc_column" class="col-sm-3 collapsed in">
+        <div id="toc_inner">
+            <h3 id="toc_title">Server Configuration</h3>
+            {% if configDocs %}
+            <div id="toc_container">
+                <ul>
+                    {% for config in configDocs %}
+                    <li>
+                        {% assign splitOpenParen = config.title | split: '(' %}
+                        {% assign splitCloseParen = splitOpenParen[1] | split: ')' %}
+                        <!-- <a href="{{ config.url }}" target="contentFrame">{{ config.title }}</a> -->
+                        <a href="{{ config.url }}" target="contentFrame">{{ splitCloseParen[0] }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
+            {% else %}
+            <div>No config found</div>
+            {% endif %}
         </div>
-        <!-- Entire guide section -->
-        <div id="config_content" tabindex="0" class="col-sm-9 position_relative">
-            <div class="contentStickyBreadcrumbHeader" style="display:none;"></div>
-            <iframe class="config_content_frame" name="contentFrame"></iframe>
-        </div>
-    <!-- </div> -->
+    </div>
+    <!-- Config content section -->
+    <div id="config_content" tabindex="0" class="col-sm-9 position_relative">
+        <div class="contentStickyBreadcrumbHeader" style="display:none;"></div>
+        <iframe class="config_content_frame" name="contentFrame"></iframe>
+    </div>
 </div>
 
 

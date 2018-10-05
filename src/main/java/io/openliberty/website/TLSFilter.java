@@ -30,7 +30,7 @@ public class TLSFilter implements Filter {
         new HashMap<String, String>() {{
             put("/index.html/", "/index.html");
             put("/docs/ref/javaee/", "/docs/ref/javaee/8/");
-            put("/docs/ref/microprofile/", "/docs/ref/microprofile/1.3/");
+            put("/docs/ref/microprofile/", "/docs/ref/microprofile/2.0/");
             put("/docs/ref/", "/docs/"); 
             put("/docs/intro/", "/docs/");
             put("/guides/microprofile-intro.html", "/guides/cdi-intro.html");
@@ -41,6 +41,7 @@ public class TLSFilter implements Filter {
     private final Map<String, String> GENERIC_REDIRECTS = new HashMap<String,String>(){
         {
             put("/news","/blog");
+            put("/config/rwlp_config_", "/config/");
         }
     };
 
@@ -70,7 +71,7 @@ public class TLSFilter implements Filter {
           response.setHeader("X-Frame-Options", "SAMEORIGIN"); // Prevent framing of this website.
           response.setHeader("X-XSS-Protection", "1; mode=block"); // Cross-site scripting prevention for Chrome, Safari, and IE. It's not necessary with newer browser versions that support the Content-Security-Policy but it helps prevent XSS on older versions of these browsers.
           response.setHeader("X-Content-Type-Options", "nosniff"); // Stops a browser from trying to MIME-sniff the content type.
-          response.setHeader("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval' maxcdn.bootstrapcdn.com fonts.googleapis.com ajax.googleapis.com *.tealiumiq.com *.trustarc.com id.rlcdn.com *.company-target.com data.cmcore.com scripts.demandbase.com consent.truste.com *.coremetrics.com *.mathtag.com *.crwdcntrl.net tags.tiqcdn.com *.ibm.com *.mybluemix.net *.bluemix.net *.s81c.com fonts.gstatic.com  *.githubusercontent.com api.github.com www.googletagmanager.com tagmanager.google.com www.google-analytics.com data:"); // Mitigating cross site scripting (XSS) from other domains.
+          response.setHeader("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval' maxcdn.bootstrapcdn.com fonts.googleapis.com ajax.googleapis.com fonts.gstatic.com  *.githubusercontent.com api.github.com www.googletagmanager.com tagmanager.google.com www.google-analytics.com data:"); // Mitigating cross site scripting (XSS) from other domains.
           response.setHeader("Referrer-Policy", "no-referrer"); // Limits the information sent cross-domain and does not send the origin name.
 
           String uri = ((HttpServletRequest)req).getRequestURI();
@@ -86,13 +87,7 @@ public class TLSFilter implements Filter {
           // REDIRECT CODE FOR HTTPS TRAFFIC
           if(TEMP_REDIRECTS.containsKey(uri)) {
               String newURI = TEMP_REDIRECTS.get(uri);
-              String sPort = "";
-              int serverPort = req.getServerPort();
-              if ((serverPort == 80) || (serverPort == 443)) {
-                  // Do not add server port to the final new URL
-              } else {
-                  sPort = ":" + serverPort;
-              }
+              String sPort = getServerPort(req);
               String newURL = req.getScheme() + "://" + req.getServerName() + sPort + newURI;
               response.sendRedirect(newURL);
               // We want to redirect the Servlet and stop further processing of
@@ -104,7 +99,8 @@ public class TLSFilter implements Filter {
               if(uri.startsWith(key)){
                   // Redirect using the old value replaced by the new value
                   String newURI = uri.replaceAll(key, GENERIC_REDIRECTS.get(key));
-                  String newURL = req.getScheme() + "://" + req.getServerName() + newURI;
+                  String sPort = getServerPort(req);
+                  String newURL = req.getScheme() + "://" + req.getServerName() + sPort + newURI;
                   response.sendRedirect(newURL);
                   // We want to redirect the Servlet and stop further processing of
                   // the incoming request.
@@ -114,6 +110,17 @@ public class TLSFilter implements Filter {
         }
 
         chain.doFilter(req, resp);
+    }
+
+    private String getServerPort(ServletRequest req) {
+        String sPort = "";
+        int serverPort = req.getServerPort();
+        if ((serverPort == 80) || (serverPort == 443)) {
+            // Do not add server port to the final new URL
+        } else {
+            sPort = ":" + serverPort;
+        }
+        return sPort;
     }
 }
 

@@ -1,0 +1,264 @@
+---
+layout: post
+title: Monitor faults with MicroProfile Fault Tolerance 1.1
+categories: blog
+author_picture: https://avatars1.githubusercontent.com/u/2011102
+seo-title: Monitor faults with MicroProfile Fault Tolerance 1.1
+seo-description: Monitor faults within your Java web application with MicroProfile Fault Tolerance 1.1
+blog_description: "Fault Tolerance provides annotations which allow you to easily apply common fault mitigation strategies to your application but did you know that, since version 1.1, it also exports metrics which allow you to monitor these mitigation strategies?"
+---
+
+= Monitor faults with MicroProfile Fault Tolerance 1.1
+Andrew Rouse <https://github.com/azquelt>
+
+:url-dashboard: https://grafana.com/dashboards/8022
+:url-dashboard-github: https://github.com/Azquelt/microprofile-faulttolerance11-dashboard
+:url-sample-app: https://github.com/Azquelt/faulttolerance-metrics-example
+:url-ft11-spec: https://github.com/eclipse/microprofile-fault-tolerance/releases/tag/1.1.2
+:url-ft11-spec-metrics: http://download.eclipse.org/microprofile/microprofile-fault-tolerance-1.1.2/microprofile-fault-tolerance-spec.html#_integration_with_microprofile_metrics
+:url-rate: https://prometheus.io/docs/prometheus/latest/querying/functions/#rate()
+:url-ol-download: https://openliberty.io/downloads/
+:url-ol-ft-guide: https://github.com/OpenLiberty/iguide-retry-timeout/tree/master/finish
+:url-prom-config: https://prometheus.io/docs/prometheus/latest/configuration/configuration/
+:url-admin-role: https://openliberty.io/docs/ref/config/#rwlp_config_administrator-role.html
+:url-7zip: https://www.7-zip.org/
+:url-metrics11-spec: https://github.com/eclipse/microprofile-metrics/releases/tag/1.1.1
+:url-prom-docs: https://prometheus.io/docs/introduction/overview/
+:url-prom-ql: https://prometheus.io/docs/prometheus/latest/querying/basics/
+:url-prom-best-practise: https://prometheus.io/docs/practices/naming/
+:url-prom-alerts: https://prometheus.io/docs/alerting/overview/
+:url-grafana-docs: http://docs.grafana.org/
+:url-grafana-alerts: http://docs.grafana.org/alerting/rules/
+
+
+All applications need to deal with unexpected problems, whether it's an important service being unavailable, or a sudden influx of requests which could overload your application. MicroProfile Fault Tolerance provides annotations which allow you to easily apply common fault mitigation strategies to your application but did you know that, since version 1.1, it also exports metrics which allow you to monitor these mitigation strategies?
+
+The full details of the metrics are in the {url-ft11-spec-metrics}[Fault Tolerance 1.1 spec] but here's a quick overview:
+
+* If you use `@Retry`, metrics are added for how often your method is failing and being retried
+* If you use `@Timeout`, metrics are added for how long calls to your method are taking and how often they're timing out
+* If you use `@CircuitBreaker`, metrics are added to track what state the CircuitBreaker is in, how often your method fails and how often an open circuit breaker causes your method to fail without being run
+* If you use `@Bulkhead`, metrics are added for how many concurrent calls to your method are currently executing, how often calls are rejected, how long calls take to return and how long they spend queued (if you're also using `@Asynchronous`)
+* If you use `@Fallback`, metrics are added for how often your method falls back to its fallback handler or fallback method
+* Finally, if you use any of the above, metrics are added for how often your method ultimately returns an exception to the caller, after all of the fault tolerance processing has finished.
+
+In general, the idea is that if you're worried about your method failing in a certain way and are using fault tolerance to try to mitigate that, metrics are added so that you can easily monitor whether or not your application is actually failing there.
+
+MicroProfile Fault Tolerance 1.1 is included in {url-ol-download}[Open Liberty 18.0.0.3] and above.
+
+== Gathering metrics from Liberty with Prometheus
+
+. You'll need a running Liberty server with an application which uses Fault Tolerance deployed to it. If you don't have an application handy, can use this {url-sample-app}[sample app] (which also comes with an already configured server.xml).
+
+. Next ensure that Liberty is exporting metrics. Make sure the `mpFaultTolerance-1.1` and `mpMetrics-1.1` features are in your server.xml:
++
+[source,xml]
+----
+    <featureManager>
+        <feature>mpFaultTolerance-1.1</feature>
+        <feature>mpMetrics-1.1</feature>
+        <!-- ... -->
+    </featureManager>
+----
+
+. You'll need to set up a user with permission to access the metrics page. If you already have users configured on your system, you can use the {url-admin-role}[administrator-role] element to configure which users should have admin access. If you don't currently have users configured, the quickest way to create one user with admin access is to use
++
+[source,xml]
+----
+    <quickStartSecurity userName="user" userPassword="password"/>
+----
+
+. You'll also need to make sure you have an https port defined in your `<httpEndpoint>` section. This may already be present in your config.
++
+[source, xml]
+----
+    <httpEndpoint id="defaultHttpEndpoint"
+                  httpPort="9080"
+                  httpsPort="9443" />
+----
++
+After doing this, you should be able to start your Liberty server and go to https://localhost:9443/metrics, log in with your admin password and see some basic server metrics.
+
+. Now you need to install Prometheus and configure it to collect metrics from your Liberty server.
++
+Download Prometheus from https://prometheus.io/download/#prometheus and extract it (this may require a third party tool like {url-7zip}[7-zip] if you're on Windows)
+
+. Next, edit `prometheus.yml`. You'll need to find the `scrape_configs` section at the bottom of the file. It will have one job configured for Prometheus itself, we need to add a new one under that for Open Liberty which should look like this:
++
+[source, yaml]
+----
+  - job_name: 'openliberty'
+
+    basic_auth:
+      username: 'adminusername'
+      password: 'adminpassword'
+
+    scheme: 'https'
+
+    tls_config:
+            insecure_skip_verify: true
+
+    static_configs:
+            - targets: ['localhost:9443']
+
+----
++
+If you have a slightly different setup, you can check Prometheus's {url-prom-config}[configuration documentation] for the other options which can be specified here.
+
+. Now you can run `./prometheus` (or `prometheus.exe` on Windows) and you should see some logs scrolling past saying that it's starting up. You should now be able to go to http://localhost:9090/ and see the prometheus web UI. 
+
+== Displaying metrics with Grafana
+
+Although Prometheus has a basic web UI which can draw graphs from collected metrics, we're going to use Grafana in this article because it has some powerful features such as being able to use placeholders in queries and collect several graphs into a dashboard which can be shared.
+
+. Download Grafana from https://grafana.com/grafana/download. (I used the standalone binaries when writing this article. If you're on Windows or you pick a different package, then read through the installation documentation linked from the download page.)
+
+. Once you have Grafana installed or extracted, you should be able to start it (`bin/grafana-server` for the standalone package) and go the the web UI in your browser (default http://localhost:3000) and log in (default user "admin", password "admin").
+
+. Next, you're going to import the dashboard I created to showcase the Fault Tolerance 1.1 metrics. Head over to the {url-dashboard}[dashboard page on grafana.com] and follow the instructions to import it. When you load up the dashboard, you should see a drop-down menu at the top left to select the method to show metrics for. If you don't see any options here, try hitting the endpoints in your app which will cause those methods to be invoked and then refresh the dashboard page.
+
+image::/img/blog/ftmetrics-imported-dashboard.png[Screenshot of the imported dashboard showing a graph of the invocations per second and of the failure rate.]
+
+This dashboard shows a selection of graphs for a single method at once. Unless the method is annotated with every Fault Tolerance annotation, some of these graphs won't apply to that method and will be blank. Since it only shows metrics for a single method, the dashboard isn't very good for showing an overview of the whole system, but it does let you browse through all the available details when you're trying to track down the cause of a problem and serves as a useful set of examples for building your own graphs and dashboards.
+
+If you have suggestions for improvements to the dashboard, you can open an issue or PR {url-dashboard-github}[on github]
+
+== Creating your own graphs
+
+Let's take a quick look at how to create your own graphs from the metrics produced by Fault Tolerance. This will allow you to create a graph which isn't covered in my dashboard, or to extract metrics from several different methods and put them all on the same dashboard.
+
+First, take a look at the {url-ft11-spec-metrics}[Fault Tolerance 1.1 spec] to see the metrics which are produced.
+
+For example, here's the metrics which are produced for methods annotated with `@Timeout`.
+
+[cols="8,3,4,9"]
+|===
+| Name | Type | Unit | Description
+
+|`ft.<name>.timeout.executionDuration`
+| Histogram | Nanoseconds
+| Histogram of execution times for the method
+
+|`ft.<name>.timeout.callsTimedOut.total`
+| Counter | None
+| The number of times the method timed out
+
+|`ft.<name>.timeout.callsNotTimedOut.total`
+| Counter | None
+| The number of times the method completed without timing out
+|===
+
+A little detail on the internals are needed here. These metric names are passed to the MicroProfile Metrics API, which then exports them in a format that Prometheus understands and which conforms to {url-prom-best-practise}[best practise for Prometheus metrics].
+
+The MicroProfile Metrics makes the following changes to the Fault Tolerance metrics when exporting to Prometheus:
+
+* Metrics are put in the `application` namespace
+* Dots are replaced with underscores
+* `camelCase` words are separated by underscores
+* The whole name is converted to lowercase
+* Metrics which measure time are rescaled to so that they're reported in seconds and `_seconds` is appended to the name
+* Histogram metrics are split into percentiles, limits, mean and standard deviation
+
+This means that, if you have a method named `callSlowService` on a class named `com.example.TestService` which is annotated with `@Timeout`, the metrics that you can query from Prometheus look like this:
+
+* `application:ft_com_example_test_service_call_slow_service_timeout_execution_duration_seconds` +
+  Execution duration percentiles
+
+* `application:ft_com_example_test_service_call_slow_service_timeout_execution_duration_min_seconds` +
+  Minimum execution duration
+
+* `application:ft_com_example_test_service_call_slow_service_timeout_execution_duration_max_seconds` +
+  Maximum execution duration
+
+* `application:ft_com_example_test_service_call_slow_service_timeout_execution_duration_mean_seconds` +
+  Mean execution duration
+
+* `application:ft_com_example_test_service_call_slow_service_timeout_execution_duration_stddev_seconds` +
+  Standard Deviation of execution durations
+
+* `application:ft_com_example_test_service_call_slow_service_timeout_execution_duration_seconds_count` +
+  The number of times the method was executed
+
+* `application:ft_com_example_test_service_call_slow_service_timeout_calls_timed_out_total` +
+  The number of times the method timed out
+
+* `application:ft_com_example_test_service_call_slow_service_timeout_calls_not_timed_out_total` +
+  The number of times the method completed without timing out
+
+// -
+
+Let's start creating our graphs.
+
+. In Grafana, first create an empty dashboard.
++
+image::/img/blog/ftmetrics-grafana-new-dashboard.png[Screenshot of Grafana highlighting the new dashboard button on the left sidebar menu]
+
+. Add a new panel and select that the new panel should be a graph
++
+image::/img/blog/ftmetrics-grafana-new-graph.png[Screenshot of Grafana highlighting the new panel button and the graph button]
+
+. Select edit from the menu that opens in the panel header.
++
+image::/img/blog/ftmetrics-grafana-edit-graph.png[Screenshot of Grafana with the menu of the new panel open highlighting the edit button]
+
+. Select the metrics tab at the bottom, this is where we write a query using {url-prom-ql}[Prometheus Query Language].
++
+image::/img/blog/ftmetrics-grafana-metrics-tab.png[Screenshot of Grafana showing the graph editing screen with the metrics tab open]
+
+Now that we have a new empty graph, let's start off with a simple example. We can draw a graph of the total number of calls to the `callSlowService` method.
+
+----
+application:ft_com_example_test_service_call_slow_service_invocations_total
+----
+
+If we load the page a few times to generate some traffic, I get a graph like this.
+
+image::/img/blog/ftmetrics-invocations-graph.png[Screenshot of Grafana showing the graph editing screen. The query from above has been entered in the query box. A line graph is above it with the line moving unevenly up and to the right.]
+
+As you can see, it keeps going upward as more requests are served.
+
+What might be more useful is to graph the _rate_ of requests, which we can do with the `{url-rate}[rate]` method.
+----
+rate(application:ft_com_example_test_service_call_slow_service_invocations_total[1m])
+----
+
+This shows us how many requests we're receiving per second by graphing the rate at which the total number of invocations goes up, averaged over the preceding minute.
+
+image::/img/blog/ftmetrics-invocations-rate-graph.png[Screenshot of Grafana showing the graph editing screen. The query from above has been entered in the query box. A line graph is above it. The line on the graph goes up and down over time, ranging between 0 and 1.2 requests per second.]
+
+Most of the metrics produced are simple counters which count up by one every time an event occurs. This is format that prometheus recommends as it's really lightweight on the server, flexible for graphing and copes gracefully with missing the occasional sample or the server restarting. Prometheus stores the value of the counter at set intervals and can then retrospectively process these samples to produce rates of change, moving averages or ratios. However, the downside of this flexibility is that we need to do a little more work, such as using the `rate` method, when writing the queries for our graphs.
+
+As a final example, let's use a more complex query to graph the percentage of calls which timed out, averaged over the last minute. Looking back at at the table above, we see that we have metrics for both the number of calls which timed out, and the number of calls which didn't. All we need to do is divide the number of calls that timed out by the total number of calls, averaged over the last minute.
+
+----
+rate(application:ft_com_example_test_service_call_slow_service_timeout_calls_timed_out_total[1m]) * 100
+/
+(
+   rate(application:ft_com_example_test_service_call_slow_service_timeout_calls_timed_out_total[1m])
+ + rate(application:ft_com_example_test_service_call_slow_service_timeout_calls_not_timed_out_total[1m])
+)
+----
+
+image::/img/blog/ftmetrics-timeout-percentage-graph.png[Screenshot of Grafana showing the graph editing screen. The query from above has been entered in the query box. A line graph is above it. The line graph shows the percentage of invocations which timed out over time. After an initial spike at 50%, it goes up and down ranging between 5% and 20% before dropping to 0%.]
+
+You might wonder why we added together the two metrics rather than using the `invocations_total` metric we saw earlier. The reason is that if the method was also annotated with `@Retry`, then each retry _attempt_ would get its own timeout and would be counted towards either the `timed_out` or `not_timed_out` metric.
+
+== A quick word on alerting
+
+Both Prometheus and Grafana have the ability to create notifications when a metric or a query reaches a certain level. For example, you could create a pager duty alert for the ops team if a critical method is calling its fallback handler more than 10% of the time for more than 5 minutes.
+
+The requirements for alerting are probably slightly different to those used when graphing. For example, if there's a sudden spike in errors you would want to see that in your graph but you might not want to raise an alert if it immediately settles down again because your automated infrastructure fixed whatever service was broken.
+
+When you're ready to configure alerts, take a look at the alerting documentation for {url-prom-alerts}[Prometheus] or {url-grafana-alerts}[Grafana] to get started.
+
+== Conclusion
+
+We've seen how the metrics generated by MicroProfile Fault Tolerance 1.1 can be viewed and graphed. We've imported a dashboard which allows ad-hoc viewing of metrics for individual methods and have also seen how to combine and use the metrics to create our own graphs and dashboards.
+
+== References
+
+* {url-ft11-spec}[MicroProfile Fault Tolerance 1.1 Specification]
+* {url-metrics11-spec}[MicroProfile Metrics 1.1 Specification]
+* {url-prom-docs}[Prometheus documentation]
+* {url-prom-ql}[Prometheus query language]
+* {url-grafana-docs}[Grafana documentation]

@@ -71,10 +71,12 @@ $(document).ready(function() {
         // Count the number of visible guides to calculate the total number
         var numBasicResults = $('#guides_basic_container .guide_column').children(':visible').length;
         var numMPResults = $('#guides_microprofile_container .guide_column').children(':visible').length;
+        var numMPEssentialResults = $('#guides_microprofile_container .essential .guide_column').children(':visible').length;
         var numAdditionalResults = $('#guides_additional_container .guide_column').children(':visible').length;
         hideEmptyCategories(
             numBasicResults == 0, 
-            numMPResults == 0, 
+            numMPResults == 0,
+            numMPEssentialResults == 0, 
             numAdditionalResults == 0
         );
 
@@ -100,7 +102,7 @@ $(document).ready(function() {
         $('.more_section').show();
     }
 
-    function hideEmptyCategories(hideBasic, hideMP, hideAdditional) {
+    function hideEmptyCategories(hideBasic, hideMP, hideMPEssentials, hideAdditional) {
         if(hideBasic) {
             $('.basic_section').hide();
         } else {
@@ -110,6 +112,12 @@ $(document).ready(function() {
             $('.microprofile_section').hide();
         } else {
             $('.microprofile_section').show();
+        }
+        // hide unnecessary labels when there are 0 essential MP guides
+        if(hideMPEssentials) {
+            $('.extraMP').hide();
+        } else {
+            $('.extraMP').show();
         }
         if(hideAdditional) {
             $('.more_section').hide();
@@ -168,7 +176,16 @@ $(document).ready(function() {
 
     $('#guide_search_input').keyup(function(event) {
         var input_value = event.currentTarget.value.toLowerCase();
-        processSearch(input_value);        
+        processSearch(input_value);
+    });
+
+    // clear search input when x button clicked
+    $('.clear_btn').on('click', function(){
+        $('#guide_search_input').val('');
+        var searchInput = $('#guide_search_input').val();
+        updateSearchUrl(searchInput);
+        processSearch(searchInput);        
+        showAllCategories();
     });
 
     $('#guide_search_input').keypress(function(event) {
@@ -247,6 +264,12 @@ $(document).ready(function() {
             return $('#popover_content').html();
         },
         trigger: 'focus'
+    });
+    
+    $('#back_to_guides_button').on('click', function() {
+        $('#guide_search_input').val('');
+        defaultView();
+        // TODO: Need to clear any `?search=*` from the URL
     });
 
     // Click buttons to fill search bar

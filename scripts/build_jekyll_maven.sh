@@ -15,9 +15,7 @@ echo "Ruby version:"
 echo `ruby -v`
 
 # Special handling for javadocs
-./scripts/copy_javadoc_stylesheet.sh
-./scripts/modify_config_adoc.sh
-./scripts/modify_feature_adoc.sh
+./scripts/modify_javadoc.sh
 pushd gems/ol-asciidoc
 gem build ol-asciidoc.gemspec
 gem install ol-asciidoc-0.0.1.gem
@@ -35,6 +33,7 @@ if [ "$JEKYLL_ENV" != "production" ]; then
     
     echo "Clone draft guides for test environments..."
     ruby ./scripts/build_clone_guides.rb "draft-guide"
+    ./scripts/build_clone_docs.sh "develop" # Argument is branch name of OpenLiberty/docs
 
     # Need to make sure there are draft-iguide* folders before using the find command
     # If we don't, the find command will fail because the path does not exist
@@ -46,6 +45,10 @@ if [ "$JEKYLL_ENV" != "production" ]; then
 
     # Include draft blog posts for non production environments
     JEKYLL_BUILD_FLAGS="--drafts"
+else
+    # Production!
+    echo "Clone published docs!"
+    ./scripts/build_clone_docs.sh "master" # Argument is branch name of OpenLiberty/docs
 fi
 
 # Move any js/css files from guides to the _assets folder for jekyll-assets minification.
@@ -57,9 +60,9 @@ find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/cont
 # Jekyll build
 echo "Building with jekyll..."
 echo `jekyll -version`
-mkdir target
-mkdir target/jekyll-webapp
+mkdir -p target/jekyll-webapp
 jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --destination target/jekyll-webapp
+python3 ./scripts/parse-feature-toc.py
 
 # Maven packaging
 echo "Running maven (mvn)..."

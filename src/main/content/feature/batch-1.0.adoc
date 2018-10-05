@@ -1,6 +1,7 @@
 = Batch API 1.0
 :stylesheet: ../feature.css
 :linkcss: 
+:page-layout: feature
 :nofooter: 
 
 This feature enables support for the Java Batch 1.0 API specified by JSR-352.
@@ -12,6 +13,10 @@ To enable the Batch API 1.0 feature, add the following element declaration insid
 ----
 <feature>batch-1.0</feature>
 ----
+
+== Supported Java versions
+
+* JavaSE-1.8
 
 == Developing a feature that depends on this feature
 If you are developing a feature that depends on the Batch API 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
@@ -49,4 +54,5 @@ com.ibm.websphere.appserver.batch-1.0; type="osgi.subsystem.feature"
 * config:batchPersistence[]
 * config:classloading[]
 * config:databaseStore[]
+* config:library[]
 * config:transaction[]
