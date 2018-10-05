@@ -312,13 +312,12 @@ $(document).ready(function() {
         window.getSelection().selectAllChildren(target); // Set the file contents as the copy target.
         if(document.execCommand('copy')) {
             window.getSelection().removeAllRanges();
-            // THIS IS WHERE NEW CODE SHOULD GO
             var current_target_object = $(event.currentTarget);	
             var position = current_target_object.position();	
             $('#code_section_copied_confirmation').css({	
                 top: position.top + 30,	
                 right: 5	
-            }).stop().fadeIn().delay(3500).fadeOut();
+            }).stop().fadeIn().delay(1000).fadeOut();
         } else {
             alert('Copy failed. Copy the code manually: ' + target.innerText);
         }
@@ -454,7 +453,6 @@ $(document).ready(function() {
         }  	
      });	
 
-     // copy button in content section (left)
      $('.copy_to_clipboard').click(function(event) {	        	
         event.preventDefault();	
         window.getSelection().selectAllChildren(target);	
