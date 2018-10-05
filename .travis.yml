@@ -5,12 +5,13 @@ rvm:
 before_install:
   - sudo apt-get install python3-bs4 -y
 
-before_script:
-- chmod +x ./scripts/build_jekyll_maven.sh # or do this locally and commit
-
-# Assume bundler is being used, therefore
-# the `install` step will run `bundle install` by default.
-script: ./scripts/build_jekyll_maven.sh
+script: >
+  if [ $TRAVIS_BRANCH = "master" ]; then
+    JEKYLL_ENV=production ./scripts/build_jekyll_maven.sh
+    cp robots.txt src/main/content/robots.txt
+  else
+    ./scripts/build_jekyll_maven.sh
+  fi
 
 # branch whitelist
 branches:
@@ -26,7 +27,7 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
-    script: env ROUTE=qa-guides.mybluemix.net JEKYLL_ENV=production ./.travis/cf-push.sh
+    script: env ROUTE=qa-guides.mybluemix.net ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
