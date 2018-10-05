@@ -8,7 +8,7 @@ before_install:
 script: >
   if [ $TRAVIS_BRANCH = "master" ]; then
     JEKYLL_ENV=production ./scripts/build_jekyll_maven.sh
-    cp robots.txt src/main/content/robots.txt
+    cp ./robots.txt ./src/main/content/robots.txt
   else
     ./scripts/build_jekyll_maven.sh
   fi
