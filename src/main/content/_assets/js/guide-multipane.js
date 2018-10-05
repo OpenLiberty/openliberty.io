@@ -312,6 +312,13 @@ $(document).ready(function() {
         window.getSelection().selectAllChildren(target); // Set the file contents as the copy target.
         if(document.execCommand('copy')) {
             window.getSelection().removeAllRanges();
+            // THIS IS WHERE NEW CODE SHOULD GO
+            var current_target_object = $(event.currentTarget);	
+            var position = current_target_object.position();	
+            $('#code_section_copied_confirmation').css({	
+                top: position.top + 30,	
+                right: 5	
+            }).stop().fadeIn().delay(3500).fadeOut();
         } else {
             alert('Copy failed. Copy the code manually: ' + target.innerText);
         }
@@ -430,11 +437,11 @@ $(document).ready(function() {
         target_position = current_target_object.position();	
         target_width = current_target_object.outerWidth();	
         target_height = current_target_object.outerHeight();	
-         $('#copy_to_clipboard').css({	
+         $('.copy_to_clipboard').css({	
             top: target_position.top + 8,	
             right: parseInt($('#guide_column').css('padding-right')) + 55	
         });	
-        $('#copy_to_clipboard').stop().fadeIn();	
+        $('.copy_to_clipboard').stop().fadeIn();	
      }, function(event) {	
          var x = event.clientX - offset.left;	
         var y = event.clientY - offset.top + $(window).scrollTop();	
@@ -442,21 +449,22 @@ $(document).ready(function() {
         && x < target_position.left + target_width	
         && y > target_position.top	
         && y < target_position.top + target_height)) {	
-            $('#copy_to_clipboard').stop().fadeOut();	
-            $('#copied_to_clipboard_confirmation').stop().fadeOut();	
+            $('.copy_to_clipboard').stop().fadeOut();	
+            $('#guide_section_copied_confirmation').stop().fadeOut();	
         }  	
      });	
 
-     $('#copy_to_clipboard').click(function(event) {	        	
+     // copy button in content section (left)
+     $('.copy_to_clipboard').click(function(event) {	        	
         event.preventDefault();	
         window.getSelection().selectAllChildren(target);	
         if(document.execCommand('copy')) {	
             window.getSelection().removeAllRanges();	
             var current_target_object = $(event.currentTarget);	
             var position = current_target_object.position();	
-            $('#copied_to_clipboard_confirmation').css({	
-                top: position.top - 25,	
-                right: 50	
+            $('#guide_section_copied_confirmation').css({	
+                top: position.top - 25,
+                right: 50
             }).stop().fadeIn().delay(3500).fadeOut();	
         } else {	
             alert('To copy press CTRL + C');	
