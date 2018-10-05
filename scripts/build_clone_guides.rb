@@ -25,12 +25,18 @@ repos = client.org_repos('OpenLiberty')
 # Travis CI related steps
 # --------------------------------------------
 # For the interactive guides, only build the dev branch for the TravisCI environments
+iguide_branch = 'master'
 guide_branch = 'master'
 if ENV['TRAVIS']
-    guide_branch = 'multipane'
-    guide_camelcase_branch = 'multiPane'
+    if ENV['TRAVIS_BRANCH'] == "multiPane"
+        iguide_branch = 'dev'
+        guide_branch = 'multipane'
+    elsif ENV['TRAVIS_BRANCH'] == "development"
+        iguide_branch = 'dev'
+    end
 end
-puts "Looking for draft interactive guides with branch: #{guide_branch}..."
+
+puts "Looking for draft interactive guides with branch: #{iguide_branch}..."
 
 # Function to check if the guide directory exists after a git clone command
 def directory_exists?(repo_name)
