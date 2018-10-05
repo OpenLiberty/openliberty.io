@@ -1,0 +1,41 @@
+= Database Session Persistence 1.0
+:stylesheet: ../feature.css
+:linkcss: 
+:page-layout: feature
+:nofooter: 
+
+This feature enables persistence of HTTP sessions to a datasource using JDBC. Persisting HTTP session data to a database allows recovery of the data after a server restart or unexpected server failure. Failover of HTTP sessions can be achieved by configuring multiple servers to persist data to the same location
+
+== Enabling this feature
+To enable the Database Session Persistence 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>sessionDatabase-1.0</feature>
+----
+
+== Supported Java versions
+
+* JavaSE-1.7
+* JavaSE-1.8
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Database Session Persistence 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.sessionDatabase-1.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:jdbc-4.0[]
+* feature:jdbc-4.1[]
+* feature:jdbc-4.2[]
+* feature:jndi-1.0[]
+
+== Feature configuration elements
+* config:classloading[]
+* config:httpSession[]
+* config:httpSessionDatabase[]
+* config:transaction[]

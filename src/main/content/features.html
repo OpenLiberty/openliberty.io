@@ -1,0 +1,36 @@
+---
+layout: doc
+type: feature
+css:
+- doc-header
+- commonConfigFeature
+- feature
+js: features
+permalink: /docs/ref/feature/
+---
+
+<!-- Build list of feature pages -->
+{% assign featureDocs = site.pages | where: 'layout', 'feature' | sort: 'title' %}
+<div id="background_container">
+    <div id="toc_column" class="col-sm-3 collapsed in">
+        <div id="toc_inner">
+            <h3 id="toc_title">Overview</h3>
+            {% if featureDocs %}
+            <div id="toc_container">
+                <div id="all_features_title">All Features A-Z</div>
+                <ul>
+                    {% for feature in featureDocs %}
+                    <li>
+                        <div role="button" href="{{ feature.url }}" tabindex="0">{{ feature.title }}</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% else %}
+            <div>No feature found</div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- Feature content section -->
+    <div id="feature_content" class="col-sm-9 position_relative" tabindex="0"></div>
+</div>

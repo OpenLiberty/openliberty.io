@@ -1,0 +1,54 @@
+= Java EE Web Profile 8.0
+:stylesheet: ../feature.css
+:linkcss: 
+:page-layout: feature
+:nofooter: 
+
+This feature combines the Liberty features that support the Java EE 8.0 Web Profile.
+
+== Enabling this feature
+To enable the Java EE Web Profile 8.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>webProfile-8.0</feature>
+----
+
+== Supported Java versions
+
+* JavaSE-1.8
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Java EE Web Profile 8.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.webProfile-8.0; type="osgi.subsystem.feature"
+----
+
+== Features that this feature enables
+* feature:appSecurity-3.0[]
+* feature:beanValidation-2.0[]
+* feature:cdi-2.0[]
+* feature:ejbLite-3.2[]
+* feature:el-3.0[]
+* feature:jaspic-1.1[]
+* feature:jaxrs-2.1[]
+* feature:jdbc-4.2[]
+* feature:jndi-1.0[]
+* feature:jpa-2.2[]
+* feature:jsf-2.3[]
+* feature:jsonb-1.0[]
+* feature:jsonp-1.1[]
+* feature:jsp-2.3[]
+* feature:managedBeans-1.0[]
+* feature:servlet-4.0[]
+* feature:websocket-1.1[]
+
+== Features that enable this feature
+* feature:javaee-8.0[]
+
+== Feature configuration elements
+* config:classloading[]
+* config:transaction[]
