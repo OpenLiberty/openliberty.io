@@ -198,7 +198,6 @@ $(document).ready(function() {
     function updateSearchUrl(value) {
         if(! value) {
             // Remove query string because search text is empty
-            //location.href = [location.protocol, '//', location.host, location.pathname].join('');
             search_value = [location.protocol, '//', location.host, location.pathname].join('');
             history.pushState(null, "", search_value);
         } else {
@@ -214,13 +213,11 @@ $(document).ready(function() {
         if(value.startsWith('tag:')) {
             var searchTextWithoutTag = value.substring(value.indexOf(':') + 1);
             searchTextWithoutTag = searchTextWithoutTag.trim();
-            //location.search = 'search=' + encodeURIComponent(searchTextWithoutTag) + '&key=tag';
             search_value = '?search=' + encodeURIComponent(searchTextWithoutTag) + '&key=tag';
             history.pushState(null, "", search_value);
             document.activeElement.blur()
         } else {
             value = value.trim();
-            //location.search = 'search=' + encodeURIComponent(value);
             search_value = '?search=' + encodeURIComponent(value);
             console.log(search_value);
             history.pushState(null, "", search_value);
