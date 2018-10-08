@@ -182,7 +182,6 @@ $(document).ready(function() {
     $(window).on('popstate', function(){
         var input_value = location.search;
         query_string = input_value.substring(8);
-        updateSearchUrl(query_string);
         document.getElementById("guide_search_input").value = query_string;
         processSearch(query_string);
     });
