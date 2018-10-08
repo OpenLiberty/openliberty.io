@@ -179,6 +179,14 @@ $(document).ready(function() {
         processSearch(input_value);
     });
 
+    $(window).on('popstate', function(){
+        var input_value = location.search;
+        query_string = input_value.substring(8);
+        updateSearchUrl(query_string);
+        document.getElementById("guide_search_input").value = query_string;
+        processSearch(query_string);
+    });
+
     // clear search input when x button clicked
     $('.clear_btn').on('click', function(){
         $('#guide_search_input').val('');
@@ -219,7 +227,6 @@ $(document).ready(function() {
         } else {
             value = value.trim();
             search_value = '?search=' + encodeURIComponent(value);
-            console.log(search_value);
             history.pushState(null, "", search_value);
             document.activeElement.blur()
         }
