@@ -45,32 +45,30 @@ $(document).ready(function(){
         }
     });
 
-    // Toggle between down caret and up caret.
-    // If focusout is set, then the button was clicked out of so reset to a down caret.
-    var toggleDropdownIcon = function(dropdownMenu, focusout){
-        // Check if the dropdown menu is open or closed
-        var button = dropdownMenu.find('button');
-        var open = button.attr('aria-expanded') == "true";
-
+    /*  Change the dropdown arrow toggle to the correct open/closed state.
+        Input: Show boolean if the dropdown is open or not. */
+    var toggleDropdownIcon = function(dropdownMenu, open){
         var img = dropdownMenu.find('.mobile_caret img');
         img.remove();
 
         var newSVG = $('<img></img>');
-        if(open || focusout){
-            newSVG.attr('src','/img/DownCaretWhite.svg');    
-            newSVG.attr('alt','Open nav menu');   
-        } else{
+        if(open){
             newSVG.attr('src','/img/UpCaretWhite.svg');
-            newSVG.attr('alt','Close nav menu');   
+            newSVG.attr('alt','Close nav menu');               
+        } else{
+            newSVG.attr('src','/img/DownCaretWhite.svg');    
+            newSVG.attr('alt','Open nav menu');
         }        
         dropdownMenu.find('.mobile_caret').append(newSVG);
     };
 
-    $('.dropdown_container').on('focusout', function(){
+    // Listener for right before the dropdown opens
+    $('.dropdown_container').on('show.bs.dropdown', function(){
         toggleDropdownIcon($(this), true);
+    }); 
+    
+    // Listener for right before the dropdown closes
+    $('.dropdown_container').on('hide.bs.dropdown', function(){
+        toggleDropdownIcon($(this), false);
     });
-
-    $('.dropdown_container').on('click', function(){
-        toggleDropdownIcon($(this));
-    });    
 });
