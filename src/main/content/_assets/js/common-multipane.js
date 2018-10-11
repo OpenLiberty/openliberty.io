@@ -307,9 +307,9 @@ function createEndOfGuideContent(){
     $("#great-work-you-re-done, #great-work-youre-done").parent().remove(); // Remove section from the main guide column.
     $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
     // Concatenate the guide title and guide attribution license and append it to the end of guide.
-    var guideAttributionText = $("#guide-attribution").siblings().find('p').text();
+    var guideAttributionText = $("#guide-attribution").siblings().find('p').html();
     if(guideAttributionText){
-        $("#guide_attribution").text(guideAttributionText);
+        $("#guide_attribution").html(guideAttributionText);
         $("#guide-attribution").parent().remove();
         $("#toc_container a[href='#guide-attribution']").parent().remove(); // Remove from TOC.
     }
