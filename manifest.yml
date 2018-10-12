@@ -3,6 +3,18 @@ instances: 1
 disk_quota: 1024M
 path: target/openliberty.war
 
+public-domain-name1: www.openliberty.io
+public-domain-name2: openliberty.io
+blue: openliberty-blue
+green: openliberty-green
+
+# Region domain names
+us-south-domain: mybluemix.net
+us-east-domain: us-east.mybluemix.net
+sydney-domain: au-syd.bluemix.net
+united-kingdom-domain: eu-gb.bluemix.net
+germany-domain: eu-de.mybluemix.net
+
 applications:
 - name: openliberty-blue
   domain: openliberty.io
@@ -19,5 +31,64 @@ applications:
 - name: openlibertydev
   domain: mybluemix.net
   host: openlibertydev
+# # US South
+# - name: ((blue))
+#   routes:
+#     - route: ((public-domain-name1))
+#     - route: ((public-domain-name2))
+#     - route: ((blue)).((us-south-domain))
+# - name: ((green))
+#   routes:
+#     - route: ((public-domain-name1))
+#     - route: ((public-domain-name2))
+#     - route: ((green)).((us-south-domain))
+# - name: openlibertydev
+#   routes:
+#     - route: openlibertydev.((us-south-domain))
+# # US East
+# - name: ((blue))-east
+#   routes:
+#     - route: ((public-domain-name1))
+#     - route: ((public-domain-name2))
+#     - route: ((blue)).((us-east-domain))
+# - name: ((green))-east
+#   routes:
+#     - route: ((public-domain-name1))
+#     - route: ((public-domain-name2))
+#     - route: ((green)).((us-east-domain))
+# United Kingdom
+- name: ((blue))-uk
+  routes:
+    - route: ((public-domain-name1))
+    - route: ((public-domain-name2))
+    - route: ((blue)).((united-kingdom-domain))
+- name: ((green))-uk
+  routes:
+    - route: ((public-domain-name1))
+    - route: ((public-domain-name2))
+    - route: ((green)).((united-kingdom-domain))
+# Germany
+- name: ((blue))-germany
+  routes:
+    - route: ((public-domain-name1))
+    - route: ((public-domain-name2))
+    - route: ((blue)).((germany-domain))
+- name: ((green))-germany
+  routes:
+    - route: ((public-domain-name1))
+    - route: ((public-domain-name2))
+    - route: ((green)).((germany-domain))
+# Sydney
+- name: ((blue))-sydney
+  routes:
+    - route: ((public-domain-name1))
+    - route: ((public-domain-name2))
+    - route: ((blue)).((sydney-domain))
+- name: ((green))-sydney
+  routes:
+    - route: ((public-domain-name1))
+    - route: ((public-domain-name2))
+    - route: ((green)).((sydney-domain))
+
 env:
   JBP_CONFIG_LIBERTY: 'app_archive: {features: ["microProfile-1.0","webCache-1.0"]}'
