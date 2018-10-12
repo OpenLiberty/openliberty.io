@@ -3,18 +3,6 @@ instances: 1
 disk_quota: 1024M
 path: target/openliberty.war
 
-public-domain-name1: www.openliberty.io
-public-domain-name2: openliberty.io
-blue: openliberty-blue
-green: openliberty-green
-
-# Region domain names
-us-south-domain: mybluemix.net
-us-east-domain: us-east.mybluemix.net
-sydney-domain: au-syd.bluemix.net
-united-kingdom-domain: eu-gb.bluemix.net
-germany-domain: eu-de.mybluemix.net
-
 applications:
 - name: openliberty-blue
   domain: openliberty.io
@@ -32,63 +20,63 @@ applications:
   domain: mybluemix.net
   host: openlibertydev
 # # US South
-# - name: ((blue))
+# - name: openliberty-blue
 #   routes:
-#     - route: ((public-domain-name1))
-#     - route: ((public-domain-name2))
-#     - route: ((blue)).((us-south-domain))
-# - name: ((green))
+#     - route: www.openliberty.io
+#     - route: openliberty.io
+#     - route: openliberty-blue.mybluemix.net
+# - name: openliberty-green
 #   routes:
-#     - route: ((public-domain-name1))
-#     - route: ((public-domain-name2))
-#     - route: ((green)).((us-south-domain))
+#     - route: www.openliberty.io
+#     - route: openliberty.io
+#     - route: openliberty-green.mybluemix.net
 # - name: openlibertydev
 #   routes:
-#     - route: openlibertydev.((us-south-domain))
+#     - route: openlibertydev.mybluemix.net
 # # US East
-# - name: ((blue))-east
+# - name: openliberty-blue-east
 #   routes:
-#     - route: ((public-domain-name1))
-#     - route: ((public-domain-name2))
-#     - route: ((blue)).((us-east-domain))
-# - name: ((green))-east
+#     - route: www.openliberty.io
+#     - route: openliberty.io
+#     - route: openliberty-blue.us-east.mybluemix.net
+# - name: openliberty-green-east
 #   routes:
-#     - route: ((public-domain-name1))
-#     - route: ((public-domain-name2))
-#     - route: ((green)).((us-east-domain))
+#     - route: www.openliberty.io
+#     - route: openliberty.io
+#     - route: openliberty-green.us-east.mybluemix.net
 # United Kingdom
-- name: ((blue))-uk
+- name: openliberty-blue-uk
   routes:
-    - route: ((public-domain-name1))
-    - route: ((public-domain-name2))
-    - route: ((blue)).((united-kingdom-domain))
-- name: ((green))-uk
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: openliberty-blue.eu-gb.bluemix.net
+- name: openliberty-green-uk
   routes:
-    - route: ((public-domain-name1))
-    - route: ((public-domain-name2))
-    - route: ((green)).((united-kingdom-domain))
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: openliberty-green.eu-gb.bluemix.net
 # Germany
-- name: ((blue))-germany
+- name: openliberty-blue-germany
   routes:
-    - route: ((public-domain-name1))
-    - route: ((public-domain-name2))
-    - route: ((blue)).((germany-domain))
-- name: ((green))-germany
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: openliberty-blue.eu-de.mybluemix.net
+- name: openliberty-green-germany
   routes:
-    - route: ((public-domain-name1))
-    - route: ((public-domain-name2))
-    - route: ((green)).((germany-domain))
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: openliberty-green.eu-de.mybluemix.net
 # Sydney
-- name: ((blue))-sydney
+- name: openliberty-blue-sydney
   routes:
-    - route: ((public-domain-name1))
-    - route: ((public-domain-name2))
-    - route: ((blue)).((sydney-domain))
-- name: ((green))-sydney
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: openliberty-blue.au-syd.bluemix.net
+- name: openliberty-green-sydney
   routes:
-    - route: ((public-domain-name1))
-    - route: ((public-domain-name2))
-    - route: ((green)).((sydney-domain))
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: openliberty-green.au-syd.bluemix.net
 
 env:
   JBP_CONFIG_LIBERTY: 'app_archive: {features: ["microProfile-1.0","webCache-1.0"]}'
