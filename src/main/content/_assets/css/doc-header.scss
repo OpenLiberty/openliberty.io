@@ -152,6 +152,10 @@
             padding-left: 30px;
             background-color: inherit;
 
+            @media screen and (max-width: 767px){
+                padding-left: 20px;
+            }
+
             #copyright_section {
                 padding-bottom: 41px;
             }
@@ -172,7 +176,7 @@
             }
     
             & #mobile_close_button {
-                margin-right: 0;
+                margin-right: 22px;
             }
         }
         
@@ -184,7 +188,17 @@
                 color: white;
             }
         }
-    }    
+
+        & #navbar {
+            &.navbar-collapse {
+                /* Expand the section to be the full width */
+                & #mobile_links_section {
+                    margin-left: -15px;
+                    margin-right: -45px;
+                }
+            }
+        }
+    }     
 }
 
 @media (max-width: 767px) {
@@ -220,7 +234,6 @@
     #breadcrumb_row .breadcrumb {
         overflow: auto;
         white-space: inherit;
-        padding-left: 15px;
     }
 }
 
