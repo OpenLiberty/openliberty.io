@@ -5,9 +5,9 @@ rvm:
 before_install:
   - sudo apt-get install python3-bs4 -y
 
-script: >
-  $(echo "INCLUDE_DRAFT_GUIDES=$INCLUDE_DRAFT_GUIDES")
-  if [ $TRAVIS_BRANCH = "master" ]; then
+script:
+  - echo "INCLUDE_DRAFT_GUIDES=$INCLUDE_DRAFT_GUIDES"
+  - if [ $TRAVIS_BRANCH = "master" ]; then
     # Need to _always_ make sure web crawlers skip our test environments
     # Even though we are running the test sites as "production"
     cp robots.txt src/main/content/robots.txt
@@ -44,10 +44,10 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
-    script: >
-      $(echo "Deploying master branch...")
-      $(echo "INCLUDE_DRAFT_GUIDES=$INCLUDE_DRAFT_GUIDES")
-      if [ -z $INCLUDE_DRAFT_GUIDES ]; then
+    script:
+      - echo "Deploying master branch..."
+      - echo "INCLUDE_DRAFT_GUIDES=$INCLUDE_DRAFT_GUIDES"
+      - if [ -z $INCLUDE_DRAFT_GUIDES ]; then
         # Production with the exception of including draft guides
         env ROUTE=qa-guides-dev.mybluemix.net ./.travis/cf-push.sh
       else
