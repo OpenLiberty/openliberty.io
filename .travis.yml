@@ -6,10 +6,27 @@ before_install:
   - sudo apt-get install python3-bs4 -y
 
 script: >
+  echo INCLUDE_DRAFT_GUIDES=$INCLUDE_DRAFT_GUIDES
   if [ $TRAVIS_BRANCH = "master" ]; then
+    # Need to _always_ make sure web crawlers skip our test environments
+    # Even though we are running the test sites as "production"
     cp robots.txt src/main/content/robots.txt
-    JEKYLL_ENV=production ./scripts/build_jekyll_maven.sh
+
+    if [ -z $INCLUDE_DRAFT_GUIDES ]; then
+      # INCLUDE_DRAFT_GUIDES should be provided as a custom config
+      # in the Travis build request
+
+      # Static guide authors want a production environment WITH draft guides.
+      # This is not a typical envirnment since drafts guides are not suppose
+      # to be in "production"
+      ./scripts/build_jekyll_maven.sh
+    else
+      # No special situation.
+      # No drafts, like production
+      JEKYLL_ENV=production ./scripts/build_jekyll_maven.sh
+    fi
   else
+    # Not master branch
     ./scripts/build_jekyll_maven.sh
   fi
 
@@ -27,12 +44,16 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
-    script: env ROUTE=qa-guides.mybluemix.net ./.travis/cf-push.sh
-  - provider: script
-    skip_cleanup: true
-    on:
-      branch: development
-    script: env ROUTE=qa-guides-dev.mybluemix.net ./.travis/cf-push.sh
+    script: >
+      echo "Deploying master branch..."
+      echo INCLUDE_DRAFT_GUIDES=$INCLUDE_DRAFT_GUIDES
+      if [ -z $INCLUDE_DRAFT_GUIDES ]; then
+        # Production with the exception of including draft guides
+        env ROUTE=qa-guides-dev.mybluemix.net ./.travis/cf-push.sh
+      else
+        # Mirror production exactly (with robots.txt included)
+        env ROUTE=qa-guides.mybluemix.net ./.travis/cf-push.sh
+      fi
   - provider: script
     skip_cleanup: true
     on:
