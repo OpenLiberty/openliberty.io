@@ -4,46 +4,31 @@ disk_quota: 1024M
 path: target/openliberty.war
 
 applications:
-- name: openliberty-blue
-  domain: openliberty.io
-  host: www
-- name: openliberty-green
-  domain: openliberty.io
-  host: www
-- name: openliberty-blue-east
-  domain: openliberty.io
-  host: www
-- name: openliberty-green-east
-  domain: openliberty.io
-  host: www
+# US South
+- name: openliberty-blue-south
+  routes:
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: openliberty-blue-south.ng.bluemix.net
+- name: openliberty-green-south
+  routes:
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: openliberty-green-south.ng.bluemix.net
 - name: openlibertydev
-  domain: mybluemix.net
-  host: openlibertydev
-# # US South
-# - name: openliberty-blue
-#   routes:
-#     - route: www.openliberty.io
-#     - route: openliberty.io
-#     - route: openliberty-blue.mybluemix.net
-# - name: openliberty-green
-#   routes:
-#     - route: www.openliberty.io
-#     - route: openliberty.io
-#     - route: openliberty-green.mybluemix.net
-# - name: openlibertydev
-#   routes:
-#     - route: openlibertydev.mybluemix.net
-# # US East
-# - name: openliberty-blue-east
-#   routes:
-#     - route: www.openliberty.io
-#     - route: openliberty.io
-#     - route: openliberty-blue.us-east.mybluemix.net
-# - name: openliberty-green-east
-#   routes:
-#     - route: www.openliberty.io
-#     - route: openliberty.io
-#     - route: openliberty-green.us-east.mybluemix.net
+  routes:
+    - route: openlibertydev.mybluemix.net
+# US East
+- name: openliberty-blue-east
+  routes:
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: openliberty-blue.us-east.mybluemix.net
+- name: openliberty-green-east
+  routes:
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: openliberty-green.us-east.mybluemix.net
 # United Kingdom
 - name: openliberty-blue-uk
   routes:
