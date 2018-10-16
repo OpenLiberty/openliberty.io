@@ -8,8 +8,10 @@ echo "Start cloning blogs repository..."
 
 git clone https://github.com/OpenLiberty/blogs.git --branch master blogs_temp
 
-mv blogs_temp/_drafts/ .
-mv blogs_temp/_posts/ .
+mv blogs_temp/drafts/ .
+mv drafts/ _drafts
+mv blogs_temp/publish/ .
+mv publish/ _posts
 
 rm -rf blogs_temp
 popd
