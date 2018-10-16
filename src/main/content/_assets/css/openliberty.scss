@@ -980,18 +980,25 @@ nav .container-fluid {
 }
 
 #footer_container .right_footer_link:hover {
-    // color: #7A9B22; TODO
+    color: #24253A;
+}
+
+#footer_project_container {
+    display: inline-block;
 }
 
 #footer_copyright {
     font-size: 11px;
 }
 
+#footer_links {
+    float: right;
+}
+
 #footer_blog_link,
 #footer_twitter_link,
 #footer_stackoverflow_link,
-#footer_groupsio_link,
-#footer_github_link {
+#footer_groupsio_link {
     float: right;
 }
 
@@ -1000,7 +1007,6 @@ nav .container-fluid {
     padding: 32px 50px 32px 50px;
     overflow: hidden;
     background: rgba(200, 210, 210, 0.16);
-    height: 96px;
 }
 
 #footer_bottom_section {
@@ -1029,19 +1035,22 @@ nav .container-fluid {
 }
 
 @media (max-width: 991px) {
-
-    #footer_links_container {
+    #footer_project_container {
+        width: 100%;
+    }
+    #footer_links_container,
+    #footer_bottom_section {
+        height: auto;
+        padding-left: 0;        
         padding-right: 0;
         margin-right: 0;
     }
-
-    #footer_twitter_link,
-    #footer_stackoverflow_link,
-    #footer_groupsio_link,
-    #footer_github_link {
+    #footer_links {
         float: none;
     }
-
+    #footer_container .footer_link {
+        margin-right: 22px;
+    }
 }
 
 #teconsent {
