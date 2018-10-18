@@ -1,0 +1,176 @@
+---
+layout: post
+title: "Build and push Spring Boot Docker images with boost-maven-plugin"
+date:   2018-09-12 10:20:00 -0000
+categories: blog
+author_picture: https://avatars3.githubusercontent.com/u/31773161
+seo-title: Build and push Spring Boot Docker images with boost-maven-plugin - OpenLiberty.io
+seo-description: Efficiently build and push layered Docker images of Spring Boot applications using the Boost Maven plugin.
+blog_description: "A simple and efficient way of building and pushing layered Docker images of Spring Boot applications using the Boost Maven plugin."
+---
+= Build and push Spring Boot Docker images with boost-maven-plugin
+Anjum Fatima <https://github.com/anjumfatima90>
+
+Do you want an efficient Docker image of your Spring Boot application? Do you want a Maven plugin to do the job? If the answer is yes, you are in the right place. The `boost-maven-plugin` provides a simple and efficient way to build your Docker image without even having to write a Dockerfile.
+
+Writing a Dockerfile to create an efficient Docker image requires more than just an understanding of the application. It requires optimization techniques and capabilities in Docker that go beyond a simplistic Dockerfile approach. The Boost Maven plugin provides a functionality to build and push layered Docker images of Spring Boot applications using Liberty.
+
+In a previous blog post, link:/blog/2018/07/02/creating-dual-layer-docker-images-for-spring-boot-apps.html[Creating dual layer Docker images for Spring Boot apps], we showed how to create an efficient Docker image by writing the Dockerfile yourself. Using the Boost Maven plugin, you can create an efficient Docker image with only minimal knowledge of Docker. Just install and run Docker on your machine to get started.
+
+== Configuring the Boost Maven plugin
+
+In your Spring Boot application, after the `spring-boot-maven-plugin` entry in the `pom.xml` file, add another entry for the `boost-maven-plugin` in the `<plugins>` section:
+
+----
+<plugin>
+  <groupId>io.openliberty.boost</groupId>
+  <artifactId>boost-maven-plugin</artifactId>
+  <version>0.1</version>
+</plugin>
+----
+
+This adds the `boost-maven-plugin` to your project.
+
+
+== Building the Docker image
+
+You can build the Docker image either by adding an execution goal to the `pom.xml` or by running the goal directly in the terminal.
+
+The `docker-build` goal creates a Liberty-specific Dockerfile and builds the Docker image. If a Dockerfile already exists in that location, you'll see a warning and the existing Dockerfile is used to create the Docker image.
+
+The build creates a Docker image with a default repository name as `${project.artifactId}`
+ and a default tag `latest`.
+
+=== Updating the pom.xml
+To add the goal to your `pom.xml`, update the `boost-maven-plugin` entry in the `pom.xml` with the `docker-build` goal:
+
+----
+<plugin>
+  <groupId>io.openliberty.boost</groupId>
+  <artifactId>boost-maven-plugin</artifactId>
+  <version>0.1</version>
+  <executions>
+    <execution>
+      <goals>
+        <goal>docker-build</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
+----
+
+Run `mvn clean package`.
+
+
+=== Running the goal directly
+
+Alternatively, you can just run the goal directly:
+
+Run `mvn clean package`
+
+Run `mvn boost:docker-build`
+
+
+== Running the Docker image
+
+Now that the Docker image is built, you can see the image in your local Docker registry.
+
+Run `docker images`
+
+Now run the application. The argument `-p 9080:9080` maps the port opened inside the Docker container to a port in your operating system.
+
+Run `docker run -p 9080:9080 ${project.artifactId}`
+
+You can access the application on `localhost:9080`.
+
+== Pushing the Docker image to a registry
+
+To push an image to a public or private registry, you need to configure the `repository` parameter
+in the format `[REGISTRYHOST/][USERNAME/]NAME`. The tag parameter is set to `latest` by default. You can do this either by adding an execution goal to the `pom.xml` or by running the goal directly in the terminal.
+
+=== Updating the pom.xml
+
+To add the goal to your `pom.xml`, update the plugin entry in the `pom.xml`:
+
+----
+<plugin>
+  <groupId>io.openliberty.boost</groupId>
+  <artifactId>boost-maven-plugin</artifactId>
+  <version>0.1</version>
+  <configuration>
+    <repository>[your_domain_name]/${project.artifactId}</repository>
+  </configuration>
+  <executions>
+    <execution>
+      <goals>
+        <goal>docker-build</goal>
+        <goal>docker-push</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
+----
+
+For a public registry like Docker Hub, replace `[your_domain_name]` with your Docker Hub username. For a private registry like IBM Container registry, replace `[your_domain_name]` with with your IBM Container Registry Host. You may need to include the namespace. For example, `registry.ng.bluemix.net/test`.
+
+
+Update the Maven `settings.xml` file with your authentication details for the registry, for example:
+
+* For a public registry like Docker Hub:
++
+----
+<server>
+  <id>docker.io</id>
+  <username>[your_registry_username]</username>
+  <password>[your_registry_password]</password>
+</server>
+----
+
+* For a private registry like https://docs.docker.com/v17.09/docker-for-ibm-cloud/ibm-registry/[IBM Container Registry]:
++
+----
+<server>
+  <id>registry.ng.bluemix.net</id>
+  <username>token</username>
+  <password>[your_registry_token]</password>
+</server>
+----
+
+
+
+Run `mvn clean install`
+This creates a Docker image with the given `repository` name and the default tag `latest`, and then pushes the image to the registry.
+
+=== Running the goal directly
+
+Alternatively, to run the goal directly, first authenticate with the registry:
+
+* For a public registry like Docker Hub: 
++
+----
+docker login
+----
+
+
+* For a private registry like https://docs.docker.com/v17.09/docker-for-ibm-cloud/ibm-registry/[IBM Container Registry]:
++
+----
+docker login -u token -p [your_registry_token] registry.ng.bluemix.net
+----
+
+
+Run `mvn clean package`
+
+Run `mvn boost:docker-build`
+
+Run `mvn boost:docker-push`
+
+
+== Try it out!
+
+Building efficient Docker images has never been so easy!! Try the link:https://github.com/OpenLiberty/boost-maven[Boost Maven plugin]
+to build and push efficient Docker images of your Spring Boot applications.
+
+Just head over to the
+link:https://github.com/barecode/spring-petclinic/blob/master/Demo-SpringOne2018.md[Sample app project] and follow the instructions to build Liberty-based Docker images.
+

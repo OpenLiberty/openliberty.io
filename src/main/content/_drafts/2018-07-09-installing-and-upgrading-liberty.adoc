@@ -1,0 +1,160 @@
+---
+layout: post
+title: "Installing and upgrading Liberty the right way"
+date:   2018-06-29 11:30:00 -0000
+categories: blog
+author_picture: https://avatars3.githubusercontent.com/u/1999406
+seo-title: Optimizing Spring Boot apps for Docker - OpenLiberty.io
+seo-description: Take a more efficient approach to building Docker images for Spring Boot applications when doing iterative development and deployment. The standard approach has some drawbacks so here we look at what they are and how to do it better.
+blog_description: "Take a more efficient approach to building Docker images for Spring Boot applications when doing iterative development and deployment. The standard approach has some drawbacks so here we look at what they are and how to do it better."
+---
+= Installing and upgrading Liberty the right way
+Michael Thompson <https://github.com/barecode>
+
+This guide lays out the best practice for upgrading Liberty to the latest version in production environments, assuming a normal operating system environment.
+For Docker images, it is recommended that you rebuild your Docker image based on the latest Liberty image available on Docker hub.
+
+
+== Basic Installation
+
+Open Liberty is packaged as a zip.
+At risk of stating the obvious, Liberty can be installed with a simple unzip:
+
+`unzip openliberty-18.0.0.2.zip`
+
+This will lay down the Liberty environment to look like this:
+
+----
+$ ls -l wlp
+total 320
+-rw-r--r--    1 mcthomps  staff   11513 Mar  9 12:23 LICENSE
+-rw-r--r--    1 mcthomps  staff  136756 Jun  8 09:37 NOTICES
+-rw-r--r--    1 mcthomps  staff   11486 Jun 19 05:08 README.TXT
+drwxr-xr-x   24 mcthomps  staff     768 Jun 19 05:08 bin
+drwxr-xr-x    5 mcthomps  staff     160 Jun 19 05:08 clients
+drwxr-xr-x    4 mcthomps  staff     128 Jun 19 05:08 dev
+drwxr-xr-x  455 mcthomps  staff   14560 Jun 19 05:08 lib
+drwxr-xr-x    4 mcthomps  staff     128 Jun 19 05:08 templates
+----
+
+That’s it!
+
+That’s the most basic way to install Liberty.
+When you want to move up to a newer version, you just unzip the new version and move the `usr` directory, which contains all of your apps and configuration.
+
+This is great for development environments or when you are just kicking the tires.
+However, when you are looking at running Liberty for a long time, that is to say in production, there’s a different approach which gives us a more flexibility at the cost of being slightly more complicated.
+
+== Production Installation
+
+In production environments, we recommend taking a few extra setup steps which will end up saving you time in the long run.
+First, you should version the unzip to something like `openliberty-18.0.0.2`.
+This allows for multiple concurrent versions to be available on-disk.
+Second, you should have the applications and configuration stored outside the installation directories.
+
+Let’s look at how to do that.
+
+When you download a version of Open Liberty, it should be extracted to a similarly named directory.
+This allows for multiple versions of Liberty to exist side-by-side.
+
+----
+cd /opt/ol
+curl -sLO https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2018-06-19_0502/openliberty-18.0.0.2.zip
+unzip openliberty-18.0.0.2.zip -d openliberty-18.0.0.2
+----
+
+In my environment there are four Open Liberty installs: 
+
+----
+$ ls -l
+total 196736
+drwxr-xr-x@  8 mcthomps  staff  256 Sep 27  2017 openliberty-17.0.0.3
+drwxr-xr-x@  8 mcthomps  staff  256 Dec  6  2017 openliberty-17.0.0.4
+drwxr-xr-x   3 mcthomps  staff   96 Jun 19 13:22 openliberty-18.0.0.1
+drwxr-xr-x   3 mcthomps  staff   96 Jun 30 06:58 openliberty-18.0.0.2
+----
+
+Should there be any issues with the application after moving it to the latest version of Liberty, you can quickly revert to using a previous version.
+
+Next, create the `usr` directory.
+This directory contains all of the applications and server configuration.
+I tend to use the name `wlp-usr`.
+
+----
+$ mkdir /opt/ol/wlp-usr
+$ ls -l
+total 0
+drwxr-xr-x@  8 mcthomps  staff  256 Sep 27  2017 openliberty-17.0.0.3
+drwxr-xr-x@  8 mcthomps  staff  256 Dec  6  2017 openliberty-17.0.0.4
+drwxr-xr-x   3 mcthomps  staff   96 Jun 19 13:22 openliberty-18.0.0.1
+drwxr-xr-x   3 mcthomps  staff   96 Jun 30 06:58 openliberty-18.0.0.2
+drwxr-xr-x  11 mcthomps  staff  352 Jun 19 15:14 wlp
+drwxr-xr-x   2 mcthomps  staff   64 Jun 30 06:46 wlp-usr----
+----
+
+Lastly, we need to set the environment variable `WLP_USER_DIR` to point to `wlp-usr`.
+This will instruct all of the Liberty commands to look for server configuration there, rather than the default directory.
+
+`export WLP_USER_DIR=/opt/ol/wlp-usr`
+
+== Upgrading the version of the server
+
+If you haven't already, create a server.
+This can be done from any install version.
+This server will be created in the `wlp-usr` directory.
+
+----
+$ cd openliberty-18.0.0.1/wlp
+$ bin/server create
+$ ls /opt/ol/wlp-usr/servers/defaultServer/
+apps            dropins         server.env      server.xml      workarea
+----
+
+Start your server in the foreground with `bin/server run`.
+
+----
+$ bin/server run
+Launching defaultServer (Open Liberty 18.0.0.1/wlp-1.0.20.cl180120180309-2209) on Java HotSpot(TM) 64-Bit Server VM, version 1.8.0_151-b12 (en_US)
+[AUDIT   ] CWWKE0001I: The server defaultServer has been launched.
+[AUDIT   ] CWWKZ0058I: Monitoring dropins for applications.
+[ERROR   ] CWWKO0221E: TCP Channel defaultHttpEndpoint initialization did not succeed.  The socket bind did not succeed for host localhost and port 9080.  The port might already be in use.
+[AUDIT   ] CWWKF0012I: The server installed the following features: [jsp-2.3, servlet-3.1, el-3.0].
+[AUDIT   ] CWWKF0011I: The server defaultServer is ready to run a smarter planet.
+----
+
+Note the version of the server is 18.0.0.1.
+To change the version this server is using, stop the server (ctrl-C), change to a different install version, and start it again.
+
+----
+$ cd /opt/ol/openliberty-18.0.0.2/wlp
+$ bin/server run
+Launching defaultServer (Open Liberty 18.0.0.2/wlp-1.0.21.cl180220180619-0403) on Java HotSpot(TM) 64-Bit Server VM, version 1.8.0_151-b12 (en_US)
+[AUDIT   ] CWWKE0001I: The server defaultServer has been launched.
+[AUDIT   ] CWWKZ0058I: Monitoring dropins for applications.
+[ERROR   ] CWWKO0221E: TCP Channel defaultHttpEndpoint initialization did not succeed.  The socket bind did not succeed for host localhost and port 9080.  The port might already be in use.
+[AUDIT   ] CWWKF0012I: The server installed the following features: [jsp-2.3, servlet-3.1, el-3.0].
+[AUDIT   ] CWWKF0011I: The server defaultServer is ready to run a smarter planet.
+----
+
+That’s it!
+
+Using this file system layout, changing the version of Liberty that is running is as simple as changing the directory you are starting Liberty from.
+ 
+== Splitting Output
+
+The logs and other output of the server can be split from the configuration using the `WLP_OUTPUT_DIR` environment variable.
+Setting it will cause all of the logs to be written under the specified directory.
+Note that this change only takes affect on server start.
+
+----
+$ mkdir /opt/ol/wlp-output
+$ export WLP_OUTPUT_DIR=/opt/ol/wlp-output
+$ bin/server start
+$ ls /opt/ol/wlp-output/defaultServer/logs/
+console.log     messages.log    state
+----
+
+To preserve these `WLP_USER_DIR` and `WLP_OUTPUT_DIR` environment variables, you will want to set that in your `.bashrc` or create a wrapper script.
+You can also add a server.env to the Liberty install’s etc directory.
+
+For more details on the environment variables and other configuration files which you can use to control Liberty, check out the README.TXT in the install.

@@ -1,0 +1,454 @@
+---
+layout: post
+title: Get more metrics from your apps with MicroProfile 2.0 on Open Liberty 18.0.0.3
+
+categories: blog
+author_picture: https://avatars3.githubusercontent.com/u/3322532
+seo-title: Get more metrics from your apps with MicroProfile 2.0 on Open Liberty 18.0.0.3 - OpenLiberty.io.
+seo-description: Monitor your microservices with metrics from your applications, from Liberty components, and to report on their fault tolerance handling. Plus more for your microservices with Open Liberty 18.0.0.3.
+blog_description: "Monitor your microservices with metrics from your applications, from Liberty components, and to report on their fault tolerance handling. Plus more for your microservices with Open Liberty 18.0.0.3."
+---
+= Get more metrics from your apps with MicroProfile 2.0 on Open Liberty 18.0.0.3
+Laura Cowen <http://github.com/lauracowen>
+
+Get metrics on your fault tolerant methods to find out whether your application is actually failing where you think it is. You can apply MicroProfile Fault Tolerance annotations to your methods then collect metrics from the MicroProfile Metrics `/metrics` endpoint to monitor exactly what happens if your application fails. Also in MicroProfile 2.0, you can collect metrics from the `/metrics` endpoint on individual Liberty components and you can configure authentication on the endpoint to make development easier. If you've not worked with metrics in Open Liberty before, take a look at our introductory https://openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice] guide. If metrics isn’t your thing (seriously?!), there is even more in MicroProfile 2.0, it brings in Java EE 8 versions of CDI, JSON-P, and JAX-RS as well as adding JSON-B. It also provides updates to config, JWT, Open Tracing, and the REST Client specs.
+
+If you're using https://www.openliberty.io/guides/maven-intro.html[Maven], here are the coordinates:
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.openliberty</groupId>
+    <artifactId>openliberty-runtime</artifactId>
+    <version>18.0.0.3</version>
+    <type>zip</type>
+</dependency>
+----
+
+Or for https://openliberty.io/guides/gradle-intro.html[Gradle]:
+
+[source,json]
+----
+dependencies {
+    libertyRuntime group: 'io.openliberty', name: 'openliberty-runtime', version: '[18.0.0.3,)'
+}
+----
+
+Or if you're using Docker:
+
+[source]
+----
+docker pull open-liberty
+----
+
+Or take a look at our https://openliberty.io/downloads/[Downloads page].
+
+[link=https://stackoverflow.com/tags/open-liberty]
+image::/img/blog_btn_stack.svg[Ask a question on Stack Overflow, align="center"]
+
+What else can Open Liberty 18.0.0.3 do for your microservices? Take a look:
+
+*  <<mpfault,Monitor faults in your microservices (MicroProfile Fault Tolerance 1.1)>>
+*  <<monitor,Get Liberty component metrics from /metrics endpoint (Monitor 1.0 with MP Metrics 1.1)>>
+*  <<mpmetrics,Disable authenticaton on /metrics during development (MicroProfile Metrics 1.1 update)>>
+*  <<mprestclient,Reactive programming in a type-safe RESTful client (MicroProfile Rest Client 1.1)>>
+*  <<mpjwt,Verify security tokens in a container-neutral way to simplify deployment (MicroProfile JWT 1.1)>>
+*  <<mptracing,Automatically trace JAX-RS requests between microservices (MicroProfile Open Tracing 1.1)>>
+*  <<mpconfig,Dynamically update your microservice configuration (MicroProfile Config 1.3)>>
+*  <<mp,Conveniently enable all MicroProfile 2.0 or MicroProfile 1.4 features>>
+*  <<sociallogin,Provide social media single sign-on options to app users (Social Login 1.0)>>
+*  <<jdbc,Use a java.sql.Driver as a data source (JDBC 4.2, 4.1, 4.0)>>
+
+
+
+As we don't have a full set of documentation implemented for Open Liberty yet, some of the items below point to the https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/as_ditamaps/was900_welcome_liberty.html[official documentation for WebSphere Liberty] (WebSphere Liberty is built on Open Liberty).
+
+
+
+
+
+
+[#mpfault]
+== Monitor faults in your microservices (MicroProfile Fault Tolerance 1.1)
+
+All applications need to deal with unexpected problems, whether it’s an important service being unavailable or a sudden influx of requests that could overload your application. MicroProfile Fault Tolerance provides annotations so that you can easily apply common fault mitigation strategies to your application but did you know that, since version 1.1, it also exports metrics that allow you to monitor how these mitigation strategies are being triggered?
+
+Here’s a quick overview:
+
+* If you use `@Retry`, metrics are added for how often your method is failing and being retried
+* If you use `@Timeout`, metrics are added for how long calls to your method are taking and how often they’re timing out
+* If you use `@CircuitBreaker`, metrics are added to track what state the CircuitBreaker is in, how often your method fails and how often an open circuit breaker causes your method to fail without being run
+* If you use `@Bulkhead`, metrics are added for how many concurrent calls to your method are currently executing, how often calls are rejected, how long calls take to return and how long they spend queued (if you’re also using `@Asynchronous`)
+* If you use `@Fallback`, metrics are added for how often your method falls back to its fallback handler or fallback method
+* If you use any of the annotations listed in the previous points, we add metrics for how often your method ultimately returns an exception to the caller, after all of the fault tolerance processing has finished.
+
+In general, the idea is that if you’re worried about your method failing in a certain way and are using fault tolerance to try to mitigate that, metrics are added so that you can easily monitor whether or not your application is actually failing there.
+
+To enable MicroProfile Fault Tolerance 1.1 and Metrics 1.1, add the definitions to your `server.xml`:
+
+[source,xml]
+----
+
+<featureManager>
+    <feature>mpFaultTolerance-1.1</feature>
+    <feature>mpMetrics-1.1</feature>
+</featureManager>
+
+----
+
+Also new in Fault Tolerance 1.1 is the ability to disable individual Fault Tolerance annotations using the MicroProfile Config feature. For example, if you have a method `MyClient.methodA()` which is annotated with `@CircuitBreaker`, you can disable the circuit breaker by adding this configuration entry:
+
+[source]
+----
+com.acme.test.MyClient/methodA/CircuitBreaker/enabled=false
+----
+
+
+Example use of fault tolerance annotations:
+[source,java]
+----
+@ApplicationScoped
+public class Example {
+ 
+  @Retry
+  @CircuitBreaker
+  public Result getResult(String userId) {
+    List<Widgets> widgets = fetchWidgets(userId);
+    return new Result(userId, widgets);
+  }
+ 
+}
+----
+
+
+Learn about fault tolerance in microservices in our guides:
+
+* https://openliberty.io/guides/retry-timeout.html[Failing fast and recovering from errors (interactive guide)]
+* https://openliberty.io/guides/bulkhead.html[Limiting the number of concurrent requests to microservices (interactive guide)]
+* https://openliberty.io/guides/microprofile-fallback.html[Building fault-tolerant microservices with the @Fallback annotation]
+* https://openliberty.io/guides/circuit-breaker.html[Preventing repeated failed calls to microservices]
+
+
+
+
+[#monitor]
+== Get Liberty component metrics from /metrics endpoint (Monitor 1.0 with MP Metrics 1.1)
+
+You can now access metrics from individual Liberty components (e.g. connection pools, sessions, servlets, etc) in Prometheus. Use the standard HTTP scraper to get all metrics from the `/metrics` endpoint, which is provided by the MicroProfile Metrics 1.1 feature. Previously, it was only possible to access Liberty component metrics using JMX MBeans.
+
+To make Monitor 1.0 metrics available at the `/metrics` endpoint:
+
+1. https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_monitor.html[Set up MicroProfile Metrics 1.1].
+2. Add `monitor-1.0` to your `server.xml`:
++
+[source,xml]
+----
+<featureManager>
+  <feature>mpMetrics-1.1</feature> 
+  <feature>monitor-1.0</feature>
+</featureManager>
+----
+
+
+Learn about MicroProfile Metrics in the https://www.openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice] guide.
+
+For more info:
+
+* https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/rwlp_monitor_metrics_rest_api.html[MicroProfile Metrics 1.1 vendor metrics (Knowledge Center)]
+
+
+
+
+
+
+
+
+[#mpmetrics]
+== Disable authenticaton on /metrics during development (MicroProfile Metrics 1.1 update)
+
+A new option for accessing `/metrics` without authentication makes it easier for developers and administrators to set up monitoring of Liberty servers in situations where security isn't required. Tools such as Prometheus or Collectd can be set up quickly to scrape metrics from Liberty.
+
+MicroProfile Metrics in Liberty provides metrics for application developers and administrators to monitor their applications. Metrics are often collected and stored in a time series database such as Prometheus. Previously, the `/metrics` endpoint provided by Liberty required basic authentication. Administrators needed to add the username and password to Prometheus's configuration in order for Prometheus to scrape the metrics from Liberty.
+
+An optional configuration attribute is now available to turn off the basic authentication of the `/metrics` endpoint. Prometheus can automatically discover Liberty's `/metrics` endpoint without modifying its configuration.
+
+To turn off basic authentication for the `/metrics` endpoint, add `<mpMetrics authentication="false"/>` to `server.xml`:
+
+
+[source,xml]
+----
+
+<featureManager>
+    <feature>mpMetrics-1.1</feature>
+</featureManager>
+
+<mpMetrics authentication="false"/>
+----
+
+
+Learn more about MicroProfile Metrics in the https://openliberty.io/guides/microprofile-metrics.html[Providing metrics from a microservice] guide.
+
+For more info:
+
+* https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_metrics_monitor.html[Monitoring with MicroProfile metrics (Knowledge Center)]
+
+
+
+
+
+[#mprestclient]
+== Reactive programming in a type-safe RESTful client (MicroProfile Rest Client 1.1)
+
+MicroProfile Rest Client 1.1 expands on the 1.0 version by providing asynchronous method support using Java 8's CompletionStage APIs. It also allows better integration with other MicroProfile technologies and third parties and adds support for URIs.
+
+The new async method support makes reactive programming possible in a type-safe RESTful client. Prior to this feature, you would either have to sacrifice type-safety and use the JAX-RS 2.X Client APIs to get asynchronous/reactive support, or sacrifice async/reactive support for type-safety. No more!
+
+The other improvements are minor in nature but still make life easier for developers. You no longer need to specify the `@Dependent` annotation on REST client interfaces when used with CDI. You can also use URIs, which can be constructed without throwing a `MalformedURLException`, saving a few lines of unnecessary try/catch blocks.
+
+REST client interface methods that return a `CompletionStage` are treated as asynchronous:
+
+[source,java]
+----
+...
+MyClient client = RestClientBuilder.newBuilder()
+                                   .executorService(executor)
+                                   .build(MyClient.class);
+CompletionStage<Widget> cs = client.getWidget(widgetId);
+cs.thenApply(...);
+...
+@Path("/widget")
+public interface MyClient {
+    @GET
+    @Path("/{widgetId}"
+    CompletionStage<Widget> getWidget(@PathParam("widgetId") String widgetId);
+}
+----
+
+
+Learn about MicroProfile Rest Client in https://www.openliberty.io/guides/microprofile-rest-client.html[Consuming RESTful services with template interfaces].
+
+
+To enable the MicroProfile Rest Client 1.1 feature, add it to the `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+  <feature>mpRestClient-1.1</feature>
+</featureManager>
+----
+
+For more info:
+
+* https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_mp_restclient.html[Configuring the MicroProfile Rest Client (Knowledge Center)].
+
+
+
+
+
+[#mpjwt]
+== Verify security tokens in a container-neutral way to simplify deployment (MicroProfile JWT 1.1)
+
+MicroProfile JWT enables authentication and identity propagation using JWT tokens. However, the mechanism for configuring the token issuers, public keys or JWKS URLs used for token validation is container-specific when using MicroProfile JWT 1.0. MicroProfile JWT 1.1 uses MicroProfile Config 1.x to allow token issuers, public keys, and JWKS URLs to be defined at the server or in an application in a container-neutral way. This simplifies deployment and improves interoperability. MicroProfile JWT 1.1 also adds Authentication Filter support, so MicroProfile JWT authentication can be limited to a subset of application URLs. 
+
+To enable the MicroProfile JWT 1.1 feature:
+
+1. Add the `mpJwt-1.1` and `appSecurity-2.0` features to the `server.xml` and, optionally, define an `mpJwt` configuration if configuration beyond public keys and issuers is needed:
++
+[source,xml]
+----
+<featureManager>
+    <feature>mpJwt-1.1</feature>
+    <feature>appSecurity-2.0</feature>
+</featureManager>
+
+<mpJwt id="myMpJwt" ... />
+----
+
+2. Supply either the token issuer and public key or the public key retrieval path or URL that will be used to retrieve the key. These can be system properties, environment variables, or entries in a `microprofile-config.properties` file within an application. For example, add to the `microprofile-config.properties` file one of the following entries: 
++
+[source,xml]
+----
+mp.jwt.verify.publickey.location=/META-INF/orange.pem
+----
++
+or
++
+[source,xml]
+----
+mp.jwt.verify.publickey=(pkcs#8 key goes here)
+ 
+mp.jwt.verify.issuer=https://server.example.com
+----
++
+For UNIX and Linux platforms (which do not accept dots in environment variables), use `_`. 
+
+
+For more info:
+
+* Learn about MicroProfile JWT in https://www.openliberty.io/guides/microprofile-jwt.html[Securing microservices with JSON Web Tokens]
+* https://www.eclipse.org/community/eclipse_newsletter/2017/september/article2.php[MicroProfile JWT article in the Eclipse newsletter]
+* https://www.ibm.com/support/knowledgecenter/was_beta_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/twlp_sec_json.html[Configuring the MicroProfile JSON Web Token (Knowledge Center)]
+
+
+
+
+
+[#mptracing]
+== Automatically trace JAX-RS requests between microservices (MicroProfile Open Tracing 1.1)
+
+Distributed tracing enables users to see the flow of requests between microservices:
+
+* See which microservices have high latency
+* See hierarchy of calls between applications and their dependent microservices:
+  * `opentracing-1.1` provides the Open Tracing v0.31 API
+  * `mpOpenTracing-1.1` implements the MicroProfile OpenTracing 1.1 specification
+
+Use `mpOpenTracing-1.1` in combination with `opentracingZipkin-0.31` to send traces to Zipkin. You can download the https://github.com/WASdev/sample.opentracing.zipkintracer[sample Zipkin tracer implementation] from GitHub. When `mpOpenTracing-1.1` and `opentracingZipkin-0.31` are enabled, inbound and outbound JAX-RS requests are automatically traced. Developers can also instrument their code with `@Traced` to explicitly trace a class or a method. Traces are sent to Zipkin and users can see their traces in the Zipkin UI.
+
+
+To enable MicroProfile Open Tracing 1.1, add the definition to your `server.xml`:
+
+[source,xml]
+----
+
+<featureManager>
+    <feature>mpOpenTracing-1.1</feature>
+    <feature>usr:opentracingZipkin-0.31</feature>
+</featureManager>
+
+----
+
+
+For more info:
+
+* https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_dist_tracing.html[Enabling distributed tracing (Knowledge Center)]
+
+
+
+
+[#mpconfig]
+== Dynamically update your microservice configuration (MicroProfile Config 1.3)
+
+Most applications require configuration that is specific to the environment in which they run. Different environments require different configurations and it is highly desirable not to have to rebuild and repackage applications for each different case. MicroProfile Config allows you to separate configuration from microservices code so that the values required by the service can be maintained externally to the code. The configuration data can come from different locations and in different formats, for example from system properties and system environment variables. The `mpConfig-1.3` feature now allows you to easily and dynamically change your application’s configuration by adding or modifying variables in the Liberty `server.xml` file.
+
+In addition, Liberty builds on previous versions of MicroProfile Config with enhancements in the areas of implicit converters and the mapping of config properties to environment variables. You can use this feature with either the `cdi-1.2` feature or the `cdi-2.0` feature.
+
+To enable the MicroProfile Config 1.3 feature, add it to the `server.xml`:
+
+[source,xml]
+----
+<featureManager>
+  <feature>mpConfig-1.3</feature>
+</featureManager>
+----
+
+
+For more info, see link:/blog/2018/09/19/dynamic-update-microservice-config.html[Neil Young's blog post].
+
+
+
+
+
+
+
+[#mp]
+== Conveniently enable all MicroProfile 2.0 or MicroProfile 1.4 features
+
+Enable all the MicroProfile 2.0 features or all the MicroProfile 1.4 features at once with the new convenience features. MicroProfile 2.0 is based on Java EE 8 technologies while MicroProfile 1.4 is based on Java EE 7 technologies.
+
+To enable MicroProfile 2.0 features:
+
+
+[source,xml]
+----
+<featureManager>
+  <feature>microProfile-2.0</feature>
+</featureManager>
+----
+
+This is the equivalent of individually enabling the following features: `jaxrs-2.1`, `cdi-2.0`, `jsonp-1.1`, `jsonb-1.0`, `mpConfig-1.3`, `mpFaultTolerance-1.1`, `mpHealth-1.0`, `mpJwt-1.1`, `mpMetrics-1.1`, `mpOpenAPI-1.0`, `mpOpenTracing-1.1`, `mpRestClient-1.1`.
+
+To enable MicroProfile 1.4 features:
+
+[source,xml]
+----
+<featureManager>
+  <feature>microProfile-1.4</feature>
+</featureManager>
+----
+
+This is the equivalent of individually enabling the following features: `jaxrs-2.0`, `cdi-1.2`, `jsonp-1.0`, `mpConfig-1.3`, `mpFaultTolerance-1.1`, `mpHealth-1.0`, `mpJwt-1.1`, `mpMetrics-1.1`, `mpOpenAPI-1.0`, `mpOpenTracing-1.1`, `mpRestClient-1.1`.
+
+
+New to MicroProfile? Try https://www.openliberty.io/guides/rest-intro.html[building a RESTful web service with Liberty and MicroProfile].
+
+
+
+
+
+
+
+[#sociallogin]
+== Provide social media single sign-on options to app users (Social Login 1.0)
+
+Social login is a form of web single sign-on using that uses existing user information from one social media providers (e.g. Facebook, Twitter, Google, Github, Linkedin) to sign a user into a website instead of creating a new login account specifically for the website. Logging in with a social media account is a fast and convenient way for users to log into your application or website hosted on a Liberty server. Users can select from a list of social media providers. You can customise this list according to the social media providers you offer or create your own selection form.
+
+To enable Social Login 1.0, add the definition to your `server.xml`:
+
+[source,xml]
+----
+
+<featureManager>
+    <feature>socialLogin-1.0</feature>
+</featureManager>
+
+----
+
+
+For more info:
+
+* https://www.ibm.com/support/knowledgecenter/en/SSAW57_liberty/com.ibm.websphere.wlp.nd.multiplatform.doc/ae/twlp_sec_sociallogin.html[Configuring social login in Liberty (Knowledge Center)]
+
+
+
+[#jdbc]
+== Use a java.sql.Driver as a data source (JDBC 4.2, 4.1, 4.0)
+
+It is now possible to use JDBC drivers that only provide a java.sql.Driver and not a data source implementation as data sources in Liberty. Liberty is able to autodetect these drivers via the ServiceLoader mechanism and match the correct one based on the URL property. Based on JDBC driver autodetection, Liberty has also enhanced its logic for discovering data source implementation class names when not specified in the configuration. This makes configuration of Liberty data sources simpler and more intuitive. It also expands the range of JDBC drivers that can be used with Liberty data sources.
+
+To enable JDBC 4.2 (jdbc-4.2), 4.1 (jdbc-4.1), or 4.0 (jdbc-4.0), add the definition to your `server.xml` along with any other features you wish to use. Then configure the data source with a URL property using the URL format defined by the JDBC vendor. For example:
+
+[source,xml]
+----
+
+<featureManager>
+    <feature>jdbc-4.2</feature>
+    <feature>jndi-1.0</feature>
+    <feature>servlet-4.0</feature>
+</featureManager>
+
+<dataSource jndiName="jdbc/myDataSource" type="java.sql.Driver">
+    <jdbcDriver libraryRef="myJDBCDriver"/>
+    <properties url="jdbc:mydriver://host1.rchland.ibm.com:2345?databaseName=testdb"/>
+    <containerAuthData user="user1" password="pwd1"/>
+</dataSource>
+
+----
+
+
+For more info:
+
+* https://www.ibm.com/support/knowledgecenter/en/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/twlp_dep_configuring_ds.html[Configuring data sources (Knowledge Center)]
+* https://www.ibm.com/support/knowledgecenter/SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/rwlp_ds_appdefined.html[Application-defined data sources (Knowledge Center)]
+
+
+
+
+
+## Ready to give it a try?
+
+Get the Maven or Gradle coordinates (and other download options) from the top of this post.
+
+[link=https://stackoverflow.com/tags/open-liberty]
+image::/img/blog_btn_stack.svg[Ask a question on Stack Overflow, align="center"]
+

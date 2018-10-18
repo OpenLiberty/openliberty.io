@@ -1,0 +1,170 @@
+---
+layout: post
+title:  "Open Liberty Spring Boot Starter - embedding Open Liberty into Spring Boot applications"
+date:   2017-11-29 09:00:00 -0400
+categories: blog
+author_picture: https://avatars3.githubusercontent.com/u/656475
+---
+:description: Use the Open Liberty web container embedded in Spring Boot applications by using the Open Liberty Spring Boot starter.
+= Open Liberty Spring Boot Starter
+Thomas Watson <http://github.com/tjwatson>
+
+Now that the Open Liberty project is in full swing we are looking for more opportunities to enable developers to use Open Liberty in their own projects. It is very common for developers to create and deploy Spring applications on Open Liberty as a simple web application, but increasingly Spring developers are using Spring Boot as a faster, simpler way to create Spring applications. Spring Boot uses a set of Maven dependencies to build the applications, these dependencies are called starters and by default Spring Boot starters use Tomcat as the embedded web container. Additional starters for Jetty and Undertow are available to override Tomcat with another container implementation. So we thought it would be interesting if you could use an Open Liberty Spring Boot starter as an alternative, just like you can already do for Jetty and Undertow.
+
+We have made available a Maven repository which can be used to try out the experimental Open Liberty Spring Boot starter https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1[here].
+
+## Configuration
+
+In order to use the Open Liberty Spring Boot starter there are a few small changes that need to be made to your Spring Boot project `pom.xml` file (when using Maven) or to your `build.gradle` file (when using Gradle).
+
+### Add the repository
+
+The experimental Open Liberty Spring Boot starter is available from the repository https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1[here].  This repository must be configured for your project. For Maven projects, you can do this by adding the following XML directly in your Spring Boot project's `pom.xml` file:
+
+[source,xml]
+----
+<project>
+  ...
+  <repositories>
+    <repository>
+      <id>liberty-spring-boot</id>
+      <url>https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1</url>
+    </repository>
+  </repositories>
+  ...
+</project>
+----
+
+For Gradle projects, you can do this by adding the following code directly in your Spring Boot project's `build.gradle` file:
+
+[source,gradle]
+----
+repositories {
+  mavenCentral()
+  maven {
+    url "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/spring-starter-alpha1"
+  }
+}
+----
+
+### Exclude the default Tomcat starter
+
+Many of the Spring Boot starters include the `spring-boot-starter-tomcat` starter. For example, the `spring-boot-starter-web` starter has a dependency on the `spring-boot-starter-tomcat` starter. Add an exclusion for each starter that your Spring Boot application depends on that transitively pulls in `spring-boot-starter-tomcat`. This excludes the `spring-boot-starter-tomcat` from your application. For Maven projects, you can do this by adding the following XML:
+
+[source,xml]
+----
+<project>
+  ...
+  <dependencies>
+    ...
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <!-- BEGIN EXCLUDE TOMCAT -->
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+      </exclusions>
+      <!-- END EXCLUDE TOMCAT -->
+    </dependency>
+    ...
+  </dependencies>
+  ...
+</project>
+----
+
+For Gradle projects, you can do this by adding the following code:
+
+[source,gradle]
+----
+dependencies {
+  ...
+  compile('org.springframework.boot:spring-boot-starter-web') {
+    exclude module: "spring-boot-starter-tomcat"
+  } 
+  ...
+}
+----
+
+### Include the Open Liberty Spring Boot starter
+
+The final step is to add a dependency on the `liberty-spring-boot-starter` to use the Open Liberty web container. For Maven projects, you can do this by adding the following XML:
+
+[source,xml]
+----
+<project>
+  ...
+  <dependencies>
+    ...
+    <dependency>
+      <groupId>io.openliberty.boot</groupId>
+      <artifactId>liberty-spring-boot-starter</artifactId>
+      <version>0.5.0.M1</version>
+    </dependency>
+    ...
+  </dependencies>
+  ...
+</project>
+----
+
+For Gradle projects, you can do this by adding the following code:
+
+----
+dependencies {
+  ...
+  compile('io.openliberty.boot:liberty-spring-boot-starter:0.5.0.M1')
+  ...
+}
+----
+
+### Additional Open Liberty components
+
+Open Liberty has a modular runtime which allows developers to only enable the bits an application needs to get its job done. The `liberty-spring-boot-starter` enables only the core Open Liberty runtime along with the web container which implements the Servlet 3.1 specification. Additional Open Liberty components may be enabled if your application requires more. The following additional Open Liberty features can be enabled:
+
+* *`liberty-boot-jsp`*: Enables JSP support.
+* *`liberty-boot-ssl`*: Enables SSL support.
+* *`liberty-boot-websocket`*: Enables WebSocket support.
+* *`liberty-boot-console`*: Enables the OSGi console for debug purposes only.
+
+You can enable these features by including additional dependencies in your application. For example, if you need to configure `server.ssl.*` settings for your application then you will need to include a dependency on the `liberty-boot-ssl` artifact.  For Maven projects, you can do this by adding the following XML:
+
+[source,xml]
+----
+<project>
+  ...
+  <dependencies>
+    ...
+    <dependency>
+      <groupId>io.openliberty.boot</groupId>
+      <artifactId>liberty-boot-ssl</artifactId>
+      <version>0.5.0.M1</version>
+    </dependency>
+    ...
+  </dependencies>
+  ...
+</project>
+----
+
+For Gradle projects, you can do this by adding the following code:
+
+[source,gradle]
+----
+dependencies {
+  ...
+  compile('io.openliberty.boot:liberty-boot-ssl:0.5.0.M1')
+  ...
+}
+----
+
+### Open Liberty specific configuration
+
+There exist a small number of Liberty-specific configuration properties for configuring the container. The Liberty specific configuration properties are prefixed with `server.liberty.`.  The following properties are available at this time:
+
+* *`server.liberty.basedir`*: `java.lang.String` - Liberty base directory. If not specified a temporary directory is used.
+* *`server.liberty.bootstrap-properties`*: `java.util.Map<java.lang.String,java.lang.String>` - Set boot strap properties for Liberty. Can be used to set any of the Liberty configuration properties that typically would go in a Liberty server bootstrap.properties file.
+
+*NOTE*: Open Liberty will create a server folder under the folder specified by the configuration `server.liberty.basedir`. This folder is used by Liberty as a persistent store while the application is running. By default the Liberty logs are stored under the folder `liberty-boot-0/wlp/usr/servers/defaultServer/logs/`. When the application stops, the base directory used by Liberty is deleted.  If you need to view the Liberty logs after the application has ended then set the `server.liberty.basedir` configuration property to a folder you want Liberty to use as the base directory.
+
+The OSGi console will not be enabled by default when you include the `liberty-boot-console` dependency. You must also configure a port which is used to telnet into the OSGi console. You can do this by specifying the bootstrap property `server.liberty.bootstrap-properties.osgi.console`.  For example, you can set `server.liberty.bootstrap-properties.osgi.console=5678` in your `application.properties` file or you can also pass in the `osgi.console` system property when launching your application with the `-Dosgi.console=5678` JVM option.
