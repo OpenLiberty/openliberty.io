@@ -396,14 +396,6 @@ function defaultToFirstPage() {
 
 
 $(document).ready(function() {
-    function handleDownArrow() {
-        if (window.innerWidth <= twoColumnBreakpoint) {
-            $("#down_arrow").hide();
-            return;
-        }
-        var atTop = $(window).scrollTop() === 0;
-        atTop ? $("#down_arrow").fadeIn() : $("#down_arrow").fadeOut();
-    }
 
     function addGuideRatingsListener(){
         $("#feedback_ratings img").on('click', function(event){
@@ -427,7 +419,6 @@ $(document).ready(function() {
     $(window).on('resize', function(){
         handleFloatingTableOfContent(); // Handle table of content view changes.
         handleFloatingTOCAccordion();
-        handleDownArrow();
         resizeGuideSections();
         handleFloatingCodeColumn();
     });
@@ -438,7 +429,6 @@ $(document).ready(function() {
 
     $(window).on('scroll', function() {
         handleFloatingTOCAccordion();
-        handleDownArrow();
         handleStickyHeader();
         handleFloatingTableOfContent();
         handleFloatingCodeColumn();
