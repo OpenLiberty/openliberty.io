@@ -945,116 +945,139 @@ nav .container-fluid {
 #footer_container {
     color: #24253A;
     margin-bottom: 40px;
-}
 
-#footer_open_liberty {
-    display: inline-block;
-    width: 150px;
-    padding: 25px;
-    background-image: url(/img/small_logo_dark_grey.svg);
-    background-repeat: no-repeat;
-    margin-left: 0px;
-    margin-right: 10px;
-    transition: background-image .2s;
-    float: left;
-}
-
-#footer_project {
-    font-family: Asap-Medium;
-    font-size: 16px;
-    color: #6F7878;
-    letter-spacing: 0;
-    float: left;
-}
-
-#footer_container .footer_link {
-    font-size: 16px;
-    transition: color .2s;
-    margin-right: 66px;
-    white-space: nowrap;
-}
-
-/* Special margin to align the stack overflow link with the privacy policy */
-#footer_container #footer_stackoverflow_link {
-    margin-right: 52px;
-}
-
-#footer_container .right_footer_link {
-    color: #5E6B8D;
-    font-weight: 500;
-}
-
-#footer_container .right_footer_link:hover {
-    color: #24253A;
-}
-
-#footer_project_container {
-    display: inline-block;
-}
-
-#footer_copyright {
-    font-size: 11px;
-}
-
-#footer_links {
-    float: right;
-}
-
-#footer_blog_link,
-#footer_twitter_link,
-#footer_stackoverflow_link,
-#footer_groupsio_link {
-    float: right;
-}
-
-#footer_links_container {
-    margin-top: 32px;
-    padding: 32px 50px 32px 50px;
-    overflow: hidden;
-    background: rgba(200, 210, 210, 0.16);
-}
-
-#footer_bottom_section {
-    padding-left: 50px;
-    padding-right: 50px;
-    height: 25px;
-}
-
-#footer_copyright,
-#footer_license_link,
-#footer_privacy_policy_link {
-    display: inline-block;
-}
-
-#footer_copyright {
-    text-align: left;
-    font-size: 14px;
-    color: #6F7878;
-}
-
-#footer_license_link,
-#footer_privacy_policy_link {
-    float: right;
-    color: #3F4659;
-    font-size: 14px;
-}
-
-@media (max-width: 991px) {
-    #footer_project_container {
-        width: 100%;
+    & .footer_link {
+        font-size: 16px;
+        transition: color .2s;
+        margin-right: 66px;
+        white-space: nowrap;
     }
-    #footer_links_container,
-    #footer_bottom_section {
-        height: auto;
-        padding-left: 0;        
-        padding-right: 0;
+
+    & .right_footer_link {
+        color: #5E6B8D;
+        font-weight: 500;
+    }
+    
+    & .right_footer_link:hover {
+        color: #24253A;
+    }
+
+    & #footer_groupsio_link, & #footer_license_link {
         margin-right: 0;
     }
-    #footer_links {
-        float: none;
+
+    /* Special margin to align the stack overflow link with the privacy policy */
+    & #footer_stackoverflow_link {
+        margin-right: 44px;
     }
-    #footer_container .footer_link {
-        margin-right: 22px;
+
+    #footer_open_liberty {
+        display: inline-block;
+        width: 150px;
+        padding: 25px 25px 10px 25px;
+        background-image: url(/img/small_logo_dark_grey.svg);
+        background-repeat: no-repeat;
+        margin-left: 0px;
+        margin-right: 10px;
+        transition: background-image .2s;
+        float: left;
+    }
+    
+    #footer_project {
+        font-weight: 500;
+        font-size: 16px;
+        color: #6F7878;
+        letter-spacing: 0;
+        float: left;
+    }
+    
+    #footer_project_container {
+        display: inline-block;
+    }
+    
+    #footer_copyright {
+        font-size: 11px;
+    
+        @media screen and (max-width: 991px) {
+            margin-bottom: 0;
+        }
+    }
+    
+    #footer_links {
+        float: right;
+    
+        @media screen and (max-width: 991px){
+            float: left;
+        }
+    }
+    
+    #footer_blog_link,
+    #footer_twitter_link,
+    #footer_stackoverflow_link,
+    #footer_groupsio_link {
+        float: right;
+    }
+    
+    #footer_links_container {
+        margin-top: 32px;
+        padding: 32px 0px 0px 0px;
+        overflow: hidden;
+    }
+    
+    #footer_bottom_section {
+        height: 25px;
+    }
+    
+    #footer_copyright,
+    #footer_license_link,
+    #footer_privacy_policy_link {
+        display: inline-block;
+    }
+
+    & #footer_license_link,
+    & #footer_privacy_policy_link {
+        float: right;
+        color: #3F4659;
+        font-size: 14px;
+    }
+    
+    #footer_copyright {
+        text-align: left;
+        font-size: 14px;
+        color: #6F7878;
+    
+        @media screen and (max-width: 991px) {
+            width: 100%;
+        }
+    }
+
+    @media screen and (max-width: 991px) {
+        & #footer_license_link {
+            margin-right: 22px;
+        }
+
+        & #footer_stackoverflow_link {
+            margin-right: 22px;
+        }
+
+        & #footer_license_link,
+        & #footer_privacy_policy_link {
+            float: none;
+        }
+        #footer_project_container {
+            width: 100%;
+        }        
+        #footer_links_container,
+        #footer_bottom_section {
+            height: auto;
+            padding-left: 0;        
+            padding-right: 0;
+            margin-right: 0;
+            margin-bottom: 20px;
+        }    
+        & .footer_link {
+            margin-right: 22px;
+        }
     }
 }
 
