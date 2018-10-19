@@ -140,10 +140,10 @@ function checkForInertialScrolling (event){
     } else if(origEvent.detail){
         // Firefox
         dir = (origEvent.detail) > 0 ? 'down' : 'up';
-    }  
+    }
     if(!dir){
         console.log('Scroll direction was not determined.');
-    }    
+    }
 
     var section_headers = $('.sect1:not(#guide_meta) h2');
     section_headers.each(function(index) {
@@ -153,33 +153,33 @@ function checkForInertialScrolling (event){
         var bottom = rect.bottom;
 
         // If scrolling down, check if the section header is coming into view
-        if(dir == 'down'){   
+        if(dir == 'down'){
             if(top > 0 && top < windowHeight && bottom > (windowHeight - 200) && bottom < windowHeight){
                 // Section header is fully in view with the bottom in the last 200 pixels of the viewport.
                 // Snap to the top of the element.
                 scrollPosition = elem.offset().top - navbarHeight;
                 return false;
-            }      
+            }
         } else {
             // Scrolling up
             // Check to see that the current section's top is in viewport and at least 200 pixels from the top of the screen but not more than 400.
             // Scroll up by a full page's height so that the previous section ends at the bottom of the viewport for optimal reading.
             if(top > 200 && top < 400){
                 var prevSection = elem.parents('.sect1').prev();
-                var prevSectionHeight = prevSection.height();                
-                scrollPosition = prevSection.offset().top - windowHeight + prevSectionHeight;                
+                var prevSectionHeight = prevSection.height();
+                scrollPosition = prevSection.offset().top - windowHeight + prevSectionHeight;
                 return false;
             }
-        }        
-    });   
+        }
+    });
     if(scrollPosition){
         event.preventDefault();
         event.stopPropagation();
-        // Snap to the top of the previous section so the user can read the last part of it. 
+        // Snap to the top of the previous section so the user can read the last part of it.
         $('html').stop().animate({
             scrollTop: scrollPosition
-        }, 500);          
-    } 
+        }, 500);
+    }
 }
 
 /**
@@ -211,13 +211,13 @@ function getScrolledVisibleSectionID() {
         var sections = $('.sect1:not(#guide_meta):not(#related-guides), .sect2');
 
         if (window.innerWidth > twoColumnBreakpoint) {
-            // multi-column view - 
-            // Determine which section has the majority of the vertical height 
+            // multi-column view -
+            // Determine which section has the majority of the vertical height
             // of the page.
             sections.each(function(index) {
                 var elem = $(sections.get(index));
                 var windowHeight = $(window).height();
-    
+
                 var elemHeight = elem.outerHeight();
                 var rect = elem[0].getBoundingClientRect();
                 var top = rect.top;
@@ -225,7 +225,7 @@ function getScrolledVisibleSectionID() {
 
                 var $sect2s = elem.find('.sect2');
                 if ($sect2s.length > 0) {
-                    // Section contains a subsection.  The section's height 
+                    // Section contains a subsection.  The section's height
                     // really ends where the subsection begins.
                     bottom = $sect2s[0].getBoundingClientRect().top;
                     elemHeight = bottom - top;
@@ -249,7 +249,7 @@ function getScrolledVisibleSectionID() {
                         // (if only part of the element is visible and extends beyond
                         // the bottom of the viewport).
                         visibleElemHeight = Math.min(elemHeight, windowHeight - top);
-                    }            
+                    }
                 }
                 else {
                     // Top of element is at or above the top of the viewport
@@ -265,12 +265,12 @@ function getScrolledVisibleSectionID() {
                     id = elem.children('h2, h3')[0].id;
                 }
             });
-    
+
         } else {
-            // single-column view -  
-            // Determine the section that most recently passed under the 
+            // single-column view -
+            // Determine the section that most recently passed under the
             // TOC header.
-            var TOC_height = $('#mobile_toc_accordion_container').outerHeight(true);           
+            var TOC_height = $('#mobile_toc_accordion_container').outerHeight(true);
             sections.each(function(index) {
                 var $element = $(sections.get(index));
                 var sectionTop = $element.offset().top - TOC_height;
@@ -336,16 +336,16 @@ function shiftWindow() {
  */
 function accessContentsFromHash(hash) {
     var $focusSection = $(hash);
-    
+
     // If section is found, scroll to it
-    if ($focusSection.length > 0) {        
+    if ($focusSection.length > 0) {
         // Update the TOC
         updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
         var scrollSpot = $focusSection.offset().top;
         // Implement smooth scrolling to the section's header.
         if (inSingleColumnView()) {
             // Single-column View
-            // The TOC is a band across the page which is fixed to the top of 
+            // The TOC is a band across the page which is fixed to the top of
             // the page when viewing sections beneath it.
             // Bring the section requested right up underneath this floating TOC.
             var $accordion = $('#mobile_toc_accordion_container');
@@ -369,8 +369,8 @@ function accessContentsFromHash(hash) {
                 // tabindex = -1 means that the element should be focusable,
                 // but not via sequential keyboard navigation.
                 $focusSection.attr('tabindex', '-1');
-                $focusSection.focus();                
-            }        
+                $focusSection.focus();
+            }
         });
     } else {
         defaultToFirstPage();
@@ -457,5 +457,50 @@ $(document).ready(function() {
         handleFloatingTableOfContent();
         addGuideRatingsListener();
         handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
+    });
+
+    //tabbing order code
+    $(window).on('keydown', function(e) {
+      var code = e.keyCode || e.which;
+
+      if (code === 9) { //code 9 is for the tab key
+        var elementWithFocus = $(document.activeElement);
+        if (elementWithFocus.parents('.sect1').length > 0) { //tabbing in step content column
+          var tabbableElements = elementWithFocus.closest('.sect1, .sect2').find('[tabindex=0], a[href], button, instruction, action'); //get list of all tabbable elements under current step section
+          var lastTabbable = tabbableElements.last(); //last "tabbable" element in section
+          if (elementWithFocus[0] === lastTabbable[0]) {
+            $('#code_column').focus(); //if you're tabbing away from the last tabbable element in the section, focus on the code column
+          }
+
+        } else if (elementWithFocus.parents('#code_column').length > 0) { //tabbing in code column
+            var tabbableElements = elementWithFocus.closest('.stepWidgetContainer').find('[tabindex=0], a[href], button, instruction, action'); //get list of all tabbable elements under current step widgets
+            var lastTabbable = tabbableElements.last(); //last "tabbable" element in section
+            if (elementWithFocus[0] === lastTabbable[0]) { //if you're tabbing away from the last tabbable element in the widgets, focus needs to go back to the next step content
+              var nextStepHash = $('#toc_container .liSelected').next().children().attr('href'); //get the next step's toc hash
+              var nextStepData = $('#toc_container .liSelected').next().children().attr('data-toc'); //data-toc attribute is the same as the data-step attribute
+              var nextStepID = null;
+
+              if (nextStepHash && nextStep) {
+                accessContentsFromHash(nextStepHash.substring(1)); //similute a toc selection to focus on next step
+                nextStepID = '#' + nextStepData + '_content'; //need next step's ID to focus on first description div
+              } else {
+                //TODO: may not need this if it's decided that we shouldn't tab to the widgets are disabled on the intro steps
+                //TODO: this only deals with the case at the beginning of the guide. What happens when you're at the last element of the TOC?
+                //This is for the very first time you visit the guide and nothing is selected in the TOC
+                accessContentsFromHash('#what-you-ll-learn');
+                nextStepID = '#Intro_content';
+              }
+
+              var nextTabbableElement = $(nextStepID).find('[tabindex=0], a[href], button, instruction, action').first(); //get the next tabbable element from the next step content section
+              nextTabbableElement.focus();
+            }
+
+        } else if (elementWithFocus.attr('id') === 'guide_meta') {
+          //the intro step doesn't have elements you can tab to go straight to code_column
+          $('#code_column').focus();
+        }
+      }
+
+      //TODO: need to do the equivalent for shift + tab (code === ). The calls to next() would be prev() and the calls to last() or first() would be the opposite
     });
 });

@@ -1,6 +1,6 @@
 ---
 layout: doc
-css: 
+css:
 - doc-header
 - toc-multipane
 - end-of-guide
@@ -14,7 +14,7 @@ js:
 
 <div id="background_container">
         <div class="row">
-            <!-- Guide's table of contents section -->            
+            <!-- Guide's table of contents section -->
             <div id="toc_column" class="collapse inline">
                 <div id="toc_inner">
                     {% assign toc = page.document | tocify_asciidoc %}
@@ -39,13 +39,13 @@ js:
                             {% endfor %}
                         </div>
                     {% endif %}
-                </div>                
+                </div>
             </div>
             <!-- Entire guide section -->
             <div id="guide_column" class="position_relative">
                 <div id="guide_content">
                     <!-- Guide header section -->
-                    <div id="guide_meta" class="sect1">
+                    <div id="guide_meta" class="sect1" tabindex="0">
                         <h1 id="guide_title">{{ page.title }}</h1>
                         <div id="duration_container">
                             <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
@@ -54,11 +54,11 @@ js:
                         <div id="mobile_github_section">
                             <div id="mobile_github_clone_popup_title"><span class="dark_green_link_light_background">Git clone</span><span style="font-weight: 600; font-family: BunueloBold"> to get going right away:</span></div>
                             <div id="mobile_github_clone_popup_repo">
-                                <span>git clone https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}.git</span>   
+                                <span>git clone https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}.git</span>
                                 <div id="mobile_github_clone_popup_copy">
                                     <img src="/img/guide_copy_button_black.svg" alt="Copy github clone command">
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
 
@@ -73,7 +73,7 @@ js:
                                     <img src="{{ " /img/TOC_Close.svg " | relative }}" class="TOC_Close_SVG img-responsive" alt="Table of contents close button"/>
                             </button>
                             <span>Table of contents</span>
-                        </div>                
+                        </div>
                     </div>
 
                     <!-- Guide content section -->
@@ -81,14 +81,14 @@ js:
 
                     <div id="down_arrow">
                         <img src="/img/guide_down_arrow.svg" alt="scroll_down">
-                    </div>                    
+                    </div>
                 </div>
                 <div id="guide_section_copied_confirmation" style="display: none;">Copied to clipboard</div>
                 <a class="copy_to_clipboard" href="" style="display: none;"></a>
             </div>
 
             <!-- Code section -->
-            <div id="code_column" class="position_relative">
+            <div id="code_column" class="position_relative" tabindex="0">
                 <div id="github_clone_popup_container" style="display: none">
                     <div id="github_clone_popup">
                         <div id="github_clone_popup_title">Git clone this repo to get going right away:</div>
@@ -102,8 +102,8 @@ js:
                 </div>
                 <div id="code_section_copied_confirmation" style="display: none;">Copied to clipboard</div>
             </div>
-            
-        </div>        
+
+        </div>
 </div>
 
 {% include end-of-guide.html %}
