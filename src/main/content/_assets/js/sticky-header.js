@@ -11,9 +11,14 @@
 
 $(document).ready(function(){
     var navbar = $('.navbar');
+    var tabletBreakpoint = 991;
     var lastScrollTop = 0;
 
     $(window).on('scroll', function(){
+        // Only float the navbar on desktop view.
+        if(window.innerWidth <= tabletBreakpoint){
+            return;
+        }
         // Check if scrolling up to apply the stickyNav class.
         var newScrollTop = $(this).scrollTop();
         
