@@ -7,14 +7,14 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 {% endif %}
 
-{% js devEnvironment %}
+{% asset devEnvironment.js %}
 
 {% for js_name in page.js %}
-  {% js {{js_name}} %}
+  {% asset {{js_name}} %}
 {% endfor %}
 
 {% for js_name in layout.js %}
-  {% js {{js_name}} %}
+  {% asset {{js_name}} %}
 {% endfor %}
 
-{% js openliberty %}
+{% asset openliberty %}

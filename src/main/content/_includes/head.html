@@ -23,16 +23,17 @@
 
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   
-  {% css openliberty %}
-  {% css coderay-custom %}
+  {% asset openliberty.css %}
+  {% asset coderay-custom.css %}
 
   {% for css_name in layout.css %}
-    {% css {{css_name}} %}
+    {% asset {{css_name}} %}
   {% endfor %}
 
   {% for css_name in page.css %}
-    {% css {{css_name}} %}
-  {% endfor %}
+    {% asset {{css_name}} %}
+  {% endfor %} 
+ 
 
   {% if jekyll.environment == 'production' and site.google_tag_manager %}
     {% include google_tag_manager_head.html %}
