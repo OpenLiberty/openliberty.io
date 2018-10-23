@@ -367,6 +367,12 @@ $(document).ready(function() {
         }               
     });
 
+    $("#github_clone_popup_copy, #mobile_github_clone_popup_copy").on('keydown', function(event){
+        if(event.which === 13 || event.keyCode === 13){
+            $(this).click();
+        }
+    });
+
     /*
        Handle showing/hiding the Github popup.
     */

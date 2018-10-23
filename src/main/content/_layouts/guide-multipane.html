@@ -20,7 +20,7 @@ js:
                     {% assign toc = page.document | tocify_asciidoc %}
                     {% if toc %}
                     <div id="close_container">
-                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button"/>
+                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button" tabindex="0"/>
                     </div>
                     <div id="mobile_close_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
                         <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button"/>
@@ -55,7 +55,7 @@ js:
                             <div id="mobile_github_clone_popup_title"><span class="dark_green_link_light_background">Git clone</span><span style="font-weight: 600; font-family: BunueloBold"> to get going right away:</span></div>
                             <div id="mobile_github_clone_popup_repo">
                                 <span>git clone https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}.git</span>
-                                <div id="mobile_github_clone_popup_copy">
+                                <div id="mobile_github_clone_popup_copy" tabindex="0">
                                     <img src="/img/guide_copy_button_black.svg" alt="Copy github clone command">
                                 </div>
                             </div>
@@ -95,7 +95,7 @@ js:
                         <div id="github_clone_popup_repo">
                                 git clone https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}.git
                         </div>
-                        <div id="github_clone_popup_copy">
+                        <div id="github_clone_popup_copy" tabindex="0">
                             <img src="/img/guide_copy_button_black.svg" alt="Copy github clone command">
                         </div>
                     </div>

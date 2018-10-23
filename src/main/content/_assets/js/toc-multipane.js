@@ -197,6 +197,13 @@ $(document).ready(function() {
         $("#down_arrow").addClass('down_arrow_without_toc');
     });
 
+    $('#close_container img').on('keydown', function(event) {
+        // Enter key
+        if(event.which === 13 || event.keyCode === 13){
+            $('#close_container').click();
+        }
+    });
+
     // These handlers only work for static guides.   At the time this
     // code executes, the TOC items for the interactive guides are not yet built.
     // So the following is basically a no-op for the interactive guides.
@@ -209,7 +216,7 @@ $(document).ready(function() {
     });
     $("#toc_container li").on("keydown", function(event) {
         // 'this' is the li element in the #toc_container
-        if (event.which === 13 || event.which === 32) {   // Spacebar or Enter
+        if (event.which === 13 || event.keyCode === 32) {   // Spacebar or Enter
           this.click();
         }
     });

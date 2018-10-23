@@ -465,38 +465,64 @@ $(document).ready(function() {
       var isShiftPressed = e.shiftKey;
       var elemToFocus;
 
-      if (code === 9) { // Tab key
-
+      // Tab key
+      if (code === 9) {
         var elementWithFocus = $(document.activeElement);
-        if (elementWithFocus.parents('.sect1').length > 0) { //tabbing in step content column
-          var tabbableElements = elementWithFocus.closest('.sect1, .sect2').find('[tabindex=0], a[href], button, instruction, action'); //get list of all tabbable elements under current step section
-          var lastTabbable = tabbableElements.last(); //last "tabbable" element in section
+        var tabbableElements, firstTabbable, lastTabbable;
+
+        if (elementWithFocus.parents('.sect1').length > 0) { 
+            // Tabbing from the guide column
+            tabbableElements = elementWithFocus.closest('.stepWidgetContainer').find('[tabindex=0], a[href], button, instruction, action'); //get list of all tabbable elements under current step widgets
+            firstTabbable = tabbableElements.first();
+            lastTabbable = tabbableElements.last();
+            
           if (elementWithFocus[0] === lastTabbable[0]) {
             elemToFocus = $('#code_column'); //if you're tabbing away from the last tabbable element in the section, focus on the code column
           }
+        } 
+        else if (elementWithFocus.parents('#code_column').length > 0) {
+            // Tabbing from the code column
+            tabbableElements = $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible'); //get list of all tabbable elements under current step widgets
+            firstTabbable = tabbableElements.first();
+            lastTabbable = tabbableElements.last();
+            if(isShiftPressed){
+                if(elementWithFocus[0] === firstTabbable){
+                    var prevStepHash = $('#toc_container .liSelected').prev().children().attr('href'); //get the next step's toc hash
+                    var prevStepData = $('#toc_container .liSelected').prev().children().attr('data-toc'); //data-toc attribute is the same as the data-step attribute
+                    
 
-        } else if (elementWithFocus.parents('#code_column').length > 0) { //tabbing in code column
-            var tabbableElements = elementWithFocus.closest('.stepWidgetContainer').find('[tabindex=0], a[href], button, instruction, action'); //get list of all tabbable elements under current step widgets
-            var lastTabbable = tabbableElements.last(); //last "tabbable" element in section
-            if (elementWithFocus[0] === lastTabbable[0]) { //if you're tabbing away from the last tabbable element in the widgets, focus needs to go back to the next step content
-              var nextStepHash = $('#toc_container .liSelected').next().children().attr('href'); //get the next step's toc hash
-              var nextStepData = $('#toc_container .liSelected').next().children().attr('data-toc'); //data-toc attribute is the same as the data-step attribute
-              var nextStepID = null;
-
-              if (nextStepHash && nextStep) {
-                accessContentsFromHash(nextStepHash.substring(1)); //similute a toc selection to focus on next step
-                nextStepID = '#' + nextStepData + '_content'; //need next step's ID to focus on first description div
-              } else {
-                //TODO: may not need this if it's decided that we shouldn't tab to the widgets are disabled on the intro steps
-                //TODO: this only deals with the case at the beginning of the guide. What happens when you're at the last element of the TOC?
-                //This is for the very first time you visit the guide and nothing is selected in the TOC
-                accessContentsFromHash('#what-you-ll-learn');
-                nextStepID = '#Intro_content';
-              }
-
-              var nextTabbableElement = $(nextStepID).find('[tabindex=0], a[href], button, instruction, action').first(); //get the next tabbable element from the next step content section
-              elemToFocus = nextTabbableElement;
+                    if(prevStepHash && prevStep){
+                        accessContentsFromHash(prevStepHash.substring(1)); // Simulate a toc selection to focus on prev step
+                        var prevStepID = '#' + prevStepData + '_content';
+                        var prevTabbableElement = $(prevStepID).find('[tabindex=0], a[href], button, instruction, action').last();
+                    } 
+                    else {
+                        // If there are no previous steps, focus the guide meta.
+                        $('#guide_meta').focus();
+                    }
+                }
             }
+            else {
+                if(elementWithFocus[0] === lastTabbable[0]) { // If you're tabbing away from the last tabbable element in the widgets, focus needs to go back to the next step content
+                    var nextStepHash = $('#toc_container .liSelected').next().children().attr('href'); //get the next step's toc hash
+                    var nextStepData = $('#toc_container .liSelected').next().children().attr('data-toc'); //data-toc attribute is the same as the data-step attribute
+                    var nextStepID = null;
+
+                    if (nextStepHash && nextStep) {
+                        accessContentsFromHash(nextStepHash.substring(1)); // Simulate a toc selection to focus on next step
+                        nextStepID = '#' + nextStepData + '_content'; // Need next step's ID to focus on first description div
+                    } else {
+                        //TODO: may not need this if it's decided that we shouldn't tab to the widgets are disabled on the intro steps
+                        //TODO: this only deals with the case at the beginning of the guide. What happens when you're at the last element of the TOC?
+                        //This is for the very first time you visit the guide and nothing is selected in the TOC
+                        accessContentsFromHash('#what-you-ll-learn');
+                        nextStepID = '#Intro_content';
+                    }
+
+                    var nextTabbableElement = $(nextStepID).find('[tabindex=0], a[href], button, instruction, action').first(); //get the next tabbable element from the next step content section
+                    elemToFocus = nextTabbableElement;
+                }
+            }            
 
         } else if (elementWithFocus.attr('id') === 'guide_meta') {
             if(isShiftPressed) {
