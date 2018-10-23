@@ -459,17 +459,20 @@ $(document).ready(function() {
         handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
     });
 
-    //tabbing order code
-    $(window).on('keydown', function(e) {
+    // Handle tabbing order
+    $(window).on('keydown', function(e) {     
       var code = e.keyCode || e.which;
+      var isShiftPressed = e.shiftKey;
+      var elemToFocus;
 
-      if (code === 9) { //code 9 is for the tab key
+      if (code === 9) { // Tab key
+
         var elementWithFocus = $(document.activeElement);
         if (elementWithFocus.parents('.sect1').length > 0) { //tabbing in step content column
           var tabbableElements = elementWithFocus.closest('.sect1, .sect2').find('[tabindex=0], a[href], button, instruction, action'); //get list of all tabbable elements under current step section
           var lastTabbable = tabbableElements.last(); //last "tabbable" element in section
           if (elementWithFocus[0] === lastTabbable[0]) {
-            $('#code_column').focus(); //if you're tabbing away from the last tabbable element in the section, focus on the code column
+            elemToFocus = $('#code_column'); //if you're tabbing away from the last tabbable element in the section, focus on the code column
           }
 
         } else if (elementWithFocus.parents('#code_column').length > 0) { //tabbing in code column
@@ -492,12 +495,31 @@ $(document).ready(function() {
               }
 
               var nextTabbableElement = $(nextStepID).find('[tabindex=0], a[href], button, instruction, action').first(); //get the next tabbable element from the next step content section
-              nextTabbableElement.focus();
+              elemToFocus = nextTabbableElement;
             }
 
         } else if (elementWithFocus.attr('id') === 'guide_meta') {
-          //the intro step doesn't have elements you can tab to go straight to code_column
-          $('#code_column').focus();
+            if(isShiftPressed) {
+                // Go to the table of contents if visible
+                if($('#tags_container:visible').length > 0){
+                    elemToFocus = $('#tags_container a').last();
+                }
+                // Else go to the breadcrumb
+                else {
+                    elemToFocus = $('#breadcrumb_row a').last();
+                }
+            }
+            else {
+                //the intro step doesn't have elements you can tab to go straight to code_column
+                elemToFocus = $('#code_column');
+            }
+          
+        }
+
+        if(elemToFocus){
+            // Only stop the default tab/shift+tab behavior if we found a custom element to override the default behavior to tab to.
+            e.preventDefault();
+            elemToFocus.focus();
         }
       }
 
