@@ -486,6 +486,7 @@ $(document).ready(function() {
             firstTabbable = tabbableElements.first();
             lastTabbable = tabbableElements.last();
             if(isShiftPressed){
+                // SHIFT TAB in the code column
                 if(elementWithFocus[0] === firstTabbable){
                     var prevStepHash = $('#toc_container .liSelected').prev().children().attr('href'); //get the next step's toc hash
                     var prevStepData = $('#toc_container .liSelected').prev().children().attr('data-toc'); //data-toc attribute is the same as the data-step attribute
@@ -503,6 +504,7 @@ $(document).ready(function() {
                 }
             }
             else {
+                // Tab in the code column
                 if(elementWithFocus[0] === lastTabbable[0]) { // If you're tabbing away from the last tabbable element in the widgets, focus needs to go back to the next step content
                     var nextStepHash = $('#toc_container .liSelected').next().children().attr('href'); //get the next step's toc hash
                     var nextStepData = $('#toc_container .liSelected').next().children().attr('data-toc'); //data-toc attribute is the same as the data-step attribute
@@ -512,11 +514,19 @@ $(document).ready(function() {
                         accessContentsFromHash(nextStepHash.substring(1)); // Simulate a toc selection to focus on next step
                         nextStepID = '#' + nextStepData + '_content'; // Need next step's ID to focus on first description div
                     } else {
-                        //TODO: may not need this if it's decided that we shouldn't tab to the widgets are disabled on the intro steps
-                        //TODO: this only deals with the case at the beginning of the guide. What happens when you're at the last element of the TOC?
-                        //This is for the very first time you visit the guide and nothing is selected in the TOC
-                        accessContentsFromHash('#what-you-ll-learn');
-                        nextStepID = '#Intro_content';
+                        // TODO: may not need this if it's decided that we shouldn't tab to the widgets are disabled on the intro steps
+                        // TODO: this only deals with the case at the beginning of the guide. What happens when you're at the last element of the TOC?
+
+                        // The very first time you visit the guide and nothing is selected in the TOC, tab to the first step.
+                        if($('#toc_container .liSelected').length === 0){
+                            var firstStepHash = $('#toc_container li').first().children().attr('href');
+                            accessContentsFromHash(firstStepHash);
+                            nextStepID = '#Intro_content';
+                        }               
+                        // On the last step's code column, tab to the end of guide
+                        else if($('#toc_container li').last().hasClass('liSelected')){
+                            $('#end_of_guide').focus();
+                        }
                     }
 
                     var nextTabbableElement = $(nextStepID).find('[tabindex=0], a[href], button, instruction, action').first(); //get the next tabbable element from the next step content section
@@ -525,6 +535,7 @@ $(document).ready(function() {
             }            
 
         } else if (elementWithFocus.attr('id') === 'guide_meta') {
+            // Tabbing from the initial section before the guide starts
             if(isShiftPressed) {
                 // Go to the table of contents if visible
                 if($('#tags_container:visible').length > 0){
@@ -548,7 +559,5 @@ $(document).ready(function() {
             elemToFocus.focus();
         }
       }
-
-      //TODO: need to do the equivalent for shift + tab (code === ). The calls to next() would be prev() and the calls to last() or first() would be the opposite
     });
 });
