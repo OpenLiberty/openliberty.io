@@ -486,16 +486,15 @@ $(document).ready(function() {
             firstTabbable = tabbableElements.first();
             lastTabbable = tabbableElements.last();
             if(isShiftPressed){
-                // SHIFT TAB in the code column
+                // SHIFT TAB from the code column
                 if(elementWithFocus[0] === firstTabbable){
                     var prevStepHash = $('#toc_container .liSelected').prev().children().attr('href'); //get the next step's toc hash
                     var prevStepData = $('#toc_container .liSelected').prev().children().attr('data-toc'); //data-toc attribute is the same as the data-step attribute
                     
-
-                    if(prevStepHash && prevStep){
-                        accessContentsFromHash(prevStepHash.substring(1)); // Simulate a toc selection to focus on prev step
-                        var prevStepID = '#' + prevStepData + '_content';
-                        var prevTabbableElement = $(prevStepID).find('[tabindex=0], a[href], button, instruction, action').last();
+                    if(prevStepHash){
+                        accessContentsFromHash(prevStepHash); // Simulate a toc selection to focus on prev step
+                        // var prevStepID = '#' + prevStepData + '_content';
+                        // var prevTabbableElement = $(prevStepID).find('[tabindex=0], a[href], button, instruction, action').last();
                     } 
                     else {
                         // If there are no previous steps, focus the guide meta.
@@ -504,14 +503,14 @@ $(document).ready(function() {
                 }
             }
             else {
-                // Tab in the code column
+                // TAB from the code column
                 if(elementWithFocus[0] === lastTabbable[0]) { // If you're tabbing away from the last tabbable element in the widgets, focus needs to go back to the next step content
                     var nextStepHash = $('#toc_container .liSelected').next().children().attr('href'); //get the next step's toc hash
                     var nextStepData = $('#toc_container .liSelected').next().children().attr('data-toc'); //data-toc attribute is the same as the data-step attribute
                     var nextStepID = null;
 
-                    if (nextStepHash && nextStep) {
-                        accessContentsFromHash(nextStepHash.substring(1)); // Simulate a toc selection to focus on next step
+                    if (nextStepHash) {
+                        accessContentsFromHash(nextStepHash); // Simulate a toc selection to focus on next step
                         nextStepID = '#' + nextStepData + '_content'; // Need next step's ID to focus on first description div
                     } else {
                         // TODO: may not need this if it's decided that we shouldn't tab to the widgets are disabled on the intro steps
@@ -521,16 +520,18 @@ $(document).ready(function() {
                         if($('#toc_container .liSelected').length === 0){
                             var firstStepHash = $('#toc_container li').first().children().attr('href');
                             accessContentsFromHash(firstStepHash);
-                            nextStepID = '#Intro_content';
+                            // nextStepID = '#Intro_content';
                         }               
                         // On the last step's code column, tab to the end of guide
                         else if($('#toc_container li').last().hasClass('liSelected')){
-                            $('#end_of_guide').focus();
+                            $('#end_of_guide_left_section').focus();
                         }
                     }
 
-                    var nextTabbableElement = $(nextStepID).find('[tabindex=0], a[href], button, instruction, action').first(); //get the next tabbable element from the next step content section
-                    elemToFocus = nextTabbableElement;
+                    if(nextStepID){
+                        var nextTabbableElement = $(nextStepID).find('[tabindex=0], a[href], button, instruction, action').first(); //get the next tabbable element from the next step content section
+                        elemToFocus = nextTabbableElement;
+                    }                    
                 }
             }            
 
