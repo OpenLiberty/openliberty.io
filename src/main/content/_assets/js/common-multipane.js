@@ -164,13 +164,15 @@ function checkForInertialScrolling (event){
             // Scrolling up
             // Check to see that the current section's top is in viewport and at least 200 pixels from the top of the screen but not more than 400.
             // Scroll up by a full page's height so that the previous section ends at the bottom of the viewport for optimal reading.
-            if(top > 200 && top < 400 && prevSection !== undefined){
+            if(top > 200 && top < 400){
                 var prevSection = elem.parents('.sect1').prev();
-                var prevSectionHeight = prevSection.height();                
-                scrollPosition = prevSection.offset().top - windowHeight + prevSectionHeight;                
-                return false;
+                var prevSectionHeight = prevSection.height();
+                if (prevSection.offset() !== undefined) {
+                    scrollPosition = prevSection.offset().top - windowHeight + prevSectionHeight;
+                }
+                return false;              
             }
-        }        
+        }
     });   
     if(scrollPosition){
         event.preventDefault();
