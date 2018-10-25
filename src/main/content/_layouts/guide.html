@@ -7,6 +7,8 @@ css:
 js: guide
 ---
 
+{% include visible-tags.liquid %}
+
 <div id="background_container" class="black_blue_gradient_background">
     <div class="container">
         <div class="row">
@@ -24,7 +26,9 @@ js: guide
                         <h3 id="tag_title">Tags</h3>
                         <div id="tags_container">
                             {% for tag in page.tags %}
-                                <a href="/guides?search={{ tag }}&key=tag">{{ tag }}</a>
+                                {% if visibleTags contains tag %}
+                                    <a href="/guides?search={{ tag }}&key=tag">{{ tag }}</a>
+                                {% endif %}
                             {% endfor %}
                         </div>
                     {% endif %}
