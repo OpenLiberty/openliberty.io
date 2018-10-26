@@ -381,7 +381,7 @@ $(document).ready(function() {
         var githubPopup = $("#github_clone_popup_container");
         if(githubPopup.length > 0){
             // Check if the "What You'll Learn" section is scrolled past yet.
-            var whatYoullLearnTop = $("#what-youll-learn, #what-you-ll-learn")[0].getBoundingClientRect().top;
+            var whatYoullLearnTop = Math.round($("#what-youll-learn, #what-you-ll-learn")[0].getBoundingClientRect().top);
             var navHeight = $('.navbar').height();
             var atTop = (whatYoullLearnTop - navHeight) > 0;
             if(atTop){
@@ -436,7 +436,7 @@ $(document).ready(function() {
     }
 
     $('#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre)').hover(function(event) {
-         offset = $('#guide_column').position();	
+        offset = $('#guide_column').position();	
         target = event.currentTarget;	
         var current_target_object = $(event.currentTarget);	
         target_position = current_target_object.position();	
@@ -448,15 +448,17 @@ $(document).ready(function() {
         });	
         $('.copy_to_clipboard').stop().fadeIn();	
      }, function(event) {	
-         var x = event.clientX - offset.left;	
-        var y = event.clientY - offset.top + $(window).scrollTop();	
-        if(!(x > target_position.left	
-        && x < target_position.left + target_width	
-        && y > target_position.top	
-        && y < target_position.top + target_height)) {	
-            $('.copy_to_clipboard').stop().fadeOut();	
-            $('#guide_section_copied_confirmation').stop().fadeOut();	
-        }  	
+        if(offset){
+            var x = event.clientX - offset.left;	
+            var y = event.clientY - offset.top + $(window).scrollTop();	
+            if(!(x > target_position.left	
+            && x < target_position.left + target_width	
+            && y > target_position.top	
+            && y < target_position.top + target_height)) {	
+                $('.copy_to_clipboard').stop().fadeOut();	
+                $('#guide_section_copied_confirmation').stop().fadeOut();	
+            }
+        }          	
      });	
 
      $('.copy_to_clipboard').click(function(event) {	        	
