@@ -96,16 +96,6 @@ function handleFloatingTOCAccordion() {
     }
 }
 
-// Move the arrow indicating that the user should scroll down to the middle of the new guide width, taking into account that the TOC is visible.
-$("#toc_column").on('show.bs.collapse', function() {
-    $("#down_arrow").removeClass('down_arrow_without_toc');
-});
-
-// Move the arrow indicating that the user should scroll down to the middle of the new guide width, taking into account that the TOC is hidden.
-$("#toc_column").on('hidden.bs.collapse', function() {
-    $("#down_arrow").addClass('down_arrow_without_toc');
-});
-
 /**
  * onClick method for selecting a TOC entry.
  * 
@@ -194,7 +184,6 @@ $(document).ready(function() {
         // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
         $("#guide_column").addClass('expanded');
 
-        $("#down_arrow").addClass('down_arrow_without_toc');
     });
 
     $('#close_container img').on('keydown', function(event) {
