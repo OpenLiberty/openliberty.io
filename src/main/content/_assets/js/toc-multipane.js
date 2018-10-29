@@ -205,7 +205,7 @@ $(document).ready(function() {
     });
     $("#toc_container li").on("keydown", function(event) {
         // 'this' is the li element in the #toc_container
-        if (event.which === 13 || event.keyCode === 32) {   // Spacebar or Enter
+        if (event.which === 13 || event.which === 32) {   // Spacebar or Enter
           this.click();
         }
     });
