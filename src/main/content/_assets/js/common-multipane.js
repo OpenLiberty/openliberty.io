@@ -363,6 +363,9 @@ function accessContentsFromHash(hash, callback) {
             $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again.
             // Check if the section was actually focused
             if ($focusSection.is(":focus")) {
+                if(callback){
+                    callback();
+                }
                 return false;
             } else {
                 // Add a tabindex to section header since they aren't focusable.
@@ -470,11 +473,9 @@ $(document).ready(function() {
             // Trigger loading the previous step and go to the code column
             var prevStepHash = $('#toc_container .liSelected').prev().children().attr('href'); //get the next step's toc hash
             if(prevStepHash){
-                event.preventDefault();
                 accessContentsFromHash(prevStepHash, function(){
                     $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible').last().focus();
                 });
-                // elemToFocus = $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible').last();
             }
             else {
                 // On the first actual guide step. Send focus to the guide meta section.
@@ -512,8 +513,7 @@ $(document).ready(function() {
                     elemToFocus = step.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').last();
                     if(elemToFocus.length === 0){
                         // If no tabbable elements are found within the step, tab to the step.
-                        // elemToFocus = step;
-                        elemToFocus = step.closest('.sect1');
+                        elemToFocus = step;
                     }
                 }
                 else {
@@ -527,14 +527,13 @@ $(document).ready(function() {
             if(elementWithFocus[0] === lastTabbable[0]) { // If you're tabbing away from the last tabbable element in the widgets, focus needs to go back to the next step content
                 var nextStepHash = $('#toc_container .liSelected').next().children().attr('href'); //get the next step's toc hash
                 var nextStepData = $('#toc_container .liSelected').next().children().attr('data-toc'); //data-toc attribute is the same as the data-step attribute
-                var nextStepID = null;               
+                var nextStepID = null;          
 
                 if (nextStepHash) {                    
                     accessContentsFromHash(nextStepHash, function(){
                         $(nextStepHash).focus();
                     }); // Simulate a toc selection to focus on next step
-                    // nextStepID = '#' + nextStepData + '_content'; // Need next step's ID to focus on first description div
-                    // Steven: '#' + nextStepData + '_content' is specific to only interactive guides
+                    // nextStepID = '#' + nextStepData + '_content'; // Need next step's ID to focus on first description div. This is specific to interactive guides.
                 } else {
                     // TODO: may not need this if it's decided that we shouldn't tab to the widgets are disabled on the intro steps
                     // TODO: this only deals with the case at the beginning of the guide. What happens when you're at the last element of the TOC?
@@ -564,6 +563,7 @@ $(document).ready(function() {
     $(window).on('keydown', function(e) {   
       if($("body").data('scrolling') === true){
          e.preventDefault();
+         e.stopPropagation();
          return;
       }
       var code = e.keyCode || e.which;
@@ -574,27 +574,30 @@ $(document).ready(function() {
       if (code === 9) {
         var elementWithFocus = $(document.activeElement);
         if (elementWithFocus.parents('#guide_column').length > 0) {
-            elemToFocus = getGuideColumnFocusElement(e, elementWithFocus, isShiftPressed);
+            if (elementWithFocus.attr('id') === 'guide_meta') {
+                // Tabbing from the initial section before the guide starts
+                if(isShiftPressed) {
+                    // Go to the table of contents if visible
+                    if($('#tags_container:visible').length > 0){
+                        elemToFocus = $('#tags_container a').last();
+                    }
+                    // Else go to the breadcrumb
+                    else {
+                        elemToFocus = $('#breadcrumb_row a').last();
+                    }
+                }
+                else {
+                    // The intro step doesn't have elements you can tab to go straight to code_column
+                    elemToFocus = $('#code_column');
+                }          
+            }
+            else {
+                elemToFocus = getGuideColumnFocusElement(e, elementWithFocus, isShiftPressed);
+            }            
         } 
         // Handle tabbing from code column
         else if (elementWithFocus[0] == $("#code_column")[0] || elementWithFocus.parents('#code_column').length > 0) {
             elemToFocus = getCodeColumnFocusElement(e, elementWithFocus, isShiftPressed);
-        } else if (elementWithFocus.attr('id') === 'guide_meta') {
-            // Tabbing from the initial section before the guide starts
-            if(isShiftPressed) {
-                // Go to the table of contents if visible
-                if($('#tags_container:visible').length > 0){
-                    elemToFocus = $('#tags_container a').last();
-                }
-                // Else go to the breadcrumb
-                else {
-                    elemToFocus = $('#breadcrumb_row a').last();
-                }
-            }
-            else {
-                // The intro step doesn't have elements you can tab to go straight to code_column
-                elemToFocus = $('#code_column');
-            }          
         }
 
         if(elemToFocus && elemToFocus.length > 0){
