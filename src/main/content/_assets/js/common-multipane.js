@@ -333,6 +333,7 @@ function shiftWindow() {
  *
  * @param String hash   The provided hash should begin with "#" as returned
  *                      from window.location.
+ * @param callback      Optional callback to execute after the window has animated to the new section. This can be used to focus a specific element on the new section.
  */
 function accessContentsFromHash(hash, callback) {
     var $focusSection = $(hash);
@@ -466,7 +467,7 @@ $(document).ready(function() {
     });
 
     // Handle tabbing from inside the guide column
-    function getGuideColumnFocusElement(event, elementWithFocus, isShiftPressed){
+    function getGuideColumnFocusElement(elementWithFocus, isShiftPressed){
         var elemToFocus;
         if(isShiftPressed){
             // Shift tab from the guide column
@@ -497,15 +498,15 @@ $(document).ready(function() {
     }
 
 
-    // Handle tabbing keystrokes in the code column
-    function getCodeColumnFocusElement(event, elementWithFocus, isShiftPressed) {
+    // Handle tabbing from inside the code column
+    function getCodeColumnFocusElement(elementWithFocus, isShiftPressed) {
         var elemToFocus;
-        var tabbableElements = $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)'); // Get list of all tabbable elements under current step widgets
+        var tabbableElements = $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)'); // Get list of all tabbable elements under current step widgets.
         var lastTabbable = tabbableElements.last();
         if(isShiftPressed){
             // Shift tab from the code column
             if(elementWithFocus[0] === $("#code_column")[0]){
-                var thisStepHash = $('#toc_container .liSelected').children().attr('href'); //get the next step's toc hash                    
+                var thisStepHash = $('#toc_container .liSelected').children().attr('href'); // Get the next step's toc hash                    
                 if(thisStepHash){
                     var step = $(thisStepHash);
                     elemToFocus = step.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)').last();
@@ -524,23 +525,18 @@ $(document).ready(function() {
             // Regular tab from the code column     
             if(elementWithFocus[0] === lastTabbable[0]) { // If you're tabbing away from the last tabbable element in the widgets, focus needs to go back to the next step content
                 var nextStepHash = $('#toc_container .liSelected').next().children().attr('href'); //get the next step's toc hash
-                var nextStepData = $('#toc_container .liSelected').next().children().attr('data-toc'); //data-toc attribute is the same as the data-step attribute
                 var nextStepID = null;          
 
-                if (nextStepHash) {                    
+                if (nextStepHash) {                  
+                    // Load the next step  
                     accessContentsFromHash(nextStepHash, function(){
                         $(nextStepHash).focus();
-                    }); // Simulate a toc selection to focus on next step
-                    // nextStepID = '#' + nextStepData + '_content'; // Need next step's ID to focus on first description div. This is specific to interactive guides.
+                    }); 
                 } else {
-                    // TODO: may not need this if it's decided that we shouldn't tab to the widgets are disabled on the intro steps
-                    // TODO: this only deals with the case at the beginning of the guide. What happens when you're at the last element of the TOC?
-
                     // The very first time you visit the guide and nothing is selected in the TOC, tab to the first step.
                     if($('#toc_container .liSelected').length === 0){                        
                         var firstStepHash = $('#toc_container li').first().children().attr('href');
                         accessContentsFromHash(firstStepHash);
-                        // nextStepID = '#Intro_content';
                     }               
                     // On the last step's code column, tab to the end of guide
                     else if($('#toc_container li').last().hasClass('liSelected')){
@@ -549,7 +545,7 @@ $(document).ready(function() {
                 }
 
                 if(nextStepID){
-                    var nextTabbableElement = $(nextStepID).find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)').first(); //get the next tabbable element from the next step content section
+                    var nextTabbableElement = $(nextStepID).find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)').first(); // Get the next tabbable element from the next step content section
                     elemToFocus = nextTabbableElement;
                 }
             }
@@ -557,7 +553,7 @@ $(document).ready(function() {
         return elemToFocus;
     }
 
-    // Handle tabbing order
+    // Handle manual tabbing order through the guide. The tabbing order is: header, breadcrumb, table of contents, #guide_meta, github popup if present, first guide section, through all of the guide section's tabbable elements, to the respective code on the right for that given guide section, through all of its tabbable elements, etc. until the last guide section and code are tabbed through, then to the end of guide section. Shift + tab goes in the reverse order.
     $(window).on('keydown', function(e) {   
       if($("body").data('scrolling') === true){
          e.preventDefault();
@@ -590,12 +586,12 @@ $(document).ready(function() {
                 }          
             }
             else {
-                elemToFocus = getGuideColumnFocusElement(e, elementWithFocus, isShiftPressed);
+                elemToFocus = getGuideColumnFocusElement(elementWithFocus, isShiftPressed);
             }            
         } 
         // Handle tabbing from code column
         else if (elementWithFocus[0] == $("#code_column")[0] || elementWithFocus.parents('#code_column').length > 0) {
-            elemToFocus = getCodeColumnFocusElement(e, elementWithFocus, isShiftPressed);
+            elemToFocus = getCodeColumnFocusElement(elementWithFocus, isShiftPressed);
         }
 
         if(elemToFocus && elemToFocus.length > 0){
