@@ -474,7 +474,7 @@ $(document).ready(function() {
             var prevStepHash = $('#toc_container .liSelected').prev().children().attr('href'); //get the next step's toc hash
             if(prevStepHash){
                 accessContentsFromHash(prevStepHash, function(){
-                    $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible').last().focus();
+                    $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)').last().focus();
                 });
             }
             else {
@@ -484,8 +484,7 @@ $(document).ready(function() {
         }
         else {
             // Regular tab from the guide column
-            // var tabbableElements = elementWithFocus.closest('.stepWidgetContainer').find('[tabindex=0], a[href], button, instruction, action'); // Get list of all tabbable elements
-            var tabbableElements = elementWithFocus.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action'); // Get list of all tabbable elements under current step widgets
+            var tabbableElements = elementWithFocus.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)'); // Get list of all tabbable elements under current step widgets
             var lastTabbable = tabbableElements.last();
             
             if (elementWithFocus[0] === lastTabbable[0] || tabbableElements.length === 0) {
@@ -501,8 +500,7 @@ $(document).ready(function() {
     // Handle tabbing keystrokes in the code column
     function getCodeColumnFocusElement(event, elementWithFocus, isShiftPressed) {
         var elemToFocus;
-        var tabbableElements = $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible'); // Get list of all tabbable elements under current step widgets
-        var firstTabbable = tabbableElements.first();
+        var tabbableElements = $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)'); // Get list of all tabbable elements under current step widgets
         var lastTabbable = tabbableElements.last();
         if(isShiftPressed){
             // Shift tab from the code column
@@ -510,7 +508,7 @@ $(document).ready(function() {
                 var thisStepHash = $('#toc_container .liSelected').children().attr('href'); //get the next step's toc hash                    
                 if(thisStepHash){
                     var step = $(thisStepHash);
-                    elemToFocus = step.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').last();
+                    elemToFocus = step.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)').last();
                     if(elemToFocus.length === 0){
                         // If no tabbable elements are found within the step, tab to the step.
                         elemToFocus = step;
@@ -551,7 +549,7 @@ $(document).ready(function() {
                 }
 
                 if(nextStepID){
-                    var nextTabbableElement = $(nextStepID).find('[tabindex=0], a[href], button, instruction, action').first(); //get the next tabbable element from the next step content section
+                    var nextTabbableElement = $(nextStepID).find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)').first(); //get the next tabbable element from the next step content section
                     elemToFocus = nextTabbableElement;
                 }
             }
