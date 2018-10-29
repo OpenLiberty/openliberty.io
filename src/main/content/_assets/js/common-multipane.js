@@ -485,7 +485,8 @@ $(document).ready(function() {
         }
         else {
             // Regular tab from the guide column
-            var tabbableElements = elementWithFocus.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)'); // Get list of all tabbable elements under current step widgets
+            // Get list of all tabbable elements under the current step. If the focused element is not the last tabbable, then we will return nothing so the next default element to tab to will not be overriden.
+            var tabbableElements = elementWithFocus.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled):not(.unavailable)'); 
             var lastTabbable = tabbableElements.last();
             
             if (elementWithFocus[0] === lastTabbable[0] || tabbableElements.length === 0) {
@@ -509,7 +510,7 @@ $(document).ready(function() {
                 var thisStepHash = $('#toc_container .liSelected').children().attr('href'); // Get the next step's toc hash                    
                 if(thisStepHash){
                     var step = $(thisStepHash);
-                    elemToFocus = step.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)').last();
+                    elemToFocus = step.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled):not(.unavailable)').last();
                     if(elemToFocus.length === 0){
                         // If no tabbable elements are found within the step, tab to the step.
                         elemToFocus = step;
