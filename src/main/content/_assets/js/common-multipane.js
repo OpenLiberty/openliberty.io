@@ -464,7 +464,7 @@ $(document).ready(function() {
 
     // Handle tabbing from inside the guide column
     function getGuideColumnFocusElement(event, elementWithFocus, isShiftPressed){
-        var elemToFocus;        
+        var elemToFocus;
         if(isShiftPressed){
             // Shift tab from the guide column
             // Trigger loading the previous step and go to the code column
@@ -483,12 +483,13 @@ $(document).ready(function() {
         }
         else {
             // Regular tab from the guide column
-            var tabbableElements = elementWithFocus.closest('.stepWidgetContainer').find('[tabindex=0], a[href], button, instruction, action'); // Get list of all tabbable elements under current step widgets
-            var firstTabbable = tabbableElements.first();
+            // var tabbableElements = elementWithFocus.closest('.stepWidgetContainer').find('[tabindex=0], a[href], button, instruction, action'); // Get list of all tabbable elements
+            var tabbableElements = elementWithFocus.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action'); // Get list of all tabbable elements under current step widgets
             var lastTabbable = tabbableElements.last();
             
-            if (elementWithFocus[0] === lastTabbable[0]) {
-                elemToFocus = $('#code_column'); //if you're tabbing away from the last tabbable element in the section, focus on the code column
+            if (elementWithFocus[0] === lastTabbable[0] || tabbableElements.length === 0) {
+                // If tabbing away from the last tabbable element in the section or there are no tabbable elements in the guide section, focus on the code column
+                elemToFocus = $('#code_column'); 
             }
         }        
         
@@ -504,14 +505,15 @@ $(document).ready(function() {
         var lastTabbable = tabbableElements.last();
         if(isShiftPressed){
             // Shift tab from the code column
-            if(elementWithFocus[0] == $("#code_column")[0] ||  elementWithFocus[0] === firstTabbable[0]){
+            if(elementWithFocus[0] === $("#code_column")[0]){
                 var thisStepHash = $('#toc_container .liSelected').children().attr('href'); //get the next step's toc hash                    
                 if(thisStepHash){
                     var step = $(thisStepHash);
-                    elemToFocus = step.closest('.sect1').children('[tabindex=0], a[href], button, instruction, action');
+                    elemToFocus = step.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').last();
                     if(elemToFocus.length === 0){
                         // If no tabbable elements are found within the step, tab to the step.
-                        elemToFocus = step;
+                        // elemToFocus = step;
+                        elemToFocus = step.closest('.sect1');
                     }
                 }
                 else {
@@ -571,9 +573,10 @@ $(document).ready(function() {
       // Tab key
       if (code === 9) {
         var elementWithFocus = $(document.activeElement);
-        if (elementWithFocus.parents('.sect1').length > 0) {
+        if (elementWithFocus.parents('#guide_column').length > 0) {
             elemToFocus = getGuideColumnFocusElement(e, elementWithFocus, isShiftPressed);
         } 
+        // Handle tabbing from code column
         else if (elementWithFocus[0] == $("#code_column")[0] || elementWithFocus.parents('#code_column').length > 0) {
             elemToFocus = getCodeColumnFocusElement(e, elementWithFocus, isShiftPressed);
         } else if (elementWithFocus.attr('id') === 'guide_meta') {
