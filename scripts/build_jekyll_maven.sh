@@ -55,6 +55,9 @@ echo "Moving any js and css files published interactive guides..."
 find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
 find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
 
+# Build draft and published blogs
+./scripts/build_clone_blogs.sh
+
 # Jekyll build
 echo "Building with jekyll..."
 echo `jekyll -version`
