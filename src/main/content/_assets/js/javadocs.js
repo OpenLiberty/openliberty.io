@@ -150,6 +150,13 @@ function addExpandAndCollapseToggleButtonForPackageFrame(contents, leftBottom) {
         header2.append(toggleButton2);
     }            
 }
+function addiPadScrolling() {
+    if (navigator.platform.match(/iPad/)) {
+        $('#javadoc_container').contents().find('.leftTop, .leftBottom, .rightContainer').css("-webkit-overflow-scrolling", "touch");
+        $('#javadoc_container').contents().find('.leftTop, .leftBottom, .rightContainer').css("overflow-y", "scroll");
+    }
+}
+
 
 /*
     Add a listener to scrolling in the main frame.
@@ -471,6 +478,7 @@ $(document).ready(function() {
         addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
         addScrollListener();
         addClickListeners();
+        addiPadScrolling();
 
         $('#javadoc_container').contents().find(CLASS_FRAME).on('load', function(){
             addAccessibility();
