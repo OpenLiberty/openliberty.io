@@ -20,6 +20,9 @@ function inSingleColumnView(){
 function inMobile(){
     return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 }
+function onAppleDevice(){
+    return (/(Mac|iPhone|iPod|iPad)/i.test(navigator.userAgent));
+}
 
 // Handle sticky header in IE, because IE doesn't support position: sticky
 function handleStickyHeader() {
@@ -425,9 +428,12 @@ $(document).ready(function() {
         handleFloatingCodeColumn();
     });
 
-    $(window).on('mousewheel DOMMouseScroll', function(event){
-        checkForInertialScrolling(event);
-    });
+    // Check if on Apple device to disable inertia scrolling since the trackpad doesn't work well.
+    if(!onAppleDevice()){
+        $(window).on('mousewheel DOMMouseScroll', function(event){
+            checkForInertialScrolling(event);
+        });
+    }    
 
     $(window).on('scroll', function() {
         handleFloatingTOCAccordion();
