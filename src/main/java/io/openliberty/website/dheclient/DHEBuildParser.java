@@ -1,7 +1,6 @@
 package io.openliberty.website.dheclient;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -25,13 +24,14 @@ import io.openliberty.website.data.LatestReleases;
 
 public class DHEBuildParser {
 
-	private ExecutorService exec = new ForkJoinPool();
-
 	@Inject
 	private DHEClient dheClient;
 
+	private final ExecutorService exec = new ForkJoinPool();
+	private final LastUpdate lastUpdate = new LastUpdate();
+
 	private volatile BuildData buildData = new BuildData(new LatestReleases(), new BuildLists());
-	private LastUpdate lastUpdate = new LastUpdate();
+	private volatile Future<LastUpdate> scheduledUpdate = null;
 
 	/** Defined default constructor */
 	public DHEBuildParser() {
@@ -42,102 +42,131 @@ public class DHEBuildParser {
 		dheClient = client;
 	}
 
+	public LastUpdate getLastUpdate() {
+		return lastUpdate;
+	}
+
 	public BuildData getBuildData() {
 		updateAsNeeded();
 		return buildData;
 	}
 
-	// Compare the current time with the time the last build request is run. Allow
-	// the next
-	// build request to go through if the last build request was run an hour ago or
-	// more.
-	boolean isBuildUpdateAllowed() {
-		boolean isBuildUpdateAllowed = true;
-		Date lastSuccessfulUpdate = lastUpdate.lastSuccessfulUpdate();
-		if (lastSuccessfulUpdate != null) {
-			long currentTime = new Date().getTime();
-			long lastUpdateTime = lastSuccessfulUpdate.getTime();
-			// 1 hour = 3600000 ms
-			if (currentTime - lastUpdateTime < 3600000) {
-				isBuildUpdateAllowed = false;
-			}
-		}
-
-		return isBuildUpdateAllowed;
-	}
-
-	private synchronized void updateAsNeeded() {
-		if (isBuildUpdateAllowed()) {
-			update();
+	/**
+	 * Conditionally update. Only try to update if: A) We have never been
+	 * successfully updated B) We have not successfully updated recently
+	 * 
+	 * In scenario (A), we want to update and block. In scenario (B), we want to
+	 * 'schedule' an update on a new thread.
+	 */
+	private void updateAsNeeded() {
+		if (lastUpdate.hasNeverSuccessfullyUpdated()) {
+			blockingUpdate();
+		} else if (lastUpdate.isUpdateNeeded()) {
+			scheduleAsyncUpdate();
 		}
 	}
 
-	public synchronized LastUpdate update() {
-		lastUpdate.setLastUpdateAttempt(new Date());
-
-		Future<List<BuildInfo>> runtimeReleases = exec.submit(
-				new RetrieveBuildList(Constants.DHE_RUNTIME_PATH_SEGMENT, Constants.DHE_RELEASE_PATH_SEGMENT));
-		Future<List<BuildInfo>> runtimeNightly = exec.submit(
-				new RetrieveBuildList(Constants.DHE_RUNTIME_PATH_SEGMENT, Constants.DHE_NIGHTLY_PATH_SEGMENT));
-		Future<List<BuildInfo>> toolsReleases = exec.submit(
-				new RetrieveBuildList(Constants.DHE_TOOLS_PATH_SEGMENT, Constants.DHE_RELEASE_PATH_SEGMENT));
-		Future<List<BuildInfo>> toolsNightly = exec.submit(
-				new RetrieveBuildList(Constants.DHE_TOOLS_PATH_SEGMENT, Constants.DHE_NIGHTLY_PATH_SEGMENT));
-
-		List<BuildInfo> updatedRuntimeReleases = getSafe(runtimeReleases);
-		List<BuildInfo> updatedRuntimeNightlyBuilds = getSafe(runtimeNightly);
-		List<BuildInfo> updatedToolsReleases = getSafe(toolsReleases);
-		List<BuildInfo> updatedToolsNightlyBuilds = getSafe(toolsNightly);
-		if (isNotEmpty(updatedRuntimeReleases) && isNotEmpty(updatedToolsReleases)) {
-			BuildInfo latestRuntimeRelease = pickLastestBuild(updatedRuntimeReleases);
-			BuildInfo latestToolsRelease = pickLastestBuild(updatedToolsReleases);
-			if (latestRuntimeRelease != null) {
-				LatestReleases latest = new LatestReleases(latestRuntimeRelease, latestToolsRelease);
-				BuildLists all = new BuildLists();
-				all.setRuntimeReleases(updatedRuntimeReleases);
-				all.setRuntimeNightlyBuilds(updatedRuntimeNightlyBuilds);
-				all.setToolsReleases(updatedToolsReleases);
-				all.setToolsNightlyBuild(updatedToolsNightlyBuilds);
-
-				buildData = new BuildData(latest, all);
-				lastUpdate.markSuccessfulUpdate();
-			}
-		}
-
-		return lastUpdate;
-	}
-
-	private boolean isNotEmpty(List<BuildInfo> updatedRuntimeReleases) {
-		return (updatedRuntimeReleases != null) && (!updatedRuntimeReleases.isEmpty());
-	}
-
-	private List<BuildInfo> getSafe(Future<List<BuildInfo>> future) {
+	/** Unconditionally force an update, blocking the thread until complete. */
+	public LastUpdate blockingUpdate() {
+		LastUpdate ret = lastUpdate;
 		try {
-			return future.get();
+			ret = scheduleAsyncUpdate().get();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return ret;
 	}
 
-	private BuildInfo pickLastestBuild(List<BuildInfo> buildsList) {
-		BuildInfo latest = null;
-
-		for (BuildInfo info : buildsList) {
-			if (latest == null) {
-				latest = info;
-			}
-			if (info.getDateTime().compareTo(latest.getDateTime()) > 0) {
-				latest = info;
-			}
+	/**
+	 * Handle the multi-threaded scenario where multiple threads may come in and
+	 * request updates. We only want to schedule one update, but return a common
+	 * indicator that the job is running.
+	 *
+	 * Need to handle the case where we have two threads coming in, asking for work
+	 * to be done, and the first thread schedules an update. The second thread
+	 * should NOT schedule a new job. The first job's Future should be returned to
+	 * the second thread.
+	 */
+	private synchronized Future<LastUpdate> scheduleAsyncUpdate() {
+		if (scheduledUpdate == null) {
+			scheduledUpdate = exec.submit(new UpdateBuildData());
 		}
-		return latest;
+		return scheduledUpdate;
 	}
 
-	public LastUpdate getLastUpdate() {
-		return lastUpdate;
+	private synchronized void clearScheduledUpdate() {
+		scheduledUpdate = null;
+	}
+
+	class UpdateBuildData implements Callable<LastUpdate> {
+
+		@Override
+		public LastUpdate call() throws Exception {
+			lastUpdate.markUpdateAttempt();
+
+			Future<List<BuildInfo>> runtimeReleases = exec.submit(
+					new RetrieveBuildList(Constants.DHE_RUNTIME_PATH_SEGMENT, Constants.DHE_RELEASE_PATH_SEGMENT));
+			Future<List<BuildInfo>> runtimeNightly = exec.submit(
+					new RetrieveBuildList(Constants.DHE_RUNTIME_PATH_SEGMENT, Constants.DHE_NIGHTLY_PATH_SEGMENT));
+			Future<List<BuildInfo>> toolsReleases = exec.submit(
+					new RetrieveBuildList(Constants.DHE_TOOLS_PATH_SEGMENT, Constants.DHE_RELEASE_PATH_SEGMENT));
+			Future<List<BuildInfo>> toolsNightly = exec.submit(
+					new RetrieveBuildList(Constants.DHE_TOOLS_PATH_SEGMENT, Constants.DHE_NIGHTLY_PATH_SEGMENT));
+
+			List<BuildInfo> updatedRuntimeReleases = getSafe(runtimeReleases);
+			List<BuildInfo> updatedRuntimeNightlyBuilds = getSafe(runtimeNightly);
+			List<BuildInfo> updatedToolsReleases = getSafe(toolsReleases);
+			List<BuildInfo> updatedToolsNightlyBuilds = getSafe(toolsNightly);
+			if (isNotEmpty(updatedRuntimeReleases) && isNotEmpty(updatedToolsReleases)) {
+				BuildInfo latestRuntimeRelease = pickLastestBuild(updatedRuntimeReleases);
+				BuildInfo latestToolsRelease = pickLastestBuild(updatedToolsReleases);
+				if (latestRuntimeRelease != null) {
+					LatestReleases latest = new LatestReleases(latestRuntimeRelease, latestToolsRelease);
+					BuildLists all = new BuildLists();
+					all.setRuntimeReleases(updatedRuntimeReleases);
+					all.setRuntimeNightlyBuilds(updatedRuntimeNightlyBuilds);
+					all.setToolsReleases(updatedToolsReleases);
+					all.setToolsNightlyBuild(updatedToolsNightlyBuilds);
+
+					buildData = new BuildData(latest, all);
+					lastUpdate.markSuccessfulUpdate();
+				}
+			}
+
+			clearScheduledUpdate();
+			return lastUpdate;
+		}
+
+		private boolean isNotEmpty(List<BuildInfo> updatedRuntimeReleases) {
+			return (updatedRuntimeReleases != null) && (!updatedRuntimeReleases.isEmpty());
+		}
+
+		private List<BuildInfo> getSafe(Future<List<BuildInfo>> future) {
+			try {
+				return future.get();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		private BuildInfo pickLastestBuild(List<BuildInfo> buildsList) {
+			BuildInfo latest = null;
+
+			for (BuildInfo info : buildsList) {
+				if (latest == null) {
+					latest = info;
+				}
+				if (info.getDateTime().compareTo(latest.getDateTime()) > 0) {
+					latest = info;
+				}
+			}
+			return latest;
+		}
 	}
 
 	class RetrieveBuildInfo implements Callable<BuildInfo> {
@@ -206,7 +235,8 @@ public class DHEBuildParser {
 			JsonValue driverLocationObject = buildInformationSrc.get(Constants.DRIVER_LOCATION);
 			if (driverLocationObject instanceof JsonString) {
 				String driverLocation = ((JsonString) driverLocationObject).getString();
-				String newDrvierLocation = Constants.DHE_URL + artifactPath + buildTypePath + dateTimePath + driverLocation;
+				String newDrvierLocation = Constants.DHE_URL + artifactPath + buildTypePath + dateTimePath
+						+ driverLocation;
 				info.addDriverLocation(newDrvierLocation);
 
 				String size = dheClient.retrieveSize(newDrvierLocation);
