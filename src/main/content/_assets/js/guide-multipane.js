@@ -41,7 +41,7 @@ $(document).ready(function() {
 
             // Move file name to the code column
             var title_section = $("<div class='code_column_title_container'></div>");
-            var title_div = $("<div class='code_column_title'>" + fileName + "</div>");
+            var title_div = $("<div class='code_column_title' tabindex='0'>" + fileName + "</div>");
             title_section.append(title_div);
 
             // Remove old title from the DOM
