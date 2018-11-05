@@ -129,7 +129,6 @@ function TOCEntryClick(liElement, event) {
     if(inSingleColumnView()){
         $("#mobile_close_container").trigger('click');
     }
-
 }
 
 // Restructure the TOC because Asciidoc nests levels in the TOC and it affects the CSS poorly.
@@ -190,6 +189,13 @@ $(document).ready(function() {
         // Enter key
         if(event.which === 13 || event.keyCode === 13){
             $('#close_container').click();
+        }
+    });
+
+    $('#mobile_close_container img').on('keydown', function(event) {
+        // Enter key
+        if(event.which === 13 || event.keyCode === 13){
+            $('#mobile_close_container').click();
         }
     });
 

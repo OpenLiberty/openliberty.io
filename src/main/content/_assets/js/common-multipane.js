@@ -552,7 +552,11 @@ $(document).ready(function() {
     }
 
     // Handle manual tabbing order through the guide. The tabbing order is: header, breadcrumb, table of contents, #guide_meta, github popup if present, first guide section, through all of the guide section's tabbable elements, to the respective code on the right for that given guide section, through all of its tabbable elements, etc. until the last guide section and code are tabbed through, then to the end of guide section. Shift + tab goes in the reverse order.
-    $(window).on('keydown', function(e) {   
+    $(window).on('keydown', function(e) {
+      if(inSingleColumnView()){
+          // Do not prevent the default tab behavior in single column view.
+          return;
+      }
       if($("body").data('scrolling') === true){
          e.preventDefault();
          e.stopPropagation();
@@ -579,7 +583,7 @@ $(document).ready(function() {
                     }
                 }
                 else {
-                    // The intro step doesn't have elements you can tab to go straight to code_column
+                    // The intro step doesn't have elements you can tab to go straight to code_column                    
                     elemToFocus = $('#code_column');
                 }          
             }
