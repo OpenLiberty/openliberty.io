@@ -1,13 +1,13 @@
 {% assign description = '' %}
-  {% if page.seo-description %}    
-    {% assign description = page.seo-description | escape %}
-  {% elsif page.description %}
-    {% assign description = page.description | escape %}
-  {% else %}
-      {% assign description = site.description | strip_html | normalize_whitespace | truncate: 160 | escape %}
+{% if page.seo-description %}    
+  {% assign description = page.seo-description | escape %}
+{% elsif page.description %}
+  {% assign description = page.description | escape %}
+{% else %}
+  {% assign description = site.description | strip_html | normalize_whitespace | truncate: 160 | escape %}
 {% endif %}
 
-<head> 
+<head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
