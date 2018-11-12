@@ -359,9 +359,9 @@ function addClickListener(contents) {
 
 function setPackageContainerHeight() {
     var packageContainer = $('#javadoc_container').contents().find(".leftBottom");
-    if (packageContainer.css("height") !== "70%") {
+    if (packageContainer.css("height") !== "55%") {
         // restore the height in case it is collapsed
-        packageContainer.css("height", "70%");
+        packageContainer.css("height", "55%");
     }
 }
 
