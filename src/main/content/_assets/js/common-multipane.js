@@ -376,7 +376,7 @@ function accessContentsFromHash(hash, callback) {
                 // tabindex = -1 means that the element should be focusable,
                 // but not via sequential keyboard navigation.
                 $focusSection.attr('tabindex', '-1');
-                $focusSection.focus();
+                $focusSection.focus();                
                 if(callback){
                     callback();
                 }
@@ -485,7 +485,6 @@ $(document).ready(function() {
                     else {
                         accessContentsFromHash(prevStepHash, function(){
                             $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)').last().focus();
-                            console.error($(document.activeElement));
                         });
                     }
                 }
@@ -539,7 +538,17 @@ $(document).ready(function() {
                     elemToFocus = step.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled):not(.unavailable)').last();
                     if(elemToFocus.length === 0){
                         // If no tabbable elements are found within the step, tab to the step.
-                        elemToFocus = step;
+                        // Check if the step is on the screen to focus it. If it isn't on the screen, it needs to be scrolled to.
+                        var pageTop = window.scrollY;
+                        var headerHeight = $('nav').height();
+                        var pageOffset = Math.round(pageTop + headerHeight);
+                        var stepOffset = Math.round(step.offset().top);
+                        if(stepOffset > pageOffset){
+                            elemToFocus = step;
+                        }
+                        else {
+                            accessContentsFromHash(thisStepHash);
+                        }                        
                     }
                 }
                 else {
@@ -558,7 +567,6 @@ $(document).ready(function() {
                     // Load the next step
                     accessContentsFromHash(nextStepHash, function(){
                         $(nextStepHash).focus();
-                        console.error($(document.activeElement));
                     });
                 } else {
                     // The very first time you visit the guide and nothing is selected in the TOC, tab to the first step.
@@ -594,7 +602,7 @@ $(document).ready(function() {
 
       // Tab key
       if (code === 9) {
-        var elementWithFocus = $(document.activeElement);        
+        var elementWithFocus = $(document.activeElement);
         if (elementWithFocus[0] == $("#guide_column")[0] || elementWithFocus.parents('#guide_column').length > 0) {
             if (elementWithFocus.attr('id') === 'guide_meta') {
                 // Tabbing from the initial section before the guide starts
@@ -627,12 +635,8 @@ $(document).ready(function() {
 
         if(elemToFocus && elemToFocus.length > 0){
             // Only stop the default tab/shift+tab behavior if we found a custom element to override the default behavior to tab to. 
-            console.error(elemToFocus);
             e.preventDefault();
             elemToFocus.focus();
-        }
-        else {
-            console.error($(event.target));
         }
       }
     });
