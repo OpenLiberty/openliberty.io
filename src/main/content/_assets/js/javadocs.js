@@ -128,7 +128,7 @@ function addExpandAndCollapseToggleButtonForPackageFrame(contents, leftBottom) {
             if(collapsed === "true"){
                 // Expand the list
                 list2.show();
-                leftBottom.css("height", "70%");
+                leftBottom.css("height", "55%");
                 $(this).empty().append($('<img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
                 $(this).attr('collapsed', false);
             }
@@ -359,9 +359,9 @@ function addClickListener(contents) {
 
 function setPackageContainerHeight() {
     var packageContainer = $('#javadoc_container').contents().find(".leftBottom");
-    if (packageContainer.css("height") !== "70%") {
+    if (packageContainer.css("height") !== "55%") {
         // restore the height in case it is collapsed
-        packageContainer.css("height", "70%");
+        packageContainer.css("height", "55%");
     }
 }
 
