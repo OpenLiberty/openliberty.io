@@ -1,6 +1,6 @@
 ---
 layout: doc
-css: 
+css:
 - doc-header
 - toc-multipane
 - end-of-guide
@@ -14,16 +14,16 @@ js:
 
 <div id="background_container">
         <div class="row">
-            <!-- Guide's table of contents section -->            
+            <!-- Guide's table of contents section -->
             <div id="toc_column" class="collapse inline">
                 <div id="toc_inner">
                     {% assign toc = page.document | tocify_asciidoc %}
                     {% if toc %}
                     <div id="close_container">
-                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button"/>
+                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button" tabindex="0"/>
                     </div>
                     <div id="mobile_close_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
-                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button"/>
+                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button" tabindex="0"/>
                     </div>
                     <h3 id="toc_title">Contents</h3>
                     <div id="toc_container">
@@ -39,13 +39,13 @@ js:
                             {% endfor %}
                         </div>
                     {% endif %}
-                </div>                
+                </div>
             </div>
             <!-- Entire guide section -->
             <div id="guide_column" class="position_relative">
                 <div id="guide_content">
                     <!-- Guide header section -->
-                    <div id="guide_meta" class="sect1">
+                    <div id="guide_meta" class="sect1" tabindex="0">
                         <h1 id="guide_title">{{ page.title }}</h1>
                         <div id="duration_container">
                             <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
@@ -54,18 +54,18 @@ js:
                         <div id="mobile_github_section">
                             <div id="mobile_github_clone_popup_title"><span class="dark_green_link_light_background">Git clone</span><span style="font-weight: 600; font-family: BunueloBold"> to get going right away:</span></div>
                             <div id="mobile_github_clone_popup_repo">
-                                <span>git clone https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}.git</span>   
-                                <div id="mobile_github_clone_popup_copy">
-                                    <img src="/img/guide_copy_button_black.svg" alt="Copy github clone command">
+                                <span>git clone https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}.git</span>
+                                <div id="mobile_github_clone_popup_copy" tabindex="0" aria-label="Copy the Github repository clone command">
+                                    <img src="/img/guide_copy_button_black.svg" alt="Copy Github clone command">
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
 
                     <div class="scroller_anchor"></div>
                     <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
                         <div id="mobile_toc_accordion">
-                            <button class="breadcrumb_hamburger toc-toggle collapsed" type="button">
+                            <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
                                     <span class="sr-only">Toggle navigation</span>
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
@@ -73,7 +73,7 @@ js:
                                     <img src="{{ " /img/TOC_Close.svg " | relative }}" class="TOC_Close_SVG img-responsive" alt="Table of contents close button"/>
                             </button>
                             <span>Table of contents</span>
-                        </div>                
+                        </div>
                     </div>
 
                     <!-- Guide content section -->
@@ -85,22 +85,22 @@ js:
             </div>
 
             <!-- Code section -->
-            <div id="code_column" class="position_relative">
+            <div id="code_column" class="position_relative" tabindex="0">
                 <div id="github_clone_popup_container" style="display: none">
-                    <div id="github_clone_popup">
+                    <div id="github_clone_popup" tabindex="0">
                         <div id="github_clone_popup_title">Git clone this repo to get going right away:</div>
                         <div id="github_clone_popup_repo">
                                 git clone https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}.git
                         </div>
-                        <div id="github_clone_popup_copy">
+                        <div id="github_clone_popup_copy" tabindex="0">
                             <img src="/img/guide_copy_button_black.svg" alt="Copy github clone command">
                         </div>
                     </div>
                 </div>
                 <div id="code_section_copied_confirmation" style="display: none;">Copied to clipboard</div>
             </div>
-            
-        </div>        
+
+        </div>
 </div>
 
 {% include end-of-guide.html %}

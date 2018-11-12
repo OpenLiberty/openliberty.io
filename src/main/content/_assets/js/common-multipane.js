@@ -143,10 +143,10 @@ function checkForInertialScrolling (event){
     } else if(origEvent.detail){
         // Firefox
         dir = (origEvent.detail) > 0 ? 'down' : 'up';
-    }  
+    }
     if(!dir){
         console.log('Scroll direction was not determined.');
-    }    
+    }
 
     var section_headers = $('.sect1:not(#guide_meta) h2');
     section_headers.each(function(index) {
@@ -156,13 +156,13 @@ function checkForInertialScrolling (event){
         var bottom = rect.bottom;
 
         // If scrolling down, check if the section header is coming into view
-        if(dir == 'down'){   
+        if(dir == 'down'){
             if(top > 0 && top < windowHeight && bottom > (windowHeight - 200) && bottom < windowHeight){
                 // Section header is fully in view with the bottom in the last 200 pixels of the viewport.
                 // Snap to the top of the element.
                 scrollPosition = elem.offset().top - navbarHeight;
                 return false;
-            }      
+            }
         } else {
             // Scrolling up
             // Check to see that the current section's top is in viewport and at least 200 pixels from the top of the screen but not more than 400.
@@ -180,11 +180,11 @@ function checkForInertialScrolling (event){
     if(scrollPosition){
         event.preventDefault();
         event.stopPropagation();
-        // Snap to the top of the previous section so the user can read the last part of it. 
+        // Snap to the top of the previous section so the user can read the last part of it.
         $('html').stop().animate({
             scrollTop: scrollPosition
-        }, 500);          
-    } 
+        }, 500);
+    }
 }
 
 /**
@@ -216,13 +216,13 @@ function getScrolledVisibleSectionID() {
         var sections = $('.sect1:not(#guide_meta):not(#related-guides), .sect2');
 
         if (window.innerWidth > twoColumnBreakpoint) {
-            // multi-column view - 
-            // Determine which section has the majority of the vertical height 
+            // multi-column view -
+            // Determine which section has the majority of the vertical height
             // of the page.
             sections.each(function(index) {
                 var elem = $(sections.get(index));
                 var windowHeight = $(window).height();
-    
+
                 var elemHeight = elem.outerHeight();
                 var rect = elem[0].getBoundingClientRect();
                 var top = rect.top;
@@ -230,7 +230,7 @@ function getScrolledVisibleSectionID() {
 
                 var $sect2s = elem.find('.sect2');
                 if ($sect2s.length > 0) {
-                    // Section contains a subsection.  The section's height 
+                    // Section contains a subsection.  The section's height
                     // really ends where the subsection begins.
                     bottom = $sect2s[0].getBoundingClientRect().top;
                     elemHeight = bottom - top;
@@ -254,7 +254,7 @@ function getScrolledVisibleSectionID() {
                         // (if only part of the element is visible and extends beyond
                         // the bottom of the viewport).
                         visibleElemHeight = Math.min(elemHeight, windowHeight - top);
-                    }            
+                    }
                 }
                 else {
                     // Top of element is at or above the top of the viewport
@@ -270,12 +270,12 @@ function getScrolledVisibleSectionID() {
                     id = elem.children('h2, h3')[0].id;
                 }
             });
-    
+
         } else {
-            // single-column view -  
-            // Determine the section that most recently passed under the 
+            // single-column view -
+            // Determine the section that most recently passed under the
             // TOC header.
-            var TOC_height = $('#mobile_toc_accordion_container').outerHeight(true);           
+            var TOC_height = $('#mobile_toc_accordion_container').outerHeight(true);
             sections.each(function(index) {
                 var $element = $(sections.get(index));
                 var sectionTop = $element.offset().top - TOC_height;
@@ -308,6 +308,7 @@ function createEndOfGuideContent(){
     var leftSide = $("#end_of_guide_left_section");
     var rightSide = $("#end_of_guide_right_section");
     var whatYouLearned = $("#great-work-you-re-done, #great-work-youre-done").siblings().find('p').clone();
+    whatYouLearned.attr('tabindex', '0');
     leftSide.prepend(whatYouLearned);
     $("#great-work-you-re-done, #great-work-youre-done").parent().remove(); // Remove section from the main guide column.
     $("#toc_container a[href='#great-work-you-re-done'], #toc_container a[href='#great-work-youre-done']").parent().remove(); // Remove from TOC.
@@ -338,19 +339,20 @@ function shiftWindow() {
  *
  * @param String hash   The provided hash should begin with "#" as returned
  *                      from window.location.
+ * @param callback      Optional callback to execute after the window has animated to the new section. This can be used to focus a specific element on the new section.
  */
-function accessContentsFromHash(hash) {
+function accessContentsFromHash(hash, callback) {
     var $focusSection = $(hash);
-    
+
     // If section is found, scroll to it
-    if ($focusSection.length > 0) {        
+    if ($focusSection.length > 0) {
         // Update the TOC
         updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
         var scrollSpot = $focusSection.offset().top;
         // Implement smooth scrolling to the section's header.
         if (inSingleColumnView()) {
             // Single-column View
-            // The TOC is a band across the page which is fixed to the top of 
+            // The TOC is a band across the page which is fixed to the top of
             // the page when viewing sections beneath it.
             // Bring the section requested right up underneath this floating TOC.
             var $accordion = $('#mobile_toc_accordion_container');
@@ -368,6 +370,9 @@ function accessContentsFromHash(hash) {
             $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again.
             // Check if the section was actually focused
             if ($focusSection.is(":focus")) {
+                if(callback){
+                    callback();
+                }
                 return false;
             } else {
                 // Add a tabindex to section header since they aren't focusable.
@@ -375,7 +380,10 @@ function accessContentsFromHash(hash) {
                 // but not via sequential keyboard navigation.
                 $focusSection.attr('tabindex', '-1');
                 $focusSection.focus();                
-            }        
+                if(callback){
+                    callback();
+                }
+            }
         });
     } else {
         defaultToFirstPage();
@@ -455,5 +463,187 @@ $(document).ready(function() {
         handleFloatingTableOfContent();
         addGuideRatingsListener();
         handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
+    });
+
+    // Handle tabbing from inside the guide column
+    function getGuideColumnFocusElement(elementWithFocus, shiftIsPressed){
+        var elemToFocus;
+        // Get list of all tabbable elements under the current step
+        var tabbableElements = elementWithFocus.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled):not(.unavailable)');
+        var firstTabbable = tabbableElements.first();
+        var lastTabbable = tabbableElements.last();
+        if(shiftIsPressed){
+            // Shift tab from the guide column
+            // Check if on the first tabbable element or there are no tabbable elements
+            if(elementWithFocus[0] === firstTabbable[0] || tabbableElements.length === 0){                
+                // Trigger loading the previous step and go to the code column
+                var prevStepHash = $('#toc_container .liSelected').prev().children().attr('href'); // Get the next step's toc hash
+                if(prevStepHash){
+                    if(inSingleColumnView()){
+                        // Focus the previous guide section's last element
+                        var step = $(prevStepHash);
+                        elemToFocus = step.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled):not(.unavailable)').last();
+                        if(elemToFocus.length === 0){
+                            // If no tabbable elements are found within the step, tab to the step.
+                            elemToFocus = step;
+                        }
+                    }
+                    else {
+                        accessContentsFromHash(prevStepHash, function(){
+                            $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)').last().focus();
+                        });
+                    }
+                }
+                else {
+                    // On the first actual guide step. Send focus to the guide meta section.
+                    elemToFocus = $('#guide_meta');
+                }
+            }
+        }
+        else {
+            // Regular tab from the guide column
+            // If the focused element is not the last tabbable, then we will return nothing so the next default element to tab to will not be overriden.
+            if (elementWithFocus[0] === lastTabbable[0] || tabbableElements.length === 0) {
+                if(inSingleColumnView()){
+                    var nextStepHash = $('#toc_container .liSelected').next().children().attr('href'); 
+                    if (nextStepHash) {
+                        // Load the next step
+                        accessContentsFromHash(nextStepHash, function(){
+                            $(nextStepHash).focus();
+                        });
+                    } else{
+                        // The very first time you visit the guide and nothing is selected in the TOC, tab to the first step.
+                        if($('#toc_container .liSelected').length === 0){       
+                            var firstStepHash = $('#toc_container li').first().children().attr('href');
+                            accessContentsFromHash(firstStepHash);
+                        }
+                    }
+                }
+                else{
+                    // If tabbing away from the last tabbable element in the section or there are no tabbable elements in the guide section, focus on the code column
+                    elemToFocus = $('#code_column'); 
+                }                
+            }
+        }        
+        
+        return elemToFocus;
+    }
+
+
+    // Handle tabbing from inside the code column
+    function getCodeColumnFocusElement(elementWithFocus, shiftIsPressed) {
+        var elemToFocus;
+        var tabbableElements = $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)'); // Get list of all tabbable elements under current step widgets.
+        var lastTabbable = tabbableElements.last();
+        if(shiftIsPressed){
+            // Shift tab from the code column
+            if(elementWithFocus[0] === $("#code_column")[0]){
+                var thisStepHash = $('#toc_container .liSelected').children().attr('href'); // Get the next step's toc hash                    
+                if(thisStepHash){
+                    var step = $(thisStepHash);
+                    elemToFocus = step.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled):not(.unavailable)').last();
+                    if(elemToFocus.length === 0){
+                        // If no tabbable elements are found within the step, tab to the step.
+                        // Check if the step is on the screen to focus it. If it isn't on the screen, it needs to be scrolled to.
+                        var pageTop = window.scrollY;
+                        var headerHeight = $('nav').height();
+                        var pageOffset = Math.round(pageTop + headerHeight);
+                        var stepOffset = Math.round(step.offset().top);
+                        if(stepOffset > pageOffset){
+                            elemToFocus = step;
+                        }
+                        else {
+                            accessContentsFromHash(thisStepHash);
+                        }                        
+                    }
+                }
+                else {
+                    // If there are no previous steps, focus the guide meta.
+                    elemToFocus = $('#guide_meta');
+                }
+            }
+        }
+        else {
+            // Regular tab from the code column     
+            if(elementWithFocus[0] === lastTabbable[0]) { // If you're tabbing away from the last tabbable element in the widgets, focus needs to go back to the next step content
+                var nextStepHash = $('#toc_container .liSelected').next().children().attr('href'); //get the next step's toc hash
+                var nextStepID = null;          
+
+                if (nextStepHash) {
+                    // Load the next step
+                    accessContentsFromHash(nextStepHash, function(){
+                        $(nextStepHash).focus();
+                    });
+                } else {
+                    // The very first time you visit the guide and nothing is selected in the TOC, tab to the first step.
+                    if($('#toc_container .liSelected').length === 0){                        
+                        var firstStepHash = $('#toc_container li').first().children().attr('href');
+                        accessContentsFromHash(firstStepHash);
+                    }               
+                    // On the last step's code column, tab to the end of guide
+                    else if($('#toc_container li').last().hasClass('liSelected')){
+                        $('#end_of_guide_left_section').focus();
+                    }
+                }
+
+                if(nextStepID){
+                    var nextTabbableElement = $(nextStepID).find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)').first(); // Get the next tabbable element from the next step content section
+                    elemToFocus = nextTabbableElement;
+                }
+            }
+        }
+        return elemToFocus;
+    }
+
+    // Handle manual tabbing order through the guide. The tabbing order is: header, breadcrumb, table of contents, #guide_meta, github popup if present, first guide section, through all of the guide section's tabbable elements, to the respective code on the right for that given guide section, through all of its tabbable elements, etc. until the last guide section and code are tabbed through, then to the end of guide section. Shift + tab goes in the reverse order.
+    $(window).on('keydown', function(e) {      
+      if($("body").data('scrolling') === true){
+         e.preventDefault();
+         e.stopPropagation();
+         return;
+      }
+      var code = e.keyCode || e.which;
+      var shiftIsPressed = e.shiftKey;
+      var elemToFocus;      
+
+      // Tab key
+      if (code === 9) {
+        var elementWithFocus = $(document.activeElement);
+        if (elementWithFocus[0] == $("#guide_column")[0] || elementWithFocus.parents('#guide_column').length > 0) {
+            if (elementWithFocus.attr('id') === 'guide_meta') {
+                // Tabbing from the initial section before the guide starts
+                if(shiftIsPressed) {
+                    // Go to the table of contents if visible
+                    if($('#tags_container:visible').length > 0){
+                        elemToFocus = $('#tags_container a').last();
+                    }
+                    // Else go to the breadcrumb
+                    else {
+                        elemToFocus = $('#breadcrumb_row a').last();
+                    }
+                }
+                else {
+                    // The intro step doesn't have elements you can tab to go straight to code_column     
+                    if(!inSingleColumnView()){
+                        // Do not prevent the default tab behavior in single column view.
+                        elemToFocus = $('#code_column');
+                    }
+                }          
+            }
+            else {                
+                elemToFocus = getGuideColumnFocusElement(elementWithFocus, shiftIsPressed);
+            }            
+        } 
+        // Handle tabbing from code column
+        else if (elementWithFocus[0] == $("#code_column")[0] || elementWithFocus.parents('#code_column').length > 0) {
+            elemToFocus = getCodeColumnFocusElement(elementWithFocus, shiftIsPressed);
+        }
+
+        if(elemToFocus && elemToFocus.length > 0){
+            // Only stop the default tab/shift+tab behavior if we found a custom element to override the default behavior to tab to. 
+            e.preventDefault();
+            elemToFocus.focus();
+        }
+      }
     });
 });

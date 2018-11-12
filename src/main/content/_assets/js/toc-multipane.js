@@ -129,7 +129,6 @@ function TOCEntryClick(liElement, event) {
     if(inSingleColumnView()){
         $("#mobile_close_container").trigger('click');
     }
-
 }
 
 // Restructure the TOC because Asciidoc nests levels in the TOC and it affects the CSS poorly.
@@ -184,6 +183,20 @@ $(document).ready(function() {
         // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
         $("#guide_column").addClass('expanded');
 
+    });
+
+    $('#close_container img').on('keydown', function(event) {
+        // Enter key
+        if(event.which === 13 || event.keyCode === 13){
+            $('#close_container').click();
+        }
+    });
+
+    $('#mobile_close_container img').on('keydown', function(event) {
+        // Enter key
+        if(event.which === 13 || event.keyCode === 13){
+            $('#mobile_close_container').click();
+        }
     });
 
     // These handlers only work for static guides.   At the time this

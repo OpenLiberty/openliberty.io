@@ -61,6 +61,7 @@
 
 #breadcrumb_hamburger:focus{
     outline: none;
+    box-shadow: 0 0 2px 2px #51a7e8; /* keyboard-only focus styles */
 }
 
 #breadcrumb_hamburger .icon-bar {
@@ -177,25 +178,29 @@
 
 #close_container {
     display: none;
-}
 
-#close_container:after{
-    clear: both;
-    content: "";
-    height: 0;
-    visibility: hidden;
-    display: block;
-}
+    &:after {
+        clear: both;
+        content: "";
+        height: 0;
+        visibility: hidden;
+        display: block;
+    }
 
-#close_container > img {
-    position: absolute;
-    top: -5px;
-    right: 27px;
-    margin-top: 20px;
-}
+    & > img {
+        position: absolute;
+        top: -5px;
+        right: 27px;
+        margin-top: 20px;
 
-#close_container > img:hover{
-    cursor: pointer;
+        &:hover {
+            cursor: pointer;
+        }
+
+        &:focus {
+            box-shadow: 0 0 2px 2px #51a7e8; /* keyboard-only focus styles */
+        }
+    }
 }
 
 #mobile_close_container {
