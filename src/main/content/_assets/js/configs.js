@@ -627,11 +627,12 @@ function getSelectedDocHtml() {
     return href;
 }
 
+// Add custom scrolling behavior to the iframe containing the documentation
 function handleContentScrolling() {
     if (!isMobileView()) {
         var frameContents = $('iframe[name="contentFrame"]').contents();
         var lastViewPos = -99999;
-
+        
         var onContentScroll = function () {
             // determine whether it is scrolling up or down
             var scrollDown = false;
@@ -640,6 +641,12 @@ function handleContentScrolling() {
             }
             lastViewPos = $(this).scrollTop();
             var breadcrumbVisible = $('.contentStickyBreadcrumbHeader').is(':visible');
+
+            if(frameContents.find('#overview_title').length > 0) {
+                // No top breadcrumb bar for overview pages,
+                // therefore skip all the breadcrumb handling code
+                return;
+            }
 
             // content breadcrumb only appears after content title and its first table are out of view
             var initialContentInView = isInitialContentInView();
@@ -699,7 +706,6 @@ function isInitialContentInView() {
             if ($(".contentStickyBreadcrumbHeader").is(':visible')) {
                 breadcrumbHeight = $(".contentStickyBreadcrumbHeader").outerHeight();
             }
-            //var frameHeight = frameContents[0].documentElement.clientHeight;
             if (lastInitialContentElementRect.top + lastInitialContentElementRect.height - breadcrumbHeight < 0) {
                 inViewPort = false;
             }
