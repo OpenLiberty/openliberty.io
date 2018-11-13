@@ -66,7 +66,7 @@ function addTOCClick() {
 
     // listen for focusin causing by tab. not mouse
     var mousedown = false;
-    $("#toc_container a").off('mousedown').on('mousedown', function(event) {
+    $("#toc_container a").off('mousedown').on('mousedown', function() {
         mousedown = true;
     });
 
@@ -195,7 +195,7 @@ function scrollToPos(pos) {
         $("#background_container").css('height', iframeContents.height() + "px");
         $('html, body').animate({
             scrollTop: pos
-          }, 400);
+        }, 400);
         $('footer').show();
     } else if (isIPadView()) {
         $('html, body').animate({
@@ -238,27 +238,25 @@ function handleExpandCollapseState(titleId, isExpand) {
 //   href: the content url including hash to point to the nested title
 //   expand: use only if the event is triggered by the toggle button to expand/collapse the content
 function updateHashInUrl(href, isExpand) {
-    //if (!isMobileView()) {
-        var hashInUrl = href;
-        if (href.indexOf("/config/") !== -1) {
-            hashInUrl = href.substring(8);
+    var hashInUrl = href;
+    if (href.indexOf("/config/") !== -1) {
+        hashInUrl = href.substring(8);
+    }
+    // a null is used by mobile for the TOC page
+    var state = null;
+    if (href !== "") {
+        state = { href: href };
+    }
+    if (isExpand !== undefined) {
+        if (isExpand) {
+            hashInUrl += "&expand=true";
+            state.expand = true;
+        } else {
+            hashInUrl += "&expand=false";
+            state.expand = false;
         }
-        // a null is used by mobile for the TOC page
-        var state = null;
-        if (href !== "") {
-            state = { href: href }
-        }
-        if (isExpand !== undefined) {
-            if (isExpand) {
-                hashInUrl += "&expand=true";
-                state.expand = true;
-            } else {
-                hashInUrl += "&expand=false";
-                state.expand = false;
-            }
-        }
-        window.history.pushState(state, null, '#' + hashInUrl);
-    //}
+    }
+    window.history.pushState(state, null, '#' + hashInUrl);
 }
 
 // Display the first doc content by default
@@ -443,10 +441,10 @@ function addExpandAndCollapseToggleButtons(subHeading, titleId) {
 
     // listen for focus causing by tab. not mouse
     var mousedown = false;
-    toggleButton.on('mousedown', function(event) {
+    toggleButton.on('mousedown', function() {
         mousedown = true;
     });
-    toggleButton.on('focus', function(e) {
+    toggleButton.on('focus', function() {
         if (!mousedown) {
             // Scroll the parent window back up if it is scroll down
             adjustParentScrollView();
@@ -539,8 +537,8 @@ function handleDeferredExpandCollapseElements(deferredElements) {
                 addExpandAndCollapseToggleButtons(subHeading, titleId);
                 return false;
             }
-        })
-    })
+        });
+    });
 }
 
 // change the evenly divided fixed cell width (25%)
@@ -634,7 +632,7 @@ function handleContentScrolling() {
         var frameContents = $('iframe[name="contentFrame"]').contents();
         var lastViewPos = -99999;
 
-        var onContentScroll = function (e) {
+        var onContentScroll = function () {
             // determine whether it is scrolling up or down
             var scrollDown = false;
             if (lastViewPos < $(this).scrollTop()) {
@@ -669,7 +667,7 @@ function handleContentScrolling() {
                     if ($(this).parent().is(":visible") && isInViewport($(this), frameView, closestAnchor)) {
                         return false;
                     }
-                })
+                });
 
                 if (closestAnchor.element && !closestAnchor.inView) {
                     var title = closestAnchor.element.parent().text();
@@ -680,7 +678,7 @@ function handleContentScrolling() {
 
                 adjustParentScrollView();
             }
-        }
+        };
 
         frameContents.unbind('scroll').bind('scroll', onContentScroll);
     }
@@ -711,10 +709,6 @@ function isInitialContentInView() {
 }
 
 function isInViewport(anchorElement, viewWindow, closestAnchor) {
-    var closestTop = -999999;
-    if (closestAnchor.top) {
-        closestTop = closestAnchor.top;
-    }
     var element = anchorElement.parent();
     var elementTop = element[0].getBoundingClientRect().top;
     // factor in the fixed header height including the main header if the parent scrollbar is scrolled to the 
@@ -1088,7 +1082,7 @@ function updateHashAfterRedirect() {
 }
 
 function replaceHistoryState(hashToReplace) {
-    var fullHref = "/config/" + hashToReplace.substring(1)
+    var fullHref = "/config/" + hashToReplace.substring(1);
     var isExpand = undefined;
     if (fullHref.indexOf("&") !== -1) {
         fullHref = fullHref.substring(0, fullHref.indexOf("&"));
@@ -1150,7 +1144,6 @@ $(document).ready(function () {
                 updateMainBreadcrumb(TOCElement);
             }
 
-            //if (!isMobileView()) {
             if (!isMobileView() && !isIPadView()) {         
                 handleContentScrolling();
             } 
@@ -1171,14 +1164,12 @@ $(document).ready(function () {
             }
 
             // update hash if it is redirect
-            updateHashAfterRedirect()
+            updateHashAfterRedirect();
 
             if (isMobileView() && $("#toc_column").hasClass('in')) {
                 $(".breadcrumb_hamburger_nav").trigger('click');
             }
-            //if ($(this).contents().attr("location").href.indexOf("#") !== -1) {
-                handleIFrameDocPosition($(this).contents().attr("location").href);
-            //}
+            handleIFrameDocPosition($(this).contents().attr("location").href);
             if (isMobileView()) {
                 $('footer').show();
             }
