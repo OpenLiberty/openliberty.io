@@ -10,14 +10,25 @@ permalink: /docs/ref/config/
 ---
 
 <!-- Build list of config pages -->
-{% assign configDocs = site.pages | where: 'layout', 'config' %}
+{% assign allConfigDocs = site.pages | where: 'layout', 'config' %}
+{% assign configDocs = allConfigDocs | where_exp: "page", "page.type != 'overview'" %}
+{% assign configOverviewDoc = allConfigDocs | where: 'type', 'overview' %}
 <div id="background_container">
     <!-- Config's table of contents section -->
     <div id="toc_column" class="col-sm-3 collapsed in">
         <div id="toc_inner">
-            <h3 id="toc_title">Server Configuration</h3>
             {% if configDocs %}
             <div id="toc_container">
+                <!-- Overview section -->
+                <ul>
+                    {% for overview in configOverviewDoc %}
+                    <li>
+                        <a href="{{ overview.url }}" target="contentFrame">Overview</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <h3 id="toc_title">Server Configuration</h3>
+                <!-- List of pages section -->
                 <ul>
                     {% for config in configDocs %}
                     <li>
