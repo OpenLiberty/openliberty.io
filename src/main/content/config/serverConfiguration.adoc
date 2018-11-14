@@ -25,7 +25,7 @@ This example `server.xml` configures the server to support Java Server Pages 2.3
 to listen to incoming traffic to localhost on port 9080, and to automatically
 expand WAR files when they are deployed.
 
-The `server.xml` is described in more detail [below](#server.xml). When
+The `server.xml` is described in more detail <<server-xml,below>>. When
 discussing config for {projectName}, the term server config maybe used to refer
 to all of the files that make up the server config, or specifically to the
 config held in XML files; this is usually clear in context and, if not, the
@@ -68,7 +68,7 @@ characters.
 == jvm.options
 The `jvm.options` files are optional, but when present are read by the
 `bin/server` shell script to determine what options to use when
-launching the JVM to start {projectName}. The `jvm.options` files are read
+launching the JVM for {projectName}. The `jvm.options` files are read
 from the following locations in order:
 
 * `${wlp.user.dir}/shared/jvm.options`
@@ -101,7 +101,7 @@ command line and ignore prior options). Certain options must not be put in the
 The `bootstrap.properties` file is optional. When present it is read during
 {projectName} bootstrap to provide config for the earliest stages of the
 server start-up. It is read by the server much earlier than `server.xml` so it
-can affect the start-up and behavior of the {productName} kernel right from the
+can affect the start-up and behavior of the {projectName} kernel right from the
 start. The `bootstrap.properties` file is a simple Java properties file and is
 located in `${server.config.dir}`. A common use of the `bootstrap.properties`
 file is to configure logging because it can affect logging behavior before them
@@ -113,6 +113,7 @@ bootstrap stage. This include file could, for example, contain a common set of
 bootstrap properties to be used by multiple servers. Set the `bootstrap.include`
 to an absolute or relative file path.
 
+[#server-xml]
 == server.xml
 
 The most important config file is the `server.xml` file. It is a simple
@@ -141,6 +142,7 @@ dropping server formatted XML files into directories. Within the two
 You can parameterize server config using variables. When resolving
 variable names the following sources are consulted in increasing order of
 precedence:
+
 * `bootstrap.properties`
 * Java system properties
 * `server.xml` config
@@ -151,17 +153,22 @@ specify variables using the variable element:
     <variable name="variableName" value="some.value" />
 
 In addition to these locations, environment variables can be accessed by
-prefixing the environment variable name with `env.`.
+adding `env.` to the start of the environment variable name:
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  host="${env.HOST}"
+                  httpPort="9080" />
 
 Variable values are always interpreted as a String with simple type conversion.
 This can lead to situations where a list of ports (e.g. 80,443) is interpreted as
 a single string, rather than two port numbers. In this case, the variable
-substitution can be forced to split on the `,` using a list function. e.g
-`${list(variableName)}`.
+substitution can be forced to split on the `,` using a list function. For example:
+
+    <mongo ports="${list(mongoPorts)}" hosts="${list(mongoHosts)}" />
 
 Simple arithmetic is also supported for variables whose value is an integer.
 The left and right side of the operator can be a variable or a number, and the
-operator can be one of `+`, `-`, `*`, `/`.
+operator can be one of `+`, `-`, `*`, `/` for example:
 
     <variable name="one" value="1" />
     <variable name="two" value="${one+1}" />
@@ -260,7 +267,8 @@ to indicate they are the same thing. Variable substitution on an `id` is not
 supported.
 
 The following example configures two applications. One is `myapp.war` and has a
-context root of `myawesomeapp` and the other is `myapp2.war`:
+context root of `myawesomeapp` and the other is `myapp2.war` which has `myapp2` as 
+the context root:
 
     <server>
         <webApplication id="app1" location="myapp.war" />
@@ -338,8 +346,8 @@ config. When this happens an XPath-like structure is used. The element name is
 given with the value of the `id` attribute inside square brackets. If no `id` is
 specified in server config, an `id` is automatically generated. From the server
 XML config in the following example, the logs reference the `dataStore` element
-as `dataStore[myDS]` and the child dataSource would be referenced as
-`dataStore[myDS]/dataSource[default-0]`.
+as `dataStore[myDS]` and the child dataSource would be identfied as
+`dataStore[myDS]/dataSource[default-0]` in logs.
 
     <server>
       <dataStore id="myDS">
