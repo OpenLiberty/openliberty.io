@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 var mobileWidth = 767;
-var commandDocsFolder = "/docs/ref/commands/server/"
+var commandDocsFolder = "/docs/ref/commands/server/";
 var windowFocus = false;
 
 // setup and listen to click on table of content
@@ -27,7 +27,7 @@ function addTOCClick() {
         if (isMobileView()) {
             $("#breadcrumb_hamburger").trigger("click");
         }
-    }
+    };
 
     $("#toc_container > ul > li > div").off("click").on("click", onclick);
 
@@ -141,7 +141,7 @@ function addOutlineToTabFocus(selector) {
         if ($(this).hasClass('addFocus')) {
             $(this).removeClass('addFocus');
         }
-    })
+    });
 
     var mousedown = false;
     $(selector).off('mousedown').on('mousedown', function(event) {
@@ -351,4 +351,4 @@ $(document).ready(function () {
     } else {
         selectFirstDoc();
     }
-})
+});
