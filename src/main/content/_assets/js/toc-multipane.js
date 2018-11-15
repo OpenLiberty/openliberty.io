@@ -59,7 +59,7 @@ function handleTOCScrolling() {
 function handleFloatingTOCAccordion() {
     var accordion = $('#mobile_toc_accordion_container');
 
-    var enableFloatingTOCAccordion = function(){ 
+    var enableFloatingTOCAccordion = function(){
         // Put the TOC accordion back into the page and remove the
         // scroller_anchor <div>.
         accordion.removeClass('fixed_toc_accordion');
@@ -73,9 +73,9 @@ function handleFloatingTOCAccordion() {
         // which causes a bounce in the page.
         $('.scroller_anchor').css('height', accordion.height());
         // Fix the TOC accordion to the top of the page.
-        accordion.addClass('fixed_toc_accordion'); 
-    };    
-    
+        accordion.addClass('fixed_toc_accordion');
+    };
+
     if(inSingleColumnView()){
         // Get the accordion start location.  It is the same as
         // scroller_anchor, a <div> that initially has a height of 0.
@@ -86,9 +86,15 @@ function handleFloatingTOCAccordion() {
         if ($(this).scrollTop() >= scroller_anchor && accordion.css('position') !== 'fixed') {
             disableFloatingTOCAccordion();
         } else if ($(this).scrollTop() < scroller_anchor && accordion.css('position') !== 'relative') {
-            // When the user scrolls back up past the scroller_anchor, put the 
+            // When the user scrolls back up past the scroller_anchor, put the
             // accordion back into the page and remove the scroller_anchor <div>.
             enableFloatingTOCAccordion();
+        } else {
+          //mobile_toc_accordion blocks the top part of the TOC column, need to add margin so that 'X' in TOC is visible
+          var tocDistanceFromTop = $('#toc_column').offset().top;
+          if ($(this).scrollTop() >= tocDistanceFromTop) {
+            $('#toc_column').css('margin-top', '40px');
+          }
         }
     }
     else{
@@ -98,33 +104,33 @@ function handleFloatingTOCAccordion() {
 
 /**
  * onClick method for selecting a TOC entry.
- * 
- * @param {*} liElement TOC entry selected  
- * @param {*} event       
+ *
+ * @param {*} liElement TOC entry selected
+ * @param {*} event
  */
 function TOCEntryClick(liElement, event) {
-    // 'this' is the li element in the #toc_container.  
+    // 'this' is the li element in the #toc_container.
     // Its first child is the anchor tag pointing to the id of the section to go to.
     var hash = $(liElement).find('a').prop('hash');
 
     // Handle our own scrolling to the appropriate section so stop event processing.
     event.preventDefault();
     event.stopPropagation();
-    
+
     var windowHash = window.location.hash;
     if (windowHash !== hash) {
         // Update the URL hash with where we wish to go....
         var currentPath = window.location.pathname;
         var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + hash;
-        // Not setting window.location.hash here because that causes the 
+        // Not setting window.location.hash here because that causes the
         // window to scroll immediately to the section.  We want to implement
         // smooth scrolling that is adjusted to account for the sticky header.
-        // So, this history.pushState will allow us to set the URL without 
-        // invoking immediate scrolling.  Then we call accessContentsFromHash 
+        // So, this history.pushState will allow us to set the URL without
+        // invoking immediate scrolling.  Then we call accessContentsFromHash
         // to perform the smooth scrolling to the requested section.
-        history.pushState(null, null, newPath);               
+        history.pushState(null, null, newPath);
     }
-    accessContentsFromHash(hash);                                 
+    accessContentsFromHash(hash);
 
     if(inSingleColumnView()){
         $("#mobile_close_container").trigger('click');
@@ -144,13 +150,13 @@ function reorganizeTOCElements(){
 $(document).ready(function() {
 
     reorganizeTOCElements();
-    
+
     $("#breadcrumb_hamburger").on('click', function(event){
         // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
         if(window.innerWidth >= threeColumnBreakpoint){
             if ($("#toc_column").hasClass('in')) {
                 // TOC is expanded
-                $("#guide_column").addClass('expanded');     
+                $("#guide_column").addClass('expanded');
             }
             else {
                 // TOC is closed
@@ -164,6 +170,36 @@ $(document).ready(function() {
         handleFloatingTableOfContent();
     });
 
+    //In single column view, set focus on 'X' initially when TOC is expanded
+    $('#toc_column').on('shown.bs.collapse', function(){
+      if ($('#mobile_close_container').attr("class").trim().length == 0) { //TOC is visible, doesn't have class 'collapsed'
+        $("#mobile_close_container  img").focus(); //focus on 'X'
+      }
+    });
+
+    //In single column view, close the TOC after tabbing from the last element in the TOC
+    //and focus on the first tabbable element in the first step
+    $('#tags_container').on('keydown', function(){
+      if(inSingleColumnView()) {
+        var tagWithFocus = $(document.activeElement);
+        var lastTag = $('#tags_container').children().last();
+        if (tagWithFocus.is(lastTag)) { //tabbing from the last tag in TOC
+          //hide the toc
+          $('#mobile_close_container').click();
+        }
+      }
+    });
+
+    //Hide the TOC when the ESC key is hit (in single column view)
+    $('#toc_column').on('keydown', function(e){
+      if(inSingleColumnView()) {
+        if(e.which == 27){ //ESC key code
+          //hide the toc
+          $('#mobile_close_container').click();
+        }
+      }
+    });
+
     // Handle collapsing the table of contents from full width into the hamburger
     // This removes the 'x' from the table of contents and turns the hamburger into a bigger 'X' that can be used to close the TOC
     // and then the TOC can be opened again by clicking the hamburger.
@@ -174,7 +210,7 @@ $(document).ready(function() {
         // Show the hamburger button and adjust the header to accomodate it
         $('#breadcrumb_hamburger').addClass('showHamburger');
         $('#breadcrumb_row .breadcrumb').addClass('breadcrumbWithHamburger');
-       
+
         $("#toc_title").css('margin-top', '20px');
 
         // Remove display type from the table of contents
