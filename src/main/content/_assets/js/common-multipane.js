@@ -439,7 +439,7 @@ $(document).ready(function() {
         handleFloatingCodeColumn();
     });
 
-    // Check if on Apple device to disable inertia scrolling since the trackpad doesn't work well.
+    // Check if on Apple device or Internet Explorer/Edge before enabling inertia scrolling since it doesn't work well.
     if(!onAppleDevice() && !onIE()){
         $(window).on('mousewheel DOMMouseScroll', function(event){
             checkForInertialScrolling(event);
