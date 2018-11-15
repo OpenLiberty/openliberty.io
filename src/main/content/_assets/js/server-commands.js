@@ -60,11 +60,11 @@ function addReferenceClick() {
         loadContent(matchingTOCElement, commandDocsFolder + currentHref, true);
 
         return false;
-    }
+    };
 
-    $("#content .sect1 .sectionbody p > a").off("click").on("click", onclick);
+    $("#command_content .sect1 .sectionbody p > a").off("click").on("click", onclick);
 
-    $("#content .sect1 .sectionbody p > a").off("keypress").on('keypress', function (event) {
+    $("#command_content .sect1 .sectionbody p > a").off("keypress").on('keypress', function (event) {
         event.stopPropagation();
         // Enter or space key
         if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
