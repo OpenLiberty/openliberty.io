@@ -8,6 +8,10 @@
 branch_name="$1"
 
 pushd src/main/content
+
+# Remove the folder to allow this repeating execution of this script
+rm -rf docs
+
 echo "Start cloning docs repository..."
 mkdir docs
 cd docs

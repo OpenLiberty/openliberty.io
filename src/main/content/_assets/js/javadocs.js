@@ -128,7 +128,7 @@ function addExpandAndCollapseToggleButtonForPackageFrame(contents, leftBottom) {
             if(collapsed === "true"){
                 // Expand the list
                 list2.show();
-                leftBottom.css("height", "70%");
+                leftBottom.css("height", "55%");
                 $(this).empty().append($('<img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
                 $(this).attr('collapsed', false);
             }
@@ -150,6 +150,13 @@ function addExpandAndCollapseToggleButtonForPackageFrame(contents, leftBottom) {
         header2.append(toggleButton2);
     }            
 }
+function addiPadScrolling() {
+    if (navigator.platform.match(/iPad/)) {
+        $('#javadoc_container').contents().find('.leftTop, .leftBottom, .rightContainer').css("-webkit-overflow-scrolling", "touch");
+        $('#javadoc_container').contents().find('.leftTop, .leftBottom, .rightContainer').css("overflow-y", "scroll");
+    }
+}
+
 
 /*
     Add a listener to scrolling in the main frame.
@@ -176,7 +183,7 @@ function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
     'border-top-width: ' + origBorderTopWidth + '; border-top-style: ' + origBorderTopStyle + '; border-top-color: ' + origBorderTopColor +';}</style>';
     frame.contents().off('scroll').on('scroll', function(event){
         var topPos = $(this).scrollTop();
-        if (topPos >= offsetTop) {
+        if (topPos >= offsetTop - 20) {
             if (!frameHeader.hasClass("sticky")) {
                 // sticky css will set margin-top to 0, otherwise the rolling content will appear in the margin-top area.
                 // To maintain the spacing and look with margin-top removed, replace padding-top and border-top
@@ -218,18 +225,16 @@ function hideFooter(element) {
     var footer = $("footer");        
 
     // Show footer if the scrollTop plus the viewport height of the right iFrame is at least 85% past the bottom of the right iFrame.
-    if ((scrollTop + rightFrameViewportHeight) > height * .85) {         
+    if ((scrollTop + rightFrameViewportHeight) > height * .85) {
         if(!footer.data('visible') || footer.data('visible') === "false"){
             footer.data('visible', true);
             footer.css('display', 'block');
-            resizeJavaDocWindow();
         }
     }
-    else{   
+    else{
         if(footer.data('visible')){
             footer.data('visible', 'false'); 
             footer.css('display', 'none');
-            resizeJavaDocWindow();
         }
     }
 }
@@ -354,9 +359,9 @@ function addClickListener(contents) {
 
 function setPackageContainerHeight() {
     var packageContainer = $('#javadoc_container').contents().find(".leftBottom");
-    if (packageContainer.css("height") !== "70%") {
+    if (packageContainer.css("height") !== "55%") {
         // restore the height in case it is collapsed
-        packageContainer.css("height", "70%");
+        packageContainer.css("height", "55%");
     }
 }
 
@@ -457,7 +462,7 @@ function getJavaDocHtmlPath(href, returnBase) {
 }
 
 $(document).ready(function() {
-
+    
     $(window).on('resize', function(){
         resizeJavaDocWindow();
     });
@@ -471,6 +476,7 @@ $(document).ready(function() {
         addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
         addScrollListener();
         addClickListeners();
+        addiPadScrolling();
 
         $('#javadoc_container').contents().find(CLASS_FRAME).on('load', function(){
             addAccessibility();
