@@ -23,6 +23,9 @@ function inMobile(){
 function onAppleDevice(){
     return (/(Mac|iPhone|iPod|iPad)/i.test(navigator.userAgent));
 }
+function onIE(){
+    return (/(MSIE|Trident\/|Edge\/)/i.test(navigator.userAgent));
+}
 
 // Handle sticky header in IE, because IE doesn't support position: sticky
 function handleStickyHeader() {
@@ -436,8 +439,8 @@ $(document).ready(function() {
         handleFloatingCodeColumn();
     });
 
-    // Check if on Apple device to disable inertia scrolling since the trackpad doesn't work well.
-    if(!onAppleDevice()){
+    // Check if on Apple device or Internet Explorer/Edge before enabling inertia scrolling since it doesn't work well.
+    if(!onAppleDevice() && !onIE()){
         $(window).on('mousewheel DOMMouseScroll', function(event){
             checkForInertialScrolling(event);
         });
