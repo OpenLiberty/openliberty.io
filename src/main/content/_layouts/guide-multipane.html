@@ -23,10 +23,11 @@ js:
                     {% assign toc = page.document | tocify_asciidoc %}
                     {% if toc %}
                     <div id="close_container">
-                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button" tabindex="0"/>
+                        <img id="toc_close_green" src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button" tabindex="0"/>
+                        <img id="toc_close_white" src="{{ " /img/TOC_Close_White.svg " | relative }}" alt="Table of contents close button" tabindex="0"/>
                     </div>
                     <div id="mobile_close_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
-                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button" tabindex="0"/>
+                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button" tabindex="0"/>                        
                     </div>
                     <h3 id="toc_title">Contents</h3>
                     <div id="toc_container">

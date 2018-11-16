@@ -29,10 +29,12 @@ function handleFloatingTableOfContent() {
 
 function disableFloatingTOC() {
     $('#toc_inner').width("").css({"position": "", "top": ""});
+    $('#toc_toggle_line').width("").css({"position": "", "top": ""});
 }
 
 function enableFloatingTOC() {
     $('#toc_inner').css({"position":"fixed", "top":"100px"});
+    $('#toc_toggle_line').css({"position":"fixed", "top":"100px"});
 }
 
 // Remove previous TOC section highlighted and highlight correct step
@@ -146,17 +148,12 @@ $(document).ready(function() {
     reorganizeTOCElements();
 
     $("#toc_hotspot").on('mouseenter', function(){
-        if(!inSingleColumnView()){
-            // $('#breadcrumb_hamburger').removeClass('showHamburger');
-            // $('#breadcrumb_row .breadcrumb').removeClass('breadcrumbWithHamburger');
-        
+        if(!inSingleColumnView()){        
             $("#toc_title").css('margin-top', '0px');
             $("#toc_column").addClass('inline');
             $("#guide_column").removeClass('expanded');
 
-            $("#toc_toggle_line").addClass("open");
-            // $("#toc_column").removeClass("hidden");
-            // $("#toc_column").animate({left: "0"});
+            $("#toc_toggle_line").addClass("open");            
             $("#toc_column").addClass("open");
             $("#guide_column").addClass("open");
         }        
@@ -181,17 +178,8 @@ $(document).ready(function() {
         handleFloatingTableOfContent();
     });
 
-    // Handle collapsing the table of contents from full width into the hamburger
-    // This removes the 'x' from the table of contents and turns the hamburger into a bigger 'X' that can be used to close the TOC
-    // and then the TOC can be opened again by clicking the hamburger.
+    // Handle collapsing the table of contents from full width back into an orange line on the left side of the page.
     $('#close_container').on('click', function() {
-        // Hide the X button
-        // $(this).hide();
-
-        // Show the hamburger button and adjust the header to accomodate it
-        // $('#breadcrumb_hamburger').addClass('showHamburger');
-        // $('#breadcrumb_row .breadcrumb').addClass('breadcrumbWithHamburger');
-       
         $("#toc_title").css('margin-top', '20px');
 
         // Remove display type from the table of contents
@@ -200,6 +188,7 @@ $(document).ready(function() {
         // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
         $("#guide_column").addClass('expanded');
 
+        // Remove open class to transition back
         $("#toc_toggle_line").removeClass("open");
         $("#toc_column").removeClass("open");
         $("#guide_column").removeClass("open");
