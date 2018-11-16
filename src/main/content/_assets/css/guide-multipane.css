@@ -655,8 +655,13 @@ header {
 
 @media (min-width: 1440px) {
     #guide_column {
-        width: calc(100% - 280px - 780px); /* Adjust for the size of the table of contents and the code column */
+        width: calc(100% - 780px);
         display: inline-block;
+    }
+
+    #guide_column.open {        
+        width: calc(100% - 280px - 780px); /* Adjust for the size of the table of contents and the code column */
+        transition: 1s;
     }
 
     #guide_column.expanded {

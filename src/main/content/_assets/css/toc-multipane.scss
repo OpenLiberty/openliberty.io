@@ -80,12 +80,18 @@
 #toc_column {
     position: fixed;
     left: 0;
-    width: 280px;
+    width: 0;
     padding-bottom: 22px;
     vertical-align: top;
     background-color: white;
     z-index: 7; /* to override the z-index valued of 4 and 6 for code mirror in interactive guide */
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.21);
+
+    &.open {
+        left: 0;
+        width: 280px;
+        transition: 1s;
+    }
 }
 
 #toc_inner {
@@ -93,7 +99,7 @@
 }
 
 // Todo move this before toc_column
-#toc_hitbox {
+#toc_hotspot {
     position: absolute;
     z-index: 999;
     opacity: 0;
@@ -113,6 +119,7 @@
 
     &.open {
         left: 275px;
+        // transition: 1s;
     }
 }
 
@@ -314,12 +321,6 @@
     color: #4f660a;
 }
 
-/* @media only screen and (max-width: 1170px) {
-    #mobile_toc_accordion .breadcrumb_hamburger {
-        border: none;
-    }
-} */
-
 @media (max-width: 1170px) {
 
     #toc_column {
@@ -464,6 +465,7 @@
         margin: 0 -15px;
     }
 
+    /* Table of Contents */    
     #close_container {
         display: none;
     }
@@ -473,7 +475,7 @@
     }
 }
 
-@media (min-width: 1440px) {    
+@media (min-width: 1440px) {
 
     #breadcrumb_hamburger {
         display: none;
@@ -505,7 +507,7 @@
 
     #toc_column {
         float: left;
-        left: 0;
+        left: -280px;
         position: relative;
         padding-bottom: 22px;
         background-color: white;
@@ -519,5 +521,12 @@
 
     #toc_inner {
         width: inherit;
+    }
+}
+
+@media (max-width: 1440px) {
+    #toc_hotspot, 
+    #toc_toggle_line {
+        display: none;
     }
 }

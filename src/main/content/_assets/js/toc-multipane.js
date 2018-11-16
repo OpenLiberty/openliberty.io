@@ -145,16 +145,21 @@ $(document).ready(function() {
 
     reorganizeTOCElements();
 
-    $("#toc_hitbox").on('mouseenter', function(){
-        $('#breadcrumb_hamburger').removeClass('showHamburger');
-        $('#breadcrumb_row .breadcrumb').removeClass('breadcrumbWithHamburger');
-       
-        $("#toc_title").css('margin-top', '0px');
-        $("#toc_column").addClass('inline');
-        $("#guide_column").removeClass('expanded');
+    $("#toc_hotspot").on('mouseenter', function(){
+        if(!inSingleColumnView()){
+            // $('#breadcrumb_hamburger').removeClass('showHamburger');
+            // $('#breadcrumb_row .breadcrumb').removeClass('breadcrumbWithHamburger');
+        
+            $("#toc_title").css('margin-top', '0px');
+            $("#toc_column").addClass('inline');
+            $("#guide_column").removeClass('expanded');
 
-        $("#toc_toggle_line").addClass("open");
-        $("#toc_column").removeClass("hidden");
+            $("#toc_toggle_line").addClass("open");
+            // $("#toc_column").removeClass("hidden");
+            // $("#toc_column").animate({left: "0"});
+            $("#toc_column").addClass("open");
+            $("#guide_column").addClass("open");
+        }        
     });
     
     $("#breadcrumb_hamburger").on('click', function(event){
@@ -184,8 +189,8 @@ $(document).ready(function() {
         // $(this).hide();
 
         // Show the hamburger button and adjust the header to accomodate it
-        $('#breadcrumb_hamburger').addClass('showHamburger');
-        $('#breadcrumb_row .breadcrumb').addClass('breadcrumbWithHamburger');
+        // $('#breadcrumb_hamburger').addClass('showHamburger');
+        // $('#breadcrumb_row .breadcrumb').addClass('breadcrumbWithHamburger');
        
         $("#toc_title").css('margin-top', '20px');
 
@@ -196,7 +201,8 @@ $(document).ready(function() {
         $("#guide_column").addClass('expanded');
 
         $("#toc_toggle_line").removeClass("open");
-        $("#toc_column").addClass("hidden");
+        $("#toc_column").removeClass("open");
+        $("#guide_column").removeClass("open");
     });
 
     $('#close_container img').on('keydown', function(event) {
