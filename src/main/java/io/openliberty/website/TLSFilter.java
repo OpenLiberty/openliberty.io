@@ -22,6 +22,36 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 public class TLSFilter implements Filter {
+<<<<<<< HEAD
+=======
+
+    // A list of deprecated URLs that need to be redirected using the HTTP 302.
+    private final Map<String, String> TEMP_REDIRECTS = 
+        new HashMap<String, String>() {{
+            put("/index.html/", "/index.html");
+            put("/docs/ref/javaee/", "/docs/ref/javaee/8/");
+            put("/docs/ref/microprofile/", "/docs/ref/microprofile/2.0/");
+            put("/docs/ref/", "/docs/"); 
+            put("/docs/intro/", "/docs/");
+            put("/guides/microprofile-intro.html", "/guides/cdi-intro.html");
+            // put("old uri", "new uri");
+    }};
+
+    // A list of URLS that redirect to external blog posts
+    private final Map<String, String> EXTERNAL_REDIRECTS = 
+        new HashMap<String, String>() {{
+            // put("old uri", "new uri");
+    }};
+
+    // Generic deprecated redirect URLS that need to be redirected.
+    private final Map<String, String> GENERIC_REDIRECTS = new HashMap<String,String>(){
+        {
+            put("/news","/blog");
+            put("/config/rwlp_config_", "/config/");
+        }
+    };
+
+>>>>>>> Add 301 redirect for blog posts
     public void destroy() {
     }
 
@@ -60,6 +90,42 @@ public class TLSFilter implements Filter {
           } else {
         	  response.setHeader("Cache-Control", "no-cache");
           }
+<<<<<<< HEAD
+=======
+        
+          // REDIRECT CODE FOR HTTPS TRAFFIC
+          if(TEMP_REDIRECTS.containsKey(uri)) {
+              String newURI = TEMP_REDIRECTS.get(uri);
+              String sPort = getServerPort(req);
+              String newURL = req.getScheme() + "://" + req.getServerName() + sPort + newURI;
+              response.sendRedirect(newURL);
+              // We want to redirect the Servlet and stop further processing of
+              // the incoming request.
+              return;
+          }
+          // 301 redirect to external blog posts
+          if(EXTERNAL_REDIRECTS.containsKey(uri)) {
+              String newURI = EXTERNAL_REDIRECTS.get(uri);
+              response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+              response.setHeader("Location", newURI);
+              // We want to redirect the Servlet and stop further processing of
+              // the incoming request.
+              return;
+          }
+          // Generic redirects that handle multiple URIs
+          for(String key: GENERIC_REDIRECTS.keySet()){
+              if(uri.startsWith(key)){
+                  // Redirect using the old value replaced by the new value
+                  String newURI = uri.replaceAll(key, GENERIC_REDIRECTS.get(key));
+                  String sPort = getServerPort(req);
+                  String newURL = req.getScheme() + "://" + req.getServerName() + sPort + newURI;
+                  response.sendRedirect(newURL);
+                  // We want to redirect the Servlet and stop further processing of
+                  // the incoming request.
+                  return;
+              }
+          }
+>>>>>>> Add 301 redirect for blog posts
         }
         chain.doFilter(req, resp);
     }
