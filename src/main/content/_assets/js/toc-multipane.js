@@ -144,6 +144,18 @@ function reorganizeTOCElements(){
 $(document).ready(function() {
 
     reorganizeTOCElements();
+
+    $("#toc_hitbox").on('mouseenter', function(){
+        $('#breadcrumb_hamburger').removeClass('showHamburger');
+        $('#breadcrumb_row .breadcrumb').removeClass('breadcrumbWithHamburger');
+       
+        $("#toc_title").css('margin-top', '0px');
+        $("#toc_column").addClass('inline');
+        $("#guide_column").removeClass('expanded');
+
+        $("#toc_toggle_line").addClass("open");
+        $("#toc_column").removeClass("hidden");
+    });
     
     $("#breadcrumb_hamburger").on('click', function(event){
         // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
@@ -167,9 +179,9 @@ $(document).ready(function() {
     // Handle collapsing the table of contents from full width into the hamburger
     // This removes the 'x' from the table of contents and turns the hamburger into a bigger 'X' that can be used to close the TOC
     // and then the TOC can be opened again by clicking the hamburger.
-    $('#close_container').on('click', function(event) {
+    $('#close_container').on('click', function() {
         // Hide the X button
-        $(this).hide();
+        // $(this).hide();
 
         // Show the hamburger button and adjust the header to accomodate it
         $('#breadcrumb_hamburger').addClass('showHamburger');
@@ -183,6 +195,8 @@ $(document).ready(function() {
         // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
         $("#guide_column").addClass('expanded');
 
+        $("#toc_toggle_line").removeClass("open");
+        $("#toc_column").addClass("hidden");
     });
 
     $('#close_container img').on('keydown', function(event) {
