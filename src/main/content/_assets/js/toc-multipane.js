@@ -157,6 +157,21 @@ function reorganizeTOCElements(){
     });
 }
 
+function restoreCurrentStep(){
+    // Restore user to section they were viewing after collapsing/expanding the TOC.
+    var hash = window.location.hash;
+    accessContentsFromHash(hash);
+
+    // If the current step isn't at the top after 1 second due to resizing of the text, then move to it.
+    setTimeout(function(){
+        var sectionTop = $(hash);
+        var offset = sectionTop[0].offsetHeight;        
+        if(Math.abs(offset) > 5){
+            accessContentsFromHash(hash);
+        } 
+    }, 1000);
+}
+
 
 $(document).ready(function() {
 
@@ -176,6 +191,8 @@ $(document).ready(function() {
             $("#toc_toggle_line").addClass("open");            
             $("#toc_column").addClass("open");
             $("#guide_column").addClass("open");
+
+            restoreCurrentStep();
         }        
     });
     
@@ -190,9 +207,7 @@ $(document).ready(function() {
                 // TOC is closed
                 $("#guide_column").removeClass('expanded');
             }
-            // Restore user to section they were viewing after collapsing/expanding the TOC.
-            var hash = window.location.hash;
-            accessContentsFromHash(hash);
+            restoreCurrentStep();
         }
         // Handle table of content floating if in the middle of the guide.
         handleFloatingTableOfContent();
@@ -212,6 +227,8 @@ $(document).ready(function() {
         $("#toc_toggle_line").removeClass("open");
         $("#toc_column").removeClass("open");
         $("#guide_column").removeClass("open");
+
+        restoreCurrentStep();
     });
 
     $('#close_container img').on('keydown', function(event) {
