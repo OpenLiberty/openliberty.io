@@ -15,10 +15,12 @@ function handleFloatingTableOfContent() {
         // The top of the TOC is scrolling off the screen, enable floating TOC.
         if(isBackgroundBottomVisible()) {
             handleTOCScrolling();
+            shrinkTOCIndicator();
         } else {
             // The entire viewport is filled with the background, so
             // do not need to worry about the TOC flowing out of the background.
             enableFloatingTOC();
+            expandTOCIndicator();
         }
     } else {
         // CURRENTLY IN MOBILE VIEW OR 2 COLUMN VIEW
@@ -29,12 +31,25 @@ function handleFloatingTableOfContent() {
 
 function disableFloatingTOC() {
     $('#toc_inner').width("").css({"position": "", "top": ""});
-    $('#toc_toggle_line').width("").css({"position": "", "top": ""});
 }
 
 function enableFloatingTOC() {
     $('#toc_inner').css({"position":"fixed", "top":"100px"});
-    $('#toc_toggle_line').css({"position":"fixed", "top":"100px"});
+    
+}
+
+function shrinkTOCIndicator() {
+    var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
+    var headerHeight = $('header').height();
+    $('#toc_toggle_line').css({
+        "position": "", 
+        "top": "",
+        "height": endOfGuidePosition - headerHeight
+    });
+}
+
+function expandTOCIndicator() {
+    $('#toc_toggle_line').css({"position":"fixed", "top":"101px"});
 }
 
 // Remove previous TOC section highlighted and highlight correct step
@@ -146,6 +161,11 @@ function reorganizeTOCElements(){
 $(document).ready(function() {
 
     reorganizeTOCElements();
+
+    var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
+    $("#toc_toggle_line").css(
+        {'height': endOfGuidePosition}
+    );
 
     $("#toc_hotspot").on('mouseenter', function(){
         if(!inSingleColumnView()){        
