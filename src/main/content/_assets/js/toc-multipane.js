@@ -163,13 +163,29 @@ function restoreCurrentStep(){
     accessContentsFromHash(hash);
 
     // If the current step isn't at the top after 1 second due to resizing of the text, then move to it.
-    setTimeout(function(){
-        var sectionTop = $(hash);
-        var offset = sectionTop[0].offsetHeight;        
-        if(Math.abs(offset) > 5){
-            accessContentsFromHash(hash);
-        } 
-    }, 1000);
+    if(hash){
+        setTimeout(function(){
+            var sectionTop = $(hash);
+            var offset = sectionTop[0].offsetHeight;        
+            if(Math.abs(offset) > 5){
+                accessContentsFromHash(hash);
+            } 
+        }, 1000);
+    }    
+}
+
+function openTOC(){
+    if(!inSingleColumnView()){        
+        $("#toc_title").css('margin-top', '0px');
+        $("#toc_column").addClass('inline');
+        $("#guide_column").removeClass('expanded');
+
+        $("#toc_toggle_line").addClass("open");            
+        $("#toc_column").addClass("open");
+        $("#guide_column").addClass("open");
+
+        restoreCurrentStep();
+    }
 }
 
 
@@ -182,18 +198,14 @@ $(document).ready(function() {
         {'height': endOfGuidePosition}
     );
 
+    $("#toc_toggle_line").on("keydown", function(e){
+        if(e.which === 13){
+            openTOC();
+        }
+    });
+
     $("#toc_hotspot").on('mouseenter', function(){
-        if(!inSingleColumnView()){        
-            $("#toc_title").css('margin-top', '0px');
-            $("#toc_column").addClass('inline');
-            $("#guide_column").removeClass('expanded');
-
-            $("#toc_toggle_line").addClass("open");            
-            $("#toc_column").addClass("open");
-            $("#guide_column").addClass("open");
-
-            restoreCurrentStep();
-        }        
+        openTOC();  
     });
     
     $("#breadcrumb_hamburger").on('click', function(event){
