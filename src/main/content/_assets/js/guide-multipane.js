@@ -32,7 +32,8 @@ $(document).ready(function() {
             var duplicate_code_block = code_block.clone();
             code_block.hide();
 
-            var header = get_header_from_element(code_block);                       
+            var header = get_header_from_element(code_block);    
+            header.setAttribute('data-has-code', 'true');               
             guide_sections.push(header);
             code_sections[header.id] = duplicate_code_block;
 
@@ -377,14 +378,13 @@ $(document).ready(function() {
        Handle showing/hiding the Github popup.
     */
     function handleGithubPopup() {
-        // If the page is scrolled down past the top of the page then hide the github clone popup
         var githubPopup = $("#github_clone_popup_container");
         if(githubPopup.length > 0){
-            // Check if the "What You'll Learn" section is scrolled past yet.
-            var whatYoullLearnTop = Math.round($("#what-youll-learn, #what-you-ll-learn")[0].getBoundingClientRect().top);
+            // Check if the first guide section that has code to show on the right has been scrolled past yet.
+            var firstCodeSectionTop = Math.round($('[data-has-code]')[0].getBoundingClientRect().top);
             var navHeight = $('.navbar').height();
-            var atTop = (whatYoullLearnTop - navHeight) > 0;
-            if(atTop){
+            var showGihubPopup = (firstCodeSectionTop - navHeight) > 0;
+            if(showGihubPopup){
                 githubPopup.fadeIn();
                 $("#code_column .code_column").addClass('dimmed_code_column', {duration:400});
             }
