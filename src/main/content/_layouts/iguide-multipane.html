@@ -21,7 +21,8 @@ js:
             <div id="toc_column" class="collapse inline">
                 <div id="toc_inner">
                     <div id="close_container">
-                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button" tabindex="0"/>
+                        <img id="toc_close_green" src="{{ " /img/TOC_Close.svg " | relative }}" alt="Close the table of contents" tabindex="0"/>
+                        <img id="toc_close_white" src="{{ " /img/TOC_Close_White.svg " | relative }}" alt="Close the table of contents" tabindex="0"/>
                     </div>
                     <div id="mobile_close_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
                         <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button" tabindex="0"/>
@@ -43,7 +44,10 @@ js:
                     {% endif %}
                 </div>
             </div>
-            <div id="toc_toggle_line" tabindex="0" aria-label="Open the table of contents"></div>  
+            <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents">
+                <img src="/img/arrow_white.svg" alt="arrow">
+            </div>
+            <div id="toc_toggle_line"></div>  
             <!-- Entire guide section -->
             <div id="guide_column" class="position_relative">
                 <div id="guide_content">
