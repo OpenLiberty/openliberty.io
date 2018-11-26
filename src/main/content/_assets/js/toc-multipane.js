@@ -161,20 +161,9 @@ function restoreCurrentStep(){
     // Restore user to section they were viewing after collapsing/expanding the TOC.
     var hash = window.location.hash;
     accessContentsFromHash(hash);
-
-    // If the current step isn't at the top after 1 second due to resizing of the text, then move to it.
-    if(hash){
-        setTimeout(function(){
-            var sectionTop = $(hash);
-            var offset = sectionTop[0].offsetHeight;        
-            if(Math.abs(offset) > 5){
-                accessContentsFromHash(hash);
-            } 
-        }, 1000);
-    }    
 }
 
-function openTOC(){
+function open_TOC(){
     if(!inSingleColumnView()){        
         $("#toc_title").css('margin-top', '0px');
         $("#toc_column").addClass('inline');
@@ -198,7 +187,7 @@ $(document).ready(function() {
     var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
     $("#toc_toggle_line").css(
         {'height': endOfGuidePosition}
-    );    
+    );
 
     // Add listener for clicking on the
     $("#toc_hotspot, #toc_indicator").on('mouseenter', function(){
@@ -219,13 +208,18 @@ $(document).ready(function() {
     });
 
     $("#toc_indicator").on('click', function(){
-        openTOC();
+        open_TOC();
     });
 
     $("#toc_indicator").on("keydown", function(e){
         if(e.which === 13){
-            openTOC();
+            open_TOC();
         }
+    });
+
+    // Restore current step's position when the guide column resizes.
+    $("#guide_column").on('transitionend', function(){
+        restoreCurrentStep();
     });
     
     $("#breadcrumb_hamburger").on('click', function(event){
