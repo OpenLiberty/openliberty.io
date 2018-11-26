@@ -176,10 +176,10 @@ function checkForInertialScrolling (event){
                 if (prevSection.offset() !== undefined) {
                     scrollPosition = prevSection.offset().top - windowHeight + prevSectionHeight;
                 }
-                return false;              
+                return false;
             }
         }
-    });   
+    });
     if(scrollPosition){
         event.preventDefault();
         event.stopPropagation();
@@ -382,7 +382,7 @@ function accessContentsFromHash(hash, callback) {
                 // tabindex = -1 means that the element should be focusable,
                 // but not via sequential keyboard navigation.
                 $focusSection.attr('tabindex', '-1');
-                $focusSection.focus();                
+                $focusSection.focus();
                 if(callback){
                     callback();
                 }
@@ -444,7 +444,7 @@ $(document).ready(function() {
         $(window).on('mousewheel DOMMouseScroll', function(event){
             checkForInertialScrolling(event);
         });
-    }    
+    }
 
     $(window).on('scroll', function() {
         handleFloatingTOCAccordion();
@@ -478,7 +478,7 @@ $(document).ready(function() {
         if(shiftIsPressed){
             // Shift tab from the guide column
             // Check if on the first tabbable element or there are no tabbable elements
-            if(elementWithFocus[0] === firstTabbable[0] || tabbableElements.length === 0){                
+            if(elementWithFocus[0] === firstTabbable[0] || tabbableElements.length === 0){
                 // Trigger loading the previous step and go to the code column
                 var prevStepHash = $('#toc_container .liSelected').prev().children().attr('href'); // Get the next step's toc hash
                 if(prevStepHash){
@@ -499,7 +499,12 @@ $(document).ready(function() {
                 }
                 else {
                     // On the first actual guide step. Send focus to the guide meta section.
-                    elemToFocus = $('#guide_meta');
+                    if (inSingleColumnView()){
+                      //In single column view, the TOC hamburger button is in between the first guide step and guide_meta section
+                      $('.breadcrumb_hamburger toc-toggle collapsed').focus();
+                    } else {
+                      elemToFocus = $('#guide_meta');
+                    }
                 }
             }
         }
@@ -508,7 +513,7 @@ $(document).ready(function() {
             // If the focused element is not the last tabbable, then we will return nothing so the next default element to tab to will not be overriden.
             if (elementWithFocus[0] === lastTabbable[0] || tabbableElements.length === 0) {
                 if(inSingleColumnView()){
-                    var nextStepHash = $('#toc_container .liSelected').next().children().attr('href'); 
+                    var nextStepHash = $('#toc_container .liSelected').next().children().attr('href');
                     if (nextStepHash) {
                         // Load the next step
                         accessContentsFromHash(nextStepHash, function(){
@@ -516,7 +521,7 @@ $(document).ready(function() {
                         });
                     } else{
                         // The very first time you visit the guide and nothing is selected in the TOC, tab to the first step.
-                        if($('#toc_container .liSelected').length === 0){       
+                        if($('#toc_container .liSelected').length === 0){
                             var firstStepHash = $('#toc_container li').first().children().attr('href');
                             accessContentsFromHash(firstStepHash);
                         }
@@ -524,11 +529,11 @@ $(document).ready(function() {
                 }
                 else{
                     // If tabbing away from the last tabbable element in the section or there are no tabbable elements in the guide section, focus on the code column
-                    elemToFocus = $('#code_column'); 
-                }                
+                    elemToFocus = $('#code_column');
+                }
             }
-        }        
-        
+        }
+
         return elemToFocus;
     }
 
@@ -541,7 +546,7 @@ $(document).ready(function() {
         if(shiftIsPressed){
             // Shift tab from the code column
             if(elementWithFocus[0] === $("#code_column")[0]){
-                var thisStepHash = $('#toc_container .liSelected').children().attr('href'); // Get the next step's toc hash                    
+                var thisStepHash = $('#toc_container .liSelected').children().attr('href'); // Get the next step's toc hash
                 if(thisStepHash){
                     var step = $(thisStepHash);
                     elemToFocus = step.closest('.sect1').find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled):not(.unavailable)').last();
@@ -557,7 +562,7 @@ $(document).ready(function() {
                         }
                         else {
                             accessContentsFromHash(thisStepHash);
-                        }                        
+                        }
                     }
                 }
                 else {
@@ -567,10 +572,10 @@ $(document).ready(function() {
             }
         }
         else {
-            // Regular tab from the code column     
+            // Regular tab from the code column
             if(elementWithFocus[0] === lastTabbable[0]) { // If you're tabbing away from the last tabbable element in the widgets, focus needs to go back to the next step content
                 var nextStepHash = $('#toc_container .liSelected').next().children().attr('href'); //get the next step's toc hash
-                var nextStepID = null;          
+                var nextStepID = null;
 
                 if (nextStepHash) {
                     // Load the next step
@@ -579,10 +584,10 @@ $(document).ready(function() {
                     });
                 } else {
                     // The very first time you visit the guide and nothing is selected in the TOC, tab to the first step.
-                    if($('#toc_container .liSelected').length === 0){                        
+                    if($('#toc_container .liSelected').length === 0){
                         var firstStepHash = $('#toc_container li').first().children().attr('href');
                         accessContentsFromHash(firstStepHash);
-                    }               
+                    }
                     // On the last step's code column, tab to the end of guide
                     else if($('#toc_container li').last().hasClass('liSelected')){
                         $('#end_of_guide_left_section').focus();
@@ -599,7 +604,7 @@ $(document).ready(function() {
     }
 
     // Handle manual tabbing order through the guide. The tabbing order is: header, breadcrumb, table of contents, #guide_meta, github popup if present, first guide section, through all of the guide section's tabbable elements, to the respective code on the right for that given guide section, through all of its tabbable elements, etc. until the last guide section and code are tabbed through, then to the end of guide section. Shift + tab goes in the reverse order.
-    $(window).on('keydown', function(e) {      
+    $(window).on('keydown', function(e) {
       if($("body").data('scrolling') === true){
          e.preventDefault();
          e.stopPropagation();
@@ -607,7 +612,7 @@ $(document).ready(function() {
       }
       var code = e.keyCode || e.which;
       var shiftIsPressed = e.shiftKey;
-      var elemToFocus;      
+      var elemToFocus;
 
       // Tab key
       if (code === 9) {
@@ -626,24 +631,24 @@ $(document).ready(function() {
                     }
                 }
                 else {
-                    // The intro step doesn't have elements you can tab to go straight to code_column     
+                    // The intro step doesn't have elements you can tab to go straight to code_column
                     if(!inSingleColumnView()){
                         // Do not prevent the default tab behavior in single column view.
                         elemToFocus = $('#code_column');
                     }
-                }          
+                }
             }
-            else {                
+            else {
                 elemToFocus = getGuideColumnFocusElement(elementWithFocus, shiftIsPressed);
-            }            
-        } 
+            }
+        }
         // Handle tabbing from code column
         else if (elementWithFocus[0] == $("#code_column")[0] || elementWithFocus.parents('#code_column').length > 0) {
             elemToFocus = getCodeColumnFocusElement(elementWithFocus, shiftIsPressed);
         }
 
         if(elemToFocus && elemToFocus.length > 0){
-            // Only stop the default tab/shift+tab behavior if we found a custom element to override the default behavior to tab to. 
+            // Only stop the default tab/shift+tab behavior if we found a custom element to override the default behavior to tab to.
             e.preventDefault();
             elemToFocus.focus();
         }
