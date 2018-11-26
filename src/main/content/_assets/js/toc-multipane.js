@@ -184,6 +184,8 @@ function openTOC(){
         $("#toc_column").addClass("open");
         $("#guide_column").addClass("open");
 
+        $("#toc_indicator").hide();
+
         restoreCurrentStep();
     }
 }
@@ -196,16 +198,34 @@ $(document).ready(function() {
     var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
     $("#toc_toggle_line").css(
         {'height': endOfGuidePosition}
-    );
+    );    
 
-    $("#toc_toggle_line").on("keydown", function(e){
+    // Add listener for clicking on the
+    $("#toc_hotspot, #toc_indicator").on('mouseenter', function(){
+        // Animate out the arrow and highlight the left side of the screen orange to indicate there is a TOC
+        if(!$("#toc_column").hasClass('open')){
+            $("#toc_toggle_line").css(
+                {'background-color': 'orange'}
+            );
+            $("#toc_indicator").addClass('open');
+        }        
+    });
+
+    $("#toc_hotspot").on('mouseleave', function(){
+        $("#toc_toggle_line").css(
+            {'background-color': 'transparent'}
+        );  
+        $("#toc_indicator").removeClass('open');
+    });
+
+    $("#toc_indicator").on('click', function(){
+        openTOC();
+    });
+
+    $("#toc_indicator").on("keydown", function(e){
         if(e.which === 13){
             openTOC();
         }
-    });
-
-    $("#toc_hotspot").on('mouseenter', function(){
-        openTOC();  
     });
     
     $("#breadcrumb_hamburger").on('click', function(event){
@@ -239,6 +259,8 @@ $(document).ready(function() {
         $("#toc_toggle_line").removeClass("open");
         $("#toc_column").removeClass("open");
         $("#guide_column").removeClass("open");
+
+        $("#toc_indicator").show();
 
         restoreCurrentStep();
     });
