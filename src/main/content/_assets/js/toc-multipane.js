@@ -207,6 +207,17 @@ $(document).ready(function() {
     });
 
     $("#toc_hotspot").on('mouseleave', function(){
+        var x = event.x;
+        var y = event.y;
+        var headerHeight = $('header').height();
+        var indicatorHeight = $("#toc_indicator").outerHeight();
+        
+        y = y - headerHeight;
+        if(x >= 0 && x <= this.offsetWidth && y >= 0 && y <= indicatorHeight){
+            // Still hovering over the TOC indicator arrow, so don't remove the orange line and arrow.
+            return;
+        }
+
         $("#toc_toggle_line").css(
             {'background-color': 'transparent'}
         );  
