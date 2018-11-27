@@ -41,7 +41,7 @@ function enableFloatingTOC() {
 function shrinkTOCIndicator() {
     var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
     var headerHeight = $('header').height();
-    $('#toc_toggle_line').css({
+    $('#toc_line').css({
         "position": "", 
         "top": "",
         "height": endOfGuidePosition - headerHeight
@@ -49,7 +49,7 @@ function shrinkTOCIndicator() {
 }
 
 function expandTOCIndicator() {
-    $('#toc_toggle_line').css({"position":"fixed", "top":"101px"});
+    $('#toc_line').css({"position":"fixed", "top":"101px"});
 }
 
 // Remove previous TOC section highlighted and highlight correct step
@@ -81,6 +81,8 @@ function handleFloatingTOCAccordion() {
         // scroller_anchor <div>.
         accordion.removeClass('fixed_toc_accordion');
         $('.scroller_anchor').css('height', 0);
+        // Restore toc location.
+        $('#toc_column').css('margin-top', '0px');
     };
     var disableFloatingTOCAccordion = function(){
         // Change the height of the scroller_anchor to that of the accordion
@@ -90,7 +92,7 @@ function handleFloatingTOCAccordion() {
         // which causes a bounce in the page.
         $('.scroller_anchor').css('height', accordion.height());
         // Fix the TOC accordion to the top of the page.
-        accordion.addClass('fixed_toc_accordion');
+        accordion.addClass('fixed_toc_accordion');        
     };
 
     if(inSingleColumnView()){
@@ -175,7 +177,7 @@ function open_TOC(){
         $("#toc_column").addClass('inline');
         $("#guide_column").removeClass('expanded');
 
-        $("#toc_toggle_line").addClass("open");            
+        $("#toc_line").addClass("open");            
         $("#toc_column").addClass("open");
         $("#guide_column").addClass("open");
 
@@ -191,7 +193,7 @@ $(document).ready(function() {
     reorganizeTOCElements();
 
     var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
-    $("#toc_toggle_line").css(
+    $("#toc_line").css(
         {'height': endOfGuidePosition}
     );
 
@@ -199,29 +201,31 @@ $(document).ready(function() {
     $("#toc_hotspot, #toc_indicator").on('mouseenter', function(){
         // Animate out the arrow and highlight the left side of the screen orange to indicate there is a TOC
         if(!$("#toc_column").hasClass('open')){
-            $("#toc_toggle_line").css(
-                {'background-color': 'orange'}
+            $("#toc_line").css(
+                {'background-color': 'rgb(255, 216, 191)'}
             );
             $("#toc_indicator").addClass('open');
         }        
     });
 
     $("#toc_hotspot").on('mouseleave', function(){
-        var x = event.x;
-        var y = event.y;
-        var headerHeight = $('header').height();
-        var indicatorHeight = $("#toc_indicator").outerHeight();
-        
-        y = y - headerHeight;
-        if(x >= 0 && x <= this.offsetWidth && y >= 0 && y <= indicatorHeight){
-            // Still hovering over the TOC indicator arrow, so don't remove the orange line and arrow.
-            return;
-        }
+        if(!$("#toc_column").hasClass('open')){
+            var x = event.x;
+            var y = event.y;
+            var headerHeight = $('header').height();
+            var indicatorHeight = $("#toc_indicator").outerHeight();
+            
+            y = y - headerHeight;
+            if(x >= 0 && x <= this.offsetWidth && y >= 0 && y <= indicatorHeight){
+                // Still hovering over the TOC indicator arrow, so don't remove the orange line and arrow.
+                return;
+            }
 
-        $("#toc_toggle_line").css(
-            {'background-color': 'transparent'}
-        );  
-        $("#toc_indicator").removeClass('open');
+            $("#toc_line").css(
+                {'background-color': 'transparent'}
+            );  
+            $("#toc_indicator").removeClass('open');
+        }        
     });
 
     $("#toc_indicator").on('click', function(){
@@ -297,10 +301,11 @@ $(document).ready(function() {
         $("#guide_column").addClass('expanded');
 
         // Remove open class to transition back
-        $("#toc_toggle_line").removeClass("open");
+        $("#toc_line").removeClass("open");
         $("#toc_column").removeClass("open");
         $("#guide_column").removeClass("open");
 
+        $("#toc_indicator").removeClass('open');
         $("#toc_indicator").show();
 
         restoreCurrentStep();
