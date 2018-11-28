@@ -383,7 +383,7 @@ $(document).ready(function() {
             // Check if the first guide section that has code to show on the right has been scrolled past yet.
             var firstCodeSectionTop = Math.round($('[data-has-code]')[0].getBoundingClientRect().top);
             var navHeight = $('.navbar').height();
-            var showGithubPopup = (firstCodeSectionTop - navHeight) > 0;
+            var showGithubPopup = (firstCodeSectionTop - navHeight) > 1;
             if(showGithubPopup){
                 githubPopup.fadeIn();
                 $("#code_column .code_column").addClass('dimmed_code_column', {duration:400});
