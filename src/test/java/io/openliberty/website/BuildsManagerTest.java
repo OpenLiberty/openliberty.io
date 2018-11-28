@@ -16,6 +16,7 @@ import io.openliberty.website.data.BuildLists;
 import io.openliberty.website.data.BuildData;
 import io.openliberty.website.data.BuildInfo;
 import io.openliberty.website.data.LastUpdate;
+import io.openliberty.website.dheclient.DHEBuildParser;
 import io.openliberty.website.mock.EmptyVersionsDHEClient;
 import io.openliberty.website.mock.MockDHEClient;
 import io.openliberty.website.mock.NullDHEClient;
@@ -24,30 +25,17 @@ public class BuildsManagerTest {
 
     @Test
     public void default_initialized_BuildManager() {
-        BuildsManager bm = new BuildsManager();
+        BuildsManager bm = new BuildsManager(new DHEBuildParser(new NullDHEClient()));
 
         LastUpdate status = bm.getStatus();
         assertEquals(Constants.NEVER_ATTEMPTED, status.getLastUpdateAttempt());
         assertEquals(Constants.NEVER_UPDATED, status.getLastSuccessfulUpdate());
     }
 
-    @Test
-    public void isAllowedToRun() {
-        BuildsManager bm = new BuildsManager(new MockDHEClient());
-
-        assertTrue("The first call to isBuildUpdateAllowed should always return true", bm.isBuildUpdateAllowed());
-        assertTrue("The second call to isBuildUpdateAllowed should return true if no update has been attempted",
-                bm.isBuildUpdateAllowed());
-
-        bm.updateBuilds();
-
-        assertFalse("Calls to isBuildUpdateAllowed should return false if a successful update recently occurred",
-                bm.isBuildUpdateAllowed());
-    }
 
     @Test
     public void validate_state_of_BuildManager_after_failed_update() {
-        BuildsManager bm = new BuildsManager(new NullDHEClient());
+        BuildsManager bm = new BuildsManager(new DHEBuildParser(new NullDHEClient()));
         LastUpdate status = bm.updateBuilds();
 
         assertEquals(status, bm.getStatus());
@@ -66,7 +54,7 @@ public class BuildsManagerTest {
 
 	@Test
 	public void validate_state_of_BuildManager_with_no_releases() {
-		BuildsManager bm = new BuildsManager(new EmptyVersionsDHEClient());
+		BuildsManager bm = new BuildsManager(new DHEBuildParser(new EmptyVersionsDHEClient()));
 		LastUpdate status = bm.updateBuilds();
 
 		assertEquals(status, bm.getStatus());
@@ -122,7 +110,7 @@ public class BuildsManagerTest {
 
     @Test
     public void validate_state_of_BuildManager_after_successful_update() {
-        BuildsManager bm = new BuildsManager(new MockDHEClient());
+        BuildsManager bm = new BuildsManager(new DHEBuildParser(new MockDHEClient()));
         LastUpdate status = bm.updateBuilds();
 
         assertEquals(status, bm.getStatus());
@@ -178,7 +166,7 @@ public class BuildsManagerTest {
 
     @Test
     public void getData_after_failed_update() {
-        BuildsManager bm = new BuildsManager(new NullDHEClient());
+        BuildsManager bm = new BuildsManager(new DHEBuildParser(new NullDHEClient()));
         BuildData data = bm.getData();
         assertEquals("{\"latest_releases\":{},\"builds\":{}}", data.asJsonObject().toString());
     }

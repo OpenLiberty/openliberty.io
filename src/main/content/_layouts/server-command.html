@@ -1,8 +1,13 @@
+{% if page.type == "overview" %}
+    {% include overview.html %}
+{% else %}
 <div id="content">
-    {% assign titleWithNoCommand = page.title | split: ' command' %}
-    <div id="command_title"> {{ titleWithNoCommand }}
+    <div id="command_title">
+        {% assign titleWithNoCommand = page.title | split: ' command' %}
+        {{ titleWithNoCommand }}
     </div>
 
     <!-- Command content section -->
     {{ content }}
 </div>
+{% endif %}

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 var mobileWidth = 767;
-var commandDocsFolder = "/docs/ref/commands/server/"
+var commandDocsFolder = "/docs/ref/commands/server/";
 var windowFocus = false;
 
 // setup and listen to click on table of content
@@ -27,7 +27,7 @@ function addTOCClick() {
         if (isMobileView()) {
             $("#breadcrumb_hamburger").trigger("click");
         }
-    }
+    };
 
     $("#toc_container > ul > li > div").off("click").on("click", onclick);
 
@@ -60,11 +60,11 @@ function addReferenceClick() {
         loadContent(matchingTOCElement, commandDocsFolder + currentHref, true);
 
         return false;
-    }
+    };
 
-    $("#content .sect1 .sectionbody p > a").off("click").on("click", onclick);
+    $("#command_content .sect1 .sectionbody p > a").off("click").on("click", onclick);
 
-    $("#content .sect1 .sectionbody p > a").off("keypress").on('keypress', function (event) {
+    $("#command_content .sect1 .sectionbody p > a").off("keypress").on('keypress', function (event) {
         event.stopPropagation();
         // Enter or space key
         if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
@@ -141,7 +141,7 @@ function addOutlineToTabFocus(selector) {
         if ($(this).hasClass('addFocus')) {
             $(this).removeClass('addFocus');
         }
-    })
+    });
 
     var mousedown = false;
     $(selector).off('mousedown').on('mousedown', function(event) {
@@ -351,4 +351,4 @@ $(document).ready(function () {
     } else {
         selectFirstDoc();
     }
-})
+});

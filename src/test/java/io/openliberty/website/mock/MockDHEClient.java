@@ -6,7 +6,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
 import io.openliberty.website.Constants;
-import io.openliberty.website.DHEClient;
+import io.openliberty.website.dheclient.DHEClient;
 
 public class MockDHEClient extends DHEClient {
 

@@ -1,8 +1,12 @@
 ---
 layout: config-content
-css: config
+css: 
+    - config
+    - overview
 ---
-
+{% if page.type == "overview" %}
+    {% include overview.html %}
+{% else %}
 <div id="content">
     <div id="config_title"> {{ page.title }}
     </div>
@@ -10,3 +14,4 @@ css: config
     <!-- Config content section -->
     {{ content }}
 </div>
+{% endif %}

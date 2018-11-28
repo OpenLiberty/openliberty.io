@@ -1,4 +1,4 @@
-package io.openliberty.website;
+package io.openliberty.website.dheclient;
 
 import java.io.StringReader;
 
@@ -10,6 +10,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import io.openliberty.website.Constants;
 
 public class DHEClient {
 	private Client client = null;
