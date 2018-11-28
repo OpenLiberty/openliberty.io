@@ -352,15 +352,6 @@ header {
         max-width: 50%;
         float: left;
 
-        &[disabled] {
-            pointer-events: none;
-            outline: none;
-
-            & > a {
-                background-color: inherit;
-            }
-        }
-
         & > a {
             text-overflow: ellipsis;
             overflow: hidden;
@@ -383,6 +374,16 @@ header {
             &:hover {
                 background-color: #D6DAE6;
                 cursor: pointer;
+            }
+        }
+        
+        /* Keep below to override the normal styling */
+        &[disabled] {
+            pointer-events: none;
+            outline: none;
+
+            & > a {
+                background-color: inherit;
             }
         }
     }

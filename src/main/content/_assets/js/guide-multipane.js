@@ -87,6 +87,12 @@ $(document).ready(function() {
         code_block.show();
     });
 
+    $('.code_column_tab').on('keydown', function(e){
+        if(e.which === 13){
+            $(this).click();
+        }
+    });
+
     // Highlights a block of code in a code section
     // Input code_section: The section of code to highlight.
     //       from_line: Integer for what line to start highlighting from.
