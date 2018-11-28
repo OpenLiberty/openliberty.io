@@ -395,7 +395,11 @@ $(document).ready(function() {
         var githubPopup = $("#github_clone_popup_container");
         if(githubPopup.length > 0){
             // Check if the first guide section that has code to show on the right has been scrolled past yet.
-            var firstCodeSectionTop = Math.round($('[data-has-code]')[0].getBoundingClientRect().top);
+            var firstCodeSection = $('[data-has-code]').first();
+            if(firstCodeSection.is('h3')){
+                firstCodeSection = firstCodeSection.parents('.sect1').find('h2').first();
+            }
+            var firstCodeSectionTop = Math.round(firstCodeSection[0].getBoundingClientRect().top);
             var navHeight = $('.navbar').height();
             var showGithubPopup = (firstCodeSectionTop - navHeight) > 0;
             if(showGithubPopup){
