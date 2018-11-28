@@ -73,6 +73,7 @@ $(document).ready(function() {
     // Hide all code blocks except the first
     $('#code_column .code_column:not(:first)').hide();
     $('.code_column_tab:not(:first)').hide();
+    setActiveTab(first_code_block.attr('fileName'));
 
 
     // Load the correct tab when clicking
@@ -394,22 +395,28 @@ $(document).ready(function() {
             if(showGithubPopup){
                 githubPopup.fadeIn();
                 $("#code_column .code_column").addClass('dimmed_code_column', {duration:400});
-                
+                $('.code_column_tab').attr('disabled', true);
             }
             else{            
                 githubPopup.fadeOut();
                 $("#code_column .code_column").removeClass('dimmed_code_column', {duration:400});
+                $('.code_column_tab').attr('disabled', false);
             }
         }                
     }
 
     // Sets the active tab in the code column and moves it to the front of the tab list.
-    function setActiveTab(fileName){
-        var activeTab = $(".code_column_tab:contains(" + fileName + ")").detach();
+    // fileName: name of the file to set active
+    // setAsFirstTab: boolean whether to move this active tab to the front or not.
+    function setActiveTab(fileName, setAsFirstTab){
+        var activeTab = $(".code_column_tab:contains(" + fileName + ")");
         $('.code_column_tab > a').removeClass('active');
         activeTab.children('a').addClass('active');
         activeTab.show();
-        $('#code_column_tabs').prepend(activeTab);
+        if(setAsFirstTab){
+            activeTab.detach();
+            $('#code_column_tabs').prepend(activeTab);
+        }        
     }
 
     // Hide other code blocks and show the correct code block based on provided id.
@@ -422,7 +429,7 @@ $(document).ready(function() {
 
                 // Set active tab
                 var fileName = code_block.attr('fileName');
-                setActiveTab(fileName);
+                setActiveTab(fileName, true);
             }
         } catch(e) {
             console.log(e);

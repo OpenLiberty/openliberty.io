@@ -351,6 +351,16 @@ header {
     & > li {
         max-width: 50%;
         float: left;
+
+        &[disabled] {
+            pointer-events: none;
+            outline: none;
+
+            & > a {
+                background-color: inherit;
+            }
+        }
+
         & > a {
             text-overflow: ellipsis;
             overflow: hidden;
