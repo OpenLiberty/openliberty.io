@@ -32,29 +32,23 @@ $(document).ready(function() {
             var duplicate_code_block = code_block.clone();
             code_block.hide();
 
-            var header = get_header_from_element(code_block);    
+            var header = get_header_from_element(code_block);
             header.setAttribute('data-has-code', 'true');               
             guide_sections.push(header);
             code_sections[header.id] = duplicate_code_block;
 
             // Create a title pane for the code section
-            duplicate_code_block.attr('fileName', fileName);            
+            duplicate_code_block.attr('fileName', fileName);
 
-            // Move file name to the code column
-            var title_section = $("<div class='code_column_title_container'></div>");
-            var title_div = $("<div class='code_column_title' tabindex='0'>" + fileName + "</div>");
-            title_section.append(title_div);
+            // Create a tab in the code column for this file.
+            var tab = $("<li class='code_column_tab' role='presentation' tabindex='0'></li>");
+            var anchor = $("<a>" + fileName + "</a>");
+            tab.append(anchor);
 
             // Remove old title from the DOM
             metadata_sect.detach();
-
-            // Add a copy file button and add it to the title section
-            var copyFileButton = $("<div class='copyFileButton' tabindex=0>");
-            var img = $("<img src='/img/guide_copy_button.svg' alt='Copy file contents' />");
-            copyFileButton.append(img);
-            title_section.append(copyFileButton);
-
-            duplicate_code_block.prepend(title_section);
+            
+            $('#code_column_tabs').append(tab);
             duplicate_code_block.addClass('dimmed_code_column'); // Dim the code at first while the github popup takes focus.
             duplicate_code_block.appendTo('#code_column'); // Move code to the right column
         }
@@ -78,6 +72,19 @@ $(document).ready(function() {
 
     // Hide all code blocks except the first
     $('#code_column .code_column:not(:first)').hide();
+    $('.code_column_tab:not(:first)').hide();
+
+
+    // Load the correct tab when clicking
+    $('.code_column_tab').on('click', function(){
+        var fileName = $(this).text();
+        setActiveTab(fileName);
+
+        // Show the code block
+        var code_block = $(".code_column[fileName='" + fileName + "']");
+        $('#code_column .code_column').not(code_block).hide();
+        code_block.show();
+    });
 
     // Highlights a block of code in a code section
     // Input code_section: The section of code to highlight.
@@ -387,12 +394,22 @@ $(document).ready(function() {
             if(showGithubPopup){
                 githubPopup.fadeIn();
                 $("#code_column .code_column").addClass('dimmed_code_column', {duration:400});
+                
             }
             else{            
                 githubPopup.fadeOut();
                 $("#code_column .code_column").removeClass('dimmed_code_column', {duration:400});
             }
         }                
+    }
+
+    // Sets the active tab in the code column and moves it to the front of the tab list.
+    function setActiveTab(fileName){
+        var activeTab = $(".code_column_tab:contains(" + fileName + ")").detach();
+        $('.code_column_tab > a').removeClass('active');
+        activeTab.children('a').addClass('active');
+        activeTab.show();
+        $('#code_column_tabs').prepend(activeTab);
     }
 
     // Hide other code blocks and show the correct code block based on provided id.
@@ -402,6 +419,10 @@ $(document).ready(function() {
             if(code_block){
                 $('#code_column .code_column').not(code_block).hide();
                 code_block.show();
+
+                // Set active tab
+                var fileName = code_block.attr('fileName');
+                setActiveTab(fileName);
             }
         } catch(e) {
             console.log(e);
