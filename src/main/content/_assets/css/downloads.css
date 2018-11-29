@@ -11,37 +11,91 @@
  
 /* INTRO */
 
+
 #downloads_intro_background {
     padding-top: 190px;
-    padding-bottom: 74px;
+    padding-bottom: 35.5px;
     margin-bottom: 46px;
 }
 
+#greenlight {
+    position: absolute;
+    right: calc(50% - 643px);
+    top: -71.9px;
+    width: 1659px;
+    height: 524px;
+}
 
-#intro_text {
-    margin-bottom: 50px;
+#leftcloud {
+    position: absolute;
+    right: calc(50% + 662.1px);
+    top: -135.8px;
+    width: 1047.8px;
+    height: 828.6px;
+}
+
+#leftcloud2 {
+    position: absolute;
+    right: calc(50% + 591.5px);
+    top: 342px;
+    width: 258px;
+    height: 127px;
+}
+
+#rightcloud {
+    position: absolute;
+    left: calc(50% + 649px);
+    top: -17px;
+    width: 921px;
+    height: 469px;
+}
+
+#rightcloud2 {
+    position: absolute;
+    left: calc(50% - 79px);
+    top: 141px;
+    width: 897px;
+    height: 340px;
+}
+
+#intro_text_1 {
+    margin-top: 39px;
+    font-size: 20px;
+    color: #2C2E50;
+}
+
+#intro_text_2 {
+    margin-top: 16px;
+    color: #2C2E50;
 }
 
 #main_download_link_container .download_link {
-    display: inline-block;
-    border-radius: 100px;
-    padding-top: 17px;
-    padding-bottom: 17px;
-    padding-left: 59px;
-    padding-right: 30px;
-    font-size: 20px;
+    border-radius: 7px;
     text-decoration: none;
     position: relative;
-    transition: border .2s, background-color .2s; 
+    transition: border .2s, background-color .2s;
+    float: right;
+    color:#2C2E50;
 }
 
 .download_button_label_container {
     display: inline-block;
 }
 
-#main_download_link_container .download_link .button_sub_label {
-    text-align: left;
+.runtime_button_sub_label {
     font-size: 11px;
+    margin-left: 159px;
+    margin-right: 149px;
+    margin-top: -52px;
+    margin-bottom: 32px;
+}
+
+.eclipse_button_sub_label {
+    font-size: 11px;
+    margin-left: 210px;
+    margin-right: 98px;
+    margin-top: -29px;
+    margin-bottom: 13px;
 }
 
 #runtime_releases_title_container {
@@ -49,12 +103,38 @@
     text-align: center;
 }
 
+#runtime_download_link_container {
+    font-size: 20px;
+    margin-top: 48.5px;
+    margin-bottom: 3.5px;
+}
+
+#eclipse_download_link_container {
+    font-size: 16px;
+}
+
+.runtime_download_button_label {
+    font-weight: 500;
+    padding-top: 20px;
+    padding-bottom: 32px;
+    padding-left: 36px;
+    padding-right: 85px;
+}
+
+.eclipse_download_button_label {
+    padding-top: 11px;
+    padding-bottom: 13px;
+    padding-left: 36px;
+    padding-right: 36px;
+}
+
 #runtime_download_link {
     color: #282A4A;
-    background-color: #ABD155;
-    min-width: 270px;
-    text-align: center;
+    background-color: #AAD34B;
+    text-align: left;
+
 }
+
 
 #runtime_download_link .arrow {
     width: 18px;
@@ -62,7 +142,7 @@
     background-image: url('/img/download_arrow_only_main.svg');
     background-repeat: no-repeat;
     position: absolute;
-    left: 26px;
+    right: 26px;
     top: calc(50% - 18px);
     transition: all .3s;
 }
@@ -77,7 +157,7 @@
     background-image: url('/img/download_line_main.svg');
     background-repeat: no-repeat;
     position: absolute;
-    left: 26px;
+    right: 26px;
     top: calc(50% + 12px);
 }
 
@@ -89,11 +169,15 @@
     background-color: #C7EE63;
 }
 
+
+
 #eclipse_developer_tools_download_link {
     margin-left: -40px;
-    border: solid 3px #5E6B8D;
+    border: solid 1px #AAD34B;
     color: #EAF0FF;
-    text-align: center;
+    min-width: 178.5px;
+    min-height: 21px;
+    text-align: left;
 }
 
 #eclipse_developer_tools_download_link:hover {
@@ -101,7 +185,7 @@
 }
 
 #eclipse_developer_tools_download_link_version_text {
-    color: #C8D6FA;
+    color: #5D6A8E;
 }
 
 #eclipse_developer_tools_download_link:hover #eclipse_developer_tools_download_link_version_text {
@@ -114,7 +198,7 @@
     background-image: url('/img/download_arrow_only_eclipse.svg');
     background-repeat: no-repeat;
     position: absolute;
-    left: 26px;
+    right: 26px;
     top: calc(50% - 18px);
     transition: all .3s;
 }
@@ -130,7 +214,7 @@
     background-image: url('/img/download_line_eclipse.svg');
     background-repeat: no-repeat;
     position: absolute;
-    left: 26px;
+    right: 26px;
     top: calc(50% + 12px);
 }
 
@@ -139,7 +223,11 @@
     transform: translateY(-1px);
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 1023px) {
+
+    #intro_logo {
+        display: none;
+    }
 
     #main_download_link_container .download_link {
         width: 310px;
@@ -157,10 +245,31 @@
 
 @media (max-width: 767px) {
 
+    #intro_logo, #leftcloud, #leftcloud2, #rightcloud, #rightcloud2 {
+        display: none;
+    }
+
+    #intro_text_1 {
+        margin-top: 78px;
+        margin-left: 33px;
+        margin-right: 32px;
+    }
+
+    #intro_text_2 {
+        margin-left: 33px;
+        margin-right: 27px;
+    }
+
+    #greenlight {
+        max-height: 403px;
+        z-index: -1;
+    }
+
     #downloads_intro_background {
-        padding-top: 60px;
-        padding-bottom: 60px;
-        margin-bottom: 60px;
+        max-height: 1px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        margin-bottom: 0px;
     }
     
     #intro_logo {
@@ -577,4 +686,3 @@
     color: white;
     background-color: #5E6B8D;
 }
-
