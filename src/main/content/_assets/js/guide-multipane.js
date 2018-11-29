@@ -89,7 +89,7 @@ $(document).ready(function() {
 
     $('.code_column_tab').on('keydown', function(e){
         if(e.which === 13){
-            $(this).click();
+            $(this).trigger('click');
         }
     });
 
@@ -342,7 +342,7 @@ $(document).ready(function() {
     $(".copyFileButton").on('keypress', function(event){
         // Enter key
         if(event.key === "Enter"){
-            $(this).click();
+            $(this).trigger('click');
         }
     });
     
@@ -384,7 +384,7 @@ $(document).ready(function() {
 
     $("#github_clone_popup_copy, #mobile_github_clone_popup_copy").on('keydown', function(event){
         if(event.which === 13 || event.keyCode === 13){
-            $(this).click();
+            $(this).trigger('click');
         }
     });
 
