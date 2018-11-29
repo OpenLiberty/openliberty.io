@@ -188,7 +188,13 @@ function handleIFrameDocPosition(href) {
     }
 }
 
-// Adjust the viewport of the iframe content
+// History: 
+//      From what we can recall from memory, the reason why we have this method is because
+//      in smaller resolutions, for some reason, we need to animate the scroll to allow
+//      a delay for the scrollTop to work.  In large resolutions, the animation scroll is
+//      is not needed.
+// Method:
+//      Adjust the viewport of the iframe content
 function scrollToPos(pos) {
     var iframeContents = $('iframe[name=contentFrame]').contents();
     if (isMobileView()) {
@@ -273,12 +279,12 @@ function selectFirstDoc() {
 function handleSubHeadingsInContent() {
     var contentTitle = getContentBreadcrumbTitle();
     var iframeContents = $('iframe[name=contentFrame]').contents();
-    var anchors = iframeContents.find("div.paragraph > p > a");
+    var anchors = iframeContents.find("div[id='content'] > div.paragraph > p > a");
     var deferAddingExpandAndCollapseToggleButton = [];
 
     if (anchors.length === 0) {
         addAnchorToSubHeadings();
-        anchors = iframeContents.find("div.paragraph > p > a");
+        anchors = iframeContents.find("div[id='content'] > div.paragraph > p > a");
     }
 
     // in reverse order so that we can hide all the nested headings
@@ -309,7 +315,7 @@ function addAnchorToSubHeadings() {
         var id = parent.text().replace(/ > /g, "/");
         var anchorElement = $('<a id="' + id + '"></a>');
         parent.prepend(anchorElement);
-    })
+    });
 }
 
 // Extract the first part of the content title as the breadcrumb title
@@ -595,7 +601,7 @@ function handleSubHeadingsInTOC(TOCElement) {
     removeHashRefTOC(href);
 
     var iframeContents = $('iframe[name=contentFrame]').contents();
-    var anchors = iframeContents.find("div.paragraph > p > a");
+    var anchors = iframeContents.find("div[id='content'] > div.paragraph > p > a");
     var anchorLI = TOCElement.parent();
     var anchorHref = TOCElement.attr("href");
     $(anchors).each(function () {
@@ -969,7 +975,6 @@ function handlePopstate() {
 //   first 2nd subtitle is scrolled into.
 function initialContentBreadcrumbVisibility() {
     if (!isMobileView() && !isIPadView()) {
-    //if (!isMobileView()) {
         // save the content breadcrumb height to be used later as the height could be 1 during the transition 
         // to display it in isInViewPort function
         contentBreadcrumbHeight = $(".contentStickyBreadcrumbHeader").outerHeight();
@@ -1051,7 +1056,6 @@ function isIPadView() {
 // the footer is displayed correctly after the iframe content.
 function adjustFrameHeight() {
     if (isMobileView() || isIPadView()) {
-    //if (isMobileView()) {
         // reset first so that iframe could reveal its height
         $("#background_container").css("height", "auto");
         var frameContents = $('iframe[name="contentFrame"]').contents();
@@ -1123,6 +1127,25 @@ function addWindowResizeListener() {
     });
 }
 
+// This function was written for the Server Configuration overview pages only.
+// When we have a page that has an anchor that references another section in the same page,
+// the browser scrolls that section, on the same page, into view.
+// When the scrolling occurs, the whole page was being scrolled "under" our top navigation bar.
+// Override the default scrolling behavior so that the scroll only occurs within the iframe
+// rather than the whole page
+function addOverviewPageClickAndScroll() {
+    var frameContents = $('iframe[name="contentFrame"]').contents();
+    var allHashAnchorsInOverviewPages = 'div[id="overview_content"] a[href^="#"]';
+    var overviewAnchors = frameContents.find(allHashAnchorsInOverviewPages);
+    overviewAnchors.on("click",function (event) {
+        event.preventDefault();
+        var hash = this.hash;
+        var target = frameContents.find(hash);
+        var newTop = target.offset().top;
+        scrollToPos(newTop);
+    });
+}
+
 $(document).ready(function () {
     addTOCClick();
     addConfigContentFocusListener();
@@ -1133,6 +1156,7 @@ $(document).ready(function () {
     handlePopstate();
 
     $('iframe[name="contentFrame"]').load(function () {
+        addOverviewPageClickAndScroll();
         if ($(this)[0].contentDocument.title !== "Not Found") {
             initialContentBreadcrumbVisibility();
             modifyFixedTableColumnWidth();
