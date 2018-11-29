@@ -374,10 +374,7 @@ $(document).ready(function() {
             selection.addRange(range);
             
             // Try to copy the selection and if it fails display a popup to copy manually.
-            if(document.execCommand('copy')) {                
-                $("#github_clone_popup_container").fadeOut("slow");
-                $(".code_column").removeClass('dimmed_code_column', {duration:400});
-            } else {
+            if(!document.execCommand('copy')) {
                 alert('Copy failed. Copy the command manually: ' + target.innerText);
             } 
             temp.remove(); // Remove temporary element.
