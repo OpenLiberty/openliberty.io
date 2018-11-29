@@ -78,13 +78,15 @@ $(document).ready(function() {
 
     // Load the correct tab when clicking
     $('.code_column_tab').on('click', function(){
-        var fileName = $(this).text();
-        setActiveTab(fileName);
+        if(!$(this).attr('disabled')){
+            var fileName = $(this).text();
+            setActiveTab(fileName);
 
-        // Show the code block
-        var code_block = $(".code_column[fileName='" + fileName + "']");
-        $('#code_column .code_column').not(code_block).hide();
-        code_block.show();
+            // Show the code block
+            var code_block = $(".code_column[fileName='" + fileName + "']");
+            $('#code_column .code_column').not(code_block).hide();
+            code_block.show();
+        }
     });
 
     $('.code_column_tab').on('keydown', function(e){
