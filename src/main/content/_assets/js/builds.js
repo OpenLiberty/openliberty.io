@@ -163,11 +163,25 @@ $(document).ready(function() {
         url: builds_url
     }).done(function(data) {
 
-        $('#runtime_download_button_version').text(data.latest_releases.runtime.version);
-        $('#eclipse_developer_tools_download_link_version_text').text(data.latest_releases.tools.version);
-
-        $('#runtime_download_link').attr('href', data.latest_releases.runtime.driver_location);
-        $('#eclipse_developer_tools_download_link').attr('href', data.latest_releases.tools.driver_location);
+        if(data.latest_releases){
+            if(data.latest_releases.runtime){
+                if(data.latest_releases.runtime.version){
+                    $('#runtime_download_button_version').text(data.latest_releases.runtime.version);
+                }
+                if(data.latest_releases.runtime.driver_location){
+                    $('#runtime_download_link').attr('href', data.latest_releases.runtime.driver_location);
+                }
+            }
+            if(data.latest_releases.tools){
+                if(data.latest_releases.tools.version){
+                    $('#eclipse_developer_tools_download_link_version_text').text(data.latest_releases.tools.version);
+                }
+                if(data.latest_releases.tools.driver_location){
+                    $('#eclipse_developer_tools_download_link').attr('href', data.latest_releases.tools.driver_location);
+                }
+            }
+        }      
+        
 
         function formatBuilds(builds_from_response) {
             for(var i = 0; i < builds_from_response.length; i++) {
