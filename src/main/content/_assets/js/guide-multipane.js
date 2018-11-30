@@ -192,19 +192,26 @@ $(document).ready(function() {
             var className = classList[i];
             if(className.indexOf('hotspot=') === 0){
                 line_nums = className.substring(8);
+                var fromLine, toLine;
                 if(line_nums.indexOf('-') > -1){
+                    // Highlight a range of lines.
                     var lines = line_nums.split('-');
-                    var fromLine = parseInt(lines[0]);
-                    var toLine = parseInt(lines[1]);
-                    // Set data attributes to save the lines to highlight
-                    snippet.data('highlight_from_line', fromLine);
-                    snippet.data('highlight_to_line', toLine);
-                    snippet.removeClass(className);
-                    snippet.addClass('hotspot');
-
-                    var code_block = get_code_block_from_hotspot(snippet);
-                    create_mobile_code_snippet(snippet, code_block, fromLine, toLine);
+                    fromLine = parseInt(lines[0]);
+                    toLine = parseInt(lines[1]);                    
                 }
+                else {
+                    // Only one line to highlight.
+                    fromLine = parseInt(line_nums);
+                    toLine = parseInt(line_nums);
+                }
+                // Set data attributes to save the lines to highlight
+                snippet.data('highlight_from_line', fromLine);
+                snippet.data('highlight_to_line', toLine);
+                snippet.removeClass(className);
+                snippet.addClass('hotspot');
+
+                var code_block = get_code_block_from_hotspot(snippet);
+                create_mobile_code_snippet(snippet, code_block, fromLine, toLine);
                 break;
             }
         }
@@ -400,7 +407,7 @@ $(document).ready(function() {
             }
             var firstCodeSectionTop = Math.round(firstCodeSection[0].getBoundingClientRect().top);
             var navHeight = $('.navbar').height();
-            var showGithubPopup = (firstCodeSectionTop - navHeight) > 0;
+            var showGithubPopup = (firstCodeSectionTop - navHeight) > 1;
             if(showGithubPopup){
                 githubPopup.fadeIn();
                 $("#code_column .code_column").addClass('dimmed_code_column', {duration:400});
