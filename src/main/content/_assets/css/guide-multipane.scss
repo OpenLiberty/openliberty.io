@@ -27,7 +27,7 @@ header {
     display: inline-block;
     position: absolute;
     right: 26px;
-    top: 14px;
+    top: 6px;
     line-height: 5px;
     padding: 4px;
 }
@@ -345,6 +345,53 @@ header {
     color: #3f465a;       
     display: table-cell;
     vertical-align: middle;
+}
+
+#code_column_tabs {
+    & > li {
+        max-width: 50%;
+        float: left;
+
+        & > a {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            text-align: center;  
+            letter-spacing: 0;
+            height: 32px;
+            padding: 2px 5px 4px 5px;
+            border: 1px solid #acb3c6;
+            border-bottom: transparent;
+            margin-right: 0;           /* Overlay bootstrap's margin so tabs are condensed   */
+            color: #5D6A8E !important;
+            line-height: 26px;
+
+            &.active {
+                background-color: #c7ccd9;
+                color: #3f465a !important;
+            }
+
+            &:hover {
+                background-color: #D6DAE6;
+                cursor: pointer;
+            }
+        }
+        
+        /* Keep below to override the normal styling */
+        &[disabled] {
+            pointer-events: none;
+            outline: none;
+
+            & > a {
+                background-color: inherit;
+            }
+        }
+    }
+
+    @media (min-width: 1170px) {
+        border-radius: 4px 4px 4px 4px;
+        border: 1px solid #c8d6fb;
+     }
 }
 
 #github_clone_popup_container {
