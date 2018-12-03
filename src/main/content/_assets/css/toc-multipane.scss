@@ -96,12 +96,6 @@
     background-color: white;
     z-index: 7; /* to override the z-index valued of 4 and 6 for code mirror in interactive guide */
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.21);
-
-    &.open {
-        left: 0;
-        width: 280px;
-        transition: .5s ease-in;
-    }
 }
 
 #toc_inner {
@@ -109,7 +103,8 @@
 }
 
 #toc_indicator {
-    display: inline-block;
+    
+    display: none;
     z-index: 5;
     left: 0;
     width: 5px;
@@ -122,9 +117,8 @@
     }
 
     &.open{
-        background-color: orange;
-        width: 50px;
-        height: 30px;
+        display: inline-block;
+        width: 45px;
         transition: .5s ease-in;
         padding: 10px 0;
     }
@@ -251,7 +245,7 @@
         position: absolute;
         top: 0;
         right: 5px;
-        background-color: orange;
+        background-color: #f4914d;
         width: 20px;
         height: 20px;    
         padding: 5px;
@@ -549,6 +543,12 @@
         background-color: white;
         z-index: 0;
         box-shadow: none;
+
+        &.open {
+            left: 0;
+            width: 280px;
+            transition: .5s ease-in;
+        }
     }
     
     #toc_column.inline {

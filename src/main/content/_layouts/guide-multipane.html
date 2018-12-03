@@ -18,7 +18,7 @@ js:
         <div class="row">
             <div id="toc_hotspot"></div>            
             <!-- Guide's table of contents section -->            
-            <div id="toc_column" class="collapse inline">
+            <div id="toc_column" class="collapse inline open">
                 <div id="toc_inner">
                     {% assign toc = page.document | tocify_asciidoc %}
                     {% if toc %}
@@ -50,11 +50,9 @@ js:
             <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents">
                 <img src="/img/arrow_white.svg" alt="arrow">
             </div>
-            <div id="toc_line_wrapper">
-                    <div id="toc_line"></div>
-            </div>            
+            <div id="toc_line" class="open"></div>
             <!-- Entire guide section -->
-            <div id="guide_column" class="position_relative">
+            <div id="guide_column" class="position_relative open">
                 <div id="guide_content">
                     <!-- Guide header section -->
                     <div id="guide_meta" class="sect1" tabindex="0">
