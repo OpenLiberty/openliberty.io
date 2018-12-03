@@ -34,22 +34,29 @@ function disableFloatingTOC() {
 }
 
 function enableFloatingTOC() {
-    $('#toc_inner').css({"position":"fixed", "top":"100px"});
-    
+    $('#toc_inner').css({"position":"fixed", "top":"100px"});    
+}
+
+function calculateTOCHeight(){
+    var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
+    var headerHeight = $('header').height();
+    return endOfGuidePosition - headerHeight;
 }
 
 function shrinkTOCIndicator() {
-    var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
-    var headerHeight = $('header').height();
     $('#toc_line').css({
         "position": "", 
         "top": "",
-        "height": endOfGuidePosition - headerHeight
+        "height": calculateTOCHeight()
     });
 }
 
 function expandTOCIndicator() {
-    $('#toc_line').css({"position":"fixed", "top":"101px"});
+    $('#toc_line').css({
+        "position":"fixed",
+        "top":"101px",
+        "height": calculateTOCHeight()
+    });
 }
 
 // Remove previous TOC section highlighted and highlight correct step
@@ -187,15 +194,17 @@ function open_TOC(){
     }
 }
 
+function setInitialTOCLineHeight(){  
+    $("#toc_line").css(
+        {'height': calculateTOCHeight()}
+    );
+}
+
 
 $(document).ready(function() {
 
     reorganizeTOCElements();
-
-    var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
-    $("#toc_line").css(
-        {'height': endOfGuidePosition}
-    );
+    setInitialTOCLineHeight();    
 
     // Add listener for clicking on the
     $("#toc_hotspot, #toc_indicator").on('mouseenter', function(){
