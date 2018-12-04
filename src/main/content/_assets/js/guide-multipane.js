@@ -12,20 +12,15 @@ $(document).ready(function() {
     var target;
     $('#preamble').detach().insertAfter('#duration_container');
 
-    var guide_sections = [];
-    var code_sections = {}; // Map guide sections to code blocks to show on the right column.
+    var code_sections = {}; // Map guide sections to code blocks to show on the right column. Each guide section maps to its tab and code block.
 
     // Move the code snippets to the code column on the right side.
     // Each code section is duplicated to show the full file in the right column and just the snippet of code relevant to the guide in the left column in single column / mobile view.
     $('.code_column').each(function(){
-        var code_block = $(this);             
+        var code_block = $(this);
         var metadata_sect = code_block.prev().find('p');
         if(metadata_sect.length > 0){
-            var metadata = metadata_sect[0].innerText;
-
-            // Split the string into file name and line numbers to show
-            metadata = metadata.split(',');
-            var fileName = metadata[0];
+            var fileName = metadata_sect[0].innerText;
 
             // Clone this code block so the full file can be shown in the right column and only a duplicate snippet will be shown in the single column view or mobile view.
             // The duplicated code block will be shown on the right column.
@@ -33,17 +28,23 @@ $(document).ready(function() {
             code_block.hide();
 
             var header = get_header_from_element(code_block);
-            header.setAttribute('data-has-code', 'true');               
-            guide_sections.push(header);
-            code_sections[header.id] = duplicate_code_block;
+            header.setAttribute('data-has-code', 'true');
+            code_sections[header.id] = {};
+            code_sections[header.id].code = duplicate_code_block;
 
             // Create a title pane for the code section
             duplicate_code_block.attr('fileName', fileName);
 
+            // Set data attribute for id on the code block for switching to the code when clicking its tab
+            duplicate_code_block.attr('data-section-id', header.id);
+
             // Create a tab in the code column for this file.
             var tab = $("<li class='code_column_tab' role='presentation' tabindex='0'></li>");
+            tab.attr('data-section-id', header.id);
             var anchor = $("<a>" + fileName + "</a>");
             tab.append(anchor);
+
+            code_sections[header.id].tab = tab;
 
             // Remove old title from the DOM
             metadata_sect.detach();
@@ -58,13 +59,13 @@ $(document).ready(function() {
     var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2, .sect2:not(#guide_meta):not(#related-guides) > h3');
     var first_section = sections[0];
     var first_code_block = $("#code_column .code_column").first();
-    guide_sections.push($(first_section));
-    code_sections[first_section.id] = first_code_block;
+    code_sections[first_section.id] = {};
+    code_sections[first_section.id].code = first_code_block;
+    code_sections[first_section.id].tab = $('.code_column_tab').first();
     
     for(var i = 1; i < sections.length; i++){
         var id = sections[i].id;
         if(!code_sections[id]){
-            guide_sections.push($(sections[i]));
             var previous_id = sections[i-1].id;
             code_sections[id] = code_sections[previous_id];
         }
@@ -72,18 +73,17 @@ $(document).ready(function() {
 
     // Hide all code blocks except the first
     $('#code_column .code_column:not(:first)').hide();
-    $('.code_column_tab:not(:first)').hide();
-    setActiveTab(first_code_block.attr('fileName'));
-
+    $('.code_column_tab').hide();
+    setActiveTab($('.code_column_tab').first());
 
     // Load the correct tab when clicking
     $('.code_column_tab').on('click', function(){
         if(!$(this).attr('disabled')){
-            var fileName = $(this).text();
-            setActiveTab(fileName);
+            setActiveTab($(this));
 
             // Show the code block
-            var code_block = $(".code_column[fileName='" + fileName + "']");
+            var data_id = $(this).attr('data-section-id');
+            var code_block = $("#code_column .code_column[data-section-id='" + data_id + "']");
             $('#code_column .code_column').not(code_block).hide();
             code_block.show();
         }
@@ -180,7 +180,7 @@ $(document).ready(function() {
     // Inputs: hotspot: The 'hotspot' in desktop view where hovering over the block will highlight certain lines of code in the code column relevant to what the guide is talking about.
     function get_code_block_from_hotspot(hotspot){
         var header = get_header_from_element(hotspot);
-        return code_sections[header.id];
+        return code_sections[header.id].code;
     }
 
     // Parse the hotspot lines to highlight and store them as a data attribute.
@@ -250,7 +250,7 @@ $(document).ready(function() {
             return;
         }
         var header = get_header_from_element(hotspot);
-        var code_block = code_sections[header.id];
+        var code_block = code_sections[header.id].code;
         if(code_block){
             var fromLine = hotspot.data('highlight_from_line');
             var toLine = hotspot.data('highlight_to_line');
@@ -270,7 +270,7 @@ $(document).ready(function() {
     $('.hotspot').on('mouseleave', function(event){
         $(this).data('hovering', false);
         var header = get_header_from_element($(this));
-        var code_block = code_sections[header.id];
+        var code_block = code_sections[header.id].code;
         if(code_block){
             remove_highlighting(code_block);
         }        
@@ -430,11 +430,25 @@ $(document).ready(function() {
         }                
     }
 
+    // Look through current step's tabs and if a duplicate file was already shown then hide it.
+    function hideDuplicateTabs(id){
+        var visibleTabs = $('#code_column_tabs li:visible');
+        var substeps = $("#" + id).parents('.sect1').find('h2, h3');
+        substeps.each(function(){
+            var code_section = code_sections[this.id];
+            if(code_section && code_section.tab){
+                // Hide other tabs with the same name
+                var tab = code_section.tab;                
+                var fileName = tab.text();
+                visibleTabs.filter(":contains('" + fileName + "')").hide();
+            }            
+        });
+    }
+
     // Sets the active tab in the code column and moves it to the front of the tab list.
-    // fileName: name of the file to set active
+    // activeTab: tab to set active
     // setAsFirstTab: boolean whether to move this active tab to the front or not.
-    function setActiveTab(fileName, setAsFirstTab){
-        var activeTab = $(".code_column_tab:contains(" + fileName + ")");
+    function setActiveTab(activeTab, setAsFirstTab){
         $('.code_column_tab > a').removeClass('active');
         activeTab.children('a').addClass('active');
         activeTab.show();
@@ -447,14 +461,13 @@ $(document).ready(function() {
     // Hide other code blocks and show the correct code block based on provided id.
     function showCorrectCodeBlock(id) {
         try{
-            var code_block = code_sections[id];
+            var code_block = code_sections[id].code;
             if(code_block){
                 $('#code_column .code_column').not(code_block).hide();
                 code_block.show();
 
-                // Set active tab
-                var fileName = code_block.attr('fileName');
-                setActiveTab(fileName, true);
+                hideDuplicateTabs(id);
+                setActiveTab(code_sections[id].tab, true);
             }
         } catch(e) {
             console.log(e);
