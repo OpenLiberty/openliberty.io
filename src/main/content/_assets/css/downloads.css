@@ -32,7 +32,31 @@ body {
     top: 0px;
     left: calc(50% - 1325px);
     width: 2560px;
-    height: 443px;
+    height: 404px;
+}
+
+#greenlight {
+    position: absolute;
+    right: calc(50% - 715px);
+    top: -56px;
+    width: 1250px;
+    height: 520px;
+}
+
+#leftcloud {
+    position: absolute;
+    left: calc(50% - 400px);
+    top: 315px;
+    width: 258px;
+    height: 127px;
+}
+
+#rightcloud {
+    position: absolute;
+    right: calc(50% - 560px);
+    top: 296px;
+    width: 306px;
+    height: 158px;
 }
 
 #intro_text_1 {
@@ -200,60 +224,61 @@ body {
     transform: translateY(-1px);
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 991px) {
 
-    #intro_logo {
-        display: none;
+    #intro_text_1 {
+        font-weight: 500;
+        margin-top: -60px;
+        text-align: center;
     }
 
-    #main_download_link_container .download_link {
-        width: 310px;
+    #intro_text_2 {
+        text-align: center;
     }
 
-    #runtime_download_link {
-        margin-bottom: 40px;
+    #runtime_download_link_container, #eclipse_download_link_container {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    #eclipse_developer_tools_download_link {
-        margin-left: 0;
+    #main_download_link_container {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
-
 }
 
 @media (max-width: 767px) {
 
-    #intro_logo {
-        display: none;
-    }
-
     #intro_text_1 {
-        margin-top: 78px;
-        margin-left: 33px;
-        margin-right: 32px;
+        margin-top: -160px;
+        text-align: left;
     }
 
     #intro_text_2 {
-        margin-left: 33px;
-        margin-right: 27px;
+        text-align: left;
     }
 
-    #downloads_intro_background {
-        max-height: 1px;
-        padding-top: 0px;
-        padding-bottom: 0px;
-        margin-bottom: 0px;
-    }
-    
-    #intro_logo {
-        margin-left:auto;
+    #runtime_download_link_container, #eclipse_download_link_container {
+        display: block;
+        margin-left: auto;
         margin-right: auto;
-        margin-bottom: 40px;
     }
 
     #main_download_link_container {
-        text-align: center;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;     
     }
 
+    #greenlight {
+        position: absolute;
+        left: -50px;
+        top: 0px;
+        height: 443px;
+        z-index: -1;
+    }
 }
 
 
