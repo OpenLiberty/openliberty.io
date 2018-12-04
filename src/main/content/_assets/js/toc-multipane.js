@@ -15,10 +15,12 @@ function handleFloatingTableOfContent() {
         // The top of the TOC is scrolling off the screen, enable floating TOC.
         if(isBackgroundBottomVisible()) {
             handleTOCScrolling();
+            shrinkTOCIndicator();
         } else {
             // The entire viewport is filled with the background, so
             // do not need to worry about the TOC flowing out of the background.
             enableFloatingTOC();
+            expandTOCIndicator();
         }
     } else {
         // CURRENTLY IN MOBILE VIEW OR 2 COLUMN VIEW
@@ -32,7 +34,29 @@ function disableFloatingTOC() {
 }
 
 function enableFloatingTOC() {
-    $('#toc_inner').css({"position":"fixed", "top":"100px"});
+    $('#toc_inner').css({"position":"fixed", "top":"100px"});    
+}
+
+function calculateTOCHeight(){
+    var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
+    var headerHeight = $('header').height();
+    return endOfGuidePosition - headerHeight;
+}
+
+function shrinkTOCIndicator() {
+    $('#toc_line').css({
+        "position": "", 
+        "top": "",
+        "height": calculateTOCHeight()
+    });
+}
+
+function expandTOCIndicator() {
+    $('#toc_line').css({
+        "position":"fixed",
+        "top":"101px",
+        "height": calculateTOCHeight()
+    });
 }
 
 // Remove previous TOC section highlighted and highlight correct step
@@ -64,6 +88,8 @@ function handleFloatingTOCAccordion() {
         // scroller_anchor <div>.
         accordion.removeClass('fixed_toc_accordion');
         $('.scroller_anchor').css('height', 0);
+        // Restore toc location.
+        $('#toc_column').css('margin-top', '0px');
     };
     var disableFloatingTOCAccordion = function(){
         // Change the height of the scroller_anchor to that of the accordion
@@ -73,7 +99,7 @@ function handleFloatingTOCAccordion() {
         // which causes a bounce in the page.
         $('.scroller_anchor').css('height', accordion.height());
         // Fix the TOC accordion to the top of the page.
-        accordion.addClass('fixed_toc_accordion');
+        accordion.addClass('fixed_toc_accordion');        
     };
 
     if(inSingleColumnView()){
@@ -146,11 +172,86 @@ function reorganizeTOCElements(){
     });
 }
 
+function restoreCurrentStep(){
+    // Restore user to section they were viewing after collapsing/expanding the TOC.
+    var hash = window.location.hash;
+    accessContentsFromHash(hash);
+}
+
+function open_TOC(){
+    if(!inSingleColumnView()){        
+        $("#toc_title").css('margin-top', '0px');
+        $("#toc_column").addClass('inline');
+        $("#guide_column").removeClass('expanded');
+
+        $("#toc_line").addClass("open");            
+        $("#toc_column").addClass("open");
+        $("#guide_column").addClass("open");
+
+        $("#toc_indicator").hide();
+
+        restoreCurrentStep();
+    }
+}
+
+function setInitialTOCLineHeight(){  
+    $("#toc_line").css(
+        {'height': calculateTOCHeight()}
+    );
+}
+
 
 $(document).ready(function() {
 
     reorganizeTOCElements();
+    setInitialTOCLineHeight();    
 
+    // Add listener for clicking on the
+    $("#toc_hotspot, #toc_indicator").on('mouseenter', function(){
+        // Animate out the arrow and highlight the left side of the screen orange to indicate there is a TOC
+        if(!$("#toc_column").hasClass('open')){
+            $("#toc_line").css(
+                {'background-color': 'rgb(255, 216, 191)'}
+            );
+            $("#toc_indicator").addClass('open');
+        }        
+    });
+
+    $("#toc_hotspot").on('mouseleave', function(){
+        if(!$("#toc_column").hasClass('open')){
+            var x = event.x;
+            var y = event.y;
+            var headerHeight = $('header').height();
+            var indicatorHeight = $("#toc_indicator").outerHeight();
+            
+            y = y - headerHeight;
+            if(x >= 0 && x <= this.offsetWidth && y >= 0 && y <= indicatorHeight){
+                // Still hovering over the TOC indicator arrow, so don't remove the orange line and arrow.
+                return;
+            }
+
+            $("#toc_line").css(
+                {'background-color': 'transparent'}
+            );  
+            $("#toc_indicator").removeClass('open');
+        }        
+    });
+
+    $("#toc_indicator").on('click', function(){
+        open_TOC();
+    });
+
+    $("#toc_indicator").on("keydown", function(e){
+        if(e.which === 13){
+            open_TOC();
+        }
+    });
+
+    // Restore current step's position when the guide column resizes.
+    $("#guide_column").on('transitionend', function(){
+        restoreCurrentStep();
+    });
+    
     $("#breadcrumb_hamburger").on('click', function(event){
         // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
         if(window.innerWidth >= threeColumnBreakpoint){
@@ -162,9 +263,7 @@ $(document).ready(function() {
                 // TOC is closed
                 $("#guide_column").removeClass('expanded');
             }
-            // Restore user to section they were viewing after collapsing/expanding the TOC.
-            var hash = window.location.hash;
-            accessContentsFromHash(hash);
+            restoreCurrentStep();
         }
         // Handle table of content floating if in the middle of the guide.
         handleFloatingTableOfContent();
@@ -200,17 +299,8 @@ $(document).ready(function() {
       }
     });
 
-    // Handle collapsing the table of contents from full width into the hamburger
-    // This removes the 'x' from the table of contents and turns the hamburger into a bigger 'X' that can be used to close the TOC
-    // and then the TOC can be opened again by clicking the hamburger.
-    $('#close_container').on('click', function(event) {
-        // Hide the X button
-        $(this).hide();
-
-        // Show the hamburger button and adjust the header to accomodate it
-        $('#breadcrumb_hamburger').addClass('showHamburger');
-        $('#breadcrumb_row .breadcrumb').addClass('breadcrumbWithHamburger');
-
+    // Handle collapsing the table of contents from full width back into an orange line on the left side of the page.
+    $('#close_container').on('click', function() {
         $("#toc_title").css('margin-top', '20px');
 
         // Remove display type from the table of contents
@@ -219,6 +309,15 @@ $(document).ready(function() {
         // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
         $("#guide_column").addClass('expanded');
 
+        // Remove open class to transition back
+        $("#toc_line").removeClass("open");
+        $("#toc_column").removeClass("open");
+        $("#guide_column").removeClass("open");
+
+        $("#toc_indicator").removeClass('open');
+        $("#toc_indicator").show();
+
+        restoreCurrentStep();
     });
 
     $('#close_container img').on('keydown', function(event) {

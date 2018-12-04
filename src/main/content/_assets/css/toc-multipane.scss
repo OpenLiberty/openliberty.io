@@ -77,10 +77,20 @@
 }
 
 /* TABLE OF CONTENTS */
+#toc_hotspot {
+    position: fixed;
+    z-index: 2;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 100%;
+}
+
 #toc_column {
     position: fixed;
     left: 0;
-    width: 280px;
+    width: 0;
     padding-bottom: 22px;
     vertical-align: top;
     background-color: white;
@@ -90,6 +100,49 @@
 
 #toc_inner {
     padding-top: 20px;
+}
+
+#toc_indicator {
+    
+    display: none;
+    z-index: 5;
+    left: 0;
+    width: 5px;
+    height: 30px;
+    position: fixed;
+    background-color: #f4914d;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &.open{
+        display: inline-block;
+        width: 45px;
+        transition: .5s ease-in;
+        padding: 7px 0;
+    }
+
+    & > img {
+        width: 16px;
+        height: 16px;
+        margin-right: 5px;
+        float: right;
+        transform: rotate(-90deg);
+    }
+}
+
+#toc_line {
+    display: inline-block;
+    z-index: 1;
+    left: 0;
+    width: 6px;
+    position: fixed;
+
+    &.open {
+        left: 275px;
+        background-color: rgb(255, 216, 191);
+    }
 }
 
 .scroller_anchor {
@@ -190,9 +243,12 @@
 
     & > img {
         position: absolute;
-        top: -5px;
-        right: 12px;
-        margin-top: 20px;    
+        top: 0;
+        right: 5px;
+        background-color: #f4914d;
+        width: 20px;
+        height: 20px;    
+        padding: 5px;
 
         &:hover {
             cursor: pointer;
@@ -202,6 +258,10 @@
             box-shadow: 0 0 2px 2px #51a7e8; /* keyboard-only focus styles */
         }
     }
+}
+
+#toc_close_green {
+    display: none;
 }
 
 #mobile_close_container {
@@ -286,12 +346,6 @@
 #tags_container a:hover {
     color: #4f660a;
 }
-
-/* @media only screen and (max-width: 1170px) {
-    #mobile_toc_accordion .breadcrumb_hamburger {
-        border: none;
-    }
-} */
 
 @media (max-width: 1170px) {
 
@@ -437,7 +491,12 @@
         margin: 0 -15px;
     }
 
-    #close_container {
+    /* Table of Contents */    
+    #toc_close_green {
+        display: inline-block;
+    }
+
+    #toc_close_white {
         display: none;
     }
 
@@ -446,7 +505,7 @@
     }
 }
 
-@media (min-width: 1440px) {    
+@media (min-width: 1440px) {
 
     #breadcrumb_hamburger {
         display: none;
@@ -478,12 +537,18 @@
 
     #toc_column {
         float: left;
-        left: 0;
+        left: -280px;
         position: relative;
         padding-bottom: 22px;
         background-color: white;
         z-index: 0;
         box-shadow: none;
+
+        &.open {
+            left: 0;
+            width: 280px;
+            transition: .5s ease-in;
+        }
     }
     
     #toc_column.inline {
@@ -492,5 +557,17 @@
 
     #toc_inner {
         width: inherit;
+    }
+}
+
+@media (max-width: 1440px) {
+    #toc_hotspot, 
+    #toc_indicator,
+    #toc_line {
+        display: none !important; /* Important is to override the display set through javascript */
+    }
+
+    #toc_column {
+        width: 280px;
     }
 }
