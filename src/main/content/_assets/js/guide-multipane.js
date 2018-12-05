@@ -17,7 +17,7 @@ $(document).ready(function() {
     // Move the code snippets to the code column on the right side.
     // Each code section is duplicated to show the full file in the right column and just the snippet of code relevant to the guide in the left column in single column / mobile view.
     $('.code_column').each(function(){
-        var code_block = $(this);
+        var code_block = $(this);        
         var metadata_sect = code_block.prev().find('p');
         if(metadata_sect.length > 0){
             var fileName = metadata_sect[0].innerText;
@@ -27,10 +27,10 @@ $(document).ready(function() {
             var duplicate_code_block = code_block.clone();
             code_block.hide();
 
-            var header = get_header_from_element(code_block);
+            var header = get_header_from_element(code_block);            
             header.setAttribute('data-has-code', 'true');
-            code_sections[header.id] = {};
-            code_sections[header.id].code = duplicate_code_block;
+            var code_section = {};
+            code_section.code = duplicate_code_block;                       
 
             // Create a title pane for the code section
             duplicate_code_block.attr('fileName', fileName);
@@ -44,7 +44,17 @@ $(document).ready(function() {
             var anchor = $("<a>" + fileName + "</a>");
             tab.append(anchor);
 
-            code_sections[header.id].tab = tab;
+            code_section.tab = tab;
+
+            if(!code_sections[header.id]){
+                code_sections[header.id] = []; // Create list of code blocks associated with this subsection
+            }
+            code_sections[header.id].push(code_section);
+
+            // Map the hotspots and tabs in this section to the index of this file in its given guide section.
+            var fileIndex = code_sections[header.id].length-1;
+            link_hotspots_to_file(code_block, header, fileIndex);
+            tab.data('file-index', fileIndex);
 
             // Remove old title from the DOM
             metadata_sect.detach();
@@ -55,19 +65,46 @@ $(document).ready(function() {
         }
     });
 
+    // Map the hotspots for a given file to what index the file is in that section.
+    // Input: Code_block: the code file
+    //        Header: the section header for this code file
+    //        Index: the index of the file in this section
+    function link_hotspots_to_file(code_block, header, index){
+        // Check how many code_column are present in this subsection.
+        var sect = code_block.parents('.sect1');
+        var num_files = $(header).siblings('.code_column').length;   
+        var hotspots;
+        if(num_files === 1){
+            hotspots = sect.find('code[class*=hotspot], span[class*=hotspot], div[class*=hotspot]');
+        }
+        else {
+            // Find only the hotspots above this code block.
+            hotspots = code_block.prevUntil('.code_column', 'code[class*=hotspot], span[class*=hotspot], div[class*=hotspot]');
+            hotspots = hotspots.add(code_block.prevUntil('.code_column', '.paragraph').find('code[class*=hotspot], span[class*=hotspot], div[class*=hotspot]'));
+        }
+        hotspots.each(function(){
+            $(this).data('file-index', index);
+        });
+    }    
+
     // Map the guide sections that don't have any code sections to the previous section's code. This assumes that the first section is what you'll learn which has no code to show on the right to begin with.
     var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2, .sect2:not(#guide_meta):not(#related-guides) > h3');
     var first_section = sections[0];
-    var first_code_block = $("#code_column .code_column").first();
-    code_sections[first_section.id] = {};
-    code_sections[first_section.id].code = first_code_block;
-    code_sections[first_section.id].tab = $('.code_column_tab').first();
+    var first_code_block = $("#code_column .code_column").first();    
+    var first_code_section = {};
+    first_code_section.code = first_code_block;
+    first_code_section.tab = $('.code_column_tab').first();
+    code_sections[first_section.id] = [];
+    code_sections[first_section.id].push(first_code_section);
     
     for(var i = 1; i < sections.length; i++){
         var id = sections[i].id;
         if(!code_sections[id]){
             var previous_id = sections[i-1].id;
-            code_sections[id] = code_sections[previous_id];
+            code_sections[id] = [];
+            for(var j = 0; j < code_sections[previous_id].length; j++){
+                code_sections[id].push(code_sections[previous_id][j]);
+            }                        
         }
     }    
 
@@ -79,11 +116,12 @@ $(document).ready(function() {
     // Load the correct tab when clicking
     $('.code_column_tab').on('click', function(){
         if(!$(this).attr('disabled')){
+            var fileIndex = $(this).data('file-index');
             setActiveTab($(this));
 
             // Show the code block
             var data_id = $(this).attr('data-section-id');
-            var code_block = $("#code_column .code_column[data-section-id='" + data_id + "']");
+            var code_block = $($("#code_column .code_column[data-section-id='" + data_id + "']").get(fileIndex));
             $('#code_column .code_column').not(code_block).hide();
             code_block.show();
         }
@@ -119,9 +157,8 @@ $(document).ready(function() {
     }
 
     // Remove all highlighting for the code section.
-    // Input code_section: The section of code to highlight.
-    function remove_highlighting(code_section){
-        var highlightedSections = code_section.find('.highlightSection');
+    function remove_highlighting(){
+        var highlightedSections = $('.highlightSection');
         highlightedSections.each(function(){
             var children = $(this).find('span');
             children.unwrap(); // Remove the wrapped highlighted div from these children.
@@ -180,7 +217,11 @@ $(document).ready(function() {
     // Inputs: hotspot: The 'hotspot' in desktop view where hovering over the block will highlight certain lines of code in the code column relevant to what the guide is talking about.
     function get_code_block_from_hotspot(hotspot){
         var header = get_header_from_element(hotspot);
-        return code_sections[header.id].code;
+        var fileIndex = hotspot.data('file-index');
+        if(!fileIndex){
+            fileIndex = 0;
+        }
+        return code_sections[header.id][fileIndex].code;
     }
 
     // Parse the hotspot lines to highlight and store them as a data attribute.
@@ -209,6 +250,14 @@ $(document).ready(function() {
                 snippet.data('highlight_to_line', toLine);
                 snippet.removeClass(className);
                 snippet.addClass('hotspot');
+
+                // Find if the hotspot has a file index set to override the default behavior.
+                for(var j = 0; j < classList.length; j++){
+                    if(classList[j].indexOf('file=') === 0){
+                        var fileIndex = classList[j].substring(5);
+                        $(this).data('file-index', parseInt(fileIndex));
+                    }
+                }
 
                 var code_block = get_code_block_from_hotspot(snippet);
                 create_mobile_code_snippet(snippet, code_block, fromLine, toLine);
@@ -250,13 +299,20 @@ $(document).ready(function() {
             return;
         }
         var header = get_header_from_element(hotspot);
-        var code_block = code_sections[header.id].code;
+        var fileIndex = hotspot.data('file-index');
+        var code_block = code_sections[header.id][fileIndex].code;
         if(code_block){
+            // Switch to the correct tab
+            var tab = code_sections[header.id][fileIndex].tab;
+            setActiveTab(tab);
+            showCorrectCodeBlock(header.id, fileIndex);
+
+            // Highlight the code
             var fromLine = hotspot.data('highlight_from_line');
             var toLine = hotspot.data('highlight_to_line');
             if(code_block && fromLine && toLine){
                 highlight_code_range(code_block, fromLine, toLine);
-            }            
+            }
         }
     }, 250);
 
@@ -269,11 +325,7 @@ $(document).ready(function() {
     // When the mouse leaves a code 'hotspot', remove all highlighting in the corresponding code section.
     $('.hotspot').on('mouseleave', function(event){
         $(this).data('hovering', false);
-        var header = get_header_from_element($(this));
-        var code_block = code_sections[header.id].code;
-        if(code_block){
-            remove_highlighting(code_block);
-        }        
+        remove_highlighting();
     });       
 
     // Prevent scrolling the page when scrolling inside of the code panel, but not one of the code blocks.
@@ -435,13 +487,15 @@ $(document).ready(function() {
         var visibleTabs = $('#code_column_tabs li:visible');
         var substeps = $("#" + id).parents('.sect1').find('h2, h3');
         substeps.each(function(){
-            var code_section = code_sections[this.id];
-            if(code_section && code_section.tab){
-                // Hide other tabs with the same name
-                var tab = code_section.tab;                
-                var fileName = tab.text();
-                visibleTabs.filter(":contains('" + fileName + "')").hide();
-            }            
+            for(var i = 0; i < code_sections[this.id].length; i++){
+                var code_section = code_sections[this.id][i];
+                if(code_section && code_section.tab){
+                    // Hide other tabs with the same name
+                    var tab = code_section.tab;                
+                    var fileName = tab.text();
+                    visibleTabs.filter(":contains('" + fileName + "')").hide();
+                }
+            }                        
         });
     }
 
@@ -459,15 +513,18 @@ $(document).ready(function() {
     }
 
     // Hide other code blocks and show the correct code block based on provided id.
-    function showCorrectCodeBlock(id) {
+    function showCorrectCodeBlock(id, index) {
         try{
-            var code_block = code_sections[id].code;
+            var code_block = index ? code_sections[id][index].code : code_sections[id][0].code;
             if(code_block){
                 $('#code_column .code_column').not(code_block).hide();
                 code_block.show();
-
                 hideDuplicateTabs(id);
-                setActiveTab(code_sections[id].tab, true);
+
+                var subsection_files = code_sections[id];
+                for(var i = subsection_files.length - 1; i >= 0; i--){
+                    setActiveTab(subsection_files[i].tab, true);
+                }
             }
         } catch(e) {
             console.log(e);
