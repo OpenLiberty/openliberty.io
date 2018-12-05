@@ -246,11 +246,6 @@ $(document).ready(function() {
             open_TOC();
         }
     });
-
-    // Restore current step's position when the guide column resizes.
-    $("#guide_column").on('transitionend', function(){
-        restoreCurrentStep();
-    });
     
     $("#breadcrumb_hamburger").on('click', function(event){
         // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
