@@ -45,6 +45,7 @@ function render_builds(builds, parent) {
                         var href = package_locations[i].split("=")[1];
                         var package_column = $('<td></td>');
                         package_column.append($('<a href="' +  href +'" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + 
+                        package_name + '</a>'));
                         row.append(package_column);
                     }
                 }
