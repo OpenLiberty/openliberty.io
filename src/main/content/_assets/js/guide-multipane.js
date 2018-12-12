@@ -30,7 +30,8 @@ $(document).ready(function() {
             var header = get_header_from_element(code_block);            
             header.setAttribute('data-has-code', 'true');
             var code_section = {};
-            code_section.code = duplicate_code_block;                       
+            code_section.code = duplicate_code_block;   
+            code_section.fileName = fileName;                    
 
             // Create a title pane for the code section
             duplicate_code_block.attr('fileName', fileName);
