@@ -514,8 +514,15 @@ $(document).ready(function() {
 
     // Hide other code blocks and show the correct code block based on provided id.
     function showCorrectCodeBlock(id, index) {
+        if(!id){
+            // At the start of the guide where there is no guide section.
+            return;
+        }
         try{
-            var code_block = index ? code_sections[id][index].code : code_sections[id][0].code;
+            if(!index){
+                index = 0;
+            }
+            var code_block = code_sections[id][index].code;
             if(code_block){
                 $('#code_column .code_column').not(code_block).hide();
                 code_block.show();
