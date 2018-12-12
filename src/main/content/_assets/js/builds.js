@@ -137,7 +137,6 @@ $(document).ready(function() {
     });
 
 
-
     $('.build_table thead tr th a').click(function(event) {
         event.preventDefault();
 
@@ -154,6 +153,17 @@ $(document).ready(function() {
 
     });
 
+
+    // Change url when tab is clicked so that page can be bookmarked on a specific tab
+    $(function(){
+        var hash = window.location.hash;
+        hash && $('ul.nav a[href="' + hash + '"]').tab('show');
+      
+        $('.nav-tabs a').click(function (e) {
+          $(this).tab('show');
+          window.location.hash = this.hash;
+        });
+      });
 
 
     $.ajax({
