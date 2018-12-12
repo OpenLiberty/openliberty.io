@@ -305,7 +305,7 @@ $(document).ready(function() {
             // Switch to the correct tab
             var tab = code_sections[header.id][fileIndex].tab;
             setActiveTab(tab);
-            showCorrectCodeBlock(header.id, fileIndex);
+            showCorrectCodeBlock(header.id, fileIndex, false);
 
             // Highlight the code
             var fromLine = hotspot.data('highlight_from_line');
@@ -493,7 +493,7 @@ $(document).ready(function() {
                     // Hide other tabs with the same name
                     var tab = code_section.tab;                
                     var fileName = tab.text();
-                    visibleTabs.filter(":contains('" + fileName + "')").hide();
+                    visibleTabs.not(tab).filter(":contains('" + fileName + "')").hide();
                 }
             }                        
         });
@@ -513,7 +513,7 @@ $(document).ready(function() {
     }
 
     // Hide other code blocks and show the correct code block based on provided id.
-    function showCorrectCodeBlock(id, index) {
+    function showCorrectCodeBlock(id, index, switchTabs) {
         if(!id){
             // At the start of the guide where there is no guide section.
             return;
@@ -528,10 +528,12 @@ $(document).ready(function() {
                 code_block.show();
                 hideDuplicateTabs(id);
 
-                var subsection_files = code_sections[id];
-                for(var i = subsection_files.length - 1; i >= 0; i--){
-                    setActiveTab(subsection_files[i].tab, true);
-                }
+                if(switchTabs){
+                    var subsection_files = code_sections[id];
+                    for(var i = subsection_files.length - 1; i >= 0; i--){
+                        setActiveTab(subsection_files[i].tab, true);
+                    }
+                }                
             }
         } catch(e) {
             console.log(e);
@@ -560,7 +562,7 @@ $(document).ready(function() {
             if(window.innerWidth > twoColumnBreakpoint) {
                 // multipane view
                 // Match the code block on the right to the new id
-                showCorrectCodeBlock(id);
+                showCorrectCodeBlock(id, null, true);
             }
         }
     }
@@ -624,7 +626,7 @@ $(document).ready(function() {
             handleFloatingTableOfContent();
             var hash = location.hash;
             accessContentsFromHash(hash);
-            showCorrectCodeBlock(hash.substring(1));  // Remove the '#' in front of the id
+            showCorrectCodeBlock(hash.substring(1), null, true);  // Remove the '#' in front of the id
         }
 
         if(window.location.hash === ""){
