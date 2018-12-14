@@ -9,6 +9,14 @@
 |===
 |Name|Type|Default|Description
 
+|+acceptThread+
+
+|boolean
+
+|+false+
+
+|+If true, then listening ports do not share the same thread for accepting connections. Otherwise, they share the same thread.+
+
 |+addressExcludeList+
 
 |string
@@ -64,4 +72,12 @@
 |+true+
 
 |+Enables immediate rebind to a port with no active listener.+
+
+|+waitToAccept+
+
+|boolean
+
+|+false+
+
+|+Queries whether this TCP Channel will delay accepting connections until the server starts. If false, connections are closed until the server starts. If true, the value for the acceptThread tcpOption is also set to true, and connections are delayed until the server starts.+
 |===
