@@ -209,6 +209,22 @@ Min: +0+ +
 
 |+Specifies whether the HTTP Channel automatically decompresses incoming request body data.+
 
+|+DoNotAllowDuplicateSetCookies+
+
+|string
+
+|+false+
+
+|+Prevents the HTTP Channel from sending multiple Set-Cookie headers with the same name.+
+
+|+MessageSizeLimit+
+
+|long
+
+|+-1+
+
+|+Limits the acceptable size of an incoming message. If a message arrives with a size larger than this value, then an error is returned to the remote client.+
+
 |+NoCacheCookiesControl+
 
 |boolean
@@ -225,6 +241,18 @@ Min: +0+ +
 
 |+Specifies the amount of time, in seconds, that an HTTP/2 connection will be allowed to remain idle between socket IO operations. If not specified, or set to a value of 0, there is no connection timeout set. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.+
 
+|+incomingBodyBufferSize+
+
+|int +
+Min: +1024+ +
+ +
+Max: +1048576+ +
+
+
+|+32768+
+
+|+Specifies the size of each buffer used when reading the body of an incoming HTTP message.+
+
 |+keepAliveEnabled+
 
 |boolean
@@ -232,6 +260,30 @@ Min: +0+ +
 |+true+
 
 |+Enables persistent connections (HTTP keepalive). If true, connections are kept alive for reuse by multiple sequential requests and responses. If false, connections are closed after the response is sent.+
+
+|+limitFieldSize+
+
+|int +
+Min: +50+ +
+ +
+Max: +32768+ +
+
+
+|+32768+
+
+|+Enforces the size limits on various HTTP fields, such as request URLs, or individual header names or values. Enforcing the size limits of these fields guards against possible Denial of Service attacks. An error is returned to the remote client, if a field exceeds the allowed size.+
+
+|+limitNumHeaders+
+
+|int +
+Min: +50+ +
+ +
+Max: +500+ +
+
+
+|+500+
+
+|+Limits the number of HTTP headers that can exist in an incoming message. When this limit is exceeded, an error is returned to the remote client.+
 
 |+maxConcurrentStreams+
 
@@ -345,6 +397,14 @@ Min: +-1+ +
 |===
 |Name|Type|Default|Description
 
+|+acceptThread+
+
+|boolean
+
+|+false+
+
+|+If true, then listening ports do not share the same thread for accepting connections. Otherwise, they share the same thread.+
+
 |+addressExcludeList+
 
 |string
@@ -392,6 +452,14 @@ Min: +-1+ +
 |+true+
 
 |+Enables immediate rebind to a port with no active listener.+
+
+|+waitToAccept+
+
+|boolean
+
+|+false+
+
+|+Queries whether this TCP Channel will delay accepting connections until the server starts. If false, connections are closed until the server starts. If true, the value for the acceptThread tcpOption is also set to true, and connections are delayed until the server starts.+
 |===
 [#+hostAlias+]*hostAlias*
 
