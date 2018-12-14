@@ -301,6 +301,9 @@ $(document).ready(function() {
         }
         var header = get_header_from_element(hotspot);
         var fileIndex = hotspot.data('file-index');
+        if(!fileIndex){
+            fileIndex = 0;
+        }
         var code_block = code_sections[header.id][fileIndex].code;
         if(code_block){
             // Switch to the correct tab
