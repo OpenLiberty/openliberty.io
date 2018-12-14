@@ -1,10 +1,9 @@
 = Admin REST Connector 2.0
-:stylesheet: ../feature.css
 :linkcss: 
 :page-layout: feature
 :nofooter: 
 
-A secure admin connector that can be used locally or remotely using any JDK. It enables remote access by clients via a REST-based connector and requires SSL and basic user security configuration. Client support includes JMX. This feature supersedes the restConnector-1.0 feature and does not include the jaxrs-1.1 feature.
+A secure, REST administrative connector that can be used locally or remotely using any Java developer kit. This connector enables remote access from a Java client or directly through an HTTPS call. It is protected by a single administrator role and requires SSL to keep the communication confidential. The HTTPS port used by the connector is defined through the default HTTP endpoint. This feature supersedes the restConnector-1.0 feature and does not include the jaxrs-1.1 feature.
 
 == Enabling this feature
 To enable the Admin REST Connector 2.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
@@ -18,6 +17,7 @@ To enable the Admin REST Connector 2.0 feature, add the following element declar
 
 * JavaSE-1.7
 * JavaSE-1.8
+* JavaSE-9.0
 
 == Developing a feature that depends on this feature
 If you are developing a feature that depends on the Admin REST Connector 2.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:

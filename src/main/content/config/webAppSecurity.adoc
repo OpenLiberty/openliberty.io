@@ -208,6 +208,14 @@
 
 |+Specifies whether authentication data can be used when accessing an unprotected resource. The unprotected resource can access validated authenticated data that it previously could not access. This option enables the unprotected resource to call the getRemoteUser, isUserInRole, and getUserPrincipal methods to retrieve an authenticated identity. The equivalent custom property in the full application server profile is com.ibm.wsspi.security.web.webAuthReq=persisting.+
 
+|+useLtpaSSOForJaspic+
+
+|boolean
+
+|+false+
+
+|+Enables the single sign-on behavior using the LTPA token for a JASPIC authentication. After the initial authentication is performed by the JASPIC provider, the LTPA cookie is created and used for subsequent logins to achieve the single-sign on behavior. The JASPIC provider is not called until the token expires. The JASPIC authentication applies when an external provider is used and also when the application uses the Java EE Security API annotations. The single sign-on behavior can also be achieved by enabling the JASPIC session cookie or the application provided RememberMeIdentityStore bean for a JASPIC authentication. In this case, set the useLtpaSSOForJaspic attribute to false.+
+
 |+useOnlyCustomCookieName+
 
 |boolean

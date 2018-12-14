@@ -49,6 +49,22 @@
 
 |+The maximum time difference in milliseconds between when a key is issued and when it can be used.+
 
+|+discoveryEndpoint+
+
+|string
+
+|
+
+|+Specifies a discovery endpoint URL for an OpenID Connect provider.+
+
+|+discoveryPollingRate+
+
+|A period of time with millisecond precision
+
+|+300s+
+
+|+Rate in milliseconds at which the OpenID Connect client checks for updates to the discovery file. The check is done only if an authentication failure exists. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), seconds (s), or milliseconds (ms). For example, specify 500 milliseconds as 500ms. You can include multiple values in a single entry. For example, 1s500ms is equivalent to 1.5 seconds.+
+
 |+displayName+
 
 |string
@@ -97,6 +113,22 @@
 
 |+The url of the issuer.+
 
+|+jwkClientId+
+
+|string
+
+|
+
+|+Specifies the client identifier to include in the basic authentication scheme of the JWK request.+
+
+|+jwkClientSecret+
+
+|Reversably encoded password (string)
+
+|
+
+|+Specifies the client password to include in the basic authentication scheme of the JWK request.+
+
 |+jwksUri+
 
 |string
@@ -117,7 +149,7 @@
 
 |string
 
-|
+|+iss+
 
 |+The value of the claim is used as the subject realm.+
 
@@ -161,6 +193,16 @@
 
 |+Specifies a token end point URL.+
 
+|+tokenEndpointAuthMethod+
+
+|* +client_secret_basic+
+* +client_secret_post+
+
+
+|+client_secret_post+
+
+|+Specifies required authentication method.+
+
 |+trustAliasName+
 
 |string
@@ -168,6 +210,30 @@
 |
 
 |+Specifies a trusted key alias for using the public key to verify the signature of the token.+
+
+|+useSystemPropertiesForHttpClientConnections+
+
+|boolean
+
+|+false+
+
+|+Specifies whether to use Java system properties when the OpenID Connect or OAuth client creates HTTP client connections. Set this property to true if you want the connections to use the http* or javax* system properties.+
+
+|+userInfoEndpoint+
+
+|string
+
+|
+
+|+Specifies a UserInfo end point URL.+
+
+|+userInfoEndpointEnabled+
+
+|boolean
+
+|+false+
+
+|+Specifies whether the User Info endpoint is contacted.+
 
 |+userNameAttribute+
 
@@ -380,6 +446,39 @@
 
 |+Specifies the name.+
 |===
+[#+authzParameter+]*authzParameter*
+
++Specifies custom parameters to send to the authorization endpoint of the OpenID Connect provider.+
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|+id+
+
+|string
+
+|
+
+|+A unique configuration ID.+
+
+|+name+
+
+|string
+
+|
+
+|+Specifies the name of the additional parameter.+
+
+|+value+
+
+|string
+
+|
+
+|+Specifies the value of the additional parameter.+
+|===
 [#+jwt+]*jwt*
 
 +Specifies the information that is used to build the JWT tokens. This information includes the JWT builder reference and the claims from the id token.+
@@ -402,3 +501,36 @@
 +Specifies a comma-separated list of claims to copy from the user information or the id token.+
 
 
+[#+tokenParameter+]*tokenParameter*
+
++Specifies custom parameters to send to the token endpoint of the OpenID Connect provider.+
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|+id+
+
+|string
+
+|
+
+|+A unique configuration ID.+
+
+|+name+
+
+|string
+
+|
+
+|+Specifies the name of the additional parameter.+
+
+|+value+
+
+|string
+
+|
+
+|+Specifies the value of the additional parameter.+
+|===
