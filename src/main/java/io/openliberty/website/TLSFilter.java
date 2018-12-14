@@ -30,7 +30,7 @@ public class TLSFilter implements Filter {
         new HashMap<String, String>() {{
             put("/index.html/", "/index.html");
             put("/docs/ref/javaee/", "/docs/ref/javaee/8/");
-            put("/docs/ref/microprofile/", "/docs/ref/microprofile/2.0/");
+            put("/docs/ref/microprofile/", "/docs/ref/microprofile/2.1/");
             put("/docs/ref/", "/docs/"); 
             put("/docs/intro/", "/docs/");
             put("/guides/microprofile-intro.html", "/guides/cdi-intro.html");
