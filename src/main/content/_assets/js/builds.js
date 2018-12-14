@@ -163,16 +163,25 @@ $(document).ready(function() {
         url: builds_url
     }).done(function(data) {
 
-        $('#runtime_download_button_version').text(data.latest_releases.runtime.version);
-        $('#eclipse_developer_tools_download_link_version_text').text(data.latest_releases.tools.version);
-
-        $('#runtime_download_link').attr('href', data.latest_releases.runtime.driver_location);
-        $('#eclipse_developer_tools_download_link').attr('href', data.latest_releases.tools.driver_location);
-
-        runtime_releases = formatBuilds(data.builds.runtime_releases);
-        developer_tools_releases = formatBuilds(data.builds.tools_releases);
-        runtime_development_builds = formatBuilds(data.builds.runtime_nightly_builds);
-        developer_tools_development_builds = formatBuilds(data.builds.tools_nightly_builds);
+        if(data.latest_releases){
+            if(data.latest_releases.runtime){
+                if(data.latest_releases.runtime.version){
+                    $('#runtime_download_button_version').text(data.latest_releases.runtime.version);
+                }
+                if(data.latest_releases.runtime.driver_location){
+                    $('#runtime_download_link').attr('href', data.latest_releases.runtime.driver_location);
+                }
+            }
+            if(data.latest_releases.tools){
+                if(data.latest_releases.tools.version){
+                    $('#eclipse_developer_tools_download_link_version_text').text(data.latest_releases.tools.version);
+                }
+                if(data.latest_releases.tools.driver_location){
+                    $('#eclipse_developer_tools_download_link').attr('href', data.latest_releases.tools.driver_location);
+                }
+            }
+        }      
+        
 
         function formatBuilds(builds_from_response) {
             for(var i = 0; i < builds_from_response.length; i++) {
@@ -183,23 +192,32 @@ $(document).ready(function() {
             return builds_from_response;
         }
 
-        builds['runtime_releases'] = runtime_releases;
-        builds['runtime_development_builds'] = runtime_development_builds;
-        builds['developer_tools_releases'] = developer_tools_releases;
-        builds['developer_tools_development_builds'] = developer_tools_development_builds;
-
-        sort_builds(runtime_releases, 'version', true);
-        render_builds(runtime_releases, $('table[data-builds-id="runtime_releases"] tbody'));
-
-        sort_builds(runtime_development_builds, 'date', true);
-        render_builds(runtime_development_builds, $('table[data-builds-id="runtime_development_builds"] tbody'));
-
-        sort_builds(developer_tools_releases, 'version', true);
-        render_builds(developer_tools_releases, $('table[data-builds-id="developer_tools_releases"] tbody'));
-
-        sort_builds(developer_tools_development_builds, 'date', true);
-        render_builds(developer_tools_development_builds, $('table[data-builds-id="developer_tools_development_builds"] tbody'));
-
+        if(data.builds){
+            if(data.builds.runtime_releases){
+                runtime_releases = formatBuilds(data.builds.runtime_releases);
+                builds['runtime_releases'] = runtime_releases;
+                sort_builds(runtime_releases, 'version', true);
+                render_builds(runtime_releases, $('table[data-builds-id="runtime_releases"] tbody'));
+            }    
+            if(data.builds.tools_releases){
+                developer_tools_releases = formatBuilds(data.builds.tools_releases);
+                builds['developer_tools_releases'] = developer_tools_releases;
+                sort_builds(developer_tools_releases, 'version', true);
+                render_builds(developer_tools_releases, $('table[data-builds-id="developer_tools_releases"] tbody'));       
+            }
+            if(data.builds.runtime_nightly_builds){
+                runtime_development_builds = formatBuilds(data.builds.runtime_nightly_builds);
+                builds['runtime_development_builds'] = runtime_development_builds;
+                sort_builds(runtime_development_builds, 'date', true);
+                render_builds(runtime_development_builds, $('table[data-builds-id="runtime_development_builds"] tbody'));
+            }
+            if(data.builds.tools_nightly_builds){
+                developer_tools_development_builds = formatBuilds(data.builds.tools_nightly_builds);
+                builds['developer_tools_development_builds'] = developer_tools_development_builds;
+                sort_builds(developer_tools_development_builds, 'date', true);
+                render_builds(developer_tools_development_builds, $('table[data-builds-id="developer_tools_development_builds"] tbody'));
+            }
+        }
     });
     
 });

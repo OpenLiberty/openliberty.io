@@ -20,7 +20,8 @@ css:
                 <h3 id="tag_title">Tags</h3>
                 <div id="tags_container">
                     {% for tag in page.tags %}
-                        {% if visibleTags contains tag %}
+                        {% assign lowercase_tag = tag | downcase %}    
+                        {% if visibleTags contains lowercase_tag %}
                             <a href="/guides?search={{ tag }}&key=tag">{{ tag }}</a>
                         {% endif %}
                     {% endfor %}
