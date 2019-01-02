@@ -13,7 +13,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>{% if page.seo-title %}{{ page.seo-title | escape }}{% else %}{% if page.title %}{{ page.title | append: ' - ' | append: site.title | escape }}{% else %}{{ site.title | escape }}{% endif %}{% endif %}</title>
+<<<<<<< HEAD
   <meta name="description" content="{{ description }}">
+=======
+  <meta name="description" content="{% if page.seo-description %}{{ page.seo-description | truncate: 300 | escape }}{% else %}{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}{% endif %}">
+>>>>>>> Add character limit to blog seo description
 
   {% if page.layout == "default" or page.layout == "post" %}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
