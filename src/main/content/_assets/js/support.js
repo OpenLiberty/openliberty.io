@@ -9,6 +9,3 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-function redirect() {
-    location.href = "https://www.ibm.com/us-en/marketplace/elite-support-for-open-liberty";
-}
