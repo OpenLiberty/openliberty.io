@@ -11,8 +11,6 @@
 package io.openliberty.website;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;
@@ -24,27 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 public class TLSFilter implements Filter {
-
-    // A list of deprecated URLs that need to be redirected using the HTTP 302.
-    private final Map<String, String> TEMP_REDIRECTS = 
-        new HashMap<String, String>() {{
-            put("/index.html/", "/index.html");
-            put("/docs/ref/javaee/", "/docs/ref/javaee/8/");
-            put("/docs/ref/microprofile/", "/docs/ref/microprofile/2.1/");
-            put("/docs/ref/", "/docs/"); 
-            put("/docs/intro/", "/docs/");
-            put("/guides/microprofile-intro.html", "/guides/cdi-intro.html");
-            // put("old uri", "new uri");
-    }};
-
-    // Generic deprecated redirect URLS that need to be redirected.
-    private final Map<String, String> GENERIC_REDIRECTS = new HashMap<String,String>(){
-        {
-            put("/news","/blog");
-            put("/config/rwlp_config_", "/config/");
-        }
-    };
-
     public void destroy() {
     }
 
@@ -58,10 +35,10 @@ public class TLSFilter implements Filter {
 
         String servletPath = ((HttpServletRequest)req).getServletPath();
         String serverName = req.getServerName();
-        
+
         if(!Constants.API_SERVLET_PATH.equals(servletPath) &&
         		(serverName.equals(Constants.OPEN_LIBERTY_GREEN_APP_HOST)
-				 || serverName.equals(Constants.OPEN_LIBERTY_BLUE_APP_HOST))) {   
+				 || serverName.equals(Constants.OPEN_LIBERTY_BLUE_APP_HOST))) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         } else if ("http".equals(req.getScheme())) {
           response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY); // HTTP 301
@@ -83,45 +60,7 @@ public class TLSFilter implements Filter {
           } else {
         	  response.setHeader("Cache-Control", "no-cache");
           }
-        
-          // REDIRECT CODE FOR HTTPS TRAFFIC
-          if(TEMP_REDIRECTS.containsKey(uri)) {
-              String newURI = TEMP_REDIRECTS.get(uri);
-              String sPort = getServerPort(req);
-              String newURL = req.getScheme() + "://" + req.getServerName() + sPort + newURI;
-              response.sendRedirect(newURL);
-              // We want to redirect the Servlet and stop further processing of
-              // the incoming request.
-              return;
-          }
-          // Generic redirects that handle multiple URIs
-          for(String key: GENERIC_REDIRECTS.keySet()){
-              if(uri.startsWith(key)){
-                  // Redirect using the old value replaced by the new value
-                  String newURI = uri.replaceAll(key, GENERIC_REDIRECTS.get(key));
-                  String sPort = getServerPort(req);
-                  String newURL = req.getScheme() + "://" + req.getServerName() + sPort + newURI;
-                  response.sendRedirect(newURL);
-                  // We want to redirect the Servlet and stop further processing of
-                  // the incoming request.
-                  return;
-              }
-          }
         }
-
         chain.doFilter(req, resp);
     }
-
-    private String getServerPort(ServletRequest req) {
-        String sPort = "";
-        int serverPort = req.getServerPort();
-        if ((serverPort == 80) || (serverPort == 443)) {
-            // Do not add server port to the final new URL
-        } else {
-            sPort = ":" + serverPort;
-        }
-        return sPort;
-    }
 }
-
-
