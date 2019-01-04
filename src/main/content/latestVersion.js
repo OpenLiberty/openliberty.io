@@ -16,7 +16,7 @@
 * a link to it.
 **/
 var latestReleasedVersion = {
-    version: '18.0.0.3',
+    version: '18.0.0.4',
     productName : 'Open Liberty Runtime',
     availableFrom : 'https://openliberty.io/downloads?welcome'
 };
