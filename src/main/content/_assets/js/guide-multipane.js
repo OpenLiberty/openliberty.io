@@ -229,27 +229,34 @@ $(document).ready(function() {
     $('code[class*=hotspot], span[class*=hotspot], div[class*=hotspot]').each(function(){
         var snippet = $(this);
         var classList = this.classList;
-        var line_nums;
+        var line_nums, ranges;
         for(var i = 0; i < classList.length; i++){
             var className = classList[i];
             if(className.indexOf('hotspot=') === 0){
                 line_nums = className.substring(8);
                 var fromLine, toLine;
                 if(line_nums.indexOf('-') > -1){
-                    // Highlight a range of lines.
                     var lines = line_nums.split('-');
                     fromLine = parseInt(lines[0]);
-                    toLine = parseInt(lines[1]);                    
+                    toLine = parseInt(lines[1]);
+                    ranges = line_nums;
                 }
                 else {
                     // Only one line to highlight.
                     fromLine = parseInt(line_nums);
                     toLine = parseInt(line_nums);
+                    ranges = fromLine + "-" + toLine;
                 }
                 // Set data attributes to save the lines to highlight
-                snippet.data('highlight_from_line', fromLine);
-                snippet.data('highlight_to_line', toLine);
-                snippet.removeClass(className);
+                if(snippet.data('highlight-ranges')){
+                    // Add lines to the hotspot
+                    var old_ranges = snippet.data('highlight-ranges');
+                    old_ranges += "," + ranges;
+                    snippet.data('highlight-ranges', old_ranges);
+                }
+                else{
+                    snippet.data('highlight-ranges', ranges);
+                }                    
                 snippet.addClass('hotspot');
 
                 // Find if the hotspot has a file index set to override the default behavior.
@@ -262,8 +269,7 @@ $(document).ready(function() {
 
                 var code_block = get_code_block_from_hotspot(snippet);
                 create_mobile_code_snippet(snippet, code_block, fromLine, toLine);
-                break;
-            }
+            }  
         }
     });
 
@@ -312,22 +318,35 @@ $(document).ready(function() {
             showCorrectCodeBlock(header.id, fileIndex, false);
 
             // Highlight the code
-            var fromLine = hotspot.data('highlight_from_line');
-            var toLine = hotspot.data('highlight_to_line');
-            if(code_block && fromLine && toLine){
-                highlight_code_range(code_block, fromLine, toLine);
+            var ranges = hotspot.data('highlight-ranges');
+            ranges = ranges.split(',');
+            for(var i = 0; i < ranges.length; i++){
+                var lines = ranges[i].split('-');
+                if(lines.length === 2){
+                    var fromLine = parseInt(lines[0]);
+                    var toLine = parseInt(lines[1]);
+                    if(fromLine && toLine){
+                        highlight_code_range(code_block, fromLine, toLine);
+                    }
+                }                
             }
         }
     }, 250);
 
     // When hovering over a code hotspot, highlight the correct lines of code in the corresponding code section.
-    $('.hotspot').on('hover mouseover', function(event){
+    $('.hotspot').on('hover mouseover', function(){
+        if(inSingleColumnView()){
+            return;
+        }
         $(this).data('hovering', true);
         handleHotspotHover($(this));
     });
 
     // When the mouse leaves a code 'hotspot', remove all highlighting in the corresponding code section.
-    $('.hotspot').on('mouseleave', function(event){
+    $('.hotspot').on('mouseleave', function(){
+        if(inSingleColumnView()){
+            return;
+        }
         $(this).data('hovering', false);
         remove_highlighting();
     });       
