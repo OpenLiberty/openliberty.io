@@ -1,33 +1,42 @@
 <header>
-<nav class="navbar navbar-default">
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <div class="navbar-header">
-            <button id="navbar_responsive_button" class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            {% unless page.home %}
-            <a id="navbar_home_link" class="navbar-brand" href="/" aria-label="Home"></a>
-            {% endunless %}
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-                
-            <ul class="nav navbar-nav navbar-right text-right">
-                <li><a href="/about">About</a></li>
-                <li><a href="/docs">Docs</a></li>
-                <li><a href="/downloads">Downloads</a></li>
-                <li><a href="/community">Community</a></li>
-                <li><a href="/contribute">Contribute</a></li>
-                <li><a href="/blog">Blog</a></li>
-                <li class="hidden-xs"><a id="navbar_github_link" href="https://github.com/OpenLiberty" target="new" aria-label="Open Liberty GitHub Repository"></a></li>                
+        <a class="navbar-brand" href="/">
+            <img src="/img/OL_logo.svg">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link blue_link_light_background" href="/docs">Docs <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link blue_link_light_background" href="/downloads">Downloads</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link blue_link_light_background" href="/support">Support</a>
+                </li>
+
             </ul>
+            <div id="float_right_section">
+                <a id="fork_button" class="nav-link dark_green_link_light_background" href="https://github.com/OpenLiberty/open-liberty" target="_blank">Fork the code</a>
+                <form id="search_form" class="form-inline my-2 my-lg-0">
+                    <input id="nav_search_input" class="form-control mr-sm-2" type="search">
+                </form>
+            </div>
         </div>
     </div>
-  </nav>
-  <div class="hidden">
-    <img src="/img/small_logo_white.svg">
-    <img src="/img/github_navbar_hover.svg">
-  </div>
+</nav>
+
+
+
+
+
+
+
+
+
 </header>
