@@ -531,6 +531,9 @@ $(document).ready(function() {
     // activeTab: tab to set active
     // setAsFirstTab: boolean whether to move this active tab to the front or not.
     function setActiveTab(activeTab, setAsFirstTab){
+        if(activeTab.children('a').hasClass('active')){
+            return;
+        }
         $('.code_column_tab > a').removeClass('active');
         activeTab.children('a').addClass('active');
         activeTab.show();
