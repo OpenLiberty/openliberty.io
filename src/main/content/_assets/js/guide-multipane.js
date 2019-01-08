@@ -13,7 +13,6 @@ $(document).ready(function() {
     $('#preamble').detach().insertAfter('#duration_container');
 
     var code_sections = {}; // Map guide sections to code blocks to show on the right column. Each guide section maps to its tab and code block.
-    var recent_sections = {}; // Store the most recently viewed code_section for each guide section
 
     // Move the code snippets to the code column on the right side.
     // Each code section is duplicated to show the full file in the right column and just the snippet of code relevant to the guide in the left column in single column / mobile view.
@@ -124,8 +123,6 @@ $(document).ready(function() {
             // Show the code block
             var data_id = $(this).attr('data-section-id');
             var code_block = $($("#code_column .code_column[data-section-id='" + data_id + "']").get(fileIndex));
-            // Save the code section for later when the user comes back to this section and we want to show the most recent code viewed.
-            recent_sections[data_id] = code_sections[data_id][fileIndex];
             $('#code_column .code_column').not(code_block).hide();
             code_block.show();
         }
@@ -314,12 +311,10 @@ $(document).ready(function() {
             fileIndex = 0;
         }
         var code_block = code_sections[header.id][fileIndex].code;
-        if(code_block){            
-            // Save the code section for later when the user comes back to this section and we want to show the most recent code viewed.
-            recent_sections[header.id] = code_sections[header.id][fileIndex];
+        if(code_block){
             // Switch to the correct tab
             var tab = code_sections[header.id][fileIndex].tab;
-            setActiveTab(tab);                       
+            setActiveTab(tab);
             showCorrectCodeBlock(header.id, fileIndex, false);
 
             // Highlight the code
@@ -531,9 +526,6 @@ $(document).ready(function() {
     // activeTab: tab to set active
     // setAsFirstTab: boolean whether to move this active tab to the front or not.
     function setActiveTab(activeTab, setAsFirstTab){
-        if(activeTab.children('a').hasClass('active')){
-            return;
-        }
         $('.code_column_tab > a').removeClass('active');
         activeTab.children('a').addClass('active');
         activeTab.show();
@@ -560,17 +552,10 @@ $(document).ready(function() {
                 hideDuplicateTabs(id);
 
                 if(switchTabs){
-                    // Load the most recently viewed tab for this section if viewed before.
-                    if(recent_sections[id]){
-                        setActiveTab(recent_sections[id].tab, true);
+                    var subsection_files = code_sections[id];
+                    for(var i = subsection_files.length - 1; i >= 0; i--){
+                        setActiveTab(subsection_files[i].tab, true);
                     }
-                    else {
-                        var subsection_files = code_sections[id];
-                        for(var i = subsection_files.length - 1; i >= 0; i--){
-                            setActiveTab(subsection_files[i].tab, true);
-                        }
-                    }
-                    
                 }                
             }
         } catch(e) {
