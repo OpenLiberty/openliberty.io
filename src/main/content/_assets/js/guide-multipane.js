@@ -553,6 +553,12 @@ $(document).ready(function() {
             if(!index){
                 index = 0;
             }
+            var tab;
+            // Load the most recently viewed tab for this section if viewed before.
+            if(recent_sections[id]){
+                tab = recent_sections[id].tab;
+                index = tab.data('file-index');                
+            }
             var code_block = code_sections[id][index].code;
             if(code_block){
                 $('#code_column .code_column').not(code_block).hide();
@@ -560,17 +566,16 @@ $(document).ready(function() {
                 hideDuplicateTabs(id);
 
                 if(switchTabs){
-                    // Load the most recently viewed tab for this section if viewed before.
-                    if(recent_sections[id]){
-                        setActiveTab(recent_sections[id].tab, true);
-                    }
-                    else {
+                    if(!recent_sections[id]){
+                        // Load all of the tabs for this section
                         var subsection_files = code_sections[id];
                         for(var i = subsection_files.length - 1; i >= 0; i--){
                             setActiveTab(subsection_files[i].tab, true);
                         }
+                    }   
+                    else {
+                        setActiveTab(tab, true);
                     }
-                    
                 }                
             }
         } catch(e) {
