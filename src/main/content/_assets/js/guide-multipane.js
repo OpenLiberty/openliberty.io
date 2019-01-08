@@ -59,9 +59,9 @@ $(document).ready(function() {
             tab.data('file-index', fileIndex);
 
             // Remove old title from the DOM
-            metadata_sect.detach();
-            
-            $('#code_column_tabs').append(tab);
+            metadata_sect.detach();            
+            $('#code_column_tabs').append(tab);            
+
             duplicate_code_block.addClass('dimmed_code_column'); // Dim the code at first while the github popup takes focus.
             duplicate_code_block.appendTo('#code_column'); // Move code to the right column
         }
@@ -316,11 +316,11 @@ $(document).ready(function() {
         var code_block = code_sections[header.id][fileIndex].code;
         if(code_block){            
             // Save the code section for later when the user comes back to this section and we want to show the most recent code viewed.
-            recent_sections[header.id] = code_sections[header.id][fileIndex];
+            recent_sections[header.id] = code_sections[header.id][fileIndex];                
             // Switch to the correct tab
             var tab = code_sections[header.id][fileIndex].tab;
-            setActiveTab(tab);                       
-            showCorrectCodeBlock(header.id, fileIndex, false);
+            setActiveTab(tab);                   
+            showCorrectCodeBlock(header.id, fileIndex, false);            
 
             // Highlight the code
             var ranges = hotspot.data('highlight-ranges');
@@ -521,7 +521,12 @@ $(document).ready(function() {
                     // Hide other tabs with the same name
                     var tab = code_section.tab;                
                     var fileName = tab.text();
-                    visibleTabs.not(tab).filter(":contains('" + fileName + "')").hide();
+                    var tabs = visibleTabs.filter(":contains('" + fileName + "')");
+                    if(tabs.length > 1 && tab.is(":visible")){
+                        var duplicateTabs =  visibleTabs.not(tab).filter(":contains('" + fileName + "')");
+                        // Only hide if no other tab is present with the name
+                        duplicateTabs.hide();
+                    }                    
                 }
             }                        
         });
@@ -540,7 +545,7 @@ $(document).ready(function() {
         if(setAsFirstTab){
             activeTab.detach();
             $('#code_column_tabs').prepend(activeTab);
-        }        
+        }
     }
 
     // Hide other code blocks and show the correct code block based on provided id.
@@ -562,21 +567,20 @@ $(document).ready(function() {
             var code_block = code_sections[id][index].code;
             if(code_block){
                 $('#code_column .code_column').not(code_block).hide();
-                code_block.show();
-                hideDuplicateTabs(id);
+                code_block.show();                
 
                 if(switchTabs){
-                    if(!recent_sections[id]){
-                        // Load all of the tabs for this section
-                        var subsection_files = code_sections[id];
-                        for(var i = subsection_files.length - 1; i >= 0; i--){
-                            setActiveTab(subsection_files[i].tab, true);
-                        }
-                    }   
-                    else {
+                    // Load all of the tabs for this section
+                    var subsection_files = code_sections[id];
+                    for(var i = subsection_files.length - 1; i >= 0; i--){
+                        setActiveTab(subsection_files[i].tab, true);
+                    }
+                    if(recent_sections[id]) {
                         setActiveTab(tab, true);
                     }
-                }                
+                }               
+                
+                hideDuplicateTabs(id);
             }
         } catch(e) {
             console.log(e);
