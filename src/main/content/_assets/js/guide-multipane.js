@@ -514,22 +514,42 @@ $(document).ready(function() {
     function hideDuplicateTabs(id){
         var visibleTabs = $('#code_column_tabs li:visible');
         var substeps = $("#" + id).parents('.sect1').find('h2, h3');
-        substeps.each(function(){
-            for(var i = 0; i < code_sections[this.id].length; i++){
-                var code_section = code_sections[this.id][i];
-                if(code_section && code_section.tab){
-                    // Hide other tabs with the same name
-                    var tab = code_section.tab;                
-                    var fileName = tab.text();
-                    var tabs = visibleTabs.filter(":contains('" + fileName + "')");
-                    if(tabs.length > 1 && tab.is(":visible")){
-                        var duplicateTabs =  visibleTabs.not(tab).filter(":contains('" + fileName + "')");
-                        // Only hide if no other tab is present with the name
-                        duplicateTabs.hide();
-                        setActiveTab(tab);
-                    }                    
-                }
-            }                        
+        var substepIds = [];
+        for(var i = 0; i < substeps.length; i++){
+            substepIds.push(substeps[i].id);
+        }
+
+        // Now check to see if any of the visible tabs match the section's tabs
+        visibleTabs.each(function(){
+            if(!$(this).is(":visible")){
+                // The tab could have been hidden by a previous iteration so only look for duplicates if it is visible.
+                return;
+            }
+            var fileName = this.textContent;
+            var fileIndex = $(this).data('file-index');
+            var data_id = $(this).attr('data-section-id');
+            var code_block = $($("#code_column .code_column[data-section-id='" + data_id + "']").get(fileIndex));
+
+            var tabsWithSameName = $('#code_column_tabs li:visible').not($(this)).filter(":contains('" + fileName + "')");
+            if(tabsWithSameName.length > 0){
+                // Compare to other tabs in this section to see if their content matches
+                tabsWithSameName.each(function(){
+                    var fileIndex2 = $(this).data('file-index');
+                    var data_id2 = $(this).attr('data-section-id');
+                    var code_block2 = $($("#code_column .code_column[data-section-id='" + data_id2 + "']").get(fileIndex2));
+
+                    if(substepIds.indexOf(data_id2) === -1){
+                        // Tab is not associated with this subsection so hide it.                        
+                        $(this).hide();
+                    }
+                    else {
+                        // Other tab is from the same section, compare file contents to determine if it is a duplicate.
+                        if(code_block.text() == code_block2.text()){                            
+                            $(this).hide();
+                        }            
+                    }
+                });
+            }            
         });
     }
 
