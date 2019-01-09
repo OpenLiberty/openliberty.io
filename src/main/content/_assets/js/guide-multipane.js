@@ -526,6 +526,7 @@ $(document).ready(function() {
                         var duplicateTabs =  visibleTabs.not(tab).filter(":contains('" + fileName + "')");
                         // Only hide if no other tab is present with the name
                         duplicateTabs.hide();
+                        setActiveTab(tab);
                     }                    
                 }
             }                        
@@ -567,8 +568,7 @@ $(document).ready(function() {
             var code_block = code_sections[id][index].code;
             if(code_block){
                 $('#code_column .code_column').not(code_block).hide();
-                code_block.show();                
-
+                code_block.show();
                 if(switchTabs){
                     // Load all of the tabs for this section
                     var subsection_files = code_sections[id];
