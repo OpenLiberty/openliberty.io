@@ -544,7 +544,7 @@ $(document).ready(function() {
                     }
                     else {
                         // Other tab is from the same section, compare file contents to determine if it is a duplicate.
-                        if(code_block.text() == code_block2.text()){                            
+                        if(code_block.text() === code_block2.text()){                            
                             $(this).hide();
                         }            
                     }
