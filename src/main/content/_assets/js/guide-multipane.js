@@ -388,7 +388,6 @@ $(document).ready(function() {
             if(delta === 1 || delta === -1){
                 delta *= 150;
             }
-            // this.scrollTop -= delta;
             codeColumnContent.scrollTop -= delta;
             handleGithubPopup();
             event.preventDefault();  
@@ -530,7 +529,12 @@ $(document).ready(function() {
         if(setAsFirstTab){
             activeTab.detach();
             $('#code_column_tabs').prepend(activeTab);
-        }        
+        }
+        // Adjust the code content to take up the remaining height
+        var tabListHeight = $("#code_column_tabs").outerHeight();
+        $("code_column_content").css({
+            "height": "calc(100% - " + tabListHeight + "px)"
+        });
     }
 
     // Hide other code blocks and show the correct code block based on provided id.
