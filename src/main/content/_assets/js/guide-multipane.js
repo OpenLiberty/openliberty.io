@@ -60,9 +60,9 @@ $(document).ready(function() {
 
             // Remove old title from the DOM
             metadata_sect.detach();            
-            $('#code_column_tabs').append(tab);            
+            $('#code_column_tabs').append(tab);
 
-            duplicate_code_block.addClass('dimmed_code_column'); // Dim the code at first while the github popup takes focus.
+            duplicate_code_block.addClass('dimmed'); // Dim the code at first while the github popup takes focus.
             duplicate_code_block.appendTo('#code_column_content'); // Move code to the right column
         }
     });
@@ -177,7 +177,7 @@ $(document).ready(function() {
     //         toLine: The line in the code block to end copying.
     function create_mobile_code_snippet(snippet, code_block, fromLine, toLine){
         var duplicate_code_block = code_block.clone();
-        duplicate_code_block.removeClass('dimmed_code_column'); // Remove the blur from the original code block;
+        duplicate_code_block.removeClass('dimmed'); // Remove the blur from the original code block;
         duplicate_code_block.addClass('mobile_code_snippet'); // Add class to this code snippet in the guide column to only show up in mobile view.
         duplicate_code_block.removeClass('code_columnn');
         duplicate_code_block.removeAttr('filename');
@@ -480,6 +480,20 @@ $(document).ready(function() {
         }
     });
 
+    function showGithubPopup(){
+        $("#github_clone_popup_container").fadeIn();
+        $("#code_column .code_column, #code_column_tabs").addClass('dimmed', {duration:400});
+        $('.code_column_tab').attr('disabled', true);
+        $(".copyFileButton").hide();
+    }
+
+    function hideGithubPopup(){
+        $("#github_clone_popup_container").fadeOut();
+        $("#code_column .code_column, #code_column_tabs").removeClass('dimmed', {duration:400});
+        $('.code_column_tab').attr('disabled', false);
+        $(".copyFileButton").show();
+    }
+
     /*
        Handle showing/hiding the Github popup.
     */
@@ -487,22 +501,23 @@ $(document).ready(function() {
         var githubPopup = $("#github_clone_popup_container");
         if(githubPopup.length > 0){
             // Check if the first guide section that has code to show on the right has been scrolled past yet.
+            // If so, then the Github popup will be dismissed. If the first section hasn't been scrolled past yet but a hotspot is showing on the next section then also hide it. 
+            var navHeight = $('.navbar').height();
             var firstCodeSection = $('[data-has-code]').first();
             if(firstCodeSection.is('h3')){
                 firstCodeSection = firstCodeSection.parents('.sect1').find('h2').first();
             }
             var firstCodeSectionTop = Math.round(firstCodeSection[0].getBoundingClientRect().top);
-            var navHeight = $('.navbar').height();
-            var showGithubPopup = (firstCodeSectionTop - navHeight) > 1;
-            if(showGithubPopup){
-                githubPopup.fadeIn();
-                $("#code_column .code_column").addClass('dimmed_code_column', {duration:400});
-                $('.code_column_tab').attr('disabled', true);
+            var blurCodeOnRight = (firstCodeSectionTop - navHeight) > 1;
+
+            var firstHotspot = $("#guide_column .hotspot:visible")[0];
+            var firstHotspotRect = firstHotspot.getBoundingClientRect();
+            var firstHotspotInView = (firstHotspotRect.top > 0) && (firstHotspotRect.bottom <= window.innerHeight);
+            if(blurCodeOnRight && !firstHotspotInView){
+                showGithubPopup();
             }
             else{            
-                githubPopup.fadeOut();
-                $("#code_column .code_column").removeClass('dimmed_code_column', {duration:400});
-                $('.code_column_tab').attr('disabled', false);
+                hideGithubPopup();         
             }
         }                
     }
