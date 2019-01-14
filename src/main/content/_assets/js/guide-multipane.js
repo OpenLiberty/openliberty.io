@@ -60,7 +60,14 @@ $(document).ready(function() {
 
             // Remove old title from the DOM
             metadata_sect.detach();            
-            $('#code_column_tabs').append(tab);
+
+            // If the same tab exists already in the list, append it in the same order to persist the order it was introduced in the guide.
+            var tabAlreadyExists =  $('#code_column_tabs li').filter(":contains('" + fileName + "')");
+            if(tabAlreadyExists.length > 0){
+                tabAlreadyExists.last().after(tab);
+            } else {
+                $('#code_column_tabs').append(tab);
+            }            
 
             duplicate_code_block.addClass('dimmed'); // Dim the code at first while the github popup takes focus.
             duplicate_code_block.appendTo('#code_column_content'); // Move code to the right column
@@ -546,39 +553,38 @@ $(document).ready(function() {
             if(tabsWithSameName.length > 0){
                 // Compare to other tabs in this section to see if their content matches
                 tabsWithSameName.each(function(){
+                    if($(this).find('a').hasClass('active')){
+                        return;
+                    }
                     var fileIndex2 = $(this).data('file-index');
                     var data_id2 = $(this).attr('data-section-id');
                     var code_block2 = $($("#code_column .code_column[data-section-id='" + data_id2 + "']").get(fileIndex2));
 
                     if(substepIds.indexOf(data_id2) === -1){
-                        // Tab is not associated with this subsection so hide it.                        
+                        // Tab is not associated with this subsection so hide it.             
                         $(this).hide();
                     }
                     else {
                         // Other tab is from the same section, compare file contents to determine if it is a duplicate.
-                        if(code_block.text() === code_block2.text()){                            
+                        if(code_block.text() === code_block2.text()){          
                             $(this).hide();
                         }            
                     }
                 });
-            }            
+            }     
         });
     }
 
     // Sets the active tab in the code column and moves it to the front of the tab list.
     // activeTab: tab to set active
-    // setAsFirstTab: boolean whether to move this active tab to the front or not.
-    function setActiveTab(activeTab, setAsFirstTab){
+    function setActiveTab(activeTab){
         if(activeTab.children('a').hasClass('active')){
             return;
         }
         $('.code_column_tab > a').removeClass('active');
         activeTab.children('a').addClass('active');
         activeTab.show();
-        if(setAsFirstTab){
-            activeTab.detach();
-            $('#code_column_tabs').prepend(activeTab);
-        }
+
         // Adjust the code content to take up the remaining height
         var tabListHeight = $("#code_column_tabs").outerHeight();
         $("code_column_content").css({
@@ -610,10 +616,10 @@ $(document).ready(function() {
                     // Load all of the tabs for this section
                     var subsection_files = code_sections[id];
                     for(var i = subsection_files.length - 1; i >= 0; i--){
-                        setActiveTab(subsection_files[i].tab, true);
+                        setActiveTab(subsection_files[i].tab);
                     }
                     if(recent_sections[id]) {
-                        setActiveTab(tab, true);
+                        setActiveTab(tab);
                     }
                 }               
                 
