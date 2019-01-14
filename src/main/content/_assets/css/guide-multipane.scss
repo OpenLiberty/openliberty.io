@@ -395,10 +395,14 @@ header {
     left: calc(100% - 780px); /* Adjust for the width and padding */
     top: 100px;
     bottom: 0; /* Initially extend the code column the full height */
+}
+
+#code_column_content {
+    height: calc(100% - 34px); /* Take up the remaining height from the tabs container */
     overflow-y: scroll;
 }
 
-.dimmed_code_column {
+.dimmed {
     opacity: .19;
     filter: blur(1px);
 }
@@ -555,6 +559,7 @@ header {
 .code_column .CodeRay code, .code_column .CodeRay .highlightSection {
     padding-left: 23px;
     padding-right: 31px;
+    padding-bottom: 34px;
 }
 
 .codeTitle {
