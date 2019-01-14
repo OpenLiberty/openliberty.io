@@ -13,6 +13,7 @@ $(document).ready(function() {
     $('#preamble').detach().insertAfter('#duration_container');
 
     var code_sections = {}; // Map guide sections to code blocks to show on the right column. Each guide section maps to its tab and code block.
+    var recent_sections = {}; // Store the most recently viewed code_section for each guide section
 
     // Move the code snippets to the code column on the right side.
     // Each code section is duplicated to show the full file in the right column and just the snippet of code relevant to the guide in the left column in single column / mobile view.
@@ -58,9 +59,9 @@ $(document).ready(function() {
             tab.data('file-index', fileIndex);
 
             // Remove old title from the DOM
-            metadata_sect.detach();
-            
-            $('#code_column_tabs').append(tab);
+            metadata_sect.detach();            
+            $('#code_column_tabs').append(tab);            
+
             duplicate_code_block.addClass('dimmed_code_column'); // Dim the code at first while the github popup takes focus.
             duplicate_code_block.appendTo('#code_column_content'); // Move code to the right column
         }
@@ -123,6 +124,8 @@ $(document).ready(function() {
             // Show the code block
             var data_id = $(this).attr('data-section-id');
             var code_block = $($("#code_column .code_column[data-section-id='" + data_id + "']").get(fileIndex));
+            // Save the code section for later when the user comes back to this section and we want to show the most recent code viewed.
+            recent_sections[data_id] = code_sections[data_id][fileIndex];
             $('#code_column .code_column').not(code_block).hide();
             code_block.show();
         }
@@ -311,11 +314,13 @@ $(document).ready(function() {
             fileIndex = 0;
         }
         var code_block = code_sections[header.id][fileIndex].code;
-        if(code_block){
+        if(code_block){            
+            // Save the code section for later when the user comes back to this section and we want to show the most recent code viewed.
+            recent_sections[header.id] = code_sections[header.id][fileIndex];                
             // Switch to the correct tab
             var tab = code_sections[header.id][fileIndex].tab;
-            setActiveTab(tab);
-            showCorrectCodeBlock(header.id, fileIndex, false);
+            setActiveTab(tab);                   
+            showCorrectCodeBlock(header.id, fileIndex, false);            
 
             // Highlight the code
             var ranges = hotspot.data('highlight-ranges');
@@ -506,16 +511,42 @@ $(document).ready(function() {
     function hideDuplicateTabs(id){
         var visibleTabs = $('#code_column_tabs li:visible');
         var substeps = $("#" + id).parents('.sect1').find('h2, h3');
-        substeps.each(function(){
-            for(var i = 0; i < code_sections[this.id].length; i++){
-                var code_section = code_sections[this.id][i];
-                if(code_section && code_section.tab){
-                    // Hide other tabs with the same name
-                    var tab = code_section.tab;                
-                    var fileName = tab.text();
-                    visibleTabs.not(tab).filter(":contains('" + fileName + "')").hide();
-                }
-            }                        
+        var substepIds = [];
+        for(var i = 0; i < substeps.length; i++){
+            substepIds.push(substeps[i].id);
+        }
+
+        // Now check to see if any of the visible tabs match the section's tabs
+        visibleTabs.each(function(){
+            if(!$(this).is(":visible")){
+                // The tab could have been hidden by a previous iteration so only look for duplicates if it is visible.
+                return;
+            }
+            var fileName = this.textContent;
+            var fileIndex = $(this).data('file-index');
+            var data_id = $(this).attr('data-section-id');
+            var code_block = $($("#code_column .code_column[data-section-id='" + data_id + "']").get(fileIndex));
+
+            var tabsWithSameName = $('#code_column_tabs li:visible').not($(this)).filter(":contains('" + fileName + "')");
+            if(tabsWithSameName.length > 0){
+                // Compare to other tabs in this section to see if their content matches
+                tabsWithSameName.each(function(){
+                    var fileIndex2 = $(this).data('file-index');
+                    var data_id2 = $(this).attr('data-section-id');
+                    var code_block2 = $($("#code_column .code_column[data-section-id='" + data_id2 + "']").get(fileIndex2));
+
+                    if(substepIds.indexOf(data_id2) === -1){
+                        // Tab is not associated with this subsection so hide it.                        
+                        $(this).hide();
+                    }
+                    else {
+                        // Other tab is from the same section, compare file contents to determine if it is a duplicate.
+                        if(code_block.text() === code_block2.text()){                            
+                            $(this).hide();
+                        }            
+                    }
+                });
+            }            
         });
     }
 
@@ -523,6 +554,9 @@ $(document).ready(function() {
     // activeTab: tab to set active
     // setAsFirstTab: boolean whether to move this active tab to the front or not.
     function setActiveTab(activeTab, setAsFirstTab){
+        if(activeTab.children('a').hasClass('active')){
+            return;
+        }
         $('.code_column_tab > a').removeClass('active');
         activeTab.children('a').addClass('active');
         activeTab.show();
@@ -547,18 +581,28 @@ $(document).ready(function() {
             if(!index){
                 index = 0;
             }
+            var tab;
+            // Load the most recently viewed tab for this section if viewed before.
+            if(recent_sections[id]){
+                tab = recent_sections[id].tab;
+                index = tab.data('file-index');                
+            }
             var code_block = code_sections[id][index].code;
             if(code_block){
                 $('#code_column .code_column').not(code_block).hide();
                 code_block.show();
-                hideDuplicateTabs(id);
-
                 if(switchTabs){
+                    // Load all of the tabs for this section
                     var subsection_files = code_sections[id];
                     for(var i = subsection_files.length - 1; i >= 0; i--){
                         setActiveTab(subsection_files[i].tab, true);
                     }
-                }                
+                    if(recent_sections[id]) {
+                        setActiveTab(tab, true);
+                    }
+                }               
+                
+                hideDuplicateTabs(id);
             }
         } catch(e) {
             console.log(e);
