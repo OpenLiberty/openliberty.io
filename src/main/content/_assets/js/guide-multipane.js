@@ -60,10 +60,10 @@ $(document).ready(function() {
 
             // Remove old title from the DOM
             metadata_sect.detach();            
-            $('#code_column_tabs').append(tab);            
+            $('#code_column_tabs').append(tab);
 
             duplicate_code_block.addClass('dimmed'); // Dim the code at first while the github popup takes focus.
-            duplicate_code_block.appendTo('#code_column'); // Move code to the right column
+            duplicate_code_block.appendTo('#code_column_content'); // Move code to the right column
         }
     });
 
@@ -155,9 +155,9 @@ $(document).ready(function() {
         var highlight_end = code_section.find('.line-numbers:contains(' + (toLine + 1) + ')').first();        
         var range = highlight_start.nextUntil(highlight_end);
         range.wrapAll("<div class='highlightSection'></div>");
-        var scrollTop = $("#code_column")[0].scrollTop;
+        var scrollTop = $("#code_column_content")[0].scrollTop;
         var position = range.position().top;
-        $("#code_column").animate({scrollTop: scrollTop + position - 50});
+        $("#code_column_content").animate({scrollTop: scrollTop + position - 50});
     }
 
     // Remove all highlighting for the code section.
@@ -376,30 +376,27 @@ $(document).ready(function() {
         $(this).stop(); // Stop animations taking place with this code section.
 
         var event0 = event.originalEvent;
-        var dir = (event0.deltaY) < 0 ? 'up' : 'down';        
-        var hasVerticalScrollbar = false;
-        var codeColumn = $("#code_column").get(0);
+        var dir = (event0.deltaY) < 0 ? 'up' : 'down';
+        var codeColumn = $("#code_column")[0];
+        var codeColumnContent = $("#code_column_content").get(0);
 
-        // Check if element is scrollable.
-        if(this.scrollTop > 0 || this.offsetHeight > this.parentElement.offsetHeight){
-            hasVerticalScrollbar = true;
-        }
-
-        if(!hasVerticalScrollbar){
-            // If the code file has no scrollbar, the page will still scroll if the event is propagated to the window scroll listener.
+        if(!(this.scrollTop > 0 || this.offsetHeight > codeColumnContent.offsetHeight)){
+            // Element is not scrollable. If the code file has no scrollbar, the page will still scroll if the event is propagated to the window scroll listener so we need to prevent propagation.
             event.stopPropagation();
             event.preventDefault();
         }
+
         // If the code column is at the top and the browser is scrolled down, the element has no scrollTop and does not respond to changing its scrollTop.
-        else if(!(dir == 'down' && codeColumn.scrollTop === 0)){
+        else if(!(dir == 'down' && this.parentElement.scrollTop === 0)){
             var delta = event0.wheelDelta || -event0.detail || -event0.deltaY;
             // Firefox's scroll value is always 1 so multiply by 150 to scroll faster.
             if(delta === 1 || delta === -1){
                 delta *= 150;
             }
-            codeColumn.scrollTop -= delta;
+            codeColumnContent.scrollTop -= delta;
             handleGithubPopup();
             event.preventDefault();  
+            event.stopPropagation();
         }            
     });
 
@@ -428,7 +425,7 @@ $(document).ready(function() {
             var position = current_target_object.position();	
             $('#code_section_copied_confirmation').css({	
                 top: position.top + 30,	
-                right: 5	
+                right: 25	
             }).stop().fadeIn().delay(1000).fadeOut();
         } else {
             alert('Copy failed. Copy the code manually: ' + target.text());
@@ -582,6 +579,11 @@ $(document).ready(function() {
             activeTab.detach();
             $('#code_column_tabs').prepend(activeTab);
         }
+        // Adjust the code content to take up the remaining height
+        var tabListHeight = $("#code_column_tabs").outerHeight();
+        $("code_column_content").css({
+            "height": "calc(100% - " + tabListHeight + "px)"
+        });
     }
 
     // Hide other code blocks and show the correct code block based on provided id.
