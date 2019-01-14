@@ -417,7 +417,7 @@ $(document).ready(function() {
         temp.css({
             'position':'absolute',
             'top':'-1000px',
-            'left':'-1000px'
+            'left':'-1000px'            
         });
         temp.html(target.html().trim());
         $('body').append(temp);
@@ -428,7 +428,7 @@ $(document).ready(function() {
             var position = current_target_object.position();	
             $('#code_section_copied_confirmation').css({	
                 top: position.top + 30,	
-                right: 5	
+                right: 5
             }).stop().fadeIn().delay(1000).fadeOut();
         } else {
             alert('Copy failed. Copy the code manually: ' + target.text());
