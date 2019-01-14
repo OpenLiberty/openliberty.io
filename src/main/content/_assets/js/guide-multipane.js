@@ -375,7 +375,7 @@ $(document).ready(function() {
         var codeColumn = $("#code_column")[0];
         var codeColumnContent = $("#code_column_content").get(0);
 
-        if(!(this.scrollTop > 0 || this.offsetHeight > codeColumn.offsetHeight)){
+        if(!(this.scrollTop > 0 || this.offsetHeight > codeColumnContent.offsetHeight)){
             // Element is not scrollable. If the code file has no scrollbar, the page will still scroll if the event is propagated to the window scroll listener so we need to prevent propagation.
             event.stopPropagation();
             event.preventDefault();
