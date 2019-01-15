@@ -580,8 +580,8 @@ $(document).ready(function() {
             $('#code_column_tabs').prepend(activeTab);
         }
         // Adjust the code content to take up the remaining height
-        var tabListHeight = $("#code_column_tabs").outerHeight();
-        $("code_column_content").css({
+        var tabListHeight = $("#code_column_title_container").outerHeight();
+        $("#code_column_content").css({
             "height": "calc(100% - " + tabListHeight + "px)"
         });
     }
