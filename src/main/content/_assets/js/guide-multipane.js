@@ -575,6 +575,20 @@ $(document).ready(function() {
         });
     }
 
+    function loadPreviousStepsTabs(){
+        // Reveal the files from previous sections in case the user loaded a later step from a bookmarked hash.
+        var lastTab = $('#code_column_tabs li:visible').last();
+        var previousHiddenTabs = lastTab.prevAll().not(":visible");
+        for(var i = previousHiddenTabs.length - 1; i >= 0; --i){
+            let tab = previousHiddenTabs.get(i);
+            let fileName = tab.innerText.trim();
+            // Check that the most recent tab for this file is showing.
+            if($('#code_column_tabs li:visible').filter(":contains('" + fileName + "')").length == 0){
+                $(tab).show();
+            }
+        }
+    };
+
     // Sets the active tab in the code column and moves it to the front of the tab list.
     // activeTab: tab to set active
     function setActiveTab(activeTab){
@@ -621,8 +635,7 @@ $(document).ready(function() {
                     if(recent_sections[id]) {
                         setActiveTab(tab);
                     }
-                }               
-                
+                }
                 hideDuplicateTabs(id);
             }
         } catch(e) {
@@ -717,6 +730,7 @@ $(document).ready(function() {
             var hash = location.hash;
             accessContentsFromHash(hash);
             showCorrectCodeBlock(hash.substring(1), null, true);  // Remove the '#' in front of the id
+            loadPreviousStepsTabs();
         }
 
         if(window.location.hash === ""){
