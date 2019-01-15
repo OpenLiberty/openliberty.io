@@ -154,6 +154,7 @@ $(document).ready(function() {
         var highlight_start = code_section.find('.line-numbers:contains(' + fromLine + ')').first();
         var highlight_end = code_section.find('.line-numbers:contains(' + (toLine + 1) + ')').first();        
         var range = highlight_start.nextUntil(highlight_end);
+
         range.wrapAll("<div class='highlightSection'></div>");
         var scrollTop = $("#code_column_content")[0].scrollTop;
         var position = range.position().top;
@@ -302,8 +303,9 @@ $(document).ready(function() {
     /**
      * Handle hovering over hotspots. This will look up the corresponding code section on the right and search for the lines to highlight. Debounce is used to prevent multiple hotspots from being hovered over quickly and having the page jump around. It will handle the latest hotspot hovered over once 250 ms has passed.
      * @param hotspot: The snippet hovered over in the guide column.
+     * @param highlightCode: boolean if the code should be highlighted
      */
-    var handleHotspotHover = debounce(function(hotspot){
+    var handleHotspotHover = debounce(function(hotspot, highlightCode){
         // Only highlight the code if the mouse is still hovered over the hotspot after the debounce.
         if(hotspot.data('hovering') == false){
             return;
@@ -323,18 +325,24 @@ $(document).ready(function() {
             showCorrectCodeBlock(header.id, fileIndex, false);            
 
             // Highlight the code
-            var ranges = hotspot.data('highlight-ranges');
-            ranges = ranges.split(',');
-            for(var i = 0; i < ranges.length; i++){
-                var lines = ranges[i].split('-');
-                if(lines.length === 2){
-                    var fromLine = parseInt(lines[0]);
-                    var toLine = parseInt(lines[1]);
-                    if(fromLine && toLine){
-                        highlight_code_range(code_block, fromLine, toLine);
-                    }
-                }                
-            }
+            if(highlightCode){
+                var ranges = hotspot.data('highlight-ranges');
+                ranges = ranges.split(',');
+                for(var i = 0; i < ranges.length; i++){
+                    var lines = ranges[i].split('-');
+                    if(lines.length === 2){
+                        var fromLine = parseInt(lines[0]);
+                        var toLine = parseInt(lines[1]);
+                        var num_Lines = parseInt(code_block.find('.line-numbers').last().text());
+                        if(fromLine && toLine){                            
+                            if(!(fromLine === 1 && toLine === num_Lines)){
+                                // Do not highlight full files
+                                highlight_code_range(code_block, fromLine, toLine);
+                            }                            
+                        }
+                    }                
+                }
+            }            
         }
     }, 250);
 
@@ -344,7 +352,8 @@ $(document).ready(function() {
             return;
         }
         $(this).data('hovering', true);
-        handleHotspotHover($(this));
+        var highlightCode = !$(this).hasClass('code_command');
+        handleHotspotHover($(this), highlightCode);
     });
 
     // When the mouse leaves a code 'hotspot', remove all highlighting in the corresponding code section.
