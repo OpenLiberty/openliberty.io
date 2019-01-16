@@ -421,7 +421,7 @@ $(document).ready(function() {
         temp.css({
             'position':'absolute',
             'top':'-1000px',
-            'left':'-1000px'
+            'left':'-1000px'            
         });
         temp.html(target.html().trim());
         $('body').append(temp);
@@ -489,14 +489,14 @@ $(document).ready(function() {
 
     function showGithubPopup(){
         $("#github_clone_popup_container").fadeIn();
-        $("#code_column .code_column, #code_column_tabs").addClass('dimmed', {duration:400});
+        $("#code_column .code_column, #code_column_tabs_container").addClass('dimmed', {duration:400});
         $('.code_column_tab').attr('disabled', true);
         $(".copyFileButton").hide();
     }
 
     function hideGithubPopup(){
         $("#github_clone_popup_container").fadeOut();
-        $("#code_column .code_column, #code_column_tabs").removeClass('dimmed', {duration:400});
+        $("#code_column .code_column, #code_column_tabs_container").removeClass('dimmed', {duration:400});
         $('.code_column_tab').attr('disabled', false);
         $(".copyFileButton").show();
     }
@@ -600,8 +600,8 @@ $(document).ready(function() {
         activeTab.show();
 
         // Adjust the code content to take up the remaining height
-        var tabListHeight = $("#code_column_tabs").outerHeight();
-        $("code_column_content").css({
+        var tabListHeight = $("#code_column_title_container").outerHeight();
+        $("#code_column_content").css({
             "height": "calc(100% - " + tabListHeight + "px)"
         });
     }
