@@ -580,8 +580,8 @@ $(document).ready(function() {
         var lastTab = $('#code_column_tabs li:visible').last();
         var previousHiddenTabs = lastTab.prevAll().not(":visible");
         for(var i = previousHiddenTabs.length - 1; i >= 0; --i){
-            let tab = previousHiddenTabs.get(i);
-            let fileName = tab.innerText.trim();
+            var tab = previousHiddenTabs.get(i);
+            var fileName = tab.innerText.trim();
             // Check that the most recent tab for this file is showing.
             if($('#code_column_tabs li:visible').filter(":contains('" + fileName + "')").length == 0){
                 $(tab).show();
