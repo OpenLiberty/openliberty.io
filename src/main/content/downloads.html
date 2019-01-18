@@ -8,16 +8,16 @@ permalink: /downloads/
 
 <!-- INTRO -->
 <div id="downloads_intro_background">
-    <img id="bluebackground" class="hidden-xs" src="{{ "/img/blue_background.png" | relative }}" alt="">
-    <img id="header" class="hidden-xs hidden-sm" src="{{ "/img/header.svg" | relative }}" alt="">
-    <img id="greenlight" class="hidden-md hidden-lg" src="{{ "/img/tabletbeam.svg" | relative }}" alt="">
-    <img id="leftcloud" class="hidden-xs hidden-md hidden-lg" src="{{ "/img/cloud.png" | relative }}" alt="">
-    <img id="rightcloud" class="hidden-xs hidden-md hidden-lg" src="{{ "/img/cloud.png" | relative }}" alt="">
+    <img id="bluebackground" class="d-none d-md-block" src="{{ "/img/blue_background.png" | relative }}" alt="">
+    <img id="header" class="d-none d-lg-block" src="{{ "/img/header.svg" | relative }}" alt="">
+    <img id="greenlight" class="d-lg-none" src="{{ "/img/tabletbeam.svg" | relative }}" alt="">
+    <img id="leftcloud" class="d-none d-md-block d-lg-none" src="{{ "/img/cloud.png" | relative }}" alt="">
+    <img id="rightcloud" class="d-none d-md-block d-lg-none" src="{{ "/img/cloud.png" | relative }}" alt="">
 
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
-                <img id="intro_logo" class="hidden-xs hidden-sm" src="{{ "/img/downloads_title.svg" | relative }}" class="img-responsive" alt="Downloads">
+            <div class="col-lg-6">
+                <img id="intro_logo" class="d-none d-lg-block" src="{{ "/img/downloads_title.svg" | relative }}" class="img-fluid" alt="Downloads">
                 <p id="intro_text_1">
                     Stay up to date with all Open Liberty downloads!
                 </p>
@@ -26,7 +26,7 @@ permalink: /downloads/
                     but development builds are also available for use. Once downloaded, you’re ready for lift-off.
                 </p>
             </div>
-            <div class="col-md-6 center_content_vertically">
+            <div class="col-lg-6 center_content_vertically">
                 <div id="main_download_link_container">
                     <div id="runtime_download_link_container" class="row">
                         <a id="runtime_download_link" class="download_link skip_outbound_link_analytics" href="">
@@ -56,12 +56,12 @@ permalink: /downloads/
 
 
 <!-- TABS -->
-<div class="container">
+<div class="container" id="tabs_container">
     <div class="row">
         <ul class="nav nav-tabs">
-            <li class="active nav-tab"><a data-toggle="tab" href="#runtime_releases">Releases</a></li>
-            <li class="nav-tab"><a data-toggle="tab" href="#development_builds">Development Builds</a></li>
-            <li class="nav-tab"><a data-toggle="tab" href="#eclipse_developer_tools">Eclipse Developer Tools</a></li>
+            <li class="nav-item"><a class="nav-link active" href="#runtime_releases">Releases</a></li>
+            <li class="nav-item"><a class="nav-link" href="#development_builds">Development Builds</a></li>
+            <li class="nav-item"><a class="nav-link" href="#eclipse_developer_tools">Eclipse Developer Tools</a></li>
         </ul>
     </div>
 </div>
@@ -72,7 +72,7 @@ permalink: /downloads/
     <!-- RELEASES -->
     <div id="runtime_releases" class="container builds_container tab-pane fade in active">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-sm-12">
                 <p id="runtime_releases_paragraph" class="section_paragraph">
                     New releases will be announced on the Open Liberty <a href="/blog" class="orange_link_light_background">blog</a>
                     and <a href="https://twitter.com/OpenLibertyIO" target="new" class="orange_link_light_background">Twitter</a>. 
@@ -100,7 +100,7 @@ permalink: /downloads/
     <!-- DEVELOPMENT BUILDS -->
     <div id="development_builds" class="container builds_container tab-pane fade">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-sm-12">
                 <p id="runtime_development_builds_paragraph">
                     Early adopters may be interested in our daily downloads containing the latest features and bug fixes.
                 </p>
@@ -127,7 +127,7 @@ permalink: /downloads/
     <!-- ECLIPSE DEVELOPER TOOLS -->
     <div id="eclipse_developer_tools" class="container builds_container tab-pane fade">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-sm-12">
                 <p id="eclipse_development_tools_text">
                     We recommend IDE tools based on Eclipse since it gives you an integrated environment right out of the box. <br>
                     <a href="https://github.com/OpenLiberty/open-liberty-tools" target="new" class="orange_link_light_background">Learn how to install the tools here</a>. 

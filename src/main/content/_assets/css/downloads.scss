@@ -46,7 +46,7 @@ body {
 
 #leftcloud {
     position: absolute;
-    left: calc(50% - 400px);
+    left: calc(50% - 500px);
     top: 315px;
     width: 258px;
     height: 127px;
@@ -115,10 +115,12 @@ body {
     font-size: 20px;
     margin-top: 48.5px;
     margin-bottom: 3.5px;
+    float: right;
 }
 
 #eclipse_download_link_container {
     font-size: 16px;
+    float: right;
 }
 
 .runtime_download_button_label {
@@ -350,20 +352,26 @@ body {
 
 /* TABS */
 
-.nav-tabs {
+#tabs_container {
     border-bottom: 4px solid rgba(200, 210, 210, 0.41);
-    & > li > a {
+
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #FFFFFF;
+    & > .nav-item > .nav-link {
+        border: none;
         color: #5E6B8D;
         padding-left: 31px;
         padding-right: 31px;
         padding-top: 15px;
-        padding-bottom: 14px;
+        padding-bottom: 15px;
         margin-right: 0px;
         margin-left: 0px;
         margin-top: 20px;
         font-weight: 500;
     }
-    & > li.active > a, > li.active > a:hover, > li.active > a:focus {
+    & .nav-link.active, .nav-link.active:hover {
         border-top: none;
         border-left: none;
         border-right: none;
@@ -372,7 +380,7 @@ body {
         background: transparent;
         margin-bottom: -4px;
     }
-    & > li > a:hover {
+    & .nav-link:hover {
         background: rgba(232, 236, 236, 0.39);
         border-color: rgba(232, 236, 236, 0.39);
     }
@@ -393,8 +401,6 @@ body {
     background-color: #F5F8FD;
     text-align: center;
 }
-
-
 
 .section_bar {
     width: 86px;
@@ -594,7 +600,7 @@ body {
 
     #intro_text_1 {
         font-weight: 500;
-        margin-top: -60px;
+        margin-top: -80px;
         text-align: center;
     }
 
@@ -605,6 +611,11 @@ body {
     #runtime_download_link_container, #eclipse_download_link_container, #main_download_link_container {
         margin-left: auto;
         margin-right: auto;
+        clear: right;
+    }
+
+    #runtime_download_link_container {
+        margin-top: 10px;
     }
 }
 
@@ -647,11 +658,7 @@ body {
         display: inline-block;
     }
 
-    .nav-tabs {
-        text-align: center;
-    }
-
-    .nav-tabs > li > a {
+    .nav-tabs > .nav-item > .nav-link {
         margin-top: 0px;
         padding-left: 5px;
         padding-right: 5px;
