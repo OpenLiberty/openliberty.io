@@ -1,0 +1,725 @@
+/*******************************************************************************
+ * Copyright (c) 2017 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+ 
+/* INTRO */
+
+#header {
+    position: absolute;
+    top: 0px;
+    left: calc(50% - 1325px);
+}
+
+body {
+    overflow-x: hidden;
+}
+
+#downloads_intro_background {
+    padding-top: 190px;
+    padding-bottom: 35.5px;
+    margin-bottom: 46px;
+    overflow: hidden;
+}
+
+#bluebackground {
+    position: absolute;
+    top: 0px;
+    left: calc(50% - 1325px);
+    width: 2560px;
+    height: 404px;
+}
+
+#greenlight {
+    position: absolute;
+    right: calc(50% - 715px);
+    top: -56px;
+    width: 1250px;
+    height: 520px;
+}
+
+#leftcloud {
+    position: absolute;
+    left: calc(50% - 500px);
+    top: 315px;
+    width: 258px;
+    height: 127px;
+}
+
+#rightcloud {
+    position: absolute;
+    right: calc(50% - 560px);
+    top: 296px;
+    width: 306px;
+    height: 158px;
+}
+
+#intro_text_1 {
+    margin-top: 39px;
+    font-size: 20px;
+    color: #2C2E50;
+}
+
+#intro_text_2 {
+    margin-top: 16px;
+    color: #2C2E50;
+}
+
+#main_download_link_container .download_link {
+    border-radius: 7px;
+    text-decoration: none;
+    position: relative;
+    transition: border .2s, background-color .2s;
+    float: right;
+    color:#2C2E50;
+}
+
+.runtime_download_button_label_container {
+    display: inline-block;
+    width: 357px;
+}
+
+.eclipse_download_button_label_container {
+    display: inline-block;
+    width: 353px;    
+}
+
+.runtime_button_sub_label {
+    font-size: 11px;
+    margin-left: 159px;
+    margin-right: 149px;
+    margin-top: -52px;
+    margin-bottom: 32px;
+}
+
+.eclipse_button_sub_label {
+    font-size: 11px;
+    margin-left: 210px;
+    margin-right: 98px;
+    margin-top: -29px;
+    margin-bottom: 13px;
+}
+
+#runtime_releases_title_container {
+    background-color: #F5F8FD;
+    text-align: center;
+}
+
+#runtime_download_link_container {
+    font-size: 20px;
+    margin-top: 48.5px;
+    margin-bottom: 3.5px;
+    float: right;
+}
+
+#eclipse_download_link_container {
+    font-size: 16px;
+    float: right;
+}
+
+.runtime_download_button_label {
+    font-weight: 500;
+    padding-top: 20px;
+    padding-bottom: 32px;
+    padding-left: 36px;
+    padding-right: 85px;
+}
+
+.eclipse_download_button_label {
+    padding-top: 11px;
+    padding-bottom: 13px;
+    padding-left: 36px;
+    padding-right: 36px;
+}
+
+#runtime_download_link {
+    color: #282A4A;
+    background-color: #AAD34B;
+    text-align: left;
+}
+
+#runtime_download_link .arrow {
+    width: 12px;
+    height: 17px;
+    background-image: url('/img/download_downarrow.svg');
+    background-repeat: no-repeat;
+    position: absolute;
+    right: 31px;
+    top: calc(50% - 12px);
+    transition: all .3s;
+}
+
+#runtime_download_link:hover .arrow {
+    transform: translateY(3px);
+}
+
+#runtime_download_link .line {
+    width: 12px;
+    height: 3px;
+    background-image: url('/img/download_arrow_line.svg');
+    background-repeat: no-repeat;
+    position: absolute;
+    right: 31px;
+    top: calc(50% + 8.5px);
+}
+
+#runtime_download_link:hover .line {
+    transform: translateY(-1px);
+}
+
+#runtime_download_link:hover {
+    background-color: #C7EE63;
+}
+
+
+
+#eclipse_developer_tools_download_link {
+    border: solid 2px #AAD34B;
+    color: #EAF0FF;
+    min-width: 178.5px;
+    min-height: 21px;
+    text-align: left;
+}
+
+#eclipse_developer_tools_download_link:hover {
+    border-color: #E6EDA8;
+}
+
+#eclipse_developer_tools_download_link_version_text {
+    color: #5D6A8E;
+}
+
+#eclipse_developer_tools_download_link:hover #eclipse_developer_tools_download_link_version_text {
+    color: #E6EDA8;
+}
+
+#eclipse_developer_tools_download_link .arrow {
+    width: 12px;
+    height: 17px;
+    background-image: url('/img/download_downarrow.svg');
+    background-repeat: no-repeat;
+    position: absolute;
+    right: 31px;
+    top: calc(50% - 12px);
+    transition: all .3s;
+}
+
+#eclipse_developer_tools_download_link:hover .arrow {
+    background-image: url('/img/download_downarrow.svg');
+    transform: translateY(2px);
+}
+
+#eclipse_developer_tools_download_link .line {
+    width: 12px;
+    height: 3px;
+    background-image: url('/img/download_arrow_line.svg');
+    background-repeat: no-repeat;
+    position: absolute;
+    right: 31px;
+    top: calc(50% + 8.5px);
+}
+
+#eclipse_developer_tools_download_link:hover .line {
+    background-image: url('/img/download_arrow_line.svg');
+    transform: translateY(-1px);
+}
+
+
+/* IMAGES FOR ANIMATION AT BOTTOM OF PAGE */
+
+#ufo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    top: 46px;
+    animation: ufo_hovering 4.5s infinite;
+}
+
+#ufobeam {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    top: 40px;
+    width: 110px;
+    height: 103px;
+    z-index: 1;
+    animation: ufo_hovering 4.5s infinite;
+}
+
+#cow {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    top: -29px;
+    width: 73px;
+    height: 60.6px;
+    z-index: 2;
+    animation: cow_hovering 4.5s infinite;
+}
+
+#cowshadow {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    top: -26px;
+    width: 64px;
+    height: 9px;
+    z-index: 3;
+    animation: shadow_resizing 4.5s infinite;
+}
+
+#bottomleftclouds {
+    display: block;
+    position: relative;
+    top: 70px;
+    left: calc(50% - 300px);
+    width: 445px;
+    height: 172px;
+    z-index: -1;
+}
+
+#bottomrightcloud {
+    display: block;
+    position: relative;
+    top: 4px;
+    left: calc(50% + 100px);
+    width: 140px;
+    height: 69px;
+}
+
+#outerbeam {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    top: -39px;
+    width: 100px;
+    height: 20px;
+    margin-bottom: -300px;
+}
+
+@keyframes cow_hovering {
+    50% {
+        transform: translateY(-30px) scale(0.8);
+    }
+}
+
+@keyframes ufo_hovering {
+    12.5%, 37.5%, 62.5%, 87.5% {
+        transform: translateY(2px);
+    }
+    25%, 50%, 75%, 100% {
+        transform: none;
+    }
+}
+
+@keyframes shadow_resizing {
+    50% {
+        transform: scale(0.6);
+    }
+}
+
+#cow_text {
+    position: relative;
+    top: -74px;
+    left: calc(50% - 225px);
+    font-family: BunueloBold;
+    font-size: 20px;
+    color: #5E6B8D;
+}
+
+#more_downloads_text {
+    font-family: BunueloBold;
+    font-size: 20px;
+    text-align: center;
+}
+
+
+
+
+
+
+
+/* TABS */
+
+#tabs_container {
+    border-bottom: 4px solid rgba(200, 210, 210, 0.41);
+
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #FFFFFF;
+    & > .nav-item > .nav-link {
+        border: none;
+        color: #5E6B8D;
+        padding-left: 31px;
+        padding-right: 31px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        margin-right: 0px;
+        margin-left: 0px;
+        margin-top: 20px;
+        font-weight: 500;
+    }
+    & .nav-link.active, .nav-link.active:hover {
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        border-bottom: 4px solid #F69144;
+        color: #F69144;
+        background: transparent;
+        margin-bottom: -4px;
+    }
+    & .nav-link:hover {
+        background: rgba(232, 236, 236, 0.39);
+        border-color: rgba(232, 236, 236, 0.39);
+    }
+}
+
+
+/* RELEASES, DEVELOPMENT BUILDS, ECLIPSE DEVELOPER TOOLS */
+
+.section_title {
+    font-family: BunueloLight;
+    font-size: 40px;
+    color: #24253A;
+    margin-top: 49px;
+    margin-bottom: 20px;
+}
+
+.section_title_container {
+    background-color: #F5F8FD;
+    text-align: center;
+}
+
+.section_bar {
+    width: 86px;
+    height: 7px;
+    margin-bottom: 40px;
+}
+
+.builds_container {
+    margin-bottom: 80px;
+}
+
+#runtime_releases_paragraph {
+    margin-top: 41px;
+    margin-bottom: 41px;
+}
+
+#runtime_development_builds_title {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+#runtime_development_builds_paragraph {
+    margin-top: 41px;
+    margin-bottom: 41px;
+}
+
+#eclipse_developer_tools_container {
+    margin-bottom: 70px;
+}
+
+#eclipse_development_tools_title {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+#eclipse_development_tools_text {
+    margin-top: 41px;
+    margin-bottom: 41px;
+    max-width: 800px;
+}
+
+#eclipse_development_tools_releases_title, #eclipse_development_tools_development_builds_title {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+#eclipse_development_tools_releases_table_container {
+    margin-bottom: 75px;
+}
+
+
+/* TABLE - COMMON */
+
+.build_table {
+    width: 100%;
+}
+
+.build_table thead tr {
+    color: #3F4659;
+    height: 37px;
+}
+
+.build_table thead tr th {
+    font-weight: normal;
+}
+
+.build_table thead tr th a {
+    color: #3F4659;
+}
+
+.build_table thead tr th a span.glyphicon {
+    margin-left: 10px;
+}
+
+.build_table tbody {
+    font-size: 16px;
+}
+
+.build_table tbody tr {
+    height: 76px;
+}
+
+.build_table tbody tr td:first-child, .build_table thead tr th:first-child {
+    padding-left: 24px;
+}
+
+.build_table tbody:before {
+    height: 11px;
+    content: "";
+    display: block;
+}
+
+.build_table tbody tr td:last-child {
+    text-align: right;
+    padding-right: 20px;
+}
+
+.build_table .build_download_button {
+    display: inline-block;
+    border: solid 2px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 36px;
+    padding-right: 36px;
+    border-radius: 100px;
+    text-align: center;
+    vertical-align: middle;
+    transition: all .2s;
+}
+
+.build_table tbody tr td a:hover {
+    color: #24243B;
+}
+
+.tests_passed_link, .view_logs_link {
+    transition: all .2s;
+}
+
+
+/* WHITE TABLE */
+
+.white_table thead tr {
+    border-top: 3px solid #5E6B8D;
+    border-bottom: 1px solid #5E6B8D;
+}
+
+.white_table thead th {
+    padding-left: 24px;
+}
+
+.version_column, .javaee_download_column, .webprofile_download_column, .download_button_column, .view_logs_column, .date_column {
+    width: 25%;
+}
+
+.releases_table .date_column {
+    width: 75%;
+}
+
+.releases_table .download_button_column {
+    width: 25%;
+}
+
+.white_table tbody tr {
+    background-color: #FFFFFF;
+    height: 51px;
+    border-bottom: 1px solid #C8D2D2;
+}
+
+.white_table tbody tr:hover {
+    background-color: #F5F8FD;
+}
+
+.white_table tbody tr td, .white_table tbody tr td:last-child {
+    padding-left: 24px;
+    text-align: left;
+}
+
+.white_table tbody tr td img, .orange_table tbody tr td img {
+    display: none;
+    height: 17px;
+    width: 9px;
+    margin-left: 17px;
+}
+
+.white_table tbody tr td a:hover img{
+    display: inline-block;    
+}
+
+.white_table tbody a{
+    font-weight: 500;
+    color: #5E6B8D;
+    letter-spacing: 0;
+}
+
+.white_table tbody a:hover{
+    cursor: pointer;
+}
+
+.white_table .table_date {
+    color: #3F4659;
+}
+
+.white_table .build_download_button {
+    color: #5E6B8D;
+    border-color: #5E6B8D;
+}
+
+.white_table .build_download_button:hover {
+    color: white;
+    background-color: #5E6B8D;
+}
+
+
+
+@media (max-width: 991px) {
+
+    #intro_text_1 {
+        font-weight: 500;
+        margin-top: -80px;
+        text-align: center;
+    }
+
+    #intro_text_2 {
+        text-align: center;
+    }
+
+    #runtime_download_link_container, #eclipse_download_link_container, #main_download_link_container {
+        margin-left: auto;
+        margin-right: auto;
+        clear: right;
+    }
+
+    #runtime_download_link_container {
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 767px) {
+    #downloads_intro_background {
+        margin-bottom: 0px;
+    }
+
+    #greenlight {
+        position: absolute;
+        left: -50px;
+        top: 0px;
+        height: 443px;
+        z-index: -1;
+    }
+
+    #intro_text_1 {
+        margin-top: -160px;
+        margin-left: 18px;
+        margin-right: 18px;
+        text-align: left;
+    }
+
+    #intro_text_2 {
+        margin-left: 18px;
+        margin-right: 10px;
+        text-align: left;
+    }
+
+    .runtime_download_button_label_container {
+        width: 262px;
+    }
+    
+    .eclipse_download_button_label_container {
+        width: 258px;
+    }
+
+    .nav-tabs > li, .nav-pills > li {
+        float: none;
+        display: inline-block;
+    }
+
+    .nav-tabs > .nav-item > .nav-link {
+        margin-top: 0px;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        font-size: 12px;
+    }
+
+    #runtime_releases_paragraph, #runtime_development_builds_paragraph, #eclipse_development_tools_text {
+        margin-top: 26px;
+        margin-bottom: 22px;
+    }
+
+    #eclipse_development_tools_releases_table_container {
+        margin-bottom: 35px;
+    }
+
+    .eclipse_button_sub_label {
+        display: none;
+    }
+
+    .build_table tbody {
+        font-size: 16px;
+    }
+
+    .build_table .build_download_button {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    #cow_text {
+        position: relative;
+        top: -220px;
+        left: auto;
+        text-align: center;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .table_container table {
+        width: 550px;
+    }
+
+    .table_container {
+        overflow-x: scroll;
+        white-space: nowrap;
+    }
+
+}
+
+@media (max-width: 400px) {
+
+    .narrow_table_container table {
+        width: 350px;
+    }
+
+    .narrow_table_container {
+        overflow-x: scroll;
+        white-space: nowrap;
+    }
+
+}
