@@ -317,6 +317,8 @@ $(document).ready(function() {
         if(hotspot.data('hovering') == false){
             return;
         }
+        $("#github_clone_popup_container").data('hotspot-hovered', true); // Track if a hotspot was hovered over to hide the github popup
+        hideGithubPopup();
         var header = get_header_from_element(hotspot);
         var fileIndex = hotspot.data('file-index');
         if(!fileIndex){
@@ -529,7 +531,11 @@ $(document).ready(function() {
             var firstHotspot = $("#guide_column .hotspot:visible")[0];
             var firstHotspotRect = firstHotspot.getBoundingClientRect();
             var firstHotspotInView = (firstHotspotRect.top > 0) && (firstHotspotRect.bottom <= window.innerHeight);
-            if(blurCodeOnRight && !firstHotspotInView){
+
+            // Only show the Github popup if above the first section with code
+            // and if hotspots weren't hovered over to reveal the code behind the popup.
+            var hotspotHovered = $("#github_clone_popup_container").data('hotspot-hovered');
+            if(blurCodeOnRight && !(firstHotspotInView && hotspotHovered)){
                 showGithubPopup();
             }
             else{            
