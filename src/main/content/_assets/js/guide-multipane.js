@@ -239,20 +239,25 @@ $(document).ready(function() {
     // Parse the hotspot lines to highlight and store them as a data attribute.
     $('code[class*=hotspot], span[class*=hotspot], div[class*=hotspot]').each(function(){
         var snippet = $(this);
+        var code_block = get_code_block_from_hotspot(snippet);
         var classList = this.classList;
         var line_nums, ranges;
         for(var i = 0; i < classList.length; i++){
             var className = classList[i];
             if(className.indexOf('hotspot=') === 0){
-                line_nums = className.substring(8);
+                line_nums = className.substring(8);                
                 var fromLine, toLine;
-                if(line_nums.indexOf('-') > -1){
+                if(line_nums === "*"){
+                    var num_lines = parseInt(code_block.find('.line-numbers').last().text());    
+                    fromLine = 1;
+                    toLine = num_lines;                
+                    ranges = fromLine + "-" + toLine;
+                } else if(line_nums.indexOf('-') > -1){
                     var lines = line_nums.split('-');
                     fromLine = parseInt(lines[0]);
                     toLine = parseInt(lines[1]);
                     ranges = line_nums;
-                }
-                else {
+                } else {
                     // Only one line to highlight.
                     fromLine = parseInt(line_nums);
                     toLine = parseInt(line_nums);
@@ -277,8 +282,7 @@ $(document).ready(function() {
                         $(this).data('file-index', parseInt(fileIndex));
                     }
                 }
-
-                var code_block = get_code_block_from_hotspot(snippet);
+                
                 create_mobile_code_snippet(snippet, code_block, fromLine, toLine);
             }  
         }
