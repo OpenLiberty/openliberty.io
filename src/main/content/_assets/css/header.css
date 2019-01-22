@@ -43,21 +43,7 @@
     border: 1px solid #4F660A;
 }
 
-#nav_search_input {
-    height: 30px;
-    width: 160px;
-    padding-left: 33px;
-    margin-left: 41px;
-    border: 1px solid #444B6D;
-    border-radius: 2px;
-    background-image: url(/img/magnify.png);
-    background-repeat: no-repeat;
-    background-size: 13px 13px;
-    background-position: left 10px center;
-    margin-bottom: 4px;
-}
-
-#fork_button, #search_form {
+#fork_button {
     display: inline-block;
 }
 
@@ -125,10 +111,26 @@
     
     .close_button {
         color: #2C2E50;
+        position: absolute;
+        top: 12px;
+        right: calc(-200% + 12px);
     }
 
     .navbar-toggler.collapsed > .close_button, .navbar-toggler:not(.collapsed) > .navbar-toggler-icon {
         display: none;
+    }
+
+    .navbar-toggler:not(.collapsed) {
+        position: fixed;
+        width: 33%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(63, 70, 89, 0.4);
+        z-index: 2;
+        cursor: pointer;
     }
 
     .navbar-nav {
@@ -166,40 +168,40 @@
         border-bottom: 1px solid rgba(201, 214, 254, 0.35);
     }
 
-    #fork_button, #search_form {
+    #fork_button {
         display: block;
     }
 
-    #search_form {
-        text-align: center;
-    }
-
-    #nav_search_input {
-        margin-left: auto;
-        margin-right: auto;
-        padding-left: 46px;
-        margin-top: 27px;
-        background: rgba(255,255,255,0.0);
-        background-image: url(/img/magnify_white.svg);
-        background-repeat: no-repeat;
-        background-position: left 10px center;
-        border: 1px solid #C9D6FE;
-        border-radius: 3px;
-        width: 82%;
-        height: 55px;
-        color: #FFFFFF;
-        font-family: BunueloLight;
-        font-size: 22px;
-    }
 }
 
 @media (max-width: 767px) {
     #navbarNav {
         max-width: 100%;
         margin-left: 0;
+        border-bottom: 2px solid #FAFFC7;
     }
 
     #header_round_links_container {
         margin-bottom: 40px;
+    }
+
+    .close_button {
+        color: #2C2E50;
+        position: absolute;
+        top: -36px;
+        right: calc(0% + 22px);
+    }
+
+    .navbar-toggler:not(.collapsed) {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 46px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(63, 70, 89, 0.5);
+        z-index: 2;
+        cursor: pointer;
     }
 }
