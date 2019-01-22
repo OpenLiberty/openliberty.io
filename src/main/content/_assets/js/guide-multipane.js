@@ -239,10 +239,20 @@ $(document).ready(function() {
     // Parse the hotspot lines to highlight and store them as a data attribute.
     $('code[class*=hotspot], span[class*=hotspot], div[class*=hotspot]').each(function(){
         var snippet = $(this);
-        var code_block = get_code_block_from_hotspot(snippet);
         var classList = this.classList;
         var line_nums, ranges;
+
+        // Find if the hotspot has a file index set to override the default behavior.
         for(var i = 0; i < classList.length; i++){
+            if(classList[i].indexOf('file=') === 0){
+                var fileIndex = classList[i].substring(5);
+                snippet.data('file-index', parseInt(fileIndex));
+            }
+        }
+
+        var code_block = get_code_block_from_hotspot(snippet);
+
+        for(i = 0; i < classList.length; i++){
             var className = classList[i];
             if(className.indexOf('hotspot') === 0){
                 var fromLine, toLine;
@@ -270,22 +280,12 @@ $(document).ready(function() {
                         snippet.data('highlight-ranges', ranges);
                     }
                 } else {
-                    // Hotspot does not highlight lines, it just switches to the file.
+                    // Hotspot does not highlight lines, it just switches to the file. 
                     var num_lines = parseInt(code_block.find('.line-numbers').last().text());  
                     fromLine = 1;
                     toLine = num_lines;
-                }
-                                    
+                }                                    
                 snippet.addClass('hotspot');
-
-                // Find if the hotspot has a file index set to override the default behavior.
-                for(var j = 0; j < classList.length; j++){
-                    if(classList[j].indexOf('file=') === 0){
-                        var fileIndex = classList[j].substring(5);
-                        $(this).data('file-index', parseInt(fileIndex));
-                    }
-                }
-                
                 create_mobile_code_snippet(snippet, code_block, fromLine, toLine);
             }              
         }
