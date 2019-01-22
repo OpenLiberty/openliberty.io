@@ -36,7 +36,7 @@ function render_builds(builds, parent) {
             row.append(version_column);
             
             var zip_column;
-            if(parent.parent().hasClass('white_table')){
+            if(parent.parent().data('builds-id') == "runtime_releases"){
                 var package_locations = build.package_locations;
                 if(package_locations !== null && package_locations !== undefined){
                     for(var i = 0; i < package_locations.length; i++){
@@ -45,7 +45,7 @@ function render_builds(builds, parent) {
                         var href = package_locations[i].split("=")[1];
                         var package_column = $('<td></td>');
                         package_column.append($('<a href="' +  href +'" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + 
-                        package_name + '<img src="/img/downloads_arrow_down_small.svg" /></a>'));
+                        package_name + '</a>'));
                         row.append(package_column);
                     }
                 }
@@ -55,10 +55,10 @@ function render_builds(builds, parent) {
                     row.append(empty_cell.clone());
                     row.append(empty_cell.clone());
                 }
-                zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">Download All<img src="/img/downloads_arrow_down_small.svg" /></a></td>');
+                zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">Download all</a></td>');
                 
             }  else {
-                zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics build_download_button">Download (.zip)</a></td>');
+                zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">Download all</a></td>');
             }                      
             row.append(zip_column);   
         } else {
@@ -77,7 +77,7 @@ function render_builds(builds, parent) {
             var log_column = $('<td><a href="' + build.build_log + '" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics view_logs_link">View logs</a></td>');            
             row.append(log_column);
 
-            var zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics build_download_button">Download (.zip)</a></td>');
+            var zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">Download all</a></td>');
         
             row.append(zip_column);
         }
@@ -137,7 +137,6 @@ $(document).ready(function() {
     });
 
 
-
     $('.build_table thead tr th a').click(function(event) {
         event.preventDefault();
 
@@ -152,11 +151,19 @@ $(document).ready(function() {
         sort_builds(builds[builds_id], key, descending);
         render_builds(builds[builds_id], $('tbody', table));
 
-        $('th .table_header_arrow', table).removeClass('table_header_arrow_down table_header_arrow_up');
-        $('.table_header_arrow', event.currentTarget).addClass(descending? 'table_header_arrow_down' : 'table_header_arrow_up');
-
     });
 
+
+    // Change url when tab is clicked so that page can be bookmarked on a specific tab
+    $(function(){
+        var hash = window.location.hash;
+        hash && $('ul.nav a[href="' + hash + '"]').tab('show');
+      
+        $('.nav-tabs a').click(function (e) {
+          $(this).tab('show');
+          window.location.hash = this.hash;
+        });
+      });
 
 
     $.ajax({

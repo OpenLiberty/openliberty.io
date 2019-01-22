@@ -9,24 +9,67 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
- .navbar-default .navbar-nav > li > a {
-    margin-left: 10px;
+.navbar {
+    position: absolute;
+    margin: auto;
+    top: 0; left: 0; right: 0;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+    background: none;
+    z-index: 9999;
+}
+
+nav .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
 }
 
 #navbar {
+    padding-right: 30px;
     padding-top: 10px;
 }
 
-.navbar {
-    padding-top: 0;
-}
-
-.qa-descriptor {
-    top: 10px;
+.navbar-default .navbar-collapse {
+    border: none;
+    box-shadow: none;
 }
 
 .container-fluid > .navbar-header {
+    padding-left: 30px;
     padding-top: 10px;
+}
+
+#navbar_responsive_button {
+    border: none;
+    background-color: #131427;
+}
+
+#navbar_responsive_button:hover .icon-bar {
+    background-color: white !important;
+}
+
+#navbar_responsive_button:hover {
+    color: white;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #C8D2D2;
+    transition: color .2s;
+    margin-left: 10px;
+}
+
+.navbar-default .navbar-nav > li > a:focus {
+    color: #C8D2D2;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+    color: white;
+}
+
+.navbar-nav > li > a {
+    font-size: 14px;
+    margin-left: 33px;
 }
 
 #header_background {
@@ -55,6 +98,32 @@
     background: inherit;
 }
 
+#header_round_links_container {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+ #header_twitter_link {
+    background-image: url("/img/Header_TwitterBird.svg");
+}
+
+ #header_stackoverflow_link {
+    background-image: url("/img/Header_StackO.svg");
+    margin-left: 32px;
+}
+
+ #header_groupsio_link {
+    background-image: url("/img/Header_GroupsIO.svg");
+    margin-left: 32px;
+}
+
+ .header_round_btn {
+    display: inline-block;
+    height: 68px;       
+    width: 68px;
+}
+
 /* Override the dropdown button colors */
 #navbar .btn-default.active, #navbar .btn-default:active, #navbar .open > .dropdown-toggle.btn-default{
     color: white;
@@ -76,16 +145,19 @@
 }
 
 .dropdown-menu {
-    background: #F1F4FE;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.25);
     border-radius: 5px;
+    background-color: #313653;
 }
 
 #reference_dropdown_container .dropdown-menu > li {
-    font-size: 15px;
+    font-size: 14px;
     color: #24243B;
     letter-spacing: 0;
-    background-color: inherit;
+}
+
+.dropdown-menu > li > a {
+    color: #C9D6FE;
 }
 
 #reference_dropdown_container .dropdown-menu > li > a:hover, #reference_dropdown_container .dropdown-menu > li > a:focus {
@@ -170,7 +242,12 @@
 
     .navbar {
         padding-top: 0;
-    }    
+    }
+
+    .navbar-default .navbar-collapse {
+        background-image: radial-gradient(circle at top right, #5E6B8D 0%, #2C2E50 91%);
+        border-bottom: 2px solid #FAFFC7;
+    }
 }
 
 /* Breakpoint for when the hamburger navbar appears and the navbar links go into the hamburger
@@ -214,8 +291,38 @@
     }
 
     .navbar-default .navbar-nav .open .dropdown-menu>li>a{
-        float: right;
-        color: #C8D2D2;
+        font-size: 16px;
+        color: #FAFFC7;
+    }
+
+    .navbar-default .navbar-nav > li > a, #reference_dropdown_container > .btn {
+        font-family: BunueloLight;
+        font-size: 35px;
+        color: #FFFFFF;
+        margin-left: 0px;
+    }
+
+    .navbar-nav {
+        margin-left: 27px;
+        margin-top: 24px !important;
+    }
+
+    .dropdown-menu > li > a {
+        border-left: 1px solid #FAFFC7 !important;
+        
+    }
+
+    #reference_caret {
+        background-image: url("/img/reference_caret_down.svg");
+        background-repeat: no-repeat;
+        width: 14px;
+        height: 9px;
+        display: inline-block;
+        padding-bottom: 13px;
+    }
+
+    #reference_dropdown_container.open #reference_caret {
+        background-image: url("/img/reference_caret_up.svg");   
     }
 
     #breadcrumb_row {
