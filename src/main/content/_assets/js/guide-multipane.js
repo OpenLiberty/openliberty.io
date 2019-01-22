@@ -244,35 +244,38 @@ $(document).ready(function() {
         var line_nums, ranges;
         for(var i = 0; i < classList.length; i++){
             var className = classList[i];
-            if(className.indexOf('hotspot=') === 0){
-                line_nums = className.substring(8);                
+            if(className.indexOf('hotspot') === 0){
                 var fromLine, toLine;
-                if(line_nums === "*"){
-                    var num_lines = parseInt(code_block.find('.line-numbers').last().text());    
-                    fromLine = 1;
-                    toLine = num_lines;                
-                    ranges = fromLine + "-" + toLine;
-                } else if(line_nums.indexOf('-') > -1){
-                    var lines = line_nums.split('-');
-                    fromLine = parseInt(lines[0]);
-                    toLine = parseInt(lines[1]);
-                    ranges = line_nums;
+                if(className.indexOf('hotspot=') === 0){
+                    line_nums = className.substring(8);
+                    if(line_nums.indexOf('-') > -1){
+                        var lines = line_nums.split('-');
+                        fromLine = parseInt(lines[0]);
+                        toLine = parseInt(lines[1]);
+                        ranges = line_nums;
+                    } else {
+                        // Only one line to highlight.
+                        fromLine = parseInt(line_nums);
+                        toLine = parseInt(line_nums);
+                        ranges = fromLine + "-" + toLine;
+                    }
+                    // Set data attributes to save the lines to highlight
+                    if(snippet.data('highlight-ranges')){
+                        // Add lines to the hotspot
+                        var old_ranges = snippet.data('highlight-ranges');
+                        old_ranges += "," + ranges;
+                        snippet.data('highlight-ranges', old_ranges);                    
+                    }
+                    else{
+                        snippet.data('highlight-ranges', ranges);
+                    }
                 } else {
-                    // Only one line to highlight.
-                    fromLine = parseInt(line_nums);
-                    toLine = parseInt(line_nums);
-                    ranges = fromLine + "-" + toLine;
+                    // Hotspot does not highlight lines, it just switches to the file.
+                    var num_lines = parseInt(code_block.find('.line-numbers').last().text());  
+                    fromLine = 1;
+                    toLine = num_lines;
                 }
-                // Set data attributes to save the lines to highlight
-                if(snippet.data('highlight-ranges')){
-                    // Add lines to the hotspot
-                    var old_ranges = snippet.data('highlight-ranges');
-                    old_ranges += "," + ranges;
-                    snippet.data('highlight-ranges', old_ranges);
-                }
-                else{
-                    snippet.data('highlight-ranges', ranges);
-                }                    
+                                    
                 snippet.addClass('hotspot');
 
                 // Find if the hotspot has a file index set to override the default behavior.
@@ -284,7 +287,7 @@ $(document).ready(function() {
                 }
                 
                 create_mobile_code_snippet(snippet, code_block, fromLine, toLine);
-            }  
+            }              
         }
     });
 
@@ -316,7 +319,7 @@ $(document).ready(function() {
      * @param hotspot: The snippet hovered over in the guide column.
      * @param highlightCode: boolean if the code should be highlighted
      */
-    var handleHotspotHover = debounce(function(hotspot, highlightCode){
+    var handleHotspotHover = debounce(function(hotspot){
         // Only highlight the code if the mouse is still hovered over the hotspot after the debounce.
         if(hotspot.data('hovering') == false){
             return;
@@ -333,11 +336,11 @@ $(document).ready(function() {
             // Switch to the correct tab
             var tab = code_sections[header.id][fileIndex].tab;
             setActiveTab(tab);                   
-            showCorrectCodeBlock(header.id, fileIndex, false);            
+            showCorrectCodeBlock(header.id, fileIndex, false);
 
             // Highlight the code
-            if(highlightCode){
-                var ranges = hotspot.data('highlight-ranges');
+            var ranges = hotspot.data('highlight-ranges');
+            if(ranges){
                 ranges = ranges.split(',');
                 for(var i = 0; i < ranges.length; i++){
                     var lines = ranges[i].split('-');
@@ -346,14 +349,14 @@ $(document).ready(function() {
                         var toLine = parseInt(lines[1]);
                         var num_Lines = parseInt(code_block.find('.line-numbers').last().text());
                         if(fromLine && toLine){                            
-                            if(!(fromLine === 1 && toLine === num_Lines)){
+                            if(!(fromLine === 1 && toLine >= num_Lines)){
                                 // Do not highlight full files
                                 highlight_code_range(code_block, fromLine, toLine);
                             }                            
                         }
                     }                
                 }
-            }            
+            }           
         }
     }, 250);
 
@@ -363,8 +366,7 @@ $(document).ready(function() {
             return;
         }
         $(this).data('hovering', true);
-        var highlightCode = !$(this).hasClass('code_command');
-        handleHotspotHover($(this), highlightCode);
+        handleHotspotHover($(this));
     });
 
     // When the mouse leaves a code 'hotspot', remove all highlighting in the corresponding code section.
