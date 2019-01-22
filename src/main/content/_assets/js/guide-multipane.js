@@ -148,7 +148,8 @@ $(document).ready(function() {
     // Input code_section: The section of code to highlight.
     //       from_line: Integer for what line to start highlighting from.
     //       to_line: Integer for what line to end highlighting.
-    function highlight_code_range(code_section, fromLine, toLine){
+    //       scroll: boolean if the code should be scrolled to
+    function highlight_code_range(code_section, fromLine, toLine, scroll){
         // Wrap each leftover piece of text in a span to handle highlighting a range of lines.
         code_section.find('code').contents().each(function(){
             if (!$(this).is('span')) {
@@ -161,11 +162,13 @@ $(document).ready(function() {
         var highlight_start = code_section.find('.line-numbers:contains(' + fromLine + ')').first();
         var highlight_end = code_section.find('.line-numbers:contains(' + (toLine + 1) + ')').first();        
         var range = highlight_start.nextUntil(highlight_end);
-
         range.wrapAll("<div class='highlightSection'></div>");
-        var scrollTop = $("#code_column_content")[0].scrollTop;
-        var position = range.position().top;
-        $("#code_column_content").animate({scrollTop: scrollTop + position - 50});
+
+        if(scroll){
+            var scrollTop = $("#code_column_content")[0].scrollTop;
+            var position = range.position().top;
+            $("#code_column_content").animate({scrollTop: scrollTop + position - 50});
+        }        
     }
 
     // Remove all highlighting for the code section.
@@ -341,10 +344,12 @@ $(document).ready(function() {
                         var fromLine = parseInt(lines[0]);
                         var toLine = parseInt(lines[1]);
                         var num_Lines = parseInt(code_block.find('.line-numbers').last().text());
-                        if(fromLine && toLine){                            
-                            if(!(fromLine === 1 && toLine === num_Lines)){
-                                // Do not highlight full files
-                                highlight_code_range(code_block, fromLine, toLine);
+                        if(fromLine && toLine){              
+                            // If a hotspot refers to a whole file, do not highlight it.    
+                            if(!(fromLine === 1 && toLine === num_Lines)){               
+                                // When multiple ranges are going to be highlighted, only scroll to the first one.                 
+                                var shouldScroll = (i === 0);
+                                highlight_code_range(code_block, fromLine, toLine, shouldScroll);
                             }                            
                         }
                     }                
