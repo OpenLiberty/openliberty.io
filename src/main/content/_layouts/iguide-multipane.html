@@ -1,23 +1,31 @@
 ---
 layout: doc
-css: 
+css:
 - doc-header
-- table-of-contents
+- toc-multipane
 - end-of-guide
 - guide-card
 - guide-multipane
-js: guide-multipane
+- iguide
+js:
+- common-multipane
+- toc-multipane
 ---
 
 {% include visible-tags.liquid %}
 
-<div id="background_container" class="black_blue_gradient_background">
+<div id="background_container">
         <div class="row">
+            <div id="toc_hotspot"></div>
             <!-- Guide's table of contents section -->
-            <div id="toc_column" class="collapse inline">
+            <div id="toc_column" class="collapse inline open">
                 <div id="toc_inner">
                     <div id="close_container">
-                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button"/>
+                        <img id="toc_close_green" src="{{ " /img/TOC_Close.svg " | relative }}" alt="Close the table of contents" tabindex="0"/>
+                        <img id="toc_close_white" src="{{ " /img/TOC_Close_White.svg " | relative }}" alt="Close the table of contents" tabindex="0"/>
+                    </div>
+                    <div id="mobile_close_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
+                        <img src="{{ " /img/TOC_Close.svg " | relative }}" alt="Table of contents close button" tabindex="0"/>
                     </div>
                     <h3 id="toc_title">Contents</h3>
                     <div id="toc_container">
@@ -37,29 +45,50 @@ js: guide-multipane
                     {% endif %}
                 </div>
             </div>
+            <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents">
+                <img src="/img/arrow_white.svg" alt="arrow">
+            </div>
+            <div id="toc_line" class="open"></div>
             <!-- Entire guide section -->
-            <div id="guide_column" class="position_relative">
+            <div id="guide_column" class="position_relative open">
                 <div id="guide_content">
                     <!-- Guide header section -->
-                    <div id="guide_meta" class="sect1">
+                    <div id="guide_meta" class="sect1" tabindex="0">
                         <h1 id="guide_title">{{ page.title }}</h1>
                         <div id="duration_container">
                             <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
                             <span id="guide_duration">{{ page.duration }}</span>
+                            <div class="guide_interactive_container">
+                                <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
+                                <span class="guide_interactive">Interactive</span>
+                            </div>
+                        </div>
+                        <p>{{ page.description }}</p>
+                    </div>
+
+                    <!-- This div is used to indicate the original position of the scrollable fixed div. -->
+                    <div class="scroller_anchor"></div>
+                    <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
+                        <div id="mobile_toc_accordion">
+                            <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <img src="{{ " /img/TOC_Close.svg " | relative }}" class="TOC_Close_SVG img-responsive" alt="Table of contents close button"/>
+                            </button>
+                            <span>Table of contents</span>
                         </div>
                     </div>
 
                     <!-- Guide content section -->
                     {{ content }}
 
-                    <div id="down_arrow">
-                        <img src="/img/guide_down_arrow.svg" alt="scroll_down">
-                    </div>
                 </div>
             </div>
 
             <!-- Code section -->
-            <div id="code_column" class="position_relative">
+            <div id="code_column" class="position_relative" tabindex="0">
             </div>
         </div>
 </div>
