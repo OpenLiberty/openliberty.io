@@ -557,32 +557,41 @@ $(document).ready(function() {
             }
             var fileName = tab.text();
             var tabsWithSameName = $('#code_column_tabs li:visible').not(tab).filter(":contains('" + fileName + "')");
-            if(substepIds.indexOf(data_id) > -1){
-                // If the current tab is for this section then hide all duplicates
-                tabsWithSameName.hide();
-                // if one of the tabs hidden was active then need to set this tab as active
-                if(!$('.code_column_tab > .active').is(":visible")){
-                    setActiveTab(tab);
-                }
-                continue;
-            } 
-            // Tab is not part of this section.
-            else if(tabsWithSameName.length > 0){
+            
+            if(tabsWithSameName.length > 0){
                 // Find duplicates and hide them.
-                for(var k=0; k<tabsWithSameName.length; k++){
-                    var tabWithSameName = $(tabsWithSameName.get(k));
-                    var data_id2 = tab.attr('data-section-id');
-                    if(tabWithSameName.find('a').hasClass('active')){
-                        continue;
+                // The current tab is in this section
+                if(substepIds.indexOf(data_id) > -1){  
+                    var setCurrTabActive = false; 
+                    if(tabsWithSameName.find('.active').length > 0){
+                        // If one of the tabs hidden was active then need to set this tab as active.
+                        setCurrTabActive = true;
+                    }                 
+                    tabsWithSameName.hide();
+                    if(setCurrTabActive){
+                        setActiveTab(tab);
                     }
-                    if(substepIds.indexOf(data_id2) > -1){      
-                        // If other tab is part of this section then hide the current tab                  
-                        tab.hide();
-                    } else {
-                        // Tab is not associated with this subsection so hide it.             
-                        tabWithSameName.hide();
+                    continue;
+                }
+                else{
+                    // Tab is not part of this section.                    
+                    for(var k=0; k<tabsWithSameName.length; k++){
+                        var tabWithSameName = $(tabsWithSameName.get(k));
+                        var data_id2 = tab.attr('data-section-id');
+                                               
+                        if(substepIds.indexOf(data_id2) > -1){
+                            // If other tab is part of this section then hide the current tab                  
+                            tab.hide();
+                        } else {                               
+                            // Tab is not associated with this subsection so hide that one unless it is active.  
+                            if(tabWithSameName.find('a').hasClass('active')){
+                                continue;
+                            }      
+                            tabWithSameName.hide();
+                        }
                     }
                 }
+                
             }
         }
         // Hide duplicates of the active tab
