@@ -1,0 +1,272 @@
+/*******************************************************************************
+ * Copyright (c) 2019 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+/* Guide Content related to the 3 column code */
+#guide_column {
+    width: 100%;
+}
+
+.hotspot:not(.code_command) {
+    display: inline-block;
+}
+
+#guide_content .hotspot:not(.code_command) pre {
+    font-family:Courier;
+    font-size:14px;
+    padding: 5px;
+    background-color: #F1F4FE;
+    color:#5e6b8d;
+    letter-spacing:0;
+    line-height:24px;
+    text-align:left;
+    white-space: pre-wrap;
+}
+
+/* Snippets of code for mobile view only, that comes from the right column file */
+.mobile_code_snippet {
+    display: none;
+}
+
+/* Code Column */
+
+#code_column {
+    padding: 0;
+    background-color: #f1f4fe;
+    position: fixed;
+    width: 780px;
+    left: calc(100% - 780px); /* Adjust for the width and padding */
+    top: 100px;
+    bottom: 0; /* Initially extend the code column the full height */
+    overflow: hidden;
+}
+
+#code_column_content {
+    height: calc(100% - 34px); /* Take up the remaining height from the tabs container */
+    overflow-y: scroll;
+}
+
+.dimmed {
+    opacity: .19;
+    filter: blur(1px);
+}
+
+.code_column_title_container {
+    height: 43px;
+    padding-left: 23px; 
+    border-bottom: solid 1px #d4d7e3;
+    display: table;
+    width: 100%;
+}
+
+.code_column_title {
+    font-family: Asap;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.86;
+    color: #3f465a;       
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#github_clone_popup_container {
+    position: absolute;
+    top: 31%;
+    width: 100%;
+    z-index: 2;
+}
+
+#github_clone_popup {
+    height: 111px;
+    margin: 0 20px;
+    padding: 19px 0 0 20px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+}
+
+#github_clone_popup_title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.63;
+    color: #1b1c34;
+    margin-bottom: 14px;
+}
+
+#github_clone_popup_repo {
+    font-size: 14px;
+    line-height: 1.57;
+    color: #737373;
+    width: 95%;
+    border-bottom: solid 1px #96bc32;
+}
+
+#github_clone_popup_copy {
+    width: 48px;
+    height: 38px;
+    background-color: #96bc32;
+    position: absolute;
+    top: 0;
+    right: 20px;
+    padding: 8px 12px;
+    text-align: center;
+}
+
+#github_clone_popup_copy:hover {
+    border: solid 1px #b2bbd1;
+    cursor: pointer;
+}
+
+#github_clone_popup_copy:active {
+    border: solid 1px #5e6b8d;
+}
+
+#github_clone_popup_copy > img {
+    width: 14px;
+    height: 16px;
+}
+
+#code_column_tabs_container {
+    display: inline-block;
+
+    #code_column_tabs {
+        max-width: calc(100% - 50px);
+        & > li {
+            float: left;
+    
+            & > a {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                text-align: center;  
+                letter-spacing: 0;
+                height: 32px;
+                padding: 2px 5px 4px 5px;
+                border: 1px solid #acb3c6;
+                border-bottom: transparent;
+                margin-right: 0;           /* Overlay bootstrap's margin so tabs are condensed   */
+                color: #5D6A8E !important;
+                line-height: 26px;
+    
+                &.active {
+                    background-color: #c7ccd9;
+                    color: #3f465a !important;
+                }
+    
+                &:hover {
+                    background-color: #D6DAE6;
+                    cursor: pointer;
+                }
+            }
+            
+            /* Keep below to override the normal styling */
+            &[disabled] {
+                pointer-events: none;
+                outline: none;
+    
+                & > a {
+                    background-color: inherit;
+                }
+            }
+        }        
+    }
+
+    @media (min-width: 1170px) {
+        width: 100%;
+        border-radius: 4px 4px 4px 4px;
+        border: 1px solid #c8d6fb;
+    }
+    
+}
+
+.copyFileButton {
+    position: absolute;
+    right: 15px;
+    top: 6px;
+    line-height: 5px;
+    padding: 4px;
+}
+
+.copyFileButton:hover {
+    border: solid 1px #b2bbd1;
+    cursor: pointer;
+}
+
+.copyFileButton:active {
+    border: solid 1px #5e6b8d;
+}
+
+.copyFileButton:focus {
+    outline: none;
+    box-shadow: 0 0 2px 2px #51a7e8; /* keyboard-only focus styles */
+}
+
+.copyFileButton > img {
+    width: 14px;
+    height: 16px;
+    outline: none;
+}
+
+.CodeRay .line-numbers {
+    display: inline-block;
+    visibility: hidden;
+    display: none;
+}
+
+.code_column .CodeRay {
+    border: none;
+    border-radius: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.code_column .CodeRay code {
+    display: block;
+    padding-bottom: 34px;
+}
+
+.code_column .CodeRay code, .code_column .CodeRay .highlightSection {
+    padding-left: 23px;
+    padding-right: 31px;   
+}
+
+/* Highlight code for when hovering over a hotspot */
+.highlightSection {
+    color: #24253a;
+    background-color: #C7CCD9;
+    margin-left: -23px;
+    margin-right: -31px;
+}
+
+@media (min-width: 1171px) {
+    #guide_column {
+        width: calc(100% - 780px);
+    }
+}
+
+
+@media (min-width: 1440px) {
+    #guide_column {
+        width: calc(100% - 780px);
+        display: inline-block;
+    }
+
+    #guide_column.open {
+        width: calc(100% - 280px - 780px); /* Adjust for the size of the table of contents and the code column */
+    }
+
+    #guide_column.expanded {
+        width: calc(100% - 780px);
+    }
+
+    #code_column {
+        left: calc(100% - 780px); /* Adjust for the width and padding */
+        display: inline-block;
+    }
+}
