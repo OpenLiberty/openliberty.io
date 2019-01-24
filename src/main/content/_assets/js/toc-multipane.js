@@ -194,6 +194,26 @@ function open_TOC(){
     }
 }
 
+function close_TOC(){
+    $("#toc_title").css('margin-top', '20px');
+
+    // Remove display type from the table of contents
+    $("#toc_column").removeClass('inline');
+
+    // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
+    $("#guide_column").addClass('expanded');
+
+    // Remove open class to transition back
+    $("#toc_line").removeClass("open");
+    $("#toc_column").removeClass("open");
+    $("#guide_column").removeClass("open");
+
+    $("#toc_indicator").removeClass('open');
+    $("#toc_indicator").show();
+
+    restoreCurrentStep();
+}
+
 function setInitialTOCLineHeight(){  
     $("#toc_line").css(
         {'height': calculateTOCHeight()}
@@ -296,23 +316,7 @@ $(document).ready(function() {
 
     // Handle collapsing the table of contents from full width back into an orange line on the left side of the page.
     $('#close_container').on('click', function() {
-        $("#toc_title").css('margin-top', '20px');
-
-        // Remove display type from the table of contents
-        $("#toc_column").removeClass('inline');
-
-        // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
-        $("#guide_column").addClass('expanded');
-
-        // Remove open class to transition back
-        $("#toc_line").removeClass("open");
-        $("#toc_column").removeClass("open");
-        $("#guide_column").removeClass("open");
-
-        $("#toc_indicator").removeClass('open');
-        $("#toc_indicator").show();
-
-        restoreCurrentStep();
+        close_TOC();
     });
 
     $('#close_container img').on('keydown', function(event) {
