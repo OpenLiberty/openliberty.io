@@ -423,11 +423,11 @@ $(document).ready(function() {
         }            
     });
 
-    // Set the github clone popup top value to the same as the what you'll learn section.
-    var whatYoullLearn = $("#what-you-ll-learn");
-    if(whatYoullLearn.length > 0){
-        var githubCloneTop = whatYoullLearn.get(0).offsetTop;
-        $("#github_clone_popup_container").css('top', githubCloneTop);
+    // Set the github clone popup top to match the first section
+    var firstSection = $(".sect1:not(#guide_meta)").first();
+    if(firstSection.length > 0){
+        var firstSectionTop = firstSection.get(0).offsetTop;
+        $("#github_clone_popup_container").css('top', firstSectionTop);
     }
 
     $(".copyFileButton").click(function(event){
@@ -524,13 +524,17 @@ $(document).ready(function() {
         var githubPopup = $("#github_clone_popup_container");
         if(githubPopup.length > 0){
             // Check if the first guide section that has code to show on the right has been scrolled past yet.
-            // If so, then the Github popup will be dismissed. If the first section hasn't been scrolled past yet but a hotspot is showing on the next section then also hide it. 
-            var navHeight = $('.navbar').height();
+            // If so, then the Github popup will be dismissed. If the first section hasn't been scrolled past yet but a hotspot is showing on the next section then also hide it.
             var firstCodeSection = $('[data-has-code]').first();
+            if(firstCodeSection.length === 0){
+                showGithubPopup();
+                return;
+            }
             if(firstCodeSection.is('h3')){
                 firstCodeSection = firstCodeSection.parents('.sect1').find('h2').first();
             }
             var firstCodeSectionTop = Math.round(firstCodeSection[0].getBoundingClientRect().top);
+            var navHeight = $('.navbar').height();
             var blurCodeOnRight = (firstCodeSectionTop - navHeight) > 1;
 
             var firstHotspot = $("#guide_column .hotspot:visible")[0];
