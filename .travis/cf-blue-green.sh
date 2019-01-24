@@ -26,7 +26,7 @@ DOMAIN=`echo $ROUTE | sed -e "s,$BLUE\.,,"`
 
 # ensure it starts
 echo "Checking status of new instance https://${GREEN}.${DOMAIN}..."
-curl --fail -s -I "https://${GREEN}.${DOMAIN}" --connect-timeout 240 --max-time 600
+curl --fail -s -I "https://${GREEN}.${DOMAIN}" --max-time 1200
 
 # add the GREEN application to each BLUE route to be load-balanced
 echo "Adding main route ($BLUE.$ROUTE) to new app ($GREEN)..."

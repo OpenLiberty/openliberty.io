@@ -33,6 +33,7 @@ if ENV['TRAVIS']
         guide_branch = 'multipane'
         guide_camelcase_branch = 'multiPane'
     elsif ENV['TRAVIS_BRANCH'] == "development"
+        guide_branch = 'dev'
         iguide_branch = 'dev'
     end
 end
@@ -54,10 +55,8 @@ repos.each do |element|
         ##################
         # DRAFT GUIDES  
         # Clone guides that are still being drafted and are only for the staging website
-        if repo_name.start_with?('draft-iguide')
-            # Clone the draft interactive guides, using the dev branch for travis and master for all other environments.
-            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{iguide_branch} --single-branch src/main/content/guides/#{repo_name}`
-        elsif repo_name.start_with?('draft-guide')
+        if repo_name.start_with?('draft-iguide') || repo_name.start_with?('draft-guide')
+            # Clone the draft guides, using the multipane/multiPane branch for travis and master for all other environments.
             `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_branch} --single-branch src/main/content/guides/#{repo_name}`
 
             # Clone the draft guide using multiPane because git clone is case sensitive
@@ -74,11 +73,8 @@ repos.each do |element|
         ##################
         # PUBLISHED GUIDES
         # Clone interactive guides that are ready to be published to openliberty.io
-        if repo_name.start_with?('iguide')
-            # Clone the interactive guides, using the dev branch for travis and master for all other environments.
-            `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{iguide_branch} --single-branch src/main/content/guides/#{repo_name}`
-        elsif repo_name.start_with?('guide')
-            # Clone static guides that are ready to be published to openliberty.io
+        if repo_name.start_with?('iguide') || repo_name.start_with?('guide')
+            # Clone the  guides, using the multipane/multiPane branch for travis and master for all other environments.
             `git clone https://github.com/OpenLiberty/#{repo_name}.git --branch #{guide_branch} --single-branch src/main/content/guides/#{repo_name}`
 
              # Clone the draft guide using multiPane because git clone is case sensitive
