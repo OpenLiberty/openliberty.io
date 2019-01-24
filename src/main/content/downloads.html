@@ -7,34 +7,41 @@ permalink: /downloads/
 ---
 
 <!-- INTRO -->
-<div id="downloads_intro_background" class="black_blue_gradient_background">
-    <div class="container">
+<div id="downloads_intro_background">
+    <img id="header" class="d-none d-lg-block" src="{{ "/img/header.svg" | relative }}" alt="">
+    <img id="greenlight" class="d-lg-none" src="{{ "/img/tabletbeam.svg" | relative }}" alt="">
+    <img id="leftcloud" class="d-none d-md-block d-lg-none" src="{{ "/img/cloud.png" | relative }}" alt="">
+    <img id="rightcloud" class="d-none d-md-block d-lg-none" src="{{ "/img/cloud.png" | relative }}" alt="">
+
+    <div class="container" id="downloads_intro_text">
         <div class="row">
-            <div class="col-sm-5">
-                <img id="intro_logo" src="{{ "/img/downloads_page_title.svg" | relative }}" class="img-responsive" alt="Downloads">
-            </div>
-            <div class="col-sm-7">
-                <p id="intro_text">
-                    Stay up to date with all Open Liberty downloads! We recommend using the latest release,
-                    but development builds are also available to be used. Once downloaded, you’re ready to get started.
-                    Check out the <a href="https://github.com/OpenLiberty/open-liberty/blob/master/README.md" target="new" class="light_green_link_dark_background">‘Getting started’ ReadMe on GitHub</a>
+            <div class="col-lg-6">
+                <img id="intro_logo" class="d-none d-lg-block" src="{{ "/img/downloads_title.svg" | relative }}" class="img-fluid" alt="Downloads">
+                <p id="intro_text_1">
+                    Stay up to date with all Open Liberty downloads!
                 </p>
-                <div id="main_download_link_container" class="row">
-                    <div class="col-lg-6">
+                <p id="intro_text_2">
+                    We recommend using the latest release,
+                    but development builds are also available for use. Once downloaded, you’re ready for lift-off.
+                </p>
+            </div>
+            <div class="col-lg-6 center_content_vertically">
+                <div id="main_download_link_container">
+                    <div id="runtime_download_link_container" class="row">
                         <a id="runtime_download_link" class="download_link skip_outbound_link_analytics" href="">
-                            <div class="download_button_label_container">
-                                <div class="button_label">Open Liberty</div>
-                                <div class="button_sub_label" id="runtime_download_button_version">&nbsp;</div>
+                            <div class="runtime_download_button_label_container">
+                                <div class="runtime_download_button_label">Open Liberty</div>
+                                <div class="runtime_button_sub_label" id="runtime_download_button_version">&nbsp</div>
                             </div>
                             <div class="arrow"></div>
                             <div class="line"></div>
                         </a>
                     </div>
-                    <div class="col-lg-6">
+                    <div id="eclipse_download_link_container" class="row"> 
                         <a id="eclipse_developer_tools_download_link" class="download_link skip_outbound_link_analytics" href="">
-                            <div class="download_button_label_container">
-                                <div class="button_label">Eclipse developer tools</div>
-                                <div class="button_sub_label" id="eclipse_developer_tools_download_link_version_text">&nbsp;</div>
+                            <div class="eclipse_download_button_label_container">
+                                <div class="eclipse_download_button_label">Eclipse developer tools</div>
+                                <div class="eclipse_button_sub_label" id="eclipse_developer_tools_download_link_version_text">&nbsp</div>
                             </div>
                             <div class="arrow"></div>
                             <div class="line"></div>
@@ -47,123 +54,140 @@ permalink: /downloads/
 </div>
 
 
-
-<!-- RELEASES -->
-<div class="container builds_container">
+<!-- TABS -->
+<div class="container" id="tabs_container">
     <div class="row">
-        <div class="col-xs-12">
-            <div class="section_bar blue_background"></div>
-            <div class="clearfix">
-                <h2 id="runtime_releases_title" class="pull-left">Releases</h2>  
-                <a class="builds_expand_link pull-right regular_link line_link blue_link_light_background functional_link" href="" data-table-container-id="runtime_releases_table_container"><span class="line"></span> <span class="collapse_link_text">collapse</span></a>
-            </div>
-            <p id="runtime_releases_paragraph" class="section_paragraph">
-                New releases will be announced on the <a href="/blog" class="light_green_link_light_background">Open Liberty Blog</a>
-                and <a href="https://twitter.com/OpenLibertyIO" target="new" class="light_green_link_light_background">Twitter</a> so keep all of your eyes peeled. 
-            </p>
-            <div id="runtime_releases_table_container" class="narrow_table_container">
-                <table class="build_table releases_table white_table" data-builds-id="runtime_releases">
-                    <thead>
-                        <tr>
-                            <th class="version_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">Version<span class="table_header_arrow table_header_arrow_down" aria-hidden="true"></span></a></th>
-                            <th class="javaee_download_column">Java EE profile download</th>
-                            <th class="webprofile_download_column">Web profile download</th>
-                            <th class="download_button_column">Full package</th>
-                        </tr>
-                    </thead>
-                    <tbody class="release_table_body">
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#runtime_releases" role="tab">Releases</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#development_builds">Development Builds</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#eclipse_developer_tools">Eclipse Developer Tools</a>
+            </li>
+        </ul>
     </div>
 </div>
 
 
+<div class="tab-content">
 
-<!-- DEVELOPMENT BUILDS -->
-<div class="container builds_container">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="section_bar green_background"></div>
-            <div class="clearfix">
-                <h2 id="runtime_development_builds_title" class="pull-left">Development builds</h2>
-                <a class="builds_expand_link pull-right regular_link line_link dark_green_link_light_background functional_link" href="" data-table-container-id="runtime_development_builds_table_container"><span class="line"></span> <span class="collapse_link_text">collapse</span></a>
-            </div>
-            <p id="runtime_development_builds_paragraph">
-                Early adopters may be interested in our daily downloads containing the latest features and bug fixes.
-            </p>
-            <div id="runtime_development_builds_table_container" class="table_container">
-                <table class="build_table development_builds_table green_table" data-builds-id="runtime_development_builds">
-                    <thead>
-                        <tr>
-                            <th class="date_column"><a href="" data-key="date" data-descending="true" class="functional_link sort_link">Date<span class="table_header_arrow table_header_arrow_down" aria-hidden="true"></span></a></th>
-                            <th class="tests_passed_column"><a href="" data-key="test_passed" data-descending="false" class="functional_link sort_link">Tests passed<span class="table_header_arrow" aria-hidden="true"></span></a></th>
-                            <th class="view_logs_column">Log details</th>
-                            <th class="download_button_column"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+    <!-- RELEASES -->
+    <div id="runtime_releases" class="container builds_container tab-pane fade show active" role="tabpanel">
+        <div class="row">
+            <div class="col-sm-12">
+                <p id="runtime_releases_paragraph" class="section_paragraph">
+                    New releases will be announced on the Open Liberty <a href="/blog" class="orange_link_light_background">blog</a>
+                    and <a href="https://twitter.com/OpenLibertyIO" target="new" class="orange_link_light_background">Twitter</a>. 
+                </p>
+                <div id="runtime_releases_table_container" class="narrow_table_container">
+                    <table class="build_table releases_table white_table" data-builds-id="runtime_releases">
+                        <thead>
+                            <tr>
+                                <th class="version_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">Newest to Oldest</a></th>
+                                <th class="javaee_download_column">Java EE profile download</th>
+                                <th class="webprofile_download_column">Web profile download</th>
+                                <th class="download_button_column">Full package</th>
+                            </tr>
+                        </thead>
+                        <tbody class="release_table_body">
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 
-<!-- ECLIPSE DEVELOPER TOOLS -->
-<div id="eclipse_developer_tools_container" class="container builds_container">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="section_bar orange_background"></div>
-            <h2 id="eclipse_development_tools_title">Eclipse developer tools</h2>
-            <p id="eclipse_development_tools_text">
-                While all of your favorite tools are compatible with Open Liberty, we recommend the IDE tools based on Eclipse since
-                it gives you an integrated environment right out of the box. Learn how to install the tools <a href="https://github.com/OpenLiberty/open-liberty-tools" target="new" class="orange_link_light_background">here</a>. 
-            </p>
-            <div class="clearfix">
-                <h3 id="eclipse_development_tools_releases_title" class="pull-left">Release</h3>
-                <a class="builds_expand_link pull-right regular_link line_link orange_link_light_background functional_link" href="" data-table-container-id="eclipse_development_tools_releases_table_container"><span class="line"></span> <span class="collapse_link_text">collapse</span></a>
-            </div>
-            <div id="eclipse_development_tools_releases_table_container" class="narrow_table_container">
-                <table class="build_table releases_table orange_table" data-builds-id="developer_tools_releases">
-                    <thead>
-                        <tr>
-                            <th class="date_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">Version<span class="table_header_arrow table_header_arrow_down" aria-hidden="true"></span></a></th>
-                            <th class="download_button_column"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="release_table_body">
-                    </tbody>
-                </table>
-            </div>
-            <div class="clearfix">
-                <h3 id="eclipse_development_tools_development_builds_title" class="pull-left">Development builds</h3>
-                <a class="builds_expand_link pull-right regular_link line_link orange_link_light_background functional_link" href="" data-table-container-id="eclipse_development_tools_development_builds_table_container"><span class="line"></span> <span class="collapse_link_text">collapse</span></a>
-            </div>
-            <div id="eclipse_development_tools_development_builds_table_container" class="table_container">
-                <table class="build_table development_builds_table orange_table" data-builds-id="developer_tools_development_builds">
-                    <thead>
-                        <tr>
-                            <th class="date_column"><a href="" data-key="date" data-descending="true" class="functional_link sort_link">Date<span class="table_header_arrow table_header_arrow_down" aria-hidden="true"></span></a></th>
-                            <th class="tests_passed_column"><a href="" data-key="test_passed" data-descending="false" class="functional_link sort_link">Tests passed<span class="table_header_arrow" aria-hidden="true"></span></a></th>
-                            <th class="view_logs_column">Log details</th>
-                            <th class="download_button_column"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+    <!-- DEVELOPMENT BUILDS -->
+    <div id="development_builds" class="container builds_container tab-pane fade" role="tabpanel">
+        <div class="row">
+            <div class="col-sm-12">
+                <p id="runtime_development_builds_paragraph">
+                    Early adopters may be interested in our daily downloads containing the latest features and bug fixes.
+                </p>
+                <div id="runtime_development_builds_table_container" class="table_container">
+                    <table class="build_table development_builds_table white_table" data-builds-id="runtime_development_builds">
+                        <thead>
+                            <tr>
+                                <th class="date_column"><a href="" data-key="date" data-descending="true" class="functional_link sort_link">Newest to Oldest</a></th>
+                                <th class="tests_passed_column"><a href="" data-key="test_passed" data-descending="false" class="functional_link sort_link">Tests passed<span class="table_header_arrow" aria-hidden="true"></span></a></th>
+                                <th class="view_logs_column">Log details</th>
+                                <th class="download_button_column">Full package</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+
+
+
+    <!-- ECLIPSE DEVELOPER TOOLS -->
+    <div id="eclipse_developer_tools" class="container builds_container tab-pane fade" role="tabpanel">
+        <div class="row">
+            <div class="col-sm-12">
+                <p id="eclipse_development_tools_text">
+                    We recommend IDE tools based on Eclipse since it gives you an integrated environment right out of the box. <br>
+                    <a href="https://github.com/OpenLiberty/open-liberty-tools" target="new" class="orange_link_light_background">Learn how to install the tools here</a>. 
+                </p>
+                <div class="clearfix">
+                    <h3 id="eclipse_development_tools_releases_title" class="pull-left">Releases</h3>
+                </div>
+                <div id="eclipse_development_tools_releases_table_container" class="narrow_table_container">
+                    <table class="build_table releases_table white_table" data-builds-id="developer_tools_releases">
+                        <thead>
+                            <tr>
+                                <th class="date_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">Newest to Oldest</a></th>
+                                <th class="download_button_column">Full package</th>
+                            </tr>
+                        </thead>
+                        <tbody class="release_table_body">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="clearfix">
+                    <h3 id="eclipse_development_tools_development_builds_title" class="pull-left">Development builds</h3>
+                </div>
+                <div id="eclipse_development_tools_development_builds_table_container" class="table_container">
+                    <table class="build_table development_builds_table white_table" data-builds-id="developer_tools_development_builds">
+                        <thead>
+                            <tr>
+                                <th class="date_column"><a href="" data-key="date" data-descending="true" class="functional_link sort_link">Newest to Oldest</a></th>
+                                <th class="tests_passed_column"><a href="" data-key="test_passed" data-descending="false" class="functional_link sort_link">Tests passed<span class="table_header_arrow" aria-hidden="true"></span></a></th>
+                                <th class="view_logs_column">Log details</th>
+                                <th class="download_button_column">Full package</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
-<div class="hidden">
-    <img src="/img/downloads_arrow_up.svg">
-    <img src="/img/download_line_eclipse_hover.svg">
-    <img src="/img/download_arrow_only_eclipse_hover.svg">
+<div id="bottom_images_container" class="container">
+    <img id="ufo" src="{{ "/img/ufo.png" | relative }}" alt="">
+    <img id="ufobeam" src="{{ "/img/ufo_beam.png" | relative }}" alt="">
+    <img id="cow" class src="{{ "/img/cow.png" | relative }}" alt="">
+    <img id="cowshadow" src="{{ "/img/cow_shadow.png" | relative }}" alt="">
+    <img id="outerbeam" src="{{ "/img/outer_beam.png" | relative }}" alt="">
+    <img id="bottomleftclouds" src="{{ "/img/bottom_left_clouds.png" | relative }}" alt="">
+    <img id="bottomrightcloud" src="{{ "/img/bottom_right_cloud.png" | relative }}" alt="">
+    <p id="cow_text">
+            Don't have a cow.
+    </p>
+    <p id="more_downloads_text">
+        More downloads are on the way.<br>
+        Check back soon!
+    </p>
 </div>

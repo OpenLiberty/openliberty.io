@@ -17,14 +17,14 @@
                 </div>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-left text-right"> 
+                <ul class="nav navbar-nav navbar-left"> 
                     <li>
                         <a href="/guides">Guides</a>
                     </li>
                     <!-- Single button -->
                     <li id="reference_dropdown_container" class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle reference_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Reference <span class="caret"></span>
+                            Reference <span id="reference_caret" class="hidden-md hidden-lg"></span>
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a href="/docs/ref/javaee/">Java EE API</a></li>
@@ -33,8 +33,13 @@
                                 <li><a href="/docs/ref/feature/">Server Features</a></li>
                                 <li><a href="/docs/ref/command/">Server Commands</a></li>
                             </ul>
-                    </li>                    
+                    </li>
                 </ul>
+                <div id="header_round_links_container" class="visible-xs">
+                    <a id="header_twitter_link" class="header_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" aria-label="Twitter"></a>
+                    <a id="header_stackoverflow_link" class="header_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" aria-label="Open Liberty questions on Stack Overflow"></a>
+                    <a id="header_groupsio_link" class="header_round_btn" href="https://groups.io/g/openliberty" target="_blank" aria-label="Open Liberty Groups.io"></a>
+                </div>
             </div>
             <!-- Add breadcrumb for all pages except /docs -->
             {% if page.url != '/docs/' %}
