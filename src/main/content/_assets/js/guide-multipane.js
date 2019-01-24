@@ -10,12 +10,9 @@
  *******************************************************************************/
 $(document).ready(function() {
     var target;
-    $('#preamble').detach().insertAfter('#duration_container');    
-
-    /* Copy button for the github clone command  that pops up initially when opening a guide. */
-    $("#github_clone_popup_copy, #mobile_github_clone_popup_copy").click(function(event){
-        event.preventDefault();
-        target = $("#github_clone_popup_repo").get(0);
+    $('#preamble').detach().insertAfter('#duration_container');  
+    
+    function copy_github_repo(target){
         // IE
         if(window.clipboardData){
             window.clipboardData.setData("Text", target.innerText);
@@ -41,7 +38,20 @@ $(document).ready(function() {
                 alert('Copy failed. Copy the command manually: ' + target.innerText);
             } 
             temp.remove(); // Remove temporary element.
-        }               
+        }
+    }
+
+    /* Copy button for the github clone command  that pops up initially when opening a guide. */
+    $("#github_clone_popup_copy").click(function(event){
+        event.preventDefault();
+        target = $("#github_clone_popup_repo").get(0);
+        copy_github_repo(target);
+    });
+
+    $("#mobile_github_clone_popup_copy").click(function(event){
+        event.preventDefault();
+        target = $("#mobile_github_clone_popup_repo > span").get(0);
+        copy_github_repo(target);
     });
 
     $("#github_clone_popup_copy, #mobile_github_clone_popup_copy").on('keydown', function(event){
