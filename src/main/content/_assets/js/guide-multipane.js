@@ -10,8 +10,7 @@
  *******************************************************************************/
 $(document).ready(function() {
     var target;
-    $('#preamble').detach().insertAfter('#duration_container');
-    
+    $('#preamble').detach().insertAfter('#duration_container');    
 
     /* Copy button for the github clone command  that pops up initially when opening a guide. */
     $("#github_clone_popup_copy, #mobile_github_clone_popup_copy").click(function(event){
