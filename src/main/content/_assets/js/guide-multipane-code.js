@@ -603,28 +603,15 @@ function setActiveTab(activeTab){
 
     $(".copyFileButton").click(function(event){
         event.preventDefault();
-        target = $("#code_column .code_column:visible .content");
-        var temp = $('<div>'); // Create a temporary div to remove extra whitespace around the content.
-        temp.css({
-            'position':'absolute',
-            'top':'-1000px',
-            'left':'-1000px'            
-        });
-        temp.html(target.html().trim());
-        $('body').append(temp);
-        window.getSelection().selectAllChildren(temp.get(0)); // Set the file contents as the copy target.
-        if(document.execCommand('copy')) {
-            window.getSelection().removeAllRanges();
-            var current_target_object = $(event.currentTarget);	
+        target = $("#code_column .code_column:visible .content")[0];
+        copy_element_to_clipboard(target, function(){
+            var current_target_object = $(event.currentTarget);
             var position = current_target_object.position();	
-            $('#code_section_copied_confirmation').css({	
+            $('#copied_confirmation').css({	
                 top: position.top + 30,	
                 right: 25	
             }).stop().fadeIn().delay(1000).fadeOut();
-        } else {
-            alert('Copy failed. Copy the code manually: ' + target.text());
-        }
-        temp.remove();
+        });
     });
 
     // Handle enter key presses on the copy file button

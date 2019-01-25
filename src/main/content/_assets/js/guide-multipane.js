@@ -8,50 +8,71 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-$(document).ready(function() {
+/* Copy the target element to the clipboard
+   target: element to copy
+   callback: function to run if the copy is successful
+*/
+function copy_element_to_clipboard(target, callback){
+    // IE
+    if(window.clipboardData){
+        window.clipboardData.setData("Text", target.innerText);
+    } 
+    else{
+        var temp = $('<div>');
+        temp.css({
+            position: "absolute",
+            left:     "-1000px",
+            top:      "-1000px",
+        });
+        // Create a temporary element for copying the text.
+        // temp.text(target.innerText);
+        temp.html(target.innerHTML.trim());
+        $("body").append(temp);
+        var range = document.createRange();
+        range.selectNodeContents(temp.get(0));
+        selection = window.getSelection();
+        selection.removeAllRanges(); // Remove previous selections
+        selection.addRange(range);
+        
+        // Try to copy the selection and if it fails display a popup to copy manually.
+        if(document.execCommand('copy')) {
+            callback();
+        } else {
+            alert('Copy failed. Copy the command manually: ' + target.innerText);
+        }
+        temp.remove(); // Remove temporary element.
+    }
+}
+
+ $(document).ready(function() {
+    
     var target;
     $('#preamble').detach().insertAfter('#duration_container');  
-    
-    function copy_github_repo(target){
-        // IE
-        if(window.clipboardData){
-            window.clipboardData.setData("Text", target.innerText);
-        } 
-        else{
-            var temp = $('<div>');
-            temp.css({
-                position: "absolute",
-                left:     "-1000px",
-                top:      "-1000px",
-            });
-            // Create a temporary element for copying the text.
-            temp.text(target.innerText);
-            $("body").append(temp);
-            var range = document.createRange();
-            range.selectNodeContents(temp.get(0));
-            selection = window.getSelection();
-            selection.removeAllRanges(); // Remove previous selections
-            selection.addRange(range);
-            
-            // Try to copy the selection and if it fails display a popup to copy manually.
-            if(!document.execCommand('copy')) {
-                alert('Copy failed. Copy the command manually: ' + target.innerText);
-            } 
-            temp.remove(); // Remove temporary element.
-        }
-    }
 
     /* Copy button for the github clone command  that pops up initially when opening a guide. */
     $("#github_clone_popup_copy").click(function(event){
         event.preventDefault();
         target = $("#github_clone_popup_repo").get(0);
-        copy_github_repo(target);
+        copy_element_to_clipboard(target, function(){
+            var position = $('#github_clone_popup_container').position();
+            $('#copied_confirmation').css({	
+                top: position.top + $('nav').outerHeight() - 20,
+                right: 20	
+            }).stop().fadeIn().delay(1000).fadeOut();
+        });
     });
 
     $("#mobile_github_clone_popup_copy").click(function(event){
         event.preventDefault();
         target = $("#mobile_github_clone_popup_repo > span").get(0);
-        copy_github_repo(target);
+        copy_element_to_clipboard(target, function(){
+            var current_target_object = $(event.currentTarget);
+            var position = current_target_object.position();	
+            $('#copied_confirmation').css({	
+                top: position.top + $('nav').outerHeight() - 20,	
+                right: 25	
+            }).stop().fadeIn().delay(1000).fadeOut();
+        });
     });
 
     $("#github_clone_popup_copy, #mobile_github_clone_popup_copy").on('keydown', function(event){
