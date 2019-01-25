@@ -607,7 +607,7 @@ function setActiveTab(activeTab){
         copy_element_to_clipboard(target, function(){
             var current_target_object = $(event.currentTarget);
             var position = current_target_object.position();	
-            $('#copied_confirmation').css({	
+            $('#code_section_copied_confirmation').css({	
                 top: position.top + 30,	
                 right: 25	
             }).stop().fadeIn().delay(1000).fadeOut();

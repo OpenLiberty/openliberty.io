@@ -56,7 +56,7 @@ function copy_element_to_clipboard(target, callback){
         copy_element_to_clipboard(target, function(){
             var position = $('#github_clone_popup_container').position();
             $('#copied_confirmation').css({	
-                top: position.top + $('nav').outerHeight() - 20,
+                top: position.top + $(window).scrollTop() + $('nav').outerHeight() - 20,
                 right: 20	
             }).stop().fadeIn().delay(1000).fadeOut();
         });
@@ -137,20 +137,17 @@ function copy_element_to_clipboard(target, callback){
         }          	
      });	
 
-     $('.copy_to_clipboard').click(function(event) {	        	
-        event.preventDefault();	
-        window.getSelection().selectAllChildren(target);	
-        if(document.execCommand('copy')) {	
-            window.getSelection().removeAllRanges();	
-            var current_target_object = $(event.currentTarget);	
+     $('.copy_to_clipboard').click(function(event) {
+        event.preventDefault();
+        var target = $(event.currentTarget)[0];
+        copy_element_to_clipboard(target, function(){
+            var current_target_object = $(event.currentTarget);
             var position = current_target_object.position();	
             $('#guide_section_copied_confirmation').css({	
                 top: position.top - 25,
-                right: 50
-            }).stop().fadeIn().delay(3500).fadeOut();	
-        } else {	
-            alert('To copy press CTRL + C');	
-        }	
+                right: 50	
+            }).stop().fadeIn().delay(3500).fadeOut();
+        });	
     });    
 
     $(window).on('scroll', function(event) {
