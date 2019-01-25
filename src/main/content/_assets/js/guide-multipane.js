@@ -100,7 +100,6 @@ function copy_element_to_clipboard(target, callback){
                 // Update the selected TOC entry
                 updateTOCHighlighting(id);                    
             }
-            // Steven call the code file now
             if(window.innerWidth > twoColumnBreakpoint) {
                 // multipane view
                 // Match the code block on the right to the new id
@@ -139,7 +138,7 @@ function copy_element_to_clipboard(target, callback){
 
      $('.copy_to_clipboard').click(function(event) {
         event.preventDefault();
-        var target = $(event.currentTarget)[0];
+        // Target was assigned while hovering over the element to copy.
         copy_element_to_clipboard(target, function(){
             var current_target_object = $(event.currentTarget);
             var position = current_target_object.position();	
