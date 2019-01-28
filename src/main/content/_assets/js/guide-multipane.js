@@ -100,7 +100,7 @@ function copy_element_to_clipboard(target, callback){
                 // Update the selected TOC entry
                 updateTOCHighlighting(id);                    
             }
-            if(window.innerWidth > twoColumnBreakpoint) {
+            if(!inSingleColumnView()) {
                 // multipane view
                 // Match the code block on the right to the new id
                 if(typeof(showCorrectCodeBlock) === "function"){

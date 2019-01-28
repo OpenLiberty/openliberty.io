@@ -10,11 +10,13 @@
  *******************************************************************************/
 // The background is shortened by 200px
 var backgroundSizeAdjustment = 200;
-var twoColumnBreakpoint = 1170;
-var threeColumnBreakpoint = 1440;
 
 function inSingleColumnView(){
-    return(window.innerWidth <= twoColumnBreakpoint);
+    return window.matchMedia('(max-width: 1169.98px)').matches;
+}
+
+function inThreeColumnView(){
+    return window.matchMedia('(min-width: 1440px)').matches;
 }
 
 function inMobile(){
@@ -82,8 +84,8 @@ function isBackgroundBottomVisible() {
 // section and the code column transitions better by making the section height
 // in two and three column view at least as tall as the viewport.
 function resizeGuideSections() {
-        // Two column view or three column view.
-    if (window.innerWidth > twoColumnBreakpoint) {
+    // Two column view or three column view.
+    if (!inSingleColumnView()) {
         var viewportHeight = window.innerHeight;
         var headerHeight = $('header').height();
         var sectionTitleHeight = $("#guide_content h2").first().height();
@@ -91,7 +93,7 @@ function resizeGuideSections() {
         $('.sect1:not(#guide_meta):not(#related-guides)').css({
                 'min-height': newSectionHeight + 'px'
         });
-        if(window.innerWidth >= threeColumnBreakpoint){
+        if(inThreeColumnView()){
             // In three column view set the width of the #guide_column appropriately.
             if ($("#toc_column").hasClass('in') || $("#toc_column").hasClass('inline')) {
                 // TOC is expanded.  Adjust #guide_column width to account for TOC column.
@@ -111,7 +113,7 @@ function resizeGuideSections() {
 }
 
 function handleFloatingCodeColumn() {
-    if(window.innerWidth > twoColumnBreakpoint) {
+    if(!inSingleColumnView()) {
         // CURRENTLY IN DESKTOP VIEW
         if(isBackgroundBottomVisible()) {
             // Set the bottom of the code column to the distance between the top of the end of guide section and the bottom of the page.
@@ -201,7 +203,7 @@ function getScrolledVisibleSectionID() {
     var topBorder = 0;
     var scrollTop = $(window).scrollTop();
 
-    if (window.innerWidth > twoColumnBreakpoint) {
+    if (!inSingleColumnView()) {
         // multi-column view - header is constant and guide scrolls
         //                     beneath it.
         topBorder = $('#guide_meta').outerHeight(true); // Border point between
@@ -218,7 +220,7 @@ function getScrolledVisibleSectionID() {
     } else {
         var sections = $('.sect1:not(#guide_meta):not(#related-guides), .sect2');
 
-        if (window.innerWidth > twoColumnBreakpoint) {
+        if (!inSingleColumnView()) {
             // multi-column view -
             // Determine which section has the majority of the vertical height
             // of the page.
