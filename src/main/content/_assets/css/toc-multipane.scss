@@ -90,7 +90,6 @@
 #toc_column {
     position: fixed;
     left: 0;
-    width: 0;
     padding-bottom: 22px;
     vertical-align: top;
     background-color: white;
@@ -139,7 +138,7 @@
     position: fixed;
 
     &.open {
-        left: 275px;
+        left: 394px; // 400px minus the width of 6 px
         background-color: rgb(255, 216, 191);
     }
 }
@@ -536,7 +535,7 @@
 
     #toc_column {
         float: left;
-        left: -280px;
+        left: -400px;
         position: relative;
         padding-bottom: 22px;
         background-color: white;
@@ -545,7 +544,8 @@
 
         &.open {
             left: 0;
-            width: 280px;
+            // width: 280px;
+            width: 400px;
         }
     }
     
@@ -565,7 +565,7 @@
         display: none !important; /* Important is to override the display set through javascript */
     }
 
-    #toc_column {
-        width: 280px;
-    }
+    // #toc_column {
+    //     width: 280px;
+    // }
 }

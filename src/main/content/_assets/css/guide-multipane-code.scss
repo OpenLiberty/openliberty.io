@@ -9,9 +9,24 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
+/* Table of Contents */
+#toc_column {
+    left: 0;
+
+    &.open {
+        width: 280px;
+    }
+}
+
+#toc_line {
+    &.open {
+        left: 274px; // 280px minus the width of 6 px
+    }
+}
+
 /* Guide Content related to the 3 column code */
 #guide_column {
-    width: 100%;
+    width: calc(100% - 280px);
 }
 
 .hotspot:not(.code_command) {
