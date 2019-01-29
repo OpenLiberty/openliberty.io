@@ -65,7 +65,8 @@ $(document).ready(function() {
             var tabAlreadyExists =  $('#code_column_tabs li').filter(":contains('" + fileName + "')");
             if(tabAlreadyExists.length > 0){
                 tabAlreadyExists.last().after(tab);
-            } else {
+            } 
+            else {
                 $('#code_column_tabs').append(tab);
             }            
 
@@ -267,7 +268,8 @@ $(document).ready(function() {
                         fromLine = parseInt(lines[0]);
                         toLine = parseInt(lines[1]);
                         ranges = line_nums;
-                    } else {
+                    } 
+                    else {
                         // Only one line to highlight.
                         fromLine = parseInt(line_nums);
                         toLine = parseInt(line_nums);
@@ -280,10 +282,11 @@ $(document).ready(function() {
                         old_ranges += "," + ranges;
                         snippet.data('highlight-ranges', old_ranges);                    
                     }
-                    else{
+                    else {
                         snippet.data('highlight-ranges', ranges);
                     }
-                } else {
+                } 
+                else {
                     // Hotspot does not highlight lines, it just switches to the file. 
                     var num_lines = parseInt(code_block.find('.line-numbers').last().text());  
                     fromLine = 1;
