@@ -299,42 +299,72 @@ function hideDuplicateTabs(id){
         substepIds.push(substeps[i].id);
     }
 
-    // Now check to see if any of the visible tabs match the section's tabs
-    visibleTabs.each(function(){
-        if(!$(this).is(":visible")){
+    // Check to see if any of the visible tabs match the section's tabs
+    for(var j = visibleTabs.length-1; j >= 0; --j){
+        var tab = $(visibleTabs.get(j));
+        var data_id = tab.attr('data-section-id');
+        if(!tab.is(":visible")){
             // The tab could have been hidden by a previous iteration so only look for duplicates if it is visible.
-            return;
+            continue;
         }
-        var fileName = this.textContent;
-        var fileIndex = $(this).data('file-index');
-        var data_id = $(this).attr('data-section-id');
-        var code_block = $($("#code_column .code_column[data-section-id='" + data_id + "']").get(fileIndex));
-
-        var tabsWithSameName = $('#code_column_tabs li:visible').not($(this)).filter(":contains('" + fileName + "')");
+        var fileName = tab.text();
+        var tabsWithSameName = $('#code_column_tabs li:visible').not(tab).filter(":contains('" + fileName + "')");
+        
         if(tabsWithSameName.length > 0){
-            // Compare to other tabs in this section to see if their content matches
-            tabsWithSameName.each(function(){
-                if($(this).find('a').hasClass('active')){
-                    return;
+            // Find duplicates and hide them.
+            // The current tab is in this section
+            if(substepIds.indexOf(data_id) > -1){  
+                var setCurrTabActive = false; 
+                if(tabsWithSameName.find('.active').length > 0){
+                    // If one of the tabs hidden was active then need to set this tab as active.
+                    setCurrTabActive = true;
+                }                 
+                tabsWithSameName.hide();
+                if(setCurrTabActive){
+                    setActiveTab(tab);
                 }
-                var fileIndex2 = $(this).data('file-index');
-                var data_id2 = $(this).attr('data-section-id');
-                var code_block2 = $($("#code_column .code_column[data-section-id='" + data_id2 + "']").get(fileIndex2));
-
-                if(substepIds.indexOf(data_id2) === -1){
-                    // Tab is not associated with this subsection so hide it.             
-                    $(this).hide();
+                continue;
+            }
+            else{
+                // Tab is not part of this section.                    
+                for(var k=0; k<tabsWithSameName.length; k++){
+                    var tabWithSameName = $(tabsWithSameName.get(k));
+                    var data_id2 = tab.attr('data-section-id');
+                                           
+                    if(substepIds.indexOf(data_id2) > -1){
+                        // If other tab is part of this section then hide the current tab                  
+                        tab.hide();
+                    } else {                               
+                        // Tab is not associated with this subsection so hide that one unless it is active.  
+                        if(tabWithSameName.find('a').hasClass('active')){
+                            continue;
+                        }      
+                        tabWithSameName.hide();
+                    }
                 }
-                else {
-                    // Other tab is from the same section, compare file contents to determine if it is a duplicate.
-                    if(code_block.text() === code_block2.text()){          
-                        $(this).hide();
-                    }            
-                }
-            });
-        }     
-    });
+            }
+            
+        }
+    }
+    // Hide duplicates of the active tab
+    var activeTab = $('.code_column_tab > .active').parent();
+    var activeDuplicates = $('#code_column_tabs li:visible').not(activeTab).filter(":contains('" + activeTab.text() + "')");
+    activeDuplicates.hide();
 }
+
+function loadPreviousStepsTabs(){
+    // Reveal the files from previous sections in case the user loaded a later step from a bookmarked hash.
+    var lastTab = $('#code_column_tabs li:visible').last();
+    var previousHiddenTabs = lastTab.prevAll().not(":visible");
+    for(var i = previousHiddenTabs.length - 1; i >= 0; --i){
+        var tab = previousHiddenTabs.get(i);
+        var fileName = tab.innerText.trim();
+        // Check that the most recent tab for this file is showing.
+        if($('#code_column_tabs li:visible').filter(":contains('" + fileName + "')").length == 0){
+            $(tab).show();
+        }
+    }
+};
 
 function loadPreviousStepsTabs(){
     // Reveal the files from previous sections in case the user loaded a later step from a bookmarked hash.
