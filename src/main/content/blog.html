@@ -24,8 +24,8 @@ permalink: /blog/
         <div class="row blog_post_row">
             <div class="col-xl-8 offset-xl-2 col-xs-12 blog_post_column">
                 <div class="blog_post_content">
-                    {% if post.link %}
-                        <h2 class="blog_post_title"><a href="{{ post.link }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
+                    {% if post.redirect_link %}
+                        <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
                     {% else %}
                         <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
                     {% endif %}
@@ -42,8 +42,8 @@ permalink: /blog/
                         {% endif %}
                     </p>
                     <div class="text-right">
-                    {% if post.link %}
-                        <a href="{{ post.link }}" class="read_more_link">Read more</a>
+                    {% if post.redirect_link %}
+                        <a href="{{ post.redirect_link }}" class="read_more_link">Read more</a>
                     {% else %}
                         <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
                     {% endif %}
