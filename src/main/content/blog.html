@@ -35,8 +35,16 @@ permalink: /blog/
                         <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
                     </div>
                     <p class="blog_post_paragraph">
+                        {% assign continue_text = ' [Continued on ' %}
                         {% if post.blog_description %}
                             {{ post.blog_description }}
+                            {% if post.redirect_link %}
+                                <span id="continued_text">
+                                {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." %}
+                                {% assign clean_domain = domain_name | remove: '[' | remove: '"' %}
+                                {{ continue_text | append: clean_domain }}
+                                </span>
+                            {% endif %}
                         {% else %}
                             {{ post.content | strip_html | truncatewords: 60 }}
                         {% endif %}
