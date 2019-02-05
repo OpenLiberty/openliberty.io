@@ -339,11 +339,11 @@ $(document).ready(function() {
     // However, this code is duplicated in
     // ...iguides-common\js\interactive\guides\table-of-contents.js
     // to set the same handlers there.
-    $("#toc_container li").on('click', function(event) {
+    $('#toc_container').on('click', 'li', function(event) {
         // 'this' is the li element in the #toc_container
         TOCEntryClick(this, event);
     });
-    $("#toc_container li").on("keydown", function(event) {
+    $('#toc_container').on('keydown', 'li', function(event) {
         // 'this' is the li element in the #toc_container
         if (event.which === 13 || event.which === 32) {   // Spacebar or Enter
           this.click();
