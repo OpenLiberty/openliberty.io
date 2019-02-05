@@ -167,7 +167,8 @@ $(document).ready(function() {
         if(scroll){
             var scrollTop = $("#code_column_content")[0].scrollTop;
             var position = range.position().top;
-            $("#code_column_content").animate({scrollTop: scrollTop + position - 50});
+            var titleBarHeight = $("#code_column_title_container").outerHeight();
+            $("#code_column_content").animate({scrollTop: scrollTop + position - titleBarHeight});
         }        
     }
 
