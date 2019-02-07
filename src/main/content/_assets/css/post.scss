@@ -10,26 +10,41 @@
  *******************************************************************************/
 
 
-#background_container {
+ #background_container {
     padding-top: 100px;
     background-size: 100% calc(100% - 280px);
     background-repeat: no-repeat;
     margin-bottom: 67px;
+
+    @media (max-width: 767.98px) {
+        padding-top: 20px;
+        margin-bottom: 40px;
+    }
 }
 
 #intro_logo {
     margin-bottom: 70px;
+
+    @media (max-width: 767.98px) {
+        margin-left: 5px;
+        margin-bottom: 30px;
+    }
 }
 
 #post_column {
     padding: 0;
-}
 
-#post_column code,
-#post_column pre  {
-    /* Bootstrap override */
-    background-color: #F3F4F7;
-    color: #5e6b8d;
+    & pre {
+        /* Bootstrap 4 override */
+        padding: 9.5px;
+    }
+
+    & code,
+    & pre {
+        /* Bootstrap override */
+        background-color: #F3F4F7;
+        color: #5e6b8d;
+    }
 }
 
 #article_container {
@@ -43,6 +58,23 @@
     -moz-box-shadow: 0px 5px 11px -3px rgba(0,0,0,0.27);
     box-shadow: 0px 5px 11px -3px rgba(0,0,0,0.27);
     overflow: hidden;
+
+    @media (max-width: 991.98px) {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        padding-left: 60px;
+        padding-right: 60px;
+    }
+
+    @media (max-width: 767.98px) {
+        padding-top: 30px;
+        padding-bottom: 30px;
+        padding-left: 15px;
+        padding-right: 15px;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+    }
 }
 
 /* Keep images from overflowing */
@@ -83,10 +115,10 @@
     font-weight: 500;
     color: #E3700D;
     transition: color .2s;
-}
 
-#article_body a:hover {
-    color: #F4914D;
+    &:hover {
+        color: #F4914D;
+    }
 }
 
 #author_image {
@@ -119,6 +151,10 @@
     color: #3F4659;
     font-size: 20px;
     padding-top: 50px;
+
+    @media (max-width: 767.98px) {
+        padding-top: 20px;
+    }
 }
 
 #twitter_link {
@@ -130,10 +166,10 @@
     margin-left: 20px;
     vertical-align: middle;
     transition: all .2s;
-}
 
-#twitter_link:hover {
-    background-image: url('/img/twitter_link_hover.svg');
+    &:hover {
+        background-image: url('/img/twitter_link_hover.svg');
+    }
 }
 
 #reddit_link {
@@ -145,51 +181,12 @@
     margin-left: 20px;
     vertical-align: middle;
     transition: background-image .2s;
-}
 
-#reddit_link:hover {
-    background-image: url('/img/reddit_link_hover.svg');
+    &:hover {
+        background-image: url('/img/reddit_link_hover.svg');
+    }
 }
 
 .download-ol-button {
     margin-bottom: 10px;
-}
-
-@media (max-width: 991.98px) {
-
-    #article_container {
-        padding-top: 40px;
-        padding-bottom: 40px;
-        padding-left: 60px;
-        padding-right: 60px;
-    }
-
-}
-
-@media (max-width: 767.98px) {
-
-    #background_container {
-        padding-top: 20px;
-        margin-bottom: 40px;
-    }
-
-    #intro_logo {
-        margin-left: 5px;
-        margin-bottom: 30px;
-    }
-
-    #article_container {
-        padding-top: 30px;
-        padding-bottom: 30px;
-        padding-left: 15px;
-        padding-right: 15px;
-        -webkit-box-shadow: none;
-        -moz-box-shadow: none;
-        box-shadow: none;
-    }
-
-    #share_post_container {
-        padding-top: 20px;
-    }
-
 }

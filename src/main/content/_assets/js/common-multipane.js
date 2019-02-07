@@ -311,6 +311,7 @@ function createEndOfGuideContent(){
     var leftSide = $("#end_of_guide_left_section");
     var rightSide = $("#end_of_guide_right_section");
     var whatYouLearned = $("#great-work-you-re-done, #great-work-youre-done").siblings().find('p').clone();
+    whatYouLearned.prepend("Nice work! "); // Start every what you learned statement with 'Nice work!'
     whatYouLearned.attr('tabindex', '0');
     leftSide.prepend(whatYouLearned);
     $("#great-work-you-re-done, #great-work-youre-done").parent().remove(); // Remove section from the main guide column.
@@ -327,6 +328,15 @@ function createEndOfGuideContent(){
     rightSide.append(relatedLinks);
     $("#related-links").parent().remove(); // Remove section from the main guide column.
     $("#toc_container a[href='#related-links']").parent().remove(); // Remove from TOC.
+
+    // Create anchor to the end of the guide
+    var li = $("<li></li>");
+    var a = $("<a></a>");
+    var end_of_guide_title = $('#end_of_guide > h2').first().text();
+    a.attr('href', '#end_of_guide');    
+    a.text(end_of_guide_title);
+    li.append(a);
+    $("#toc_container > ul").append(li);
 }
 
 // Adjust the window for the sticky header.
