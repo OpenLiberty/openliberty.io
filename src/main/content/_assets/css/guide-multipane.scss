@@ -15,11 +15,7 @@
 
 /* Table of Contents */
 #toc_column {
-    left: 0;
-
-    &.open {
-        width: 280px;
-    }
+    left: 0;    
 }
 
 #toc_line {
@@ -293,6 +289,12 @@
 
 
 @media (min-width: 1440px) {
+    #toc_column{
+        &.open {
+            width: 280px; /* Override the 400px width from single pane guide */
+        }
+    }
+
     #guide_column {
         width: calc(100% - 780px);
         display: inline-block;

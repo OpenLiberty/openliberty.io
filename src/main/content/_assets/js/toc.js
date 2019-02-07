@@ -143,6 +143,13 @@ function TOCEntryClick(liElement, event) {
     event.preventDefault();
     event.stopPropagation();
 
+    // Close the TOC if not in 3 column view
+    if(inSingleColumnView()){
+        $("#mobile_close_container").trigger('click');
+    } else if(window.innerWidth < threeColumnBreakpoint){
+        $("#breadcrumb_hamburger").trigger('click');
+    }
+
     var windowHash = window.location.hash;
     if (windowHash !== hash) {
         // Update the URL hash with where we wish to go....
@@ -157,10 +164,6 @@ function TOCEntryClick(liElement, event) {
         history.pushState(null, null, newPath);
     }
     accessContentsFromHash(hash);
-
-    if(inSingleColumnView()){
-        $("#mobile_close_container").trigger('click');
-    }
 }
 
 // Restructure the TOC because Asciidoc nests levels in the TOC and it affects the CSS poorly.
@@ -281,14 +284,14 @@ $(document).ready(function() {
             restoreCurrentStep();
         }
         // Handle table of content floating if in the middle of the guide.
-        handleFloatingTableOfContent();
+        handleFloatingTableOfContent();        
     });
 
     //In single column view, set focus on 'X' initially when TOC is expanded
     $('#toc_column').on('shown.bs.collapse', function(){
-      if ($('#mobile_close_container').attr("class").trim().length == 0) { //TOC is visible, doesn't have class 'collapsed'
-        $("#mobile_close_container  img").focus(); //focus on 'X'
-      }
+        if ($('#mobile_close_container').attr("class").trim().length == 0) { //TOC is visible, doesn't have class 'collapsed'
+            $("#mobile_close_container  img").focus(); //focus on 'X'
+        }
     });
 
     //In single column view, close the TOC after tabbing from the last element in the TOC
