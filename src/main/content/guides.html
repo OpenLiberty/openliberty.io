@@ -11,10 +11,9 @@ permalink: /guides/
 <!-- Build a list of all the documents in the guides code base -->
 {% assign static-guides = site.pages | where: 'layout', 'guide' %}
 {% assign multipane-static-guides = site.pages | where: 'layout', 'guide-multipane' %}
-{% assign multipane-static-nocode-guides = site.pages | where: 'layout', 'guide-multipane-nocode' %}
 {% assign interactive-guides = site.pages | where: 'layout', 'interactive-guide' %}
 {% assign multipane-iguides = site.pages | where: 'layout', 'iguide-multipane' %}
-{% assign all-markdown-files = static-guides | concat: interactive-guides | concat: multipane-static-guides | concat: multipane-static-nocode-guides | concat: multipane-iguides | sort: 'releasedate' | reverse %}
+{% assign all-markdown-files = static-guides | concat: interactive-guides | concat: multipane-static-guides | concat: multipane-iguides | sort: 'releasedate' | reverse %}
 {% assign all-guides = '' | split: '' %}
 
 <!-- Remove any documents deemed private (archived, templates, etc) -->
