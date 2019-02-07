@@ -4,79 +4,64 @@ disk_quota: 1024M
 path: target/openliberty.war
 
 applications:
+# US South
 - name: openliberty-blue
-  domain: openliberty.io
-  host: www
+  routes:
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: us-south.openliberty.io
 - name: openliberty-green
-  domain: openliberty.io
-  host: www
-- name: openliberty-blue-east
-  domain: openliberty.io
-  host: www
-- name: openliberty-green-east
-  domain: openliberty.io
-  host: www
+  routes:
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: us-south.openliberty.io
 - name: openlibertydev
-  domain: mybluemix.net
-  host: openlibertydev
-# # US South
-# - name: openliberty-blue
-#   routes:
-#     - route: www.openliberty.io
-#     - route: openliberty.io
-#     - route: openliberty-blue.mybluemix.net
-# - name: openliberty-green
-#   routes:
-#     - route: www.openliberty.io
-#     - route: openliberty.io
-#     - route: openliberty-green.mybluemix.net
-# - name: openlibertydev
-#   routes:
-#     - route: openlibertydev.mybluemix.net
-# # US East
-# - name: openliberty-blue-east
-#   routes:
-#     - route: www.openliberty.io
-#     - route: openliberty.io
-#     - route: openliberty-blue.us-east.mybluemix.net
-# - name: openliberty-green-east
-#   routes:
-#     - route: www.openliberty.io
-#     - route: openliberty.io
-#     - route: openliberty-green.us-east.mybluemix.net
+  routes:
+    - route: openlibertydev.mybluemix.net
+# US East
+- name: openliberty-blue-east
+  routes:
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: us-east.openliberty.io
+- name: openliberty-green-east
+  routes:
+    - route: www.openliberty.io
+    - route: openliberty.io
+    - route: us-east.openliberty.io
 # United Kingdom
 - name: openliberty-blue-uk
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
-    - route: openliberty-blue.eu-gb.bluemix.net
+    - route: eu-gb.openliberty.io
 - name: openliberty-green-uk
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
-    - route: openliberty-green.eu-gb.bluemix.net
+    - route: eu-gb.openliberty.io
 # Germany
 - name: openliberty-blue-germany
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
-    - route: openliberty-blue.eu-de.mybluemix.net
+    - route: eu-de.openliberty.io
 - name: openliberty-green-germany
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
-    - route: openliberty-green.eu-de.mybluemix.net
+    - route: eu-de.openliberty.io
 # Sydney
 - name: openliberty-blue-sydney
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
-    - route: openliberty-blue.au-syd.bluemix.net
+    - route: au-syd.openliberty.io
 - name: openliberty-green-sydney
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
-    - route: openliberty-green.au-syd.bluemix.net
+    - route: au-syd.openliberty.io
 
 env:
   JBP_CONFIG_LIBERTY: 'app_archive: {features: ["microProfile-1.0","webCache-1.0"]}'
