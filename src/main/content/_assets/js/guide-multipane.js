@@ -285,12 +285,6 @@ $(document).ready(function() {
                     else {
                         snippet.data('highlight-ranges', ranges);
                     }
-                } 
-                else {
-                    // Hotspot does not highlight lines, it just switches to the file. 
-                    var num_lines = parseInt(code_block.find('.line-numbers').last().text());  
-                    fromLine = 1;
-                    toLine = num_lines;
                 }                                    
                 snippet.addClass('hotspot');
                 create_mobile_code_snippet(snippet, code_block, fromLine, toLine);
@@ -357,13 +351,10 @@ $(document).ready(function() {
                         var fromLine = parseInt(lines[0]);
                         var toLine = parseInt(lines[1]);
                         var num_Lines = parseInt(code_block.find('.line-numbers').last().text());
-                        if(fromLine && toLine){
-                            // If a hotspot refers to a whole file, do not highlight it.    
-                            if(!(fromLine === 1 && toLine >= num_Lines)){               
-                                // When multiple ranges are going to be highlighted, only scroll to the first one.                 
-                                var shouldScroll = (i === 0);
-                                highlight_code_range(code_block, fromLine, toLine, shouldScroll);
-                            }                            
+                        if(fromLine && toLine){   
+                            // When multiple ranges are going to be highlighted, only scroll to the first one.                 
+                            var shouldScroll = (i === 0);
+                            highlight_code_range(code_block, fromLine, toLine, shouldScroll);               
                         }
                     }                
                 }
