@@ -58,7 +58,8 @@ function highlight_code_range(code_section, fromLine, toLine, scroll){
     if(scroll){
         var scrollTop = $("#code_column_content")[0].scrollTop;
         var position = range.position().top;
-        $("#code_column_content").animate({scrollTop: scrollTop + position - 50});
+        var titleBarHeight = $("#code_column_title_container").outerHeight();
+        $("#code_column_content").animate({scrollTop: scrollTop + position - titleBarHeight});
     }        
 }
 
@@ -507,9 +508,7 @@ function setActiveTab(activeTab){
         if(e.which === 13){
             $(this).trigger('click');
         }
-    });
-
-    
+    });    
 
     // Parse the hotspot lines to highlight and store them as a data attribute.
     $('code[class*=hotspot], span[class*=hotspot], div[class*=hotspot]').each(function(){
