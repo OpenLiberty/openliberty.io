@@ -400,7 +400,21 @@ function setActiveTab(activeTab){
 
 
 
- $(document).ready(function() {   
+ $(document).ready(function() { 
+     
+     /* Copy button for the github clone command  that pops up initially when opening a guide. */
+    $("#github_clone_popup_copy").click(function(event){
+        event.preventDefault();
+        target = $("#github_clone_popup_repo").get(0);
+        copy_element_to_clipboard(target, function(){
+            var position = $('#github_clone_popup_container').position();
+            $('#code_section_copied_confirmation').css({	
+                top: position.top - 20,
+                right: 20	
+            }).stop().fadeIn().delay(1000).fadeOut();
+        });
+    });
+
     // Move the code snippets to the code column on the right side.
     // Each code section is duplicated to show the full file in the right column and just the snippet of code relevant to the guide in the left column in single column / mobile view.
     $('.code_column').each(function(){

@@ -44,7 +44,7 @@
             <!-- Add breadcrumb for all pages except /docs -->
             {% if page.url != '/docs/' %}
             <div id="breadcrumb_row">
-                {% if page.layout == 'guide' or page.layout == 'guide-multipane' or page.layout == 'iguide-multipane' %}
+                {% if page.url contains '/guides/' and page.url != '/guides/' %}
                     <!-- Hamburger icon for showing the table of contents -->
                     <button id="breadcrumb_hamburger" class="toc-toggle collapsed" type="button" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
                         <span class="sr-only">Toggle navigation</span>

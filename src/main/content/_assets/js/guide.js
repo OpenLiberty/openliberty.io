@@ -49,19 +49,6 @@ function copy_element_to_clipboard(target, callback){
     var target;
     $('#preamble').detach().insertAfter('#duration_container');  
 
-    /* Copy button for the github clone command  that pops up initially when opening a guide. */
-    $("#github_clone_popup_copy").click(function(event){
-        event.preventDefault();
-        target = $("#github_clone_popup_repo").get(0);
-        copy_element_to_clipboard(target, function(){
-            var position = $('#github_clone_popup_container').position();
-            $('#code_section_copied_confirmation').css({	
-                top: position.top - 20,
-                right: 20	
-            }).stop().fadeIn().delay(1000).fadeOut();
-        });
-    });
-
     $("#mobile_github_clone_popup_copy").click(function(event){
         event.preventDefault();
         target = $("#mobile_github_clone_popup_repo > span").get(0);
