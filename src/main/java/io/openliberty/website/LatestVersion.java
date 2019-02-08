@@ -34,6 +34,7 @@ public class LatestVersion extends HttpServlet {
                             "};";
 
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    resp.setContentType("application/javascript");
     resp.getWriter().println(response);
   }
 
