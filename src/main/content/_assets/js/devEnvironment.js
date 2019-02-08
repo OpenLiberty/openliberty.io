@@ -6,11 +6,11 @@ $(document).ready(function(){
         label = $("<div></div>");
         label.addClass('qa-descriptor');
         label.text('QA Site');
-        $("#navbar ul.nav").after(label);
+        $(".navbar").after(label);
     } else if(host.indexOf('openlibertydev') > -1){
         label = $("<div></div>");
         label.addClass('qa-descriptor');
         label.text('Dev Site');
-        $("#navbar ul.nav").after(label);
+        $(".navbar").after(label);
     }
 });
