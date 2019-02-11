@@ -9,10 +9,64 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
  
+/* Nav bar color corrections for light page */
+.navbar-dark .navbar-nav .nav-link {
+    color: #5E6B8D;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #24253A;
+}
+
+#ol_nav_title {
+    color: #2C2E50;
+}
+
+@media (max-width: 991.98px) {
+    .navbar-dark .navbar-nav .nav-link, .navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:active, #fork_button {
+        font-family: BunueloLight;
+        font-size: 35px;
+        color: #FFFFFF;
+        margin-right: 26px;
+        margin-left: 26px;
+    }
+    
+    #fork_button {
+        border: none;
+        padding-left: 0;
+        padding-top: 8px;
+        padding-bottom: 27px;
+        border-bottom: 1px solid rgba(201, 214, 254, 0.35);
+        border-radius: 0px;
+    }
+    
+    #fork_button:hover {
+        color: #FFFFFF;
+        border: none;
+        border-bottom: 1px solid rgba(201, 214, 254, 0.35);
+    }
+    
+    #fork_button {
+        display: block;
+    }
+
+}
+
+
+@media (max-width: 767.98px) {
+    .navbar-dark .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgb(44, 46, 80)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+    }
+}
+
+
+
+
 /* INTRO */
 
 #header {
     position: absolute;
+    top: -3px;
     left: calc(50% - 1325px);
 }
 
@@ -621,12 +675,12 @@ html, body{
 
     #greenlight {
         position: absolute;
-        height: 393px;
+        height: 439px;
         z-index: -1;
     }
 
     #intro_text_1 {
-        margin-top: -160px;
+        margin-top: -114px;
         margin-left: 18px;
         margin-right: 18px;
         text-align: left;
