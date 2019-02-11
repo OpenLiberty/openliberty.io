@@ -65,7 +65,8 @@ $(document).ready(function() {
             var tabAlreadyExists =  $('#code_column_tabs li').filter(":contains('" + fileName + "')");
             if(tabAlreadyExists.length > 0){
                 tabAlreadyExists.last().after(tab);
-            } else {
+            } 
+            else {
                 $('#code_column_tabs').append(tab);
             }            
 
@@ -245,46 +246,49 @@ $(document).ready(function() {
         var snippet = $(this);
         var classList = this.classList;
         var line_nums, ranges;
+
+        // Find if the hotspot has a file index set to override the default behavior.
         for(var i = 0; i < classList.length; i++){
+            if(classList[i].indexOf('file=') === 0){
+                var fileIndex = classList[i].substring(5);
+                snippet.data('file-index', parseInt(fileIndex));
+            }
+        }
+
+        var code_block = get_code_block_from_hotspot(snippet);
+
+        for(i = 0; i < classList.length; i++){
             var className = classList[i];
-            if(className.indexOf('hotspot=') === 0){
-                line_nums = className.substring(8);
+            if(className.indexOf('hotspot') === 0){
                 var fromLine, toLine;
-                if(line_nums.indexOf('-') > -1){
-                    var lines = line_nums.split('-');
-                    fromLine = parseInt(lines[0]);
-                    toLine = parseInt(lines[1]);
-                    ranges = line_nums;
-                }
-                else {
-                    // Only one line to highlight.
-                    fromLine = parseInt(line_nums);
-                    toLine = parseInt(line_nums);
-                    ranges = fromLine + "-" + toLine;
-                }
-                // Set data attributes to save the lines to highlight
-                if(snippet.data('highlight-ranges')){
-                    // Add lines to the hotspot
-                    var old_ranges = snippet.data('highlight-ranges');
-                    old_ranges += "," + ranges;
-                    snippet.data('highlight-ranges', old_ranges);
-                }
-                else{
-                    snippet.data('highlight-ranges', ranges);
-                }                    
-                snippet.addClass('hotspot');
-
-                // Find if the hotspot has a file index set to override the default behavior.
-                for(var j = 0; j < classList.length; j++){
-                    if(classList[j].indexOf('file=') === 0){
-                        var fileIndex = classList[j].substring(5);
-                        $(this).data('file-index', parseInt(fileIndex));
+                if(className.indexOf('hotspot=') === 0){
+                    line_nums = className.substring(8);
+                    if(line_nums.indexOf('-') > -1){
+                        var lines = line_nums.split('-');
+                        fromLine = parseInt(lines[0]);
+                        toLine = parseInt(lines[1]);
+                        ranges = line_nums;
+                    } 
+                    else {
+                        // Only one line to highlight.
+                        fromLine = parseInt(line_nums);
+                        toLine = parseInt(line_nums);
+                        ranges = fromLine + "-" + toLine;
                     }
-                }
-
-                var code_block = get_code_block_from_hotspot(snippet);
+                    // Set data attributes to save the lines to highlight
+                    if(snippet.data('highlight-ranges')){
+                        // Add lines to the hotspot
+                        var old_ranges = snippet.data('highlight-ranges');
+                        old_ranges += "," + ranges;
+                        snippet.data('highlight-ranges', old_ranges);                    
+                    }
+                    else {
+                        snippet.data('highlight-ranges', ranges);
+                    }
+                }                                    
+                snippet.addClass('hotspot');
                 create_mobile_code_snippet(snippet, code_block, fromLine, toLine);
-            }  
+            }              
         }
     });
 
@@ -316,7 +320,7 @@ $(document).ready(function() {
      * @param hotspot: The snippet hovered over in the guide column.
      * @param highlightCode: boolean if the code should be highlighted
      */
-    var handleHotspotHover = debounce(function(hotspot, highlightCode){
+    var handleHotspotHover = debounce(function(hotspot){
         // Only highlight the code if the mouse is still hovered over the hotspot after the debounce.
         if(hotspot.data('hovering') == false){
             return;
@@ -335,11 +339,11 @@ $(document).ready(function() {
             // Switch to the correct tab
             var tab = code_sections[header.id][fileIndex].tab;
             setActiveTab(tab);                   
-            showCorrectCodeBlock(header.id, fileIndex, false);            
+            showCorrectCodeBlock(header.id, fileIndex, false);
 
             // Highlight the code
-            if(highlightCode){
-                var ranges = hotspot.data('highlight-ranges');
+            var ranges = hotspot.data('highlight-ranges');
+            if(ranges){
                 ranges = ranges.split(',');
                 for(var i = 0; i < ranges.length; i++){
                     var lines = ranges[i].split('-');
@@ -347,17 +351,14 @@ $(document).ready(function() {
                         var fromLine = parseInt(lines[0]);
                         var toLine = parseInt(lines[1]);
                         var num_Lines = parseInt(code_block.find('.line-numbers').last().text());
-                        if(fromLine && toLine){              
-                            // If a hotspot refers to a whole file, do not highlight it.    
-                            if(!(fromLine === 1 && toLine === num_Lines)){               
-                                // When multiple ranges are going to be highlighted, only scroll to the first one.                 
-                                var shouldScroll = (i === 0);
-                                highlight_code_range(code_block, fromLine, toLine, shouldScroll);
-                            }                            
+                        if(fromLine && toLine){   
+                            // When multiple ranges are going to be highlighted, only scroll to the first one.                 
+                            var shouldScroll = (i === 0);
+                            highlight_code_range(code_block, fromLine, toLine, shouldScroll);               
                         }
                     }                
                 }
-            }            
+            }           
         }
     }, 250);
 
@@ -367,8 +368,7 @@ $(document).ready(function() {
             return;
         }
         $(this).data('hovering', true);
-        var highlightCode = !$(this).hasClass('code_command');
-        handleHotspotHover($(this), highlightCode);
+        handleHotspotHover($(this));
     });
 
     // When the mouse leaves a code 'hotspot', remove all highlighting in the corresponding code section.
