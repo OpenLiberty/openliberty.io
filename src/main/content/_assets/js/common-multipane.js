@@ -311,7 +311,7 @@ function createEndOfGuideContent(){
     var leftSide = $("#end_of_guide_left_section");
     var rightSide = $("#end_of_guide_right_section");
     var whatYouLearned = $("#great-work-you-re-done, #great-work-youre-done").siblings().find('p').clone();
-    whatYouLearned.prepend("Nice work! "); // Start every what you learned statement with 'Nice work!'
+    whatYouLearned.first().prepend("Nice work! "); // Start every what you learned statement with 'Nice work!'
     whatYouLearned.attr('tabindex', '0');
     leftSide.prepend(whatYouLearned);
     $("#great-work-you-re-done, #great-work-youre-done").parent().remove(); // Remove section from the main guide column.
