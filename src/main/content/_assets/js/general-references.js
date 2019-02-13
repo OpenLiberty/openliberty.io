@@ -299,7 +299,7 @@ function scrollToTOC(tocElement) {
 function addHashListener() {
     $(window).on('hashchange', function () {
         if (window.location.hash) {
-            var tocHref = commandDocsFolder + window.location.hash.substring(1);
+            var tocHref = generalDocsFolder + window.location.hash.substring(1);
             var tocElement = $("#toc_container").find("div[href='" + tocHref + "']");
             if (tocElement.length === 1) {
                 scrollToTOC(tocElement);
