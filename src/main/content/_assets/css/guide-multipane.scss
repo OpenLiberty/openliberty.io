@@ -27,12 +27,11 @@
 /* Guide Content related to the 3 column code */
 #guide_column {
     max-width: initial; /* Take off the width restriction of single pane guides */
-
-
 }
 
 .hotspot:not(.code_command) {
     display: inline-block;
+    max-width: 100%;
 }
 
 #guide_content .hotspot:not(.code_command) pre {
@@ -52,8 +51,18 @@
     display: none;
 }
 
-/* Code Column */
+#guide_content .code_command pre,  #guide_content .code_command code {
+    background-color: #F1F4FE;
+    margin-bottom: 0;
+    overflow: hidden;
+    white-space: pre-wrap;       /* css-3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;      
+}
 
+/* Code Column */
 #code_column {
     padding: 0;
     background-color: #f1f4fe;
