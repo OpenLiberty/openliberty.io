@@ -191,6 +191,7 @@ function open_TOC(){
         $("#toc_column").addClass("open");
         $("#guide_column").addClass("open");
 
+        $("#toc_indicator").addClass('open hidden');
         $("#toc_indicator").hide();
 
         restoreCurrentStep();
@@ -211,7 +212,7 @@ function close_TOC(){
     $("#toc_column").removeClass("open");
     $("#guide_column").removeClass("open");
 
-    $("#toc_indicator").removeClass('open');
+    $("#toc_indicator").removeClass('open hidden');
     $("#toc_indicator").show();
 
     restoreCurrentStep();
@@ -236,7 +237,7 @@ $(document).ready(function() {
             $("#toc_line").css(
                 {'background-color': 'rgb(255, 216, 191)'}
             );
-            $("#toc_indicator").addClass('open');
+            $("#toc_indicator").addClass('open');            
         }        
     });
 
