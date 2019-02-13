@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 var mobileWidth = 767;
-var commandDocsFolder = "/docs/ref/commands/server/";
+var generalDocsFolder = "/docs/ref/general/";
 var windowFocus = false;
 
 // setup and listen to click on table of content
@@ -57,7 +57,7 @@ function addReferenceClick() {
         event.preventDefault();
         event.stopPropagation();
 
-        loadContent(matchingTOCElement, commandDocsFolder + currentHref, true);
+        loadContent(matchingTOCElement, generalDocsFolder + currentHref, true);
 
         return false;
     };
@@ -182,8 +182,8 @@ function updateMainBreadcrumb(resource, attrForTitle) {
 // so that when hashchange is triggered, there is no need to handle the event.
 function updateHashInUrl(href) {
     var hashInUrl = href;
-    if (href.indexOf(commandDocsFolder) !== -1) {
-        hashInUrl = href.substring((commandDocsFolder).length);
+    if (href.indexOf(generalDocsFolder) !== -1) {
+        hashInUrl = href.substring((generalDocsFolder).length);
     }
 
     //lastClickElementHref = hashInUrl;
