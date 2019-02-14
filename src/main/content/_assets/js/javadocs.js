@@ -461,6 +461,12 @@ function getJavaDocHtmlPath(href, returnBase) {
     return javaDocPath;
 }
 
+function versionClick() {
+    console.log("versionClick called");
+    document.getElementById("other_javadoc_version").href += window.location.hash;
+    return false;
+}
+
 $(document).ready(function() {
     
     $(window).on('resize', function(){
