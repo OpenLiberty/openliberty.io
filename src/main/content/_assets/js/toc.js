@@ -192,7 +192,6 @@ function open_TOC(){
         $("#guide_column").addClass("open");
 
         $("#toc_indicator").addClass('open hidden');
-        $("#toc_indicator").hide();
 
         restoreCurrentStep();
     }
@@ -213,7 +212,6 @@ function close_TOC(){
     $("#guide_column").removeClass("open");
 
     $("#toc_indicator").removeClass('open hidden');
-    $("#toc_indicator").show();
 
     restoreCurrentStep();
 }
@@ -271,7 +269,7 @@ $(document).ready(function() {
         }
     });
     
-    $("#breadcrumb_hamburger").on('click', function(event){
+    $("#breadcrumb_hamburger").on('click', function(){
         // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
         if(window.innerWidth >= threeColumnBreakpoint){
             if ($("#toc_column").hasClass('in')) {
