@@ -9,7 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-var target;
 var code_sections = {}; // Map guide sections to code blocks to show on the right column. Each guide section maps to its tab and code block.
 var recent_sections = {}; // Store the most recently viewed code_section for each guide section
 
@@ -621,7 +620,10 @@ function setActiveTab(activeTab){
 
     $(".copyFileButton").click(function(event){
         event.preventDefault();
-        target = $("#code_column .code_column:visible .content")[0];
+        // Remove the line numbers from being copied.
+        var target_copy = $("#code_column .code_column:visible .content code").clone();
+        target_copy.find('.line-numbers').remove();
+        target = target_copy[0];
         copy_element_to_clipboard(target, function(){
             var current_target_object = $(event.currentTarget);
             var position = current_target_object.position();	
