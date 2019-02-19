@@ -18,24 +18,22 @@ function copy_element_to_clipboard(target, callback){
         window.clipboardData.setData("Text", target.innerText);
     } 
     else{
-        var temp = $('<div>');
+        var temp = $('<textarea>');
         temp.css({
             position: "absolute",
             left:     "-1000px",
             top:      "-1000px",
-        });
+        });       
+        
         // Create a temporary element for copying the text.
-        // temp.text(target.innerText);
-        temp.html(target.innerHTML.trim());
+        // Prepend <br> with newlines because jQuery .text() strips the <br>'s and we use .text() because we don't want all of the html tags copied to the clipboard.
+        var text = $(target).clone().find('br').prepend('\r\n').end().text().trim();
+        temp.html(text);
         $("body").append(temp);
-        var range = document.createRange();
-        range.selectNodeContents(temp.get(0));
-        selection = window.getSelection();
-        selection.removeAllRanges(); // Remove previous selections
-        selection.addRange(range);
+        temp.select();
         
         // Try to copy the selection and if it fails display a popup to copy manually.
-        if(document.execCommand('copy')) {
+        if(document.execCommand('copy')) {            
             callback();
         } else {
             alert('Copy failed. Copy the command manually: ' + target.innerText);
@@ -46,7 +44,12 @@ function copy_element_to_clipboard(target, callback){
 
  $(document).ready(function() {
     
-    var target;
+    var offset;	
+    var target;	
+    var target_position;	
+    var target_width;	
+    var target_height;
+
     $('#preamble').detach().insertAfter('#duration_container');  
 
     $("#mobile_github_clone_popup_copy").click(function(event){
@@ -104,11 +107,11 @@ function copy_element_to_clipboard(target, callback){
         target_position = current_target_object.position();	
         target_width = current_target_object.outerWidth();	
         target_height = current_target_object.outerHeight();	
-         $('.copy_to_clipboard').css({	
+         $('#copy_to_clipboard').css({	
             top: target_position.top + 8,	
             right: parseInt($('#guide_column').css('padding-right')) + 55	
         });	
-        $('.copy_to_clipboard').stop().fadeIn();	
+        $('#copy_to_clipboard').stop().fadeIn();	
      }, function(event) {	
         if(offset){
             var x = event.clientX - offset.left;	
@@ -117,13 +120,13 @@ function copy_element_to_clipboard(target, callback){
             && x < target_position.left + target_width	
             && y > target_position.top	
             && y < target_position.top + target_height)) {	
-                $('.copy_to_clipboard').stop().fadeOut();	
+                $('#copy_to_clipboard').stop().fadeOut();	
                 $('#guide_section_copied_confirmation').stop().fadeOut();	
             }
         }          	
      });	
 
-     $('.copy_to_clipboard').click(function(event) {
+     $('#copy_to_clipboard').click(function(event) {
         event.preventDefault();
         // Target was assigned while hovering over the element to copy.
         copy_element_to_clipboard(target, function(){
