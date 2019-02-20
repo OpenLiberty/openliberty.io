@@ -46,33 +46,6 @@ function addTOCClick() {
     })
 }
 
-// setup and listen to click on the See Also section
-function addReferenceClick() {
-    var onclick = function (event) {
-        var resource = $(event.currentTarget);
-        var currentHref = resource.attr("href");
-        var matchingTOCElement = getTOCElement(currentHref);
-
-        // handle the click event ourselves so as to take care of updating the hash 
-        event.preventDefault();
-        event.stopPropagation();
-
-        loadContent(matchingTOCElement, generalDocsFolder + currentHref, true);
-
-        return false;
-    };
-
-    $("#general_content .sect1 .sectionbody p > a").off("click").on("click", onclick);
-
-    $("#general_content .sect1 .sectionbody p > a").off("keypress").on('keypress', function (event) {
-        event.stopPropagation();
-        // Enter or space key
-        if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
-            $(this).trigger('click');
-        }
-    });
-}
-
 // highlight the selected TOC
 function setSelectedTOC(resource) {
     deselectedTOC();
@@ -127,7 +100,6 @@ function loadContent(targetTOC, tocHref, addHash) {
 
             $(this).focus(); // switch focus to the content for the reader
 
-            addReferenceClick();
         } else {
             $('footer').show();
         }
