@@ -366,10 +366,17 @@ function setPackageContainerHeight() {
 }
 
 function setIFrameContent(iframeName, href) {
+    // check if href results in 404 and redirect to doc-404.html if it does
     var iframeContent = $('#javadoc_container').contents().find(iframeName).contents();
-    // replace the content only if the current content is from a different href
-    if (iframeContent.attr("location").href !== href) {    
-        iframeContent.attr("location").replace(href);
+    var errorhref = "http://localhost:4000/javadocs/doc-404.html";
+    if (UrlExists(href) === false) {
+        iframeContent.attr("location").replace(errorhref);
+    }
+    else {
+        // replace the content only if the current content is from a different href
+        if (iframeContent.attr("location").href !== href) {    
+            iframeContent.attr("location").replace(href);
+        }
     }
 }
 
@@ -461,10 +468,21 @@ function getJavaDocHtmlPath(href, returnBase) {
     return javaDocPath;
 }
 
+// check if url exists for version button
+function UrlExists(url) {
+    var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    if (http.status != 404) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 function versionClick() {
-    console.log("versionClick called");
     document.getElementById("other_javadoc_version").href += window.location.hash;
-    return false;
 }
 
 $(document).ready(function() {
