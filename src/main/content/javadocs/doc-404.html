@@ -110,12 +110,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 
 
-
-
 <div>
-    <img src="/img/up_arrow_yellow.svg" alt="">
-    <img src="/img/warning.svg" alt="warning">
-    <h1>Package <span id="package_placeholder"></span> doesn't exist in Java EE <span id="version_placeholder"></span></h1>
+    <p><img src="/../img/warning.svg" alt="warning"> Package <span id="package_placeholder"></span> doesn't exist in Java EE <span id="version_placeholder"></span></p>
 </div>
 
 <script>
@@ -123,19 +119,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
     var hashPage = window.top.location.hash;
     hashPage = hashPage.substring(1);  // take out the #
     var splitHashPage = hashPage.split("&");
-    var sortedHash = splitHashPage.sort(); // sort hash to get class first
+    var sortedHash = splitHashPage.sort(); // sort list to get class first
     var currentClass = sortedHash[0].slice(6, -5).replace(/\//g, "."); // select class and replace / with .
 
     // get current version
     var path = window.top.location.pathname;
-    var currentVersion = path.slice(-2, -1);
-
+    if (path.includes("microprofile")) {
+        var currentVersion = path.slice(-4, -1);
+    }
+    else {
+        var currentVersion = path.slice(-2, -1);
+    }
 
     document.getElementById("package_placeholder").innerHTML = currentClass;
-    document.getElementById("version_placeholder").innerHTML = currentVersion;
-    
+    document.getElementById("version_placeholder").innerHTML = currentVersion; 
 </script>
-
 
 </div>
 </main>

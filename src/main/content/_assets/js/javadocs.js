@@ -368,7 +368,7 @@ function setPackageContainerHeight() {
 function setIFrameContent(iframeName, href) {
     // check if href results in 404 and redirect to doc-404.html if it does
     var iframeContent = $('#javadoc_container').contents().find(iframeName).contents();
-    var errorhref = "http://localhost:4000/javadocs/doc-404.html";
+    var errorhref = "/javadocs/doc-404.html";
     if (UrlExists(href) === false) {
         iframeContent.attr("location").replace(errorhref);
     }
@@ -481,8 +481,9 @@ function UrlExists(url) {
     }
 }
 
-function versionClick() {
-    document.getElementById("other_javadoc_version").href += window.location.hash;
+// add current hash to url when version button clicked
+function versionClick(event) {
+    event.target.href += window.location.hash;
 }
 
 $(document).ready(function() {
