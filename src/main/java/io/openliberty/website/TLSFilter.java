@@ -58,7 +58,7 @@ public class TLSFilter implements Filter {
               response.setHeader("Cache-Control", "no-store");
               response.setHeader("Pragma", "no-cache");
           } else {
-        	  response.setHeader("Cache-Control", "no-cache");
+              response.setHeader("Cache-Control", "no-cache");
           }
         }
         chain.doFilter(req, resp);
