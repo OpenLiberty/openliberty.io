@@ -9,6 +9,10 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
+.unscrollable {
+    overflow: hidden;
+}
+
 #background_container {
     background-color: inherit;
 }
@@ -34,6 +38,11 @@
     max-width: 100%;
 }
 
+#guide_content code.hotspot {
+    background-color: #F1F4FE;
+    color:#5e6b8d;
+}
+
 #guide_content .hotspot:not(.code_command) pre {
     font-family:Courier;
     font-size:14px;
@@ -44,11 +53,6 @@
     line-height:24px;
     text-align:left;
     white-space: pre-wrap;
-}
-
-/* Snippets of code for mobile view only, that comes from the right column file */
-.mobile_code_snippet {
-    display: none;
 }
 
 #guide_content .code_command pre,  #guide_content .code_command code {
@@ -72,6 +76,43 @@
     top: 100px;
     bottom: 0; /* Initially extend the code column the full height */
     overflow: hidden;
+
+    @media screen and (max-width: 1169.98px) {
+        position: absolute;
+        display: none;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        &.modal {
+            display: block;
+
+            #github_clone_popup {
+                display: none;
+            }
+
+            // Remove blur
+            #code_column_tabs_container, .code_column {
+                opacity: 1;
+                filter: none;
+            }
+
+            #code_column_tabs_container {
+                width: 100%;
+            }
+
+            #dismiss_button {
+                position: absolute;
+                right: 25px;
+                top: 50%;
+                background:#ffffff;
+                border:1px solid #96bc32;
+                border-radius:3px;
+                width:91px;
+                height:38px;
+            }
+        }
+    }
 }
 
 #code_column_content {
@@ -286,12 +327,6 @@
     background-color: #f1f4fe;
 }
 
-@media (max-width: 1199.98px) {
-    .guide_item {
-        width: 100%;
-    }
-}
-
 @media (min-width: 1170px) {
     #guide_column {
         width: calc(100% - 780px);
@@ -312,14 +347,27 @@
         }
     }
 
-    #guide_content code.hotspot {
-        background-color: #F1F4FE;
-        color:#5e6b8d;
-    }
-
     #guide_content code.hotspot:not(.code_command):hover {
         color: #24253A;
         background-color: #C7CCD9;
+    }
+}
+
+@media (max-width: 1169.98px) {
+    #guide_content code.hotspot:hover,
+    #guide_content .code_command:hover {
+        cursor: pointer;
+    }
+
+    .listingblock.code_column {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .guide_item {
+        width: 100%;
     }
 }
 
