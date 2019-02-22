@@ -119,11 +119,11 @@ function create_issue_element(index, ui_position) {
     var bar_element = $('<div class="issue_green_bar"></div>');
     var title_element = $('<h3 class="truncate"></h3>');
     title_element.text(issue.title);    
-    var date_element = $('<p class="pull-left"></p>');
+    var date_element = $('<p class="float-left"></p>');
     var date_value = new Date(issue.updated_at).toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
     date_element.text(date_value);
 
-    var index_element = $('<p class="pull-right">' + (index + 1) + ' / ' + issues.length + '</p>');
+    var index_element = $('<p class="float-right">' + (index + 1) + ' / ' + issues.length + '</p>');
     var shadow_element = $('<div class="shadow"></div>');
     issue_element.append(bar_element);
     issue_element.append(title_element);
