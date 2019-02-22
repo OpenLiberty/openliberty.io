@@ -66,7 +66,7 @@ function highlight_code_range(code_section, fromLine, toLine, scroll){
 function remove_highlighting(){
     var highlightedSections = $('.highlightSection');
     highlightedSections.each(function(){
-        var children = $(this).find('span');
+        var children = $(this).children('span');
         children.unwrap(); // Remove the wrapped highlighted div from these children.
     });
     
