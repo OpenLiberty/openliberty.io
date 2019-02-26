@@ -20,7 +20,7 @@ js:
                             <div class="post_information_container">
                                 <img src="{{ page.author_picture }}" id="author_image" alt="image of author">
                                 <div id="post_information">
-                                    <div id="author_name">{{ page.author }}</div>
+                                    <a id="author_name" href="{{ page.author_github }}">{{ page.author }}</a>
                                     <div id="post_date">
                                         <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
                                             {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %} {{ page.date | date: date_format }}
