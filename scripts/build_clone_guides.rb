@@ -32,9 +32,6 @@ if ENV['TRAVIS']
         iguide_branch = 'multiPane'
         guide_branch = 'multipane'
         guide_camelcase_branch = 'multiPane'
-    elsif ENV['TRAVIS_BRANCH'] == "development"
-        guide_branch = 'dev'
-        iguide_branch = 'dev'
     end
 end
 
