@@ -143,6 +143,13 @@ function TOCEntryClick(liElement, event) {
     event.preventDefault();
     event.stopPropagation();
 
+    // Close the TOC if not in 3 column view
+    if(inSingleColumnView()){
+        $("#mobile_close_container").trigger('click');
+    } else if(window.innerWidth < threeColumnBreakpoint){
+        $("#breadcrumb_hamburger").trigger('click');
+    }
+
     var windowHash = window.location.hash;
     if (windowHash !== hash) {
         // Update the URL hash with where we wish to go....
@@ -157,10 +164,6 @@ function TOCEntryClick(liElement, event) {
         history.pushState(null, null, newPath);
     }
     accessContentsFromHash(hash);
-
-    if(inSingleColumnView()){
-        $("#mobile_close_container").trigger('click');
-    }
 }
 
 // Restructure the TOC because Asciidoc nests levels in the TOC and it affects the CSS poorly.
@@ -188,10 +191,29 @@ function open_TOC(){
         $("#toc_column").addClass("open");
         $("#guide_column").addClass("open");
 
-        $("#toc_indicator").hide();
+        $("#toc_indicator").addClass('open hidden');
 
         restoreCurrentStep();
     }
+}
+
+function close_TOC(){
+    $("#toc_title").css('margin-top', '20px');
+
+    // Remove display type from the table of contents
+    $("#toc_column").removeClass('inline');
+
+    // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
+    $("#guide_column").addClass('expanded');
+
+    // Remove open class to transition back
+    $("#toc_line").removeClass("open");
+    $("#toc_column").removeClass("open");
+    $("#guide_column").removeClass("open");
+
+    $("#toc_indicator").removeClass('open hidden');
+
+    restoreCurrentStep();
 }
 
 function setInitialTOCLineHeight(){  
@@ -213,7 +235,7 @@ $(document).ready(function() {
             $("#toc_line").css(
                 {'background-color': 'rgb(255, 216, 191)'}
             );
-            $("#toc_indicator").addClass('open');
+            $("#toc_indicator").addClass('open');            
         }        
     });
 
@@ -247,7 +269,7 @@ $(document).ready(function() {
         }
     });
     
-    $("#breadcrumb_hamburger").on('click', function(event){
+    $("#breadcrumb_hamburger").on('click', function(){
         // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
         if(window.innerWidth >= threeColumnBreakpoint){
             if ($("#toc_column").hasClass('in')) {
@@ -261,14 +283,14 @@ $(document).ready(function() {
             restoreCurrentStep();
         }
         // Handle table of content floating if in the middle of the guide.
-        handleFloatingTableOfContent();
+        handleFloatingTableOfContent();        
     });
 
     //In single column view, set focus on 'X' initially when TOC is expanded
     $('#toc_column').on('shown.bs.collapse', function(){
-      if ($('#mobile_close_container').attr("class").trim().length == 0) { //TOC is visible, doesn't have class 'collapsed'
-        $("#mobile_close_container  img").focus(); //focus on 'X'
-      }
+        if ($('#mobile_close_container').attr("class").trim().length == 0) { //TOC is visible, doesn't have class 'collapsed'
+            $("#mobile_close_container  img").focus(); //focus on 'X'
+        }
     });
 
     //In single column view, close the TOC after tabbing from the last element in the TOC
@@ -296,23 +318,7 @@ $(document).ready(function() {
 
     // Handle collapsing the table of contents from full width back into an orange line on the left side of the page.
     $('#close_container').on('click', function() {
-        $("#toc_title").css('margin-top', '20px');
-
-        // Remove display type from the table of contents
-        $("#toc_column").removeClass('inline');
-
-        // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
-        $("#guide_column").addClass('expanded');
-
-        // Remove open class to transition back
-        $("#toc_line").removeClass("open");
-        $("#toc_column").removeClass("open");
-        $("#guide_column").removeClass("open");
-
-        $("#toc_indicator").removeClass('open');
-        $("#toc_indicator").show();
-
-        restoreCurrentStep();
+        close_TOC();
     });
 
     $('#close_container img').on('keydown', function(event) {
