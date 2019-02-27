@@ -27,6 +27,63 @@ function onIE(){
     return (/(MSIE|Trident\/|Edge\/)/i.test(navigator.userAgent));
 }
 
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called after it stops being called for
+// N milliseconds. If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
+function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate){
+                func.apply(context, args);
+            }
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow){
+            func.apply(context, args);
+        }
+    };
+}
+
+/* Copy the target element to the clipboard
+   target: element to copy
+   callback: function to run if the copy is successful
+*/
+function copy_element_to_clipboard(target, callback){
+    // IE
+    if(window.clipboardData){
+        window.clipboardData.setData("Text", target.innerText);
+    } 
+    else{
+        var temp = $('<textarea>');
+        temp.css({
+            position: "absolute",
+            left:     "-1000px",
+            top:      "-1000px",
+        });       
+        
+        // Create a temporary element for copying the text.
+        // Prepend <br> with newlines because jQuery .text() strips the <br>'s and we use .text() because we don't want all of the html tags copied to the clipboard.
+        var text = $(target).clone().find('br').prepend('\r\n').end().text().trim();
+        temp.text(text);
+        $("body").append(temp);
+        temp.select();
+        
+        // Try to copy the selection and if it fails display a popup to copy manually.
+        if(document.execCommand('copy')) { 
+            callback();
+        } else {
+            alert('Copy failed. Copy the command manually: ' + target.innerText);
+        }
+        temp.remove(); // Remove temporary element.
+    }
+}
+
 // Handle sticky header in IE, because IE doesn't support position: sticky
 function handleStickyHeader() {
     if (!inSingleColumnView()) {
@@ -311,7 +368,7 @@ function createEndOfGuideContent(){
     var leftSide = $("#end_of_guide_left_section");
     var rightSide = $("#end_of_guide_right_section");
     var whatYouLearned = $("#great-work-you-re-done, #great-work-youre-done").siblings().find('p').clone();
-    whatYouLearned.prepend("Nice work! "); // Start every what you learned statement with 'Nice work!'
+    whatYouLearned.first().prepend("Nice work! "); // Start every what you learned statement with 'Nice work!'
     whatYouLearned.attr('tabindex', '0');
     leftSide.prepend(whatYouLearned);
     $("#great-work-you-re-done, #great-work-youre-done").parent().remove(); // Remove section from the main guide column.
@@ -456,10 +513,10 @@ $(document).ready(function() {
         });
     }
 
-    $(window).on('scroll', function() {
+    $(window).on('scroll', function() {        
         handleFloatingTOCAccordion();
-        handleStickyHeader();
-        handleFloatingTableOfContent();
+        handleStickyHeader();     
+        handleFloatingTableOfContent();   
         handleFloatingCodeColumn();
     });
 
