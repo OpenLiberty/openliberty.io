@@ -86,6 +86,7 @@
 
         &.modal {
             display: block;
+            overflow: auto;
 
             #github_clone_popup {
                 display: none;
@@ -101,10 +102,15 @@
                 width: 100%;
             }
 
+            #code_column_tabs {
+                // Give more room for the 'Back to text' button.
+                max-width: calc(100% - 100px);
+            }
+
             #dismiss_button {
                 position: absolute;
-                right: 25px;
-                top: 50%;
+                top: 0;
+                right: 50px;
                 background:#ffffff;
                 border:1px solid #96bc32;
                 border-radius:3px;

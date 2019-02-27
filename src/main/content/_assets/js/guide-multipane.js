@@ -533,11 +533,22 @@ function restoreCodeColumn(){
             $("body").addClass("unscrollable");            
             $("#code_column").addClass("modal");
 
+            var top = $(this).offset().top;
+            // var parent_top = $(this).parent().offset().top;
+            var mobile_toc_height = $("#mobile_toc_accordion").height();
+            var scrollTo = top - mobile_toc_height;
+            // Scroll the hotspot to the top of the page, with the paragraph encompassing the hotspot shown.
+            $('html').stop().animate({
+                scrollTop: scrollTo
+            }, 400);
+
             // Set the top of the code to appear underneath the hotspot that was clicked.
             var hotspot_height = $(this).height();
-            var top = $(this).offset().top;
+            var bottom = scrollTo + window.innerHeight - hotspot_height - 5;
+            var height = bottom - scrollTo;
             $("#code_column").css({
-                "top" : top + hotspot_height + 5 + "px"
+                "top" : scrollTo + mobile_toc_height + hotspot_height + 5 + "px",
+                "height" : height
             });
             handleHotspotHover($(this));
         }
