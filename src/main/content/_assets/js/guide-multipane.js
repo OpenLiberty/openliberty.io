@@ -185,6 +185,9 @@ function showGithubPopup(){
     $("#code_column .code_column, #code_column_tabs_container").addClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', true);
     $(".copyFileButton").hide();
+    $('#code_column_content').css({
+        'overflow-y': 'hidden'
+    });
 }
 
 function hideGithubPopup(){
@@ -192,6 +195,9 @@ function hideGithubPopup(){
     $("#code_column .code_column, #code_column_tabs_container").removeClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', false);
     $(".copyFileButton").show();
+    $('#code_column_content').css({
+        'overflow-y': 'scroll'
+    });
 }
 
 /*
