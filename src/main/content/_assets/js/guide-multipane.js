@@ -542,7 +542,7 @@ function restoreCodeColumn(){
             var scrollTo = top - mobile_toc_height;
             
             // Scroll the hotspot to the top of the page, with the paragraph encompassing the hotspot shown.
-            $('html').stop().animate({
+            $('html, body').stop().animate({
                 scrollTop: scrollTo
             }, 400);
 
