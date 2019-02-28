@@ -530,13 +530,17 @@ function restoreCodeColumn(){
     // In mobile view if the user clicks a hotspot it shows a modal of the file with the hotspot code highlighted.
     $('.hotspot').on('click', function(){
         if(inSingleColumnView()){
-            $("body").addClass("unscrollable");            
+            $("body").addClass("unscrollable");   
+            $("#mobile_toc_accordion_container").css({
+                "pointer-events" : "none"
+            });         
             $("#code_column").addClass("modal");
+            
 
             var top = $(this).offset().top;
-            // var parent_top = $(this).parent().offset().top;
             var mobile_toc_height = $("#mobile_toc_accordion").height();
             var scrollTo = top - mobile_toc_height;
+            
             // Scroll the hotspot to the top of the page, with the paragraph encompassing the hotspot shown.
             $('html').stop().animate({
                 scrollTop: scrollTo
@@ -556,6 +560,9 @@ function restoreCodeColumn(){
 
     $('#dismiss_button').on('click', function(){
         $("body").removeClass("unscrollable");
+        $("#mobile_toc_accordion_container").css({
+            "pointer-events" : "auto"
+        });
         $("#code_column").removeClass("modal");
         remove_highlighting();
     });
