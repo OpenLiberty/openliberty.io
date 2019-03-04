@@ -34,13 +34,3 @@ deploy:
     on:
       branch: development
     script: env ROUTE=qa-guides-dev.mybluemix.net ./.travis/cf-push.sh
-  - provider: script
-    skip_cleanup: true
-    on:
-      branch: multiPane
-    script: env ROUTE=qa-guides-multipane.mybluemix.net ./.travis/cf-push.sh
-  - provider: script
-    skip_cleanup: true
-    on:
-      branch: multiPane-stable
-    script: env ROUTE=user-testing.mybluemix.net ./.travis/cf-push.sh
