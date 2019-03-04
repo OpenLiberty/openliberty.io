@@ -32,6 +32,8 @@ if ENV['TRAVIS']
         iguide_branch = 'multiPane'
         guide_branch = 'multipane'
         guide_camelcase_branch = 'multiPane'
+    elseif ENV['TRAVIS_BRANCH'] == "hotspots"
+        guide_branch = 'hotspots'
     end
 end
 

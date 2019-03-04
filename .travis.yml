@@ -44,3 +44,8 @@ deploy:
     on:
       branch: multiPane-stable
     script: env ROUTE=user-testing.mybluemix.net ./.travis/cf-push.sh
+  - provider: script
+    skip_cleanup: true
+    on:
+      branch: hotspots
+    script: env ROUTE=hotspots.mybluemix.net ./.travis/cf-push.sh
