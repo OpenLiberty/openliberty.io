@@ -1,0 +1,35 @@
+= +Remote IP Options+ (+remoteIp+)
+:linkcss: 
+:page-layout: config
+:nofooter: 
+
++An element configured within the httpEndpoint element so that the associated HTTP channel is enabled to consider X-Forwarded-* or Forwarded request headers.+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|+id+
+
+|string
+
+|
+
+|+A unique configuration ID.+
+
+|+proxies+
+
+|string
+
+|+10.\d{1,3}.\d{1,3}.\d{1,3}\|192.168.\d{1,3}.\d{1,3}\|169.254.\d{1,3}.\d{1,3}\|127.\d{1,3}.\d{1,3}.\d{1,3}\|172.1[6-9]{1}.\d{1,3}.\d{1,3}\|172.2[0-9]{1}.\d{1,3}.\d{1,3}\|172.3[0-1]{1}.\d{1,3}.\d{1,3}\|0:0:0:0:0:0:0:1\|::1+
+
+|+A regular expression that defines trusted proxies.+
+
+|+useRemoteIpInAccessLog+
+
+|boolean
+
+|+false+
+
+|+If this property is set to true and the remote client information was verified by the HTTP Channel, the NCSA access log reflects the Forwarded or X-Forwarded-* headers. These headers are reflected when one or more of the following items are recorded: the remote client IP, the host, or the request protocol.+
+|===

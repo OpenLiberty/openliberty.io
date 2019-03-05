@@ -1,0 +1,88 @@
+= +Audit Event+ (+auditEvent+)
+:linkcss: 
+:page-layout: config
+:nofooter: 
+
++An audit event+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|+eventName+
+
+|* +JMX_MBEAN+
+* +JMX_MBEAN_ATTRIBUTES+
+* +JMX_MBEAN_REGISTER+
+* +JMX_NOTIFICATION+
+* +SECURITY_API_AUTHN+
+* +SECURITY_API_AUTHN_TERMINATE+
+* +SECURITY_AUDIT_MGMT+
+* +SECURITY_AUTHN+
+* +SECURITY_AUTHN_DELEGATION+
+* +SECURITY_AUTHN_FAILOVER+
+* +SECURITY_AUTHN_TERMINATE+
+* +SECURITY_AUTHZ+
+* +SECURITY_JMS_AUTHN+
+* +SECURITY_JMS_AUTHZ+
+* +SECURITY_MEMBER_MGMT+
+
+
+|
+
+|+The unique name of the audit event.  For example: SECURITY_AUTHN or SECURITY_AUTHZ.+ +
+*+JMX_MBEAN+* +
++Audit record for any create, query, invoke MBean operations+ +
+*+JMX_MBEAN_ATTRIBUTES+* +
++Audit record for any query, create or update to MBean attributes.+ +
+*+JMX_MBEAN_REGISTER+* +
++Audit record for any register or unregister MBean operations.+ +
+*+JMX_NOTIFICATION+* +
++Audit record of any addition or removal of notification listeners.+ +
+*+SECURITY_API_AUTHN+* +
++Audit record for any authentication which passes through the authentication API, excluding logouts.+ +
+*+SECURITY_API_AUTHN_TERMINATE+* +
++Audit record for any authentication logout which passes through the authentication API.+ +
+*+SECURITY_AUDIT_MGMT+* +
++Audit record of the starting and stopping of audit services.+ +
+*+SECURITY_AUTHN+* +
++Audit record for any security authentication event, excluding logouts.+ +
+*+SECURITY_AUTHN_DELEGATION+* +
++Audit record for any delegation, identify assertion, and runAS.  Used when switching user identities within a given session.+ +
+*+SECURITY_AUTHN_FAILOVER+* +
++Audit record for any authentication failover event.+ +
+*+SECURITY_AUTHN_TERMINATE+* +
++Audit record for any authentication logout event.+ +
+*+SECURITY_AUTHZ+* +
++Audit record for any security authorization events.+ +
+*+SECURITY_JMS_AUTHN+* +
++Audit record for any JMS authentication events.+ +
+*+SECURITY_JMS_AUTHZ+* +
++Audit record for any JMS auhorization events.+ +
+*+SECURITY_MEMBER_MGMT+* +
++Audit record for all user and group management events, including creation, reading, updating and deleting of user and group records.+
+
+|+id+
+
+|string
+
+|
+
+|+A unique configuration ID.+
+
+|+outcome+
+
+|* +CHALLENGE+
+* +DENIED+
+* +ERROR+
+* +FAILURE+
+* +INFO+
+* +REDIRECT+
+* +SUCCESS+
+* +WARNING+
+
+
+|
+
+|+Defines the outcome for an audit event to gather and report.  For example:  SUCCESS, FAILURE, or DENIED.  If no outcome is specified, then all outcomes for the particular audit event are emitted to the audit.log.+
+|===

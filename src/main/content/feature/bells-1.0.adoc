@@ -3,8 +3,11 @@
 :page-layout: feature
 :nofooter: 
 
+// tag::description[]
 This feature enables the configuration of Basic Extensions using Liberty Libraries (BELL).
 
+// end::description[]
+// tag::enable[]
 == Enabling this feature
 To enable the Basic Extensions using Liberty Libraries 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
 
@@ -12,11 +15,33 @@ To enable the Basic Extensions using Liberty Libraries 1.0 feature, add the foll
 ----
 <feature>bells-1.0</feature>
 ----
+// end::enable[]
+// tag::config[]
+
+== Feature configuration elements
+* config:bell[]
+* config:classloading[]
+* config:library[]
+// end::config[]
+// tag::apis[]
+// end::apis[]
+// tag::requirements[]
+// end::requirements[]
+// tag::java-versions[]
 
 == Supported Java versions
 
 * JavaSE-1.7
 * JavaSE-1.8
+* JavaSE-11.0
+// end::java-versions[]
+// tag::dependencies[]
+
+== Features that enable this feature
+* feature:jsonbContainer-1.0[]
+* feature:jsonpContainer-1.1[]
+// end::dependencies[]
+// tag::feature-require[]
 
 == Developing a feature that depends on this feature
 If you are developing a feature that depends on the Basic Extensions using Liberty Libraries 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
@@ -26,12 +51,6 @@ If you are developing a feature that depends on the Basic Extensions using Liber
 ----
 com.ibm.websphere.appserver.bells-1.0; type="osgi.subsystem.feature"
 ----
-
-== Features that enable this feature
-* feature:jsonbContainer-1.0[]
-* feature:jsonpContainer-1.1[]
-
-== Feature configuration elements
-* config:bell[]
-* config:classloading[]
-* config:library[]
+// end::feature-require[]
+// tag::spi[]
+// end::spi[]

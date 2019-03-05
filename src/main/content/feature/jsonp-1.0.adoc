@@ -3,8 +3,11 @@
 :page-layout: feature
 :nofooter: 
 
+// tag::description[]
 The Java API for JSON Processing (JSON-P) feature provides a standardized method for constructing and manipulating data to be rendered in JavaScript Object Notation (JSON).
 
+// end::description[]
+// tag::enable[]
 == Enabling this feature
 To enable the JavaScript Object Notation Processing 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
 
@@ -12,20 +15,25 @@ To enable the JavaScript Object Notation Processing 1.0 feature, add the followi
 ----
 <feature>jsonp-1.0</feature>
 ----
+// end::enable[]
+// tag::apis[]
+
+== Standard API packages provided by this feature
+* javadoc:javax.json[]
+* javadoc:javax.json.spi[]
+* javadoc:javax.json.stream[]
+// end::apis[]
+// tag::requirements[]
+// end::requirements[]
+// tag::java-versions[]
 
 == Supported Java versions
 
 * JavaSE-1.7
 * JavaSE-1.8
-
-== Developing a feature that depends on this feature
-If you are developing a feature that depends on the JavaScript Object Notation Processing 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
-
-
-[source,]
-----
-com.ibm.websphere.appserver.jsonp-1.0; type="osgi.subsystem.feature"
-----
+* JavaSE-11.0
+// end::java-versions[]
+// tag::dependencies[]
 
 == Features that enable this feature
 * feature:javaeeClient-7.0[]
@@ -40,8 +48,17 @@ com.ibm.websphere.appserver.jsonp-1.0; type="osgi.subsystem.feature"
 * feature:mpRestClient-1.1[]
 * feature:socialLogin-1.0[]
 * feature:webProfile-7.0[]
+// end::dependencies[]
+// tag::feature-require[]
 
-== Standard API packages provided by this feature
-* javadoc:javax.json[]
-* javadoc:javax.json.spi[]
-* javadoc:javax.json.stream[]
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the JavaScript Object Notation Processing 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.jsonp-1.0; type="osgi.subsystem.feature"
+----
+// end::feature-require[]
+// tag::spi[]
+// end::spi[]

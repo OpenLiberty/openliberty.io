@@ -3,8 +3,11 @@
 :page-layout: feature
 :nofooter: 
 
+// tag::description[]
 This feature enables persistence of HTTP sessions using JCache. Persisting HTTP session data using JCache allows for high performance HTTP session persistence without the use of a relational database. Failover of HTTP sessions can be achieved by configuring multiple servers to persist data to the same location.
 
+// end::description[]
+// tag::enable[]
 == Enabling this feature
 To enable the JCache Session Persistence 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
 
@@ -12,19 +15,17 @@ To enable the JCache Session Persistence 1.0 feature, add the following element 
 ----
 <feature>sessionCache-1.0</feature>
 ----
+// end::enable[]
+// tag::config[]
 
-== Supported Java versions
-
-* JavaSE-1.8
-
-== Developing a feature that depends on this feature
-If you are developing a feature that depends on the JCache Session Persistence 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
-
-
-[source,]
-----
-com.ibm.websphere.appserver.sessionCache-1.0; type="osgi.subsystem.feature"
-----
+== Feature configuration elements
+* config:classloading[]
+* config:httpSession[]
+* config:httpSessionCache[]
+* config:library[]
+* config:transaction[]
+// end::config[]
+// tag::apis[]
 
 == Standard API packages provided by this feature
 * javadoc:javax.cache[]
@@ -36,10 +37,28 @@ com.ibm.websphere.appserver.sessionCache-1.0; type="osgi.subsystem.feature"
 * javadoc:javax.cache.management[]
 * javadoc:javax.cache.processor[]
 * javadoc:javax.cache.spi[]
+// end::apis[]
+// tag::requirements[]
+// end::requirements[]
+// tag::java-versions[]
 
-== Feature configuration elements
-* config:classloading[]
-* config:httpSession[]
-* config:httpSessionCache[]
-* config:library[]
-* config:transaction[]
+== Supported Java versions
+
+* JavaSE-1.8
+* JavaSE-11.0
+// end::java-versions[]
+// tag::dependencies[]
+// end::dependencies[]
+// tag::feature-require[]
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the JCache Session Persistence 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.sessionCache-1.0; type="osgi.subsystem.feature"
+----
+// end::feature-require[]
+// tag::spi[]
+// end::spi[]

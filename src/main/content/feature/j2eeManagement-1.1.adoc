@@ -3,8 +3,11 @@
 :page-layout: feature
 :nofooter: 
 
+// tag::description[]
 This feature allows applications to utilize the interfaces defined in the JSR77 specification. 
 
+// end::description[]
+// tag::enable[]
 == Enabling this feature
 To enable the J2EE Management 1.1 feature, add the following element declaration inside the featureManager element in your server.xml file:
 
@@ -12,11 +15,43 @@ To enable the J2EE Management 1.1 feature, add the following element declaration
 ----
 <feature>j2eeManagement-1.1</feature>
 ----
+// end::enable[]
+// tag::config[]
+
+== Feature configuration elements
+* config:channelfw[]
+* config:classloading[]
+* config:orb[]
+* config:tcpOptions[]
+* config:transaction[]
+// end::config[]
+// tag::apis[]
+
+== Standard API packages provided by this feature
+* javadoc:javax.management.j2ee[]
+* javadoc:javax.management.j2ee.statistics[]
+* javadoc:org.omg.stub.javax.management.j2ee[]
+
+== IBM API packages provided by this feature
+* javadoc:com.ibm.websphere.management.j2ee[]
+// end::apis[]
+// tag::requirements[]
+// end::requirements[]
+// tag::java-versions[]
 
 == Supported Java versions
 
 * JavaSE-1.7
 * JavaSE-1.8
+* JavaSE-11.0
+// end::java-versions[]
+// tag::dependencies[]
+
+== Features that enable this feature
+* feature:javaee-7.0[]
+* feature:javaee-8.0[]
+// end::dependencies[]
+// tag::feature-require[]
 
 == Developing a feature that depends on this feature
 If you are developing a feature that depends on the J2EE Management 1.1 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
@@ -26,22 +61,6 @@ If you are developing a feature that depends on the J2EE Management 1.1 feature,
 ----
 com.ibm.websphere.appserver.j2eeManagement-1.1; type="osgi.subsystem.feature"
 ----
-
-== Features that enable this feature
-* feature:javaee-7.0[]
-* feature:javaee-8.0[]
-
-== Standard API packages provided by this feature
-* javadoc:javax.management.j2ee[]
-* javadoc:javax.management.j2ee.statistics[]
-* javadoc:org.omg.stub.javax.management.j2ee[]
-
-== IBM API packages provided by this feature
-* javadoc:com.ibm.websphere.management.j2ee[]
-
-== Feature configuration elements
-* config:channelfw[]
-* config:classloading[]
-* config:orb[]
-* config:tcpOptions[]
-* config:transaction[]
+// end::feature-require[]
+// tag::spi[]
+// end::spi[]

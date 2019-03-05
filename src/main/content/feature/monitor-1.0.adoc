@@ -3,8 +3,11 @@
 :page-layout: feature
 :nofooter: 
 
+// tag::description[]
 This feature enables the Performance Monitoring Infrastructure (PMI) for other features the server is running. Monitoring data is accessible through standard MXBeans; access through the traditional WebSphere Perf MBean can be enabled.
 
+// end::description[]
+// tag::enable[]
 == Enabling this feature
 To enable the Performance Monitoring 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
 
@@ -12,11 +15,31 @@ To enable the Performance Monitoring 1.0 feature, add the following element decl
 ----
 <feature>monitor-1.0</feature>
 ----
+// end::enable[]
+// tag::config[]
+
+== Feature configuration elements
+* config:classloading[]
+* config:monitor[]
+// end::config[]
+// tag::apis[]
+
+== IBM API packages provided by this feature
+* javadoc:com.ibm.websphere.monitor.jmx[]
+// end::apis[]
+// tag::requirements[]
+// end::requirements[]
+// tag::java-versions[]
 
 == Supported Java versions
 
 * JavaSE-1.7
 * JavaSE-1.8
+* JavaSE-11.0
+// end::java-versions[]
+// tag::dependencies[]
+// end::dependencies[]
+// tag::feature-require[]
 
 == Developing a feature that depends on this feature
 If you are developing a feature that depends on the Performance Monitoring 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
@@ -26,10 +49,6 @@ If you are developing a feature that depends on the Performance Monitoring 1.0 f
 ----
 com.ibm.websphere.appserver.monitor-1.0; type="osgi.subsystem.feature"
 ----
-
-== IBM API packages provided by this feature
-* javadoc:com.ibm.websphere.monitor.jmx[]
-
-== Feature configuration elements
-* config:classloading[]
-* config:monitor[]
+// end::feature-require[]
+// tag::spi[]
+// end::spi[]

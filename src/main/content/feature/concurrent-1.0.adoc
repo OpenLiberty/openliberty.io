@@ -3,8 +3,11 @@
 :page-layout: feature
 :nofooter: 
 
+// tag::description[]
 This feature enables the creation of managed executors that allow applications to submit tasks to run concurrently, with thread context that is managed by the application server.It also enables the creation of managed thread factories to create threads that run with the threadcontext of the component that looks up the managed thread factory.
 
+// end::description[]
+// tag::enable[]
 == Enabling this feature
 To enable the Concurrency Utilities for Java EE 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
 
@@ -12,11 +15,41 @@ To enable the Concurrency Utilities for Java EE 1.0 feature, add the following e
 ----
 <feature>concurrent-1.0</feature>
 ----
+// end::enable[]
+// tag::config[]
+
+== Feature configuration elements
+* config:classloading[]
+* config:concurrencyPolicy[]
+* config:contextService[]
+* config:managedExecutorService[]
+* config:managedScheduledExecutorService[]
+* config:managedThreadFactory[]
+// end::config[]
+// tag::apis[]
+
+== Standard API packages provided by this feature
+* javadoc:javax.enterprise.concurrent[]
+// end::apis[]
+// tag::requirements[]
+// end::requirements[]
+// tag::java-versions[]
 
 == Supported Java versions
 
 * JavaSE-1.7
 * JavaSE-1.8
+* JavaSE-11.0
+// end::java-versions[]
+// tag::dependencies[]
+
+== Features that enable this feature
+* feature:javaee-7.0[]
+* feature:javaee-8.0[]
+* feature:mpFaultTolerance-1.0[]
+* feature:mpFaultTolerance-1.1[]
+// end::dependencies[]
+// tag::feature-require[]
 
 == Developing a feature that depends on this feature
 If you are developing a feature that depends on the Concurrency Utilities for Java EE 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
@@ -26,20 +59,6 @@ If you are developing a feature that depends on the Concurrency Utilities for Ja
 ----
 com.ibm.websphere.appserver.concurrent-1.0; type="osgi.subsystem.feature"
 ----
-
-== Features that enable this feature
-* feature:javaee-7.0[]
-* feature:javaee-8.0[]
-* feature:mpFaultTolerance-1.0[]
-* feature:mpFaultTolerance-1.1[]
-
-== Standard API packages provided by this feature
-* javadoc:javax.enterprise.concurrent[]
-
-== Feature configuration elements
-* config:classloading[]
-* config:concurrencyPolicy[]
-* config:contextService[]
-* config:managedExecutorService[]
-* config:managedScheduledExecutorService[]
-* config:managedThreadFactory[]
+// end::feature-require[]
+// tag::spi[]
+// end::spi[]
