@@ -1,0 +1,80 @@
+= Audit 1.0
+:linkcss: 
+:page-layout: feature
+:nofooter: 
+
+// tag::description[]
+The Liberty Audit feature is used to report and track auditable events to ensure the integrity of your system. The Liberty Audit feature introduces an infrastructure which serves two purposes: - Confirming the effectiveness and integrity of the existing configuration - Identifying areas where improvement to the configuration may be needed  The Liberty Audit feature has the ability to capture the following auditable events: - Basic authentication - Start and stop of the Audit service - Form login - Client certificate login - Servlet runAs delegation - Form logout - Servlet 3.0 login, logout and authenticate APIs The Liberty Audit feature supports the Cloud Auditing Data Federation (CADF) event model.  The CADF model describes a data model and associated schema definitions for an audit event. The feature provides a default implementation, the AuditFileHandler, which emits human-readable audit records to a file-based log.   Each audit record is emitted in JSON format. 
+
+// end::description[]
+// tag::enable[]
+== Enabling this feature
+To enable the Audit 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>audit-1.0</feature>
+----
+// end::enable[]
+// tag::config[]
+
+== Feature configuration elements
+* config:administrator-role[]
+* config:auditEvent[]
+* config:auditFileHandler[]
+* config:authCache[]
+* config:authentication[]
+* config:authorization-roles[]
+* config:basicRegistry[]
+* config:channelfw[]
+* config:classloading[]
+* config:federatedRepository[]
+* config:httpAccessLogging[]
+* config:httpDispatcher[]
+* config:httpEncoding[]
+* config:httpEndpoint[]
+* config:httpOptions[]
+* config:httpProxyRedirect[]
+* config:jaasLoginContextEntry[]
+* config:jaasLoginModule[]
+* config:library[]
+* config:ltpa[]
+* config:mimeTypes[]
+* config:quickStartSecurity[]
+* config:remoteIp[]
+* config:tcpOptions[]
+* config:trustAssociation[]
+* config:virtualHost[]
+// end::config[]
+// tag::apis[]
+// end::apis[]
+// tag::requirements[]
+
+== Features that this feature enables
+* feature:appSecurity-2.0[]
+* feature:distributedMap-1.0[]
+* feature:json-1.0[]
+* feature:ssl-1.0[]
+// end::requirements[]
+// tag::java-versions[]
+
+== Supported Java versions
+
+* JavaSE-1.8
+* JavaSE-11.0
+// end::java-versions[]
+// tag::dependencies[]
+// end::dependencies[]
+// tag::feature-require[]
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Audit 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.audit-1.0; type="osgi.subsystem.feature"
+----
+// end::feature-require[]
+// tag::spi[]
+// end::spi[]

@@ -1,0 +1,71 @@
+= Java Database Connectivity 4.3
+:linkcss: 
+:page-layout: feature
+:nofooter: 
+
+// tag::description[]
+This feature enables the configuration of DataSources to access Databases from applications. Any JDBC driver that complies with the JDBC 4.3, 4.2, 4.1, 4.0, 3.0, or 2.x specification can be used; customized configuration of many specific providers is included. High performance connection pooling is also provided.
+
+// end::description[]
+// tag::enable[]
+== Enabling this feature
+To enable the Java Database Connectivity 4.3 feature, add the following element declaration inside the featureManager element in your server.xml file:
+
+
+----
+<feature>jdbc-4.3</feature>
+----
+// end::enable[]
+// tag::config[]
+
+== Feature configuration elements
+* config:authData[]
+* config:classloading[]
+* config:connectionManager[]
+* config:dataSource[]
+* config:jdbcDriver[]
+* config:library[]
+* config:transaction[]
+// end::config[]
+// tag::apis[]
+// end::apis[]
+// tag::requirements[]
+// end::requirements[]
+// tag::java-versions[]
+
+== Supported Java versions
+
+* JavaSE-1.8
+* JavaSE-11.0
+// end::java-versions[]
+// tag::dependencies[]
+
+== Features that enable this feature
+* feature:batch-1.0[]
+* feature:ejb-3.2[]
+* feature:ejbPersistentTimer-3.2[]
+* feature:javaee-7.0[]
+* feature:javaee-8.0[]
+* feature:javaeeClient-7.0[]
+* feature:javaeeClient-8.0[]
+* feature:jpa-2.1[]
+* feature:jpa-2.2[]
+* feature:jpaContainer-2.1[]
+* feature:jpaContainer-2.2[]
+* feature:sessionDatabase-1.0[]
+* feature:webProfile-7.0[]
+* feature:webProfile-8.0[]
+// end::dependencies[]
+// tag::feature-require[]
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Java Database Connectivity 4.3 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.jdbc-4.3; type="osgi.subsystem.feature"
+----
+// end::feature-require[]
+// tag::spi[]
+// end::spi[]
