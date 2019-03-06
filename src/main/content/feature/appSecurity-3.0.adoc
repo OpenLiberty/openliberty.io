@@ -3,8 +3,11 @@
 :page-layout: feature
 :nofooter: 
 
+// tag::description[]
 This feature enables support for securing the server runtime environment and applications using Security-1.0 as defined in JSR-375.
 
+// end::description[]
+// tag::enable[]
 == Enabling this feature
 To enable the Application Security 3.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
 
@@ -12,43 +15,8 @@ To enable the Application Security 3.0 feature, add the following element declar
 ----
 <feature>appSecurity-3.0</feature>
 ----
-
-== Supported Java versions
-
-* JavaSE-1.8
-
-== Developing a feature that depends on this feature
-If you are developing a feature that depends on the Application Security 3.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
-
-
-[source,]
-----
-com.ibm.websphere.appserver.appSecurity-3.0; type="osgi.subsystem.feature"
-----
-
-== Features that this feature enables
-* feature:cdi-2.0[]
-* feature:el-3.0[]
-* feature:servlet-4.0[]
-* feature:ssl-1.0[]
-
-== Features that enable this feature
-* feature:jacc-1.5[]
-* feature:jaspic-1.1[]
-* feature:mpJwt-1.0[]
-* feature:mpJwt-1.1[]
-* feature:passwordUtilities-1.0[]
-* feature:webProfile-8.0[]
-
-== Standard API packages provided by this feature
-* javadoc:javax.security.auth.message[]
-* javadoc:javax.security.auth.message.callback[]
-* javadoc:javax.security.auth.message.config[]
-* javadoc:javax.security.auth.message.module[]
-* javadoc:javax.security.enterprise[]
-* javadoc:javax.security.enterprise.authentication.mechanism.http[]
-* javadoc:javax.security.enterprise.credential[]
-* javadoc:javax.security.enterprise.identitystore[]
+// end::enable[]
+// tag::config[]
 
 == Feature configuration elements
 * config:administrator-role[]
@@ -62,3 +30,54 @@ com.ibm.websphere.appserver.appSecurity-3.0; type="osgi.subsystem.feature"
 * config:ltpa[]
 * config:quickStartSecurity[]
 * config:trustAssociation[]
+// end::config[]
+// tag::apis[]
+
+== Standard API packages provided by this feature
+* javadoc:javax.security.auth.message[]
+* javadoc:javax.security.auth.message.callback[]
+* javadoc:javax.security.auth.message.config[]
+* javadoc:javax.security.auth.message.module[]
+* javadoc:javax.security.enterprise[]
+* javadoc:javax.security.enterprise.authentication.mechanism.http[]
+* javadoc:javax.security.enterprise.credential[]
+* javadoc:javax.security.enterprise.identitystore[]
+// end::apis[]
+// tag::requirements[]
+
+== Features that this feature enables
+* feature:cdi-2.0[]
+* feature:el-3.0[]
+* feature:servlet-4.0[]
+* feature:ssl-1.0[]
+// end::requirements[]
+// tag::java-versions[]
+
+== Supported Java versions
+
+* JavaSE-1.8
+* JavaSE-11.0
+// end::java-versions[]
+// tag::dependencies[]
+
+== Features that enable this feature
+* feature:jacc-1.5[]
+* feature:jaspic-1.1[]
+* feature:mpJwt-1.0[]
+* feature:mpJwt-1.1[]
+* feature:passwordUtilities-1.0[]
+* feature:webProfile-8.0[]
+// end::dependencies[]
+// tag::feature-require[]
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Application Security 3.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.appSecurity-3.0; type="osgi.subsystem.feature"
+----
+// end::feature-require[]
+// tag::spi[]
+// end::spi[]

@@ -3,8 +3,11 @@
 :page-layout: feature
 :nofooter: 
 
+// tag::description[]
 This feature enables an embedded messaging server that is JMS compliant. Applications can send and receive messages using the wasJmsClient feature.
 
+// end::description[]
+// tag::enable[]
 == Enabling this feature
 To enable the Message Server 1.0 feature, add the following element declaration inside the featureManager element in your server.xml file:
 
@@ -12,28 +15,8 @@ To enable the Message Server 1.0 feature, add the following element declaration 
 ----
 <feature>wasJmsServer-1.0</feature>
 ----
-
-== Supported Java versions
-
-* JavaSE-1.7
-* JavaSE-1.8
-
-== Developing a feature that depends on this feature
-If you are developing a feature that depends on the Message Server 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
-
-
-[source,]
-----
-com.ibm.websphere.appserver.wasJmsServer-1.0; type="osgi.subsystem.feature"
-----
-
-== Features that enable this feature
-* feature:javaee-7.0[]
-* feature:javaee-8.0[]
-* feature:wasJmsSecurity-1.0[]
-
-== IBM API packages provided by this feature
-* javadoc:com.ibm.websphere.messaging.mbean[]
+// end::enable[]
+// tag::config[]
 
 == Feature configuration elements
 * config:channelfw[]
@@ -43,3 +26,39 @@ com.ibm.websphere.appserver.wasJmsServer-1.0; type="osgi.subsystem.feature"
 * config:transaction[]
 * config:wasJmsEndpoint[]
 * config:wasJmsOutbound[]
+// end::config[]
+// tag::apis[]
+
+== IBM API packages provided by this feature
+* javadoc:com.ibm.websphere.messaging.mbean[]
+// end::apis[]
+// tag::requirements[]
+// end::requirements[]
+// tag::java-versions[]
+
+== Supported Java versions
+
+* JavaSE-1.7
+* JavaSE-1.8
+* JavaSE-11.0
+// end::java-versions[]
+// tag::dependencies[]
+
+== Features that enable this feature
+* feature:javaee-7.0[]
+* feature:javaee-8.0[]
+* feature:wasJmsSecurity-1.0[]
+// end::dependencies[]
+// tag::feature-require[]
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Message Server 1.0 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.wasJmsServer-1.0; type="osgi.subsystem.feature"
+----
+// end::feature-require[]
+// tag::spi[]
+// end::spi[]

@@ -3,8 +3,11 @@
 :page-layout: feature
 :nofooter: 
 
+// tag::description[]
 This feature enables the configuration of resource adapters to access Enterprise Information Systems (EIS) from applications. The configuration of a resource adapter also includes the configuration of connection factories, administered objects and activation specifications. Any resource adapter that complies with the JCA 1.7 specification or lower can be used. High performance connection pooling is also provided.
 
+// end::description[]
+// tag::enable[]
 == Enabling this feature
 To enable the Java Connector Architecture 1.7 feature, add the following element declaration inside the featureManager element in your server.xml file:
 
@@ -12,25 +15,8 @@ To enable the Java Connector Architecture 1.7 feature, add the following element
 ----
 <feature>jca-1.7</feature>
 ----
-
-== Supported Java versions
-
-* JavaSE-1.8
-
-== Developing a feature that depends on this feature
-If you are developing a feature that depends on the Java Connector Architecture 1.7 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
-
-
-[source,]
-----
-com.ibm.websphere.appserver.jca-1.7; type="osgi.subsystem.feature"
-----
-
-== Features that enable this feature
-* feature:javaee-7.0[]
-* feature:javaee-8.0[]
-* feature:jms-2.0[]
-* feature:mdb-3.2[]
+// end::enable[]
+// tag::config[]
 
 == Feature configuration elements
 * config:activationSpec[]
@@ -46,3 +32,36 @@ com.ibm.websphere.appserver.jca-1.7; type="osgi.subsystem.feature"
 * config:library[]
 * config:resourceAdapter[]
 * config:transaction[]
+// end::config[]
+// tag::apis[]
+// end::apis[]
+// tag::requirements[]
+// end::requirements[]
+// tag::java-versions[]
+
+== Supported Java versions
+
+* JavaSE-1.8
+* JavaSE-11.0
+// end::java-versions[]
+// tag::dependencies[]
+
+== Features that enable this feature
+* feature:javaee-7.0[]
+* feature:javaee-8.0[]
+* feature:jms-2.0[]
+* feature:mdb-3.2[]
+// end::dependencies[]
+// tag::feature-require[]
+
+== Developing a feature that depends on this feature
+If you are developing a feature that depends on the Java Connector Architecture 1.7 feature, include the following item in the Subsystem-Content header in the feature manifest file for your new feature:
+
+
+[source,]
+----
+com.ibm.websphere.appserver.jca-1.7; type="osgi.subsystem.feature"
+----
+// end::feature-require[]
+// tag::spi[]
+// end::spi[]

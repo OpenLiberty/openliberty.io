@@ -90,6 +90,14 @@ Max: +65535+ +
 *+WARN+* +
 +Server will issue warning and error messages when it incurs a configuration error.+
 
+|+remoteIpRef+
+
+|A reference to top level remoteIp element (string).
+
+|+defaultRemoteIp+
+
+|+Remote IP options for the endpoint.+
+
 |+sslOptionsRef+
 
 |A reference to top level sslOptions element (string).
@@ -313,6 +321,31 @@ Min: +-1+ +
 |+60s+
 
 |+Amount of time to wait on a socket for each portion of the response data to be transmitted. Specify a positive integer followed by a unit of time, which can be hours (h), minutes (m), or seconds (s). For example, specify 30 seconds as 30s. You can include multiple values in a single entry. For example, 1m30s is equivalent to 90 seconds.+
+|===
+[#+remoteIp+]*remoteIp*
+
++Remote IP options for the endpoint.+
+
+
+[cols="a,a,a,a",width="100%"]
+|===
+|Name|Type|Default|Description
+
+|+proxies+
+
+|string
+
+|+10.\d{1,3}.\d{1,3}.\d{1,3}\|192.168.\d{1,3}.\d{1,3}\|169.254.\d{1,3}.\d{1,3}\|127.\d{1,3}.\d{1,3}.\d{1,3}\|172.1[6-9]{1}.\d{1,3}.\d{1,3}\|172.2[0-9]{1}.\d{1,3}.\d{1,3}\|172.3[0-1]{1}.\d{1,3}.\d{1,3}\|0:0:0:0:0:0:0:1\|::1+
+
+|+A regular expression that defines trusted proxies.+
+
+|+useRemoteIpInAccessLog+
+
+|boolean
+
+|+false+
+
+|+If this property is set to true and the remote client information was verified by the HTTP Channel, the NCSA access log reflects the Forwarded or X-Forwarded-* headers. These headers are reflected when one or more of the following items are recorded: the remote client IP, the host, or the request protocol.+
 |===
 [#+sslOptions+]*sslOptions*
 
