@@ -366,11 +366,23 @@ function setPackageContainerHeight() {
 }
 
 function setIFrameContent(iframeName, href) {
-    // check if href results in 404 and redirect to doc-404.html if it does
     var iframeContent = $('#javadoc_container').contents().find(iframeName).contents();
+    var leftBottomiframeContent = $('#javadoc_container').contents().find(".leftBottom iframe").contents();
     var errorhref = "/javadocs/doc-404.html";
-    if (UrlExists(href) === false) {
+    // get current version to create path to all classes frame
+    var path = window.top.location.pathname;
+    if (path.includes("microprofile")) {
+        var currentVersion = path.slice(-4, -1);
+        var allClassesHref = "/javadocs/microprofile-" + currentVersion + "-javadoc/allclasses-frame.html";
+    }
+    else {
+        var currentVersion = path.slice(-2, -1);
+        var allClassesHref = "/javadocs/liberty-javaee" + currentVersion + "-javadoc/allclasses-frame.html";
+    }
+    // check if href results in 404 and redirect to doc-404.html if it does
+    if (UrlExists(href) === false && iframeName === "iframe.rightIframe") {
         iframeContent.attr("location").replace(errorhref);
+        leftBottomiframeContent.attr("location").replace(allClassesHref);
     }
     else {
         // replace the content only if the current content is from a different href
