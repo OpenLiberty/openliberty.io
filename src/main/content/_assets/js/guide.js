@@ -50,9 +50,9 @@
                 var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + scrolledToHash;
                 // Not setting window.location.hash here because that causes an
                 // onHashChange event to fire which will scroll to the top of the
-                // section.  pushState updates the URL without causing an
+                // section.  replaceState updates the URL without causing an
                 // onHashChange event.
-                history.pushState(null, null, newPath);
+                history.replaceState(null, null, newPath);
 
                 // Update the selected TOC entry
                 updateTOCHighlighting(id);                    

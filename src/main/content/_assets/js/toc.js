@@ -161,7 +161,7 @@ function TOCEntryClick(liElement, event) {
         // So, this history.pushState will allow us to set the URL without
         // invoking immediate scrolling.  Then we call accessContentsFromHash
         // to perform the smooth scrolling to the requested section.
-        history.pushState(null, null, newPath);
+        history.replaceState(null, null, newPath);
     }
     accessContentsFromHash(hash);
 }
