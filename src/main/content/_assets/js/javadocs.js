@@ -380,9 +380,13 @@ function setIFrameContent(iframeName, href) {
         var allClassesHref = "/javadocs/liberty-javaee" + currentVersion + "-javadoc/allclasses-frame.html";
     }
     // check if href results in 404 and redirect to doc-404.html if it does
-    if (UrlExists(href) === false && iframeName === "iframe.rightIframe") {
-        iframeContent.attr("location").replace(errorhref);
-        leftBottomiframeContent.attr("location").replace(allClassesHref);
+    if (UrlExists(href) === false) {
+        if (iframeName === "iframe.rightIframe") {
+            iframeContent.attr("location").replace(errorhref);
+        }
+        else if (iframeName === ".leftBottom iframe") {
+            leftBottomiframeContent.attr("location").replace(allClassesHref);
+        }
     }
     else {
         // replace the content only if the current content is from a different href
