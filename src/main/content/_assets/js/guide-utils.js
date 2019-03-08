@@ -470,7 +470,6 @@ $(document).ready(function() {
         handleFloatingTOCAccordion();
         resizeGuideSections();
         handleFloatingCodeColumn();
-        restoreCodeColumn();
     });
 
     // Check if on Apple device or Internet Explorer/Edge before enabling inertia scrolling since it doesn't work well.
