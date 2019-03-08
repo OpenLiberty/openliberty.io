@@ -69,40 +69,6 @@ function remove_highlighting(){
         var children = $(this).children('span');
         children.unwrap(); // Remove the wrapped highlighted div from these children.
     });
-    
-}
-
-// Creates a clone of the code highlighted by hotspots in desktop view, so that they can be shown in mobile.
-// Inputs: snippet: Hotspot in the guide column.
-//         code_block: The source code block.
-//         fromLine: The line in the code block to start copying from.
-//         toLine: The line in the code block to end copying.
-function create_mobile_code_snippet(snippet, code_block, fromLine, toLine){
-    var duplicate_code_block = code_block.clone();
-    duplicate_code_block.removeClass('dimmed'); // Remove the blur from the original code block;
-    duplicate_code_block.addClass('mobile_code_snippet'); // Add class to this code snippet in the guide column to only show up in mobile view.
-    duplicate_code_block.removeClass('code_columnn');
-    duplicate_code_block.removeAttr('filename');
-    duplicate_code_block.find('.code_column_title_container').remove();
-
-    // Wrap each leftover piece of text in a span to handle selecting a range of lines.
-    duplicate_code_block.find('code').contents().each(function(){
-        if (!$(this).is('span')) {
-            var newText = $(this).wrap('<span class="string"></span>');
-            $(this).replaceWith(newText);
-        }
-    });
-    var first_span = duplicate_code_block.find('.line-numbers:contains(' + fromLine + ')').first();
-    var last_span = duplicate_code_block.find('.line-numbers:contains(' + (toLine + 1) + ')').first();
-
-    // Remove spans before the first line number and after the last line number
-    if(first_span.length > 0){
-        first_span.prevAll('span').remove();            
-    }
-    if(last_span.length > 0){
-        last_span.nextAll('span').remove();
-    }
-    snippet.after(duplicate_code_block);
 }
 
 // Returns the header of the element passed in. This checks if the element is in a subsection first before checking the main section header.
@@ -219,6 +185,9 @@ function showGithubPopup(){
     $("#code_column .code_column, #code_column_tabs_container").addClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', true);
     $(".copyFileButton").hide();
+    $('#code_column_content').css({
+        'overflow-y': 'hidden'
+    });
 }
 
 function hideGithubPopup(){
@@ -226,6 +195,9 @@ function hideGithubPopup(){
     $("#code_column .code_column, #code_column_tabs_container").removeClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', false);
     $(".copyFileButton").show();
+    $('#code_column_content').css({
+        'overflow-y': 'scroll'
+    });
 }
 
 /*
@@ -371,9 +343,22 @@ function setActiveTab(activeTab){
     });
 }
 
-
+function restoreCodeColumn(){
+    if(!inSingleColumnView()){
+        $("body").removeClass("unscrollable");
+        $("#code_column").css({
+            "top": "100px"
+        });
+        $("#code_column").removeClass("modal");
+        remove_highlighting(); // Remove previously highlighted hotspots from mobile view
+    }
+}
 
  $(document).ready(function() { 
+
+    $(window).on('resize', function(){
+        restoreCodeColumn();
+    });
      
      /* Copy button for the github clone command  that pops up initially when opening a guide. */
     $("#github_clone_popup_copy").click(function(event){
@@ -544,10 +529,49 @@ function setActiveTab(activeTab){
                     }
                 }                                    
                 snippet.addClass('hotspot');
-                create_mobile_code_snippet(snippet, code_block, fromLine, toLine);
             }              
         }
-    });    
+    });  
+    
+    // In mobile view if the user clicks a hotspot it shows a modal of the file with the hotspot code highlighted.
+    $('.hotspot').on('click', function(){
+        if(inSingleColumnView()){
+            $("body").addClass("unscrollable");   
+            $("#mobile_toc_accordion_container").css({
+                "pointer-events" : "none"
+            });         
+            $("#code_column").addClass("modal");
+            
+
+            var top = $(this).offset().top;
+            var mobile_toc_height = $("#mobile_toc_accordion").height();
+            var scrollTo = top - mobile_toc_height;
+            
+            // Scroll the hotspot to the top of the page, with the paragraph encompassing the hotspot shown.
+            $('html, body').stop().animate({
+                scrollTop: scrollTo
+            }, 400);
+
+            // Set the top of the code to appear underneath the hotspot that was clicked.
+            var hotspot_height = $(this).height();
+            var bottom = scrollTo + window.innerHeight - hotspot_height - 5;
+            var height = bottom - scrollTo;
+            $("#code_column").css({
+                "top" : scrollTo + mobile_toc_height + hotspot_height + 5 + "px",
+                "height" : height
+            });
+            handleHotspotHover($(this));
+        }
+    });
+
+    $('#dismiss_button').on('click', function(){
+        $("body").removeClass("unscrollable");
+        $("#mobile_toc_accordion_container").css({
+            "pointer-events" : "auto"
+        });
+        $("#code_column").removeClass("modal");
+        remove_highlighting();
+    });
 
     // When hovering over a code hotspot, highlight the correct lines of code in the corresponding code section.
     $('.hotspot').on('hover mouseover', function(){
