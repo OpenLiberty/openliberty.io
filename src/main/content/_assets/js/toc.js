@@ -158,10 +158,10 @@ function TOCEntryClick(liElement, event) {
         // Not setting window.location.hash here because that causes the
         // window to scroll immediately to the section.  We want to implement
         // smooth scrolling that is adjusted to account for the sticky header.
-        // So, this history.pushState will allow us to set the URL without
+        // So, this history.replaceState will allow us to set the URL without
         // invoking immediate scrolling.  Then we call accessContentsFromHash
         // to perform the smooth scrolling to the requested section.
-        history.pushState(null, null, newPath);
+        history.replaceState(null, null, newPath);
     }
     accessContentsFromHash(hash);
 }
