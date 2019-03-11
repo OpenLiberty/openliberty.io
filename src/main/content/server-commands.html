@@ -20,14 +20,14 @@ permalink: /docs/ref/command/
         <div id="toc_inner">
             {% if commandDocs %}
             <div id="toc_container">
+                <h3 id="toc_title">Server Commands</h3>
                 <ul>
                     {% for overview in commandOverviewDoc %}
                     <li>
-                        <div role="button" href="{{ overview.url }}" tabindex="0">Overview</div>
+                        <div id="overview_button" role="button" href="{{ overview.url }}" tabindex="0">OVERVIEW</div>
                     </li>
                     {% endfor %}
                 </ul>
-                <h3 id="toc_title">Server Commands</h3>
                 <ul id="command_toc">
                     {% for command in commandDocs %}
                     {% assign noCommand = command.title | split: ' command' %}
