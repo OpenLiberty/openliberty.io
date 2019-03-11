@@ -367,7 +367,6 @@ function setPackageContainerHeight() {
 
 function setIFrameContent(iframeName, href) {
     var iframeContent = $('#javadoc_container').contents().find(iframeName).contents();
-    var leftBottomiframeContent = $('#javadoc_container').contents().find(".leftBottom iframe").contents();
     var errorhref = "/javadocs/doc-404.html";
     // get current version to create path to all classes frame
     var path = window.top.location.pathname;
@@ -379,21 +378,26 @@ function setIFrameContent(iframeName, href) {
         var currentVersion = path.slice(-2, -1);
         var allClassesHref = "/javadocs/liberty-javaee" + currentVersion + "-javadoc/allclasses-frame.html";
     }
+
     // check if href results in 404 and redirect to doc-404.html if it does
-    if (UrlExists(href) === false) {
-        if (iframeName === "iframe.rightIframe") {
-            iframeContent.attr("location").replace(errorhref);
+    var http = new XMLHttpRequest();
+    http.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
+           // replace the content only if the current content is from a different href
+           if (iframeContent.attr("location").href !== href) {    
+               iframeContent.attr("location").replace(href);
+           }
+        } else if (this.status === 404) {
+           if (iframeName === "iframe.rightIframe") {
+               iframeContent.attr("location").replace(errorhref);
+           }
+           else if (iframeName === ".leftBottom iframe") {
+               iframeContent.attr("location").replace(allClassesHref);
+           }
         }
-        else if (iframeName === ".leftBottom iframe") {
-            leftBottomiframeContent.attr("location").replace(allClassesHref);
-        }
-    }
-    else {
-        // replace the content only if the current content is from a different href
-        if (iframeContent.attr("location").href !== href) {    
-            iframeContent.attr("location").replace(href);
-        }
-    }
+     };
+     http.open('HEAD', href, false);
+     http.send();
 }
 
 // If package is provided as hashName, then return the class hash. Otherwise return the package hash.
@@ -482,19 +486,6 @@ function getJavaDocHtmlPath(href, returnBase) {
 
     }
     return javaDocPath;
-}
-
-// check if url exists for version button
-function UrlExists(url) {
-    var http = new XMLHttpRequest();
-    http.open('HEAD', url, false);
-    http.send();
-    if (http.status != 404) {
-        return true;
-    }
-    else {
-        return false;
-    }
 }
 
 // add current hash to url when version button clicked
