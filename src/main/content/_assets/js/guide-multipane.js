@@ -49,8 +49,15 @@ function highlight_code_range(code_section, fromLine, toLine, scroll){
     });
     
     // Wrap code block lines in a div to highlight
-    var highlight_start = code_section.find('.line-numbers:contains(' + fromLine + ')').first();
-    var highlight_end = code_section.find('.line-numbers:contains(' + (toLine + 1) + ')').first();        
+    var highlight_start = code_section.find('.line-numbers').filter(function(){
+        return parseInt(this.innerText.trim()) === fromLine;
+    });
+    var highlight_end = code_section.find('.line-numbers').filter(function(){
+        return parseInt(this.innerText.trim()) === toLine + 1;
+    });
+    if(highlight_end.length === 0){
+        highlight_end = highlight_start.nextAll('.line-numbers').first();
+    }  
     var range = highlight_start.nextUntil(highlight_end);
     range.wrapAll("<div class='highlightSection'></div>");
 
@@ -168,7 +175,6 @@ var handleHotspotHover = debounce(function(hotspot){
                 if(lines.length === 2){
                     var fromLine = parseInt(lines[0]);
                     var toLine = parseInt(lines[1]);
-                    var num_Lines = parseInt(code_block.find('.line-numbers').last().text());
                     if(fromLine && toLine){   
                         // When multiple ranges are going to be highlighted, only scroll to the first one.                 
                         var shouldScroll = (i === 0);
@@ -355,9 +361,18 @@ function restoreCodeColumn(){
 }
 
 /*
-    Hide the copyright comments from the code file.
+    Hide the comments from the code file including the copyright.
 */
-function hideCopyright(code_block){
+function hideComments(code_block){
+    // Hide comments
+    code_block.find('.comment').prev('.line-numbers').each(function(){
+        $(this).html($(this).html().trim());
+    }).remove();
+    code_block.find('.comment').each(function(){
+        $(this).html($(this).html().trim());
+    }).remove();
+
+    // Hide the copyright
     var start = code_block.find("span:contains('<!-- Copyright')");
     start = start.prev('.line-numbers');
     var end = start.nextAll("span:contains('-->')").first();
@@ -365,11 +380,11 @@ function hideCopyright(code_block){
         var range = start.nextUntil(end);
         range = range.add(start).add(end);
         range.remove();
-
-        // Trim extra whitespace
-        var code = code_block.find('code');
-        code.html(code.html().trim());
     }
+
+    // Trim extra whitespace
+    var code = code_block.find('code');
+    code.html(code.html().trim());
 }
 
 $(document).ready(function() { 
@@ -413,12 +428,8 @@ $(document).ready(function() {
             // Set data attribute for id on the code block for switching to the code when clicking its tab
             code_block.attr('data-section-id', header.id);
 
-            // Hide the copyright
-            hideCopyright(code_block);
-
-            // Hide comments
-            code_block.find('.comment').hide();
-            code_block.find('.comment').prev('.line-numbers').hide();
+            // Hide the comments from the file.
+            hideComments(code_block);                     
 
             // Create a tab in the code column for this file.
             var tab = $("<li class='code_column_tab' role='presentation' tabindex='0'></li>");
@@ -544,9 +555,7 @@ $(document).ready(function() {
                         }                        
                     }
                     else {
-                        // Hotspot is using a tag name.           
-                        console.error("tag_name: " + value);
-
+                        // Hotspot is using a tag name.        
                         // Find the start line for the tag using tag::<tag_name>[] and the end line for the tag using end::<tag_name>[]
                         var tag_start = code_block.find("span:contains(tag::" + value + ")");
                         var tag_end = code_block.find("span:contains(end::" + value + ")");
@@ -555,7 +564,7 @@ $(document).ready(function() {
                         ranges = fromLine + "-" + toLine;
 
                         // Remove tags
-                        tag_start.prev('.line-numbers').remove(); // Remove the extra line number before the tag
+                        tag_start.prev('.line-numbers').remove();
                         tag_start.remove();
                         tag_end.remove();
 
