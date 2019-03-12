@@ -396,7 +396,7 @@ function setIFrameContent(iframeName, href) {
            }
         }
      };
-     http.open('HEAD', href, false);
+     http.open('HEAD', href);
      http.send();
 }
 
