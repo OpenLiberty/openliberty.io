@@ -50,9 +50,9 @@
                 var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + scrolledToHash;
                 // Not setting window.location.hash here because that causes an
                 // onHashChange event to fire which will scroll to the top of the
-                // section.  pushState updates the URL without causing an
+                // section.  replaceState updates the URL without causing an
                 // onHashChange event.
-                history.pushState(null, null, newPath);
+                history.replaceState(null, null, newPath);
 
                 // Update the selected TOC entry
                 updateTOCHighlighting(id);                    
@@ -73,10 +73,11 @@
         var current_target_object = $(event.currentTarget);	
         target_position = current_target_object.position();	
         target_width = current_target_object.outerWidth();	
-        target_height = current_target_object.outerHeight();	
+        target_height = current_target_object.outerHeight();
+        var right_position = inSingleColumnView() ? 20 : 55;	
          $('#copy_to_clipboard').css({	
             top: target_position.top + 8,	
-            right: parseInt($('#guide_column').css('padding-right')) + 55	
+            right: parseInt($('#guide_column').css('padding-right')) + right_position	
         });	
         $('#copy_to_clipboard').stop().fadeIn();	
      }, function(event) {	
@@ -101,7 +102,7 @@
             var position = current_target_object.position();	
             $('#guide_section_copied_confirmation').css({	
                 top: position.top - 25,
-                right: 50	
+                right: inSingleColumnView() ? 20 : 50	
             }).stop().fadeIn().delay(3500).fadeOut();
         });	
     });    

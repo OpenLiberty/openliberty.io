@@ -472,9 +472,9 @@ function defaultToFirstPage() {
     // Reset the hash in the URL
     var currentPath = window.location.pathname;
     var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1);
-    // We already scrolled to the top of the guide.  history.pushState allows
+    // We already scrolled to the top of the guide.  history.replaceState allows
     // us to set the URL without invoking immediate scrolling.
-    history.pushState(null, null, newPath);
+    history.replaceState(null, null, newPath);
 }
 
 
