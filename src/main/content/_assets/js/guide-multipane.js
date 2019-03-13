@@ -254,7 +254,9 @@ function hideDuplicateTabs(id){
             continue;
         }
         var fileName = tab.text();
-        var tabsWithSameName = $('#code_column_tabs li:visible').not(tab).filter(":contains('" + fileName + "')");
+        var tabsWithSameName = $('#code_column_tabs li:visible').not(tab).filter(function(){
+            return this.innerText === fileName;
+        });
         
         if(tabsWithSameName.length > 0){
             // Find duplicates and hide them.
