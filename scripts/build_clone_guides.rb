@@ -26,12 +26,6 @@ repos = client.org_repos('OpenLiberty')
 # --------------------------------------------
 # For the interactive guides, only build the dev branch for the TravisCI environments
 guide_branch = 'master'
-if ENV['TRAVIS']
-    if ENV['TRAVIS_BRANCH'] == "development"
-        guide_branch = 'dev'
-    end
-end
-
 puts "Looking for draft interactive guides with branch: #{guide_branch}..."
 
 # Function to check if the guide directory exists after a git clone command
