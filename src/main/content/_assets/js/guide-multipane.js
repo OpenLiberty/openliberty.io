@@ -255,7 +255,7 @@ function hideDuplicateTabs(id){
         }
         var fileName = tab.text();
         var tabsWithSameName = $('#code_column_tabs li:visible').not(tab).filter(function(){
-            return this.innerText === fileName;
+            return this.innerText.trim() === fileName;
         });
         
         if(tabsWithSameName.length > 0){
@@ -297,7 +297,7 @@ function hideDuplicateTabs(id){
     // Hide duplicates of the active tab
     var activeTab = $('.code_column_tab > .active').parent();
     var activeDuplicates = $('#code_column_tabs li:visible').not(activeTab).filter(function(){
-        return this.innerText === activeTab.text();
+        return this.innerText.trim() === activeTab.text();
     });
     activeDuplicates.hide();
 }
@@ -311,7 +311,7 @@ function loadPreviousStepsTabs(){
         var fileName = tab.innerText.trim();
         // Check that only the most recent tab for this file is showing.
         var visibleTabsWithSameName = $('#code_column_tabs li:visible').filter(function(){
-            return this.innerText === fileName;
+            return this.innerText.trim() === fileName;
         });
         if(visibleTabsWithSameName.length === 0){
             $(tab).show();
@@ -414,7 +414,7 @@ function restoreCodeColumn(){
 
             // If the same tab exists already in the list, append it in the same order to persist the order it was introduced in the guide.
             var tabAlreadyExists = $('#code_column_tabs li').filter(function(){
-                return this.innerText === fileName;
+                return this.innerText.trim() === fileName;
             });
             if(tabAlreadyExists.length > 0){
                 tabAlreadyExists.last().after(tab);
