@@ -413,7 +413,9 @@ function restoreCodeColumn(){
             metadata_sect.detach();            
 
             // If the same tab exists already in the list, append it in the same order to persist the order it was introduced in the guide.
-            var tabAlreadyExists =  $('#code_column_tabs li').filter(":contains('" + fileName + "')");
+            var tabAlreadyExists = $('#code_column_tabs li').filter(function(){
+                return this.innerText === fileName;
+            });
             if(tabAlreadyExists.length > 0){
                 tabAlreadyExists.last().after(tab);
             } 
