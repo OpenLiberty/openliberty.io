@@ -6,20 +6,18 @@ before_install:
   - sudo apt-get install python3-bs4 -y
 
 script: >
-  if [ $TRAVIS_BRANCH = "master" ]; then
-    cp robots.txt src/main/content/robots.txt
-    JEKYLL_ENV=production ./scripts/build_jekyll_maven.sh
-  else
-    ./scripts/build_jekyll_maven.sh
-  fi
+    if [ $TRAVIS_BRANCH = "master" ] and [ $ROUTE = $SITE_QA_DOMAIN ]; then
+      cp robots.txt src/main/content/robots.txt
+      JEKYLL_ENV=production ./scripts/build_jekyll_maven.sh
+    else
+      ./scripts/build_jekyll_maven.sh
+    fi
 
 # branch whitelist
 branches:
   only:
     - master
     - development
-    - multiPane
-    - multiPane-stable
 
 sudo: false # route your build to the container-based infrastructure for a faster build
 
@@ -28,9 +26,14 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
-    script: env ROUTE=qa-guides.mybluemix.net ./.travis/cf-push.sh
+    script: env ROUTE=$SITE_QA_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_QA_BRANCH ./.travis/cf-push.sh
+  - provider: script
+    skip_cleanup: true
+    on:
+      branch: master
+    script: env ROUTE=$SITE_DRAFT_GUIDES_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
       branch: development
-    script: env ROUTE=qa-guides-dev.mybluemix.net ./.travis/cf-push.sh
+    script: env ROUTE=$SITE_DEV_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH ./.travis/cf-push.sh
