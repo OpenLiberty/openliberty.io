@@ -6,7 +6,7 @@ before_install:
   - sudo apt-get install python3-bs4 -y
 
 script: >
-    if [ $TRAVIS_BRANCH = "master" ] and [ $ROUTE = $SITE_QA_DOMAIN ]; then
+    if [ $TRAVIS_BRANCH = "master" && $ROUTE = $SITE_QA_DOMAIN ]; then
       cp robots.txt src/main/content/robots.txt
       JEKYLL_ENV=production ./scripts/build_jekyll_maven.sh
     else
