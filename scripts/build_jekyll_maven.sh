@@ -51,13 +51,14 @@ fi
 
 
 echo "Copying guide images to /img/guide"
+mkdir -p src/main/content/img/guide
 # Check if any draft guide images exist first
 if [ -e src/main/content/guides/draft-guide*/assets/* ]
- then cp src/main/content/guides/draft-guide*/assets/* src/main/content/img/guide
+ then cp src/main/content/guides/draft-guide*/assets/* src/main/content/img/guide/
 fi
 # Check if any published guide images exist first
 if [ -e src/main/content/guides/guide*/assets/* ]
- then cp src/main/content/guides/guide*/assets/* src/main/content/img/guide
+ then cp src/main/content/guides/guide*/assets/* src/main/content/img/guide/
 fi
 
 # Move any js/css files from guides to the _assets folder for jekyll-assets minification.
