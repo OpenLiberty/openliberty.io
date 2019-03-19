@@ -69,7 +69,7 @@ repos.each do |element|
             # Clone the default branch if the guide_branch does not exist for this guide repo.
             if !(directory_exists?(repo_name))
                 `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
-            end            
+            end
         end
     end
 end

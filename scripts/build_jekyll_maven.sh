@@ -49,6 +49,18 @@ else
     ./scripts/build_clone_docs.sh "master" # Argument is branch name of OpenLiberty/docs
 fi
 
+
+echo "Copying guide images to /img/guide"
+mkdir -p src/main/content/img/guide
+# Check if any draft guide images exist first
+if [ -e src/main/content/guides/draft-guide*/assets/* ]
+ then cp src/main/content/guides/draft-guide*/assets/* src/main/content/img/guide/
+fi
+# Check if any published guide images exist first
+if [ -e src/main/content/guides/guide*/assets/* ]
+ then cp src/main/content/guides/guide*/assets/* src/main/content/img/guide/
+fi
+
 # Move any js/css files from guides to the _assets folder for jekyll-assets minification.
 echo "Moving any js and css files published interactive guides..."
 # Assumption: There is _always_ iguide* folders
