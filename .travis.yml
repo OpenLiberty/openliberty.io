@@ -7,8 +7,12 @@ before_install:
 
 script: >
     if [ $TRAVIS_BRANCH = "master" && $ROUTE = $SITE_QA_DOMAIN ]; then
-      cp robots.txt src/main/content/robots.txt
-      JEKYLL_ENV=production ./scripts/build_jekyll_maven.sh
+      cp robots.txt src/main/content/robots.txt      
+      env JEKYLL_ENV=production GUIDE_CLONE_BRANCH=$GUIDE_QA_BRANCH ./scripts/build_jekyll_maven.sh
+    elif [ $ROUTE == $SITE_DRAFT_GUIDES_DOMAIN ]; then      
+      env GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH ./scripts/build_jekyll_maven.sh
+    elif [ $ROUTE == $SITE_DEV_DOMAIN ]; then      
+      env GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH ./scripts/build_jekyll_maven.sh
     else
       ./scripts/build_jekyll_maven.sh
     fi
@@ -26,14 +30,14 @@ deploy:
     skip_cleanup: true
     on:
       branch: master
-    script: env ROUTE=$SITE_QA_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_QA_BRANCH ./.travis/cf-push.sh
+    script: env ROUTE=$SITE_QA_DOMAIN ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
       branch: master
-    script: env ROUTE=$SITE_DRAFT_GUIDES_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH ./.travis/cf-push.sh
+    script: env ROUTE=$SITE_DRAFT_GUIDES_DOMAIN ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
       branch: development
-    script: env ROUTE=$SITE_DEV_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH ./.travis/cf-push.sh
+    script: env ROUTE=$SITE_DEV_DOMAIN ./.travis/cf-push.sh
