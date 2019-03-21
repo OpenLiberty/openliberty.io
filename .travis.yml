@@ -12,12 +12,12 @@ env:
   - ROUTE=$SITE_DEV_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH
 
 script: >
-    if [ $TRAVIS_BRANCH = "steven" && $ROUTE = $SITE_QA_DOMAIN ]; then
+    if [ $TRAVIS_BRANCH = "master" && $ROUTE = $SITE_QA_DOMAIN ]; then
       cp robots.txt src/main/content/robots.txt      
       ./scripts/build_jekyll_maven.sh
-    elif [ $TRAVIS_BRANCH = "steven" && $ROUTE = $SITE_DRAFT_GUIDES_DOMAIN ]; then
+    elif [ $TRAVIS_BRANCH = "master" && $ROUTE = $SITE_DRAFT_GUIDES_DOMAIN ]; then
       ./scripts/build_jekyll_maven.sh
-    elif [ $TRAVIS_BRANCH = "steven-development" && $ROUTE = $SITE_DEV_DOMAIN ]; then
+    elif [ $TRAVIS_BRANCH = "development" && $ROUTE = $SITE_DEV_DOMAIN ]; then
       env GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH ./scripts/build_jekyll_maven.sh
     else
       ./scripts/build_jekyll_maven.sh
@@ -28,7 +28,7 @@ branches:
   only:
     - master
     - development
-    - steven
+    - master
 
 sudo: false # route your build to the container-based infrastructure for a faster build
 
@@ -37,18 +37,18 @@ deploy:
   - provider: script
     skip_cleanup: true
     on:
-      branch: steven
+      branch: master
       condition: $ROUTE = $SITE_QA_DOMAIN
     script: env ROUTE=$SITE_QA_DOMAIN ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
-      branch: steven
+      branch: master
       condition: $ROUTE = $SITE_DRAFT_GUIDES_DOMAIN
     script: env ROUTE=$SITE_DRAFT_GUIDES_DOMAIN ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
-      branch: steven-development
+      branch: development
       condition: $ROUTE = $SITE_DEV_DOMAIN
     script: env ROUTE=$SITE_DEV_DOMAIN ./.travis/cf-push.sh
