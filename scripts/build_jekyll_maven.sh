@@ -30,7 +30,6 @@ if [ "$JEKYLL_ENV" != "production" ]; then
     cp robots.txt src/main/content/robots.txt
     
     echo "Clone draft guides for test environments..."
-    echo "The GUIDE_CLONE_BRANCH is $GUIDE_CLONE_BRANCH"
     ruby ./scripts/build_clone_guides.rb "draft-guide"
     ./scripts/build_clone_docs.sh "develop" # Argument is branch name of OpenLiberty/docs
 
