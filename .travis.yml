@@ -5,13 +5,19 @@ rvm:
 before_install:
   - sudo apt-get install python3-bs4 -y
 
+# Trigger a build for each environment
+env:
+  - ROUTE=$SITE_QA_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_QA_BRANCH JEKYLL_ENV=production
+  - ROUTE=$SITE_DRAFT_GUIDES_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH
+  - ROUTE=$SITE_DEV_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH
+
 script: >
     if [ $TRAVIS_BRANCH = "master" && $ROUTE = $SITE_QA_DOMAIN ]; then
       cp robots.txt src/main/content/robots.txt      
-      env JEKYLL_ENV=production GUIDE_CLONE_BRANCH=$GUIDE_QA_BRANCH ./scripts/build_jekyll_maven.sh
-    elif [ $ROUTE == $SITE_DRAFT_GUIDES_DOMAIN ]; then      
-      env GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH ./scripts/build_jekyll_maven.sh
-    elif [ $ROUTE == $SITE_DEV_DOMAIN ]; then      
+      ./scripts/build_jekyll_maven.sh
+    elif [ $TRAVIS_BRANCH = "master" && $ROUTE = $SITE_DRAFT_GUIDES_DOMAIN ]; then
+      ./scripts/build_jekyll_maven.sh
+    elif [ $TRAVIS_BRANCH = "development" && $ROUTE = $SITE_DEV_DOMAIN ]; then
       env GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH ./scripts/build_jekyll_maven.sh
     else
       ./scripts/build_jekyll_maven.sh
@@ -25,19 +31,23 @@ branches:
 
 sudo: false # route your build to the container-based infrastructure for a faster build
 
+# deploy only the specified build to each route
 deploy:
   - provider: script
     skip_cleanup: true
     on:
       branch: master
+      condition: $ROUTE = $SITE_QA_DOMAIN
     script: env ROUTE=$SITE_QA_DOMAIN ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
       branch: master
+      condition: $ROUTE = $SITE_DRAFT_GUIDES_DOMAIN
     script: env ROUTE=$SITE_DRAFT_GUIDES_DOMAIN ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
       branch: development
+      condition: $ROUTE = $SITE_DEV_DOMAIN
     script: env ROUTE=$SITE_DEV_DOMAIN ./.travis/cf-push.sh
