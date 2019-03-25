@@ -9,6 +9,63 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
  
+
+/* Nav bar color corrections for light page */
+.navbar-dark .navbar-nav .nav-link {
+    color: #5E6B8D;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #24253A;
+}
+
+#fork_button {
+    border: 1px solid #ABD155;
+    color: #4F660A;
+}
+
+#fork_button:hover {
+    border: 1px solid #4F660A;
+}
+
+#ol_nav_title {
+    color: #2C2E50;
+}
+
+@media (max-width: 991.98px) {
+    .navbar-dark .navbar-nav .nav-link, .navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:active, #fork_button {
+        font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
+        font-size: 35px;
+        color: #FFFFFF;
+        margin-right: 26px;
+        margin-left: 26px;
+    }
+    
+    #fork_button {
+        border: none;
+        padding-left: 0;
+        padding-top: 8px;
+        padding-bottom: 27px;
+        border-bottom: 1px solid rgba(201, 214, 254, 0.35);
+        border-radius: 0px;
+    }
+    
+    #fork_button:hover {
+        color: #FFFFFF;
+        border: none;
+        border-bottom: 1px solid rgba(201, 214, 254, 0.35);
+    }
+    
+    #fork_button {
+        display: block;
+    }
+
+    .navbar-dark .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgb(44, 46, 80)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+    }
+}
+
+
 /* BLOG */
 
 #background_container {
@@ -17,7 +74,7 @@
 }
 
 #blog_container {
-    padding-top: 190px;
+    padding-top: 70px;
 
     @media (max-width: 767.98px) {
         padding-top: 60px;
@@ -30,42 +87,47 @@
     @media (max-width: 767.98px) {
         margin-bottom: 40px;
     }
+
+    .col-md-8 {
+        border-left: 2px solid rgba(151, 151, 151, 0.49);
+    }
 }
 
-#page_intro_paragraph {
-    font-size: 20px;
-    line-height: 35px;
+#intro_logo {
+    margin-top: 89px;
+}
 
-    @media (max-width: 767.98px) {
-        font-size: 16px;
-        line-height: inherit;
-    }
+.blog_subtitle {
+    font-size: 24px;
+    margin-top: 33px;
 }
 
 .blog_post_column {
     padding: 0;
-    background-color: white;
-    -webkit-box-shadow: 0px 5px 11px -3px rgba(0,0,0,0.27);
-    -moz-box-shadow: 0px 5px 11px -3px rgba(0,0,0,0.27);
-    box-shadow: 0px 5px 11px -3px rgba(0,0,0,0.27);
+    border-bottom: 1px solid rgba(151, 151, 151, 0.49);
     margin-bottom: 70px;
     color: #24253A;
-    border-left: solid 37px #EEEFF3;
     transition: border-color .2s;
-    
-    &:hover {
-        border-color: #ECF1BA;
-    }
 
     @media (max-width: 767.98px) {
         border-width: 0;
     }
 }
 
+#latest_posts {
+    font-family: BunueloLight;
+    font-size: 35px;
+    background-color: rgba(230, 237, 168, 0.3);
+    padding-left: 71px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-left: -15px;
+}
+
 .blog_post_content {
     width: 100%;
     padding-top: 40px;
-    padding-left: 72px;
+    padding-left: 63px;
     padding-right: 70px;
     padding-bottom: 64px;
 
@@ -89,6 +151,8 @@
 }
 
 .blog_post_title_link {
+    font-family: BunueloLight;
+    font-size: 35px;
     color: #5E6B8D;
     transition: color .2s;
 
@@ -135,9 +199,9 @@
 }
 
 .read_more_link {
-    color: #5e6b8d;
-    border: solid 2px #a6adc0;
-    border-radius: 100px;
+    color: #E57000;
+    border: 2px solid #FBCEAD;
+    border-radius: 7px;
     font-size: 20px;
     padding-top: 8px;
     padding-bottom: 8px;
@@ -146,9 +210,8 @@
     transition: all .2s;
 
     &:hover {
-        color: white;
-        background-color: #5E6B8D;
-        border-color: #5E6B8D;
+        color: #E57000;
+        border-color: #E57000;
     }
 }
 

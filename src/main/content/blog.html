@@ -6,60 +6,63 @@ permalink: /blog/
 ---
 
 <!-- BLOG -->
-<div id="background_container" class="black_blue_gradient_background">
+<div id="background_container">
     <div id="blog_container" class="container">
         <div id="blog_row_1" class="row">
             <div class="col-md-4">
                 <img id="intro_logo" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-fluid" alt="Blog">
+                <h2 class="blog_subtitle">Never miss a post!</h1>
+                <p>Be sure to follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our RSS feed.</p>
+
+                <h2 class="blog_subtitle">Featured Tags</h1>
+                <p>Microprofile, Java EE, Spring, announcements, Jakarta EE</p>
             </div>
             <div class="col-md-8">
-                <p id="page_intro_paragraph">
-                    The Open Liberty blog is your source for official Open Liberty announcements and other hot open source topics,
-                    all in an easily digestible form! Follow <a href="https://twitter.com/OpenLibertyIO" target="new" class="light_green_link_dark_background">@OpenLibertyIO</a> and never miss a new post! 
-                </p>
-            </div>
-        </div>
-        {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
-        {% for post in site.posts %}
-        <div class="row blog_post_row">
-            <div class="col-xl-8 offset-xl-2 col-xs-12 blog_post_column">
-                <div class="blog_post_content">
-                    {% if post.redirect_link %}
-                        <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
-                    {% else %}
-                        <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
-                    {% endif %}
-                    <div class="blog_post_author_data_container">
-                        <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
-                        <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
-                        <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
-                    </div>
-                    <p class="blog_post_paragraph">
-                        {% assign continue_text = ' [Continued on ' %}
-                        {% if post.blog_description %}
-                            {{ post.blog_description }}
+                <p id="latest_posts">Latest Posts</p>
+                {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
+                {% for post in site.posts %}
+                <div class="row blog_post_row">
+                    <div class="blog_post_column">
+                        <div class="blog_post_content">
                             {% if post.redirect_link %}
-                                <span id="continued_text">
-                                {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." %}
-                                {% assign clean_domain = domain_name | remove: '[' | remove: '"' %}
-                                {{ continue_text | append: clean_domain }}
-                                </span>
+                                <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
+                            {% else %}
+                                <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
                             {% endif %}
-                        {% else %}
-                            {{ post.content | strip_html | truncatewords: 60 }}
-                        {% endif %}
-                    </p>
-                    <div class="text-right">
-                    {% if post.redirect_link %}
-                        <a href="{{ post.redirect_link }}" class="read_more_link">Read more</a>
-                    {% else %}
-                        <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
-                    {% endif %}
+                            <div class="blog_post_author_data_container">
+                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
+                                <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
+                            </div>
+                            <p class="blog_post_paragraph">
+                                {% assign continue_text = ' [Continued on ' %}
+                                {% if post.blog_description %}
+                                    {{ post.blog_description }}
+                                    {% if post.redirect_link %}
+                                        <span id="continued_text">
+                                        {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." %}
+                                        {% assign clean_domain = domain_name | remove: '[' | remove: '"' %}
+                                        {{ continue_text | append: clean_domain }}
+                                        </span>
+                                    {% endif %}
+                                {% else %}
+                                    {{ post.content | strip_html | truncatewords: 60 }}
+                                {% endif %}
+                            </p>
+                            <div class="text-right">
+                            {% if post.redirect_link %}
+                                <a href="{{ post.redirect_link }}" class="read_more_link">Read more</a>
+                            {% else %}
+                                <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
+                            {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
-        {% endfor %}
+
 
     </div>
 </div>
