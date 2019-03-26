@@ -11,15 +11,18 @@ processing the `server.xml` file, any elements or attributes that are not
 understood are simply ignored. The default `server.xml` might look like the
 following example:
 
-    <server description="new server">
-        <featureManager>
-            <feature>jsp-2.3</feature>
-        </featureManager>
-        <httpEndpoint id="defaultHttpEndpoint"
-                      httpPort="9080"
-                      httpsPort="9443" />
-        <applicationManager autoExpand="true"/>
-    </server>
+[source,xml]
+----
+<server description="new server">
+    <featureManager>
+        <feature>jsp-2.3</feature>
+    </featureManager>
+    <httpEndpoint id="defaultHttpEndpoint"
+                  httpPort="9080"
+                  httpsPort="9443" />
+    <applicationManager autoExpand="true"/>
+</server>
+----
 
 This example `server.xml` configures the server to support Java Server Pages 2.3,
 to listen to incoming traffic to localhost on port 9080, and to automatically
@@ -62,7 +65,7 @@ variable substitution.  For example:
 
     JAVA_HOME=/opt/ibm/java
     WLP_USER_DIR=/opt/wlp-usr
-    
+
 Key values must not contain white space. The values are interpreted as literal so there is no need to escape spaces or other special characters.
 
 == jvm.options
@@ -88,9 +91,12 @@ Common uses of `jvm.options` files include:
 The `jvm.options` file format uses one line per JVM option and does not support
 variable substitution. For example:
 
-    -Xmx512m
-    -Dmy.system.prop=This is the value.
- 
+[source,properties]
+----
+-Xmx512m
+-Dmy.system.prop=This is the value.
+----
+
 There is no need to escape special characters, such as spaces.
 
 The options are read and provided in order to the JVM. If you provide multiple
@@ -144,39 +150,77 @@ You can parameterize server config using variables. When resolving
 variable names the following sources are consulted in increasing order of
 precedence:
 
+* `server.xml` default variable values
+* envrionment variables
 * `bootstrap.properties`
 * Java system properties
 * `server.xml` config
 
 Variables are referenced using `${variableName}` syntax. In server config,
-specify variables using the variable element:
+specify variables using the `variable` element:
 
-    <variable name="variableName" value="some.value" />
+[source,xml]
+----
+<variable name="variableName" value="some.value" />
+----
 
-In addition to these locations, environment variables can be accessed by
-adding `env.` to the start of the environment variable name:
+Default values, specified in server config, are only used if no other value can
+be found. They are specified using the `variable` element and the `defaultValue`
+attribute:
 
-    <httpEndpoint id="defaultHttpEndpoint"
-                  host="${env.HOST}"
-                  httpPort="9080" />
+[source,xml]
+----
+<variable name="variableName" defaultValue="some.default.value"/>
+----
+
+Environment variables can be accessed as variables. From 19.0.0.3 they can be
+accessed directly by referencing the environment variable name. If the variable
+cannot be resolved the following transformations on the environment variable
+name is tried:
+
+1. Replace all non-alpha num characters with _
+1. Change all characters to upper case.
+
+If you enter `${my.env.var}` in `server.xml` it will look for environment
+variables with the following names:
+
+1. my.env.var
+1. my_env_var
+1. MY_ENV_VAR
+
+When using a Liberty release older than 19.0.0.3 environment variables can be
+accessed by adding `env.` to the start of the environment variable name:
+
+[source,xml]
+----
+<httpEndpoint id="defaultHttpEndpoint"
+              host="${env.HOST}"
+              httpPort="9080" />
+----
 
 Variable values are always interpreted as a String with simple type conversion.
 This can lead to situations where a list of ports (e.g. `80,443`) is interpreted as
 a single string rather than as two port numbers. In this case, the variable
 substitution can be forced to split on the `,` using a `list` function. For example:
 
-    <mongo ports="${list(mongoPorts)}" hosts="${list(mongoHosts)}" />
+[source,xml]
+----
+<mongo ports="${list(mongoPorts)}" hosts="${list(mongoHosts)}" />
+----
 
 Simple arithmetic is also supported for variables whose value is an integer.
 The left and right side of the operator can be a variable or a number; the
 operator can be one of `+`, `-`, `*`, `/` for example:
 
-    <variable name="one" value="1" />
-    <variable name="two" value="${one+1}" />
-    <variable name="three" value="${one+two}" />
-    <variable name="six" value="${two*three}" />
-    <variable name="five" value="${six-one}" />
-    <variable name="threeagain" value="${six/two}" />
+[source,xml]
+----
+<variable name="one" value="1" />
+<variable name="two" value="${one+1}" />
+<variable name="three" value="${one+two}" />
+<variable name="six" value="${two*three}" />
+<variable name="five" value="${six-one}" />
+<variable name="threeagain" value="${six/two}" />
+----
 
 There are a number of predefined variables:
 
@@ -210,52 +254,70 @@ data source).
 For singleton config elements the config is merged. If two
 elements exist with different attributes both attributes are used. For example:
 
-    <server>
-        <logging a="true" />
-        <logging b="false" />
-    </server>
+[source,xml]
+----
+<server>
+    <logging a="true" />
+    <logging b="false" />
+</server>
+----
 
 is treated as:
 
-    <server>
-        <logging a="true" b="false" />
-    </server>
+[source,xml]
+----
+<server>
+    <logging a="true" b="false" />
+</server>
+----
 
 If the same attribute is specified twice then it is treated as a last instance
 wins. For example:
 
-    <server>
-        <logging a="true" b="true"/>
-        <logging b="false" />
-    </server>
+[source,xml]
+----
+<server>
+    <logging a="true" b="true"/>
+    <logging b="false" />
+</server>
+----
 
 is treated as:
 
-    <server>
-        <logging a="true" b="false" />
-    </server>
+[source,xml]
+----
+<server>
+    <logging a="true" b="false" />
+</server>
+----
 
 In some cases, config is provided using child elements that take text. In
 these cases the config is merged by using all of the values specified. The most
 common scenario is configuring features. For example:
 
-    <server>
-        <featureManager>
-            <feature>servlet-4.0</feature>
-        </featureManager>
-        <featureManager>
-            <feature>restConnector-2.0</feature>
-        </featureManager>
-    </server>
+[source,xml]
+----
+<server>
+    <featureManager>
+        <feature>servlet-4.0</feature>
+    </featureManager>
+    <featureManager>
+        <feature>restConnector-2.0</feature>
+    </featureManager>
+</server>
+----
 
 is treated as:
 
-    <server>
-        <featureManager>
-            <feature>servlet-4.0</feature>
-            <feature>restConnector-2.0</feature>
-        </featureManager>
-    </server>
+[source,xml]
+----
+<server>
+    <featureManager>
+        <feature>servlet-4.0</feature>
+        <feature>restConnector-2.0</feature>
+    </featureManager>
+</server>
+----
 
 ==== Merging factory config
 
@@ -268,14 +330,17 @@ to indicate they are the same thing. Variable substitution on an `id` is not
 supported.
 
 The following example configures two applications. One is `myapp.war` and has a
-context root of `myawesomeapp` and the other is `myapp2.war` which has `myapp2` as 
+context root of `myawesomeapp` and the other is `myapp2.war` which has `myapp2` as
 the context root:
 
-    <server>
-        <webApplication id="app1" location="myapp.war" />
-        <webApplication location="myapp2.war" />
-        <webApplication id="app1" contextRoot="/myawesomeapp" />
-    </server>
+[source,xml]
+----
+<server>
+    <webApplication id="app1" location="myapp.war" />
+    <webApplication location="myapp2.war" />
+    <webApplication id="app1" contextRoot="/myawesomeapp" />
+</server>
+----
 
 === Include processing
 
@@ -286,26 +351,35 @@ referenced file as if they were included inline in place of the `include`
 element. In the following example, the server processes the contents of the
 `other.xml` file before processing the contents of the `other2.xml` file:
 
-    <server>
-        <include location="other.xml" />
-        <include location="other2.xml" />
-    </server>
+[source,xml]
+----
+<server>
+    <include location="other.xml" />
+    <include location="other2.xml" />
+</server>
+----
 
 By default, an include file must exist but, if the include file might not be
 present, the `optional` attribute can be set to `true`. For example:
 
-    <server>
-        <include location="other.xml" optional="true" />
-    </server>
+[source,xml]
+----
+<server>
+    <include location="other.xml" optional="true" />
+</server>
+----
 
 When including a file, you can specify the `onConflict` attribute to change the
 normal merge rules. The normal merge rules can be replaced to ignore (`IGNORE`) any
 conflicting config or to replace it (`REPLACE`).
 
-    <server>
-        <include location="other.xml" onConflict="IGNORE" />
-        <include location="other2.xml" onConflict="REPLACE" />
-    </server>
+[source,xml]
+----
+<server>
+    <include location="other.xml" onConflict="IGNORE" />
+    <include location="other2.xml" onConflict="REPLACE" />
+</server>
+----
 
 You can set the `location` attribute to a relative or absolute file path or to
 an HTTP URL.
@@ -322,10 +396,13 @@ A reference to config always uses the `id` attribute of the element being referr
 to. The config element making the reference uses an attribute that always ends
 with `Ref`. For example:
 
-    <server>
-      <dataSource jndiName="jdbc/fred" jdbcDriverRef="myDriver" />
-      <jdbcDriver id="myDriver" />
-    </server>
+[source,xml]
+----
+<server>
+  <dataSource jndiName="jdbc/fred" jdbcDriverRef="myDriver" />
+  <jdbcDriver id="myDriver" />
+</server>
+----
 
 == Dynamic updates
 The server monitors the server XML config for updates and dynamically
@@ -335,11 +412,17 @@ XML config file on the local disk is monitored for updates every 500ms. Whether 
 check, and how often, can be configured. To configure the server to only check
 every ten minutes specify:
 
-    <config monitorInterval="10m" />
+[source,xml]
+----
+<config monitorInterval="10m" />
+----
 
 To disable file system polling and only reload when an MBean is notified specify:
 
-    <config updateTrigger="mbean" />
+[source,xml]
+----
+<config updateTrigger="mbean" />
+----
 
 == Log Messages
 While the server is running it might output log messages that reference some
@@ -350,8 +433,11 @@ XML config in the following example, the logs reference the `dataStore` element
 as `dataStore[myDS]` and the child dataSource would be identfied as
 `dataStore[myDS]/dataSource[default-0]` in logs.
 
-    <server>
-      <dataStore id="myDS">
+[source,xml]
+----
+<server>
+    <dataStore id="myDS">
         <dataSource />
-      </dataStore>
-    </server>
+    </dataStore>
+</server>
+----
