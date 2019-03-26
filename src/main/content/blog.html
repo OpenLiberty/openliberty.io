@@ -9,59 +9,98 @@ permalink: /blog/
 <div id="background_container">
     <div id="blog_container" class="container">
         <div id="blog_row_1" class="row">
-            <div class="col-md-4">
-                <img id="intro_logo" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-fluid" alt="Blog">
+            <div class="col-md-12 col-lg-4">
+                <img id="intro_logo" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-fluid d-none d-lg-block" alt="Blog">
                 <h2 class="blog_subtitle">Never miss a post!</h1>
                 <p>Be sure to follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our RSS feed.</p>
 
                 <h2 class="blog_subtitle">Featured Tags</h1>
                 <p>Microprofile, Java EE, Spring, announcements, Jakarta EE</p>
+                <img id="ufo_images" src="/img/blogs_images.svg" alt="ufo and clouds">
             </div>
-            <div class="col-md-8">
+            <div class="col-md-12 col-lg-8">
                 <p id="latest_posts">Latest Posts</p>
                 {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
+                {% assign count = 1 %}
                 {% for post in site.posts %}
-                <div class="row blog_post_row">
-                    <div class="blog_post_column">
-                        <div class="blog_post_content">
-                            {% if post.redirect_link %}
-                                <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
-                            {% else %}
-                                <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
-                            {% endif %}
-                            <p class="blog_post_paragraph">
-                                {% assign continue_text = ' [Continued on ' %}
-                                {% if post.blog_description %}
-                                    {{ post.blog_description }}
-                                    {% if post.redirect_link %}
-                                        <span id="continued_text">
+                    <div class="row blog_post_row">
+                        <div class="blog_post_column">
+                            {% if count < 4 %}
+                            <div class="blog_post_content">
+                                {% if post.redirect_link %}
+                                    <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
+                                    <span id="continued_text">
+                                        {% assign continue_text = ' [Continued on ' %}
                                         {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." %}
                                         {% assign clean_domain = domain_name | remove: '[' | remove: '"' %}
                                         {{ continue_text | append: clean_domain }}
-                                        </span>
-                                    {% endif %}
-                                {% else %}
-                                    {{ post.content | strip_html | truncatewords: 60 }}
+                                    </span>
+                                    {% else %}
+                                    <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
                                 {% endif %}
-                            </p>
-                            <div class="blog_post_author_data_container">
-                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
-                                <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
-                                <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
+                                <p class="blog_post_paragraph">
+                                    {% if post.blog_description %}
+                                        {{ post.blog_description }}
+                                    {% else %}
+                                        {{ post.content | strip_html | truncatewords: 60 }}
+                                    {% endif %}
+                                </p>
+                                <div class="blog_post_author_data_container">
+                                    <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                    <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
+                                    <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
+                                </div>
+                                <div id="read_more_link_container">
+                                {% if post.redirect_link %}
+                                    <a href="{{ post.redirect_link }}" class="read_more_link" id="read_more_link_external">Read more</a>
+                                {% else %}
+                                    <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
+                                {% endif %}
+                                </div>
+                                {% if count != 3 %}
+                                    <div id="bottom_border"></div>
+                                {% endif %}
                             </div>
-                            <div id="read_more_link_container">
-                            {% if post.redirect_link %}
-                                <a href="{{ post.redirect_link }}" class="read_more_link" id="read_more_link_external">Read more</a>
+                            {% elsif count == 4 %}
+                                <p id="older_posts">Older Posts</p>
+
                             {% else %}
-                                <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
+                                <div class="blog_post_content">
+                                    {% if post.redirect_link %}
+                                        <h2 class="blog_post_title_condensed"><a href="{{ post.redirect_link }}" class="blog_post_title_link_condensed">{{ post.title | escape }}</a></h2>
+                                        <span id="continued_text">
+                                            {% assign continue_text = ' [Continued on ' %}
+                                            {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." %}
+                                            {% assign clean_domain = domain_name | remove: '[' | remove: '"' %}
+                                            {{ continue_text | append: clean_domain }}
+                                        </span>
+                                    {% else %}
+                                        <h2 class="blog_post_title_condensed"><a href="{{ post.url | relative_url }}" class="blog_post_title_link_condensed">{{ post.title | escape }}</a></h2>
+                                    {% endif %}
+                                    <div class="blog_post_author_data_container">
+                                        <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                        <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
+                                        <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
+                                    </div>
+                                    <div id="read_more_link_container">
+                                    {% if post.redirect_link %}
+                                        <a href="{{ post.redirect_link }}" class="read_more_link" id="read_more_link_external">Read more</a>
+                                    {% else %}
+                                        <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
+                                    {% endif %}
+                                    </div>
+                                    <div id="bottom_border"></div>
+                                </div>
+
+
+
                             {% endif %}
-                            </div>
-                            <div id="bottom_border"></div>
+
                         </div>
                     </div>
-                </div>
+                    {% assign count = count | plus: 1 %}
                 {% endfor %}
-                <div class="blog_post_content">
+                <div id="final_post" class="blog_post_content">
                     <p class="blog_post_title_link">Stay lightyears ahead.</p>
                     <p>Follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our RSS feed.</p>
                 </div>
