@@ -29,11 +29,6 @@ permalink: /blog/
                             {% else %}
                                 <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
                             {% endif %}
-                            <div class="blog_post_author_data_container">
-                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
-                                <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
-                                <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
-                            </div>
                             <p class="blog_post_paragraph">
                                 {% assign continue_text = ' [Continued on ' %}
                                 {% if post.blog_description %}
@@ -49,17 +44,27 @@ permalink: /blog/
                                     {{ post.content | strip_html | truncatewords: 60 }}
                                 {% endif %}
                             </p>
-                            <div class="text-right">
+                            <div class="blog_post_author_data_container">
+                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
+                                <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
+                            </div>
+                            <div id="read_more_link_container">
                             {% if post.redirect_link %}
-                                <a href="{{ post.redirect_link }}" class="read_more_link">Read more</a>
+                                <a href="{{ post.redirect_link }}" class="read_more_link" id="read_more_link_external">Read more</a>
                             {% else %}
                                 <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
                             {% endif %}
                             </div>
+                            <div id="bottom_border"></div>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
+                <div class="blog_post_content">
+                    <p class="blog_post_title_link">Stay lightyears ahead.</p>
+                    <p>Follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our RSS feed.</p>
+                </div>
             </div>
         </div>
 
