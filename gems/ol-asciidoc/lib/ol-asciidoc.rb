@@ -16,7 +16,7 @@ class ConfigLinkMacro < Asciidoctor::Extensions::InlineMacroProcessor
   named :config
 
   def process parent, target, attrs
-    (create_anchor parent, target, type: :link, target: "/docs/ref/config/#rwlp_config_" + target + ".html").convert
+    (create_anchor parent, target, type: :link, target: "/docs/ref/config/#" + target + ".html").convert
   end
 end
 

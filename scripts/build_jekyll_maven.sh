@@ -12,13 +12,6 @@ JEKYLL_BUILD_FLAGS=""
 echo "Ruby version:"
 echo `ruby -v`
 
-# Special handling for javadocs
-./scripts/modify_javadoc.sh
-pushd gems/ol-asciidoc
-gem build ol-asciidoc.gemspec
-gem install ol-asciidoc-0.0.1.gem
-popd
-
 # Guides that are ready to be published to openliberty.io
 echo "Cloning repositories with name starting with guide or iguide..."
 ruby ./scripts/build_clone_guides.rb
@@ -49,6 +42,12 @@ else
     ./scripts/build_clone_docs.sh "master" # Argument is branch name of OpenLiberty/docs
 fi
 
+# Special handling for javadocs
+./scripts/modify_javadoc.sh
+pushd gems/ol-asciidoc
+gem build ol-asciidoc.gemspec
+gem install ol-asciidoc-0.0.1.gem
+popd
 
 echo "Copying guide images to /img/guide"
 mkdir -p src/main/content/img/guide
