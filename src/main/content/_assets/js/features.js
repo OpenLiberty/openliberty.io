@@ -223,7 +223,7 @@ function updateMainBreadcrumb(resource, attrForTitle) {
 function updateHashInUrl(href) {
     var hashInUrl = href;
     if (href.indexOf("/feature/") !== -1) {
-        hashInUrl = href.substring(9);
+        hashInUrl = href.substring(18);
     }
 
     lastClickElementHref = hashInUrl;
@@ -345,7 +345,6 @@ function scrollToTOC(tocElement) {
         var elementTop = tocElement[0].getBoundingClientRect().top - headerHeight;
         var tocClientHeight = $('#toc_column')[0].clientHeight;
         var tocScrollHeight = $('#toc_column')[0].scrollHeight;
-        console.log("elementTop: " + elementTop + "; currentTOCTop: " + currentTOCTop + "; headerHeight: " + headerHeight + "; tocClientHeight: " + tocClientHeight);
 
         if (elementTop < 0 || (elementTop > 0 && 
                             elementTop > tocClientHeight)) {
@@ -370,7 +369,7 @@ function addHashListener() {
             lastClickElementHref = null;
 
             if (window.location.hash) {
-                var tocHref = "/feature/" + window.location.hash.substring(1);
+                var tocHref = "/docs/ref/feature/" + window.location.hash.substring(1);
                 var tocElement = $("#toc_container").find("div[href='" + tocHref + "']");
                 if (tocElement.length === 1) {
                     loadContent(tocElement, tocHref);
