@@ -16,7 +16,7 @@ permalink: /blog/
 
                 <h2 class="blog_subtitle">Featured Tags</h1>
                 <p>Microprofile, Java EE, Spring, announcements, Jakarta EE</p>
-                <img id="ufo_images" src="/img/blogs_images.svg" alt="ufo and clouds">
+                <img id="ufo_images_top" class="d-none d-sm-block" src="/img/blogs_images.svg" alt="ufo and clouds">
             </div>
             <div class="col-md-12 col-lg-8">
                 <p id="latest_posts">Latest Posts</p>
@@ -28,13 +28,13 @@ permalink: /blog/
                             {% if count < 4 %}
                             <div class="blog_post_content">
                                 {% if post.redirect_link %}
-                                    <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
-                                    <span id="continued_text">
-                                        {% assign continue_text = ' [Continued on ' %}
-                                        {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." %}
-                                        {% assign clean_domain = domain_name | remove: '[' | remove: '"' %}
-                                        {{ continue_text | append: clean_domain }}
-                                    </span>
+                                    <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" class="blog_post_title_link">{{ post.title | escape }}</a>
+                                        <span class="continued_text">
+                                            {% assign continue_text = ' [Continued on ' %}
+                                            {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
+                                            {{ continue_text | append: domain_name }}
+                                        </span>
+                                    </h2>
                                     {% else %}
                                     <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
                                 {% endif %}
@@ -45,20 +45,20 @@ permalink: /blog/
                                         {{ post.content | strip_html | truncatewords: 60 }}
                                     {% endif %}
                                 </p>
-                                <div class="blog_post_author_data_container">
+                                <div class="blog_post_author_data_container d-none d-sm-block">
                                     <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
                                     <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
                                     <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
                                 </div>
-                                <div id="read_more_link_container">
+                                <div class="read_more_link_container">
                                 {% if post.redirect_link %}
-                                    <a href="{{ post.redirect_link }}" class="read_more_link" id="read_more_link_external">Read more</a>
+                                    <a href="{{ post.redirect_link }}" class="read_more_link read_more_link_external">Read more</a>
                                 {% else %}
                                     <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
                                 {% endif %}
                                 </div>
                                 {% if count != 3 %}
-                                    <div id="bottom_border"></div>
+                                    <div class="bottom_border"></div>
                                 {% endif %}
                             </div>
                             {% elsif count == 4 %}
@@ -67,13 +67,13 @@ permalink: /blog/
                             {% else %}
                                 <div class="blog_post_content">
                                     {% if post.redirect_link %}
-                                        <h2 class="blog_post_title_condensed"><a href="{{ post.redirect_link }}" class="blog_post_title_link_condensed">{{ post.title | escape }}</a></h2>
-                                        <span id="continued_text">
-                                            {% assign continue_text = ' [Continued on ' %}
-                                            {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." %}
-                                            {% assign clean_domain = domain_name | remove: '[' | remove: '"' %}
-                                            {{ continue_text | append: clean_domain }}
-                                        </span>
+                                        <h2 class="blog_post_title_condensed"><a href="{{ post.redirect_link }}" class="blog_post_title_link_condensed">{{ post.title | escape }}</a>
+                                            <span class="continued_text">
+                                                {% assign continue_text = ' [Continued on ' %}
+                                                {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
+                                                {{ continue_text | append: domain_name }}
+                                            </span>
+                                        </h2>
                                     {% else %}
                                         <h2 class="blog_post_title_condensed"><a href="{{ post.url | relative_url }}" class="blog_post_title_link_condensed">{{ post.title | escape }}</a></h2>
                                     {% endif %}
@@ -82,14 +82,14 @@ permalink: /blog/
                                         <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
                                         <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
                                     </div>
-                                    <div id="read_more_link_container">
+                                    <div class="read_more_link_container">
                                     {% if post.redirect_link %}
-                                        <a href="{{ post.redirect_link }}" class="read_more_link" id="read_more_link_external">Read more</a>
+                                        <a href="{{ post.redirect_link }}" class="read_more_link read_more_link_external">Read more</a>
                                     {% else %}
                                         <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
                                     {% endif %}
                                     </div>
-                                    <div id="bottom_border"></div>
+                                    <div class="bottom_border"></div>
                                 </div>
 
 
@@ -104,6 +104,7 @@ permalink: /blog/
                     <p class="blog_post_title_link">Stay lightyears ahead.</p>
                     <p>Follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our RSS feed.</p>
                 </div>
+                <img id="ufo_images_bottom" class="d-block d-sm-none img-fluid" src="/img/blogs_images_mobile.svg" alt="ufo and clouds">
             </div>
         </div>
 

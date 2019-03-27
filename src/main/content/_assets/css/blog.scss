@@ -88,10 +88,6 @@
         box-shadow: -2px 0 2px -2px #D8D8D8;
     }
 
-    @media (max-width: 767.98px) {
-        margin-bottom: 40px;
-    }
-
     @media (max-width: 991.98px) {
         .col-lg-4 {
             overflow: hidden;
@@ -100,9 +96,19 @@
             }
         }
     }
+
+    @media (max-width: 767.98px) {
+        margin-bottom: 40px;
+        .col-lg-4 {
+            & p {
+                width: 100%;
+            }
+        }
+    }
 }
 
 #intro_logo {
+    height: 60px;
     margin-top: 89px;
 }
 
@@ -111,7 +117,7 @@
     margin-top: 33px;
 }
 
-#ufo_images {
+#ufo_images_top {
     position: absolute;
     right: 0px;
     width: 700px;
@@ -120,6 +126,13 @@
         top: 0px;
         width: 430px;
     }
+}
+
+#ufo_images_bottom {
+    min-width: 160%;
+    height: auto;
+    margin-left: 37%;
+    transform: translateX(-40%);
 }
 
 .blog_post_column {
@@ -138,8 +151,8 @@
     font-size: 35px;
     background-color: rgba(230, 237, 168, 0.3);
     padding-left: 71px;
-    padding-top: 14px;
-    padding-bottom: 14px;
+    padding-top: 17px;
+    padding-bottom: 11px;
     margin-left: -15px;
     margin-bottom: 0px;
     margin-right: -15px;
@@ -150,7 +163,7 @@
     padding-top: 40px;
     padding-left: 63px;
     padding-right: 70px;
-    padding-bottom: 33px;
+    padding-bottom: 0px;
 
     @media (max-width: 991.98px) {
         padding-top: 30px;
@@ -165,10 +178,6 @@
         padding-right: 30px;
         padding-bottom: 40px;
     }
-}
-
-.blog_post_title {
-    display: inline;
 }
 
 .blog_post_title_link {
@@ -216,11 +225,12 @@
     margin-bottom: 40px;
 }
 
-#continued_text {
-    color: #F4914D;
+.continued_text {
+    font-size: 16px;
+    color: #E57000;
 }
 
-#read_more_link_container {
+.read_more_link_container {
     float: right;
 }
 
@@ -241,7 +251,7 @@
     }
 }
 
-#read_more_link_external {
+.read_more_link_external {
     color: #E57000;
     border: 2px solid #FBCEAD;
     &:hover {
@@ -250,7 +260,7 @@
     }
 }
 
-#bottom_border {
+.bottom_border {
     border-bottom: 1px solid rgba(151, 151, 151, 0.49);
 }
 
@@ -265,8 +275,7 @@
 }
 
 .blog_post_title_condensed {
-    display: inline;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .blog_post_title_link_condensed {
