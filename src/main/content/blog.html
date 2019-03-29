@@ -28,46 +28,47 @@ permalink: /blog/
                         <p class="green_bar">Latest Posts</p>
                         {% endif %}
                         {% if count < 4 %}
-                        <div class="blog_post_content">
-                            {% if post.redirect_link %}
-                                <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" class="blog_post_title_link">{{ post.title | escape }}</a>
-                                    <span class="continued_text">
-                                        {% assign continue_text = ' [Continued on ' %}
-                                        {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
-                                        {{ continue_text | append: domain_name }}
-                                    </span>
-                                </h2>
-                                {% else %}
-                                <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
-                            {% endif %}
-                            <p class="blog_post_date_mobile">{{ post.date | date: date_format }}</p>
-                            <p class="blog_post_paragraph">
-                                {% if post.blog_description %}
-                                    {{ post.blog_description }}
-                                {% else %}
-                                    {{ post.content | strip_html | truncatewords: 60 }}
+                            <div class="blog_post_content">
+                                {% if post.redirect_link %}
+                                    <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" class="blog_post_title_link">{{ post.title | escape }}</a>
+                                        <span class="continued_text">
+                                            {% assign continue_text = ' [Continued on ' %}
+                                            {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
+                                            {{ continue_text | append: domain_name }}
+                                        </span>
+                                    </h2>
+                                    {% else %}
+                                    <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
                                 {% endif %}
-                            </p>
-                            <div class="blog_post_author_data_container">
-                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
-                                <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
-                                <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
+                                <p class="blog_post_date_mobile">{{ post.date | date: date_format }}</p>
+                                <p class="blog_post_paragraph">
+                                    {% if post.blog_description %}
+                                        {{ post.blog_description }}
+                                    {% else %}
+                                        {{ post.content | strip_html | truncatewords: 60 }}
+                                    {% endif %}
+                                </p>
+                                <div class="blog_post_author_data_container">
+                                    <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                    <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
+                                    <span class="blog_post_date">on {{ post.date | date: date_format }}</span>
+                                </div>
+                                <div class="read_more_link_container">
+                                {% if post.redirect_link %}
+                                    <a href="{{ post.redirect_link }}" class="read_more_link read_more_link_external">Read more</a>
+                                {% else %}
+                                    <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
+                                {% endif %}
+                                </div>
+                                {% if count != 3 %}
+                                    <div class="bottom_border"></div>
+                                {% endif %}
                             </div>
-                            <div class="read_more_link_container">
-                            {% if post.redirect_link %}
-                                <a href="{{ post.redirect_link }}" class="read_more_link read_more_link_external">Read more</a>
-                            {% else %}
-                                <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
-                            {% endif %}
-                            </div>
-                            {% if count != 3 %}
-                                <div class="bottom_border"></div>
-                            {% endif %}
-                        </div>
-                        {% elsif count == 4 %}
-                            <p class="green_bar">Older Posts</p>
 
                         {% else %}
+                            {% if count == 4 %}
+                            <p class="green_bar">Oldest Posts</p>
+                            {% endif %}
                             <div class="blog_post_content">
                                 {% if post.redirect_link %}
                                     <h2 class="blog_post_title_condensed"><a href="{{ post.redirect_link }}" class="blog_post_title_link_condensed">{{ post.title | escape }}</a>
