@@ -10,7 +10,7 @@ permalink: /blog/
 <div id="blog_container" class="container-fluid">
     <div id="blog_row_1" class="row flex-xl-nowrap">
         <div id="left_column" class="col-md-12 col-lg-4 bd-sidebar">
-            <img id="intro_logo" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-fluid d-none d-lg-block" alt="Blog">
+            <img id="blog_title" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-fluid d-none d-lg-block" alt="Blog">
             <h2 class="blog_subtitle">Never miss a post!</h1>
             <p>Be sure to follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our RSS feed.</p>
 
@@ -19,12 +19,14 @@ permalink: /blog/
             <img id="ufo_images_top" class="d-none d-md-block" src="/img/blogs_images.svg" alt="ufo and clouds">
         </div>
         <div id="right_column" class="col-md-12 col-lg-8">
-            <p id="latest_posts">Latest Posts</p>
             {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
             {% assign count = 1 %}
             {% for post in site.posts %}
                 <div class="row blog_post_row">
                     <div class="blog_post_column">
+                        {% if count == 1 %}
+                        <p class="green_bar">Latest Posts</p>
+                        {% endif %}
                         {% if count < 4 %}
                         <div class="blog_post_content">
                             {% if post.redirect_link %}
@@ -63,7 +65,7 @@ permalink: /blog/
                             {% endif %}
                         </div>
                         {% elsif count == 4 %}
-                            <p id="older_posts">Older Posts</p>
+                            <p class="green_bar">Older Posts</p>
 
                         {% else %}
                             <div class="blog_post_content">
@@ -93,16 +95,12 @@ permalink: /blog/
                                 </div>
                                 <div class="bottom_border"></div>
                             </div>
-
-
-
                         {% endif %}
-
                     </div>
                 </div>
                 {% assign count = count | plus: 1 %}
             {% endfor %}
-            <div id="final_post" class="blog_post_content">
+            <div class="blog_post_content text-center"">
                 <p class="blog_post_title_link">Stay lightyears ahead.</p>
                 <p>Follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our RSS feed.</p>
             </div>
