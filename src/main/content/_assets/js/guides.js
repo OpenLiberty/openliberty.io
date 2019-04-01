@@ -14,6 +14,7 @@ $(document).ready(function() {
     var title_key = 1;
     var description_key = 2;
     var tags_key = 4;
+    var search_term_key = 8;
     var num_of_additional_microprofile_guides = 0;
 
     // Look for guides that contain every search word
@@ -24,6 +25,7 @@ $(document).ready(function() {
             var title = guide_item.data('title');
             var description = guide_item.data('description');
             var tags = guide_item.data('tags');
+            var search_terms = guide_item.data('search-keywords');
 
             // Split on whitespaces.  Treat consecutive whitespaces as one.
             var tokens = search_value.trim().split(/\s+/);
@@ -34,7 +36,8 @@ $(document).ready(function() {
                 var word = tokens[i];
                 if (((key & title_key) && title.indexOf(word) != -1)
                 || ((key & description_key) && description.indexOf(word) != -1)
-                || ((key & tags_key) && tags.indexOf(word) != -1)) {
+                || ((key & tags_key) && tags.indexOf(word) != -1)
+                || ((key & search_term_key) && search_terms.indexOf(word) != -1)) {
                     // Guide contains one of the search word.
                     // Keep checking this guide if it contains the other
                     // search words.
@@ -166,7 +169,7 @@ $(document).ready(function() {
                 var search_value = input_value.substring(4).trim();
                 filter_guides(tags_key, search_value);
             } else {
-                filter_guides(title_key | description_key | tags_key, input_value);
+                filter_guides(title_key | description_key | tags_key | search_term_key, input_value);
             }
             expandMicroProfileAdditionalGuides();
             updateTotals();
