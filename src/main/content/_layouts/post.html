@@ -10,25 +10,38 @@ js:
 
 <div id="article_container" class="container-fluid">
     <article class="post" aria-label="article">
-            <header id="post_header">
-                <div class="container">
-                        <a id="blog_link" href="/blog"><img id="arrow" src="/img/post_arrow.svg">See all blog posts</a>
-                        <h1 id="post_title">{{ page.title | escape }}</h1>
-                    <div id="post_information_container">
-                        <img src="{{ page.author_picture }}" id="author_image" alt="image of author">
-                        <a id="author_name" href="{{ page.author_github }}">{{ page.author }}</a>
-                        {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
-                        <span id="post_date">on {{ page.date | date: date_format }}</span>
-                    </div>
-                    <p id="tags">Tags:</p>
-                    <a id="tag_link">open source, JavaEE7, announcements, MicroProfile</a>
+        <header id="post_header">
+            <div class="container">
+                <a id="blog_link" href="/blog"><img id="arrow" src="/img/post_arrow.svg">See all blog posts</a>
+                <div class="share_post_container">
+                    <a class="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{page.title}}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
+                    <a class="reddit_link" href="//www.reddit.com/submit" onclick="window.open('//www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
                 </div>
-            </header>
+                <h1 id="post_title">{{ page.title | escape }}</h1>
+                <div id="post_information_container">
+                    <img src="{{ page.author_picture }}" id="author_image" alt="image of author">
+                    <a id="author_name" href="{{ page.author_github }}">{{ page.author }}</a>
+                    {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
+                    <span id="post_date">on {{ page.date | date: date_format }}</span>
+                </div>
+                <p id="tags_header">Tags:</p>
+                <a id="tag_link">open source, JavaEE7, announcements, MicroProfile</a>
+            </div>
+        </header>
         <div id="article_body" class="container">
             {{ content }}
-            <div id="share_post_container">
-                <a id="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{page.title}}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
-                <a id="reddit_link" href="//www.reddit.com/submit" onclick="window.open('//www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
+            <div id="blog_link_container">
+                <a id="blog_link_bottom" href="/blog"><img id="arrow" src="/img/post_arrow.svg">See all blog posts</a>
+            </div>
+            <div class="share_post_container">
+                <a class="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{page.title}}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
+                <a class="reddit_link" href="//www.reddit.com/submit" onclick="window.open('//www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
+            </div>
+        </div>
+        <div id="tags_container">
+            <div class="container">
+                <p id="tags">Tags</p>
+                <p id="tags_list">open source, JavaEE7, announcements, MicroProfile, open source, JavaEE7, announcements</p>
             </div>
         </div>
         {% if site.disqus.shortname %} {% include disqus_comments.html %} {% endif %}

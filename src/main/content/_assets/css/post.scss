@@ -88,14 +88,12 @@
     margin-top: 68px;
     background-color: white;
     color: #24253a;
-    padding-bottom: 82px;
     overflow: hidden;
-    @media (max-width: 991.98px) {
-        padding-bottom: 40px;
-    }
+    padding-left: 0px;
+    padding-right: 0px;
 
     @media (max-width: 767.98px) {
-        padding-bottom: 30px;
+        margin-top: 46px;
     }
 }
 
@@ -103,19 +101,24 @@
     background-color: #F7F8F9;
     padding-top: 23px;
     padding-bottom: 40px;
+
+    @media (max-width: 767.98px) {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 }
 
 #blog_link {
     font-size: 14px;
     color: #606B8D;
-    display: block;
+    display: inline-block;
     margin-bottom: 12px;
 }
 
 #arrow {
     width: 14px;
     height: 12px;
-    margin-top: -3px;
+    margin-top: -4px;
     margin-right: 8px;
 }
 
@@ -130,6 +133,12 @@
     margin-bottom: 14px;
 }
 
+#article_body {
+    @media (max-width: 767.98px) {
+        padding-left: 27px;
+        padding-right: 27px;
+    }
+}
 
 /* Keep images from overflowing */
 #article_body img {
@@ -192,7 +201,7 @@
     color: #6F7878;;
 }
 
-#tags {
+#tags_header {
     font-size: 16px;
     color: #24253A;
     margin-bottom: 0px;
@@ -205,18 +214,34 @@
     margin-bottom: 0px;
 }
 
-#share_post_container {
+#blog_link_container > #blog_link_bottom {
+    color: #5E6B8D;
+    font-size: 20px;
+    font-weight: 400;
+    padding: 5px 15px 5px 15px;
+    border: 2px solid #C9D6FE;
+    border-radius: 7px;
+
+    &:hover {
+        background-color: #C9D6FE;
+    }
+}
+
+.share_post_container {
     color: #3F4659;
     font-size: 20px;
-    padding-top: 50px;
     float: right;
+}
 
+#article_body > .share_post_container, #blog_link_container {
+    display: inline-block;
+    padding-top: 50px;
     @media (max-width: 767.98px) {
         padding-top: 20px;
     }
 }
 
-#twitter_link {
+.twitter_link {
     display: inline-block;
     width: 27px;
     height: 23px;
@@ -231,7 +256,7 @@
     }
 }
 
-#reddit_link {
+.reddit_link {
     display: inline-block;
     width: 30px;
     height: 25px;
@@ -246,8 +271,34 @@
     }
 }
 
+#tags_container {
+    background-color: #F7F8F9;
+    margin-top: 54px;
+    padding-top: 45px;
+    padding-bottom: 58px;
+    margin-bottom: 19px;
+    box-shadow: 0px 19px 36px -18px #5E6B8D;
+}
+
+#tags {
+    font-family: BunueloBold;
+    font-size: 20px;
+    color: #2C2E4F;
+}
+
+#tags_list {
+    font-size: 16px;
+    color: #5E6B8D;
+    padding-top: 16px;
+    margin: 0px;
+}
+
 .download-ol-button {
     margin-bottom: 10px;
+}
+
+footer {
+    padding-top: 0px;
 }
 
 
