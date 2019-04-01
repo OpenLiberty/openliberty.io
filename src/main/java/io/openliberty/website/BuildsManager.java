@@ -19,8 +19,14 @@ import io.openliberty.website.data.LastUpdate;
 import io.openliberty.website.data.LatestReleases;
 import io.openliberty.website.dheclient.DHEBuildParser;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 @ApplicationScoped
 public class BuildsManager {
+
+	private static final Logger logger = Logger.getLogger(BuildsManager.class.getName());
+
 	@Inject
 	private DHEBuildParser dheBuilds;
 
@@ -30,6 +36,9 @@ public class BuildsManager {
 
 	/** Allow for unittest injection */
 	BuildsManager(DHEBuildParser dheBuilds) {
+		if (logger.isLoggable(Level.FINER)) {
+			logger.log(Level.FINE, "BuildsManager() ", dheBuilds);
+		}
 		this.dheBuilds = dheBuilds;
 	}
 

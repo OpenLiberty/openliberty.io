@@ -16,9 +16,12 @@ import javax.json.JsonObjectBuilder;
 
 import io.openliberty.website.Constants;
 
+
 public class BuildData {
+
 	private LatestReleases latestReleases;
 	private BuildLists builds;
+
 
 	public BuildData(LatestReleases latestReleases, BuildLists builds) {
 		this.latestReleases = latestReleases;

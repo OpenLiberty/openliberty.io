@@ -32,7 +32,12 @@ import io.openliberty.website.data.BuildLists;
 import io.openliberty.website.data.LastUpdate;
 import io.openliberty.website.data.LatestReleases;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class DHEBuildParser {
+
+	private static final Logger logger = Logger.getLogger(DHEBuildParser.class.getName());
 
 	@Inject
 	private DHEClient dheClient;
@@ -42,6 +47,7 @@ public class DHEBuildParser {
 
 	private volatile BuildData buildData = new BuildData(new LatestReleases(), new BuildLists());
 	private volatile Future<LastUpdate> scheduledUpdate = null;
+
 
 	/** Defined default constructor */
 	public DHEBuildParser() {
@@ -53,11 +59,17 @@ public class DHEBuildParser {
 	}
 
 	public LastUpdate getLastUpdate() {
+		if (logger.isLoggable(Level.FINER)) {
+			logger.log(Level.FINE, "getLastUpdate()", lastUpdate.asJsonObject());
+		}
 		return lastUpdate;
 	}
 
 	public BuildData getBuildData() {
 		updateAsNeeded();
+		if (logger.isLoggable(Level.FINER)) {
+			logger.log(Level.FINE, "getBuildData()", buildData.asJsonObject());
+		}
 		return buildData;
 	}
 
@@ -73,6 +85,12 @@ public class DHEBuildParser {
 			blockingUpdate();
 		} else if (lastUpdate.isUpdateNeeded()) {
 			scheduleAsyncUpdate();
+		} else {
+			// force to get the update
+			BuildLists builds = buildData.getBuilds();
+			if (isNotEmpty(builds)) {}
+			    //latestReleases != null ? latestReleases.asJsonObject() : Json.createObjectBuilder().build());
+		        //builds != null ? builds.asJsonObject() : Json.createObjectBuilder().build());
 		}
 	}
 
@@ -85,6 +103,9 @@ public class DHEBuildParser {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			e.printStackTrace();
+		}
+		if (logger.isLoggable(Level.FINER)) {
+			logger.log(Level.FINE, "blockingUpdate()", ret);
 		}
 		return ret;
 	}
@@ -103,6 +124,9 @@ public class DHEBuildParser {
 		if (scheduledUpdate == null) {
 			scheduledUpdate = exec.submit(new UpdateBuildData());
 		}
+		if (logger.isLoggable(Level.FINER)) {
+			logger.log(Level.FINE, "scheduleAsyncUpdate()", scheduledUpdate);
+		}
 		return scheduledUpdate;
 	}
 
@@ -114,6 +138,9 @@ public class DHEBuildParser {
 
 		@Override
 		public LastUpdate call() throws Exception {
+			if (logger.isLoggable(Level.FINER)) {
+		        logger.log(Level.FINE, "UpdateBuildData.call()");
+            }
 			lastUpdate.markUpdateAttempt();
 
 			Future<List<BuildInfo>> runtimeReleases = exec.submit(
@@ -129,6 +156,12 @@ public class DHEBuildParser {
 			List<BuildInfo> updatedRuntimeNightlyBuilds = getSafe(runtimeNightly);
 			List<BuildInfo> updatedToolsReleases = getSafe(toolsReleases);
 			List<BuildInfo> updatedToolsNightlyBuilds = getSafe(toolsNightly);
+			if (logger.isLoggable(Level.FINER)) {
+				logger.log(Level.FINE, "updatedRuntimeReleases=", updatedRuntimeReleases);
+				logger.log(Level.FINE, "updatedRuntimeNightlyBuilds=", updatedRuntimeNightlyBuilds);
+				logger.log(Level.FINE, "updatedToolsReleases=", updatedToolsReleases);
+				logger.log(Level.FINE, "updatedToolsNightlyBuilds=", updatedToolsNightlyBuilds);
+			}
 			if (isNotEmpty(updatedRuntimeReleases) && isNotEmpty(updatedToolsReleases)) {
 				BuildInfo latestRuntimeRelease = pickLastestBuild(updatedRuntimeReleases);
 				BuildInfo latestToolsRelease = pickLastestBuild(updatedToolsReleases);
@@ -142,10 +175,17 @@ public class DHEBuildParser {
 
 					buildData = new BuildData(latest, all);
 					lastUpdate.markSuccessfulUpdate();
+
+					if (logger.isLoggable(Level.FINER)) {
+						logger.log(Level.FINE, "buildData=", buildData.asJsonObject());
+					}
 				}
 			}
 
 			clearScheduledUpdate();
+			if (logger.isLoggable(Level.FINER)) {
+				logger.log(Level.FINE, "lastUpdate=", lastUpdate.asJsonObject());
+			}
 			return lastUpdate;
 		}
 
@@ -175,6 +215,9 @@ public class DHEBuildParser {
 					latest = info;
 				}
 			}
+			if (logger.isLoggable(Level.FINER)) {
+				logger.log(Level.FINE, "pickLastestBuild()", latest == null? null : latest.asJsonObject());
+			}
 			return latest;
 		}
 	}
@@ -192,6 +235,9 @@ public class DHEBuildParser {
 
 		@Override
 		public BuildInfo call() throws Exception {
+			if (logger.isLoggable(Level.FINER)) {
+		        logger.log(Level.FINE, "RetrieveBuildInfo.call()");
+            }
 			String dateTimePath = dateTime + '/';
 			String informationFileURL = Constants.DHE_URL + artifactPath + buildTypePath + dateTimePath
 					+ Constants.DHE_INFO_JSON_FILE_NAME;
@@ -204,6 +250,11 @@ public class DHEBuildParser {
 
 		private BuildInfo parseBuildInformation(String artifactPath, String buildTypePath, String dateTime,
 				String dateTimePath, JsonObject buildInformationSrc) {
+			if (logger.isLoggable(Level.FINER)) {
+				logger.log(Level.FINE, "parseBuildInformation()", 
+				           new Object[]{ artifactPath, buildTypePath, dateTime,
+							             dateTimePath, buildInformationSrc });
+			}
 			BuildInfo info = new BuildInfo();
 			info.addDateTime(dateTime);
 
@@ -273,6 +324,9 @@ public class DHEBuildParser {
 					}
 				}
 			}
+			if (logger.isLoggable(Level.FINER)) {
+				logger.log(Level.FINE, "parseBuildInformation() info=", info == null? null : info.asJsonObject());
+			}
 			return info;
 		}
 
@@ -305,13 +359,19 @@ public class DHEBuildParser {
 					}
 
 					for (Future<BuildInfo> f : buildInfoFutures) {
-						BuildInfo info = getSafe(f);
+						BuildInfo info = getSafe(f);						
 						if (info != null) {
+							if (logger.isLoggable(Level.FINER)) {
+								logger.log(Level.FINE, "RetrieveBuildList.call() build=", info.asJsonObject());
+							}
 							builds.add(info);
 						}
 					}
 
 				}
+			}
+			if (logger.isLoggable(Level.FINER)) {
+				logger.log(Level.FINE, "RetrieveBuildList.call() builds=", builds);
 			}
 			return builds;
 		}
