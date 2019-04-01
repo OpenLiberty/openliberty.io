@@ -260,7 +260,9 @@ function hideDuplicateTabs(id){
             continue;
         }
         var fileName = tab.text();
-        var tabsWithSameName = $('#code_column_tabs li:visible').not(tab).filter(":contains('" + fileName + "')");
+        var tabsWithSameName = $('#code_column_tabs li:visible').not(tab).filter(function(){
+            return this.innerText.trim() === fileName;
+        });
         
         if(tabsWithSameName.length > 0){
             // Find duplicates and hide them.
@@ -300,7 +302,9 @@ function hideDuplicateTabs(id){
     }
     // Hide duplicates of the active tab
     var activeTab = $('.code_column_tab > .active').parent();
-    var activeDuplicates = $('#code_column_tabs li:visible').not(activeTab).filter(":contains('" + activeTab.text() + "')");
+    var activeDuplicates = $('#code_column_tabs li:visible').not(activeTab).filter(function(){
+        return this.innerText.trim() === activeTab.text();
+    });
     activeDuplicates.hide();
 }
 
@@ -311,26 +315,15 @@ function loadPreviousStepsTabs(){
     for(var i = previousHiddenTabs.length - 1; i >= 0; --i){
         var tab = previousHiddenTabs.get(i);
         var fileName = tab.innerText.trim();
-        // Check that the most recent tab for this file is showing.
-        if($('#code_column_tabs li:visible').filter(":contains('" + fileName + "')").length == 0){
+        // Check that only the most recent tab for this file is showing.
+        var visibleTabsWithSameName = $('#code_column_tabs li:visible').filter(function(){
+            return this.innerText.trim() === fileName;
+        });
+        if(visibleTabsWithSameName.length === 0){
             $(tab).show();
         }
     }
-};
-
-function loadPreviousStepsTabs(){
-    // Reveal the files from previous sections in case the user loaded a later step from a bookmarked hash.
-    var lastTab = $('#code_column_tabs li:visible').last();
-    var previousHiddenTabs = lastTab.prevAll().not(":visible");
-    for(var i = previousHiddenTabs.length - 1; i >= 0; --i){
-        var tab = previousHiddenTabs.get(i);
-        var fileName = tab.innerText.trim();
-        // Check that the most recent tab for this file is showing.
-        if($('#code_column_tabs li:visible').filter(":contains('" + fileName + "')").length == 0){
-            $(tab).show();
-        }
-    }
-};
+}
 
 // Sets the active tab in the code column and moves it to the front of the tab list.
 // activeTab: tab to set active
@@ -456,7 +449,9 @@ $(document).ready(function() {
             metadata_sect.detach();            
 
             // If the same tab exists already in the list, append it in the same order to persist the order it was introduced in the guide.
-            var tabAlreadyExists =  $('#code_column_tabs li').filter(":contains('" + fileName + "')");
+            var tabAlreadyExists = $('#code_column_tabs li').filter(function(){
+                return this.innerText.trim() === fileName;
+            });
             if(tabAlreadyExists.length > 0){
                 tabAlreadyExists.last().after(tab);
             } 
@@ -711,7 +706,7 @@ $(document).ready(function() {
             var current_target_object = $(event.currentTarget);
             var position = current_target_object.position();	
             $('#code_section_copied_confirmation').css({	
-                top: position.top + 30,	
+                top: position.top + 42,	
                 right: 25	
             }).stop().fadeIn().delay(1000).fadeOut();
         });

@@ -12,13 +12,6 @@ JEKYLL_BUILD_FLAGS=""
 echo "Ruby version:"
 echo `ruby -v`
 
-# Special handling for javadocs
-./scripts/modify_javadoc.sh
-pushd gems/ol-asciidoc
-gem build ol-asciidoc.gemspec
-gem install ol-asciidoc-0.0.1.gem
-popd
-
 # Guides that are ready to be published to openliberty.io
 echo "Cloning repositories with name starting with guide or iguide..."
 ruby ./scripts/build_clone_guides.rb
@@ -47,6 +40,24 @@ else
     # Production!
     echo "Clone published docs!"
     ./scripts/build_clone_docs.sh "master" # Argument is branch name of OpenLiberty/docs
+fi
+
+# Special handling for javadocs
+./scripts/modify_javadoc.sh
+pushd gems/ol-asciidoc
+gem build ol-asciidoc.gemspec
+gem install ol-asciidoc-0.0.1.gem
+popd
+
+echo "Copying guide images to /img/guide"
+mkdir -p src/main/content/img/guide
+# Check if any draft guide images exist first
+if [ -e src/main/content/guides/draft-guide*/assets/* ]
+ then cp src/main/content/guides/draft-guide*/assets/* src/main/content/img/guide/
+fi
+# Check if any published guide images exist first
+if [ -e src/main/content/guides/guide*/assets/* ]
+ then cp src/main/content/guides/guide*/assets/* src/main/content/img/guide/
 fi
 
 # Move any js/css files from guides to the _assets folder for jekyll-assets minification.
