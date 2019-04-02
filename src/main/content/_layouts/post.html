@@ -25,8 +25,6 @@ js:
                     {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
                     <span id="post_date">on {{ page.date | date: date_format }}</span>
                 </div>
-                <p id="tags_header">Tags:</p>
-                <a id="tag_link">open source, JavaEE7, announcements, MicroProfile</a>
             </div>
         </header>
         <div id="article_body" class="container">
@@ -37,12 +35,6 @@ js:
             <div class="share_post_container">
                 <a class="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{page.title}}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
                 <a class="reddit_link" href="//www.reddit.com/submit" onclick="window.open('//www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
-            </div>
-        </div>
-        <div id="tags_container">
-            <div class="container">
-                <p id="tags">Tags</p>
-                <p id="tags_list">open source, JavaEE7, announcements, MicroProfile, open source, JavaEE7, announcements</p>
             </div>
         </div>
         {% if site.disqus.shortname %} {% include disqus_comments.html %} {% endif %}
