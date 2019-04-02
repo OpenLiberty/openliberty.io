@@ -356,17 +356,51 @@ function restoreCodeColumn(){
 /*
     Hide the comments from the code file including the copyright.
 */
-function hideComments(code_block){
+function hide_comments(code_block){
     // Hide comments
-    // code_block.find('.comment').prev('.line-numbers').remove();
-    // code_block.find('.comment').remove();
+    code_block.find('.comment').prev('.line-numbers').remove();
+    // console.error(code_block.data('sectionId'));
 
-    code_block.find('.comment').prev('.line-numbers').each(function(){
-        $(this).html($(this).html().trim());
-    }).remove();
+    code_block.find('code').contents().each(function(){
+        if (!$(this).is('span')) {
+            var newText = $(this).wrap('<span class="string"></span>');
+            $(this).replaceWith(newText);
+        }
+    });
+
+    var start_tags = code_block.find('.comment:contains(tag::)');    
+    start_tags.each(function(){
+        // Wrap the tag in a div for highlighting later
+        var text = $(this).text();
+        var start_index = text.indexOf('tag::');
+        var end_index = text.indexOf('[]');
+        var tag_name = text.substring(start_index + 1, end_index);
+        var end = $(this).nextAll("span:contains('end::')").first();
+        var content = $(this).nextUntil(end);
+        // Mark the lines start to end with a data-tag so that the hotspot can highlight them
+        content.data('hotspot-tag', tag_name);
+
+        // content.contents().each(function(){
+        //     if (!$(this).is('span')) {
+        //         $(this).wrapAll("<span class='string'></span>");
+        //     }
+        // });
+        // content.wrapAll("<div style='background-color: yellow'></div>");   
+        // $(this).remove();
+        // end.remove();
+    });
+
+    start_tags.prev('span').remove();
+    start_tags.remove();
+
+    var end_tags = code_block.find('.comment:contains(end::)');
+    end_tags.next('span').remove();
+    end_tags.remove();
+
+    code_block.find('.comment').prev('.line-numbers').css('background-color', 'magenta');   
     code_block.find('.comment').each(function(){
         $(this).html($(this).html().trim());
-    }).remove();    
+    }).css('background-color', 'cyan');
 
     // Hide the copyright
     var start = code_block.find("span:contains('<!-- Copyright')");
@@ -425,7 +459,7 @@ $(document).ready(function() {
             code_block.attr('data-section-id', header.id);
 
             // Hide the comments from the file.
-            hideComments(code_block);                     
+            hide_comments(code_block);
 
             // Create a tab in the code column for this file.
             var tab = $("<li class='code_column_tab' role='presentation' tabindex='0'></li>");
