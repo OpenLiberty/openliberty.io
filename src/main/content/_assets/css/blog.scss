@@ -31,10 +31,8 @@
 
 #left_column {
     @media (min-width: 992px) {
-        position: sticky;
-        top: 2rem;
-        z-index: 1000;
-        height: calc(100vh - 2rem);
+        position: fixed;
+        width: 23.33333%;
     }
 
     @media (max-width: 991.98px) {
@@ -85,17 +83,15 @@
 
 #right_column {
     box-shadow: -2px 0 2px -2px #D8D8D8;
+    overflow: hidden;
 
     @media (max-width: 991.98px) {
-        #right_column {
-            box-shadow: none;
-        }
+        box-shadow: none;
     }
 }
 
 .blog_post_column {
     width: 100%;
-    padding: 0;
     color: #24253A;
 }
 
@@ -103,6 +99,7 @@
     font-family: BunueloLight;
     font-size: 35px;
     background-color: rgba(230, 237, 168, 0.3);
+    width: 61.66667vw;
     padding-left: 63px;
     padding-top: 17px;
     padding-bottom: 11px;
@@ -110,6 +107,7 @@
 
     @media (max-width: 991.98px) {
         padding-left: 33px;
+        width: 100vw;
     }
 
     @media (max-width: 767.98px) {
@@ -121,21 +119,17 @@
     width: 100%;
     padding-top: 40px;
     padding-left: 63px;
-    padding-right: 70px;
-    padding-bottom: 0px;
 
     @media (max-width: 991.98px) {
         padding-top: 30px;
         padding-left: 33px;
         padding-right: 33px;
-        padding-bottom: 0px;
     }
 
     @media (max-width: 767.98px) {
         padding-top: 25px;
         padding-left: 30px;
         padding-right: 30px;
-        padding-bottom: 0px;
     }
 }
 
@@ -157,9 +151,7 @@
 
 .blog_post_date_mobile {
     font-size: 16px;
-    margin-left: 2px;
     color: #6f7878;
-    margin-bottom: 18px;
 }
 
 .blog_post_paragraph {
@@ -175,6 +167,7 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    padding-right: 0px;
 
     @media (max-width: 767.98px) {
         display: none;
@@ -201,10 +194,10 @@
 }
 
 .read_more_link_container {
-    float: right;
+    text-align: right;
+    padding-left: 0px;
 
     @media (max-width: 767.98px) {
-        float: none;
         text-align: center;
         margin-bottom: 40px;
     }
@@ -235,6 +228,7 @@
 .read_more_link_external {
     color: #E57000;
     border: 2px solid #FBCEAD;
+
     &:hover {
         color: #E57000;
         border-color: #E57000;
@@ -270,13 +264,18 @@
     }
 }
 
-#ufo_images_bottom {
-    min-width: 160%;
-    height: auto;
-    margin-left: 37%;
-    transform: translateX(-40%);
+#final_post {
+    @media (max-width: 991.98px) {
+        text-align: center;
+    }
+    @media (max-width: 767.98px) {
+        display: none;
+    }
 }
 
-footer {
-    left: 0px;
+#ufo_images_bottom {
+    min-width: 160%;
+    margin-left: 35%;
+    margin-top: 10px;
+    transform: translateX(-40%);
 }
