@@ -565,6 +565,9 @@ function restoreCodeColumn(){
             "pointer-events" : "auto"
         });
         $("#code_column").removeClass("modal");
+        $("#code_column").css({
+            "height" : 'auto'
+        });
         remove_highlighting();
     });
 
