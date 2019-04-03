@@ -10,5 +10,5 @@
  *******************************************************************************/
 
 // move footer from bottom of page to right column
- $("footer").detach().appendTo('#right_column');
+//$("footer").detach().appendTo('#right_column');
 
