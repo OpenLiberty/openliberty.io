@@ -29,12 +29,12 @@ js:
         </header>
         <div id="article_body" class="container">
             {{ content }}
-            <div id="blog_link_container">
-                <a id="blog_link_bottom" href="/blog"><img id="arrow" src="/img/post_arrow.svg">See all blog posts</a>
-            </div>
             <div class="share_post_container">
                 <a class="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{page.title}}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
                 <a class="reddit_link" href="//www.reddit.com/submit" onclick="window.open('//www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
+            </div>
+            <div id="blog_link_container">
+                <a id="blog_link_bottom" href="/blog"><img id="arrow" src="/img/post_arrow.svg">See all blog posts</a>
             </div>
         </div>
         {% if site.disqus.shortname %} {% include disqus_comments.html %} {% endif %}
