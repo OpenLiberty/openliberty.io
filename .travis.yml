@@ -34,6 +34,7 @@ branches:
   only:
     - master
     - development
+    - demo1
 
 sudo: false # route your build to the container-based infrastructure for a faster build
 
@@ -57,3 +58,9 @@ deploy:
       branch: development
       condition: $ROUTE = $SITE_DEV_DOMAIN
     script: ./.travis/cf-push.sh
+  - provider: script
+    skip_cleanup: true
+    on:
+      branch: demo1
+    script: env ROUTE=$SITE_DEMO1_DOMAIN ./.travis/cf-push.sh
+
