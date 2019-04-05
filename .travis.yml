@@ -18,13 +18,9 @@ jobs:
     - if: branch != master AND branch != development 
 
 script: >
-    if [ $TRAVIS_BRANCH = "master" && $ROUTE = $SITE_QA_DOMAIN ]; then
+    if [ $JEKYLL_ENV == "production" ]; then
       cp robots.txt src/main/content/robots.txt      
       ./scripts/build_jekyll_maven.sh
-    elif [ $TRAVIS_BRANCH = "master" && $ROUTE = $SITE_DRAFT_GUIDES_DOMAIN ]; then
-      ./scripts/build_jekyll_maven.sh
-    elif [ $TRAVIS_BRANCH = "development" && $ROUTE = $SITE_DEV_DOMAIN ]; then
-      env GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH ./scripts/build_jekyll_maven.sh
     else
       ./scripts/build_jekyll_maven.sh
     fi
