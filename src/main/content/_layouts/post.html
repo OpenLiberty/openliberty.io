@@ -1,50 +1,46 @@
 ---
 layout: default
 css: 
-- post
 - header
+- post
+- header-light
 js: 
 - header
 ---
 
-<div id="background_container" class="black_blue_gradient_background">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <img id="intro_logo" src="{{ "/img/blog_title_small.svg" | relative }}" alt="Blog">
-            </div>
-            <div id="post_column" class="col-sm-12">
-                <div id="article_container">
-                    <article class="post" itemscope itemtype="http://schema.org/BlogPosting" aria-label="article">
-                        <header>                        
-                            <div class="post_information_container">
-                                <img src="{{ page.author_picture }}" id="author_image" alt="image of author">
-                                <div id="post_information">
-                                    <a id="author_name" href="{{ page.author_github }}">{{ page.author }}</a>
-                                    <div id="post_date">
-                                        <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
-                                            {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %} {{ page.date | date: date_format }}
-                                        </time>
-                                    </div>
-                                </div>
-                            </div>
-                            <h1 itemprop="name headline">{{ page.title | escape }}</h1>
-                        </header>
-                        <div itemprop="articleBody" id="article_body">
-                            {{ content }}
-                        </div>
-                        <div id="share_post_container">
-                            Share this post:
-                            <a id="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{page.title}}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
-                            <a id="reddit_link" href="//www.reddit.com/submit" onclick="window.open('//www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
-                        </div>
-                        {% if site.disqus.shortname %} {% include disqus_comments.html %} {% endif %}
-                    </article>
+
+<div id="article_container" class="container-fluid">
+    <article class="post" aria-label="article">
+        <header id="post_header">
+            <div class="container">
+                <a id="blog_link" href="/blog"><img id="arrow" src="/img/post_arrow.svg" alt="back to all blogs">See all blog posts</a>
+                <div class="share_post_container">
+                    <a class="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{page.title}}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
+                    <a class="reddit_link" href="//www.reddit.com/submit" onclick="window.open('//www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
+                </div>
+                <h1 id="post_title">{{ page.title | escape }}</h1>
+                <div id="post_information_container">
+                    <img src="{{ page.author_picture }}" id="author_image" alt="image of author">
+                    <a id="author_name" href="{{ page.author_github }}">{{ page.author }}</a>
+                    {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
+                    <span id="post_date">on {{ page.date | date: date_format }}</span>
                 </div>
             </div>
+        </header>
+        <div id="article_body" class="container">
+            {{ content }}
+            <div class="share_post_container">
+                <a class="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{page.title}}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
+                <a class="reddit_link" href="//www.reddit.com/submit" onclick="window.open('//www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
+            </div>
+            <div id="blog_link_container">
+                <a id="blog_link_bottom" href="/blog"><img id="arrow" src="/img/post_arrow.svg" alt="back to all blogs">See all blog posts</a>
+            </div>
         </div>
-    </div>
+        {% if site.disqus.shortname %} {% include disqus_comments.html %} {% endif %}
+    </article>
 </div>
+
 
 <div class="d-none">
     <img src="/img/twitter_link_hover.svg">
