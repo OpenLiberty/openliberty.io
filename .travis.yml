@@ -14,6 +14,8 @@ jobs:
       if: branch = master
     - env: ROUTE=$SITE_DEV_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH JEKYLL_DRAFTS=true
       if: branch = development
+    - env: ROUTE=$SITE_DEMO1_DOMAIN
+      if: branch = demo1
     # Build other branches besides master and development
     - if: branch != master AND branch != development 
 
@@ -58,5 +60,5 @@ deploy:
     skip_cleanup: true
     on:
       branch: demo1
-    script: env ROUTE=$SITE_DEMO1_DOMAIN ./.travis/cf-push.sh
+    script: ./.travis/cf-push.sh
 
