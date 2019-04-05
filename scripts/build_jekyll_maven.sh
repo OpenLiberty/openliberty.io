@@ -17,14 +17,22 @@ echo "Cloning repositories with name starting with guide or iguide..."
 ruby ./scripts/build_clone_guides.rb
 
 # Development environment only actions
-if [ "$JEKYLL_ENV" != "production" ]; then
+if [ "$JEKYLL_ENV" != "production" ]; then 
     echo "Not in production environment..."
     echo "Adding robots.txt"
     cp robots.txt src/main/content/robots.txt
-    
-    echo "Clone draft guides for test environments..."
-    ruby ./scripts/build_clone_guides.rb "draft-guide"
+
     ./scripts/build_clone_docs.sh "develop" # Argument is branch name of OpenLiberty/docs
+else
+    # Production!
+    echo "Clone published docs!"
+    ./scripts/build_clone_docs.sh "master" # Argument is branch name of OpenLiberty/docs
+fi
+
+# Development environments with draft docs/guides
+if [ "$JEKYLL_DRAFTS" == "true" ]; then
+    echo "Clone draft guides for test environments..."
+    ruby ./scripts/build_clone_guides.rb "draft-guide"    
 
     # Need to make sure there are draft-iguide* folders before using the find command
     # If we don't, the find command will fail because the path does not exist
@@ -36,10 +44,6 @@ if [ "$JEKYLL_ENV" != "production" ]; then
 
     # Include draft blog posts for non production environments
     JEKYLL_BUILD_FLAGS="--drafts"
-else
-    # Production!
-    echo "Clone published docs!"
-    ./scripts/build_clone_docs.sh "master" # Argument is branch name of OpenLiberty/docs
 fi
 
 # Special handling for javadocs

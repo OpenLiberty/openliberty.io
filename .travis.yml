@@ -10,21 +10,17 @@ jobs:
   include:
     - env: ROUTE=$SITE_QA_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_QA_BRANCH JEKYLL_ENV=production
       if: branch = master
-    - env: ROUTE=$SITE_DRAFT_GUIDES_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH
+    - env: ROUTE=$SITE_DRAFT_GUIDES_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH JEKYLL_DRAFTS=true
       if: branch = master
-    - env: ROUTE=$SITE_DEV_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH
+    - env: ROUTE=$SITE_DEV_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH JEKYLL_DRAFTS=true
       if: branch = development
-    # Build other branches besides master and development
-    - if: branch != master  AND branch != development 
+    - env: ROUTE=$SITE_DEMO1_DOMAIN
+      if: branch = demo1
 
 script: >
-    if [ $TRAVIS_BRANCH = "master" && $ROUTE = $SITE_QA_DOMAIN ]; then
+    if [ $JEKYLL_ENV == "production" ]; then
       cp robots.txt src/main/content/robots.txt      
       ./scripts/build_jekyll_maven.sh
-    elif [ $TRAVIS_BRANCH = "master" && $ROUTE = $SITE_DRAFT_GUIDES_DOMAIN ]; then
-      ./scripts/build_jekyll_maven.sh
-    elif [ $TRAVIS_BRANCH = "development" && $ROUTE = $SITE_DEV_DOMAIN ]; then
-      env GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH ./scripts/build_jekyll_maven.sh
     else
       ./scripts/build_jekyll_maven.sh
     fi
@@ -62,5 +58,5 @@ deploy:
     skip_cleanup: true
     on:
       branch: demo1
-    script: env ROUTE=$SITE_DEMO1_DOMAIN ./.travis/cf-push.sh
+    script: ./.travis/cf-push.sh
 
