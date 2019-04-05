@@ -16,8 +16,6 @@ jobs:
       if: branch = development
     - env: ROUTE=$SITE_DEMO1_DOMAIN
       if: branch = demo1
-    # Build other branches besides master and development
-    - if: branch != master AND branch != development 
 
 script: >
     if [ $JEKYLL_ENV == "production" ]; then
