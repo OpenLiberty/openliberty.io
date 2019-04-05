@@ -30,7 +30,7 @@ else
 fi
 
 # Development environments with draft docs/guides
-if [ "$JEKYLL_DRAFTS" == "true" ]; then
+if [ "$JEKYLL_DRAFT_GUIDES" == "true" ]; then
     echo "Clone draft guides for test environments..."
     ruby ./scripts/build_clone_guides.rb "draft-guide"    
 
@@ -41,7 +41,10 @@ if [ "$JEKYLL_DRAFTS" == "true" ]; then
         find src/main/content/guides/draft-iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
         find src/main/content/guides/draft-iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
     fi
+fi
 
+# Development environments that enable the draft blogs in the _draft directory.
+if [ "$JEKYLL_DRAFT_BLOGS" == "true" ]; then
     # Include draft blog posts for non production environments
     JEKYLL_BUILD_FLAGS="--drafts"
 fi
