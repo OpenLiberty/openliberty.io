@@ -26,7 +26,7 @@ repos = client.org_repos('OpenLiberty')
 # --------------------------------------------
 # For the interactive guides, only build the dev branch for the TravisCI environments
 guide_branch = 'master'
-if ENV['TRAVIS']
+if ENV['TRAVIS'] && ENV['GUIDE_CLONE_BRANCH']
     guide_branch = ENV['GUIDE_CLONE_BRANCH']
 end
 
