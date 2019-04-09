@@ -6,19 +6,23 @@ before_install:
   - sudo apt-get install python3-bs4 -y
 
 # Trigger a build for each environment
-env:
-  - ROUTE=$SITE_QA_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_QA_BRANCH JEKYLL_ENV=production
-  - ROUTE=$SITE_DRAFT_GUIDES_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH
-  - ROUTE=$SITE_DEV_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH
+jobs:
+  include:
+    - env: ROUTE=$SITE_QA_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_QA_BRANCH JEKYLL_ENV=production
+      if: branch = master
+    - env: ROUTE=$SITE_DRAFT_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH JEKYLL_DRAFT_GUIDES=true JEKYLL_DRAFT_BLOGS=true
+      if: branch = master
+    - env: ROUTE=$SITE_DEV_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH JEKYLL_DRAFT_GUIDES=true JEKYLL_DRAFT_BLOGS=true
+      if: branch = development
+    - env: ROUTE=$SITE_DEMO1_DOMAIN
+      if: branch = demo1
+    - env: ROUTE=$SITE_HOTSPOT_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_HOTSPOT_BRANCH JEKYLL_DRAFT_GUIDES=true
+      if: branch = hotspots
 
 script: >
-    if [ $TRAVIS_BRANCH = "master" && $ROUTE = $SITE_QA_DOMAIN ]; then
+    if [ $JEKYLL_ENV == "production" ]; then
       cp robots.txt src/main/content/robots.txt      
       ./scripts/build_jekyll_maven.sh
-    elif [ $TRAVIS_BRANCH = "master" && $ROUTE = $SITE_DRAFT_GUIDES_DOMAIN ]; then
-      ./scripts/build_jekyll_maven.sh
-    elif [ $TRAVIS_BRANCH = "development" && $ROUTE = $SITE_DEV_DOMAIN ]; then
-      env GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH ./scripts/build_jekyll_maven.sh
     else
       ./scripts/build_jekyll_maven.sh
     fi
@@ -28,6 +32,8 @@ branches:
   only:
     - master
     - development
+    - demo1
+    - hotspots
 
 sudo: false # route your build to the container-based infrastructure for a faster build
 
@@ -38,21 +44,27 @@ deploy:
     on:
       branch: master
       condition: $ROUTE = $SITE_QA_DOMAIN
-    script: env ROUTE=$SITE_QA_DOMAIN ./.travis/cf-push.sh
+    script: ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
       branch: master
-      condition: $ROUTE = $SITE_DRAFT_GUIDES_DOMAIN
-    script: env ROUTE=$SITE_DRAFT_GUIDES_DOMAIN ./.travis/cf-push.sh
+      condition: $ROUTE = $SITE_DRAFT_DOMAIN
+    script: ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
       branch: development
       condition: $ROUTE = $SITE_DEV_DOMAIN
-    script: env ROUTE=$SITE_DEV_DOMAIN ./.travis/cf-push.sh    
+    script: env ROUTE=$SITE_DEV_DOMAIN ./.travis/cf-push.sh
+  - provider: script
+    skip_cleanup: true
+    on:
+      branch: demo1
+    script: ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
       branch: hotspots
-    script: env ROUTE=hotspots.mybluemix.net ./.travis/cf-push.sh
+    script: env ROUTE=$SITE_HOTSPOT_DOMAIN ./.travis/cf-push.sh
+
