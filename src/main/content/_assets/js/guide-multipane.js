@@ -376,7 +376,7 @@ function hide_comments(code_block){
     }
 
     // Hide comments and their line numbers
-    code_block.find('.comment').prev('.line-numbers').remove();    
+    code_block.find('.comment').prev('.line-numbers').remove();
 
     var start_tags = code_block.find('.comment:contains(tag::)');    
     start_tags.each(function(){
@@ -384,10 +384,10 @@ function hide_comments(code_block){
         var text = $(this).text();
         var start_index = text.indexOf('tag::');
         var end_index = text.indexOf('[]');
-        var tag_name = text.substring(start_index + 1, end_index);
+        var tag_name = text.substring(start_index + 5, end_index);
         var end = $(this).nextAll("span:contains('end::')").first();
         var content = $(this).nextUntil(end);
-        // Mark the lines start to end with a data-tag so that the hotspot can highlight them
+        // Mark the lines start to end with a data-tag so that the hotspot can highlight them.
         content.attr('data-hotspot-tag', tag_name);
     });
 
@@ -579,18 +579,13 @@ $(document).ready(function() {
                         }                        
                     }
                     else {
-                        // Hotspot is using a tag name.        
+                        // Hotspot is using a tag name.
                         // Find the start line for the tag using tag::<tag_name>[] and the end line for the tag using end::<tag_name>[]
-                        var tag_start = code_block.find("span:contains(tag::" + value + ")");
-                        var tag_end = code_block.find("span:contains(end::" + value + ")");
+                        var tag_start = code_block.find("span[data-hotspot-tag='" + value + "']").first();
+                        var tag_end = code_block.find("span[data-hotspot-tag='" + value + "']").last();
                         fromLine = parseInt(tag_start.next('.line-numbers').text());
-                        toLine = parseInt(tag_end.prev('.line-numbers').text());
+                        toLine = parseInt(tag_end.prev('.line-numbers').text()) - 1;                        
                         ranges = fromLine + "-" + toLine;
-
-                        // Remove tags
-                        tag_start.prev('.line-numbers').remove();
-                        tag_start.remove();
-                        tag_end.remove();
 
                         // Trim the extra whitespace in the code
                         var code = code_block.find('code');
