@@ -357,16 +357,26 @@ function restoreCodeColumn(){
     Hide the comments from the code file including the copyright.
 */
 function hide_comments(code_block){
-    // Hide comments
-    code_block.find('.comment').prev('.line-numbers').remove();
-    // console.error(code_block.data('sectionId'));
-
+    // Wrap the standalone text in spans so they can be selected between the range of start and end tags
     code_block.find('code').contents().each(function(){
         if (!$(this).is('span')) {
             var newText = $(this).wrap('<span class="string"></span>');
             $(this).replaceWith(newText);
         }
     });
+
+    // Hide the copyright
+    var start = code_block.find(".comment:contains('tag::comment[]')");
+    start = start.prev('.line-numbers');
+    var end = code_block.find(".comment:contains('end::comment[]')");
+    if(start.length === 1 && end.length === 1){
+        var range = start.nextUntil(end);
+        range = range.add(start).add(end);
+        range.remove();
+    }
+
+    // Hide comments and their line numbers
+    code_block.find('.comment').prev('.line-numbers').remove();    
 
     var start_tags = code_block.find('.comment:contains(tag::)');    
     start_tags.each(function(){
@@ -378,39 +388,21 @@ function hide_comments(code_block){
         var end = $(this).nextAll("span:contains('end::')").first();
         var content = $(this).nextUntil(end);
         // Mark the lines start to end with a data-tag so that the hotspot can highlight them
-        content.data('hotspot-tag', tag_name);
-
-        // content.contents().each(function(){
-        //     if (!$(this).is('span')) {
-        //         $(this).wrapAll("<span class='string'></span>");
-        //     }
-        // });
-        // content.wrapAll("<div style='background-color: yellow'></div>");   
-        // $(this).remove();
-        // end.remove();
+        content.attr('data-hotspot-tag', tag_name);
     });
 
+    // Hide start tags
     start_tags.prev('span').remove();
     start_tags.remove();
 
+    // Hide end tags
     var end_tags = code_block.find('.comment:contains(end::)');
     end_tags.next('span').remove();
     end_tags.remove();
 
-    code_block.find('.comment').prev('.line-numbers').css('background-color', 'magenta');   
     code_block.find('.comment').each(function(){
         $(this).html($(this).html().trim());
     }).css('background-color', 'cyan');
-
-    // Hide the copyright
-    var start = code_block.find("span:contains('<!-- Copyright')");
-    start = start.prev('.line-numbers');
-    var end = start.nextAll("span:contains('-->')").first();
-    if(start.length === 1 && end.length === 1){
-        var range = start.nextUntil(end);
-        range = range.add(start).add(end);
-        range.remove();
-    }
 
     // Trim extra whitespace
     var code = code_block.find('code');
