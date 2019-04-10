@@ -14,7 +14,7 @@
 
 #blog_container {
     padding-top: 70px;
-    width: 70%;
+    width: 85%;
     margin: 0 auto;
 
     @media (max-width: 991.98px) {
@@ -30,9 +30,13 @@
 /* LEFT COLUMN */
 
 #left_column {
+    overflow: hidden;
+    padding-left: 0px;
+    padding-right: 0px;
+
     @media (min-width: 992px) {
         position: fixed;
-        width: 23.33333%;
+        width: 28.33333%;
     }
 
     @media (max-width: 991.98px) {
@@ -66,17 +70,38 @@
     }
 }
 
-#ufo_images_top {
-    position: absolute;
-    right: 0px;
-    width: 200%;
+#ufo_images_desktop {
+    position: relative;
     margin-top: 30px;
+    float: right;
+
+    @media (max-width: 1600px) {
+        width: 600px;
+    }
+
+    @media (max-width: 1400px) {
+        width: 500px;
+    }
+
+    @media (max-width: 1150px) {
+        width: 470px;
+    }
 
     @media (max-width: 991.98px) {
+        position: absolute;
         top: 0px;
-        width: 430px;
+        right: 0px;
+        width: 700px;
+
         margin-top: 0px;
     }
+}
+
+#ufo_images_tablet {
+    position: absolute;
+    width: 800px;
+    top: -25px;
+    right: 0px;
 }
 
 
@@ -100,7 +125,6 @@
     font-family: BunueloLight;
     font-size: 35px;
     background-color: rgba(230, 237, 168, 0.3);
-    width: 61.66667vw;
     padding-left: 63px;
     padding-top: 17px;
     padding-bottom: 11px;
@@ -120,6 +144,7 @@
     width: 100%;
     padding-top: 40px;
     padding-left: 63px;
+    padding-right: 63px;
 
     @media (max-width: 991.98px) {
         padding-top: 30px;
@@ -278,8 +303,8 @@
     }
 }
 
-#ufo_images_bottom {
-    min-width: 160%;
+#ufo_images_mobile {
+    min-width: 210%;
     margin-left: 35%;
     margin-top: 10px;
     transform: translateX(-40%);
@@ -292,11 +317,21 @@
 }
 
 @media (min-width: 992px) {
+    #blog_container {
+        box-shadow: -2px 0 2px -2px #D8D8D8, 2px 0 2px -2px #D8D8D8;
+    }
+
+    #blog_title, .blog_subtitle, .blog_subtext {
+        padding-left: 63px;
+        padding-right: 63px;
+    }
+
     footer {
         position: fixed;
         right: 0;
         top: calc(100% - 69px);
-        left: 38.33333%;
+        left: 35.83333%;
+        width: 56.66667%;
         z-index: 1030;
         transition: top .3s;
         padding-top: 0px;
@@ -320,10 +355,6 @@
 
     #footer_top_container > #footer_round_links_container {
         margin: 12px 0;
-    }
-
-    #footer_round_links_container, #footer_bottom_right_section {
-        margin-right: 13vw !important;
     }
 
     body {

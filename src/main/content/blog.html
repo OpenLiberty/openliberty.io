@@ -13,8 +13,9 @@ permalink: /blog/
         <div id="left_column" class="col-md-12 col-lg-4">
             <img id="blog_title" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-fluid d-none d-lg-block" alt="Blog">
             <h2 class="blog_subtitle">Never miss a post!</h2>
-            <p>Be sure to follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our <a class="orange_link_light_background" href="https://openliberty.io/feed.xml" target="_blank">RSS feed</a>.</p>
-            <img id="ufo_images_top" class="d-none d-md-block" src="/img/blogs_images.svg" alt="ufo and clouds">
+            <p class="blog_subtext">Be sure to follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our <a class="orange_link_light_background" href="https://openliberty.io/feed.xml" target="_blank">RSS feed</a>.</p>
+            <img id="ufo_images_desktop" class="d-none d-lg-block" src="/img/blog_images_desktop.svg" alt="ufo and clouds">
+            <img id="ufo_images_tablet" class="d-none d-md-block d-lg-none" src="/img/blog_images_tablet.svg" alt="ufo and clouds">
         </div>
         <div id="right_column" class="col-md-12 col-lg-8 offset-lg-4">
             {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
@@ -25,7 +26,7 @@ permalink: /blog/
                         {% if count == 1 %}
                         <p class="green_bar">Latest Posts</p>
                         {% endif %}
-                        {% if count < 4 %}
+                        {% if count < 11 %}
                             <div class="blog_post_content">
                                 {% if post.redirect_link %}
                                     <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" class="blog_post_title_link">{{ post.title | escape }}</a>
@@ -60,13 +61,13 @@ permalink: /blog/
                                     {% endif %}
                                     </div>
                                 </div>
-                                {% if count != 3 %}
+                                {% if count != 10 %}
                                     <div class="bottom_border"></div>
                                 {% endif %}
                             </div>
                         {% else %}
-                            {% if count == 4 %}
-                            <p class="green_bar">Oldest Posts</p>
+                            {% if count == 11 %}
+                            <p class="green_bar">Older Posts</p>
                             {% endif %}
                             <div class="blog_post_content">
                                 {% if post.redirect_link %}
@@ -106,7 +107,7 @@ permalink: /blog/
                 <p class="blog_post_title_link">Stay lightyears ahead.</p>
                 <p>Follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our <a class="orange_link_light_background" href="https://openliberty.io/feed.xml" target="_blank">RSS feed</a>.</p>
             </div>
-            <img id="ufo_images_bottom" class="d-block d-md-none img-fluid" src="/img/blogs_images_mobile.svg" alt="ufo and clouds">
+            <img id="ufo_images_mobile" class="d-block d-md-none img-fluid" src="/img/blog_images_mobile.svg" alt="ufo and clouds">
         </div>
     </div>
 </div>
