@@ -81,16 +81,28 @@ public class DHEBuildParser {
 	 * 'schedule' an update on a new thread.
 	 */
 	private void updateAsNeeded() {
+		if (logger.isLoggable(Level.FINER)) {
+			logger.log(Level.FINE, "updateAsNeeded()");
+		}
 		if (lastUpdate.hasNeverSuccessfullyUpdated()) {
 			blockingUpdate();
 		} else if (lastUpdate.isUpdateNeeded()) {
 			scheduleAsyncUpdate();
-		} else {
-			// force to get the update
+		} else {		
+			// forcing an update if runtime nightly builds is empty		
 			BuildLists builds = buildData.getBuilds();
-			if (isNotEmpty(builds)) {}
-			    //latestReleases != null ? latestReleases.asJsonObject() : Json.createObjectBuilder().build());
-		        //builds != null ? builds.asJsonObject() : Json.createObjectBuilder().build());
+			if (builds != null) {
+				if (logger.isLoggable(Level.FINER)) {
+					logger.log(Level.FINE, "builds=", builds.asJsonObject());
+				}
+				List<BuildInfo> runtimeNightlyBuilds = builds.getRuntimeNightlyBuilds();
+				if (runtimeNightlyBuilds.isEmpty()) {
+					if (logger.isLoggable(Level.FINER)) {
+						logger.log(Level.FINE, "runtimeNightlyBuilds is empty - force an update");
+					}
+                    scheduleAsyncUpdate();
+				}
+            }
 		}
 	}
 

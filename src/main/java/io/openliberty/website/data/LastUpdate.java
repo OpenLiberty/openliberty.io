@@ -22,6 +22,8 @@ import io.openliberty.website.Constants;
 
 public class LastUpdate {
 	private static final int ONE_HOUR_MILLIS = 3600000;
+	// change to 5 minutes for testing
+	//private static final int ONE_HOUR_MILLIS = 300000;
 
 	private Date lastAttempt;
 	private Date lastSuccess;
@@ -29,11 +31,11 @@ public class LastUpdate {
 	private static final Logger logger = Logger.getLogger(LastUpdate.class.getName());
 
 	public String getLastUpdateAttempt() {
+		String result = lastAttempt == null ? Constants.NEVER_ATTEMPTED : DateUtil.asUTCString(lastAttempt);
 		if (logger.isLoggable(Level.FINER)) {
-			//logger.info("getLastUpdateAttempt() " + lastAttempt);
-			logger.log(Level.FINE, "getLastUpdateAttempt()", lastAttempt);
+			logger.log(Level.FINE, "getLastUpdateAttempt()", result);
 		}
-		return lastAttempt == null ? Constants.NEVER_ATTEMPTED : DateUtil.asUTCString(lastAttempt);
+		return result;
 	}
 
 	void setLastUpdateAttempt(Date date) {
@@ -43,23 +45,22 @@ public class LastUpdate {
 	public String getLastSuccessfulUpdate() {
 		String result = lastSuccess == null ? Constants.NEVER_UPDATED : DateUtil.asUTCString(lastSuccess);
 		if (logger.isLoggable(Level.FINER)) {
-			logger.fine("getLastSuccessfulUpdate() lastSuccessfulUpdate=" + result);
+			logger.fine("getLastSuccessfulUpdate() " + result);
 		}
-		//return lastSuccess == null ? Constants.NEVER_UPDATED : DateUtil.asUTCString(lastSuccess);
 		return result;
 	}
 
 	public void markUpdateAttempt() {	
 		lastAttempt = new Date();
 		if (logger.isLoggable(Level.FINER)) {
-			logger.fine("markUpdateAttempt() lastAttempt=" + lastAttempt);
+			logger.fine("markUpdateAttempt() " + lastAttempt);
 		}
 	}
 
 	public void markSuccessfulUpdate() {	
 		lastSuccess = lastAttempt;
 		if (logger.isLoggable(Level.FINER)) {
-			logger.fine("markSuccessfulUpdate() lastSuccess=" + lastSuccess);
+			logger.fine("markSuccessfulUpdate() " + lastSuccess);
 		}
 	}
 
@@ -75,7 +76,7 @@ public class LastUpdate {
 
 	public boolean hasNeverSuccessfullyUpdated() {
 		if (logger.isLoggable(Level.FINER)) {
-			logger.fine("isUpdateNeeded() " + (lastSuccess == null));
+			logger.fine("hasNeverSuccessfullyUpdated() " + (lastSuccess == null));
 		}
 		return lastSuccess == null;
 	}
