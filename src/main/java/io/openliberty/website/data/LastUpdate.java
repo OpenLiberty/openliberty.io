@@ -22,8 +22,6 @@ import io.openliberty.website.Constants;
 
 public class LastUpdate {
 	private static final int ONE_HOUR_MILLIS = 3600000;
-	// change to 5 minutes for testing
-	//private static final int ONE_HOUR_MILLIS = 300000;
 
 	private Date lastAttempt;
 	private Date lastSuccess;
