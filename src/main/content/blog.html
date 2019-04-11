@@ -18,6 +18,25 @@ permalink: /blog/
             <img id="ufo_images_tablet" class="d-none d-md-block d-lg-none" src="/img/blog_images_tablet.svg" alt="ufo and clouds">
         </div>
         <div id="right_column" class="col-md-12 col-lg-8 offset-lg-4">
+
+            {% assign past_month_count = 0 %}
+            {% for post in site.posts %}
+
+                {% assign date_published = post.date | date:'%s' %}
+                {% assign date_now = 'now' | date:'%s' %}
+                {% assign date_difference = date_now | minus: date_published %}
+
+                {% if date_difference < 2592000 %}
+                    {% assign past_month_count = past_month_count | plus: 1 %}
+                {% endif %}
+
+                {% assign latest_posts_count = 3 %}
+                {% if past_month_count > 3 %}
+                    {% assign latest_posts_count = past_month_count %}
+                {% endif %}
+
+            {% endfor %}
+
             {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
             {% assign count = 1 %}
             {% for post in site.posts %}
@@ -26,7 +45,7 @@ permalink: /blog/
                         {% if count == 1 %}
                         <p class="green_bar">Latest Posts</p>
                         {% endif %}
-                        {% if count < 11 %}
+                        {% if count <= latest_posts_count %}
                             <div class="blog_post_content">
                                 {% if post.redirect_link %}
                                     <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" class="blog_post_title_link">{{ post.title | escape }}</a>
@@ -61,14 +80,14 @@ permalink: /blog/
                                     {% endif %}
                                     </div>
                                 </div>
-                                {% if count != 10 %}
+                                {% if count != latest_posts_count %}
                                     <div class="bottom_border"></div>
                                 {% endif %}
                             </div>
-                        {% else %}
-                            {% if count == 11 %}
+                        {% if count == latest_posts_count %}
                             <p class="green_bar">Older Posts</p>
-                            {% endif %}
+                        {% endif %}
+                        {% else %}
                             <div class="blog_post_content">
                                 {% if post.redirect_link %}
                                     <h2 class="blog_post_title_condensed"><a href="{{ post.redirect_link }}" class="blog_post_title_link_condensed">{{ post.title | escape }}</a>
