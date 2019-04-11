@@ -35,6 +35,7 @@ import io.openliberty.website.data.LatestReleases;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class DHEBuildParser {
 
 	private static final Logger logger = Logger.getLogger(DHEBuildParser.class.getName());
@@ -84,25 +85,28 @@ public class DHEBuildParser {
 		if (logger.isLoggable(Level.FINER)) {
 			logger.log(Level.FINE, "updateAsNeeded()");
 		}
+		
 		if (lastUpdate.hasNeverSuccessfullyUpdated()) {
 			blockingUpdate();
 		} else if (lastUpdate.isUpdateNeeded()) {
 			scheduleAsyncUpdate();
-		} else {		
-			// forcing an update if runtime nightly builds is empty		
-			BuildLists builds = buildData.getBuilds();
-			if (builds != null) {
+		} 
+
+		// forcing an update if runtime nightly builds is empty		
+		BuildLists builds = buildData.getBuilds();
+		if (builds != null) {
+			if (logger.isLoggable(Level.FINER)) {
+				logger.log(Level.FINE, "builds=", builds.asJsonObject());
+			}
+			
+			List<BuildInfo> runtimeNightlyBuilds = builds.getRuntimeNightlyBuilds();
+			if (runtimeNightlyBuilds.isEmpty()) {
 				if (logger.isLoggable(Level.FINER)) {
-					logger.log(Level.FINE, "builds=", builds.asJsonObject());
+					logger.log(Level.FINE, "runtimeNightlyBuilds is empty - force an update");
 				}
-				List<BuildInfo> runtimeNightlyBuilds = builds.getRuntimeNightlyBuilds();
-				if (runtimeNightlyBuilds.isEmpty()) {
-					if (logger.isLoggable(Level.FINER)) {
-						logger.log(Level.FINE, "runtimeNightlyBuilds is empty - force an update");
-					}
-                    scheduleAsyncUpdate();
-				}
-            }
+				logger.info("runtimeNightlyBuilds is empty - force an update");
+				scheduleAsyncUpdate();
+			}
 		}
 	}
 
