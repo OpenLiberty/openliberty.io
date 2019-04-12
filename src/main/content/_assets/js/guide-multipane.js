@@ -50,14 +50,19 @@ function highlight_code_range(code_section, fromLine, toLine, scroll){
     
     // Wrap code block lines in a div to highlight
     var highlight_start = code_section.find('.line-numbers').filter(function(){
-        return parseInt(this.innerText.trim()) === fromLine;
+        return parseInt(this.innerText.trim()) === fromLine;        
     });
     var highlight_end = code_section.find('.line-numbers').filter(function(){
-        return parseInt(this.innerText.trim()) === toLine + 1;
+        return parseInt(this.innerText.trim()) === toLine;
     });
     if(highlight_end.length === 0){
-        highlight_end = highlight_start.nextAll('.line-numbers').first();
-    }  
+        while(highlight_end.length === 0){
+            toLine = toLine + 1;
+            highlight_end = code_section.find('.line-numbers').filter(function(){
+                return parseInt(this.innerText.trim()) === toLine;
+            });
+        }
+    }
     var range = highlight_start.nextUntil(highlight_end);
     range.wrapAll("<div class='highlightSection'></div>");
 
@@ -178,7 +183,7 @@ var handleHotspotHover = debounce(function(hotspot){
                     if(fromLine && toLine){   
                         // When multiple ranges are going to be highlighted, only scroll to the first one.                 
                         var shouldScroll = (i === 0);
-                        highlight_code_range(code_block, fromLine, toLine, shouldScroll);               
+                        highlight_code_range(code_block, fromLine, toLine + 1, shouldScroll);               
                     }
                 }                
             }
@@ -583,12 +588,12 @@ $(document).ready(function() {
                         }                        
                     }
                     else {
-                        // Hotspot is using a tag name.
+                        // Hotspot is a tag name.
                         // Find the start line for the tag using tag::<tag_name>[] and the end line for the tag using end::<tag_name>[]
-                        var tag_start = code_block.find("span[data-hotspot-tag='" + value + "']").first();
-                        var tag_end = code_block.find("span[data-hotspot-tag='" + value + "']").last();
-                        fromLine = parseInt(tag_start.nextAll('.line-numbers').first().text());
-                        toLine = parseInt(tag_end.prevAll('.line-numbers').first().text()) - 1;                        
+                        var tag_start = code_block.find(".line-numbers[data-hotspot-tag='" + value + "']").first();
+                        var tag_end = code_block.find(".line-numbers[data-hotspot-tag='" + value + "']").last();
+                        fromLine = parseInt(tag_start.text());
+                        toLine = parseInt(tag_end.text());                     
                         ranges = fromLine + "-" + toLine;
 
                         // Trim the extra whitespace in the code
