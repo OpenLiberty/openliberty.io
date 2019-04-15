@@ -371,12 +371,11 @@ function hide_comments(code_block){
     });
 
     // Hide the copyright
-    var start = code_block.find(".comment:contains('tag::comment[]')");
-    start = start.prev('.line-numbers');
-    var end = code_block.find(".comment:contains('end::comment[]')");
+    var start = code_block.find(".comment:contains('tag::comment[]')").prev('.line-numbers');
+    var end = code_block.find(".comment:contains('end::comment[]')").nextAll('.line-numbers').first();
     if(start.length === 1 && end.length === 1){
         var range = start.nextUntil(end);
-        range = range.add(start).add(end);
+        range = range.add(start);
         range.remove();
     }
 
