@@ -381,7 +381,7 @@ function hide_comments(code_block){
     }
 
     // Hide comments and their line numbers
-    code_block.find('.comment').each(function(){
+    code_block.find(".comment:contains('tag::'), .comment:contains('end::')").each(function(){
         // Remove the line number and all space between the line number and the comment        
         var line_num = $(this).prevAll('.line-numbers').first();
         line_num.nextUntil($(this)).andSelf().remove();
