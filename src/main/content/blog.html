@@ -8,127 +8,137 @@ permalink: /blog/
 ---
 
 <!-- BLOG -->
-<div id="blog_container" class="container-fluid">
-    <div class="row">
-        <div id="left_column" class="col-md-12 col-lg-4">
-            <img id="blog_title" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-fluid d-none d-lg-block" alt="Blog">
-            <h2 class="blog_subtitle">Never miss a post!</h2>
-            <p class="blog_subtext">Be sure to follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our <a class="orange_link_light_background" href="https://openliberty.io/feed.xml" target="_blank">RSS feed</a>.</p>
-            <img id="ufo_images_desktop" class="d-none d-lg-block" src="/img/blog_images_desktop.svg" alt="ufo and clouds">
-            <img id="ufo_images_tablet" class="d-none d-md-block d-lg-none" src="/img/blog_images_tablet.svg" alt="ufo and clouds">
-        </div>
-        <div id="right_column" class="col-md-12 col-lg-8 offset-lg-4">
+<div id="background_container">
+    <div id="blog_container" class="container-fluid">
+        <div class="row">
+            <div id="left_column" class="col-md-12 col-lg-4">
+                <img id="blog_title" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-fluid d-none d-md-block" alt="Blog">
+                <span id="star1" class="star d-none d-md-block"></span>
+                <span id="star2" class="star d-none d-md-block"></span>
+                <span id="star3" class="star d-none d-md-block"></span>
+                <span id="star4" class="star d-none d-md-block"></span>
+                <span id="star5" class="star d-none d-md-block"></span>
+                <span id="star6" class="star d-none d-md-block"></span>
+                <h2 class="blog_subtitle">Never miss a post!</h2>
+                <p class="blog_subtext">Be sure to follow <a class="green_link" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our <a class="green_link" href="https://openliberty.io/feed.xml" target="_blank">RSS feed</a>.</p>
+                <img id="ufo_images_desktop" class="d-none d-lg-block" src="/img/blog_images_desktop.svg" alt="ufo and clouds">
+                <img id="ufo_images_tablet" class="d-none d-md-block d-lg-none" src="/img/blog_images_tablet.svg" alt="ufo and clouds">
+            </div>
+            <div id="right_column" class="col-md-12 col-lg-8 offset-lg-4">
 
-            <!-- Show blog posts from the past 30 days as Latest Posts unless there are less than 3 -->
-            {% assign past_month_count = 0 %}
-            {% for post in site.posts %}
+                <!-- Show blog posts from the past 30 days as Latest Posts unless there are less than 3
+                     2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+                {% assign past_month_count = 0 %}
+                {% for post in site.posts %}
 
-                {% assign date_published = post.date | date:'%s' %}
-                {% assign date_now = 'now' | date:'%s' %}
-                {% assign date_difference = date_now | minus: date_published %}
+                    {% assign date_published = post.date | date:'%s' %}
+                    {% assign date_now = 'now' | date:'%s' %}
+                    {% assign date_difference = date_now | minus: date_published %}
 
-                <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
-                {% if date_difference < 2592000 %}
-                    {% assign past_month_count = past_month_count | plus: 1 %}
-                {% endif %}
+                    {% if date_difference < 2592000 %}
+                        {% assign past_month_count = past_month_count | plus: 1 %}
+                    {% endif %}
 
-                {% assign latest_posts_count = 3 %}
-                {% if past_month_count > 3 %}
-                    {% assign latest_posts_count = past_month_count %}
-                {% endif %}
+                    {% assign latest_posts_count = 3 %}
+                    {% if past_month_count > 3 %}
+                        {% assign latest_posts_count = past_month_count %}
+                    {% endif %}
 
-            {% endfor %}
+                {% endfor %}
 
-            {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
-            {% assign count = 1 %}
-            {% for post in site.posts %}
-                <div class="row blog_post_row">
-                    <div class="blog_post_column">
-                        {% if count == 1 %}
-                        <p class="green_bar">Latest Posts</p>
-                        {% endif %}
-                        {% if count <= latest_posts_count %}
-                            <div class="blog_post_content">
-                                {% if post.redirect_link %}
-                                    <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" class="blog_post_title_link">{{ post.title | escape }}</a>
-                                        <span class="continued_text">
-                                            {% assign continue_text = ' [Continued on ' %}
-                                            {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
-                                            {{ continue_text | append: domain_name }}
-                                        </span>
-                                    </h2>
-                                    {% else %}
-                                    <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
-                                {% endif %}
-                                <p class="blog_post_date_mobile d-sm-block d-md-none">{{ post.date | date: date_format }}</p>
-                                <p class="blog_post_paragraph">
-                                    {% if post.blog_description %}
-                                        {{ post.blog_description }}
-                                    {% else %}
-                                        {{ post.content | strip_html | truncatewords: 60 }}
-                                    {% endif %}
-                                </p>
-                                <div class="row">
-                                    <div class="blog_post_author_data_container col-md-7">
-                                        <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
-                                        <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
-                                        <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
-                                    </div>
-                                    <div class="read_more_link_container col-sm-12 col-md-5">
+                {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
+                {% assign count = 1 %}
+                {% for post in site.posts %}
+                    <div class="row blog_post_row">
+                        <div class="blog_post_column">
+                            {% if count == 1 %}
+                            <p class="green_bar">Latest Posts</p>
+                            {% endif %}
+                            {% if count <= latest_posts_count %}
+                                <div class="blog_post_content">
                                     {% if post.redirect_link %}
-                                        <a href="{{ post.redirect_link }}" class="read_more_link read_more_link_external">Read more</a>
-                                    {% else %}
-                                        <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
+                                        <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" class="blog_post_title_link">{{ post.title | escape }}</a>
+                                            <span class="continued_text">
+                                                {% assign continue_text = ' [Continued on ' %}
+                                                {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
+                                                {{ continue_text | append: domain_name }}
+                                            </span>
+                                        </h2>
+                                        {% else %}
+                                        <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
                                     {% endif %}
+                                    <p class="blog_post_date_mobile d-sm-block d-md-none">{{ post.date | date: date_format }}</p>
+                                    <p class="blog_post_paragraph">
+                                        {% if post.blog_description %}
+                                            {{ post.blog_description }}
+                                        {% else %}
+                                            {{ post.content | strip_html | truncatewords: 60 }}
+                                        {% endif %}
+                                    </p>
+                                    <div class="row">
+                                        <div class="blog_post_author_data_container col-md-7">
+                                            <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                            <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
+                                            <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
+                                        </div>
+                                        <div class="read_more_link_container col-sm-12 col-md-5">
+                                        {% if post.redirect_link %}
+                                            <a href="{{ post.redirect_link }}" class="read_more_link read_more_link_external">Read more</a>
+                                        {% else %}
+                                            <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
+                                        {% endif %}
+                                        </div>
                                     </div>
+                                    {% if count != latest_posts_count %}
+                                        <div class="bottom_border"></div>
+                                    {% endif %}
                                 </div>
-                                {% if count != latest_posts_count %}
+                            {% if count == latest_posts_count %}
+                                <p class="green_bar">Older Posts</p>
+                            {% endif %}
+                            {% else %}
+                                <div class="blog_post_content">
+                                    {% if post.redirect_link %}
+                                        <h2 class="blog_post_title_condensed"><a href="{{ post.redirect_link }}" class="blog_post_title_link_condensed">{{ post.title | escape }}</a>
+                                            <span class="continued_text">
+                                                {% assign continue_text = ' [Continued on ' %}
+                                                {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
+                                                {{ continue_text | append: domain_name }}
+                                            </span>
+                                        </h2>
+                                    {% else %}
+                                        <h2 class="blog_post_title_condensed"><a href="{{ post.url | relative_url }}" class="blog_post_title_link_condensed">{{ post.title | escape }}</a></h2>
+                                    {% endif %}
+                                    <p class="blog_post_date_mobile d-sm-block d-md-none">{{ post.date | date: date_format }}</p>
+                                    <div class="row">
+                                        <div class="blog_post_author_data_container col-md-7">
+                                            <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                            <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
+                                            <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
+                                        </div>
+                                        <div class="read_more_link_container col-sm-12 col-md-5">
+                                        {% if post.redirect_link %}
+                                            <a href="{{ post.redirect_link }}" class="read_more_link read_more_link_external">Read more</a>
+                                        {% else %}
+                                            <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
+                                        {% endif %}
+                                        </div>
+                                    </div>
                                     <div class="bottom_border"></div>
-                                {% endif %}
-                            </div>
-                        {% if count == latest_posts_count %}
-                            <p class="green_bar">Older Posts</p>
-                        {% endif %}
-                        {% else %}
-                            <div class="blog_post_content">
-                                {% if post.redirect_link %}
-                                    <h2 class="blog_post_title_condensed"><a href="{{ post.redirect_link }}" class="blog_post_title_link_condensed">{{ post.title | escape }}</a>
-                                        <span class="continued_text">
-                                            {% assign continue_text = ' [Continued on ' %}
-                                            {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
-                                            {{ continue_text | append: domain_name }}
-                                        </span>
-                                    </h2>
-                                {% else %}
-                                    <h2 class="blog_post_title_condensed"><a href="{{ post.url | relative_url }}" class="blog_post_title_link_condensed">{{ post.title | escape }}</a></h2>
-                                {% endif %}
-                                <p class="blog_post_date_mobile d-sm-block d-md-none">{{ post.date | date: date_format }}</p>
-                                <div class="row">
-                                    <div class="blog_post_author_data_container col-md-7">
-                                        <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
-                                        <a class="blog_post_author_name" href="{{ post.author_github }}">{{ post.author }}</a>
-                                        <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
-                                    </div>
-                                    <div class="read_more_link_container col-sm-12 col-md-5">
-                                    {% if post.redirect_link %}
-                                        <a href="{{ post.redirect_link }}" class="read_more_link read_more_link_external">Read more</a>
-                                    {% else %}
-                                        <a href="{{ post.url | relative_url }}" class="read_more_link">Read more</a>
-                                    {% endif %}
-                                    </div>
                                 </div>
-                                <div class="bottom_border"></div>
-                            </div>
-                        {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% assign count = count | plus: 1 %}
+                {% endfor %}
+                <div class="row blog_post_row">
+                    <div id="final_post" class="blog_post_content">
+                        <p class="blog_post_title_link">Stay lightyears ahead.</p>
+                        <p>Follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our <a class="orange_link_light_background" href="https://openliberty.io/feed.xml" target="_blank">RSS feed</a>.</p>
                     </div>
                 </div>
-                {% assign count = count | plus: 1 %}
-            {% endfor %}
-            <div id="final_post" class="blog_post_content">
-                <p class="blog_post_title_link">Stay lightyears ahead.</p>
-                <p>Follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank">@openlibertyio</a> on Twitter or subscribe to our <a class="orange_link_light_background" href="https://openliberty.io/feed.xml" target="_blank">RSS feed</a>.</p>
+                <img id="ufo_images_mobile" class="d-block d-md-none img-fluid" src="/img/blog_images_mobile.svg" alt="ufo and clouds">
             </div>
-            <img id="ufo_images_mobile" class="d-block d-md-none img-fluid" src="/img/blog_images_mobile.svg" alt="ufo and clouds">
         </div>
     </div>
 </div>

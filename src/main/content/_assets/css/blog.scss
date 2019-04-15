@@ -12,17 +12,123 @@
 
 /* BLOG */
 
+#background_container {
+    background-image: radial-gradient(circle at top right, #5E6B8D 0%, #2C2E50 70%);
+    margin-top: 62px;
+
+    @media (max-width: 991.98px) {
+        margin-top: 46px;
+    }
+
+    @media (max-width: 767.98px) {
+        background: none;
+    }
+}
+
+.star {
+    width: 4px;
+    height: 4px;
+    background-color: #C8D2D2;
+    border-radius: 50%; 
+}
+
+#star1 {
+    position: fixed;
+    top: 200px;
+    right: calc(98%);
+    animation: blink 3s infinite;
+
+    @media (max-width: 991.98px) {
+        right: calc(40%);
+    }
+}
+
+#star2 {
+    position: fixed;
+    top: 355px;
+    right: calc(95%);
+    animation: blink 4s infinite;
+
+    @media (max-width: 991.98px) {
+        top: 305px;
+        right: calc(80%);
+    }
+}
+
+#star3 {
+    position: fixed;
+    top: 230px;
+    right: calc(70%);
+    animation: blink 5s infinite;
+
+    @media (max-width: 991.98px) {
+        top: 100px;
+        right: calc(5%);
+    }
+}
+
+#star4 {
+    position: fixed;
+    top: 260px;
+    right: calc(10%);
+    animation: blink 3s infinite;
+
+    @media (max-width: 991.98px) {
+        top: 78px;
+        right: calc(93%);
+    }
+}
+
+#star5 {
+    position: fixed;
+    top: 720px;
+    right: calc(5%);
+    animation: blink 4s infinite;
+
+    @media (max-width: 991.98px) {
+        top: 90px;
+        right: calc(30%);
+    }
+}
+
+#star6 {
+    position: fixed;
+    top: 400px;
+    right: calc(2%);
+    animation: blink 6s infinite;
+
+    @media (max-width: 991.98px) {
+        top: 300px;
+        right: calc(50%);
+    }
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    40% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
 #blog_container {
-    padding-top: 70px;
-    width: 85%;
+    max-width: 1440px;
     margin: 0 auto;
 
     @media (max-width: 991.98px) {
         width: 100%;
+        padding-top: 46px;
     }
 
     @media (max-width: 767.98px) {
-        padding-top: 60px;
+        padding-top: 24px;
     }
 }
 
@@ -30,13 +136,11 @@
 /* LEFT COLUMN */
 
 #left_column {
-    overflow: hidden;
     padding-left: 0px;
     padding-right: 0px;
-
+    
     @media (min-width: 992px) {
         position: fixed;
-        width: 28.33333%;
     }
 
     @media (max-width: 991.98px) {
@@ -59,48 +163,63 @@
 #blog_title {
     height: 60px;
     margin-top: 89px;
+
+    @media (max-width: 991.98px) {
+        margin-top: 37px;
+    }
 }
 
 .blog_subtitle {
     font-size: 24px;
     margin-top: 33px;
+    color: #ffffff;
 
     @media (max-width: 991.98px) {
         margin-top: 22px;
     }
+
+    @media (max-width: 767.98px) {
+        color: #212529;
+    }
+}
+
+.blog_subtext {
+    color: #ffffff;
+
+    @media (max-width: 767.98px) {
+        color: #212529;
+    }
+}
+
+.green_link {
+    color: #E6EDA8;
+
+    &:hover {
+        color: #F7FFB3;
+    }
+
+    @media (max-width: 767.98px) {
+        color: #F69144;
+
+        &:hover {
+            transition: all .2s;
+            color: #E3700D;
+        }
+    }
+    
 }
 
 #ufo_images_desktop {
     position: relative;
     margin-top: 30px;
     float: right;
-
-    @media (max-width: 1600px) {
-        width: 600px;
-    }
-
-    @media (max-width: 1400px) {
-        width: 500px;
-    }
-
-    @media (max-width: 1150px) {
-        width: 470px;
-    }
-
-    @media (max-width: 991.98px) {
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        width: 700px;
-
-        margin-top: 0px;
-    }
+    width: 255%;
 }
 
 #ufo_images_tablet {
     position: absolute;
     width: 800px;
-    top: -25px;
+    top: -5px;
     right: 0px;
 }
 
@@ -108,10 +227,9 @@
 /* RIGHT COLUMN */
 
 #right_column {
-    box-shadow: -2px 0 2px -2px #D8D8D8;
+    background: #ffffff;
 
     @media (max-width: 991.98px) {
-        box-shadow: none;
         overflow: hidden;
     }
 }
@@ -317,11 +435,7 @@
 }
 
 @media (min-width: 992px) {
-    #blog_container {
-        box-shadow: -2px 0 2px -2px #D8D8D8, 2px 0 2px -2px #D8D8D8;
-    }
-
-    #blog_title, .blog_subtitle, .blog_subtext {
+    #blog_title, .blog_subtitle, .blog_subtext, .footer_container {
         padding-left: 63px;
         padding-right: 63px;
     }
@@ -330,8 +444,7 @@
         position: fixed;
         right: 0;
         top: calc(100% - 69px);
-        left: 35.83333%;
-        width: 56.66667%;
+        width: 66.66667%;
         z-index: 1030;
         transition: top .3s;
         padding-top: 0px;
@@ -359,5 +472,16 @@
 
     body {
         overflow-x: hidden;
+    }
+}
+
+@media (min-width: 1440px) {
+    #left_column {
+        width: 480px;
+    }
+
+    footer {
+        width: 960px;
+        right: calc( (100vw - 1440px) / 2);
     }
 }
