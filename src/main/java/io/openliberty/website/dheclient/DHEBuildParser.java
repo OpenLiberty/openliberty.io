@@ -105,7 +105,7 @@ public class DHEBuildParser {
 					logger.log(Level.FINE, "runtimeNightlyBuilds is empty - force an update");
 				}
 				logger.info("runtimeNightlyBuilds is empty - force an update");
-				scheduleAsyncUpdate();
+				blockingUpdate();
 			}
 		}
 	}
