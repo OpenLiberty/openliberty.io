@@ -49,21 +49,22 @@ function highlight_code_range(code_section, fromLine, toLine, scroll){
     });
     
     // Wrap code block lines in a div to highlight
-    var highlight_start = code_section.find('.line-numbers').filter(function(){
+    var highlightStart = code_section.find('.line-numbers').filter(function(){
         return parseInt(this.innerText.trim()) === fromLine;        
     });
-    var highlight_end = code_section.find('.line-numbers').filter(function(){
+    var highlightEnd = code_section.find('.line-numbers').filter(function(){
         return parseInt(this.innerText.trim()) === toLine;
     });
-    if(highlight_end.length === 0){
-        while(highlight_end.length === 0){
+    if(highlightEnd.length === 0){
+        var lastLine = parseInt(code_section.find('.line-numbers').last().text().trim());
+        while(highlightEnd.length === 0 && toLine < lastLine){
             toLine = toLine + 1;
-            highlight_end = code_section.find('.line-numbers').filter(function(){
+            highlightEnd = code_section.find('.line-numbers').filter(function(){
                 return parseInt(this.innerText.trim()) === toLine;
             });
         }
     }
-    var range = highlight_start.nextUntil(highlight_end);
+    var range = highlightStart.nextUntil(highlightEnd);
     range.wrapAll("<div class='highlightSection'></div>");
 
     if(scroll){
