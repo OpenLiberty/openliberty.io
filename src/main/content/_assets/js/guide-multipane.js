@@ -387,6 +387,15 @@ function hide_comments(code_block){
         line_num.nextUntil($(this)).andSelf().remove();
     });
 
+    var hideList;
+    var classList = code_block[0].classList;
+    for(var i=0; i < classList.length; i++){
+        if(classList[i].indexOf("hide_tags=") > -1){
+            hideList = classList[i].substring(10).split(",");
+            break;
+        }
+    }
+
     var start_tags = code_block.find('.comment:contains(tag::)');
     start_tags.each(function(){
         // Wrap the tag in a div for highlighting later
@@ -396,8 +405,26 @@ function hide_comments(code_block){
         var tag_name = text.substring(start_index, end_index);
         var end = $(this).nextAll("span:contains('end::')").first();
         var content = $(this).nextUntil(end);
-        // Mark the lines start to end with a data-tag so that the hotspot can highlight them.
-        content.attr('data-hotspot-tag', tag_name);
+
+        // Check if the tag should be hidden
+        var hide = false;
+        if(hideList){
+            for(var i=0; i<hideList.length; i++){
+                if(hideList.indexOf(tag_name) > -1){
+                    hide = true;
+                    break;
+                }
+            }
+        }
+        
+        // If the tag is in the list of tags that should be hidden then hide it instead of just marking it.
+        if(hide){
+            content.hide();
+        }
+        else {
+            // Mark the lines start to end with a data-tag so that the hotspot can highlight them.
+            content.attr('data-hotspot-tag', tag_name);
+        }
     });
 
     // Hide start tags
