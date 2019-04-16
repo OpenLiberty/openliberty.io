@@ -25,6 +25,69 @@
     }
 }
 
+#right_cloud_back {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+
+#right_cloud_front {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+
+#blog_container {
+    max-width: 1440px;
+    margin: 0 auto;
+
+    @media (max-width: 991.98px) {
+        width: 100%;
+        padding-top: 46px;
+    }
+
+    @media (max-width: 767.98px) {
+        padding-top: 24px;
+    }
+}
+
+
+/* LEFT COLUMN */
+
+#left_column {
+    padding-left: 0px;
+    padding-right: 0px;
+    
+    @media (min-width: 992px) {
+        position: fixed;
+    }
+
+    @media (max-width: 991.98px) {
+        overflow: hidden;
+        padding-left: 33px;
+        & p {
+            width: 50%;
+            margin-bottom: 35px;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        padding-left: 30px;
+        & p {
+            width: 100%;
+        }
+    }
+}
+
+#blog_title {
+    height: 60px;
+    margin-top: 89px;
+
+    @media (max-width: 991.98px) {
+        margin-top: 37px;
+    }
+}
+
 .star {
     width: 4px;
     height: 4px;
@@ -118,57 +181,6 @@
     }
 }
 
-#blog_container {
-    max-width: 1440px;
-    margin: 0 auto;
-
-    @media (max-width: 991.98px) {
-        width: 100%;
-        padding-top: 46px;
-    }
-
-    @media (max-width: 767.98px) {
-        padding-top: 24px;
-    }
-}
-
-
-/* LEFT COLUMN */
-
-#left_column {
-    padding-left: 0px;
-    padding-right: 0px;
-    
-    @media (min-width: 992px) {
-        position: fixed;
-    }
-
-    @media (max-width: 991.98px) {
-        overflow: hidden;
-        padding-left: 33px;
-        & p {
-            width: 50%;
-            margin-bottom: 35px;
-        }
-    }
-
-    @media (max-width: 767.98px) {
-        padding-left: 30px;
-        & p {
-            width: 100%;
-        }
-    }
-}
-
-#blog_title {
-    height: 60px;
-    margin-top: 89px;
-
-    @media (max-width: 991.98px) {
-        margin-top: 37px;
-    }
-}
-
 .blog_subtitle {
     font-size: 24px;
     margin-top: 33px;
@@ -247,7 +259,8 @@
     padding-top: 17px;
     padding-bottom: 11px;
     margin-bottom: 0px;
-
+    border-top: 3px solid #d4d7e3;
+    
     @media (max-width: 991.98px) {
         padding-left: 33px;
         width: 100vw;
@@ -421,6 +434,10 @@
     }
 }
 
+#ufo_images_mobile_container {
+    background-image: radial-gradient(circle at top right, #5E6B8D 0%, #2C2E50 70%);
+}
+
 #ufo_images_mobile {
     min-width: 210%;
     margin-left: 35%;
@@ -482,6 +499,6 @@
 
     footer {
         width: 960px;
-        right: calc( (100vw - 1440px) / 2);
+        right: calc( (100% - 1440px) / 2);
     }
 }
