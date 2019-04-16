@@ -44,7 +44,7 @@ function render_builds(builds, parent) {
                         package_name = package_name.toLowerCase();
                         var href = package_locations[i].split("=")[1];
                         var package_column = $('<td></td>');
-                        package_column.append($('<a href="' +  href +'" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + 
+                        package_column.append($('<a href="' +  href +'" target="_blank" rel="noopener" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + 
                         package_name + '</a>'));
                         row.append(package_column);
                     }
@@ -71,10 +71,10 @@ function render_builds(builds, parent) {
             var date_column = $('<td><span class="table_date">' + year + '-' + add_lead_zero(month) + '-' + add_lead_zero(day) + ', ' + add_lead_zero(hour) + ':' + add_lead_zero(minute) + '</span></td>');
             row.append(date_column);
             
-            var tests_column = $('<td><a href="' +  build.tests_log +'" target="new" class="'+ analytics_class_name + ' skip_outbound_link_analytics tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
+            var tests_column = $('<td><a href="' +  build.tests_log +'" target="_blank" rel="noopener" class="'+ analytics_class_name + ' skip_outbound_link_analytics tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
             row.append(tests_column);
             
-            var log_column = $('<td><a href="' + build.build_log + '" target="new" class="' + analytics_class_name + ' skip_outbound_link_analytics view_logs_link">View logs</a></td>');            
+            var log_column = $('<td><a href="' + build.build_log + '" target="_blank" rel="noopener" class="' + analytics_class_name + ' skip_outbound_link_analytics view_logs_link">View logs</a></td>');            
             row.append(log_column);
 
             var zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">Download all</a></td>');
