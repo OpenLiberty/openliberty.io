@@ -387,6 +387,7 @@ function hide_comments(code_block){
         line_num.nextUntil($(this)).andSelf().remove();
     });
 
+    // Parse the tags that should be hidden.
     var hideList;
     var classList = code_block[0].classList;
     for(var i=0; i < classList.length; i++){
@@ -427,11 +428,11 @@ function hide_comments(code_block){
         }
     });
 
-    // Hide start tags
+    // Hide start tags and the space before them.
     start_tags.prev('span').remove();
     start_tags.remove();
 
-    // Hide end tags
+    // Hide end tags and the space after them.
     var end_tags = code_block.find('.comment:contains(end::)');
     end_tags.next('span').remove();
     end_tags.remove();
