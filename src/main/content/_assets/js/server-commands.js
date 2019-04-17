@@ -53,13 +53,16 @@ function addReferenceClick() {
         var currentHref = resource.attr("href");
         var matchingTOCElement = getTOCElement(currentHref);
 
-        // handle the click event ourselves so as to take care of updating the hash 
-        event.preventDefault();
-        event.stopPropagation();
+        // check that link isn't a full url containing http before updating hash
+        if (currentHref.indexOf("http") == -1) {
+            // handle the click event ourselves so as to take care of updating the hash 
+            event.preventDefault();
+            event.stopPropagation();
 
-        loadContent(matchingTOCElement, commandDocsFolder + currentHref, true);
+            loadContent(matchingTOCElement, commandDocsFolder + currentHref, true);
 
-        return false;
+            return false;
+        }
     };
 
     $("#command_content .sect1 .sectionbody p > a").off("click").on("click", onclick);

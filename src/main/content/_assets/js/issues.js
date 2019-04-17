@@ -114,7 +114,7 @@ function update_tab_index() {
 
 function create_issue_element(index, ui_position) {
     var issue = issues[index];
-    var issue_element = $('<a target="new" class="issue issue_' + ui_position + ' clearfix center-block"</a>');
+    var issue_element = $('<a target="_blank" rel="noopener" class="issue issue_' + ui_position + ' clearfix center-block"</a>');
     issue_element.attr('href', issue.html_url);    
     var bar_element = $('<div class="issue_green_bar"></div>');
     var title_element = $('<h3 class="truncate"></h3>');
