@@ -11,6 +11,8 @@
 package io.openliberty.website.data;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -24,8 +26,14 @@ public class LastUpdate {
 	private Date lastAttempt;
 	private Date lastSuccess;
 
+	private static final Logger logger = Logger.getLogger(LastUpdate.class.getName());
+
 	public String getLastUpdateAttempt() {
-		return lastAttempt == null ? Constants.NEVER_ATTEMPTED : DateUtil.asUTCString(lastAttempt);
+		String result = lastAttempt == null ? Constants.NEVER_ATTEMPTED : DateUtil.asUTCString(lastAttempt);
+		if (logger.isLoggable(Level.FINER)) {
+			logger.log(Level.FINE, "getLastUpdateAttempt()", result);
+		}
+		return result;
 	}
 
 	void setLastUpdateAttempt(Date date) {
@@ -33,25 +41,41 @@ public class LastUpdate {
 	}
 
 	public String getLastSuccessfulUpdate() {
-		return lastSuccess == null ? Constants.NEVER_UPDATED : DateUtil.asUTCString(lastSuccess);
+		String result = lastSuccess == null ? Constants.NEVER_UPDATED : DateUtil.asUTCString(lastSuccess);
+		if (logger.isLoggable(Level.FINER)) {
+			logger.fine("getLastSuccessfulUpdate() " + result);
+		}
+		return result;
 	}
 
-	public void markUpdateAttempt() {
+	public void markUpdateAttempt() {	
 		lastAttempt = new Date();
+		if (logger.isLoggable(Level.FINER)) {
+			logger.fine("markUpdateAttempt() " + lastAttempt);
+		}
 	}
 
-	public void markSuccessfulUpdate() {
+	public void markSuccessfulUpdate() {	
 		lastSuccess = lastAttempt;
+		if (logger.isLoggable(Level.FINER)) {
+			logger.fine("markSuccessfulUpdate() " + lastSuccess);
+		}
 	}
 
 	public JsonObject asJsonObject() {
 		JsonObjectBuilder builder = Json.createObjectBuilder();
 		builder.add(Constants.LAST_UPDATE_ATTEMPT, getLastUpdateAttempt());
 		builder.add(Constants.LAST_SUCCESSFULL_UPDATE, getLastSuccessfulUpdate());
+		if (logger.isLoggable(Level.FINER)) {
+			logger.fine("asJsonObject() builder=" + builder);
+		}
 		return builder.build();
 	}
 
 	public boolean hasNeverSuccessfullyUpdated() {
+		if (logger.isLoggable(Level.FINER)) {
+			logger.fine("hasNeverSuccessfullyUpdated() " + (lastSuccess == null));
+		}
 		return lastSuccess == null;
 	}
 
@@ -59,7 +83,7 @@ public class LastUpdate {
 	 * Compare the current time with the time the last successful update completed.
 	 * An update is needed if the last successful update was more than an hour ago.
 	 */
-	public boolean isUpdateNeeded() {
+	public boolean isUpdateNeeded() {	
 		boolean isBuildUpdateAllowed = true;
 
 		if (lastSuccess != null) {
@@ -68,6 +92,9 @@ public class LastUpdate {
 			if ((currentTime - lastUpdateTime) < ONE_HOUR_MILLIS) {
 				isBuildUpdateAllowed = false;
 			}
+		}
+		if (logger.isLoggable(Level.FINER)) {
+			logger.fine("isUpdateNeeded() " + isBuildUpdateAllowed);
 		}
 
 		return isBuildUpdateAllowed;
