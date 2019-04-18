@@ -71,10 +71,10 @@ function highlight_code_range(code_section, fromLine, toLine, scroll){
     range.wrapAll("<div class='highlightSection'></div>");
 
     if(scroll){
-        var scrollTop = $("#code_column_content")[0].scrollTop;
+        var scrollTop = code_section.parent()[0].scrollTop;
         var position = range.position().top;
-        var titleBarHeight = $("#code_column_title_container").outerHeight();
-        $("#code_column_content").animate({scrollTop: scrollTop + position - titleBarHeight});
+        var titleBarHeight = code_section.parent().find(".code_column_title_container").outerHeight();
+        $(".code_column_content").animate({scrollTop: scrollTop + position - titleBarHeight});
     }        
 }
 
@@ -142,7 +142,7 @@ function showCorrectCodeBlock(id, index, switchTabs) {
                     setActiveTab(tab);
                 }
             }
-            hideDuplicateTabs(id);
+            hideDuplicateTabs(id, code_block);
         }
     } catch(e) {
         console.log(e);
@@ -197,20 +197,20 @@ var handleHotspotHover = debounce(function(hotspot){
 
 function showGithubPopup(){
     $("#github_clone_popup_container").fadeIn();
-    $("#code_column .code_column, #code_column_tabs_container").addClass('dimmed', {duration:400});
+    $("#code_column .code_column, .code_column_tabs_container").addClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', true);
     $(".copyFileButton").hide();
-    $('#code_column_content').css({
+    $('.code_column_content').css({
         'overflow-y': 'hidden'
     });
 }
 
 function hideGithubPopup(){
     $("#github_clone_popup_container").fadeOut();
-    $("#code_column .code_column, #code_column_tabs_container").removeClass('dimmed', {duration:400});
+    $("#code_column .code_column, .code_column_tabs_container").removeClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', false);
     $(".copyFileButton").show();
-    $('#code_column_content').css({
+    $('.code_column_content').css({
         'overflow-y': 'scroll'
     });
 }
@@ -252,8 +252,9 @@ function handleGithubPopup() {
 }
 
 // Look through current step's tabs and if a duplicate file was already shown then hide it.
-function hideDuplicateTabs(id){
-    var visibleTabs = $('#code_column_tabs li:visible');
+function hideDuplicateTabs(id, code_block){
+    var code_column = code_block.parents('.code_column_container');
+    var visibleTabs = code_column.find('.code_column_tabs li:visible');
     var substeps = $("#" + id).parents('.sect1').find('h2, h3');
     var substepIds = [];
     for(var i = 0; i < substeps.length; i++){
@@ -269,7 +270,7 @@ function hideDuplicateTabs(id){
             continue;
         }
         var fileName = tab.text();
-        var tabsWithSameName = $('#code_column_tabs li:visible').not(tab).filter(function(){
+        var tabsWithSameName = code_column.find('.code_column_tabs li:visible').not(tab).filter(function(){
             return this.innerText.trim() === fileName;
         });
         
@@ -311,7 +312,7 @@ function hideDuplicateTabs(id){
     }
     // Hide duplicates of the active tab
     var activeTab = $('.code_column_tab > .active').parent();
-    var activeDuplicates = $('#code_column_tabs li:visible').not(activeTab).filter(function(){
+    var activeDuplicates = code_column.find('.code_column_tabs li:visible').not(activeTab).filter(function(){
         return this.innerText.trim() === activeTab.text();
     });
     activeDuplicates.hide();
@@ -319,7 +320,7 @@ function hideDuplicateTabs(id){
 
 function loadPreviousStepsTabs(){
     // Reveal the files from previous sections in case the user loaded a later step from a bookmarked hash.
-    var lastTab = $('#code_column_tabs li:visible').last();
+    var lastTab = $('#code_column .code_column_tabs li:visible').last();
     var previousHiddenTabs = lastTab.prevAll().not(":visible");
     for(var i = previousHiddenTabs.length - 1; i >= 0; --i){
         var tab = previousHiddenTabs.get(i);
@@ -345,21 +346,11 @@ function setActiveTab(activeTab){
     activeTab.show();
 
     // Adjust the code content to take up the remaining height
-    var tabListHeight = $("#code_column_title_container").outerHeight();
-    $("#code_column_content").css({
+    var code_column = activeTab.parents('.code_column_container');
+    var tabListHeight = code_column.find(".code_column_title_container").outerHeight();
+    code_column.find(".code_column_content").css({
         "height": "calc(100% - " + tabListHeight + "px)"
     });
-}
-
-function restoreCodeColumn(){
-    if(!inSingleColumnView()){
-        $("body").removeClass("unscrollable");
-        $("#code_column").css({
-            "top": "100px"
-        });
-        $("#code_column").removeClass("modal");
-        remove_highlighting(); // Remove previously highlighted hotspots from mobile view
-    }
 }
 
 /*
@@ -517,18 +508,18 @@ $(document).ready(function() {
             metadata_sect.detach();            
 
             // If the same tab exists already in the list, append it in the same order to persist the order it was introduced in the guide.
-            var tabAlreadyExists = $('#code_column_tabs li').filter(function(){
+            var tabAlreadyExists = $('#code_column .code_column_tabs li').filter(function(){
                 return this.innerText.trim() === fileName;
             });
             if(tabAlreadyExists.length > 0){
                 tabAlreadyExists.last().after(tab);
             } 
             else {
-                $('#code_column_tabs').append(tab);
+                $('#code_column .code_column_tabs').append(tab);
             }            
 
             code_block.addClass('dimmed'); // Dim the code at first while the github popup takes focus.
-            code_block.appendTo('#code_column_content'); // Move code to the right column
+            code_block.appendTo('#code_column .code_column_content'); // Move code to the right column
         }
     });
 
@@ -568,10 +559,11 @@ $(document).ready(function() {
 
             // Show the code block
             var data_id = $(this).attr('data-section-id');
-            var code_block = $($("#code_column .code_column[data-section-id='" + data_id + "']").get(fileIndex));
+            var code_column = $(this).parents('.code_column_container');
+            var code_block = $(code_column.find(".code_column[data-section-id='" + data_id + "']").get(fileIndex));
             // Save the code section for later when the user comes back to this section and we want to show the most recent code viewed.
             recent_sections[data_id] = code_sections[data_id][fileIndex];
-            $('#code_column .code_column').not(code_block).hide();
+            code_column.find('.code_column').not(code_block).hide();
             code_block.show();
         }
     });
@@ -665,18 +657,21 @@ $(document).ready(function() {
     // In mobile view if the user clicks a hotspot it shows a modal of the file with the hotspot code highlighted.
     $('.hotspot').on('click', function(){
         if(inSingleColumnView()){
-            $("body").addClass("unscrollable");   
-            $("#mobile_toc_accordion_container").css({
-                "pointer-events" : "none"
-            });         
-            $("#code_column").addClass("modal");
-            
+            if($(this).attr('open_hotspot')){
+                return;
+            }
+            $(this).attr('open_hotspot', 'true');         
 
+            // Clone the code column and display it below the hotspot
+            var code_clone = $("#code_column").clone(true); // Clone the code column including its events.
+            code_clone.removeAttr('id');
+            code_clone.addClass('mobile_code_column');
+            code_clone.addClass("open");  
+
+            // Scroll the hotspot to the top of the page, with the paragraph encompassing the hotspot shown.
             var top = $(this).offset().top;
             var mobile_toc_height = $("#mobile_toc_accordion").height();
-            var scrollTo = top - mobile_toc_height;
-            
-            // Scroll the hotspot to the top of the page, with the paragraph encompassing the hotspot shown.
+            var scrollTo = top - mobile_toc_height;     
             $('html, body').stop().animate({
                 scrollTop: scrollTo
             }, 400);
@@ -684,25 +679,23 @@ $(document).ready(function() {
             // Set the top of the code to appear underneath the hotspot that was clicked.
             var hotspot_height = $(this).height();
             var bottom = scrollTo + window.innerHeight - hotspot_height - 5;
-            var height = bottom - scrollTo;
-            $("#code_column").css({
-                "top" : scrollTo + mobile_toc_height + hotspot_height + 5 + "px",
+            var height = (bottom - scrollTo) / 2;
+            code_clone.css({
+                // "top" : scrollTo + mobile_toc_height + hotspot_height + 5 + "px",
                 "height" : height
             });
+
+            $(this).after(code_clone);
             handleHotspotHover($(this));
         }
     });
 
-    $('#dismiss_button').on('click', function(){
-        $("body").removeClass("unscrollable");
-        $("#mobile_toc_accordion_container").css({
-            "pointer-events" : "auto"
-        });
-        $("#code_column").removeClass("modal");
-        $("#code_column").css({
-            "height" : 'auto'
-        });
-        remove_highlighting();
+    $('.mobile_code_expand').on('click', function(){
+        // Expand the code column to its full height (auto)
+        $(this).parents('.mobile_code_column').css({
+            'height': 'auto'
+        }).addClass('removeGradient');
+        $(this).hide();
     });
 
     // When hovering over a code hotspot, highlight the correct lines of code in the corresponding code section.
@@ -744,7 +737,6 @@ $(document).ready(function() {
 
         var event0 = event.originalEvent;
         var dir = (event0.deltaY) < 0 ? 'up' : 'down';
-        var codeColumn = $("#code_column")[0];
         var codeColumnContent = $("#code_column_content").get(0);
 
         if(!(this.scrollTop > 0 || this.offsetHeight > codeColumnContent.offsetHeight)){
@@ -775,18 +767,27 @@ $(document).ready(function() {
     }
 
     $(".copyFileButton").click(function(event){
-        event.preventDefault();
-        // Remove the line numbers from being copied.
-        var target_copy = $("#code_column .code_column:visible .content code").clone();
-        target_copy.find('.line-numbers').remove();
+        event.preventDefault();        
+        var code_column = $(this).parents('.code_column_container');
+        var target_copy = code_column.find(".code_column:visible .content code").clone();
+        target_copy.find('.line-numbers').remove(); // Remove the line numbers from being copied.
         target = target_copy[0];
         copy_element_to_clipboard(target, function(){
             var current_target_object = $(event.currentTarget);
-            var position = current_target_object.position();	
-            $('#code_section_copied_confirmation').css({	
-                top: position.top + 42,	
-                right: 25	
-            }).stop().fadeIn().delay(1000).fadeOut();
+            var position = current_target_object.position();
+            var navHeight = $('nav').outerHeight();
+            if(inSingleColumnView()){
+                $('#guide_section_copied_confirmation').css({
+                    top: window.pageYOffset + current_target_object[0].getBoundingClientRect().top - navHeight + 42,
+                    right: 25	
+                }).stop().fadeIn().delay(1000).fadeOut();
+            } else {
+                // current_target_object.parents('.code_column_container').find                
+                $('#code_section_copied_confirmation').css({	
+                    top: position.top + 42,	
+                    right: 25	
+                }).stop().fadeIn().delay(1000).fadeOut();
+            }
         });
     });
 
