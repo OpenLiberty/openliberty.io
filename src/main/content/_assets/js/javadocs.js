@@ -173,8 +173,11 @@ function addScrollListener() {
 function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
     var frame = $('#javadoc_container').contents().find(frameToListen);
     var frameHeader = frame.contents().find(frameElementToListen);
+    var packagesList = frame.contents().find("h2[title='Packages']").next();
+    var classesList = frame.contents().find('h1.bar').next();
     var offsetTop = frameHeader.offset().top;
     var origPaddingTop = parseInt(frameHeader.css("padding-top").replace("px", ""));
+    var headerHeight = frameHeader.height();
     // For FireFox, cannot just use border-top, has to use border-top-color, border-top-style, border-top-width
     var origBorderTopWidth = frameHeader.css("border-top-width");
     var origBorderTopStyle = frameHeader.css("border-top-style");
@@ -189,6 +192,8 @@ function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
                 // To maintain the spacing and look with margin-top removed, replace padding-top and border-top
                 // with temporarily values and adjust sticky header with calculated padding-top and border-top.
                 frameHeader.css("padding-top", offsetTop + origPaddingTop);
+                packagesList.css("padding-top", offsetTop + origPaddingTop + headerHeight);
+                classesList.css("padding-top", offsetTop + origPaddingTop + headerHeight);
                 frameHeader.css("border-top-width", "0px");
                 frameHeader.css("border-top-style", "solid");
                 frameHeader.css("border-top-color", "transparent");
