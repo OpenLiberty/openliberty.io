@@ -391,7 +391,6 @@ footer {
         color: #6F7878;
         letter-spacing: 0;
         float: left;
-        clear: left;
     }
 
     #footer_round_links_container {
@@ -404,6 +403,8 @@ footer {
         width: 45px;        
         height: 45px;
         float: left;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     #footer_groupsio_link {
@@ -443,6 +444,7 @@ footer {
 #footer_bottom_container {
     color: #24253A;
     margin-bottom: 40px;
+    padding-top: 8px;
 
     #footer_bottom_left_section, #footer_bottom_right_section {
         display: inline-block;
@@ -460,7 +462,6 @@ footer {
         text-align: left;
         font-size: 11px;
         color: #6F7878;
-        margin-top: 12px;
     }
 
     .vertical_bar {
@@ -469,7 +470,6 @@ footer {
     
     .right_footer_link {
         font-size: 14px;
-        margin-top: 10px;
         float: left;
     }
     
@@ -482,29 +482,19 @@ footer {
 
 @media (max-width: 991.98px) {
 
+    #footer_top_container #footer_project {
+        clear: left;
+    }
+
     #footer_container {
         background-image: none;
     }
 
-    #footer_copyright,
-    .left_footer_link,
-    .vertical_bar {
-        display: inline-block;
-        text-align: left;
-        font-size: 11px;
-        color: #6F7878;
-        margin-top: 12px;
-    }
-
-    .vertical_bar {
-        margin: 0 4px;
-    }
-    
     .right_footer_link {
         font-size: 14px;
         float: right;
-        margin-top: 10px;
     }
+
     #footer_support_link, #footer_blog_link {
         margin-left: 28px;
     }
@@ -514,6 +504,14 @@ footer {
 @media (max-width: 767.98px) {
     #footer_gray_background {
         height: 131px;
+    }
+
+    .footer_container {
+        width: 100%;
+    }
+
+    .right_footer_link {
+        margin-top: 12px;
     }
     
     #footer_open_liberty, #footer_project {
@@ -553,27 +551,44 @@ footer {
         border-top: 1px solid #D4D7E3;
         position: fixed;
         right: 0;
-        top: calc(100% - 69px);
+        top: calc(100% - 54px);
         width: 100%;
         z-index: 1030;
         transition: top .3s;
         padding-top: 0px;
         background: #FFFFFF;
         &:hover {
-            top: calc(100% - 105px);
+            top: calc(100% - 84px);
         }
     }
 
-    #footer_top_container > #footer_project_container {
-        padding-top: 12px;
+    #footer_top_container {
+        & .footer_round_btn {
+            width: 30px;
+            height: 30px;
+        }
+
+        & #footer_project_container {
+            padding-top: 12px;
+        }
+
+        & #footer_project {
+            margin-bottom: 0px;
+            padding-left: 5px;
+            padding-top: 12px;
+        }
+
+        & #footer_round_links_container {
+            margin: 12px 0;
+        }
     }
 
-    #footer_project {
-        margin-bottom: 0px;
-    }
+    #footer_bottom_container {
+        padding-top: 2px;
 
-    #footer_top_container > #footer_round_links_container {
-        margin: 12px 0;
+        & .right_footer_link {
+        margin-top: 2px;
+        }
     }
 
     body {
