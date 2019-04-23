@@ -372,16 +372,16 @@ function hide_comments(code_block){
     });
 
     // Hide the copyright
-    var start = code_block.find(".comment:contains('tag::comment[]')").prev('.line-numbers');
-    var end = code_block.find(".comment:contains('end::comment[]')").nextAll('.line-numbers').first();
+    var start = code_block.find("span:contains('tag::comment[]')").prev('.line-numbers');
+    var end = code_block.find("span:contains('end::comment[]')").nextAll('.line-numbers').first();
     if(start.length === 1 && end.length === 1){
         var range = start.nextUntil(end);
         range = range.add(start);
         range.remove();
     }
 
-    // Hide comments and their line numbers
-    code_block.find(".comment:contains('tag::'), .comment:contains('end::')").each(function(){
+    // Remove the space between the line numbers and start/end tags
+    code_block.find("span:contains('tag::'), span:contains('end::')").each(function(){
         // Remove the line number and all space between the line number and the comment        
         var line_num = $(this).prevAll('.line-numbers').first();
         line_num.nextUntil($(this)).andSelf().remove();
@@ -397,7 +397,7 @@ function hide_comments(code_block){
         }
     }
 
-    var start_tags = code_block.find('.comment:contains(tag::)');
+    var start_tags = code_block.find('span:contains(tag::)');
     start_tags.each(function(){
         // Wrap the tag in a div for highlighting later
         var text = $(this).text();
@@ -433,7 +433,7 @@ function hide_comments(code_block){
     start_tags.remove();
 
     // Hide end tags and the space after them.
-    var end_tags = code_block.find('.comment:contains(end::)');
+    var end_tags = code_block.find('span:contains(end::)');
     end_tags.next('span').remove();
     end_tags.remove();
 
