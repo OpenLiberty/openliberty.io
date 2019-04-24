@@ -251,14 +251,29 @@
 .dlist {
     & dl {
         font-size: 16px;
+        & > :first-child {
+            margin-top: 0;
+        }
         & > dt {
             font-weight: 500;
+            font-style: italic;
+            display: inline-block;
+            margin-top: 20px;
         }
         & > dd {
-            padding-left: 10px;
+            display: inline;
+            &:before {
+                content:"-";
+                white-space: pre;
+            }
+
+            &:after {
+                content:"\a";
+                white-space: pre;
+            }
+
             & > p {
-                margin-top: 10px;
-                margin-bottom: 10px;  
+                display: inline;
             }
         }
     }
