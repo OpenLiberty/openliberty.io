@@ -35,7 +35,7 @@ js:
                         </div>
                         <div id="share_post_container">
                             Share this post:
-                            <a id="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{page.title}}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
+                            <a id="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{page.title | replace: "'", "\\'"}}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
                             <a id="reddit_link" href="//www.reddit.com/submit" onclick="window.open('//www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
                         </div>
                         {% if site.disqus.shortname %} {% include disqus_comments.html %} {% endif %}
