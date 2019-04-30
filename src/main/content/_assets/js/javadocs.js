@@ -214,7 +214,7 @@ function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
 }
 
 /*
-    Check if the right iframe has been scrolled down at least 85% to show the footer.	
+    Check if the right iframe has been scrolled down at least 85% to show the footer.
 */
 function hideFooter(element) {
     var scrollTop = element.scrollTop(); // Add the viewport to the top of the scrollTop to see if we've reached end of page.
@@ -224,7 +224,7 @@ function hideFooter(element) {
     var height = element.height();
     var footer = $("footer");
 
-    // Show footer if the scrollTop plus the viewport height of the right iFrame is at least 85% past the bottom of the right iFrame.	
+    // Show footer if the scrollTop plus the viewport height of the right iFrame is at least 85% past the bottom of the right iFrame.
     if ((scrollTop + rightFrameViewportHeight) > height * .85) {
         if(!footer.data('visible') || footer.data('visible') === "false"){
             footer.data('visible', true);
