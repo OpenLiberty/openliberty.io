@@ -404,7 +404,7 @@ function hide_comments(code_block){
         var start_index = text.indexOf('tag::') + 5;
         var end_index = text.indexOf('[]');
         var tag_name = text.substring(start_index, end_index);
-        var end = $(this).nextAll("span:contains('end::')").first();
+        var end = $(this).nextAll("span:contains('end::" + tag_name + "')").first(); // Steven change this to look for the actual end tag instead of contains
         var content = $(this).nextUntil(end);
 
         // Check if the tag should be hidden
@@ -424,7 +424,19 @@ function hide_comments(code_block){
         }
         else {
             // Mark the lines start to end with a data-tag so that the hotspot can highlight them.
-            content.attr('data-hotspot-tag', tag_name);
+            // Handle nested tags by having a list of 
+            content.each(function(){
+                // console.error("tag_name: " + tag_name + ". content: " + $(this).text());
+                // Check if element already has a tag
+                var tag = $(this).attr('data-hotspot-tag');
+                if(tag){
+                    tag = tag + "," + tag_name;
+                    $(this).attr('data-hotspot-tag', tag);
+                }
+                else {
+                    $(this).attr('data-hotspot-tag', tag_name);
+                }
+            });             
         }
     });
 
@@ -618,8 +630,18 @@ $(document).ready(function() {
                     else {
                         // Hotspot is a tag name.
                         // Find the start line for the tag using tag::<tag_name>[] and the end line for the tag using end::<tag_name>[]
-                        var tag_start = code_block.find(".line-numbers[data-hotspot-tag='" + value + "']").first();
-                        var tag_end = code_block.find(".line-numbers[data-hotspot-tag='" + value + "']").last();
+                        // var tag_start = code_block.find(".line-numbers[data-hotspot-tag='" + value + "']").first();
+                        // var tag_end = code_block.find(".line-numbers[data-hotspot-tag='" + value + "']").last();
+
+                        // Steven might have to search thru all the line numbers
+                        var line_numbers = code_block.find(".line-numbers[data-hotspot-tag]").filter(function(){
+                            // Steven split apart the attribute and search on each one.
+                            var hotspot_tag = $(this).attr("data-hotspot-tag");
+                            return hotspot_tag.indexOf(value) > -1;
+                        });
+                        var tag_start = line_numbers.first();
+                        var tag_end = line_numbers.last();
+
                         fromLine = parseInt(tag_start.text());
                         toLine = parseInt(tag_end.text());                     
                         ranges = fromLine + "-" + toLine;
