@@ -20,8 +20,31 @@ js:
                 </div>
                 <h1 id="post_title">{{ page.title | escape }}</h1>
                 <div id="post_information_container">
-                    <img src="{{ page.author_picture }}" id="author_image" alt="image of author">
-                    <a id="author_name" href="{{ page.author_github }}" target="_blank" rel="noopener">{{ page.author }}</a>
+                    {% assign additional_author_count = 0 %}
+                    {% for author in page.additional_authors %}
+                        {% assign additional_author_count = additional_author_count | plus: 1 %}
+                    {% endfor %}
+                    {% assign current = 1 %}
+                    <div class="author_images_container">
+                        <img src="{{ page.author_picture }}" class="author_image" alt="image of author">
+                        {% for author in page.additional_authors %}
+                            <img src="{{ author.image }}" class="author_image" alt="image of author">
+                        {% endfor %}
+                    </div>
+                    <a class="author_name" href="{{ page.author_github }}" target="_blank" rel="noopener">{{ page.author }}</a>
+                    {% for author in page.additional_authors %}
+                        {% if additional_author_count == 1 %}
+                            <span>and</span>
+                        {% elsif additional_author_count > 1 %}
+                            {% if current < additional_author_count %}
+                                <span class="comma">,</span>
+                            {% elsif current == additional_author_count %}
+                                <span class="comma">, and</span>
+                            {% endif %}
+                        {% endif %}
+                        {% assign current = current | plus: 1 %}
+                        <a class="author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }} </a>
+                    {% endfor %}
                     {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
                     <span id="post_date">on {{ page.date | date: date_format }}</span>
                 </div>
@@ -40,7 +63,6 @@ js:
         {% if site.disqus.shortname %} {% include disqus_comments.html %} {% endif %}
     </article>
 </div>
-
 
 <div class="d-none">
     <img src="/img/twitter_link_hover.svg">
