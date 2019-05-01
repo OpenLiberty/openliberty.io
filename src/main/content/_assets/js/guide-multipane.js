@@ -57,6 +57,7 @@ function highlight_code_range(code_section, fromLine, toLine, scroll){
     });
     if(highlightEnd.length === 0){
         var lastLine = parseInt(code_section.find('.line-numbers').last().text().trim());
+        // If the line number after the last line to highlight was a tag, then search for the next line number.
         while(highlightEnd.length === 0 && toLine < lastLine){
             toLine = toLine + 1;
             highlightEnd = code_section.find('.line-numbers').filter(function(){
@@ -360,10 +361,12 @@ function restoreCodeColumn(){
 }
 
 /*
-    Hide the comments from the code file including the copyright.
+    Parse the start/end tags in the code file.
+    If the asciidoc specifies to remove a certain tag then remove the tag and its contents.
+    Otherwise, mark the contents of the tag for highlighting later and remove the start and end tag.
 */
-function hide_comments(code_block){
-    // Wrap the standalone text in spans so they can be selected between the range of start and end tags
+function parse_tags(code_block){
+    // Wrap the standalone text in spans so they can be selected between the range of start and end tags using jQuery's nextUntil()
     code_block.find('code').contents().each(function(){
         if (!$(this).is('span')) {
             var newText = $(this).wrap('<span class="string"></span>');
@@ -371,18 +374,8 @@ function hide_comments(code_block){
         }
     });
 
-    // Hide the copyright
-    var start = code_block.find("span:contains('tag::comment[]')").prev('.line-numbers');
-    var end = code_block.find("span:contains('end::comment[]')").nextAll('.line-numbers').first();
-    if(start.length === 1 && end.length === 1){
-        var range = start.nextUntil(end);
-        range = range.add(start);
-        range.remove();
-    }
-
-    // Remove the space between the line numbers and start/end tags
-    code_block.find("span:contains('tag::'), span:contains('end::')").each(function(){
-        // Remove the line number and all space between the line number and the comment        
+    // Remove the line numbers before the start/end tags and space between the line numbers and start/end tags
+    code_block.find("span:contains('tag::'), span:contains('end::')").each(function(){    
         var line_num = $(this).prevAll('.line-numbers').first();
         line_num.nextUntil($(this)).andSelf().remove();
     });
@@ -399,7 +392,6 @@ function hide_comments(code_block){
 
     var start_tags = code_block.find('span:contains(tag::)');
     start_tags.each(function(){
-        // Wrap the tag in a div for highlighting later
         var text = $(this).text();
         var start_index = text.indexOf('tag::') + 5;
         var end_index = text.indexOf('[]');
@@ -424,12 +416,11 @@ function hide_comments(code_block){
         }
         else {
             // Mark the lines start to end with a data-tag so that the hotspot can highlight them.
-            // Handle nested tags by having a list of 
             content.each(function(){
-                // console.error("tag_name: " + tag_name + ". content: " + $(this).text());
-                // Check if element already has a tag
+                // Check if element already has a tag.
                 var tag = $(this).attr('data-hotspot-tag');
                 if(tag){
+                    // Add a comma delimited list of tags so that nested tags can work.
                     tag = tag + "," + tag_name;
                     $(this).attr('data-hotspot-tag', tag);
                 }
@@ -454,10 +445,6 @@ function hide_comments(code_block){
     });
     empty_space.remove();
     end_tags.remove();
-
-    code_block.find('.comment').each(function(){
-        $(this).html($(this).html().trim());
-    });
 
     // Trim extra whitespace
     var code = code_block.find('code');
@@ -505,8 +492,8 @@ $(document).ready(function() {
             // Set data attribute for id on the code block for switching to the code when clicking its tab
             code_block.attr('data-section-id', header.id);
 
-            // Hide the comments from the file.
-            hide_comments(code_block);
+            // Parse out the tags in the code file.
+            parse_tags(code_block);
 
             // Create a tab in the code column for this file.
             var tab = $("<li class='code_column_tab' role='presentation' tabindex='0'></li>");
@@ -641,7 +628,7 @@ $(document).ready(function() {
                             var tags = hotspot_tag.split(",");
                             for(var i =0; i <tags.length; i++){
                                 var tag = tags[i];
-                                if(tag == value){
+                                if(tag === value){
                                     return true;
                                 }
                             }
