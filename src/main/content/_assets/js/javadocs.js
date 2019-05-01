@@ -221,8 +221,8 @@ function hideFooter(element) {
     var javadoc_container = $('#javadoc_container').contents();
     var rightFrame = javadoc_container.find(CLASS_FRAME);
     var rightFrameViewportHeight = rightFrame.contents()[0].documentElement.clientHeight;
-    var height = element.height(); 
-    var footer = $("footer");        
+    var height = element.height();
+    var footer = $("footer");
 
     // Show footer if the scrollTop plus the viewport height of the right iFrame is at least 85% past the bottom of the right iFrame.
     if ((scrollTop + rightFrameViewportHeight) > height * .85) {
@@ -233,7 +233,7 @@ function hideFooter(element) {
     }
     else{
         if(footer.data('visible')){
-            footer.data('visible', 'false'); 
+            footer.data('visible', 'false');
             footer.css('display', 'none');
         }
     }
