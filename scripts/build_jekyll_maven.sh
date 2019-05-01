@@ -12,43 +12,50 @@ JEKYLL_BUILD_FLAGS=""
 echo "Ruby version:"
 echo `ruby -v`
 
-# Special handling for javadocs
-./scripts/modify_javadoc.sh
-pushd gems/ol-asciidoc
-gem build ol-asciidoc.gemspec
-gem install ol-asciidoc-0.0.1.gem
-popd
-
 # Guides that are ready to be published to openliberty.io
 echo "Cloning repositories with name starting with guide or iguide..."
 ruby ./scripts/build_clone_guides.rb
 
 # Development environment only actions
-if [ "$JEKYLL_ENV" != "production" ]; then
+if [ "$JEKYLL_ENV" != "production" ]; then 
     echo "Not in production environment..."
     echo "Adding robots.txt"
     cp robots.txt src/main/content/robots.txt
-    
-    echo "Clone draft guides for test environments..."
-    ruby ./scripts/build_clone_guides.rb "draft-guide"
-    ./scripts/build_clone_docs.sh "develop" # Argument is branch name of OpenLiberty/docs
 
-    # Need to make sure there are draft-iguide* folders before using the find command
-    # If we don't, the find command will fail because the path does not exist
-    if [ $(find src/main/content/guides -type d -name "draft-iguide*" | wc -l ) != "0" ] ; then
-        echo "Moving any js and css files from draft interactive guides..."
-        find src/main/content/guides/draft-iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
-        find src/main/content/guides/draft-iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
+    # Development environments with draft docs/guides
+    if [ "$JEKYLL_DRAFT_GUIDES" == "true" ]; then
+        echo "Clone draft guides for test environments..."
+        ruby ./scripts/build_clone_guides.rb "draft-guide"    
+
+        # Need to make sure there are draft-iguide* folders before using the find command
+        # If we don't, the find command will fail because the path does not exist
+        if [ $(find src/main/content/guides -type d -name "draft-iguide*" | wc -l ) != "0" ] ; then
+            echo "Moving any js and css files from draft interactive guides..."
+            find src/main/content/guides/draft-iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
+            find src/main/content/guides/draft-iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
+        fi
+        ./scripts/build_clone_docs.sh "draft" # Argument is branch name of OpenLiberty/docs
+    else
+        ./scripts/build_clone_docs.sh "develop" # Argument is branch name of OpenLiberty/docs
     fi
-
-    # Include draft blog posts for non production environments
-    JEKYLL_BUILD_FLAGS="--drafts"
 else
     # Production!
     echo "Clone published docs!"
     ./scripts/build_clone_docs.sh "master" # Argument is branch name of OpenLiberty/docs
 fi
 
+# Development environments that enable the draft blogs in the _draft directory.
+if [ "$JEKYLL_DRAFT_BLOGS" == "true" ]; then
+    # Include draft blog posts for non production environments
+    JEKYLL_BUILD_FLAGS="--drafts"
+fi
+
+# Special handling for javadocs
+./scripts/modify_javadoc.sh
+pushd gems/ol-asciidoc
+gem build ol-asciidoc.gemspec
+gem install ol-asciidoc-0.0.1.gem
+popd
 
 echo "Copying guide images to /img/guide"
 mkdir -p src/main/content/img/guide

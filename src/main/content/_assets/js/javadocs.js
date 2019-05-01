@@ -367,7 +367,7 @@ function setPackageContainerHeight() {
 
 function setIFrameContent(iframeName, href) {
     var iframeContent = $('#javadoc_container').contents().find(iframeName).contents();
-    var errorhref = "/javadocs/doc-404.html";
+    var errorhref = "/docs/ref/javadocs/doc-404.html";
     // get current version to create path to all classes frame
     var path = window.top.location.pathname;
     if (path.includes("microprofile")) {

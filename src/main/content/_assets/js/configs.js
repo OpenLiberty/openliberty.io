@@ -246,7 +246,7 @@ function handleExpandCollapseState(titleId, isExpand) {
 function updateHashInUrl(href, isExpand) {
     var hashInUrl = href;
     if (href.indexOf("/config/") !== -1) {
-        hashInUrl = href.substring(8);
+        hashInUrl = href.substring(17);
     }
     // a null is used by mobile for the TOC page
     var state = null;
@@ -1078,9 +1078,9 @@ function updateHashAfterRedirect() {
         hashValue = hashValue.substring("#rwlp_config_".length);
         //hashValue = hashValue.substring(1);
         if (hashValue.indexOf("&") !== -1) {
-            href = "/config/" + hashValue.substring(0, hashValue.indexOf("&"));
+            href = "/docs/ref/config/" + hashValue.substring(0, hashValue.indexOf("&"));
         } else {
-            href = "/config/" + hashValue;
+            href = "/docs/ref/config/" + hashValue;
         }
     
         var iframeContent = $('iframe[name="contentFrame"]').contents();
@@ -1092,7 +1092,7 @@ function updateHashAfterRedirect() {
 }
 
 function replaceHistoryState(hashToReplace) {
-    var fullHref = "/config/" + hashToReplace.substring(1);
+    var fullHref = "/docs/ref/config/" + hashToReplace.substring(1);
     var isExpand = undefined;
     if (fullHref.indexOf("&") !== -1) {
         fullHref = fullHref.substring(0, fullHref.indexOf("&"));

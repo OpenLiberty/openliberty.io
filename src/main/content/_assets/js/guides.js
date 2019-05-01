@@ -14,6 +14,7 @@ $(document).ready(function() {
     var title_key = 1;
     var description_key = 2;
     var tags_key = 4;
+    var search_term_key = 8;
     var num_of_additional_microprofile_guides = 0;
 
     // Look for guides that contain every search word
@@ -24,6 +25,7 @@ $(document).ready(function() {
             var title = guide_item.data('title');
             var description = guide_item.data('description');
             var tags = guide_item.data('tags');
+            var search_terms = guide_item.data('search-keywords');
 
             // Split on whitespaces.  Treat consecutive whitespaces as one.
             var tokens = search_value.trim().split(/\s+/);
@@ -34,7 +36,8 @@ $(document).ready(function() {
                 var word = tokens[i];
                 if (((key & title_key) && title.indexOf(word) != -1)
                 || ((key & description_key) && description.indexOf(word) != -1)
-                || ((key & tags_key) && tags.indexOf(word) != -1)) {
+                || ((key & tags_key) && tags.indexOf(word) != -1)
+                || ((key & search_term_key) && search_terms.indexOf(word) != -1)) {
                     // Guide contains one of the search word.
                     // Keep checking this guide if it contains the other
                     // search words.
@@ -64,7 +67,7 @@ $(document).ready(function() {
         var count_label = ' search results';
         if(no_search_text !== undefined && no_search_text) {
             count_label = ' guides';
-            $('#microprofile_more_guides_button b').text(num_of_additional_microprofile_guides + ' additional MicroProfile Guides');
+            $('#additional_microprofile_guides').text(num_of_additional_microprofile_guides + ' additional MicroProfile Guides');
             showAllCategories();
         }
 
@@ -93,7 +96,7 @@ $(document).ready(function() {
 
         // Change the additional MicroProfile search result number
         var numMPMoreResults = $('#microprofile_more_guides .guide_column').children(':visible').length;
-        $('#microprofile_more_guides_button b').text(numMPMoreResults + ' additional MicroProfile Guides');
+        $('#additional_microprofile_guides').text(numMPMoreResults + ' additional MicroProfile Guides');
     }
 
     function showAllCategories() {
@@ -141,21 +144,6 @@ $(document).ready(function() {
         $('.guide_column').show();
         var no_search_text = true;
         updateTotals(no_search_text);
-        collapseMicroProfileAdditionalGuides();
-    }
-
-    function expandMicroProfileAdditionalGuides() {
-        // Expand the section with more microprofile guides
-        if(! $('#microprofile_more_guides').is('.collapse.in')) {
-            $('#microprofile_more_guides_button').click();
-        }
-    }
-
-    function collapseMicroProfileAdditionalGuides() {
-        // Collapse the section with more microprofile guides
-        if($('#microprofile_more_guides').is('.collapse.in')) {
-            $('#microprofile_more_guides_button').click();
-        }
     }
 
     function processSearch(input_value) {
@@ -166,9 +154,8 @@ $(document).ready(function() {
                 var search_value = input_value.substring(4).trim();
                 filter_guides(tags_key, search_value);
             } else {
-                filter_guides(title_key | description_key | tags_key, input_value);
+                filter_guides(title_key | description_key | tags_key | search_term_key, input_value);
             }
-            expandMicroProfileAdditionalGuides();
             updateTotals();
         }        
     }
@@ -232,7 +219,7 @@ $(document).ready(function() {
     }
 
     function getTotal_additional_MP_guides() {
-        var label = $('#microprofile_more_guides_button b').text();
+        var label = $('#additional_microprofile_guides').text();
         return label.split(' ')[0];
     }
 
@@ -291,22 +278,6 @@ $(document).ready(function() {
         $(this).addClass('hidden');
         $('#guide_search_input').focus();
         processSearch(input_value);
-    });
-
-    // Button to hide and show additional microprofile guides
-    $('#microprofile_more_guides_button').on('click', function(e) {
-        e.preventDefault();
-        $('#microprofile_more_guides').collapse('toggle');
-    });
-
-    // Change icon when collapse is done
-    $('#microprofile_more_guides').on('hidden.bs.collapse', function () {
-        $('#microprofile_more_guides_icon').text('+');
-    });
-
-    // Change icon when collapse is done
-    $('#microprofile_more_guides').on('shown.bs.collapse', function () {
-        $('#microprofile_more_guides_icon').text('-');
     });
 
     init();

@@ -81,7 +81,7 @@ permalink: /guides/
     <div class="essential row">
         {% for guide in basic-essential-guides %}
         <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}">
+            <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}" data-search-keywords="{{ guide.search-keywords | join: ' ' | downcase }}">
                 <div class="guide_title_and_description_container">
                     <h3 class="guide_title">{{guide.title}}</h3>
                     <p class="guide_description" title="{{guide.description}}">{{guide.description}}</p>
@@ -114,7 +114,7 @@ permalink: /guides/
     <div class="essential row">
         {% for guide in microprofile-essential-guides %}
         <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}">
+            <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}" data-search-keywords="{{ guide.search-keywords | join: ' ' | downcase }}">
                 <div class="guide_title_and_description_container">
                     <h3 class="guide_title">{{guide.title}}</h3>
                     <p class="guide_description" title="{{guide.description}}">{{guide.description}}</p>
@@ -133,15 +133,19 @@ permalink: /guides/
     </div>
     <div class="row extraMP">
         <div class="col-xs-12">
+
+            <p id="additional_microprofile_guides">{{microprofile-guides.size}} additional MicroProfile Guides</p>
+            <!----
             <button id="microprofile_more_guides_button" type="button" class="btn">
                 <p><span id="microprofile_more_guides_icon">+</span><b>{{microprofile-guides.size}} additional MicroProfile Guides</b></p>
             </button>
+            -->
         </div>
     </div>
-    <div id="microprofile_more_guides" class="collapse row">
+    <div id="microprofile_more_guides" class="row">
         {% for guide in microprofile-guides %}
         <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}">
+            <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}" data-search-keywords="{{ guide.search-keywords | join: ' ' | downcase }}">
                     <div class="guide_title_and_description_container">
                         <h3 class="guide_title">{{guide.title}}</h3>
                         <p class="guide_description" title="{{guide.description}}">{{guide.description}}</p>
@@ -179,7 +183,7 @@ permalink: /guides/
     <div class="row">
         {% for guide in uncatagorized-guides %}
         <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3">
-            <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}">
+            <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="{{ guide.tags | join: ' ' | downcase }}" data-search-keywords="{{ guide.search-keywords | join: ' ' | downcase }}">
                 <div class="guide_title_and_description_container">
                     <h3 class="guide_title">{{guide.title}}</h3>
                     <p class="guide_description" title="{{guide.description}}">{{guide.description}}</p>
