@@ -8,93 +8,335 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
- 
+
+
 /* BLOG */
 
 #background_container {
-    background-size: 100% calc(100% - 200px);
-    background-repeat: no-repeat;
+    background-image: radial-gradient(circle at top right, #5E6B8D 0%, #2C2E50 70%);
+    margin-top: 62px;
+
+    @media (max-width: 991.98px) {
+        margin-top: 46px;
+    }
+
+    @media (max-width: 767.98px) {
+        background: none;
+    }
+}
+
+#right_cloud_back {
+    position: fixed;
+    width: 50%;
+    bottom: 0;
+    right: 0;
+}
+
+#right_cloud_front {
+    position: fixed;
+    width: 50%;
+    bottom: 0;
+    right: 0;
 }
 
 #blog_container {
-    padding-top: 190px;
+    max-width: 1440px;
+    margin: 0 auto;
+
+    @media (max-width: 991.98px) {
+        width: 100%;
+        padding-top: 46px;
+    }
 
     @media (max-width: 767.98px) {
-        padding-top: 60px;
+        padding-top: 24px;
     }
 }
 
-#blog_row_1 {
-    margin-bottom: 117px;
+
+/* LEFT COLUMN */
+
+#left_column {
+    padding-left: 0px;
+    padding-right: 0px;
+    
+    @media (min-width: 992px) {
+        position: fixed;
+    }
+
+    @media (max-width: 991.98px) {
+        overflow: hidden;
+        padding-left: 33px;
+        & p {
+            width: 50%;
+            margin-bottom: 35px;
+        }
+    }
 
     @media (max-width: 767.98px) {
-        margin-bottom: 40px;
+        padding-left: 30px;
+        & p {
+            width: 100%;
+        }
     }
 }
 
-#page_intro_paragraph {
-    font-size: 20px;
-    line-height: 35px;
+#blog_title {
+    height: 60px;
+    margin-top: 89px;
+
+    @media (max-width: 991.98px) {
+        margin-top: 37px;
+    }
+}
+
+.star {
+    width: 4px;
+    height: 4px;
+    background-color: #C8D2D2;
+    border-radius: 50%; 
+}
+
+#star1 {
+    position: fixed;
+    top: 200px;
+    right: calc(98%);
+    animation: blink 3s infinite;
+
+    @media (max-width: 991.98px) {
+        right: calc(40%);
+    }
+}
+
+#star2 {
+    position: fixed;
+    top: 355px;
+    right: calc(95%);
+    animation: blink 4s infinite;
+
+    @media (max-width: 991.98px) {
+        top: 305px;
+        right: calc(80%);
+    }
+}
+
+#star3 {
+    position: fixed;
+    top: 230px;
+    right: calc(70%);
+    animation: blink 5s infinite;
+
+    @media (max-width: 991.98px) {
+        top: 100px;
+        right: calc(5%);
+    }
+}
+
+#star4 {
+    position: fixed;
+    top: 260px;
+    right: calc(10%);
+    animation: blink 3s infinite;
+
+    @media (max-width: 991.98px) {
+        top: 78px;
+        right: calc(93%);
+    }
+}
+
+#star5 {
+    position: fixed;
+    top: 720px;
+    right: calc(5%);
+    animation: blink 4s infinite;
+
+    @media (max-width: 991.98px) {
+        top: 90px;
+        right: calc(30%);
+    }
+}
+
+#star6 {
+    position: fixed;
+    top: 400px;
+    right: calc(2%);
+    animation: blink 6s infinite;
+
+    @media (max-width: 991.98px) {
+        top: 300px;
+        right: calc(50%);
+    }
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    40% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.blog_subtitle {
+    font-size: 24px;
+    margin-top: 33px;
+    color: #ffffff;
+
+    @media (max-width: 991.98px) {
+        margin-top: 22px;
+    }
 
     @media (max-width: 767.98px) {
-        font-size: 16px;
-        line-height: inherit;
+        color: #212529;
+    }
+}
+
+.blog_subtext {
+    color: #ffffff;
+
+    @media (max-width: 767.98px) {
+        color: #212529;
+    }
+}
+
+.green_link {
+    color: #E6EDA8;
+
+    &:hover {
+        color: #F7FFB3;
+    }
+
+    @media (max-width: 767.98px) {
+        color: #F69144;
+
+        &:hover {
+            transition: all .2s;
+            color: #E3700D;
+        }
+    }
+    
+}
+
+#ufo_images_desktop {
+    position: relative;
+    margin-top: 30px;
+    float: right;
+    width: 255%;
+}
+
+#ufo_images_tablet {
+    position: absolute;
+    width: 800px;
+    top: -5px;
+    right: 0px;
+}
+
+
+/* RIGHT COLUMN */
+
+#right_column {
+    background: #ffffff;
+
+    @media (max-width: 991.98px) {
+        overflow: hidden;
     }
 }
 
 .blog_post_column {
-    padding: 0;
-    background-color: white;
-    -webkit-box-shadow: 0px 5px 11px -3px rgba(0,0,0,0.27);
-    -moz-box-shadow: 0px 5px 11px -3px rgba(0,0,0,0.27);
-    box-shadow: 0px 5px 11px -3px rgba(0,0,0,0.27);
-    margin-bottom: 70px;
+    width: 100%;
     color: #24253A;
-    border-left: solid 37px #EEEFF3;
-    transition: border-color .2s;
+}
+
+.green_bar {
+    font-family: BunueloLight;
+    font-size: 35px;
+    background-color: #F7F9E5;
+    padding-left: 63px;
+    padding-top: 17px;
+    padding-bottom: 11px;
+    margin-bottom: 0px;
+    border-top: 3px solid #d4d7e3;
     
-    &:hover {
-        border-color: #ECF1BA;
+    @media (max-width: 991.98px) {
+        padding-left: 33px;
+        width: 100vw;
     }
 
     @media (max-width: 767.98px) {
-        border-width: 0;
+        padding-left: 30px;
     }
 }
 
 .blog_post_content {
     width: 100%;
     padding-top: 40px;
-    padding-left: 72px;
-    padding-right: 70px;
-    padding-bottom: 64px;
+    padding-left: 63px;
+    padding-right: 63px;
 
     @media (max-width: 991.98px) {
         padding-top: 30px;
-        padding-left: 40px;
-        padding-right: 40px;
-        padding-bottom: 50px;
+        padding-left: 33px;
+        padding-right: 33px;
     }
 
     @media (max-width: 767.98px) {
-        padding-top: 20px;
+        padding-top: 25px;
         padding-left: 30px;
         padding-right: 30px;
-        padding-bottom: 40px;
     }
 }
 
-.blog_post_title {
-    margin-bottom: 23px;
-}
-
 .blog_post_title_link {
+    font-family: BunueloLight;
+    font-size: 35px;
     color: #5E6B8D;
     transition: color .2s;
 
     &:hover {
         color: #3F4659;
     }
+}
+
+.continued_text {
+    font-size: 16px;
+    color: #F69144;
+}
+
+.blog_post_date_mobile {
+    font-size: 16px;
+    color: #6f7878;
+    margin-bottom: 22px;
+}
+
+.blog_post_paragraph {
+    text-align: justify;
+    overflow: hidden;
+    margin-top: 23px;
+    margin-bottom: 35px;
+}
+
+.blog_post_author_data_container {
+    display: inline-block;
+    margin-bottom: 30px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-right: 0px;
+
+    @media (max-width: 767.98px) {
+        display: none;
+    }
+}
+
+.author_images_container {
+    display: inline-block;
+    margin-right: 8px;
 }
 
 .blog_post_author_image {
@@ -104,40 +346,31 @@
     vertical-align: middle;
 }
 
-.blog_post_author_data_container {
-    margin-bottom: 30px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-
 .blog_post_author_name {
     font-size: 16px;
-    margin-left: 17px;
     color: #24253A;
 }
 
 .blog_post_date {
     font-size: 16px;
-    margin-left: 7px;
+    margin-left: 2px;
     color: #6f7878;
 }
 
-.blog_post_paragraph {
-    text-align: justify;
-    min-height: 130px;
-    overflow: hidden;
-    margin-bottom: 40px;
-}
+.read_more_link_container {
+    text-align: right;
+    padding-left: 0px;
 
-#continued_text {
-    color: #F4914D;
+    @media (max-width: 767.98px) {
+        text-align: center;
+        margin-bottom: 40px;
+    }
 }
 
 .read_more_link {
-    color: #5e6b8d;
-    border: solid 2px #a6adc0;
-    border-radius: 100px;
+    color: #5E6B8D;
+    border: 2px solid #C9D6FE;
+    border-radius: 7px;
     font-size: 20px;
     padding-top: 8px;
     padding-bottom: 8px;
@@ -146,35 +379,107 @@
     transition: all .2s;
 
     &:hover {
-        color: white;
-        background-color: #5E6B8D;
+        color: #5E6B8D;
         border-color: #5E6B8D;
+    }
+
+    @media (max-width: 767.98px) {
+        padding-left: 79px;
+        padding-right: 79px;
     }
 }
 
-@media (max-width: 767.98px) {
+.read_more_link_external {
+    color: #E57000;
+    border: 2px solid #FBCEAD;
+
+    &:hover {
+        color: #E57000;
+        border-color: #E57000;
+    }
+}
+
+.bottom_border {
+    border-bottom: 1px solid rgba(151, 151, 151, 0.49);
     
-    #blog_title {
-        margin-bottom: 40px;
+    @media (max-width: 767.98px) {
+        position: absolute;
+        left: 0;
+        width: 100vw;
     }
+}
 
-    #intro_logo {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 40px;
-        margin-top: 46px;
+.blog_post_title_condensed {
+    margin-bottom: 30px;
+
+    @media (max-width: 767.98px) {
+        margin-bottom: 8px;
     }
+}
 
-    .blog_post_row {
-        -webkit-box-shadow: none;
-        -moz-box-shadow: none;
-        box-shadow: none;
-        margin-bottom: 40px;
+.blog_post_title_link_condensed {
+    font-family: BunueloBold;
+    font-size: 25px;
+    color: #5E6B8D;
+    transition: color .2s;
 
-        &:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
+    &:hover {
+        color: #3F4659;
     }
+}
+
+#final_post {
+    padding-bottom: 40px;
+
+    @media (max-width: 991.98px) {
+        text-align: center;
+    }
+    @media (max-width: 767.98px) {
+        display: none;
+    }
+}
+
+#ufo_images_mobile_container {
+    background-image: radial-gradient(circle at top right, #5E6B8D 0%, #2C2E50 70%);
+}
+
+#ufo_images_mobile {
+    min-width: 210%;
+    margin-left: 35%;
+    margin-top: 10px;
+    transform: translateX(-40%);
+}
+
+@media (min-width: 992px) {
+    #blog_title, .blog_subtitle, .blog_subtext {
+        padding-left: 63px;
+        padding-right: 63px;
+    }
+}
+
+@media (min-width: 1440px) {
+    #left_column {
+        width: 480px;
+    }
+}
+
+footer {
+    padding-top: 0px;
+    position: relative;
+
+
+}
+
+#footer_bottom_container {
+    margin-bottom: 0px;
+    width: 100%;
+    background: #ffffff;
+}
+
+#footer_bottom_left_section {
+    padding-left: 10%;
+}
+
+#footer_bottom_right_section {
+    padding-right: 10%;
 }
