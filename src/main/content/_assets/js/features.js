@@ -95,7 +95,7 @@ function loadContent(targetTOC, tocHref, addHash, versionHref) {
                 }
             } else {
                 updateMainBreadcrumb(targetTOC);
-                setupDisplayContent();
+                //setupDisplayContent();
                 $('footer').show();
 
                 // update hash only if thru normal clicking path
@@ -190,7 +190,7 @@ function loadVersionContent(versionElement, versionHref) {
     $("#common_feature_content").load(versionHref, function(response, status) {
         if (status === "success") {
             $('#feature_title').hide();
-            setupDisplayContent();
+            //setupDisplayContent();
             updateMainBreadcrumb(versionElement, 'full_title');
 
             $(this).focus(); // switch focus to the content for the reader
