@@ -22,25 +22,26 @@ if [ "$JEKYLL_ENV" != "production" ]; then
     echo "Adding robots.txt"
     cp robots.txt src/main/content/robots.txt
 
-    ./scripts/build_clone_docs.sh "develop" # Argument is branch name of OpenLiberty/docs
+    # Development environments with draft docs/guides
+    if [ "$JEKYLL_DRAFT_GUIDES" == "true" ]; then
+        echo "Clone draft guides for test environments..."
+        ruby ./scripts/build_clone_guides.rb "draft-guide"    
+
+        # Need to make sure there are draft-iguide* folders before using the find command
+        # If we don't, the find command will fail because the path does not exist
+        if [ $(find src/main/content/guides -type d -name "draft-iguide*" | wc -l ) != "0" ] ; then
+            echo "Moving any js and css files from draft interactive guides..."
+            find src/main/content/guides/draft-iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
+            find src/main/content/guides/draft-iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
+        fi
+        ./scripts/build_clone_docs.sh "draft" # Argument is branch name of OpenLiberty/docs
+    else
+        ./scripts/build_clone_docs.sh "develop" # Argument is branch name of OpenLiberty/docs
+    fi
 else
     # Production!
     echo "Clone published docs!"
     ./scripts/build_clone_docs.sh "master" # Argument is branch name of OpenLiberty/docs
-fi
-
-# Development environments with draft docs/guides
-if [ "$JEKYLL_DRAFT_GUIDES" == "true" ]; then
-    echo "Clone draft guides for test environments..."
-    ruby ./scripts/build_clone_guides.rb "draft-guide"    
-
-    # Need to make sure there are draft-iguide* folders before using the find command
-    # If we don't, the find command will fail because the path does not exist
-    if [ $(find src/main/content/guides -type d -name "draft-iguide*" | wc -l ) != "0" ] ; then
-        echo "Moving any js and css files from draft interactive guides..."
-        find src/main/content/guides/draft-iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
-        find src/main/content/guides/draft-iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
-    fi
 fi
 
 # Development environments that enable the draft blogs in the _draft directory.

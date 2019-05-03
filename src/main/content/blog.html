@@ -51,6 +51,12 @@ permalink: /blog/
                 {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
                 {% assign count = 1 %}
                 {% for post in site.posts %}
+
+                    {% assign additional_author_count = 0 %}
+                    {% for author in post.additional_authors %}
+                        {% assign additional_author_count = additional_author_count | plus: 1 %}
+                    {% endfor %}
+
                     <div class="row blog_post_row">
                         <div class="blog_post_column">
                             {% if count == 1 %}
@@ -79,8 +85,22 @@ permalink: /blog/
                                     </p>
                                     <div class="row">
                                         <div class="blog_post_author_data_container col-md-7">
-                                            <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                            <div class="author_images_container">
+                                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                                {% for author in post.additional_authors %}
+                                                    <img src="{{ author.image }}" class="blog_post_author_image" alt="image of author">
+                                                {% endfor %}
+                                            </div>
                                             <a class="blog_post_author_name" href="{{ post.author_github }}" target="_blank" rel="noopener">{{ post.author }}</a>
+                                            {% for author in post.additional_authors %}
+                                                {% if additional_author_count == 1 %}
+                                                    <span>and </span>
+                                                    <a class="blog_post_author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }}</a>
+                                                {% else %}
+                                                    <span>and {{ additional_author_count }} others</span>
+                                                    {% break %}
+                                                {% endif %}
+                                            {% endfor %}
                                             <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
                                         </div>
                                         <div class="read_more_link_container col-sm-12 col-md-5">
@@ -114,8 +134,25 @@ permalink: /blog/
                                     <p class="blog_post_date_mobile d-sm-block d-md-none">{{ post.date | date: date_format }}</p>
                                     <div class="row">
                                         <div class="blog_post_author_data_container col-md-7">
-                                            <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                            <div class="author_images_container">
+                                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                                {% for author in post.additional_authors %}
+                                                    <img src="{{ author.image }}" class="blog_post_author_image" alt="image of author">
+                                                {% endfor %}
+                                            </div>
                                             <a class="blog_post_author_name" href="{{ post.author_github }}" target="_blank" rel="noopener">{{ post.author }}</a>
+
+
+                                            {% for author in post.additional_authors %}
+                                                {% if additional_author_count == 1 %}
+                                                    <span>and </span>
+                                                    <a class="blog_post_author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }}</a>
+                                                {% else %}
+                                                    <span>and {{ additional_author_count }} others</span>
+                                                    {% break %}
+                                                {% endif %}
+                                            {% endfor %}
+
                                             <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
                                         </div>
                                         <div class="read_more_link_container col-sm-12 col-md-5">

@@ -16,9 +16,16 @@ import javax.json.JsonObjectBuilder;
 
 import io.openliberty.website.Constants;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class LatestReleases {
+
+	private static final Logger logger = Logger.getLogger(LatestReleases.class.getName());
+
 	private BuildInfo runtime;
 	private BuildInfo tools;
+	
 
 	public LatestReleases() {
 	}
@@ -40,6 +47,9 @@ public class LatestReleases {
 	}
 
 	public BuildInfo getRuntimeRelease() {
+		if (logger.isLoggable(Level.FINER)) {
+			logger.log(Level.FINE, "getRuntimeRelease()", runtime);
+		}
 		return runtime;
 	}
 }

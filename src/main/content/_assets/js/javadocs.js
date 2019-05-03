@@ -164,8 +164,8 @@ function addiPadScrolling() {
 function addScrollListener() {
     var javadoc_container = $('#javadoc_container').contents();
     var rightFrame = javadoc_container.find(CLASS_FRAME);
-    rightFrame.contents().off('scroll').on('scroll', function(event){	
-        hideFooter($(this));	
+    rightFrame.contents().off('scroll').on('scroll', function(event){
+        hideFooter($(this));
     });
 }
 
@@ -213,30 +213,30 @@ function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
     });
 }
 
-/*	
-    Check if the right iframe has been scrolled down at least 85% to show the footer.	
-*/	
-function hideFooter(element) {	
-    var scrollTop = element.scrollTop(); // Add the viewport to the top of the scrollTop to see if we've reached end of page.	
-    var javadoc_container = $('#javadoc_container').contents();	
-    var rightFrame = javadoc_container.find(CLASS_FRAME);	
-    var rightFrameViewportHeight = rightFrame.contents()[0].documentElement.clientHeight;	
-    var height = element.height(); 	
-    var footer = $("footer");        	
+/*
+    Check if the right iframe has been scrolled down at least 85% to show the footer.
+*/
+function hideFooter(element) {
+    var scrollTop = element.scrollTop(); // Add the viewport to the top of the scrollTop to see if we've reached end of page.
+    var javadoc_container = $('#javadoc_container').contents();
+    var rightFrame = javadoc_container.find(CLASS_FRAME);
+    var rightFrameViewportHeight = rightFrame.contents()[0].documentElement.clientHeight;
+    var height = element.height();
+    var footer = $("footer");
 
-     // Show footer if the scrollTop plus the viewport height of the right iFrame is at least 85% past the bottom of the right iFrame.	
-    if ((scrollTop + rightFrameViewportHeight) > height * .85) {	
-        if(!footer.data('visible') || footer.data('visible') === "false"){	
-            footer.data('visible', true);	
-            footer.css('display', 'block');	
-        }	
-    }	
-    else{	
-        if(footer.data('visible')){	
-            footer.data('visible', 'false'); 	
-            footer.css('display', 'none');	
-        }	
-    }	
+    // Show footer if the scrollTop plus the viewport height of the right iFrame is at least 85% past the bottom of the right iFrame.
+    if ((scrollTop + rightFrameViewportHeight) > height * .85) {
+        if(!footer.data('visible') || footer.data('visible') === "false"){
+            footer.data('visible', true);
+            footer.css('display', 'block');
+        }
+    }
+    else{
+        if(footer.data('visible')){
+            footer.data('visible', 'false');
+            footer.css('display', 'none');
+        }
+    }
 }
 
 function addNavHoverListener() {
@@ -367,7 +367,7 @@ function setPackageContainerHeight() {
 
 function setIFrameContent(iframeName, href) {
     var iframeContent = $('#javadoc_container').contents().find(iframeName).contents();
-    var errorhref = "/javadocs/doc-404.html";
+    var errorhref = "/docs/ref/javadocs/doc-404.html";
     // get current version to create path to all classes frame
     var path = window.top.location.pathname;
     if (path.includes("microprofile")) {
