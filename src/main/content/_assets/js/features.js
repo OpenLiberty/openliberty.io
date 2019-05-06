@@ -65,15 +65,6 @@ function setSelectedTOC(resource) {
     resource.parent().addClass("toc_selected");
 }
 
-// Add extra css to the doc, set the doc height, and scroll to the content
-function setupDisplayContent() {
-    addClassToFeaturesThatEnableThisFeature();
-    setContainerHeight();
-    $('html, body').animate({
-        scrollTop: 0
-    }, 400);
-}
-
 // This function
 // - highlight the selected TOC 
 // - load the doc for the selected TOC
@@ -95,7 +86,6 @@ function loadContent(targetTOC, tocHref, addHash, versionHref) {
                 }
             } else {
                 updateMainBreadcrumb(targetTOC);
-                //setupDisplayContent();
                 $('footer').show();
 
                 // update hash only if thru normal clicking path
@@ -190,7 +180,6 @@ function loadVersionContent(versionElement, versionHref) {
     $("#common_feature_content").load(versionHref, function(response, status) {
         if (status === "success") {
             $('#feature_title').hide();
-            //setupDisplayContent();
             updateMainBreadcrumb(versionElement, 'full_title');
 
             $(this).focus(); // switch focus to the content for the reader
@@ -236,17 +225,6 @@ function isMobileView() {
         return true;
     } else {
         return false;
-    }
-}
-
-// add css to features-that-enable-this-feature per design
-function addClassToFeaturesThatEnableThisFeature() {
-    var featuresThatEnableThisFeature = $("#features-that-enable-this-feature");
-    if (featuresThatEnableThisFeature.length === 1) {
-        var ulist = featuresThatEnableThisFeature.parent().find('.ulist');
-        if (ulist.length === 1) {
-            ulist.addClass('enableByList');
-        }
     }
 }
 
