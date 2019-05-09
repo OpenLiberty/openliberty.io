@@ -124,10 +124,14 @@ function removeHashRefTOC(href) {
 
 // Set the href for iframe to load the content. The call will not trigger a refresh.
 function setIframeLocationHref(href) {
-    var iframeContent = $('iframe[name="contentFrame"]').contents();
-    if (iframeContent.attr("location").pathname !== href) {
-        iframeContent.attr("location").replace(href);
-    }
+    // var iframeContent = $('iframe[name="contentFrame"]').contents();
+    // console.log("iframeContent:", iframeContent);
+    // if (iframeContent.attr("location").pathname !== href) {
+    //     iframeContent.attr("location").replace(href);
+    // }
+
+    $('#config_content').load(href);
+    
     // move focus to the content
     $('#config_content').focus();
 }
@@ -270,8 +274,9 @@ function selectFirstDoc() {
     if (!isMobileView()) {
         var firstTOCElement = $("#toc_container a").first();
         var href = firstTOCElement.attr("href");
-        var iframeContents = $('iframe[name=contentFrame]').contents();
-        iframeContents.attr("location").replace(href);
+        //var iframeContents = $('iframe[name=contentFrame]').contents();
+        //iframeContents.attr("location").replace(href);
+        $('#config_content').load(href);
     }
 }
 
@@ -279,6 +284,7 @@ function selectFirstDoc() {
 function handleSubHeadingsInContent() {
     var contentTitle = getContentBreadcrumbTitle();
     var iframeContents = $('iframe[name=contentFrame]').contents();
+    console.log("handleSubHeadingsInContet() iframeContents: ", iframeContents);
     var anchors = iframeContents.find("div[id='content'] > div.paragraph > p > a");
     var deferAddingExpandAndCollapseToggleButton = [];
 
@@ -792,6 +798,8 @@ function createClickableBreadcrumb(breadcrumbText, highlightLastItem) {
             parseInt($(".contentStickyBreadcrumbHeader").css("padding-right"));
         var breadcrumbWidth = $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").width() + paddingWidth;
         var contentWindowWidth = $('iframe[name="contentFrame"]').contents()[0].documentElement.clientWidth;
+        console.log(contentWindowWidth);
+
         var fontSize = 32;
         while (breadcrumbWidth > contentWindowWidth && fontSize > 0) {
             $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").css("font-size", fontSize + "px");
