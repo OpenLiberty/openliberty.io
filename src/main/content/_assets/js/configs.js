@@ -17,6 +17,10 @@ var contentBreadcrumbHeight = 0;
 var mobileWidth = 767;
 var ipadWidth = 1024;
 
+function resizeIframe(obj) {
+    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+}
+
 function addTOCClick() {
     var onclick = function (event) {
         // clean out the breadcrumb so that it cannot be clicked on while loading/repositioning the doc
@@ -52,6 +56,9 @@ function addTOCClick() {
         }
         updateHashInUrl(currentHref);
         createClickableBreadcrumb(getContentBreadcrumbTitle(), true);
+        var iframe = $('iframe');
+        var aiframeContents = iframe.contents();
+        resizeIframe(iframe);
     }
 
     $("#toc_container a").off("click").on("click", onclick);
