@@ -16,6 +16,8 @@ jobs:
       if: branch = development
     - env: ROUTE=$SITE_DEMO1_DOMAIN
       if: branch = demo1
+    - env: ROUTE=$SITE_HOTSPOT_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_HOTSPOT_BRANCH JEKYLL_DRAFT_GUIDES=true
+      if: branch = hotspots
 
 script: >
     if [ $JEKYLL_ENV == "production" ]; then
@@ -31,6 +33,7 @@ branches:
     - master
     - development
     - demo1
+    - hotspots
 
 sudo: false # route your build to the container-based infrastructure for a faster build
 
@@ -53,10 +56,15 @@ deploy:
     on:
       branch: development
       condition: $ROUTE = $SITE_DEV_DOMAIN
-    script: ./.travis/cf-push.sh
+    script: env ROUTE=$SITE_DEV_DOMAIN ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
       branch: demo1
     script: ./.travis/cf-push.sh
+  - provider: script
+    skip_cleanup: true
+    on:
+      branch: hotspots
+    script: env ROUTE=$SITE_HOTSPOT_DOMAIN ./.travis/cf-push.sh
 
