@@ -30,7 +30,7 @@ function link_hotspots_to_file(code_block, header, index){
         hotspots = hotspots.add(code_block.prevUntil('.code_column', '.paragraph').find('code[class*=hotspot], span[class*=hotspot], div[class*=hotspot]'));
     }
     hotspots.each(function(){
-        if($(this).data('file-index') === undefined){
+        if($(this).data('file-index') === "undefined"){
             $(this).data('file-index', index);
         }        
     });
