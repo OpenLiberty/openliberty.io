@@ -17,8 +17,9 @@ var contentBreadcrumbHeight = 0;
 var mobileWidth = 767;
 var ipadWidth = 1024;
 
+
 function resizeIframe(obj) {
-    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    obj.style.height = obj.contentWindow.document.body.scrollHeight + 29 + 'px';
 }
 
 function addTOCClick() {
@@ -135,9 +136,6 @@ function setIframeLocationHref(href) {
 
     // move focus to the content
     $('#config_content').focus();
-    
-    resizeIframe($(".config_content_frame")[0]);
-
 }
 
 // Update doc header breadcrumb with the current TOC title
@@ -485,6 +483,7 @@ function handleExpandCollapseToggleButton(buttonElement, updateUrl) {
         buttonElement.attr('collapsed', true);
     }
     adjustFrameHeight();
+    resizeIframe($(".config_content_frame")[0]);
     if (updateUrl) {
         var href = getSelectedDocHtml() + "#";
         updateHashInUrl(href + titleId, true);
@@ -1020,6 +1019,7 @@ function addHamburgerClick() {
                 $("#breadcrumb_hamburger").show();
                 $("#breadcrumb_hamburger_title").show();
                 adjustFrameHeight();
+                resizeIframe($(".config_content_frame")[0]);
                 handleIFrameDocPosition(""); // scroll to the top
             } else {
                 $("#config_content").hide();
@@ -1075,7 +1075,7 @@ function adjustFrameHeight() {
             }
             // then calculate the height
             $("#background_container").css("height", height + "px");
-        } 
+        }
     }
 }
 
@@ -1131,6 +1131,7 @@ function addWindowResizeListener() {
             $("#breadcrumb_hamburger").hide();
             $("#breadcrumb_hamburger_title").hide();
             adjustFrameHeight();
+            resizeIframe($(".config_content_frame")[0]);
         }
     });
 }
@@ -1172,6 +1173,7 @@ $(document).ready(function () {
             var TOCElement = findTOCElement();
             handleSubHeadingsInTOC(TOCElement);
             adjustFrameHeight();
+            resizeIframe($(".config_content_frame")[0]);
             var TOCSubElement = findTOCElement(true);
             if (TOCSubElement) {
                 setSelectedTOC(TOCSubElement, true)
