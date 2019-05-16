@@ -17,20 +17,6 @@ var contentBreadcrumbHeight = 0;
 var mobileWidth = 767;
 var ipadWidth = 1024;
 
-// set height of iframe to size of contents unless contents is smaller than min_height
-function resizeIframe(obj) {
-    new_height = obj[0].contentWindow.document.body.scrollHeight;
-    var min_height = $(window).height() - $('nav').height() - $('footer').height() - 70;
-    if (new_height < min_height) {
-        obj.css('height', min_height + 'px');
-        $("#toc_inner").css('height', min_height + 'px');
-    }
-    else {
-        obj.css('height', new_height + 29 + 'px');
-        $("#toc_inner").css('height', new_height + 29 + 'px');
-    }
-}
-
 function addTOCClick() {
     var onclick = function (event) {
         // clean out the breadcrumb so that it cannot be clicked on while loading/repositioning the doc
@@ -142,7 +128,6 @@ function setIframeLocationHref(href) {
     if (iframeContent.attr("location").pathname !== href) {
         iframeContent.attr("location").replace(href);
     }
-
     // move focus to the content
     $('#config_content').focus();
 }
@@ -195,7 +180,6 @@ function handleIFrameDocPosition(href) {
                     scrollToElementTop = elementTop - elementHeight + 125; 
                 }
                 scrollToPos(scrollToElementTop);
-
             }
         }
     } else {
@@ -492,7 +476,6 @@ function handleExpandCollapseToggleButton(buttonElement, updateUrl) {
         buttonElement.attr('collapsed', true);
     }
     adjustFrameHeight();
-    resizeIframe($(".config_content_frame"));
     if (updateUrl) {
         var href = getSelectedDocHtml() + "#";
         updateHashInUrl(href + titleId, true);
@@ -1028,7 +1011,6 @@ function addHamburgerClick() {
                 $("#breadcrumb_hamburger").show();
                 $("#breadcrumb_hamburger_title").show();
                 adjustFrameHeight();
-                resizeIframe($(".config_content_frame"));
                 handleIFrameDocPosition(""); // scroll to the top
             } else {
                 $("#config_content").hide();
@@ -1084,7 +1066,18 @@ function adjustFrameHeight() {
             }
             // then calculate the height
             $("#background_container").css("height", height + "px");
-        }
+        } 
+    }
+    // set height of iframe to size of contents unless contents is smaller than min_height
+    var new_height = $(".config_content_frame")[0].contentWindow.document.body.scrollHeight;
+    var min_height = $(window).height() - $('nav').height() - $('footer').height() - 70;
+    if (new_height < min_height) {
+        $(".config_content_frame").css('height', min_height + 'px');
+        $("#toc_inner").css('height', min_height + 'px');
+    }
+    else {
+        $(".config_content_frame").css('height', new_height + 29 + 'px');
+        $("#toc_inner").css('height', new_height + 29 + 'px');
     }
 }
 
@@ -1140,7 +1133,6 @@ function addWindowResizeListener() {
             $("#breadcrumb_hamburger").hide();
             $("#breadcrumb_hamburger_title").hide();
             adjustFrameHeight();
-            resizeIframe($(".config_content_frame"));
         }
     });
 }
@@ -1182,7 +1174,6 @@ $(document).ready(function () {
             var TOCElement = findTOCElement();
             handleSubHeadingsInTOC(TOCElement);
             adjustFrameHeight();
-            resizeIframe($(".config_content_frame"));
             var TOCSubElement = findTOCElement(true);
             if (TOCSubElement) {
                 setSelectedTOC(TOCSubElement, true)
