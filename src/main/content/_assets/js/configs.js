@@ -824,7 +824,6 @@ function handleParentWindowScrolling() {
                 var frameView = $(this);
                 var frameContents = $('iframe[name="contentFrame"]').contents();
                 var anchors = frameContents.find("div.paragraph > p > a");
-                console.log("anchors", anchors);
                 var closestAnchor = {};
                 $(anchors).each(function () {
                     if ($(this).parent().is(":visible") && isInViewport($(this), frameContents, closestAnchor)) {
@@ -835,7 +834,6 @@ function handleParentWindowScrolling() {
                 if (closestAnchor.element && !closestAnchor.inView) {
                     // normal scrolling elements
                     var title = closestAnchor.element.parent().text();
-                    console.log("title:", title);
                     createClickableBreadcrumb(title, true);
                 } else {
                     // scrolling when the previous 2nd level title and its nested titles are all
