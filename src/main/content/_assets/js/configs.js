@@ -824,6 +824,7 @@ function handleParentWindowScrolling() {
                 var frameView = $(this);
                 var frameContents = $('iframe[name="contentFrame"]').contents();
                 var anchors = frameContents.find("div.paragraph > p > a");
+                console.log("anchors", anchors);
                 var closestAnchor = {};
                 $(anchors).each(function () {
                     if ($(this).parent().is(":visible") && isInViewport($(this), frameContents, closestAnchor)) {
@@ -834,6 +835,7 @@ function handleParentWindowScrolling() {
                 if (closestAnchor.element && !closestAnchor.inView) {
                     // normal scrolling elements
                     var title = closestAnchor.element.parent().text();
+                    console.log("title:", title);
                     createClickableBreadcrumb(title, true);
                 } else {
                     // scrolling when the previous 2nd level title and its nested titles are all
@@ -932,7 +934,7 @@ function handlePopstate() {
                 if (event.state.href.indexOf("#") !== -1) {
                     handleContentBreadcrumbVisibility(true);
                 }
-                handleIFrameDocPosition(event.state.href);
+                //handleIFrameDocPosition(event.state.href);
 
                 // select TOC
                 var TOCSubElement = $("#toc_container").find("a[href='" + event.state.href + "']");
@@ -1068,17 +1070,17 @@ function adjustFrameHeight() {
             $("#background_container").css("height", height + "px");
         } 
     }
-    // set height of iframe to size of contents unless contents is smaller than min_height
-    var new_height = $(".config_content_frame")[0].contentWindow.document.body.scrollHeight;
-    var min_height = $(window).height() - $('nav').height() - $('footer').height() - 70;
-    if (new_height < min_height) {
-        $(".config_content_frame").css('height', min_height + 'px');
-        $("#toc_inner").css('height', min_height + 'px');
-    }
-    else {
-        $(".config_content_frame").css('height', new_height + 29 + 'px');
-        $("#toc_inner").css('height', new_height + 29 + 'px');
-    }
+        // set height of iframe to size of contents unless contents is smaller than min_height
+        var new_height = $(".config_content_frame")[0].contentWindow.document.body.scrollHeight;
+        var min_height = $(window).height() - $('nav').height() - $('footer').height() - 70;
+        if (new_height < min_height) {
+            $(".config_content_frame").css('height', min_height + 'px');
+            $("#toc_inner").css('height', min_height + 'px');
+        }
+        else {
+            $(".config_content_frame").css('height', new_height + 29 + 'px');
+            $("#toc_inner").css('height', new_height + 29 + 'px');
+        }
 }
 
 function updateHashAfterRedirect() {
