@@ -8,10 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-#background_container {
-    height: 1500px; /* initial height */
-}
-
+ 
 /* table of column styling */
 #toc_title {
     color: #5D6A8E;
@@ -39,6 +36,14 @@
 #toc_inner {
     margin-right: 0px;
     padding-right: 0px;
+    overflow: auto;
+}
+
+@media (min-width: 767px) {
+    #toc_inner {
+        position: fixed;
+        width: 25%;
+    }
 }
 
 .toc_selected {
@@ -70,6 +75,10 @@
 }
 
 /* content styling */
+#feature_content {
+    min-height: 100vh;
+}
+
 
 #feature_content:focus {
     outline: none;

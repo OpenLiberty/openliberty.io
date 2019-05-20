@@ -238,15 +238,15 @@ function isMobileView() {
     }
 }
 
-// add css to features-that-enable-this-feature per design	
-function addClassToFeaturesThatEnableThisFeature() {	
-    var featuresThatEnableThisFeature = $("#features-that-enable-this-feature");	
-    if (featuresThatEnableThisFeature.length === 1) {	
-        var ulist = featuresThatEnableThisFeature.parent().find('.ulist');	
-        if (ulist.length === 1) {	
-            ulist.addClass('enableByList');	
-        }	
-    }	
+// add css to features-that-enable-this-feature per design
+function addClassToFeaturesThatEnableThisFeature() {
+    var featuresThatEnableThisFeature = $("#features-that-enable-this-feature");
+    if (featuresThatEnableThisFeature.length === 1) {
+        var ulist = featuresThatEnableThisFeature.parent().find('.ulist');
+        if (ulist.length === 1) {
+            ulist.addClass('enableByList');
+        }
+    }
 }
 
 // set the container height so that the table of content is using the viewport to display its content
@@ -415,7 +415,7 @@ $(document).ready(function () {
     addHamburgerClick();
     addHashListener();
     addWindowResizeListener();
-
+    
     //manually tiggering it if we have hash part in URL
     if (window.location.hash) {
         $(window).trigger('hashchange');
@@ -423,3 +423,8 @@ $(document).ready(function () {
         selectFirstDoc();
     }
 })
+
+// Change height of toc if footer is in view so that fixed toc isn't visible through footer
+$(window).scroll(function() {
+    $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
+});
