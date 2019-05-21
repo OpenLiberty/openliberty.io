@@ -42,6 +42,7 @@ function addTOCClick() {
             // Note: content breadcrumb not visible with initial loading
             setIframeLocationHref(currentHref);
             updateMainBreadcrumb(resource);
+            updateTitle(resource.text());
         } else {
             // positioning to one of the 2nd level subtitiles
             // - enable content breadcrumb
@@ -148,6 +149,11 @@ function updateMainBreadcrumb(resource) {
             $(".breadcrumb.fluid-container").append("<li><a class='inactive_link' doc-href='" + resource.attr("href") + "' target='contentFrame'>" + resource.text() + "</a></li>");
         }
     }
+}
+
+// Update title in browser tab to show current page
+function updateTitle(currentPage) {
+    $("title").text(currentPage + " - Server Config - Open Liberty");
 }
 
 // Using anchor href <a href="..."> to jump to a 2nd level heading in the doc within an iframe causes 
@@ -898,8 +904,10 @@ function handleInitialContent() {
     if (window.location.hash !== "" && window.location.hash !== undefined) {
         var fullHref = replaceHistoryState(window.location.hash);
         setIframeLocationHref(fullHref);
+        updateTitle(window.location.hash.replace("#", "").replace(".html", ""));
     } else {
         selectFirstDoc();
+        updateTitle("OVERVIEW");
     }
 }
 

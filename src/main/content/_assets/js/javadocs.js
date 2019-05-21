@@ -295,6 +295,20 @@ function setDynamicIframeContent() {
     if (targetPage.class) {
         setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + targetPage.class);
     }
+    updateTitle(targetPage.package);
+}
+
+// Update title in browser tab to show current page
+function updateTitle(currentPage) {
+    if (currentPage != undefined && currentPage != "allclasses-frame.html") {
+        var currentPage = currentPage.substring(0, currentPage.lastIndexOf('/')).replace(/\//g, ".");
+        if (window.top.location.pathname.includes("microprofile")) {
+            $("title").text(currentPage + " - MicroProfile API - Open Liberty");
+        }
+        else {
+            $("title").text(currentPage + " - Java EE API - Open Liberty");
+        }
+    }
 }
 
 function addClickListeners() {
@@ -358,6 +372,9 @@ function addClickListener(contents) {
                 state[otherStateKey] = defaultHtmlRootPath + value;
             });
             window.history.pushState(state, null, hashParams);
+
+            var package = hashParams.substring(1).split("&").sort()[1].replace("package=", "");
+            updateTitle(package);
         }
     })
 }
