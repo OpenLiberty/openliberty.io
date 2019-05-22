@@ -300,7 +300,7 @@ function setDynamicIframeContent() {
 
 // Update title in browser tab to show current page
 function updateTitle(currentPage) {
-    if (currentPage != undefined && currentPage != "allclasses-frame.html") {
+    if (currentPage !== undefined && currentPage !== "allclasses-frame.html") {
         var currentPage = currentPage.substring(0, currentPage.lastIndexOf('/')).replace(/\//g, ".");
         if (window.top.location.pathname.includes("microprofile")) {
             $("title").text(currentPage + " - MicroProfile API - Open Liberty");
