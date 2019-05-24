@@ -120,6 +120,7 @@ function loadContent(targetTOC, tocHref, addHash) {
     $("#command_content").load(tocHref, function(response, status) {
         if (status === "success") {
             updateMainBreadcrumb(targetTOC);
+            updateTitle(targetTOC);
             setupDisplayContent();
             $('footer').show();
 
@@ -191,6 +192,11 @@ function updateHashInUrl(href) {
 
     //lastClickElementHref = hashInUrl;
     window.location.hash = "#" + hashInUrl;
+}
+
+// Update title in browser tab to show current page
+function updateTitle(currentPage) {
+    $("title").text(currentPage.text() + " - Server Commands - Open Liberty");
 }
 
 // check if mobile view or not
