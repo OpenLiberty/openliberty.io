@@ -81,7 +81,15 @@ find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/cont
 echo "Building with jekyll..."
 echo `jekyll -version`
 mkdir -p target/jekyll-webapp
-jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --destination target/jekyll-webapp
+
+# Enable google analytics if ga is true
+if [ "$ga" = true ]
+  then 
+    jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --config src/main/content/_config.yml,src/main/content/_google_analytics.yml --destination target/jekyll-webapp 
+  else
+    jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --destination target/jekyll-webapp 
+fi
+
 python3 ./scripts/parse-feature-toc.py
 
 # Maven packaging
