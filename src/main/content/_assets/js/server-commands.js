@@ -97,7 +97,6 @@ function getTOCElement(href) {
 
 // Add extra css to the doc, set the doc height, and scroll to the content
 function setupDisplayContent() {
-    setContainerHeight();
     adjustParentWindow();
     $('#command_content').animate({
         scrollTop: 0
@@ -111,7 +110,6 @@ function setupDisplayContent() {
 // - show the display content, 
 // - update hash if requested
 function loadContent(targetTOC, tocHref, addHash) {
-    $('footer').hide();
     if (targetTOC.length === 1) {
         setSelectedTOC(targetTOC);
     } else {
@@ -122,7 +120,6 @@ function loadContent(targetTOC, tocHref, addHash) {
             updateMainBreadcrumb(targetTOC);
             updateTitle(targetTOC);
             setupDisplayContent();
-            $('footer').show();
 
             // update hash only if thru normal clicking path
             if (addHash) {
@@ -132,8 +129,6 @@ function loadContent(targetTOC, tocHref, addHash) {
             $(this).focus(); // switch focus to the content for the reader
 
             addReferenceClick();
-        } else {
-            $('footer').show();
         }
     });
 }
@@ -342,7 +337,6 @@ function addWindowResizeListener() {
             }
             $("#breadcrumb_hamburger").hide();
             $("#breadcrumb_hamburger_title").hide();
-            setContainerHeight();
         }
     });
 }
@@ -360,4 +354,9 @@ $(document).ready(function () {
     } else {
         selectFirstDoc();
     }
+});
+
+// Change height of toc if footer is in view so that fixed toc isn't visible through footer
+$(document).scroll(function() {
+    $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
 });
