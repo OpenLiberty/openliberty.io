@@ -86,8 +86,11 @@ function loadContent(targetTOC, tocHref, addHash) {
         setSelectedTOC(targetTOC);
     } else {
         deselectedTOC();
-    }
+    }    
     $("#general_content").load(tocHref, function(response, status) {
+        var doc_adoc = /[^/]*$/.exec(tocHref)[0].replace("html", "adoc");
+        $("#open_issue_link").attr("href", "https://github.com/OpenLiberty/docs/issues/new");
+        $("#edit_topic_link").attr("href", "https://github.com/OpenLiberty/docs/edit/master/ref/general/" + doc_adoc);
         if (status === "success") {
             updateMainBreadcrumb(targetTOC);
             updateTitle(targetTOC);
