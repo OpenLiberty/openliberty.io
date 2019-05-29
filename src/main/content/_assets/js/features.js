@@ -65,13 +65,12 @@ function setSelectedTOC(resource) {
     resource.parent().addClass("toc_selected");
 }
 
-// Add extra css to the doc, set the doc height, and scroll to the content
-function setupDisplayContent() {
-    addClassToFeaturesThatEnableThisFeature();
-    setContainerHeight();
-    $('html, body').animate({
-        scrollTop: 0
-    }, 400);
+// Add extra css to the doc, set the doc height, and scroll to the content	
+function setupDisplayContent() {	
+    addClassToFeaturesThatEnableThisFeature();	
+    $('html, body').animate({	
+        scrollTop: 0	
+    }, 400);	
 }
 
 // This function
@@ -413,7 +412,6 @@ function addWindowResizeListener() {
             }
             $("#breadcrumb_hamburger").hide();
             $("#breadcrumb_hamburger_title").hide();
-            setContainerHeight();
         }
     });
 }
@@ -424,7 +422,7 @@ $(document).ready(function () {
     addHamburgerClick();
     addHashListener();
     addWindowResizeListener();
-
+    
     //manually tiggering it if we have hash part in URL
     if (window.location.hash) {
         $(window).trigger('hashchange');
@@ -432,3 +430,8 @@ $(document).ready(function () {
         selectFirstDoc();
     }
 })
+
+// Change height of toc if footer is in view so that fixed toc isn't visible through footer
+$(window).scroll(function() {
+    $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
+});
