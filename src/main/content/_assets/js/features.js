@@ -25,7 +25,7 @@ function addTOCClick() {
         var resource = $(event.currentTarget);
         //setSelectedTOC(resource);
         var currentHref = resource.attr("href");
-
+        
         // handle the click event ourselves so as to take care of updating the hash 
         event.preventDefault();
         event.stopPropagation();
@@ -94,6 +94,7 @@ function loadContent(targetTOC, tocHref, addHash, versionHref) {
                 }
             } else {
                 updateMainBreadcrumb(targetTOC);
+                updateTitle(targetTOC);
                 setupDisplayContent();
                 $('footer').show();
 
@@ -227,6 +228,12 @@ function updateHashInUrl(href) {
 
     lastClickElementHref = hashInUrl;
     window.location.hash = "#" + hashInUrl;
+}
+
+
+// Update title in browser tab to show current page
+function updateTitle(currentPage) {
+    $("title").text(currentPage.text() + " - Server Features - Open Liberty");
 }
 
 // check if mobile view or not

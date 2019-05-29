@@ -173,8 +173,11 @@ function addScrollListener() {
 function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
     var frame = $('#javadoc_container').contents().find(frameToListen);
     var frameHeader = frame.contents().find(frameElementToListen);
+    var packagesList = frame.contents().find("h2[title='Packages']").next();
+    var classesList = frame.contents().find('h1.bar').next();
     var offsetTop = frameHeader.offset().top;
     var origPaddingTop = parseInt(frameHeader.css("padding-top").replace("px", ""));
+    var headerHeight = frameHeader.height();
     // For FireFox, cannot just use border-top, has to use border-top-color, border-top-style, border-top-width
     var origBorderTopWidth = frameHeader.css("border-top-width");
     var origBorderTopStyle = frameHeader.css("border-top-style");
@@ -189,6 +192,8 @@ function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
                 // To maintain the spacing and look with margin-top removed, replace padding-top and border-top
                 // with temporarily values and adjust sticky header with calculated padding-top and border-top.
                 frameHeader.css("padding-top", offsetTop + origPaddingTop);
+                packagesList.css("padding-top", offsetTop + origPaddingTop + headerHeight);
+                classesList.css("padding-top", offsetTop + origPaddingTop + headerHeight);
                 frameHeader.css("border-top-width", "0px");
                 frameHeader.css("border-top-style", "solid");
                 frameHeader.css("border-top-color", "transparent");
@@ -290,6 +295,20 @@ function setDynamicIframeContent() {
     if (targetPage.class) {
         setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + targetPage.class);
     }
+    updateTitle(targetPage.package);
+}
+
+// Update title in browser tab to show current page
+function updateTitle(currentPage) {
+    if (currentPage !== undefined && currentPage !== "allclasses-frame.html") {
+        var currentPage = currentPage.substring(0, currentPage.lastIndexOf('/')).replace(/\//g, ".");
+        if (window.top.location.pathname.includes("microprofile")) {
+            $("title").text(currentPage + " - MicroProfile API - Open Liberty");
+        }
+        else {
+            $("title").text(currentPage + " - Java EE API - Open Liberty");
+        }
+    }
 }
 
 function addClickListeners() {
@@ -353,6 +372,9 @@ function addClickListener(contents) {
                 state[otherStateKey] = defaultHtmlRootPath + value;
             });
             window.history.pushState(state, null, hashParams);
+
+            var package = hashParams.substring(1).split("&").sort()[1].replace("package=", "");
+            updateTitle(package);
         }
     })
 }

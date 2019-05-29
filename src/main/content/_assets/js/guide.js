@@ -75,7 +75,6 @@
         target_width = current_target_object.outerWidth();	
         target_height = current_target_object.outerHeight();
         var right_position = inSingleColumnView() ? 1 : 46;
-        console.log("right_position:", right_position);
          $('#copy_to_clipboard').css({	
             top: target_position.top + 1,	
             right: parseInt($('#guide_column').css('padding-right')) + right_position	
