@@ -371,8 +371,12 @@ function parse_tags(code_block){
     // Wrap the standalone text in spans so they can be selected between the range of start and end tags using jQuery's nextUntil()
     code_block.find('code').contents().each(function(){
         if (!$(this).is('span')) {
-            var newText = $(this).wrap('<span class="string"></span>');
-            $(this).replaceWith(newText);
+            var newText = $(this).wrap('<span class="string"></span>');     
+            if(newText.text().trim() === ""){
+                // Mark the span to know that it can be removed later when removing whitespace.
+                newText.parent().attr('data-empty-space', true);
+            }       
+            $(this).replaceWith(newText);           
         }
     });
 
@@ -434,19 +438,19 @@ function parse_tags(code_block){
     });
 
     // Hide the empty space before the start tags added before to select the range.
-    var empty_space = start_tags.prev('span').filter(function(){
-        return this.innerText.trim() == "";
+    var empty_start_space = start_tags.prev('span').add(start_tags.next('span')).filter(function(){
+        return this.innerText.trim() == "" && $(this).attr('data-empty-space');
     });
-    empty_space.remove();
-    start_tags.remove();
 
     // Hide the empty space after the end tags added before to select the range.
     var end_tags = code_block.find('span:contains(end::)');
-    empty_space = end_tags.next('span').filter(function(){
-        return this.innerText.trim() == "";
+    var empty_end_space = end_tags.next('span').filter(function(){
+        return this.innerText.trim() == "" && $(this).attr('data-empty-space');
     });
-    empty_space.remove();
+
+    start_tags.remove();
     end_tags.remove();
+    empty_start_space.add(empty_end_space).remove();
 
     // Trim extra whitespace
     var code = code_block.find('code');
