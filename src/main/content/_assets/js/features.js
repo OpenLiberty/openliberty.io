@@ -25,7 +25,7 @@ function addTOCClick() {
         var resource = $(event.currentTarget);
         //setSelectedTOC(resource);
         var currentHref = resource.attr("href");
-
+        
         // handle the click event ourselves so as to take care of updating the hash 
         event.preventDefault();
         event.stopPropagation();
@@ -65,13 +65,12 @@ function setSelectedTOC(resource) {
     resource.parent().addClass("toc_selected");
 }
 
-// Add extra css to the doc, set the doc height, and scroll to the content
-function setupDisplayContent() {
-    addClassToFeaturesThatEnableThisFeature();
-    setContainerHeight();
-    $('html, body').animate({
-        scrollTop: 0
-    }, 400);
+// Add extra css to the doc, set the doc height, and scroll to the content	
+function setupDisplayContent() {	
+    addClassToFeaturesThatEnableThisFeature();	
+    $('html, body').animate({	
+        scrollTop: 0	
+    }, 400);	
 }
 
 // This function
@@ -95,6 +94,7 @@ function loadContent(targetTOC, tocHref, addHash, versionHref) {
                 }
             } else {
                 updateMainBreadcrumb(targetTOC);
+                updateTitle(targetTOC);
                 setupDisplayContent();
                 $('footer').show();
 
@@ -228,6 +228,12 @@ function updateHashInUrl(href) {
 
     lastClickElementHref = hashInUrl;
     window.location.hash = "#" + hashInUrl;
+}
+
+
+// Update title in browser tab to show current page
+function updateTitle(currentPage) {
+    $("title").text(currentPage.text() + " - Server Features - Open Liberty");
 }
 
 // check if mobile view or not
@@ -406,7 +412,6 @@ function addWindowResizeListener() {
             }
             $("#breadcrumb_hamburger").hide();
             $("#breadcrumb_hamburger_title").hide();
-            setContainerHeight();
         }
     });
 }
@@ -417,7 +422,7 @@ $(document).ready(function () {
     addHamburgerClick();
     addHashListener();
     addWindowResizeListener();
-
+    
     //manually tiggering it if we have hash part in URL
     if (window.location.hash) {
         $(window).trigger('hashchange');
@@ -425,3 +430,8 @@ $(document).ready(function () {
         selectFirstDoc();
     }
 })
+
+// Change height of toc if footer is in view so that fixed toc isn't visible through footer
+$(window).scroll(function() {
+    $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
+});

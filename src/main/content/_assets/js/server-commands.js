@@ -97,7 +97,6 @@ function getTOCElement(href) {
 
 // Add extra css to the doc, set the doc height, and scroll to the content
 function setupDisplayContent() {
-    setContainerHeight();
     adjustParentWindow();
     $('#command_content').animate({
         scrollTop: 0
@@ -111,17 +110,19 @@ function setupDisplayContent() {
 // - show the display content, 
 // - update hash if requested
 function loadContent(targetTOC, tocHref, addHash) {
-    $('footer').hide();
     if (targetTOC.length === 1) {
         setSelectedTOC(targetTOC);
     } else {
         deselectedTOC();
     }
     $("#command_content").load(tocHref, function(response, status) {
+        var doc_adoc = /[^/]*$/.exec(tocHref)[0].replace("html", "adoc");
+        $("#open_issue_link").attr("href", "https://github.com/OpenLiberty/docs/issues/new");
+        $("#edit_topic_link").attr("href", "https://github.com/OpenLiberty/docs/edit/master/ref/commands/server/" + doc_adoc);
         if (status === "success") {
             updateMainBreadcrumb(targetTOC);
+            updateTitle(targetTOC);
             setupDisplayContent();
-            $('footer').show();
 
             // update hash only if thru normal clicking path
             if (addHash) {
@@ -131,8 +132,6 @@ function loadContent(targetTOC, tocHref, addHash) {
             $(this).focus(); // switch focus to the content for the reader
 
             addReferenceClick();
-        } else {
-            $('footer').show();
         }
     });
 }
@@ -191,6 +190,11 @@ function updateHashInUrl(href) {
 
     //lastClickElementHref = hashInUrl;
     window.location.hash = "#" + hashInUrl;
+}
+
+// Update title in browser tab to show current page
+function updateTitle(currentPage) {
+    $("title").text(currentPage.text() + " - Server Commands - Open Liberty");
 }
 
 // check if mobile view or not
@@ -336,7 +340,6 @@ function addWindowResizeListener() {
             }
             $("#breadcrumb_hamburger").hide();
             $("#breadcrumb_hamburger_title").hide();
-            setContainerHeight();
         }
     });
 }
@@ -354,4 +357,9 @@ $(document).ready(function () {
     } else {
         selectFirstDoc();
     }
+});
+
+// Change height of toc if footer is in view so that fixed toc isn't visible through footer
+$(document).scroll(function() {
+    $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
 });
