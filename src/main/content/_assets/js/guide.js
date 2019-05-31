@@ -126,13 +126,13 @@
         // get user's operating system
         var ua = navigator.userAgent.toLowerCase();
         if (ua.indexOf("win") != -1) {
-            var OSName = "windows";
+            OSName = "windows";
         }
         if (ua.indexOf("mac") != -1) {
-            var OSName = "mac";
+            OSName = "mac";
         }
         if (ua.indexOf("linux") != -1) {
-            var OSName = "linux";
+            OSName = "linux";
         }
         // hide tab content except for selected tab and add active class to selected tab
         var os_section = "#" + OSName + "_section";
