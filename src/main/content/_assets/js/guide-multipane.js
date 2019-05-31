@@ -403,7 +403,7 @@ function parse_tags(code_block){
         var end_index = text.indexOf('[]');
         var tag_name = text.substring(start_index, end_index);
         var end = $(this).nextAll("span:contains('end::" + tag_name + "')").first();
-        var content = $(this).nextUntil(end);
+        var content = $(this).nextUntil(end.prev());
 
         // Check if the tag should be hidden
         var hide = false;
@@ -450,7 +450,8 @@ function parse_tags(code_block){
 
     start_tags.remove();
     end_tags.remove();
-    empty_start_space.add(empty_end_space).remove();
+    empty_start_space.remove();
+    empty_end_space.remove();
 
     // Trim extra whitespace
     var code = code_block.find('code');
