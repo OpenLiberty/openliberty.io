@@ -80,6 +80,7 @@
     top: 100px;
     bottom: 0; /* Initially extend the code column the full height */
     overflow: hidden;
+    box-shadow: -2px 0px 2px rgba(0,0,0,0.12);
 
     #dismiss_button {
         display: none;
@@ -162,36 +163,40 @@
     vertical-align: middle;
 }
 
-#github_clone_popup_container {
+#prereqs_container {
     position: absolute;
     display: none;
-    top: 31%;
+    top: 0%;
     width: 100%;
     z-index: 2;
-}
-
-#github_clone_popup {
-    height: 111px;
-    margin: 0 20px;
-    padding: 19px 0 0 20px;
+    padding: 30px 50px;
     background-color: #ffffff;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12)
 }
 
-#github_clone_popup_title {
+#prereqs_title {
     font-size: 16px;
     font-weight: 500;
     line-height: 1.63;
     color: #1b1c34;
-    margin-bottom: 14px;
+    display: inline-block;
 }
 
-#github_clone_popup_repo {
+.prereq {
     font-size: 14px;
     line-height: 1.57;
-    color: #737373;
+    color: #4F660A;
     width: 95%;
-    border-bottom: solid 1px #96bc32;
+    border: 1px solid #abd155;
+    padding: 3px 12px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 3px;
+
+    &:hover {
+        color: #ffffff;
+        background-color: #4F660A;
+    }
 }
 
 #github_clone_popup_copy {

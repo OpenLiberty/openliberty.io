@@ -159,7 +159,7 @@ var handleHotspotHover = debounce(function(hotspot){
     if(hotspot.data('hovering') == false){
         return;
     }
-    $("#github_clone_popup_container").data('hotspot-hovered', true); // Track if a hotspot was hovered over to hide the github popup
+    $("#prereqs_container").data('hotspot-hovered', true); // Track if a hotspot was hovered over to hide the github popup
     hideGithubPopup();
     var header = get_header_from_element(hotspot);
     var fileIndex = hotspot.data('file-index');
@@ -196,7 +196,7 @@ var handleHotspotHover = debounce(function(hotspot){
 }, 250);
 
 function showGithubPopup(){
-    $("#github_clone_popup_container").fadeIn();
+    $("#prereqs_container").fadeIn();
     $("#code_column .code_column, #code_column_tabs_container").addClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', true);
     $(".copyFileButton").hide();
@@ -206,7 +206,7 @@ function showGithubPopup(){
 }
 
 function hideGithubPopup(){
-    $("#github_clone_popup_container").fadeOut();
+    $("#prereqs_container").fadeOut();
     $("#code_column .code_column, #code_column_tabs_container").removeClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', false);
     $(".copyFileButton").show();
@@ -219,7 +219,7 @@ function hideGithubPopup(){
    Handle showing/hiding the Github popup.
 */
 function handleGithubPopup() {
-    var githubPopup = $("#github_clone_popup_container");
+    var githubPopup = $("#prereqs_container");
     if(githubPopup.length > 0){
         // Check if the first guide section that has code to show on the right has been scrolled past yet.
         // If so, then the Github popup will be dismissed. If the first section hasn't been scrolled past yet but a hotspot is showing on the next section then also hide it.
@@ -241,7 +241,7 @@ function handleGithubPopup() {
 
         // Only show the Github popup if above the first section with code
         // and if hotspots weren't hovered over to reveal the code behind the popup.
-        var hotspotHovered = $("#github_clone_popup_container").data('hotspot-hovered');
+        var hotspotHovered = $("#prereqs_container").data('hotspot-hovered');
         if(blurCodeOnRight && !(firstHotspotInView && hotspotHovered)){
             showGithubPopup();
         }
@@ -462,9 +462,9 @@ $(document).ready(function() {
      /* Copy button for the github clone command  that pops up initially when opening a guide. */
     $("#github_clone_popup_copy").click(function(event){
         event.preventDefault();
-        target = $("#github_clone_popup_repo").get(0);
+        target = $(".prereq").get(0);
         copy_element_to_clipboard(target, function(){
-            var position = $('#github_clone_popup_container').position();
+            var position = $('#prereqs_container').position();
             $('#code_section_copied_confirmation').css({	
                 top: position.top - 20,
                 right: 20	
@@ -773,7 +773,7 @@ $(document).ready(function() {
     var firstSection = $(".sect1:not(#guide_meta)").first();
     if(firstSection.length > 0){
         var firstSectionTop = firstSection.get(0).offsetTop;
-        $("#github_clone_popup_container").css('top', firstSectionTop);
+        //$("#prereqs_container").css('top', firstSectionTop);
     }
 
     $(".copyFileButton").click(function(event){
