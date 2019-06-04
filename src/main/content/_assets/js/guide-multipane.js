@@ -372,16 +372,12 @@ function parse_tags(code_block){
     code_block.find('code').contents().each(function(){
         if (!$(this).is('span')) {
             var newText = $(this).wrap('<span class="string"></span>');     
-            if(newText.text().trim() === ""){
-                // Mark the span to know that it can be removed later when removing whitespace.
-                newText.parent().attr('data-empty-space', true);
-            }       
             $(this).replaceWith(newText);           
         }
     });
 
     // Remove the line numbers before the start/end tags and space between the line numbers and start/end tags
-    code_block.find("span:contains('tag::'), span:contains('end::')").each(function(){    
+    code_block.find("span:contains('tag::'), span:contains('end::')").each(function(){
         var line_num = $(this).prevAll('.line-numbers').first();
         line_num.nextUntil($(this)).andSelf().remove();
     });
@@ -397,13 +393,15 @@ function parse_tags(code_block){
     }
 
     var start_tags = code_block.find('span:contains(tag::)');
+    var end_tags = code_block.find('span:contains(end::)');
+
     start_tags.each(function(){
         var text = $(this).text();
         var start_index = text.indexOf('tag::') + 5;
         var end_index = text.indexOf('[]');
         var tag_name = text.substring(start_index, end_index);
         var end = $(this).nextAll("span:contains('end::" + tag_name + "')").first();
-        var content = $(this).nextUntil(end.prev());
+        var content = $(this).nextUntil(end);
 
         // Check if the tag should be hidden
         var hide = false;
@@ -414,11 +412,10 @@ function parse_tags(code_block){
                     break;
                 }
             }
-        }
-        
+        }        
         // If the tag is in the list of tags that should be hidden then hide it instead of just marking it.
         if(hide){
-            content.hide();
+            content.remove();
         }
         else {
             // Mark the lines start to end with a data-tag so that the hotspot can highlight them.
@@ -433,25 +430,21 @@ function parse_tags(code_block){
                 else {
                     $(this).attr('data-hotspot-tag', tag_name);
                 }
-            });             
+            });
         }
     });
 
-    // Hide the empty space before the start tags added before to select the range.
-    var empty_start_space = start_tags.prev('span').add(start_tags.next('span')).filter(function(){
-        return this.innerText.trim() == "" && $(this).attr('data-empty-space');
-    });
-
-    // Hide the empty space after the end tags added before to select the range.
-    var end_tags = code_block.find('span:contains(end::)');
-    var empty_end_space = end_tags.next('span').filter(function(){
-        return this.innerText.trim() == "" && $(this).attr('data-empty-space');
+    // Remove the whitespace after the start and end tags up until the next line number.
+    start_tags.add(end_tags).each(function(){
+        var next_line_num = $(this).nextAll('.line-numbers').first();
+        if(next_line_num.length > 0){
+            var empty_space = $(this).nextUntil(next_line_num);
+            empty_space.remove();
+        }        
     });
 
     start_tags.remove();
     end_tags.remove();
-    empty_start_space.remove();
-    empty_end_space.remove();
 
     // Trim extra whitespace
     var code = code_block.find('code');
