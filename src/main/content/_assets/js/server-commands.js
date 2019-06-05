@@ -54,7 +54,7 @@ function addReferenceClick() {
         var matchingTOCElement = getTOCElement(currentHref);
 
         // check that link isn't a full url containing http before updating hash
-        if (currentHref.indexOf("http") == -1) {
+        if (matchingTOCElement.length > 0 && currentHref.indexOf("http") == -1) {
             // handle the click event ourselves so as to take care of updating the hash 
             event.preventDefault();
             event.stopPropagation();
