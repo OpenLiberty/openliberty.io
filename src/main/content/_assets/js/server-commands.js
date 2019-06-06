@@ -54,7 +54,7 @@ function addReferenceClick() {
         var matchingTOCElement = getTOCElement(currentHref);
 
         // check that link isn't a full url containing http before updating hash
-        if (currentHref.indexOf("http") == -1) {
+        if (matchingTOCElement.length > 0 && currentHref.indexOf("http") == -1) {
             // handle the click event ourselves so as to take care of updating the hash 
             event.preventDefault();
             event.stopPropagation();
@@ -118,7 +118,7 @@ function loadContent(targetTOC, tocHref, addHash) {
     $("#command_content").load(tocHref, function(response, status) {
         var doc_adoc = /[^/]*$/.exec(tocHref)[0].replace("html", "adoc");
         $("#open_issue_link").attr("href", "https://github.com/OpenLiberty/docs/issues/new");
-        $("#edit_topic_link").attr("href", "https://github.com/OpenLiberty/docs/edit/master/ref/commands/server/" + doc_adoc);
+        $("#edit_topic_link").attr("href", "https://github.com/OpenLiberty/docs/edit/develop/ref/commands/server/" + doc_adoc);
         if (status === "success") {
             updateMainBreadcrumb(targetTOC);
             updateTitle(targetTOC);

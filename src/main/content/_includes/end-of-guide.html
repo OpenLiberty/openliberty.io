@@ -2,6 +2,35 @@
         <h2 tabindex="0">Nice work! Where to next?</h2>
         <div id="end_of_guide_left_section">
             <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    {% if page.layout == 'guide' or page.layout == 'guide-multipane' %}
+                        <a href="https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();">Yes</a>
+                    {% elsif page.layout == 'iguide-multipane' %}
+                        <a href="https://github.com/OpenLiberty/iguide-{{page.url | replace: '/guides/', ''}}/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();">Yes</a>
+                    {% endif %}
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
             <h3 id="improve_guide_feedback">What could make this guide better?</h3>
             {% if page.layout == 'guide' or page.layout == 'guide-multipane' %}
                 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}/issues">Raise an issue</a> to share feedback</p>
@@ -13,14 +42,6 @@
 
             <h3 id="need_help">Need help?</h3>
             <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
-
-            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
-            <div id="feedback_ratings">
-                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
-                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
-                <img class="guide_rating" id="like" src="/img/3_Like.png" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
-                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
-            </div>
 
             <h3>Like Open Liberty? Star our repo on GitHub.</h3>
             <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub">Star</a>
