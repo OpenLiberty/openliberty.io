@@ -22,7 +22,11 @@
                 <div class="popup_content" tabindex="0">
                     <p class="popup_title">Thank you for your feedback!</p>
                     <p id="open_issue">Would you like to open an issue in GitHub?</p>
-                    <a href="https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();">Yes</a>
+                    {% if page.layout == 'guide' or page.layout == 'guide-multipane' %}
+                        <a href="https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();">Yes</a>
+                    {% elsif page.layout == 'iguide-multipane' %}
+                        <a href="https://github.com/OpenLiberty/iguide-{{page.url | replace: '/guides/', ''}}/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();">Yes</a>
+                    {% endif %}
                     <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
                 </div>
             </div>
