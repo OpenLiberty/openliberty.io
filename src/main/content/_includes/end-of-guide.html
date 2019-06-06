@@ -5,25 +5,25 @@
             
             <h3 id="feedback_rating_question">What did you think of this guide?</h3>
             <div id="feedback_ratings">
-                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
-                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
-                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
-                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
             </div>
 
             <div id="like_popup" class="popup">
-                <div class="popup_content">
+                <div class="popup_content" tabindex="0">
                     <p class="popup_title">Thank you for your feedback!</p>
-                    <p id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</p>
+                    <p id="close_button" class="popup_button" onclick="$('#like_popup').hide();" tabindex="0">Close</p>
                 </div>
             </div>
 
             <div id="dislike_popup" class="popup">
-                <div class="popup_content">
+                <div class="popup_content" tabindex="0">
                     <p class="popup_title">Thank you for your feedback!</p>
                     <p id="open_issue">Would you like to open an issue in GitHub?</p>
                     <a href="https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}/issues/new" target="_blank" id="yes_button" class="popup_button">Yes</a>
-                    <p id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</p>
+                    <p id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();" tabindex="0">No, thank you</p>
                 </div>
             </div>
 
