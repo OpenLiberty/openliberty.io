@@ -62,13 +62,9 @@ js:
                         <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
                         <span id="guide_duration">{{ page.duration }}</span>
                     </div>
-                    <div id="mobile_github_section">
-                        <div id="mobile_github_clone_popup_title"><span class="dark_green_link_light_background">Git clone</span><span> to get going right away:</span></div>
-                        <div id="mobile_github_clone_popup_repo">
-                            <span>git clone https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}.git</span>
-                            <div id="mobile_github_clone_popup_copy" tabindex="0" aria-label="Copy the Github repository clone command">
-                                <img src="/img/guides_copy_button_black.svg" alt="Copy Github clone command" title="Copy Github clone command">
-                            </div>
+                    <div id="mobile_prereqs_section">
+                        <p id="mobile_prereqs_title">Prerequisites</p>
+                        <div class="prereqs_list">
                         </div>
                     </div>
                 </div>
@@ -108,13 +104,9 @@ js:
             <div id="code_column_content"></div>
 
             <div id="prereqs_container">
-                <div id="prereqs_title">Prerequisites</div>
-                {% assign guide_name = page.url | remove: "/guides/" %}
-                {% for guideprereqlist in site.data.guide_prereqs %}
-                    {% for prereq in guideprereqlist[guide_name] %}
-                        <a href="{{ site.data.guide_prereq_links[prereq] }}" class="prereq">{{ prereq }}</a>
-                    {% endfor %}
-                {% endfor %}
+                <p id="prereqs_title">Prerequisites</p>
+                <div class="prereqs_list">
+                </div>
             </div>
             <button id="dismiss_button" aria-label="Back to text" tabindex="0">Back to text</button>
         </div>
