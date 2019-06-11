@@ -256,7 +256,7 @@ $.getJSON( "../../guides/guides-common/guide_prereqs.json", function(data) {
     var guide_name = window.location.pathname.replace('.html','').replace('/guides/', '');
     var prereq_html = '';
     $.each(data.prereqs, function(i, prereq) {
-        if (prereq.guides.indexOf(guide_name) > -1) {
+        if (prereq.guides.indexOf(guide_name) > -1 || prereq.guides.indexOf("all") > -1) {
             prereq_html += '<a href=' + '"' + prereq.link + '"' + ' class="prereq">' + prereq.name + '</a>';
         }
     });
