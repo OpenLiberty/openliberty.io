@@ -100,10 +100,11 @@
 .mobile_code_column {
     display: none;
     background-color: #f1f4fe;
+    overflow: hidden;  
 
     @media screen and (max-width: 1169.98px){
         &.open {
-            display: block;           
+            display: block;                     
 
             .CodeRay, code {
                 background-color: inherit !important;
@@ -112,6 +113,13 @@
     
             #github_clone_popup {
                 display: none;
+            }
+
+            .code_column_title_container { 
+                @media (max-width: 1169.98px) {
+                    width: 100%;
+                    padding-left: 0;
+                }
             }
     
             // Remove blur
@@ -126,28 +134,31 @@
     
             .code_column_tabs {
                 max-width: calc(100% - 60px);
-                height: 44px;
-                overflow-x: auto;
-                overflow-y: hidden;
-    
-                & > li {
-                    float: none;
-                    display: table-cell !important;
-                }
+                overflow: auto;
+            }
+
+            .code_colummn_content {
+                overflow: auto;
             }
     
-            .mobile_code_expand {
-                display: block;
+            .mobile_code_caret {
                 position: absolute;
                 z-index: 2; // Appear over the dimmed mobile snippet.
                 right: 30px;
                 bottom: 30px;
                 width: 30px;
                 height: 25px; 
-                border: none;
-                background-image: url(/img/down_arrow_blue.svg);
+                border: none;                
                 background-color: transparent;
-                background-repeat: no-repeat;                               
+                background-repeat: no-repeat;
+                background-image: url(/img/down_arrow_blue.svg);
+            }
+            .mobile_code_expand {
+                display: block;
+            }
+            .mobile_code_collapse {
+                display: none;
+                transform: rotate(180deg);
             }
         } 
         &:after {
@@ -184,18 +195,6 @@
 .dimmed {
     opacity: .19;
     filter: blur(1px);
-}
-
-.code_column_title_container {
-    height: 43px;
-    padding-left: 23px; 
-    border-bottom: solid 1px #d4d7e3;
-    display: table;
-    width: 100%;
-
-    @media (max-width: 1169.98px) {
-        padding-left: 0;
-    }
 }
 
 .code_column_title {

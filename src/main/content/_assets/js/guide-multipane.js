@@ -443,10 +443,6 @@ function parse_tags(code_block){
 }
 
 $(document).ready(function() { 
-
-    $(window).on('resize', function(){
-        restoreCodeColumn();
-    });
      
      /* Copy button for the github clone command  that pops up initially when opening a guide. */
     $("#github_clone_popup_copy").click(function(event){
@@ -666,7 +662,7 @@ $(document).ready(function() {
             var code_clone = $("#code_column").clone(true); // Clone the code column including its events.
             code_clone.removeAttr('id');
             code_clone.addClass('mobile_code_column');
-            code_clone.addClass("open");  
+            code_clone.addClass("open");
 
             // Scroll the hotspot to the top of the page, with the paragraph encompassing the hotspot shown.
             var top = $(this).offset().top;
@@ -681,7 +677,6 @@ $(document).ready(function() {
             var bottom = scrollTo + window.innerHeight - hotspot_height - 5;
             var height = (bottom - scrollTo) / 2;
             code_clone.css({
-                // "top" : scrollTo + mobile_toc_height + hotspot_height + 5 + "px",
                 "height" : height
             });
 
@@ -692,10 +687,24 @@ $(document).ready(function() {
 
     $('.mobile_code_expand').on('click', function(){
         // Expand the code column to its full height (auto)
-        $(this).parents('.mobile_code_column').css({
+        var code_column = $(this).parents('.mobile_code_column');
+        var height = code_column.css('height');
+        code_column.data('old_height', height);
+        code_column.css({
             'height': 'auto'
         }).addClass('removeGradient');
         $(this).hide();
+        $(this).siblings('.mobile_code_collapse').show();
+    });
+
+    $('.mobile_code_collapse').on('click', function(){
+        var code_column = $(this).parents('.mobile_code_column');
+        var old_height = code_column.data('old_height');
+        code_column.css('height', old_height);
+
+        // Hide the collapse button and show the expand button.
+        $(this).hide();
+        $(this).siblings('.mobile_code_expand').show();
     });
 
     // When hovering over a code hotspot, highlight the correct lines of code in the corresponding code section.
