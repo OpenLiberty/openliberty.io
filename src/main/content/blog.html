@@ -5,6 +5,7 @@ css:
 - blog
 - header-light
 permalink: /blog/
+featured_tags: [microprofile, javaee, spring, announcements, jakarta ee]
 ---
 
 <!-- BLOG -->
@@ -23,11 +24,21 @@ permalink: /blog/
                 <span id="star6" class="star d-none d-md-block"></span>
                 <h2 class="blog_subtitle">Never miss a post!</h2>
                 <p class="blog_subtext">Be sure to follow <a class="green_link" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@openlibertyio</a> on Twitter or subscribe to our <a class="green_link" href="https://openliberty.io/feed.xml" target="_blank" rel="noopener">RSS feed</a>.</p>
+                <h2 class="blog_subtitle">Featured Tags</h2>
+                <div id="featured_tags_list">
+                    {% for featured_tag in page.featured_tags %}
+                        <p class="featured_tag" onclick="$('#filter').show();">{{featured_tag}}</p><span>, </span>
+                    {% endfor %}
+                </div>
                 <img id="ufo_images_desktop" class="d-none d-lg-block" src="/img/blog_images_desktop.svg" alt="ufo and clouds">
                 <img id="ufo_images_tablet" class="d-none d-md-block d-lg-none" src="/img/blog_images_tablet.svg" alt="ufo and clouds">
             </div>
             <div id="right_column" class="col-md-12 col-lg-8 offset-lg-4">
-
+                <div id="filter">
+                    <img id="x_button" src="/img/blog_x_button.svg" onclick="$('#filter').hide();">
+                    <p>Filtered by tag: </p>
+                    <p id="filter_tag"></p>
+                </div>
                 <!-- Show blog posts from the past 30 days as Latest Posts unless there are less than 3
                      2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
                 {% assign past_month_count = 0 %}
@@ -84,7 +95,7 @@ permalink: /blog/
                                         {% endif %}
                                     </p>
                                     <div class="row">
-                                        <div class="blog_post_author_data_container col-md-7">
+                                        <div class="blog_post_author_data_container">
                                             <div class="author_images_container">
                                                 <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
                                                 {% for author in post.additional_authors %}
@@ -102,6 +113,13 @@ permalink: /blog/
                                                 {% endif %}
                                             {% endfor %}
                                             <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="blog_tags_container col-md-7">
+                                            {% for tag in post.tags %}
+                                                <a href="" class="blog_tag">{{tag}}</a><span>, </span>
+                                            {% endfor %}
                                         </div>
                                         <div class="read_more_link_container col-sm-12 col-md-5">
                                         {% if post.redirect_link %}
@@ -133,7 +151,7 @@ permalink: /blog/
                                     {% endif %}
                                     <p class="blog_post_date_mobile d-sm-block d-md-none">{{ post.date | date: date_format }}</p>
                                     <div class="row">
-                                        <div class="blog_post_author_data_container col-md-7">
+                                        <div class="blog_post_author_data_container">
                                             <div class="author_images_container">
                                                 <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
                                                 {% for author in post.additional_authors %}
@@ -154,6 +172,13 @@ permalink: /blog/
                                             {% endfor %}
 
                                             <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="blog_tags_container col-md-7">
+                                            {% for tag in post.tags %}
+                                                <a href="" class="blog_tag">{{tag}}</a><span>, </span>
+                                            {% endfor %}
                                         </div>
                                         <div class="read_more_link_container col-sm-12 col-md-5">
                                         {% if post.redirect_link %}
