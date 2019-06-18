@@ -16,7 +16,7 @@ var recent_sections = {}; // Store the most recently viewed code_section for eac
 // Input: Code_block: the code file
 //        Header: the section header for this code file
 //        Index: the index of the file in this section
-function link_hotspots_to_file(code_block, header, index){
+function linkHotspotsToFile(code_block, header, index){
     // Check how many code_column are present in this subsection.
     var sect = code_block.parents('.sect1');
     var num_files = $(header).siblings('.code_column').length;   
@@ -41,7 +41,7 @@ function link_hotspots_to_file(code_block, header, index){
 //       from_line: Integer for what line to start highlighting from.
 //       to_line: Integer for what line to end highlighting.
 //       scroll: boolean if the code should be scrolled to
-function highlight_code_range(code_section, fromLine, toLine, scroll){
+function highlightCodeRange(code_section, fromLine, toLine, scroll){
     // Wrap each leftover piece of text in a span to handle highlighting a range of lines.
     code_section.find('code').contents().each(function(){
         if (!$(this).is('span')) {
@@ -71,16 +71,18 @@ function highlight_code_range(code_section, fromLine, toLine, scroll){
     range.wrapAll("<div class='highlightSection'></div>");
 
     if(scroll){
+        var container = code_section.parents(".code_column_container");
         var scrollTop = code_section.parent()[0].scrollTop;
         var position = range.position().top;
-        var titleBarHeight = code_section.parent().find(".code_column_title_container").outerHeight();
-        $(".code_column_content").animate({scrollTop: scrollTop + position - titleBarHeight});
+        var titleBarHeight = container.find(".code_column_title_container").outerHeight();
+        container.find(".code_column_content").animate({scrollTop: scrollTop + position - titleBarHeight});
     }        
 }
 
 // Remove all highlighting for the code section.
-function remove_highlighting(){
-    var highlightedSections = $('.highlightSection');
+// @param {code_column} optional code section to remove highlighting from.
+function remove_highlighting(code_column){
+    var highlightedSections = code_column ? code_column.find('.highlightSection') : $('.highlightSection');
     highlightedSections.each(function(){
         var children = $(this).children('span');
         children.unwrap(); // Remove the wrapped highlighted div from these children.
@@ -88,7 +90,7 @@ function remove_highlighting(){
 }
 
 // Returns the header of the element passed in. This checks if the element is in a subsection first before checking the main section header.
-function get_header_from_element(element){
+function getHeaderFromElement(element){
     var header;
     var subsection = element.parents('.sect2');
     if(subsection.length > 0){
@@ -103,8 +105,8 @@ function get_header_from_element(element){
 
 // Returns the code block associated with a code hotspot.
 // Inputs: hotspot: The 'hotspot' in desktop view where hovering over the block will highlight certain lines of code in the code column relevant to what the guide is talking about.
-function get_code_block_from_hotspot(hotspot){
-    var header = get_header_from_element(hotspot);
+function getCodeBlockFromHotspot(hotspot){
+    var header = getHeaderFromElement(hotspot);
     var fileIndex = hotspot.data('file-index');
     if(!fileIndex){
         fileIndex = 0;
@@ -112,8 +114,14 @@ function get_code_block_from_hotspot(hotspot){
     return code_sections[header.id][fileIndex].code;
 }
 
-// Hide other code blocks and show the correct code block based on provided id.
-function showCorrectCodeBlock(id, index, switchTabs) {
+/* Show the code block if passed in, otherwise find the code block based on the section id and index.
+   Hide the other code blocks in the given code section
+   @param {id} section id
+   @param {index} file index for determining which code block in the given section to show
+   @param {switchTabs} boolean to switch to the tab or not
+   @param {code_block} Which code block to show, if available
+*/
+function showCorrectCodeBlock(id, index, switchTabs, code_block) {
     if(!id){
         // At the start of the guide where there is no guide section.
         return;
@@ -124,13 +132,16 @@ function showCorrectCodeBlock(id, index, switchTabs) {
         }
         var tab;
         // Load the most recently viewed tab for this section if viewed before.
-        if(recent_sections[id]){
-            tab = recent_sections[id].tab;
-            index = tab.data('file-index');                
-        }
-        var code_block = code_sections[id][index].code;
+        if(!code_block){
+            if(recent_sections[id]){
+                tab = recent_sections[id].tab;
+                index = tab.data('file-index');
+            }
+            code_block = code_sections[id][index].code;
+        }  
         if(code_block){
-            $('#code_column .code_column').not(code_block).hide();
+            var code_section = code_block.parents('.code_column_container');
+            code_section.find('.code_column').not(code_block).hide();
             code_block.show();
             if(switchTabs){
                 // Load all of the tabs for this section
@@ -152,7 +163,6 @@ function showCorrectCodeBlock(id, index, switchTabs) {
 /**
  * Handle hovering over hotspots. This will look up the corresponding code section on the right and search for the lines to highlight. Debounce is used to prevent multiple hotspots from being hovered over quickly and having the page jump around. It will handle the latest hotspot hovered over once 250 ms has passed.
  * @param hotspot: The snippet hovered over in the guide column.
- * @param highlightCode: boolean if the code should be highlighted
  */
 var handleHotspotHover = debounce(function(hotspot){
     // Only highlight the code if the mouse is still hovered over the hotspot after the debounce.
@@ -161,19 +171,40 @@ var handleHotspotHover = debounce(function(hotspot){
     }
     $("#github_clone_popup_container").data('hotspot-hovered', true); // Track if a hotspot was hovered over to hide the github popup
     hideGithubPopup();
-    var header = get_header_from_element(hotspot);
+    var header = getHeaderFromElement(hotspot);
     var fileIndex = hotspot.data('file-index');
     if(!fileIndex){
         fileIndex = 0;
     }
-    var code_block = code_sections[header.id][fileIndex].code;
-    if(code_block){            
-        // Save the code section for later when the user comes back to this section and we want to show the most recent code viewed.
-        recent_sections[header.id] = code_sections[header.id][fileIndex];                
-        // Switch to the correct tab
-        var tab = code_sections[header.id][fileIndex].tab;
-        setActiveTab(tab);                   
-        showCorrectCodeBlock(header.id, fileIndex, false);
+    var code_block;
+    if(inSingleColumnView()){
+        // Show the correct code file in the mobile hotspot code section.
+        var code_column;
+        if(hotspot.parents('tr').length > 0){
+            // If the hotspot is in a table then look in the <tr> created after the <tr> this hotspot is in.
+            code_column = hotspot.parents('tr').next().find('.code_column_container');
+        } else {
+            code_column = hotspot.next('.code_column_container');        
+        }        
+        var section_id = getScrolledVisibleSectionID();
+        code_block = $(code_column.find(".code_column[data-section-id='" + section_id + "']").get(fileIndex)); 
+        if(code_block.length === 0){
+            // Check if the parent section has code associated with it.
+            section_id = hotspot.parents('.sect1').find('h2').first().attr('id');
+            code_block = $(code_column.find(".code_column[data-section-id='" + section_id + "']").get(fileIndex)); 
+        }
+    } else {
+        code_block = code_sections[header.id][fileIndex].code;
+    }
+    if(code_block){
+        if(!inSingleColumnView()){
+            // Save the code section for later when the user comes back to this section and we want to show the most recent code viewed.
+            recent_sections[header.id] = code_sections[header.id][fileIndex];
+            // Switch to the correct tab
+            var tab = code_sections[header.id][fileIndex].tab;
+            setActiveTab(tab);
+        }        
+        showCorrectCodeBlock(header.id, fileIndex, false, code_block);
 
         // Highlight the code
         var ranges = hotspot.data('highlight-ranges');
@@ -187,7 +218,7 @@ var handleHotspotHover = debounce(function(hotspot){
                     if(fromLine && toLine){   
                         // When multiple ranges are going to be highlighted, only scroll to the first one.                 
                         var shouldScroll = (i === 0);
-                        highlight_code_range(code_block, fromLine, toLine + 1, shouldScroll);               
+                        highlightCodeRange(code_block, fromLine, toLine + 1, shouldScroll);               
                     }
                 }                
             }
@@ -200,7 +231,7 @@ function showGithubPopup(){
     $("#code_column .code_column, .code_column_tabs_container").addClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', true);
     $(".copyFileButton").hide();
-    $('.code_column_content').css({
+    $('#code_column .code_column_content').css({
         'overflow-y': 'hidden'
     });
 }
@@ -210,7 +241,7 @@ function hideGithubPopup(){
     $("#code_column .code_column, .code_column_tabs_container").removeClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', false);
     $(".copyFileButton").show();
-    $('.code_column_content').css({
+    $('#code_column .code_column_content').css({
         'overflow-y': 'scroll'
     });
 }
@@ -318,15 +349,38 @@ function hideDuplicateTabs(id, code_block){
     activeDuplicates.hide();
 }
 
-function loadPreviousStepsTabs(){
+// function loadMobileTabs(section){
+//     // Reveal the files from previous sections in case the user loaded a later step from a bookmarked hash.
+//     var code_column = section ? section : $("#code_column");
+//     var hiddenTabs = code_column.find(".code_column_tabs li:hidden");
+//     for(var i = hiddenTabs.length - 1; i >= 0; --i){
+//         var tab = hiddenTabs.get(i);
+//         var fileName = tab.innerText.trim();
+//         // Check that only the most recent tab for this file is showing.
+//         var visibleTabsWithSameName = code_column.find(".code_column_tabs li:visible").filter(function(){
+//             return this.innerText.trim() === fileName;
+//         });
+//         if(visibleTabsWithSameName.length === 0){
+//             $(tab).show();
+//         }
+//     }
+// }
+
+function loadPreviousStepsTabs(section){
     // Reveal the files from previous sections in case the user loaded a later step from a bookmarked hash.
-    var lastTab = $('#code_column .code_column_tabs li:visible').last();
-    var previousHiddenTabs = lastTab.prevAll().not(":visible");
-    for(var i = previousHiddenTabs.length - 1; i >= 0; --i){
-        var tab = previousHiddenTabs.get(i);
+    var code_column = section ? section : $("#code_column");
+    var hiddenTabs;
+    if(inSingleColumnView()){
+        hiddenTabs = code_column.find(".code_column_tabs li:hidden");
+    } else {
+        var lastTab = code_column.find(".code_column_tabs li:visible").last();
+        hiddenTabs = lastTab.prevAll().not(":visible");
+    }    
+    for(var i = hiddenTabs.length - 1; i >= 0; --i){
+        var tab = hiddenTabs.get(i);
         var fileName = tab.innerText.trim();
         // Check that only the most recent tab for this file is showing.
-        var visibleTabsWithSameName = $('#code_column_tabs li:visible').filter(function(){
+        var visibleTabsWithSameName = code_column.find(".code_column_tabs li:visible").filter(function(){
             return this.innerText.trim() === fileName;
         });
         if(visibleTabsWithSameName.length === 0){
@@ -341,14 +395,14 @@ function setActiveTab(activeTab){
     if(activeTab.children('a').hasClass('active')){
         return;
     }
-    $('.code_column_tab > a').removeClass('active');
+    var code_column = activeTab.parents('.code_column_container');
+    code_column.find('.code_column_tab > a').removeClass('active');
     activeTab.children('a').addClass('active');
     activeTab.show();
 
     // Adjust the code content to take up the remaining height
-    var code_column = activeTab.parents('.code_column_container');
     var tabListHeight = code_column.find(".code_column_title_container").outerHeight();
-    code_column.find(".code_column_content").css({
+    code_column.find(".code_column_content").css({ 
         "height": "calc(100% - " + tabListHeight + "px)"
     });
 }
@@ -358,7 +412,7 @@ function setActiveTab(activeTab){
     If the asciidoc specifies to remove a certain tag then remove the tag and its contents.
     Otherwise, mark the contents of the tag for highlighting later and remove the start and end tag.
 */
-function parse_tags(code_block){
+function parseTags(code_block){
     // Wrap the standalone text in spans so they can be selected between the range of start and end tags using jQuery's nextUntil()
     code_block.find('code').contents().each(function(){
         if (!$(this).is('span')) {
@@ -442,6 +496,104 @@ function parse_tags(code_block){
     code.html(code.html().trim());
 }
 
+function showMobileCodeBlock(hotspot){
+    if(!hotspot.attr('open_hotspot')){
+        hotspot.attr('open_hotspot', 'true');
+
+        // Clone the code column including its events and display it below the hotspot
+        var code_clone = $("#code_column").clone(true);
+        code_clone.removeAttr('id');
+        code_clone.addClass('mobile_code_column');
+        code_clone.addClass("open");
+
+        // Scroll the hotspot to the top of the page, with the paragraph encompassing the hotspot shown.
+        var top = hotspot.offset().top;
+        var mobile_toc_height = $("#mobile_toc_accordion").height();
+        var scrollTo = top - mobile_toc_height;
+        $('html, body').stop().animate({
+            scrollTop: scrollTo
+        }, 400);
+
+        // Set the top of the code to appear underneath the hotspot that was clicked.
+        var hotspot_height = hotspot.height();
+        var bottom = scrollTo + window.innerHeight - hotspot_height - 5;
+        // var height = (bottom - scrollTo) / 2;
+        var height = bottom - scrollTo;
+        code_clone.data('collapsed_height', height / 2);
+        remove_highlighting(code_clone);
+        // If the hotspot is within a table, insert the code in a row below it.
+        var table_row = hotspot.parents('tr');
+        if(table_row.length === 1){
+            var new_tr = $("<tr></tr>");
+            var new_td = $("<td colspan='2'></td>");
+            new_td.css('padding', '0'); // Make the code full width
+            new_tr.append(new_td);
+            new_td.append(code_clone);        
+            table_row.after(new_tr);
+        } else {
+            hotspot.after(code_clone);
+        }               
+        loadPreviousStepsTabs(code_clone); 
+        handleMobileCodeDisplay(code_clone);
+    }
+    handleHotspotHover(hotspot);
+}
+
+/*
+    Expand the mobile code block to show the full contents of the file.
+*/
+function expandMobileCodeFile(code_column){
+    // Expand the code column to its full height (auto)
+    var expand_button = code_column.find('.mobile_code_expand');
+    var height = code_column.css('height');
+    code_column.data('collapsed_height', height);
+    code_column.css({
+        'height': 'auto'
+    });
+    code_column.removeClass('gradient');
+    expand_button.hide();
+    expand_button.siblings('.mobile_code_collapse').show();
+}
+/*
+    Collapse the mobile code block into a condensed view.
+*/
+function collapseMobileCodeFile(code_column){
+    var collapsed_height = code_column.data('collapsed_height');
+    var collapse_button = code_column.find('.mobile_code_collapse');
+    code_column.css('height', collapsed_height);
+    code_column.addClass('gradient');
+
+    // Hide the collapse button and show the expand button.
+    collapse_button.hide();
+    collapse_button.siblings('.mobile_code_expand').show();
+
+    // Scroll back to where you were in the text after collapsing the section
+    var offset = collapse_button.parents('.code_column_container').offset().top;
+    var toc_height = $("#mobile_toc_accordion_container").outerHeight();
+    $('html, body').stop().animate({
+        scrollTop: offset - toc_height
+    }, 400);
+}
+
+/*
+    Determine whether the mobile code block is already fully shown and hide the expand button or if it needs to have a collapse arrow.
+*/
+function handleMobileCodeDisplay(code_section){
+    // Check the height of the code block to determine if all of its content is already shown.
+    var code_block_parent = code_section.find(".code_column_content");
+    var full_height = code_block_parent.height();
+    var code_block = code_section.find(".code_column:visible");
+    var child_height = code_block.height();
+    if(child_height + 50 >= full_height){
+        // All of the code block for this file is visible 
+        // Show the collapse button.
+        expandMobileCodeFile(code_block_parent);
+    } else {
+        // Show the expand button
+        collapseMobileCodeFile(code_block_parent);
+    }
+}
+
 $(document).ready(function() { 
      
      /* Copy button for the github clone command  that pops up initially when opening a guide. */
@@ -467,7 +619,7 @@ $(document).ready(function() {
 
             code_block.hide();
 
-            var header = get_header_from_element(code_block);            
+            var header = getHeaderFromElement(code_block);            
             header.setAttribute('data-has-code', 'true');
             var code_section = {};
             code_section.code = code_block;   
@@ -480,7 +632,7 @@ $(document).ready(function() {
             code_block.attr('data-section-id', header.id);
 
             // Parse out the tags in the code file.
-            parse_tags(code_block);
+            parseTags(code_block);
 
             // Create a tab in the code column for this file.
             var tab = $("<li class='code_column_tab' role='presentation' tabindex='0'></li>");
@@ -497,7 +649,7 @@ $(document).ready(function() {
 
             // Map the hotspots and tabs in this section to the index of this file in its given guide section.
             var fileIndex = code_sections[header.id].length-1;
-            link_hotspots_to_file(code_block, header, fileIndex);
+            linkHotspotsToFile(code_block, header, fileIndex);
             tab.data('file-index', fileIndex);
 
             // Remove old title from the DOM
@@ -549,6 +701,9 @@ $(document).ready(function() {
 
     // Load the correct tab when clicking
     $('.code_column_tab').on('click', function(){
+        if(inSingleColumnView()){
+            handleMobileCodeDisplay($(this).parents('.code_column_container'));
+        }
         if(!$(this).attr('disabled')){
             var fileIndex = $(this).data('file-index');
             setActiveTab($(this));
@@ -584,7 +739,7 @@ $(document).ready(function() {
             }
         }
 
-        var code_block = get_code_block_from_hotspot(snippet);
+        var code_block = getCodeBlockFromHotspot(snippet);
 
         for(i = 0; i < classList.length; i++){
             var className = classList[i];
@@ -653,58 +808,18 @@ $(document).ready(function() {
     // In mobile view if the user clicks a hotspot it shows a modal of the file with the hotspot code highlighted.
     $('.hotspot').on('click', function(){
         if(inSingleColumnView()){
-            if($(this).attr('open_hotspot')){
-                return;
-            }
-            $(this).attr('open_hotspot', 'true');         
-
-            // Clone the code column and display it below the hotspot
-            var code_clone = $("#code_column").clone(true); // Clone the code column including its events.
-            code_clone.removeAttr('id');
-            code_clone.addClass('mobile_code_column');
-            code_clone.addClass("open");
-
-            // Scroll the hotspot to the top of the page, with the paragraph encompassing the hotspot shown.
-            var top = $(this).offset().top;
-            var mobile_toc_height = $("#mobile_toc_accordion").height();
-            var scrollTo = top - mobile_toc_height;     
-            $('html, body').stop().animate({
-                scrollTop: scrollTo
-            }, 400);
-
-            // Set the top of the code to appear underneath the hotspot that was clicked.
-            var hotspot_height = $(this).height();
-            var bottom = scrollTo + window.innerHeight - hotspot_height - 5;
-            var height = (bottom - scrollTo) / 2;
-            code_clone.css({
-                "height" : height
-            });
-
-            $(this).after(code_clone);
-            handleHotspotHover($(this));
+            showMobileCodeBlock($(this));            
         }
     });
 
     $('.mobile_code_expand').on('click', function(){
-        // Expand the code column to its full height (auto)
         var code_column = $(this).parents('.mobile_code_column');
-        var height = code_column.css('height');
-        code_column.data('old_height', height);
-        code_column.css({
-            'height': 'auto'
-        }).addClass('removeGradient');
-        $(this).hide();
-        $(this).siblings('.mobile_code_collapse').show();
+        expandMobileCodeFile(code_column);
     });
 
     $('.mobile_code_collapse').on('click', function(){
         var code_column = $(this).parents('.mobile_code_column');
-        var old_height = code_column.data('old_height');
-        code_column.css('height', old_height);
-
-        // Hide the collapse button and show the expand button.
-        $(this).hide();
-        $(this).siblings('.mobile_code_expand').show();
+        collapseMobileCodeFile(code_column);
     });
 
     // When hovering over a code hotspot, highlight the correct lines of code in the corresponding code section.
@@ -746,7 +861,7 @@ $(document).ready(function() {
 
         var event0 = event.originalEvent;
         var dir = (event0.deltaY) < 0 ? 'up' : 'down';
-        var codeColumnContent = $("#code_column_content").get(0);
+        var codeColumnContent = $("#code_column .code_column_content").get(0);
 
         if(!(this.scrollTop > 0 || this.offsetHeight > codeColumnContent.offsetHeight)){
             // Element is not scrollable. If the code file has no scrollbar, the page will still scroll if the event is propagated to the window scroll listener so we need to prevent propagation.

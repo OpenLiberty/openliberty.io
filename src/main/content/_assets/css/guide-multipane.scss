@@ -84,10 +84,6 @@
     bottom: 0; /* Initially extend the code column the full height */
     overflow: hidden;
 
-    .mobile_code_expand {
-        display: none;
-    }
-
     @media screen and (max-width: 1169.98px) {
         position: absolute;
         display: none;
@@ -100,6 +96,7 @@
 .mobile_code_column {
     display: none;
     background-color: #f1f4fe;
+    margin-bottom: 18px;
     overflow: hidden;  
 
     @media screen and (max-width: 1169.98px){
@@ -154,31 +151,27 @@
                 background-image: url(/img/down_arrow_blue.svg);
             }
             .mobile_code_expand {
-                display: block;
+                display: none;
             }
             .mobile_code_collapse {
-                display: none;
+                display: block;
                 transform: rotate(180deg);
             }
-        } 
-        &:after {
-            content  : "";
-            position : absolute;
-            z-index  : 1;
-            bottom   : 0;
-            left     : 0;
-            pointer-events   : none;
-            background-image : linear-gradient(to bottom, 
-                                rgba(255,255,255, 0), 
-                                rgba(255,255,255, 1) 90%);
-            width    : 100%;
-            height   : 50%;
         }       
-        &.removeGradient {
+        &.gradient {
             &:after {
-                content: none;
-                background-image: none;
-            }
+                content  : "";
+                position : absolute;
+                z-index  : 1;
+                bottom   : 0;
+                left     : 0;
+                pointer-events   : none;
+                background-image : linear-gradient(to bottom, 
+                                    rgba(255,255,255, 0), 
+                                    rgba(255,255,255, 1) 90%);
+                width    : 100%;
+                height   : 50%;
+            }            
         }
     }
 }
