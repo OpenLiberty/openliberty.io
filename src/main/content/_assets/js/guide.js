@@ -110,12 +110,28 @@
     // show content for clicked OS tab
     $('.tab_link').click(function(event) {
         // hide all tab content and remove active class from all links
-        $(".tab_content").hide();
-        $(".tab_link").removeClass("active");
+        var last_paragraph = $(this).prevAll(".paragraph:not(.tab_link)").first();
+        var next_paragraph = $(this).nextAll(".paragraph:not(.tab_link)").first();
+        var tab_contents = last_paragraph.nextUntil(next_paragraph, ".tab_content");
+        tab_contents.hide();
+
+        var tab_links = last_paragraph.nextUntil(next_paragraph, ".tab_link");
+        tab_links.removeClass("active");
         
         // show content of clicked tab and add active class to clicked tab
-        var tab_content = "#" + this.id.replace("link", "section");
-        $(tab_content).show();
+        var class_list = this.classList;
+        for(var i = 0; i < class_list.length; i++){
+            var class_name = class_list[i];
+            if(class_name !== "tab_link" && class_name.indexOf("_link") > -1){
+                var tab_content = class_name.replace("link", "section");
+                var content = tab_contents.filter(function(){
+                    return $(this).hasClass(tab_content);
+                });
+                $(content).show();
+                break;
+            }
+        }
+        
         $(this).addClass("active");
     });
 
@@ -135,11 +151,11 @@
             OSName = "linux";
         }
         // hide tab content except for selected tab and add active class to selected tab
-        var os_section = "#" + OSName + "_section";
-        var os_id = "#" + OSName + "_link";
+        var os_section = "." + OSName + "_section";
+        var os_class = "." + OSName + "_link";
         $(".tab_content").hide();
         $(os_section).show();
-        $(os_id).addClass("active");
+        $(os_class).addClass("active");
     }
 
     $(window).on('scroll', function(event) {
