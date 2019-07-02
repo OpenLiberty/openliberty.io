@@ -92,9 +92,9 @@ function loadContent(targetTOC, tocHref, addHash, versionHref) {
                 } else {
                     addVersionClick('default');
                 }
+                $('footer').show();
             } else {
                 updateMainBreadcrumb(targetTOC);
-                updateTitle(targetTOC);
                 setupDisplayContent();
                 $('footer').show();
 
@@ -103,6 +103,7 @@ function loadContent(targetTOC, tocHref, addHash, versionHref) {
                     updateHashInUrl(tocHref);
                 }
             }
+            updateTitle(targetTOC);
             $(this).focus(); // switch focus to the content for the reader
         } else {
             $('footer').show();
