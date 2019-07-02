@@ -30,7 +30,9 @@ function link_hotspots_to_file(code_block, header, index){
         hotspots = hotspots.add(code_block.prevUntil('.code_column', '.paragraph').find('code[class*=hotspot], span[class*=hotspot], div[class*=hotspot]'));
     }
     hotspots.each(function(){
-        $(this).data('file-index', index);
+        if($(this).data('file-index') === "undefined"){
+            $(this).data('file-index', index);
+        }        
     });
 }
 
@@ -49,9 +51,23 @@ function highlight_code_range(code_section, fromLine, toLine, scroll){
     });
     
     // Wrap code block lines in a div to highlight
-    var highlight_start = code_section.find('.line-numbers:contains(' + fromLine + ')').first();
-    var highlight_end = code_section.find('.line-numbers:contains(' + (toLine + 1) + ')').first();        
-    var range = highlight_start.nextUntil(highlight_end);
+    var highlightStart = code_section.find('.line-numbers').filter(function(){
+        return parseInt(this.innerText.trim()) === fromLine;        
+    });
+    var highlightEnd = code_section.find('.line-numbers').filter(function(){
+        return parseInt(this.innerText.trim()) === toLine;
+    });
+    if(highlightEnd.length === 0){
+        var lastLine = parseInt(code_section.find('.line-numbers').last().text().trim());
+        // If the line number after the last line to highlight was a tag, then search for the next line number.
+        while(highlightEnd.length === 0 && toLine < lastLine){
+            toLine = toLine + 1;
+            highlightEnd = code_section.find('.line-numbers').filter(function(){
+                return parseInt(this.innerText.trim()) === toLine;
+            });
+        }
+    }
+    var range = highlightStart.nextUntil(highlightEnd);
     range.wrapAll("<div class='highlightSection'></div>");
 
     if(scroll){
@@ -168,11 +184,10 @@ var handleHotspotHover = debounce(function(hotspot){
                 if(lines.length === 2){
                     var fromLine = parseInt(lines[0]);
                     var toLine = parseInt(lines[1]);
-                    var num_Lines = parseInt(code_block.find('.line-numbers').last().text());
                     if(fromLine && toLine){   
                         // When multiple ranges are going to be highlighted, only scroll to the first one.                 
                         var shouldScroll = (i === 0);
-                        highlight_code_range(code_block, fromLine, toLine, shouldScroll);               
+                        highlight_code_range(code_block, fromLine, toLine + 1, shouldScroll);               
                     }
                 }                
             }
@@ -347,7 +362,96 @@ function restoreCodeColumn(){
     }
 }
 
- $(document).ready(function() { 
+/*
+    Parse the start/end tags in the code file.
+    If the asciidoc specifies to remove a certain tag then remove the tag and its contents.
+    Otherwise, mark the contents of the tag for highlighting later and remove the start and end tag.
+*/
+function parse_tags(code_block){
+    // Wrap the standalone text in spans so they can be selected between the range of start and end tags using jQuery's nextUntil()
+    code_block.find('code').contents().each(function(){
+        if (!$(this).is('span')) {
+            var newText = $(this).wrap('<span class="string"></span>');     
+            $(this).replaceWith(newText);           
+        }
+    });
+
+    // Remove the line numbers before the start/end tags and space between the line numbers and start/end tags
+    code_block.find("span:contains('tag::'), span:contains('end::')").each(function(){
+        var line_num = $(this).prevAll('.line-numbers').first();
+        line_num.nextUntil($(this)).andSelf().remove();
+    });
+
+    // Parse the tags that should be hidden.
+    var hideList;
+    var classList = code_block[0].classList;
+    for(var i=0; i < classList.length; i++){
+        if(classList[i].indexOf("hide_tags=") > -1){
+            hideList = classList[i].substring(10).split(",");
+            break;
+        }
+    }
+
+    var start_tags = code_block.find('span:contains(tag::)');
+    var end_tags = code_block.find('span:contains(end::)');
+
+    start_tags.each(function(){
+        var text = $(this).text();
+        var start_index = text.indexOf('tag::') + 5;
+        var end_index = text.indexOf('[]');
+        var tag_name = text.substring(start_index, end_index);
+        var end = $(this).nextAll("span:contains('end::" + tag_name + "')").first();
+        var content = $(this).nextUntil(end);
+
+        // Check if the tag should be hidden
+        var hide = false;
+        if(hideList){
+            for(var i=0; i<hideList.length; i++){
+                if(hideList.indexOf(tag_name) > -1){
+                    hide = true;
+                    break;
+                }
+            }
+        }        
+        // If the tag is in the list of tags that should be hidden then hide it instead of just marking it.
+        if(hide){
+            content.remove();
+        }
+        else {
+            // Mark the lines start to end with a data-tag so that the hotspot can highlight them.
+            content.each(function(){
+                // Check if element already has a tag.
+                var tag = $(this).attr('data-hotspot-tag');
+                if(tag){
+                    // Add a comma delimited list of tags so that nested tags can work.
+                    tag = tag + "," + tag_name;
+                    $(this).attr('data-hotspot-tag', tag);
+                }
+                else {
+                    $(this).attr('data-hotspot-tag', tag_name);
+                }
+            });
+        }
+    });
+
+    // Remove the whitespace after the start and end tags up until the next line number.
+    start_tags.add(end_tags).each(function(){
+        var next_line_num = $(this).nextAll('.line-numbers').first();
+        if(next_line_num.length > 0){
+            var empty_space = $(this).nextUntil(next_line_num);
+            empty_space.remove();
+        }        
+    });
+
+    start_tags.remove();
+    end_tags.remove();
+
+    // Trim extra whitespace
+    var code = code_block.find('code');
+    code.html(code.html().trim());
+}
+
+$(document).ready(function() { 
 
     $(window).on('resize', function(){
         restoreCodeColumn();
@@ -374,22 +478,22 @@ function restoreCodeColumn(){
         if(metadata_sect.length > 0){
             var fileName = metadata_sect[0].innerText;
 
-            // Clone this code block so the full file can be shown in the right column and only a duplicate snippet will be shown in the single column view or mobile view.
-            // The duplicated code block will be shown on the right column.
-            var duplicate_code_block = code_block.clone();
             code_block.hide();
 
             var header = get_header_from_element(code_block);            
             header.setAttribute('data-has-code', 'true');
             var code_section = {};
-            code_section.code = duplicate_code_block;   
+            code_section.code = code_block;   
             code_section.fileName = fileName;                    
 
             // Create a title pane for the code section
-            duplicate_code_block.attr('fileName', fileName);
+            code_block.attr('fileName', fileName);
 
             // Set data attribute for id on the code block for switching to the code when clicking its tab
-            duplicate_code_block.attr('data-section-id', header.id);
+            code_block.attr('data-section-id', header.id);
+
+            // Parse out the tags in the code file.
+            parse_tags(code_block);
 
             // Create a tab in the code column for this file.
             var tab = $("<li class='code_column_tab' role='presentation' tabindex='0'></li>");
@@ -423,8 +527,8 @@ function restoreCodeColumn(){
                 $('#code_column_tabs').append(tab);
             }            
 
-            duplicate_code_block.addClass('dimmed'); // Dim the code at first while the github popup takes focus.
-            duplicate_code_block.appendTo('#code_column_content'); // Move code to the right column
+            code_block.addClass('dimmed'); // Dim the code at first while the github popup takes focus.
+            code_block.appendTo('#code_column_content'); // Move code to the right column
         }
     });
 
@@ -482,7 +586,7 @@ function restoreCodeColumn(){
     $('code[class*=hotspot], span[class*=hotspot], div[class*=hotspot]').each(function(){
         var snippet = $(this);
         var classList = this.classList;
-        var line_nums, ranges;
+        var ranges;
 
         // Find if the hotspot has a file index set to override the default behavior.
         for(var i = 0; i < classList.length; i++){
@@ -499,19 +603,49 @@ function restoreCodeColumn(){
             if(className.indexOf('hotspot') === 0){
                 var fromLine, toLine;
                 if(className.indexOf('hotspot=') === 0){
-                    line_nums = className.substring(8);
-                    if(line_nums.indexOf('-') > -1){
-                        var lines = line_nums.split('-');
-                        fromLine = parseInt(lines[0]);
-                        toLine = parseInt(lines[1]);
-                        ranges = line_nums;
-                    } 
-                    else {
-                        // Only one line to highlight.
-                        fromLine = parseInt(line_nums);
-                        toLine = parseInt(line_nums);
-                        ranges = fromLine + "-" + toLine;
+                    // Check if the hotspot is a number or tag
+                    var value = className.substring(8);
+                    var isNumber = /^[0-9]$/.test(value.charAt(0));
+                    if(isNumber){
+                        if(value.indexOf('-') > -1){
+                            var lines = value.split('-');
+                            fromLine = parseInt(lines[0]);
+                            toLine = parseInt(lines[1]);
+                            ranges = value;
+                        } 
+                        else {
+                            // Only one line to highlight.
+                            fromLine = parseInt(value);
+                            toLine = parseInt(value);
+                            ranges = fromLine + "-" + toLine;
+                        }                        
                     }
+                    else {
+                        // Hotspot is a tag name.
+                        // Find the start line for the tag using tag::<tag_name>[] and the end line for the tag using end::<tag_name>[]
+                        var line_numbers = code_block.find(".line-numbers[data-hotspot-tag]").filter(function(){
+                            var hotspot_tag = $(this).attr("data-hotspot-tag");
+                            var tags = hotspot_tag.split(",");
+                            for(var i =0; i <tags.length; i++){
+                                var tag = tags[i];
+                                if(tag === value){
+                                    return true;
+                                }
+                            }
+                            return false;
+                        });
+                        var tag_start = line_numbers.first();
+                        var tag_end = line_numbers.last();
+
+                        fromLine = parseInt(tag_start.text());
+                        toLine = parseInt(tag_end.text());                     
+                        ranges = fromLine + "-" + toLine;
+
+                        // Trim the extra whitespace in the code
+                        var code = code_block.find('code');
+                        code.html(code.html().trim());
+                    }
+
                     // Set data attributes to save the lines to highlight
                     if(snippet.data('highlight-ranges')){
                         // Add lines to the hotspot
@@ -521,7 +655,7 @@ function restoreCodeColumn(){
                     }
                     else {
                         snippet.data('highlight-ranges', ranges);
-                    }
+                    }                    
                 }                                    
                 snippet.addClass('hotspot');
             }              

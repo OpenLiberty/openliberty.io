@@ -85,7 +85,7 @@ header {
 
 #guide_content a, #end_of_guide a {
     font-weight: 500;
-    color: #E3700D;
+    color: #CC4D19;
     transition: color .2s;
     overflow-wrap: break-word;
     word-wrap: break-word;
@@ -128,12 +128,14 @@ header {
 #guide_content code {
     /* Bootstrap override */
     word-wrap: break-word;
+    white-space: pre;
 }
 
 #guide_content pre {
     border: none;
     border-radius: 0;
     padding: 30px;
+    word-wrap: normal;
 }
 
 #guide_content .listingblock.command .content pre,
@@ -275,6 +277,28 @@ header {
 #guide_content table tr th,#guide_content table tr td{padding: 0em 1.625em;font-size:inherit;color:rgba(0,0,0,.8)}
 #guide_content table tr.even,#guide_content table tr.alt,#guide_content table tr:nth-of-type(even){background:#f8f8f7}
 #guide_content table thead tr th,#guide_content table tfoot tr th,#guide_content table tbody tr td,#guide_content table tr td,#guide_content table tfoot tr td{display:table-cell;line-height:1.6}
+
+.tab_link {
+    display: inline-block;
+    padding-right: 15px;
+    cursor: pointer;
+    & :hover {
+        color: #CC4D19;
+    }
+}
+
+.tab_link.active {
+    color: #CC4D19;
+    cursor: auto;
+    & > p {
+        border-bottom: 2px solid #CC4D19;
+    }
+}
+
+#windows_link > p, #mac_link > p, #linux_link > p {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
 
 /* GUIDE PAGE LAYOUT */
 

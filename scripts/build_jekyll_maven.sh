@@ -59,13 +59,16 @@ popd
 
 echo "Copying guide images to /img/guide"
 mkdir -p src/main/content/img/guide
-# Check if any draft guide images exist first
-if [ -e src/main/content/guides/draft-guide*/assets/* ]
- then cp src/main/content/guides/draft-guide*/assets/* src/main/content/img/guide/
+
+# Check if any draft guide images exist.
+if ls src/main/content/guides/draft-guide*/assets/* 1> /dev/null 2>&1; then
+    echo "Copying draft guide images to /img/guide"
+    cp src/main/content/guides/draft-guide*/assets/* src/main/content/img/guide/
 fi
-# Check if any published guide images exist first
-if [ -e src/main/content/guides/guide*/assets/* ]
- then cp src/main/content/guides/guide*/assets/* src/main/content/img/guide/
+# Check if any published guide images exist.
+if ls src/main/content/guides/guide*/assets/* 1> /dev/null 2>&1; then
+    echo "Copying published guide images to /img/guide"
+    cp src/main/content/guides/guide*/assets/* src/main/content/img/guide/
 fi
 
 # Move any js/css files from guides to the _assets folder for jekyll-assets minification.
@@ -81,7 +84,15 @@ find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/cont
 echo "Building with jekyll..."
 echo `jekyll -version`
 mkdir -p target/jekyll-webapp
-jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --destination target/jekyll-webapp
+
+# Enable google analytics if ga is true
+if [ "$ga" = true ]
+  then 
+    jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --config src/main/content/_config.yml,src/main/content/_google_analytics.yml --destination target/jekyll-webapp 
+  else
+    jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --destination target/jekyll-webapp 
+fi
+
 python3 ./scripts/parse-feature-toc.py
 
 # Maven packaging
