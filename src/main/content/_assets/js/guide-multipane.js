@@ -235,6 +235,13 @@ function handleGithubPopup() {
         var navHeight = $('.navbar').height();
         var blurCodeOnRight = (firstCodeSectionTop - navHeight) > 1;
 
+        // get id of most visible section
+        // if most visible section is first code section, unblur code pane
+        var most_visible_section_id = getScrolledVisibleSectionID();
+        if (most_visible_section_id == firstCodeSection[0].id) {
+            blurCodeOnRight = false;
+        }
+
         var firstHotspot = $("#guide_column .hotspot:visible")[0];
         var firstHotspotRect = firstHotspot.getBoundingClientRect();
         var firstHotspotInView = (firstHotspotRect.top > 0) && (firstHotspotRect.bottom <= window.innerHeight);
