@@ -213,9 +213,6 @@ function scrollToPos(pos) {
         $('html, body').animate({
             scrollTop: pos
         }, 400);
-    } else {
-        // scroll to the position that will show the target anchor below the fixed content breadcrumb
-        iframeContents.scrollTop(pos);
     }
 }
 
@@ -860,7 +857,6 @@ function adjustParentScrollView() {
         if ($(window.parent.document).scrollTop() > 0) {
             // temporarily disable parent window scrolling listener
             $(window.parent.document).off('scroll');
-            $(window.parent.document).scrollTop(0);
             // enable back the scrolling listener
             handleParentWindowScrolling();
         }
