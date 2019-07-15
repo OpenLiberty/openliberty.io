@@ -27,9 +27,6 @@ function addTOCClick() {
         if (isMobileView()) {
             $("#breadcrumb_hamburger").trigger("click");
         }
-
-        $(window.parent.document).scrollTop(0);
-
     };
 
     $("#toc_container > ul > li > div").off("click").on("click", onclick);
