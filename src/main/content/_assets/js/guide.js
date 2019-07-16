@@ -113,9 +113,16 @@
         var last_paragraph = $(this).prevAll(".paragraph:not(.tab_link)").first();
         var next_paragraph = $(this).nextAll(".paragraph:not(.tab_link)").first();
         var tab_contents = last_paragraph.nextUntil(next_paragraph, ".tab_content");
+        var tab_links = last_paragraph.nextUntil(next_paragraph, ".tab_link");
+
+        // if no previous paragraphs use siblings instead
+        if (!(last_paragraph[0])) {
+            tab_contents = $(this).siblings(".tab_content");
+            tab_links = $(this).siblings(".tab_link");
+        }
+
         tab_contents.hide();
 
-        var tab_links = last_paragraph.nextUntil(next_paragraph, ".tab_link");
         tab_links.removeClass("active");
         
         // show content of clicked tab and add active class to clicked tab
