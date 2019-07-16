@@ -97,7 +97,6 @@ function getTOCElement(href) {
 
 // Add extra css to the doc, set the doc height, and scroll to the content
 function setupDisplayContent() {
-    adjustParentWindow();
     $('#command_content').animate({
         scrollTop: 0
     }, 400);
@@ -154,7 +153,6 @@ function addOutlineToTabFocus(selector) {
         if (!mousedown && !windowFocus) {
             $(this).addClass("addFocus");
             // scroll the parent window back up if it is scroll down
-            adjustParentWindow();
         }
         mousedown = false;
         windowFocus = false;
@@ -226,16 +224,6 @@ function selectFirstDoc() {
     }
 }
 
-// If parent window is scrolled down to the footer, it will shift the top of toc and doc content up
-// behind the fixed header. As a result, the backward tabbing towards the top (either toc or doc content)
-// would result in not seeing the toc or top of the doc. This function will shift the parent window back
-// to the top.
-function adjustParentWindow() {
-    if ($(window.parent.document).scrollTop() > 0) {
-        $(window.parent.document).scrollTop(0);
-    }    
-}
-
 // If the doc content is in focus by means of other than a mouse click, then goto the top of the 
 // doc.
 function addContentFocusListener() {
@@ -245,7 +233,6 @@ function addContentFocusListener() {
     });
     $('#command_content').on("focusin", function(e) {
         if (!mousedown) {
-            adjustParentWindow();
             $('#command_content').scrollTop(0);
         }
         mousedown = false;
