@@ -213,6 +213,9 @@ function scrollToPos(pos) {
         $('html, body').animate({
             scrollTop: pos
         }, 400);
+    } else {	
+        // scroll to the position that will show the target anchor below the fixed content breadcrumb	
+        iframeContents.scrollTop(pos);	
     }
 }
 
