@@ -11,14 +11,24 @@ permalink: /docs/ref/feature/
 ---
 
 <!-- Build list of feature pages -->
-{% assign featureDocs = site.pages | where: 'layout', 'feature' | sort: 'title' %}
+{% assign allFeatureDocs = site.pages | where: 'layout', 'feature' | sort: 'title' %}
+{% assign featureDocs = allFeatureDocs | where_exp: "page", "page.type != 'overview'" %}
+{% assign configOverviewDoc = allFeatureDocs | where: 'type', 'overview' %}
 <div id="background_container">
     <div id="toc_column" class="col-sm-3 collapsed in">
         <div id="toc_inner">
-            <h3 id="toc_title">Overview</h3>
             {% if featureDocs %}
             <div id="toc_container">
-                <div id="all_features_title">All Features A-Z</div>
+                <h3 id="toc_title">Server Features</h3>
+                <!-- Overview section -->
+                <ul>
+                    {% for overview in configOverviewDoc %}
+                    <li>
+                        <div role="button" class="overview_button" href="{{ overview.url }}" tabindex="0">OVERVIEW</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <!-- List of pages section -->
                 <ul>
                     {% for feature in featureDocs %}
                     <li>

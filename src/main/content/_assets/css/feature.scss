@@ -10,17 +10,6 @@
  *******************************************************************************/
  
 /* table of column styling */
-#toc_title {
-    color: #5D6A8E;
-    letter-spacing: 0;
-    line-height: 24px;
-    padding: 6px 39px 6px 14px;
-    width: 22%; /* mobile has to switch to 100% */
-    margin: 17px 0 0 0;
-    background: #fff;
-    display: none; /* for now, until the overview page is delivered */
-}
-
 .toc_title_selected {
     margin-left: -15px;
 }
@@ -61,17 +50,6 @@
 
 #toc_column ul li div[href]:focus {
     outline: none;
-}
-
-#all_features_title {
-    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
-    font-size: 14px;
-    color: #313653;
-    letter-spacing: 0.2px;
-    line-height: 26px;
-    text-transform: uppercase;
-    padding-top: 20px;
-    display: none;
 }
 
 /* content styling */
@@ -140,6 +118,24 @@ pre, pre > code {
 
 .breadcrumb_hamburger {
     display: none; 
+}
+
+/* TABLES */
+table {
+    display: block; 
+    overflow: auto; /* enable scrollbars if the content is too wide for the parent */
+}
+table, th, td {
+    border: 1px solid #dedede;
+    text-align: center;
+
+    & code {
+        background: inherit;
+        color: inherit;
+    }
+}
+td {
+    text-align: center;
 }
 
 @media (max-width: 767.98px) {
