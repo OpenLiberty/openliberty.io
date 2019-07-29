@@ -72,8 +72,6 @@ function addTOCClick() {
 
     $("#toc_container a").off('focusin').on('focusin', function(event) {
         if (!mousedown) {
-            // Scroll the parent window back up if it is scroll down
-            //adjustParentScrollView();
             // move the TOC in viewport if it is out of viewport
             adjustTOCView($(event.currentTarget));
         }
@@ -157,7 +155,6 @@ function handleIFrameDocPosition(href) {
     var hrefElement = "";
     var index = href.indexOf("#");
     var iframeContents = $('iframe[name=contentFrame]').contents();
-    //adjustParentScrollView();
     if (index !== -1) {
         if (href.length === index + 1) {
             // handle positioning to the top
@@ -202,7 +199,7 @@ function scrollToPos(pos) {
             scrollTop: pos
         }, 400);
         $('footer').show();
-    } else { //if (isIPadView()) {
+    } else {
         $('html, body').animate({
             scrollTop: pos
         }, 400);
@@ -447,10 +444,6 @@ function addExpandAndCollapseToggleButtons(subHeading, titleId) {
         mousedown = true;
     });
     toggleButton.on('focus', function() {
-        if (!mousedown) {
-            // Scroll the parent window back up if it is scroll down
-            //adjustParentScrollView();
-        }
         mousedown = false;
     });
 
@@ -686,8 +679,6 @@ function handleContentScrolling() {
                 } else {
                     createClickableBreadcrumb(getContentBreadcrumbTitle(), true);
                 }
-
-                //adjustParentScrollView();
             }
         };
 
@@ -851,22 +842,6 @@ function handleParentWindowScrolling() {
     }
 }
 
-/* This function could be removed after more testing */
-function adjustParentScrollView() {
-    if (!isMobileView() && !isIPadView()) {
-        // if the parent window scrolling is moved, move it back to the top. Otherwise the 
-        // viewport is moved to the doc_header space making the calculation of viewport to determine
-        // the content breadcrumb incorrect.
-        if ($(window.parent.document).scrollTop() > 0) {
-            // temporarily disable parent window scrolling listener
-            //$(window.parent.document).off('scroll');
-            //$(window.parent.document).scrollTop(0);
-            // enable back the scrolling listener
-            //handleParentWindowScrolling();
-        }
-    }
-}
-
 // display the toc element in viewport
 function adjustTOCView(resource) {
     var resourceTop = resource.parent()[0].getBoundingClientRect().top;
@@ -890,7 +865,6 @@ function addConfigContentFocusListener() {
     });
     $('#config_content').on("focusin", function(e) {
         if (!mousedown) {
-            //adjustParentScrollView();
             scrollToPos(0);
         }
         mousedown = false;
@@ -1027,6 +1001,7 @@ function addHamburgerClick() {
                 $("#breadcrumb_hamburger_title").hide();
                 // reset the container height to show table of content
                 $("#background_container").css("height", "auto");
+                $("#toc_inner").css("height", "auto");
                 // since the opening/closing of the toc container is managed by the hamburger,
                 // it always scrolls back to the top of the TOC. The codes here cannot override  
                 // the scrolling position as the default hamburger click event has not been fired
@@ -1172,7 +1147,6 @@ $(document).ready(function () {
     addTOCClick();
     addConfigContentFocusListener();
     handleInitialContent();
-    //handleParentWindowScrolling();
     addHamburgerClick();
     addWindowResizeListener();
     handlePopstate();
@@ -1231,5 +1205,7 @@ $(document).ready(function () {
 
 // Change height of toc if footer is in view so that fixed toc isn't visible through footer
 $(window).scroll(function() {
-    $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
+    if (!isMobileView()) {
+        $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
+    }
 });
