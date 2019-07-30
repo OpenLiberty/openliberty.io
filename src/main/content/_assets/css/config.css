@@ -14,28 +14,36 @@
 
 /* table of column styling */
 
-#row, #toc_column, #toc_inner, #config_content {
+#row, #toc_column, #toc_inner {
     height: 100%;
 }
 
 #toc_column {
     padding-left: 0;
     padding-top: 20px;
+    padding-right: 0;
 }
 
-#toc_title {
-    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
-    font-size: 14px;
-    color: #313653;
-    letter-spacing: 0.2px;
-    line-height: 26px;
-    position: relative;
-    margin-top: 10px;
-    margin-bottom: 0px; 
+#toc_inner {
+    margin-right: 0px;
+    padding-right: 0px;
+    overflow: auto;
+}
+
+@media (min-width: 767px) {
+    #toc_inner {
+        position: fixed;
+        width: 25%;
+        max-height: calc(100% - 121px);
+    }
 }
 
 a[target="contentFrame"] {
     color: #5D6A8E;
+}
+
+.toc_selected {
+    margin-right: 0px;
 }
 
 .toc_main_selected {
@@ -57,7 +65,6 @@ a[target="contentFrame"] {
 }
 
 iframe.config_content_frame {
-    height: 100%;
     width: 100%;
     border: none;
 }
@@ -101,15 +108,6 @@ div.paragraph p.subsection {
    arrow navigate thru the history */
 p.subHeading > a, p.subHeading > div.toogle > a {
     position: relative;
-}
-
-p.subHeading > a::before, p.subHeading > div.toogle > a::before {
-    display: inline-block;
-    content: " ";
-    margin-top: -125px;
-    height: 125px;
-    visibility: hidden;
-    pointer-events: none;
 }
 
 /* TABLE STYLING */
@@ -253,9 +251,6 @@ div.toggle:hover {
 }
 
 @media (min-width: 1025px) {
-    html, body, main {  
-        height: 95%;
-    }
 
     /* Has to put the overflow hidden css for desktop here as overriding the values in
        the mobile area still causes horizontal scrolling problem */
@@ -266,9 +261,6 @@ div.toggle:hover {
     /* hide scrollbar for iframe */
     #config_content {
         overflow: hidden;
-    } 
+    }
 
-    iframe.config_content_frame {
-        width: 102%;
-    } 
 }

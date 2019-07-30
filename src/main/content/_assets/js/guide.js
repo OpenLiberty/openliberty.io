@@ -110,36 +110,22 @@
     // show content for clicked OS tab
     $('.tab_link').click(function(event) {
         // hide all tab content and remove active class from all links
-        var last_paragraph = $(this).prevAll(".paragraph:not(.tab_link)").first();
-        var next_paragraph = $(this).nextAll(".paragraph:not(.tab_link)").first();
-        var tab_contents = last_paragraph.nextUntil(next_paragraph, ".tab_content");
-        var tab_links = last_paragraph.nextUntil(next_paragraph, ".tab_link");
-
-        // if no previous paragraphs use siblings instead
-        if (!(last_paragraph[0])) {
-            tab_contents = $(this).siblings(".tab_content");
-            tab_links = $(this).siblings(".tab_link");
-        }
-
-        tab_contents.hide();
-
-        tab_links.removeClass("active");
+        $(".tab_content").hide();
+        $(".tab_link").removeClass("active");
         
-        // show content of clicked tab and add active class to clicked tab
+        // get class of clicked tab and class of its respective content section
         var class_list = this.classList;
-        for(var i = 0; i < class_list.length; i++){
+        for (var i = 0; i < class_list.length; i++) {
             var class_name = class_list[i];
-            if(class_name !== "tab_link" && class_name.indexOf("_link") > -1){
-                var tab_content = class_name.replace("link", "section");
-                var content = tab_contents.filter(function(){
-                    return $(this).hasClass(tab_content);
-                });
-                $(content).show();
-                break;
+            if (class_name !== "tab_link" && class_name.indexOf("_link") > -1) {
+                var tab_content = "." + class_name.replace("link", "section");
+                var tab_class = "." + class_name;
             }
         }
-        
-        $(this).addClass("active");
+
+        // show content of clicked tab and add active class to clicked tab
+        $(tab_content).show();
+        $(tab_class).addClass("active");
     });
 
     // determine user's operating system and show prerequisite instructions for that OS
