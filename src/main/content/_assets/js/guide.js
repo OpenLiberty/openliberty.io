@@ -105,7 +105,51 @@
                 right: inSingleColumnView() ? 20 : 50	
             }).stop().fadeIn().delay(3500).fadeOut();
         });	
-    });    
+    });
+
+    // show content for clicked OS tab
+    $('.tab_link').click(function(event) {
+        // hide all tab content and remove active class from all links
+        $(".tab_content").hide();
+        $(".tab_link").removeClass("active");
+        
+        // get class of clicked tab and class of its respective content section
+        var class_list = this.classList;
+        for (var i = 0; i < class_list.length; i++) {
+            var class_name = class_list[i];
+            if (class_name !== "tab_link" && class_name.indexOf("_link") > -1) {
+                var tab_content = "." + class_name.replace("link", "section");
+                var tab_class = "." + class_name;
+            }
+        }
+
+        // show content of clicked tab and add active class to clicked tab
+        $(tab_content).show();
+        $(tab_class).addClass("active");
+    });
+
+    // determine user's operating system and show prerequisite instructions for that OS
+    function setDefaultTab() {
+        // set default OS to windows
+        var OSName = "windows";
+        // get user's operating system
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf("win") != -1) {
+            OSName = "windows";
+        }
+        if (ua.indexOf("mac") != -1) {
+            OSName = "mac";
+        }
+        if (ua.indexOf("linux") != -1) {
+            OSName = "linux";
+        }
+        // hide tab content except for selected tab and add active class to selected tab
+        var os_section = "." + OSName + "_section";
+        var os_class = "." + OSName + "_link";
+        $(".tab_content").hide();
+        $(os_section).show();
+        $(os_class).addClass("active");
+    }
 
     $(window).on('scroll', function(event) {
         // Check if a scroll animation from another piece of code is taking place and prevent normal behavior.
@@ -117,6 +161,7 @@
 
     $(window).on('load', function(){
         createEndOfGuideContent();
+        setDefaultTab();
 
         if (location.hash){
             handleFloatingTableOfContent();

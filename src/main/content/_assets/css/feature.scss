@@ -8,22 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-#background_container {
-    height: 1500px; /* initial height */
-}
-
+ 
 /* table of column styling */
-#toc_title {
-    color: #5D6A8E;
-    letter-spacing: 0;
-    line-height: 24px;
-    padding: 6px 39px 6px 14px;
-    width: 22%; /* mobile has to switch to 100% */
-    margin: 17px 0 0 0;
-    background: #fff;
-    display: none; /* for now, until the overview page is delivered */
-}
-
 .toc_title_selected {
     margin-left: -15px;
 }
@@ -33,6 +19,20 @@
     padding-top: 20px;
     padding-bottom: 20px;
     padding-left: 0px;
+    padding-right: 0px;
+}
+
+#toc_inner {
+    margin-right: 0px;
+    padding-right: 0px;
+    overflow: auto;
+}
+
+@media (min-width: 767px) {
+    #toc_inner {
+        position: fixed;
+        width: 25%;
+    }
 }
 
 .toc_selected {
@@ -52,20 +52,9 @@
     outline: none;
 }
 
-#all_features_title {
-    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
-    font-size: 14px;
-    color: #313653;
-    letter-spacing: 0.2px;
-    line-height: 26px;
-    text-transform: uppercase;
-    padding-top: 20px;
-    display: none;
-}
-
 /* content styling */
 #feature_content {
-    height: 100%;
+    min-height: 100vh;
 }
 
 #feature_content:focus {
@@ -74,6 +63,10 @@
 
 #content, #common_feature {
     padding: 20px 20px 50px 20px;
+}
+
+#content {
+    margin-right: 0px;
 }
 
 #feature_title, #common_feature_title {
@@ -107,7 +100,6 @@ div.sectionbody > div.paragraph > p {
 }
 
 .sect1 > h2 {
-    font-size: 20px;
     color: #24243B;
     letter-spacing: 0;
     line-height: 24px;
@@ -121,26 +113,28 @@ pre, pre > code {
     color: #5E6B8D;
     letter-spacing: 0;
     line-height: 24px;
-    display: inline-block;
-}
-
-div.sectionbody > div.ulist > ul {
-    padding-left: 20px;
-}
-
-div.sectionbody > div.ulist > ul > li > p {
-    font-size: 16px;
-    color: #24243B;
-    letter-spacing: 0;
-    line-height: 30px;
-}
-
-div.sectionbody > div.enableByList > ul > li > p {
-    color: #5D6A8E;
 }
 
 .breadcrumb_hamburger {
     display: none; 
+}
+
+/* TABLES */
+table {
+    display: block; 
+    overflow: auto; /* enable scrollbars if the content is too wide for the parent */
+}
+table, th, td {
+    border: 1px solid #dedede;
+    text-align: center;
+
+    & code {
+        background: inherit;
+        color: inherit;
+    }
+}
+td {
+    text-align: center;
 }
 
 @media (max-width: 767.98px) {

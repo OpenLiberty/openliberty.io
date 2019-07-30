@@ -30,7 +30,9 @@ function link_hotspots_to_file(code_block, header, index){
         hotspots = hotspots.add(code_block.prevUntil('.code_column', '.paragraph').find('code[class*=hotspot], span[class*=hotspot], div[class*=hotspot]'));
     }
     hotspots.each(function(){
-        $(this).data('file-index', index);
+        if($(this).data('file-index') === "undefined"){
+            $(this).data('file-index', index);
+        }        
     });
 }
 
@@ -369,13 +371,13 @@ function parse_tags(code_block){
     // Wrap the standalone text in spans so they can be selected between the range of start and end tags using jQuery's nextUntil()
     code_block.find('code').contents().each(function(){
         if (!$(this).is('span')) {
-            var newText = $(this).wrap('<span class="string"></span>');
-            $(this).replaceWith(newText);
+            var newText = $(this).wrap('<span class="string"></span>');     
+            $(this).replaceWith(newText);           
         }
     });
 
     // Remove the line numbers before the start/end tags and space between the line numbers and start/end tags
-    code_block.find("span:contains('tag::'), span:contains('end::')").each(function(){    
+    code_block.find("span:contains('tag::'), span:contains('end::')").each(function(){
         var line_num = $(this).prevAll('.line-numbers').first();
         line_num.nextUntil($(this)).andSelf().remove();
     });
@@ -391,6 +393,8 @@ function parse_tags(code_block){
     }
 
     var start_tags = code_block.find('span:contains(tag::)');
+    var end_tags = code_block.find('span:contains(end::)');
+
     start_tags.each(function(){
         var text = $(this).text();
         var start_index = text.indexOf('tag::') + 5;
@@ -408,11 +412,10 @@ function parse_tags(code_block){
                     break;
                 }
             }
-        }
-        
+        }        
         // If the tag is in the list of tags that should be hidden then hide it instead of just marking it.
         if(hide){
-            content.hide();
+            content.remove();
         }
         else {
             // Mark the lines start to end with a data-tag so that the hotspot can highlight them.
@@ -427,23 +430,20 @@ function parse_tags(code_block){
                 else {
                     $(this).attr('data-hotspot-tag', tag_name);
                 }
-            });             
+            });
         }
     });
 
-    // Hide the empty space before the start tags added before to select the range.
-    var empty_space = start_tags.prev('span').filter(function(){
-        return this.innerText.trim() == "";
+    // Remove the whitespace after the start and end tags up until the next line number.
+    start_tags.add(end_tags).each(function(){
+        var next_line_num = $(this).nextAll('.line-numbers').first();
+        if(next_line_num.length > 0){
+            var empty_space = $(this).nextUntil(next_line_num);
+            empty_space.remove();
+        }        
     });
-    empty_space.remove();
-    start_tags.remove();
 
-    // Hide the empty space after the end tags added before to select the range.
-    var end_tags = code_block.find('span:contains(end::)');
-    empty_space = end_tags.next('span').filter(function(){
-        return this.innerText.trim() == "";
-    });
-    empty_space.remove();
+    start_tags.remove();
     end_tags.remove();
 
     // Trim extra whitespace

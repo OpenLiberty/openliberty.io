@@ -54,7 +54,7 @@ function addReferenceClick() {
         var matchingTOCElement = getTOCElement(currentHref);
 
         // check that link isn't a full url containing http before updating hash
-        if (currentHref.indexOf("http") == -1) {
+        if (matchingTOCElement.length > 0 && currentHref.indexOf("http") == -1) {
             // handle the click event ourselves so as to take care of updating the hash 
             event.preventDefault();
             event.stopPropagation();
@@ -97,8 +97,6 @@ function getTOCElement(href) {
 
 // Add extra css to the doc, set the doc height, and scroll to the content
 function setupDisplayContent() {
-    setContainerHeight();
-    adjustParentWindow();
     $('#command_content').animate({
         scrollTop: 0
     }, 400);
@@ -111,17 +109,19 @@ function setupDisplayContent() {
 // - show the display content, 
 // - update hash if requested
 function loadContent(targetTOC, tocHref, addHash) {
-    $('footer').hide();
     if (targetTOC.length === 1) {
         setSelectedTOC(targetTOC);
     } else {
         deselectedTOC();
     }
     $("#command_content").load(tocHref, function(response, status) {
+        var doc_adoc = /[^/]*$/.exec(tocHref)[0].replace("html", "adoc");
+        $("#open_issue_link").attr("href", "https://github.com/OpenLiberty/docs/issues/new");
+        $("#edit_topic_link").attr("href", "https://github.com/OpenLiberty/docs/edit/develop/ref/commands/server/" + doc_adoc);
         if (status === "success") {
             updateMainBreadcrumb(targetTOC);
+            updateTitle(targetTOC);
             setupDisplayContent();
-            $('footer').show();
 
             // update hash only if thru normal clicking path
             if (addHash) {
@@ -131,8 +131,6 @@ function loadContent(targetTOC, tocHref, addHash) {
             $(this).focus(); // switch focus to the content for the reader
 
             addReferenceClick();
-        } else {
-            $('footer').show();
         }
     });
 }
@@ -155,7 +153,6 @@ function addOutlineToTabFocus(selector) {
         if (!mousedown && !windowFocus) {
             $(this).addClass("addFocus");
             // scroll the parent window back up if it is scroll down
-            adjustParentWindow();
         }
         mousedown = false;
         windowFocus = false;
@@ -193,6 +190,11 @@ function updateHashInUrl(href) {
     window.location.hash = "#" + hashInUrl;
 }
 
+// Update title in browser tab to show current page
+function updateTitle(currentPage) {
+    $("title").text(currentPage.text() + " - Server Commands - Open Liberty");
+}
+
 // check if mobile view or not
 function isMobileView() {
     if ($(window).width() <= mobileWidth) {
@@ -222,16 +224,6 @@ function selectFirstDoc() {
     }
 }
 
-// If parent window is scrolled down to the footer, it will shift the top of toc and doc content up
-// behind the fixed header. As a result, the backward tabbing towards the top (either toc or doc content)
-// would result in not seeing the toc or top of the doc. This function will shift the parent window back
-// to the top.
-function adjustParentWindow() {
-    if ($(window.parent.document).scrollTop() > 0) {
-        $(window.parent.document).scrollTop(0);
-    }    
-}
-
 // If the doc content is in focus by means of other than a mouse click, then goto the top of the 
 // doc.
 function addContentFocusListener() {
@@ -241,7 +233,6 @@ function addContentFocusListener() {
     });
     $('#command_content').on("focusin", function(e) {
         if (!mousedown) {
-            adjustParentWindow();
             $('#command_content').scrollTop(0);
         }
         mousedown = false;
@@ -336,7 +327,6 @@ function addWindowResizeListener() {
             }
             $("#breadcrumb_hamburger").hide();
             $("#breadcrumb_hamburger_title").hide();
-            setContainerHeight();
         }
     });
 }
@@ -354,4 +344,9 @@ $(document).ready(function () {
     } else {
         selectFirstDoc();
     }
+});
+
+// Change height of toc if footer is in view so that fixed toc isn't visible through footer
+$(document).scroll(function() {
+    $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
 });

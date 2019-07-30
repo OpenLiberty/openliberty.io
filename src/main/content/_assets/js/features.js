@@ -25,7 +25,7 @@ function addTOCClick() {
         var resource = $(event.currentTarget);
         //setSelectedTOC(resource);
         var currentHref = resource.attr("href");
-
+        
         // handle the click event ourselves so as to take care of updating the hash 
         event.preventDefault();
         event.stopPropagation();
@@ -65,13 +65,12 @@ function setSelectedTOC(resource) {
     resource.parent().addClass("toc_selected");
 }
 
-// Add extra css to the doc, set the doc height, and scroll to the content
-function setupDisplayContent() {
-    addClassToFeaturesThatEnableThisFeature();
-    setContainerHeight();
-    $('html, body').animate({
-        scrollTop: 0
-    }, 400);
+// Add extra css to the doc, set the doc height, and scroll to the content	
+function setupDisplayContent() {	
+    addClassToFeaturesThatEnableThisFeature();	
+    $('html, body').animate({	
+        scrollTop: 0	
+    }, 400);	
 }
 
 // This function
@@ -93,6 +92,7 @@ function loadContent(targetTOC, tocHref, addHash, versionHref) {
                 } else {
                     addVersionClick('default');
                 }
+                $('footer').show();
             } else {
                 updateMainBreadcrumb(targetTOC);
                 setupDisplayContent();
@@ -103,6 +103,7 @@ function loadContent(targetTOC, tocHref, addHash, versionHref) {
                     updateHashInUrl(tocHref);
                 }
             }
+            updateTitle(targetTOC);
             $(this).focus(); // switch focus to the content for the reader
         } else {
             $('footer').show();
@@ -168,7 +169,6 @@ function addOutlineToTabFocus(selector) {
         if (!mousedown && !windowFocus) {
             $(this).addClass("addFocus");
             // scroll the parent window back up if it is scroll down
-            adjustParentWindow();
         }
         mousedown = false;
         windowFocus = false;
@@ -230,6 +230,12 @@ function updateHashInUrl(href) {
     window.location.hash = "#" + hashInUrl;
 }
 
+
+// Update title in browser tab to show current page
+function updateTitle(currentPage) {
+    $("title").text(currentPage.text() + " - Server Features - Open Liberty");
+}
+
 // check if mobile view or not
 function isMobileView() {
     if ($(window).width() <= mobileWidth) {
@@ -271,16 +277,6 @@ function selectFirstDoc() {
     }
 }
 
-// If parent window is scrolled down to the footer, it will shift the top of toc and doc content up
-// behind the fixed header. As a result, the backward tabbing towards the top (either toc or doc content)
-// would result in not seeing the toc or top of the doc. This function will shift the parent window back
-// to the top.
-function adjustParentWindow() {
-    if ($(window.parent.document).scrollTop() > 0) {
-        $(window.parent.document).scrollTop(0);
-    }    
-}
-
 // If the doc content is in focus by means of other than a mouse click, then goto the top of the 
 // doc.
 function addFeatureContentFocusListener() {
@@ -290,7 +286,6 @@ function addFeatureContentFocusListener() {
     });
     $('#feature_content').on("focusin", function(e) {
         if (!mousedown) {
-            adjustParentWindow();
             $('#feature_content').scrollTop(0);
         }
         mousedown = false;
@@ -406,7 +401,6 @@ function addWindowResizeListener() {
             }
             $("#breadcrumb_hamburger").hide();
             $("#breadcrumb_hamburger_title").hide();
-            setContainerHeight();
         }
     });
 }
@@ -417,7 +411,7 @@ $(document).ready(function () {
     addHamburgerClick();
     addHashListener();
     addWindowResizeListener();
-
+    
     //manually tiggering it if we have hash part in URL
     if (window.location.hash) {
         $(window).trigger('hashchange');
@@ -425,3 +419,8 @@ $(document).ready(function () {
         selectFirstDoc();
     }
 })
+
+// Change height of toc if footer is in view so that fixed toc isn't visible through footer
+$(window).scroll(function() {
+    $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
+});
