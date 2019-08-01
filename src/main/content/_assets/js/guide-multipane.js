@@ -503,6 +503,10 @@ function showMobileCodeBlock(hotspot){
         // Clone the code column including its events and display it below the hotspot
         var code_clone = $("#code_column").clone(true);
         code_clone.removeAttr('id');
+        code_clone.css({ // Remove top/bottom that could have been set on the desktop code column.
+            'top': '',
+            'botom': ''
+        });
         code_clone.addClass('mobile_code_column');
         code_clone.addClass("open");
 
