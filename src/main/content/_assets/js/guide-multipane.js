@@ -144,14 +144,24 @@ function showCorrectCodeBlock(id, index, switchTabs, code_block) {
             code_section.find('.code_column').not(code_block).hide();
             code_block.show();
             if(switchTabs){
-                // Load all of the tabs for this section
-                var subsection_files = code_sections[id];
-                for(var i = subsection_files.length - 1; i >= 0; i--){
-                    setActiveTab(subsection_files[i].tab);
-                }
-                if(recent_sections[id]) {
-                    setActiveTab(tab);
-                }
+                if(inSingleColumnView()){
+                    // Find the tab in mobile view to set active.
+                    tab = code_sections[id][index].tab;
+                    var tab_name = $(tab).text();
+                    var mobile_tab = code_section.find('.code_column_tab:visible').filter(function(){
+                        return $(this).text().trim() == tab_name;
+                    });
+                    setActiveTab(mobile_tab);
+                } else {
+                    // Load all of the tabs for this section
+                    var subsection_files = code_sections[id];
+                    for(var i = subsection_files.length - 1; i >= 0; i--){
+                        setActiveTab(subsection_files[i].tab);
+                    }
+                    if(recent_sections[id]) {
+                        setActiveTab(tab);
+                    }
+                }                
             }
             hideDuplicateTabs(id, code_block);
         }
@@ -203,8 +213,9 @@ var handleHotspotHover = debounce(function(hotspot){
             // Switch to the correct tab
             var tab = code_sections[header.id][fileIndex].tab;
             setActiveTab(tab);
-        }        
-        showCorrectCodeBlock(header.id, fileIndex, false, code_block);
+        }
+        var switchTabs = inSingleColumnView() ? true : false;
+        showCorrectCodeBlock(header.id, fileIndex, switchTabs, code_block);
 
         // Highlight the code
         var ranges = hotspot.data('highlight-ranges');
