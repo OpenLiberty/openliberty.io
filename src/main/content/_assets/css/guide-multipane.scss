@@ -101,7 +101,9 @@
 
     @media screen and (max-width: 1169.98px){
         &.open {
-            display: block;                     
+            display: block;       
+            margin-left: -23px;
+            margin-right: -31px;
 
             .CodeRay, code {
                 background-color: inherit !important;
@@ -136,6 +138,13 @@
 
             .code_colummn_content {
                 overflow: auto;
+            }
+
+            .CodeRay .highlightSection {
+                padding-left: 44px;
+                padding-right: 34px;
+                margin-left: -44px;
+                margin-right: -34px;
             }
     
             .mobile_code_caret {
@@ -413,6 +422,12 @@
 }
 
 @media (max-width: 1169.98px) {
+    #guide_content pre code {
+        white-space: pre-wrap;
+    }
+    #guide_content .code_column .CodeRay {
+        padding: 9.5px 16px; // Override guide.css
+    }
     #guide_content code.hotspot:hover,
     #guide_content .code_command:hover {
         cursor: pointer;

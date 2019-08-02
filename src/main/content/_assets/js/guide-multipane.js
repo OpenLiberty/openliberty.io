@@ -72,10 +72,11 @@ function highlightCodeRange(code_section, fromLine, toLine, scroll){
 
     if(scroll){
         var container = code_section.parents(".code_column_container");
-        var scrollTop = code_section.parent()[0].scrollTop;
-        var position = range.position().top;
+        var containerPosition = code_section.parent()[0].scrollTop;
+        var highlightPosition = range.position().top;
         var titleBarHeight = container.find(".code_column_title_container").outerHeight();
-        container.find(".code_column_content").animate({scrollTop: scrollTop + position - titleBarHeight});
+        var scrollPosition = containerPosition + highlightPosition - titleBarHeight;
+        container.find(".code_column_content").animate({scrollTop: scrollPosition});
     }        
 }
 
@@ -360,23 +361,6 @@ function hideDuplicateTabs(id, code_block){
     activeDuplicates.hide();
 }
 
-// function loadMobileTabs(section){
-//     // Reveal the files from previous sections in case the user loaded a later step from a bookmarked hash.
-//     var code_column = section ? section : $("#code_column");
-//     var hiddenTabs = code_column.find(".code_column_tabs li:hidden");
-//     for(var i = hiddenTabs.length - 1; i >= 0; --i){
-//         var tab = hiddenTabs.get(i);
-//         var fileName = tab.innerText.trim();
-//         // Check that only the most recent tab for this file is showing.
-//         var visibleTabsWithSameName = code_column.find(".code_column_tabs li:visible").filter(function(){
-//             return this.innerText.trim() === fileName;
-//         });
-//         if(visibleTabsWithSameName.length === 0){
-//             $(tab).show();
-//         }
-//     }
-// }
-
 function loadPreviousStepsTabs(section){
     // Reveal the files from previous sections in case the user loaded a later step from a bookmarked hash.
     var code_column = section ? section : $("#code_column");
@@ -539,7 +523,7 @@ function showMobileCodeBlock(hotspot){
         // If the hotspot is within a table, insert the code in a row below it.
         var table_row = hotspot.parents('tr');
         if(table_row.length === 1){
-            var new_tr = $("<tr></tr>");
+            var new_tr = $("<tr style='background:none'></tr>");
             var new_td = $("<td colspan='2'></td>");
             new_td.css('padding', '0'); // Make the code full width
             new_tr.append(new_td);
@@ -565,6 +549,9 @@ function expandMobileCodeFile(code_column){
     code_column.css({
         'height': 'auto'
     });
+    code_column.find('.code_column_content').css({
+        'overflow-y': 'scroll'
+    });
     code_column.removeClass('gradient');
     expand_button.hide();
     expand_button.siblings('.mobile_code_collapse').show();
@@ -575,7 +562,12 @@ function expandMobileCodeFile(code_column){
 function collapseMobileCodeFile(code_column){
     var collapsed_height = code_column.data('collapsed_height');
     var collapse_button = code_column.find('.mobile_code_collapse');
-    code_column.css('height', collapsed_height);
+    code_column.css({
+        'height': collapsed_height
+    });
+    code_column.find('.code_column_content').css({
+        'overflow-y': 'hidden'
+    });
     code_column.addClass('gradient');
 
     // Hide the collapse button and show the expand button.
@@ -906,7 +898,7 @@ $(document).ready(function() {
     }
 
     $(".copyFileButton").click(function(event){
-        event.preventDefault();        
+        event.preventDefault();
         var code_column = $(this).parents('.code_column_container');
         var target_copy = code_column.find(".code_column:visible .content code").clone();
         target_copy.find('.line-numbers').remove(); // Remove the line numbers from being copied.
