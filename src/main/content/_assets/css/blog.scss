@@ -336,6 +336,10 @@
     }
 }
 
+#older_posts {
+    margin-top: -1px;
+}
+
 .blog_post_content {
     width: 100%;
     padding-top: 40px;
@@ -421,11 +425,18 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    margin-bottom: 40px;
+    margin-bottom: 32px;
     color: #5E6B8D;
 
     & span:last-child {
         display: none;
+    }
+
+    &:empty {
+        margin-bottom: 20px;
+        & + .read_more_link_container {
+            margin-top: -50px;
+        }
     }
 }
 
