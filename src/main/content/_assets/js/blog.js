@@ -51,7 +51,6 @@ function filterPosts(tag) {
 
 
 function removeFilter() {
-    //updateSearchUrl();
     $('#filter').hide();
     $('.blog_post_content').show();
     $('#older_posts').show();
