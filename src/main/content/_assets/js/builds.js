@@ -27,7 +27,8 @@ function render_builds(builds, parent) {
     builds.forEach(function(build) {
 
         var row = $('<tr></tr>');        
-        
+        var download_arrow = '<div class="download_arrow"><div class="table_arrow"></div><div class="table_line"></div></div>';
+
         if(parent.hasClass('release_table_body')) {
             if(build.version.indexOf('-RC') > -1){
                 build.version.replace('-RC', ' Release Candidate');
@@ -55,12 +56,12 @@ function render_builds(builds, parent) {
                     row.append(empty_cell.clone());
                     row.append(empty_cell.clone());
                 }
-                zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">Download all</a></td>');
+                zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
                 
             }  else {
-                zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">Download all</a></td>');
+                zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
+                row.append(zip_column);
             }                      
-            row.append(zip_column);   
         } else {
             var date = new Date(build.date);
             var year = date.getFullYear();
@@ -77,8 +78,7 @@ function render_builds(builds, parent) {
             var log_column = $('<td><a href="' + build.build_log + '" class="' + analytics_class_name + ' skip_outbound_link_analytics view_logs_link">View logs</a></td>');            
             row.append(log_column);
 
-            var zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">Download all</a></td>');
-        
+            var zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
             row.append(zip_column);
         }
 

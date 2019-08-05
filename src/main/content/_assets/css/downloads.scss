@@ -210,8 +210,30 @@ html, body{
     transition: all .3s;
 }
 
-#runtime_download_link:hover .arrow {
+#runtime_download_link:hover .arrow, td a:hover .table_arrow {
     transform: translateY(2px);
+}
+
+.download_arrow {
+    display: inline-block;
+}
+
+.table_arrow {
+    display: inline-block;
+    width: 12px;
+    height: 17px;
+    background-image: url('/img/download_arrow_blue.svg');
+    background-repeat: no-repeat;
+    transition: all .3s;
+    margin-right: 10px;
+}
+
+.table_line {
+    width: 12px;
+    height: 3px;
+    background-image: url('/img/download_arrow_line_blue.svg');
+    background-repeat: no-repeat;
+    position: relative;
 }
 
 #runtime_download_link .line {
@@ -536,12 +558,6 @@ html, body{
     padding-left: 24px;
 }
 
-.build_table tbody:before {
-    height: 11px;
-    content: "";
-    display: block;
-}
-
 .build_table tbody tr td:last-child {
     text-align: right;
     padding-right: 20px;
@@ -598,6 +614,18 @@ html, body{
     border-bottom: 1px solid #C8D2D2;
 }
 
+.white_table tbody tr:nth-child(odd) {
+    background-color: #f6f8fa;
+}
+
+#runtime_releases_table_container tbody tr {
+    background-color: #FFFFFF;
+}
+
+#runtime_releases_table_container .white_table tbody tr:nth-child(8n), #runtime_releases_table_container .white_table tbody tr:nth-child(8n-1), #runtime_releases_table_container .white_table tbody tr:nth-child(8n-2), #runtime_releases_table_container .white_table tbody tr:nth-child(8n-3) {
+    background-color: #f6f8fa;
+}
+
 .white_table tbody tr:hover {
     background-color: #F5F8FD;
 }
@@ -620,12 +648,19 @@ html, body{
 
 .white_table tbody a{
     font-weight: 500;
-    color: #5E6B8D;
+    color: #546FB5;
     letter-spacing: 0;
 }
 
 .white_table tbody a:hover{
     cursor: pointer;
+    color: #6787D9;
+    & .table_arrow {
+        background-image: url('/img/download_arrow_blue_hover.svg');
+    }
+    & .table_line {
+        background-image: url('/img/download_arrow_line_blue_hover.svg');
+    }
 }
 
 .white_table .table_date {
