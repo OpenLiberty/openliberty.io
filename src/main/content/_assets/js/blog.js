@@ -80,4 +80,14 @@ function init() {
 
 $(document).ready(function() {
     init();
+
+    // if blog post has no tags, add col-md-7 class so that text doesn't overlap
+    $('.blog_tags_container').each(function() {
+        if ($(this).is(':empty')) {
+            // get author container for same post
+            var author_container = $(this).parent().prev().children('.blog_post_author_data_container');
+            author_container.addClass("col-md-7");
+        }
+    });
+
 });
