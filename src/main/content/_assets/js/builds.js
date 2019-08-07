@@ -23,25 +23,33 @@ function render_builds(builds, parent) {
     parent.empty();
 
     var analytics_class_name = 'link_' + parent.parent().data('builds-id');
-    builds.forEach(function(build) {
-        console.log("build:", build);
-        var row = $('<tr></tr>');
-        var download_arrow = '<div class="download_arrow"><div class="table_arrow"></div><div class="table_line"></div></div>';
+    var download_arrow = '<div class="download_arrow"><div class="table_arrow"></div><div class="table_line"></div></div>';
 
+    builds.forEach(function(build) {
+        var row = $('<tr></tr>');
+        console.log("build");
+        // both releases tables (ol releases and eclipse developer tools releases)
         if(parent.hasClass('release_table_body')) {
             if(build.version.indexOf('-RC') > -1){
                 build.version.replace('-RC', ' Release Candidate');
             }
-            var version_column = $('<td><span class="table_date">' + build.version + '</span></td>');                        
             var zip_column;
 
-            // DIFFERENT
+            // ol releases table only
             if(parent.parent().data('builds-id') == "runtime_releases"){
+                var web_profile_row = $('<tr></tr>');
+                var microprofile_row = $('<tr></tr>');
+                var all_ga_features_row = $('<tr></tr>');
                 var package_locations = build.package_locations;
-                var version_column = $('<td rowspan="3"><span class="table_date">' + build.version + '</span></td>');
-                // ONLY JAVA EE AND WEB PROFILE STUFF
+                if (build.version == "19.0.0.7") {
+                    package_locations = ["openliberty-javaee8-19.0.0.7.zip","openliberty-webProfile8-19.0.0.7.zip","openliberty-microProfile3-19.0.0.7.zip"];
+                }
+                console.log("package_locations:", package_locations);
                 if(package_locations !== null && package_locations !== undefined){
+                    var num_packages = package_locations.length + 1;
+                    var version_column = $('<td rowspan="' + num_packages + '"><span class="table_date">' + build.version + '</span></td>');
                     row.append(version_column);
+
                     for(var i = 0; i < package_locations.length; i++){
                         var package_name = package_locations[i].split("=")[0];
                         package_name = package_name.toLowerCase();
@@ -54,35 +62,32 @@ function render_builds(builds, parent) {
                             row.append(package_column);
                         }
                         else if (package_name.indexOf("web") > -1) {
-                            web_profile_row = $('<tr></tr>');
                             web_profile_row.append("<td>Web Profile 8</td>");
                             web_profile_row.append(package_column);
                         }
+                        else if (package_name.indexOf("microprofile") > -1) {
+                            microprofile_row.append('<td>MicroProfile 3</td>');
+                            microprofile_row.append(package_column);
+                        }
 
                     }
-                    var all_ga_features_row = $('<tr></tr>');
                     all_ga_features_row.append('<td>All GA Features</td>');
                     all_ga_features_row.append('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
-                
                 }
                 else{
                     var version_column = $('<td><span class="table_date">' + build.version + '</span></td>');            
                     row.append(version_column);
                     row.append('<td>All GA Features</td>');
                     row.append('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
-
                 }
-
-                // add microprofile and all ga features rows here
-                // var microprofile_row = $('<tr></tr>');
-                // microprofile_row.append('<td>MicroProfile 3</td>');
-                // microprofile_row.append('<td></td>');
-
+            // eclipse developer tools releases only
             }  else {
-                row.append(version_column);
+                var version_column = $('<td><span class="table_date">' + build.version + '</span></td>');
                 zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
+                row.append(version_column);
                 row.append(zip_column);
             }
+        // remaining tables (ol development builds and eclipse development builds)
         } else {
             var date = new Date(build.date);
             var year = date.getFullYear();
@@ -105,7 +110,7 @@ function render_builds(builds, parent) {
 
         parent.append(row);
         parent.append(web_profile_row);
-        // parent.append(microprofile_row);
+        parent.append(microprofile_row);
         parent.append(all_ga_features_row)
 
     });
