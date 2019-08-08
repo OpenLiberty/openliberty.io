@@ -18,6 +18,8 @@ jobs:
       if: branch = demo1
     - env: ROUTE=$SITE_HOTSPOT_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_HOTSPOT_BRANCH JEKYLL_DRAFT_GUIDES=true
       if: branch = hotspots
+    - env: ROUTE=$SITE_ANTORA_DOMAIN
+      if: branch = antora
 
 script: >
     if [ $JEKYLL_ENV == "production" ]; then
@@ -34,6 +36,7 @@ branches:
     - development
     - demo1
     - hotspots
+    - antora
 
 sudo: false # route your build to the container-based infrastructure for a faster build
 
@@ -67,4 +70,9 @@ deploy:
     on:
       branch: hotspots
     script: env ROUTE=$SITE_HOTSPOT_DOMAIN ./.travis/cf-push.sh
+  - provider: script
+    skip_cleanup: true
+    on:
+      branch: antora
+    script: env ROUTE=$SITE_ANTORA_DOMAIN ./.travis/cf-push.sh
 
