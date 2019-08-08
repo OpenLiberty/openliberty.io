@@ -27,7 +27,6 @@ function render_builds(builds, parent) {
 
     builds.forEach(function(build) {
         var row = $('<tr></tr>');
-        console.log("build");
         // both releases tables (ol releases and eclipse developer tools releases)
         if(parent.hasClass('release_table_body')) {
             if(build.version.indexOf('-RC') > -1){
@@ -41,10 +40,6 @@ function render_builds(builds, parent) {
                 var microprofile_row = $('<tr></tr>');
                 var all_ga_features_row = $('<tr></tr>');
                 var package_locations = build.package_locations;
-                if (build.version == "19.0.0.7") {
-                    package_locations = ["openliberty-javaee8-19.0.0.7.zip","openliberty-webProfile8-19.0.0.7.zip","openliberty-microProfile3-19.0.0.7.zip"];
-                }
-                console.log("package_locations:", package_locations);
                 if(package_locations !== null && package_locations !== undefined){
                     var num_packages = package_locations.length + 1;
                     var version_column = $('<td rowspan="' + num_packages + '"><span class="table_date">' + build.version + '</span></td>');
