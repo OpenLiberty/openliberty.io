@@ -4,6 +4,7 @@ title: Blog
 css: 
 - blog
 - header-light
+js: blog
 permalink: /blog/
 ---
 
@@ -23,11 +24,19 @@ permalink: /blog/
                 <span id="star6" class="star d-none d-md-block"></span>
                 <h2 class="blog_subtitle">Never miss a post!</h2>
                 <p class="blog_subtext">Be sure to follow <a class="green_link" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@openlibertyio</a> on Twitter or subscribe to our <a class="green_link" href="https://openliberty.io/feed.xml" target="_blank" rel="noopener">RSS feed</a>.</p>
+                <h2 class="blog_subtitle">Featured Tags</h2>
+                <div id="featured_tags_list">
+
+                </div>
                 <img id="ufo_images_desktop" class="d-none d-lg-block" src="/img/blog_images_desktop.svg" alt="ufo and clouds">
                 <img id="ufo_images_tablet" class="d-none d-md-block d-lg-none" src="/img/blog_images_tablet.svg" alt="ufo and clouds">
             </div>
             <div id="right_column" class="col-md-12 col-lg-8 offset-lg-4">
-
+                <div id="filter">
+                    <img id="x_button" src="/img/blog_x_button.svg" onclick="removeFilter(); updateSearchUrl();">
+                    <span>Filtered by tag: </span>
+                    <span id="filter_tag"></span>
+                </div>
                 <!-- Show blog posts from the past 30 days as Latest Posts unless there are less than 3
                      2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
                 {% assign past_month_count = 0 %}
@@ -63,7 +72,7 @@ permalink: /blog/
                             <p class="green_bar">Latest Posts</p>
                             {% endif %}
                             {% if count <= latest_posts_count %}
-                                <div class="blog_post_content">
+                                    <div class="blog_post_content">
                                     {% if post.redirect_link %}
                                         <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link">{{ post.title | escape }}</a>
                                             <span class="continued_text">
@@ -84,7 +93,7 @@ permalink: /blog/
                                         {% endif %}
                                     </p>
                                     <div class="row">
-                                        <div class="blog_post_author_data_container col-md-7">
+                                        <div class="blog_post_author_data_container">
                                             <div class="author_images_container">
                                                 <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
                                                 {% for author in post.additional_authors %}
@@ -103,6 +112,9 @@ permalink: /blog/
                                             {% endfor %}
                                             <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="blog_tags_container col-md-7"></div>
                                         <div class="read_more_link_container col-sm-12 col-md-5">
                                         {% if post.redirect_link %}
                                             <a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="read_more_link read_more_link_external">Read more</a>
@@ -111,17 +123,15 @@ permalink: /blog/
                                         {% endif %}
                                         </div>
                                     </div>
-                                    {% if count != latest_posts_count %}
-                                        <div class="bottom_border"></div>
-                                    {% endif %}
+                                    <div class="bottom_border"></div>
                                 </div>
                             {% if count == latest_posts_count %}
-                                <p class="green_bar">Older Posts</p>
+                                <p id="older_posts" class="green_bar">Older Posts</p>
                             {% endif %}
                             {% else %}
                                 <div class="blog_post_content">
                                     {% if post.redirect_link %}
-                                        <h2 class="blog_post_title_condensed"><a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link_condensed">{{ post.title | escape }}</a>
+                                        <h2 class="blog_post_title_condensed"><a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link blog_post_title_link_condensed">{{ post.title | escape }}</a>
                                             <span class="continued_text">
                                                 {% assign continue_text = ' [Continued on ' %}
                                                 {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
@@ -129,11 +139,11 @@ permalink: /blog/
                                             </span>
                                         </h2>
                                     {% else %}
-                                        <h2 class="blog_post_title_condensed"><a href="{{ post.url | relative_url }}" class="blog_post_title_link_condensed">{{ post.title | escape }}</a></h2>
+                                        <h2 class="blog_post_title_condensed"><a href="{{ post.url | relative_url }}" class="blog_post_title_link blog_post_title_link_condensed">{{ post.title | escape }}</a></h2>
                                     {% endif %}
                                     <p class="blog_post_date_mobile d-sm-block d-md-none">{{ post.date | date: date_format }}</p>
                                     <div class="row">
-                                        <div class="blog_post_author_data_container col-md-7">
+                                        <div class="blog_post_author_data_container">
                                             <div class="author_images_container">
                                                 <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
                                                 {% for author in post.additional_authors %}
@@ -155,6 +165,9 @@ permalink: /blog/
 
                                             <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="blog_tags_container col-md-7"></div>
                                         <div class="read_more_link_container col-sm-12 col-md-5">
                                         {% if post.redirect_link %}
                                             <a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="read_more_link read_more_link_external">Read more</a>
@@ -172,7 +185,7 @@ permalink: /blog/
                 {% endfor %}
                 <div class="row blog_post_row">
                     <div id="final_post" class="blog_post_content">
-                        <p class="blog_post_title_link">Stay lightyears ahead.</p>
+                        <p id="final_post_title">Stay lightyears ahead.</p>
                         <p>Follow <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@openlibertyio</a> on Twitter or subscribe to our <a class="orange_link_light_background" href="https://openliberty.io/feed.xml" target="_blank" rel="noopener">RSS feed</a>.</p>
                     </div>
                 </div>
