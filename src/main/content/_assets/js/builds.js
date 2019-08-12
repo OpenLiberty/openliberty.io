@@ -96,7 +96,7 @@ function render_builds(builds, parent) {
             var tests_column = $('<td><a href="' +  build.tests_log +'" class="'+ analytics_class_name + ' skip_outbound_link_analytics tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
             row.append(tests_column);
             
-            var log_column = $('<td><a href="' + build.build_log + '" class="' + analytics_class_name + ' skip_outbound_link_analytics view_logs_link">View logs</a></td>');            
+            var log_column = $('<td><a href="' + build.build_log + '" class="' + analytics_class_name + ' skip_outbound_link_analytics view_logs_link" target="_blank" rel="noopener">View logs</a></td>');            
             row.append(log_column);
 
             var zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
