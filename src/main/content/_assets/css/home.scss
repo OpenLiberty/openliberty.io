@@ -17,6 +17,19 @@
     padding-top: 60px;
 }
 
+.star {
+    width: 4px;
+    height: 4px;
+    background-color: #C8D2D2;
+    border-radius: 50%; 
+}
+
+#cloud_shadow {
+    position: absolute;
+    top: 310px;
+    right: 0px;
+}
+
 #cloud_1 {
     position: absolute;
     top: 676px;
@@ -58,7 +71,7 @@
     right: 460px;
     width: 238px;
     height: 309px;
-    animation: person_hovering 4.5s infinite;
+    animation: object_hovering 4.5s infinite;
     animation-timing-function: linear;
 }
 
@@ -66,7 +79,7 @@
     position: absolute;
     top: 335px;
     right: 385px;
-    animation: coffee_hovering 4s infinite;
+    animation: object_hovering 4s infinite;
     animation-timing-function: linear;
 }
 
@@ -74,31 +87,34 @@
     position: absolute;
     top: 475px;
     right: 360px;
-    animation: shoe_hovering 3.5s infinite;
+    animation: object_hovering 3.5s infinite;
     animation-timing-function: linear;
 }
+
 
 #laptop {
     position: absolute;
     top: 600px;
     right: 450px;
-    animation: computer_hovering 5.5s infinite;
+    animation: object_hovering 5.5s infinite;
     animation-timing-function: linear;
 }
 
+
 #ball {
     position: absolute;
-    top: 636px;
+    top: 645px;
     right: 676px;
-    animation: ball_hovering 3.6s infinite;
+    animation: object_hovering 3.6s infinite;
     animation-timing-function: linear;
 }
+
 
 #dog {
     position: absolute;
     top: 660px;
     right: 674px;
-    animation: dog_hovering 3.5s infinite;
+    animation: object_hovering 3.5s infinite;
     animation-timing-function: linear;
 }
 
@@ -106,7 +122,7 @@
     position: absolute;
     top: 775px;
     right: 525px;    
-    animation: phone_hovering 5s infinite;
+    animation: object_hovering 5s infinite;
     animation-timing-function: linear;
 }
 
@@ -114,7 +130,7 @@
     position: absolute;
     top: 633px;
     right: 218px;
-    animation: mouse_hovering 5.5s infinite;
+    animation: object_hovering 5.5s infinite;
     animation-timing-function: linear;
 }
 
@@ -133,11 +149,16 @@
 #person_2 {
     position: absolute;
     top: 535px;
-    right: 200px;
-    animation: person_2_hovering 4.5s infinite;
+    right: 205px;
+    animation: object_hovering 4.3s infinite;
     animation-timing-function: linear;
 }
 
+@keyframes object_hovering {
+    50% {
+        transform: translateY(16px) translateX(-6px) rotate(4deg);
+    }
+}
 
 #intro_content {
     position: relative;
@@ -195,79 +216,6 @@
     right: calc(50% - 185px);
 }
 
-#shooting_star_1 {
-    position: absolute;
-    top: 280px;
-    right: calc(50% + 500px);
-    animation: shooting_star_1_fly_lg 20s infinite;
-}
-
-
-@keyframes shooting_star_1_fly_lg {
-    0% {
-        opacity: 0;
-    }
-    30% {
-        opacity: 0;
-        top: 280px;
-        transform: translateX(-30px);
-    }
-    33% {
-        opacity: 1;
-    }
-    37% {
-        opacity: 0;
-        top: 120px;
-        transform: translateX(600px);
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-@keyframes shooting_star_1_fly_md {
-    0% {
-        opacity: 0;
-    }
-    30% {
-        opacity: 0;
-        top: 200px;
-        transform: translateX(50px);
-    }
-    33% {
-        opacity: 1;
-    }
-    37% {
-        opacity: 0;
-        top: 100px;
-        transform: translateX(560px);
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-@keyframes shooting_star_1_fly_sm {
-    0% {
-        opacity: 0;
-    }
-    30% {
-        opacity: 0;
-        top: 120px;
-        transform: translateX(170px);
-    }
-    33% {
-        opacity: 1;
-    }
-    37% {
-        opacity: 0;
-        top: 70px;
-        transform: translateX(550px);
-    }
-    100% {
-        opacity: 0;
-    }
-}
 
 #star1 {
     position: absolute;
@@ -355,10 +303,6 @@
         right: calc(50% + 380px);
     }
 
-    #shooting_star_1 {
-        animation: shooting_star_1_fly_md 15s infinite;
-    }
-
 }
 
 @media (max-width: 991.98px) {
@@ -396,10 +340,6 @@
     #star3 {
         top: 80px;
         right: calc(50% + 300px);
-    }
-
-    #shooting_star_1 {
-        animation: shooting_star_1_fly_sm 15s infinite;
     }
 
 }
@@ -467,7 +407,7 @@
 }
 
 .learn_more_container {
-    margin-bottom: 50px;
+    margin-bottom: 100px;
 }
 
 .learn_more_link {
