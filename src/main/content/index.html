@@ -115,12 +115,82 @@ css: home
                 <h3 id="logos_title">Open Liberty integrates with the Open Source community</h3>
             </div>
         </div>
-        <div class="row">first row of logos will go here</div>
-        <div class="row">second row of logos will go here</div>
+        <div class="logos_row row">first row of logos will go here</div>
+        <div class="logos_row row">second row of logos will go here</div>
     </div>
 </div>
 
 
+<!-- NEWS -->
+<div id="news_container" class="container">
+    <img id="cloud_6" src="/img/home_cloud_1.png">
+    <img id="cloud_7" src="/img/home_cloud_3.png">
+    <img id="cloud_8" src="/img/home_cloud_3.png">
+    <img id="cloud_9" src="/img/home_cloud_1.png">
+
+    <div class="row">
+        <h2 id="news_title">Open Liberty News</h2>
+        <p id="news_text">Check out the latest news on our blog and follow us on Twitter.</p>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div id="blog_post">
+                {% for post in site.posts limit:1 %}
+                    {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
+                    {% if post.redirect_link %}
+                        <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link">{{ post.title | escape }}</a>
+                            <span class="continued_text">
+                                {% assign continue_text = ' [Continued on ' %}
+                                {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
+                                {{ continue_text | append: domain_name }}
+                            </span>
+                        </h2>
+                    {% else %}
+                        <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
+                    {% endif %}
+
+                    <div class="blog_post_author_data_container">
+                        <div class="author_images_container">
+                            <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                            {% for author in post.additional_authors %}
+                                <img src="{{ author.image }}" class="blog_post_author_image" alt="image of author">
+                            {% endfor %}
+                        </div>
+                        <a class="blog_post_author_name" href="{{ post.author_github }}" target="_blank" rel="noopener">{{ post.author }}</a>
+                        {% for author in post.additional_authors %}
+                            {% if additional_author_count == 1 %}
+                                <span>and </span>
+                                <a class="blog_post_author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }}</a>
+                            {% else %}
+                                <span>and {{ additional_author_count }} others</span>
+                                {% break %}
+                            {% endif %}
+                        {% endfor %}
+                        <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
+                    </div>
+
+                    <p class="blog_post_paragraph">
+                        {% if post.blog_description %}
+                            {{ post.blog_description }}
+                        {% else %}
+                            {{ post.content | strip_html | truncatewords: 60 }}
+                        {% endif %}
+                    </p>
+                {% endfor %}
+                <a id="blog_link" href="/blog/">View all Open Liberty Blog posts</a>
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="twitter_div">
+                <img id="ufo_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+                <a id="twitter_handle" href="https://twitter.com/OpenLibertyIO">@openliberty.io</a>
+                <a id="twitter_link" href="https://twitter.com/OpenLibertyIO">Follow</a>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 <!-- SUPPORT -->
 <div id="support_background">
@@ -140,6 +210,13 @@ css: home
                 <a id="support_link" href="/support/">Get Open Liberty support</a>
             </div>
             <div id="support_image" class="col-md-6">
+                <span id="star6" class="star"></span>
+                <span id="star7" class="star"></span>
+                <span id="star8" class="star"></span>
+                <span id="star9" class="star"></span>
+                <span id="star10" class="star"></span>
+                <span id="star11" class="star"></span>
+                <span id="star12" class="star"></span>
                 <img id="support_ufo" src="{{ "/img/ufo_with_guide.png" | relative }}" class="img-fluid" alt="Mothership UFO">
             </div>
         </div>
@@ -148,12 +225,12 @@ css: home
 
 <!-- GET INVOLVED -->
 <div id="get_involved_container" class="container">
-    <img id="cloud_6" src="/img/home_cloud_1.png">
-    <img id="cloud_7" src="/img/home_cloud_1.png">
-    <img id="cloud_8" src="/img/home_cloud_5.png">
-    <img id="cloud_9" src="/img/home_cloud_3.png">
-    <img id="cloud_10" src="/img/home_cloud_3.png">
-    <img id="cloud_11" src="/img/home_cloud_6.png">
+    <img id="cloud_10" src="/img/home_cloud_1.png">
+    <img id="cloud_11" src="/img/home_cloud_1.png">
+    <img id="cloud_12" src="/img/home_cloud_5.png">
+    <img id="cloud_13" src="/img/home_cloud_3.png">
+    <img id="cloud_14" src="/img/home_cloud_3.png">
+    <img id="cloud_15" src="/img/home_cloud_6.png">
     <div class="row">
         <div class="col-md-6">
             <h2 id="get_involved_title">Get involved</h2>
