@@ -64,7 +64,7 @@ css: home
                     important, not the APIs changing under you.
                 </p>
                 <div class="learn_more_container">
-                    <a class="learn_more_link" href="" class="skip_outbound_link_analytics">Learn more</a>
+                    <a class="learn_more_link" href="/docs/ref/general/#microprofile.html" class="skip_outbound_link_analytics">Learn more</a>
                 </div>
             </div>
             <div class="col-md-6"></div>
@@ -77,7 +77,7 @@ css: home
                     with zero migration. Easy-to-manage configuration from development to test to production.
                 </p>
                 <div class="learn_more_container">
-                    <a class="learn_more_link" href="" class="skip_outbound_link_analytics">Learn more</a>
+                    <a class="learn_more_link" href="/guides/?search=cloud" class="skip_outbound_link_analytics">Learn more</a>
                 </div>
             </div>
         </div>
@@ -136,7 +136,6 @@ css: home
         <div class="col-md-6">
             <div id="blog_post">
                 {% for post in site.posts limit:1 %}
-                    {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
                     {% if post.redirect_link %}
                         <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link">{{ post.title | escape }}</a>
                             <span class="continued_text">
@@ -149,6 +148,10 @@ css: home
                         <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
                     {% endif %}
 
+                    {% assign additional_author_count = 0 %}
+                    {% for author in post.additional_authors %}
+                        {% assign additional_author_count = additional_author_count | plus: 1 %}
+                    {% endfor %}
                     <div class="blog_post_author_data_container">
                         <div class="author_images_container">
                             <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
@@ -166,6 +169,7 @@ css: home
                                 {% break %}
                             {% endif %}
                         {% endfor %}
+                        {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
                         <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
                     </div>
 
@@ -184,9 +188,11 @@ css: home
         <div class="col-md-6">
             <div id="twitter_div">
                 <img id="ufo_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
-                <a id="twitter_handle" href="https://twitter.com/OpenLibertyIO">@openliberty.io</a>
-                <a id="twitter_link" href="https://twitter.com/OpenLibertyIO">Follow</a>
+                <a id="twitter_handle" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@openliberty.io</a>
+                <a id="twitter_link" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">Follow</a>
             </div>
+
+            <a class="twitter-timeline" href="https://twitter.com/OpenLibertyIO?ref_src=twsrc%5Etfw" data-tweet-limit="3" data-chrome="noheader nofooter noborders" data-cards="hidden"></a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
         </div>
     </div>
 
