@@ -166,8 +166,10 @@
     width: 100%;
     z-index: 2;
     padding: 30px 50px;
+    padding-bottom: 18px;
     background-color: #ffffff;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12)
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+    white-space: nowrap;
 }
 
 #prereqs_title {
@@ -177,6 +179,12 @@
     color: #1b1c34;
     display: inline-block;
     margin-bottom: 0px;
+    margin-right: 20px;
+}
+
+.prereq_div {
+    display: inline-block;
+    margin-bottom: 12px;
 }
 
 #prereqs_container .prereqs_list {
@@ -203,6 +211,20 @@
 #mobile_prereqs_section .prereq {
     margin-left: 0px;
     margin-right: 16px;
+}
+
+#mobile_prereqs_section {
+    display: none;
+}
+
+@media (max-width: 1169.98px) {
+    #mobile_prereqs_section {
+        display: block;
+    }
+
+    #prereqs_container {
+        display: none;
+    }
 }
 
 #code_column_tabs_container {

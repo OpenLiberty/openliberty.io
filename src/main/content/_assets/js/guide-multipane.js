@@ -251,32 +251,6 @@ function handlePrereqsPopup() {
     }                
 }
 
-// Read prereqs from json file and add to html
-$.getJSON( "../../guides/guides-common/guide_prereqs.json", function(data) {
-    var guide_name = window.location.pathname.replace('.html','').replace('/guides/', '');
-    var prereq_html = '';
-    $.each(data.prereqs, function(i, prereq) {
-        // if guide found in prereqs list, add it to the html
-        if (prereq.guides.indexOf(guide_name) > -1) {
-            prereq_html += '<a href=' + '"' + prereq.link + '"' + ' class="prereq" target="_blank">' + prereq.name + '</a>';
-        }
-        // if prereqs list contains * add prereq to all guides except for excluded guides (if they exist)
-        else if (prereq.guides.indexOf("*") > -1) {
-            if (prereq.exclude) {
-                // if guide not in prereq exclude list, add it to the html
-                if (prereq.exclude.indexOf(guide_name) <= -1) {
-                    prereq_html += '<a href=' + '"' + prereq.link + '"' + ' class="prereq" target="_blank">' + prereq.name + '</a>'; 
-                }
-            }
-            // guides has * but no exclude, add all to html
-            else {
-                prereq_html += '<a href=' + '"' + prereq.link + '"' + ' class="prereq" target="_blank">' + prereq.name + '</a>'; 
-            }
-        }
-    });
-
-    $(".prereqs_list").html(prereq_html);
-});
 
 // Look through current step's tabs and if a duplicate file was already shown then hide it.
 function hideDuplicateTabs(id){
