@@ -266,7 +266,18 @@ header {
     padding-bottom: 23px;
 }
 
-#guide_content table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+#guide_content table {
+    background:#fff;
+    margin-bottom:1.25em;
+    border:solid 1px #dedede;       
+      
+    &.wrap_table {
+        /* Prevent overflow of table contents */
+        display: block;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+}
 #guide_content table thead, #guide_content table tfoot{background:#f7f8f7;font-weight:bold}
 #guide_content table thead tr th,#guide_content table thead tr td,#guide_content table tfoot tr th,#guide_content table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
 #guide_content table tr th,#guide_content table tr td{padding: 0em 1.625em;font-size:inherit;color:rgba(0,0,0,.8)}
