@@ -9,6 +9,10 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
+#header_background {
+    padding-top: 0px
+}
+
 /* table of contents styling */
 
 #toc_column {
@@ -16,6 +20,10 @@
     padding-top: 20px;
     padding-bottom: 20px;
     padding-left: 0px;
+
+    @media (min-width: 767px) {
+        padding-top: 121px;
+    }
 }
 
 #toc_inner {
@@ -48,6 +56,22 @@
 }
 
 /* content styling */
+.imageblock {
+    overflow-x: auto;
+}
+
+@media (min-width: 768px) {
+    img {
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 767px) {
+    #general_content {
+        padding-top: 101px;
+    }
+}
+
 #general_content:focus {
     outline: none;
 }
@@ -90,10 +114,8 @@ div.sectionbody > div.paragraph > p, div.sectionbody > div.dlist > dl > dd > p {
 }
 
 pre, pre > code, code {
-    background-color: #f1f4fe;
     font-family: Courier;
     font-size: 16px;
-    color: #5E6B8D;
     letter-spacing: 0;
     line-height: 24px;
     border: none;
@@ -101,17 +123,6 @@ pre, pre > code, code {
 
 #content > pre {
     padding-left: 25px;
-}
-
-div.sectionbody > div.ulist > ul {
-    padding-left: 20px;
-}
-
-div.sectionbody > div.ulist > ul > li > p {
-    font-size: 16px;
-    color: #24243B;
-    letter-spacing: 0;
-    line-height: 30px;
 }
 
 .breadcrumb_hamburger {

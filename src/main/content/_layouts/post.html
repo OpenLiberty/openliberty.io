@@ -6,6 +6,7 @@ css:
 - header-light
 js: 
 - header
+- post
 ---
 
 <div id="article_container" class="container-fluid">
@@ -14,8 +15,8 @@ js:
             <div class="container">
                 <a id="blog_link" href="/blog"><img id="arrow" src="/img/post_arrow.svg" alt="back to all blogs">See all blog posts</a>
                 <div class="share_post_container">
-                    {% assign page_title = page.title | replace: "'" , "\\'" %}
-                    <a class="twitter_link" href="//twitter.com/intent" onclick="window.open('https\://twitter.com/intent/tweet?text=' + encodeURIComponent('{{ page_title }}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
+                    {% assign page_title = page.title | replace: "'" , "\\\\'" %}
+                    <a class="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{ page_title }}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
                     <a class="reddit_link" href="//www.reddit.com/submit" onclick="window.open('//www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
                 </div>
                 <h1 id="post_title">{{ page.title | escape }}</h1>
@@ -48,18 +49,25 @@ js:
                     {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
                     <span id="post_date">on {{ page.date | date: date_format }}</span>
                 </div>
+                <div class="post_tags_container"></div>
             </div>
         </header>
         <div id="article_body" class="container">
             {{ content }}
             <div class="share_post_container">
-                {% assign page_title = page.title | replace: "'" , "\\'" %}
+                {% assign page_title = page.title | replace: "'" , "\\\\'" %}
                 <a class="twitter_link" href="//twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{ page_title }}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
                 <a class="reddit_link" href="//www.reddit.com/submit" onclick="window.open('//www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
             </div>
             <div id="blog_link_container">
                 <a id="blog_link_bottom" href="/blog"><img id="arrow" src="/img/post_arrow.svg" alt="back to all blogs">See all blog posts</a>
             </div>
+        </div>
+        <div class="tags_container_bottom">	
+            <div class="container">	
+                <p id="tags">Tags</p>	
+                <div class="post_tags_container"></div>	
+            </div>	
         </div>
         {% if site.disqus.shortname %} {% include disqus_comments.html %} {% endif %}
     </article>

@@ -33,7 +33,7 @@ permalink: /blog/
             </div>
             <div id="right_column" class="col-md-12 col-lg-8 offset-lg-4">
                 <div id="filter">
-                    <img id="x_button" src="/img/blog_x_button.svg" onclick="$('#filter').hide(); $('.blog_post_content').show(); $('#older_posts').show();">
+                    <img id="x_button" src="/img/blog_x_button.svg" onclick="removeFilter(); updateSearchUrl();">
                     <span>Filtered by tag: </span>
                     <span id="filter_tag"></span>
                 </div>
@@ -114,9 +114,7 @@ permalink: /blog/
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="blog_tags_container col-md-7">
-
-                                        </div>
+                                        <div class="blog_tags_container col-md-7"></div>
                                         <div class="read_more_link_container col-sm-12 col-md-5">
                                         {% if post.redirect_link %}
                                             <a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="read_more_link read_more_link_external">Read more</a>
@@ -125,9 +123,7 @@ permalink: /blog/
                                         {% endif %}
                                         </div>
                                     </div>
-                                    {% if count != latest_posts_count %}
-                                        <div class="bottom_border"></div>
-                                    {% endif %}
+                                    <div class="bottom_border"></div>
                                 </div>
                             {% if count == latest_posts_count %}
                                 <p id="older_posts" class="green_bar">Older Posts</p>
@@ -171,9 +167,7 @@ permalink: /blog/
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="blog_tags_container col-md-7">
-
-                                        </div>
+                                        <div class="blog_tags_container col-md-7"></div>
                                         <div class="read_more_link_container col-sm-12 col-md-5">
                                         {% if post.redirect_link %}
                                             <a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="read_more_link read_more_link_external">Read more</a>
