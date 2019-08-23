@@ -15,7 +15,11 @@ function getTags(callback) {
                 if (tag.posts.indexOf(post_name) > -1) {
                     tags_html = '<p class="blog_tag" onclick="filterPosts(' + "'" + tag_class + "'" + '); updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tag.name + '</p>' + '<span>, </span>';
 
+<<<<<<< HEAD
                     $(".blog_post_content:eq(" + i + ")").addClass(tag_class.toLowerCase());
+=======
+                    $(".blog_post_content:eq(" + i + ")").addClass(tag_class);
+>>>>>>> Test callback
                     $(".blog_tags_container:eq(" + i + ")").append(tags_html);
                 }
             });
