@@ -154,9 +154,11 @@
     animation-timing-function: linear;
 }
 
-@keyframes object_hovering {
-    50% {
-        transform: translateY(16px) translateX(-6px) rotate(4deg);
+@media (min-width: 768px) {
+    @keyframes object_hovering {
+        50% {
+            transform: translateY(16px) translateX(-6px) rotate(4deg);
+        }
     }
 }
 
@@ -590,15 +592,16 @@
     font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
     font-size: 40px;
     text-align: center;
-    width: 100%;
+    position: relative;
     z-index: 1;
 }
 
 #news_text {
     font-size: 16px;
-    margin: auto;
-    margin-bottom: 62px;
+    text-align: center;
+    position: relative;
     z-index: 1;
+    margin-bottom: 62px;
 }
 
 #blog_post {
@@ -606,6 +609,7 @@
     border-radius: 3px;
     padding: 47px 57px;
     background: #ffffff;
+    margin-bottom: 18px;
 }
 
 .blog_post_title_link {
@@ -934,7 +938,7 @@
     width: 50px;
     height: 50px;
     border-radius: 100%;
-    margin-right: 12px;
+    margin: 0 6px;
 }
 
 
@@ -969,6 +973,12 @@
         top: 740px;
     }
 
+    #cloud_4 {
+        top: 822px;
+        right: -50px;
+        z-index: 1;
+    }
+
     #beam {
         top: 565px;
         right: -20px;
@@ -986,8 +996,8 @@
     #person_1 {
         top: 620px;
         right: 115px;
-        width: 172px;
-        height: 220px;
+        width: 165px;
+        height: 207px;
     }
 
     #coffee {
@@ -1005,8 +1015,8 @@
     }
 
     #person_2 {
-        top: 778px;
-        right: 25px;
+        top: 773px;
+        right: 10px;
         width: 136px;
         height: 211px;
     }
@@ -1065,12 +1075,17 @@
 
     .learn_more_container {
         text-align: center;
-        margin-bottom: 50px;
+        margin-bottom: 55px;
     }
 
     #graph1, #graph2 {
         margin: 10px;
     }
+
+    #logos {
+        padding: 30px;
+    }
+
 
     #cloud_9 {
         top: 820px;
@@ -1079,6 +1094,15 @@
 
 
 
+    #blog_post {
+        padding: 30px;
+    }
+
+    #blog_link {
+        margin: auto;
+        width: 250px;
+    }
+
 
     #support_container {
         padding-top: 60px;
@@ -1086,7 +1110,6 @@
 
     #support_title {
         text-align: center;
-        padding-bottom: 300px;
     }
 
     #support_link {
@@ -1094,17 +1117,32 @@
     }
 
     #support_ufo {
-        position: relative;
-        top: -600px;
+        margin-bottom: 30px;
     }
 
     #get_involved_container {
         margin-top: 80px;
-        margin-bottom: 0px;
+    }
+
+    #cloud_16 {
+        position: relative;
+        top: -145px;
+        right: 120px;
+    }
+    
+    #get_involved_row {
+        position: relative;
+        top: -340px;
     }
 
     #get_involved_title {
         text-align: center;
+    }
+
+
+    #contribute_link {
+        margin-left: auto;
+        margin-right: auto;
     }
 
     #contributors_title {
@@ -1112,8 +1150,8 @@
     }
 
     #contributors_div {
-        margin: 0px 50px;
-        text-align: center;
+        width: 194px;
+        margin: auto;
     }
 
     .contributor_image {
