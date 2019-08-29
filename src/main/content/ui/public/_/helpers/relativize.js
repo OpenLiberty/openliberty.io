@@ -2,11 +2,20 @@
 
 const { posix: path } = require('path')
 
-// TODO memoize
-module.exports = (from, to) => {
-  if (!from || to.charAt() === '#') return to
-  let hash = ''
+// TODO memoize me
+function relativize (to, ctx) {
+  let from
+  // legacy invocation
+  if (arguments.length > 2) {
+    [from, to, ctx] = arguments
+  } else {
+    from = ctx.data.root.page.url
+  }
+  if (!to) return '#'
   const hashIdx = to.indexOf('#')
+  if (!hashIdx) return to
+  if (!from) return (ctx.data.root.site.path || '') + to
+  let hash = ''
   if (~hashIdx) {
     hash = to.substr(hashIdx)
     to = to.substr(0, hashIdx)
@@ -21,3 +30,5 @@ module.exports = (from, to) => {
 function isDir (str) {
   return str.charAt(str.length - 1) === '/'
 }
+
+module.exports = relativize

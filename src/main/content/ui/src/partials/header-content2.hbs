@@ -10,10 +10,10 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a href="/" aria-label="Open Liberty Home Page">
-                    <img id="doc_logo" src="{{ " /img/docs_openliberty_logo.png " | relative }}" class="img-responsive" alt="Home" />
+                    <img id="doc_logo" src="{{ "/img/docs_openliberty_logo.png" }}" class="img-responsive" alt="Home" />
                 </a>
                 <div id="doc_title">
-                    <img src="{{ "/img/doc_header_title.svg" | relative }}" alt="Docs">
+                    <img src="{{ "/img/doc_header_title.svg" }}" alt="Docs">
                 </div>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
@@ -29,10 +29,10 @@
                             <ul class="dropdown-menu">
                                 <li><a href="/docs/ref/javaee/">Java EE API</a></li>
                                 <li><a href="/docs/ref/microprofile/">MicroProfile API</a></li>
-                                <li><a href="/docs/ref/config/1/serverConfiguration.html">Server Config</a></li>
+                                <li><a href="/docs/ref/config/">Server Config</a></li>
                                 <li><a href="/docs/ref/feature/">Server Features</a></li>
                                 <li><a href="/docs/ref/command/">Server Commands</a></li>
-                                <li><a href="/docs/ref/general/1/logging.html">General</a></li>
+                                <li><a href="/docs/ref/general/">General</a></li>
                             </ul>
                     </li>
                 </ul>
@@ -43,18 +43,18 @@
                 </div>
             </div>
             <!-- Add breadcrumb for all pages except /docs -->
-            {% if page.url != '/docs/' %}
+            {{!-- {% if page.url not '/docs/' %} --}}
             <div id="breadcrumb_row">
-                {% if page.url contains '/guides/' and page.url != '/guides/' %}
+                {{!-- {{#if page.url contains '/guides/' and page.url not '/guides/' }} --}}
                     <!-- Hamburger icon for showing the table of contents -->
                     <button id="breadcrumb_hamburger" class="toc-toggle collapsed" type="button" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
-                        <img src="{{ " /img/toc_close_green.svg " | relative }}" id="header_close_toc_svg" class="hidden img-responsive" alt="Table of contents close button"/>
+                        <img src="{{ " /img/toc_close_green.svg " }}" id="header_close_toc_svg" class="hidden img-responsive" alt="Table of contents close button"/>
                     </button>
-                {% endif %}  
+                {{!-- {{/endif }}   --}}
 
                 <ol class="breadcrumb fluid-container">   
                     <li>
@@ -62,29 +62,29 @@
                     </li>
 
                     <!-- Javadocs -->
-                    {% if page.type == 'Javadoc' %}
+                    {{#if page.type eq 'Javadoc' }}
                         <li>
                             <a class="inactive_link">Reference</a>
                         </li>
                         <li class="active"> {{ page.doc-type }} </li>
                         {% assign versions = site.pages | where: 'doc-type', page.doc-type | sort: 'version' | reverse %}
-                        {% if versions | size > 1 %}
+                        {{!-- {{#if versions | size > 1 }}
                             <span id="breadcrumb_line">|</span>
                             <li id="breadcrumb_version">VERSION:</li>
 
-                            {% for javadoc in versions %}
+                            {{#each versions }}
                             <li class="javadoc_version">
-                                {% if page.version == javadoc.version %}
-                                    <a class="selected_javadoc__version">{{ javadoc.version }}</a>
-                                {% else %}
-                                    <a href="{{ javadoc.url }}" onclick="versionClick(event)">{{ javadoc.version }}</a>
-                                {% endif %}
+                                {{#if page.version eq javadoc.version }}
+                                    <a class="selected_javadoc__version">{{this}}.version</a>
+                                {{#else }}
+                                    <a href="{{ javadoc.url }}" onclick="versionClick(event)">{{ {{this}}.version }}</a>
+                                {{/if }
                                 
                             </li>
-                            {% endfor %} 
-                        {% endif %}
+                            {{/each}} 
+                        {{/if }} --}}
 
-                    {% elsif page.type == 'config' %}
+                    {{#elsif page.type eq 'config' }}
                         <li>
                             <a class="inactive_link">Reference</a>
                         </li>
@@ -92,7 +92,7 @@
                             <a href="/docs/ref/config/">Config</a>
                         </li>
 
-                    {% elsif page.type == 'general' %}
+                    {{#elsif page.type eq 'general' }}
                     <li>
                         <a class="inactive_link">Reference</a>
                     </li>
@@ -101,10 +101,10 @@
                     </li>
 
                     <!-- Intro docs -->
-                    {% elsif page.url contains '/docs/intro' %}
+                    {{#elsif page.url contains '/docs/intro' }}
                         <li class="active">{{ page.title }}</li>
 
-                    {% elsif page.type == 'feature' %}
+                    {{#elsif page.type eq 'feature' }}
                         <li>
                             <a class="inactive_link">Reference</a>
                         </li>
@@ -112,7 +112,7 @@
                             <a href="/docs/ref/feature/">Features</a>
                         </li>
 
-                    {% elsif page.type == 'command' %}
+                    {{#elsif page.type eq 'command' }}
                         <li>
                             <a class="inactive_link">Reference</a>
                         </li>
@@ -120,19 +120,19 @@
                             <a href="/docs/ref/command/">Commands</a>
                         </li>
                     <!-- All Guides page -->
-                    {% elsif page.url == '/guides/' %}
+                    {{#elsif page.url eq '/guides/' }}
                         <li class="active">Guides</li>
                     
                     <!-- Individual Guides -->
-                    {% else %}
+                    {{#else }}
                         <li> 
                             <a href="/guides">Guides</a>
                         </li>
                         <li class="active">{{ page.title }}</li>
-                    {% endif %}
+                    {{/endif }}
                 </ol>
             </div> 
-            {% if page.type == 'config' or page.type == 'feature' or page.type == 'command' or page.type == 'general' %}
+            {{#if page.type eq 'config' or page.type eq 'feature' or page.type eq 'command' or page.type eq 'general' % }}
                 <div class="breadcrumb_hamburger_nav" role="button" data-toggle="collapse" data-target="#toc_column" aria-expanded="true" aria-controls="toc_column">
                     <!-- Hamburger icon for showing the table of contents -->
                     <button id="breadcrumb_hamburger" class="collapsed" type="button">
@@ -143,8 +143,8 @@
                     </button>
                     <span id="breadcrumb_hamburger_title">Table of Content</span>
                 </div>
-            {% endif %}  
-        {% endif %}      
+            {{/endif }}  
+        {{!-- {% endif %}       --}}
         </div>
     </nav>
     <!-- Docs -->

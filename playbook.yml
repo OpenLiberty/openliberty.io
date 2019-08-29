@@ -1,7 +1,7 @@
 site:
   title: Open Liberty Docs
   # the 404 page and sitemap files only get generated when the url property is set
-  url: https://openliberty.io/docs
+  url: https://antora.mybluemix.net/docs
   start_page: general::logging.adoc
 content:
   sources:
@@ -11,8 +11,10 @@ content:
   - url: https://github.com/OpenLiberty/docs.git
     branches: antora
     start_path: ref/config
-# ui:
-#   bundle:
-#     url: src/main/content/ui/build/ui-bundle.zip
-#   default_layout: general-reference
+ui:
+  bundle:
+    # url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
+    url: src/main/content/ui/build/ui-bundle.zip
+    snapshot: true    
+  default_layout: general-layout
     
