@@ -1,9 +1,9 @@
-# Clone the certifications (draft or published)
+# Clone the certifications
 #
 # git clone does not like to clone into folders that are populated.  We are doing
 # this sequence of commands to workaround that limitation. 
 # Could _not_ use:
-#   git clone https://github.com/OpenLiberty/certifications.git --branch develop src/main/content
+#   git clone https://github.com/OpenLiberty/certifications.git --branch dev src/main/content
 
 branch_name="$1"
 
