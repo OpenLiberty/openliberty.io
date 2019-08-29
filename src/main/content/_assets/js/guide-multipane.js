@@ -468,7 +468,8 @@ $(document).ready(function() {
         if(metadata_sect.length > 0){
             var fileName = metadata_sect[0].innerText;
 
-            code_block.hide();
+            // code_block.hide();
+            $('#code_column .code_column:not(:first)').hide();
 
             var header = get_header_from_element(code_block);            
             header.setAttribute('data-has-code', 'true');
