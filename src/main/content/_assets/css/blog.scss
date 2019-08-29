@@ -11,6 +11,7 @@
 
 
 /* BLOG */
+html { background: #5E6B8D; }
 
 #background_container {
     background-image: radial-gradient(circle at top right, #5E6B8D 0%, #2C2E50 70%);
@@ -59,7 +60,7 @@
 #left_column {
     padding-left: 0px;
     padding-right: 0px;
-    
+
     @media (min-width: 992px) {
         position: fixed;
     }
@@ -67,17 +68,10 @@
     @media (max-width: 991.98px) {
         overflow: hidden;
         padding-left: 33px;
-        & p {
-            width: 50%;
-            margin-bottom: 35px;
-        }
     }
 
     @media (max-width: 767.98px) {
         padding-left: 30px;
-        & p {
-            width: 100%;
-        }
     }
 }
 
@@ -94,7 +88,7 @@
     width: 4px;
     height: 4px;
     background-color: #C8D2D2;
-    border-radius: 50%; 
+    border-radius: 50%;
 }
 
 #star1 {
@@ -200,8 +194,51 @@
 .blog_subtext {
     color: #ffffff;
 
+    @media (max-width: 991.98px) {
+        width: 50%;
+        margin-bottom: 35px;
+    }
+
     @media (max-width: 767.98px) {
+        width: 100%;
         color: #212529;
+    }
+}
+
+#featured_tags_list {
+    font-size: 16px;
+    color: #C9D6FE;
+
+    & span {
+        white-space: nowrap;
+
+        &:last-child {
+            display: none;
+        }
+    }
+
+    @media (max-width: 991.98px) {
+        padding-bottom: 50px;
+    }
+
+    @media (max-width: 767.98px) {
+        color: #5E6B8D;
+    }
+}
+
+.featured_tag {
+    display: inline-block;
+    margin-bottom: 0px;
+    
+    &:hover {
+        color: #E6ECFF;
+        cursor: pointer;
+    }
+
+    @media (max-width: 767.98px) {
+        &:hover {
+            color: #3F4659;
+        }
     }
 }
 
@@ -220,7 +257,7 @@
             color: #F4914D;
         }
     }
-    
+
 }
 
 #ufo_images_desktop {
@@ -242,9 +279,33 @@
 
 #right_column {
     background: #ffffff;
+    border-top: 3px solid #d4d7e3;
 
     @media (max-width: 991.98px) {
         overflow: hidden;
+    }
+}
+
+#filter {
+    display: none;
+    //position: fixed;
+    font-size: 16px;
+    color: #3F4659;
+    padding: 25px 0px;
+    background: #ffffff;
+    //margin-bottom: 74px;
+
+    & img, p {
+        display: inline-block;
+    }
+}
+
+#x_button {
+    padding-right: 5px;
+    padding-bottom: 3px;
+
+    &:hover {
+        cursor: pointer;
     }
 }
 
@@ -261,8 +322,11 @@
     padding-top: 17px;
     padding-bottom: 11px;
     margin-bottom: 0px;
-    border-top: 3px solid #d4d7e3;
-    
+  
+    &:last-child {
+        border-top: 3px solid #d4d7e3;
+    }
+
     @media (max-width: 991.98px) {
         padding-left: 33px;
         width: 100vw;
@@ -271,6 +335,10 @@
     @media (max-width: 767.98px) {
         padding-left: 30px;
     }
+}
+
+#older_posts {
+    margin-top: -1px;
 }
 
 .blog_post_content {
@@ -292,7 +360,7 @@
     }
 }
 
-.blog_post_title_link {
+.blog_post_title_link, #final_post_title {
     font-family: BunueloLight;
     font-size: 35px;
     color: #5E6B8D;
@@ -322,12 +390,11 @@
 }
 
 .blog_post_author_data_container {
-    display: inline-block;
-    margin-bottom: 30px;
-    overflow: hidden;
+    margin-bottom: 20px;
+    padding-left: 15px;
+    overflow:hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    padding-right: 0px;
 
     @media (max-width: 767.98px) {
         display: none;
@@ -355,6 +422,37 @@
     font-size: 16px;
     margin-left: 2px;
     color: #6f7878;
+}
+
+.blog_tags_container {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-bottom: 32px;
+    color: #5E6B8D;
+
+    & span:last-child {
+        display: none;
+    }
+
+    &:empty {
+        margin-bottom: 20px;
+        & + .read_more_link_container {
+            margin-top: -50px;
+        }
+    }
+}
+
+.blog_tag {
+    display: inline-block;
+    font-size: 14px;
+    color: #5E6B8D;
+    
+    &:hover {
+        color: #24253A;
+        cursor: pointer;
+    }
 }
 
 .read_more_link_container {
@@ -401,7 +499,7 @@
 
 .bottom_border {
     border-bottom: 1px solid rgba(151, 151, 151, 0.49);
-    
+
     @media (max-width: 767.98px) {
         position: absolute;
         left: 0;
@@ -451,7 +549,7 @@
 }
 
 @media (min-width: 992px) {
-    #blog_title, .blog_subtitle, .blog_subtext {
+    #blog_title, .blog_subtitle, .blog_subtext, #featured_tags_list {
         padding-left: 63px;
         padding-right: 63px;
     }
