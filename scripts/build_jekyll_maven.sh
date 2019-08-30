@@ -44,9 +44,8 @@ else
     echo "Clone published docs!"
     ./scripts/build_clone_docs.sh "master" # Argument is branch name of OpenLiberty/docs
 
-    #Uncomment the 2 lines below when ready to publish certifications to the site
-    #echo "Clone published certifications!"
-    #./scripts/build_clone_certifications.sh "master" # Argument is branch name of OpenLiberty/certifications
+    echo "Clone published certifications!"
+    ./scripts/build_clone_certifications.sh "master" # Argument is branch name of OpenLiberty/certifications
 fi
 
 # Development environments that enable the draft blogs in the _draft directory.
