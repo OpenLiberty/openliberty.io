@@ -1,0 +1,371 @@
+/*******************************************************************************
+ * Copyright (c) 2017 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+
+/* POST */
+
+#article_container {
+    margin-top: 68px;
+    background-color: white;
+    color: #24253a;
+    overflow: hidden;
+    padding-left: 0px;
+    padding-right: 0px;
+
+    @media (max-width: 767.98px) {
+        margin-top: 46px;
+    }
+
+    & pre {
+        /* Bootstrap 4 override */
+        padding: 9.5px;
+    }
+
+    & code,
+    & pre {
+        /* Bootstrap override */
+        background-color: #F3F4F7;
+        color: #5e6b8d;
+    }
+}
+
+#post_header {
+    background-color: #F7F8F9;
+    padding-top: 23px;
+    padding-bottom: 35px;
+
+    @media (max-width: 767.98px) {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+#blog_link {
+    font-size: 14px;
+    color: #606B8D;
+    display: inline-block;
+    margin-bottom: 12px;
+    transition: color .2s;
+
+    &:hover {
+        color: #24253A;
+    }
+}
+
+#arrow {
+    width: 14px;
+    height: 12px;
+    margin-top: -4px;
+    margin-right: 8px;
+}
+
+#post_title {
+    font-family: BunueloLight;
+    font-size: 40px;
+    color: #24253A;
+    margin-bottom: 10px;
+}
+
+#article_body {
+    @media (max-width: 767.98px) {
+        padding-left: 27px;
+        padding-right: 27px;
+    }
+}
+
+/* Keep images from overflowing */
+#article_body img {
+    max-width: 100%;
+}
+
+#article_body p {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    line-height: 24px;
+}
+
+#article_body li > p {
+    margin-top: 13px;
+    margin-bottom: 13px;
+}
+
+#article_body h1 {
+    font-size: 40px;
+    font-family: BunueloLight;
+    color: #24253A;
+    margin-top: 60px;
+    margin-bottom: 8px;
+    line-height: 50px;
+}
+
+#article_body h2 {
+    font-size: 24px;
+    font-family: BunueloBold;
+    color: #24253A;
+    margin-top: 40px;
+    margin-bottom: 8px;
+    line-height: 30px;
+}
+
+#article_body h3 {
+    font-size: 20px;
+    font-family: Asap;
+    font-weight: 500;
+    color: #24253A;
+    margin-top: 40px;
+    margin-bottom: 8px;
+    line-height: 24px;
+}
+
+#article_body h4 {
+    font-size: 17px;
+    font-family: Asap;
+    color: #24253A;
+    margin-top: 40px;
+    margin-bottom: 8px;
+    line-height: 18px;
+}
+
+#article_body h5 {
+    font-size: 14px;
+    font-family: Asap;
+    color: #24253A;
+    margin-top: 40px;
+    margin-bottom: 8px;
+    line-height: 12px;
+}
+
+#article_body h6 {
+    font-size: 11px;
+    font-family: Asap;
+    color: #24253A;
+    margin-top: 40px;
+    margin-bottom: 8px;
+}
+
+#article_body a {
+    font-weight: 500;
+    color: #546FB5;
+    transition: color .2s;
+
+    &:hover {
+        color: #6787D9;
+    }
+}
+
+.author_images_container {
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.author_image {
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+}
+
+.author_name {
+    font-size: 16px;
+    color: #24253A;;
+}
+
+.comma {
+    margin-left: -2px;
+}
+
+#post_date {
+    font-size: 16px;
+    color: #6F7878;;
+}
+
+.post_tags_container {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-top: 10px;
+    color: #5E6B8D;
+
+    & span:last-child {
+        display: none;
+    }
+}
+
+.post_tag {
+    display: inline-block;
+    font-size: 14px;
+    color: #5E6B8D;
+    margin-bottom: 0px;
+
+    &:hover {
+        color: #24253A;
+        cursor: pointer;
+    }
+}
+
+.share_post_container {
+    color: #3F4659;
+    font-size: 20px;
+    float: right;
+    margin-bottom: 34px;
+}
+
+@media (max-width:767.98px) {
+    #blog_link_container {
+        padding-top: 10px;
+        padding-bottom: 40px;
+    }
+}
+
+#article_body > .share_post_container, #blog_link_container {
+    display: inline-block;
+    padding-top: 50px;
+    @media (max-width: 767.98px) {
+        padding-top: 20px;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+#blog_link_container > #blog_link_bottom {
+    color: #5E6B8D;
+    font-size: 20px;
+    font-weight: 400;
+    padding: 5px 15px 5px 15px;
+    border: 2px solid #C9D6FE;
+    border-radius: 7px;
+    
+    &:hover {
+        border: 2px solid #5E6B8D;
+    }
+}
+
+.twitter_link {
+    display: inline-block;
+    width: 27px;
+    height: 23px;
+    background-image: url('/img/twitter_link.svg');
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    transition: all .2s;
+
+    &:hover {
+        background-image: url('/img/twitter_link_hover.svg');
+    }
+}
+
+.reddit_link {
+    display: inline-block;
+    width: 30px;
+    height: 25px;
+    background-image: url('/img/reddit_link.svg');
+    background-repeat: no-repeat;
+    margin-left: 16px;
+    vertical-align: middle;
+    transition: background-image .2s;
+
+    &:hover {
+        background-image: url('/img/reddit_link_hover.svg');
+    }
+}
+
+.tags_container_bottom {	
+    background-color: #F7F8F9;	
+    margin-top: 54px;	
+    padding-top: 45px;	
+    padding-bottom: 58px;	
+    margin-bottom: 19px;	
+    box-shadow: 0px 19px 36px -18px #AEB6D6;	
+}
+
+#tags {
+    margin-bottom: 5px;
+}
+
+footer {
+    padding-top: 0px;
+}
+
+
+.download-ol-button {
+    margin-bottom: 10px;
+}
+
+.CodeRay {
+    padding: 10px;
+}
+
+// custom styling for asciidoc definition/description lists
+.dlist {
+    & dl {
+        font-size: 16px;
+        padding-left: 20px;
+
+        & > :first-child {
+            margin-top: 0;
+        }
+        & > dt {
+            font-weight: 500;
+            font-style: italic;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        & > dd {
+            display: inline;
+            &:before {
+                content:" - ";
+                white-space: pre;
+            }
+
+            &:after {
+                content:"\a";
+                white-space: pre;
+            }
+
+            & > p {
+                display: inline;
+                color: #687272;
+            }
+        }
+        & ul li p {
+            color: #687272;
+        }
+    }
+}
+
+// custom styling for asciidoc admonition paragraphs
+.admonitionblock td {
+    border: 1px solid #dfe2e5;
+    padding: 6px 13px;
+    i {
+        color: #24253a;
+        font-family: Asap;
+        font-style: normal;
+    }
+    &.icon .icon-note::before {
+        content: "Note";
+    }
+    &.icon .icon-tip::before {
+        content: "Tip";
+    }
+    &.icon .icon-important::before {
+        content: "Important";
+    }
+    &.icon .icon-warning::before {
+        content: "Warning";
+    }
+    &.icon .icon-caution::before {
+        content: "Caution";
+    }
+    &.content {
+        width: 100%;
+    }
+}
