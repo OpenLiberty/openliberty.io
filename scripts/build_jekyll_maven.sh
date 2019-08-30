@@ -63,12 +63,12 @@ mkdir -p src/main/content/img/guide
 # Check if any draft guide images exist.
 if ls src/main/content/guides/draft-guide*/assets/* 1> /dev/null 2>&1; then
     echo "Copying draft guide images to /img/guide"
-    cp src/main/content/guides/draft-guide*/assets/* src/main/content/img/guide/
+    cp -n src/main/content/guides/draft-guide*/assets/* src/main/content/img/guide/ || true
 fi
 # Check if any published guide images exist.
 if ls src/main/content/guides/guide*/assets/* 1> /dev/null 2>&1; then
     echo "Copying published guide images to /img/guide"
-    cp src/main/content/guides/guide*/assets/* src/main/content/img/guide/
+    cp -n src/main/content/guides/guide*/assets/* src/main/content/img/guide/ || true
 fi
 
 # Move any js/css files from guides to the _assets folder for jekyll-assets minification.
