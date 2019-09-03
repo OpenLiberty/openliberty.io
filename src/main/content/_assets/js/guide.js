@@ -67,12 +67,12 @@
         }
     }
 
-    $('#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre)').hover(function(event) {
+    $('#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre):not(.code_column pre)').hover(function(event) {
         offset = $('#guide_column').position();	
         target = event.currentTarget;	
-        var current_target_object = $(event.currentTarget);	
+        var current_target_object = $(event.currentTarget);
         target_position = current_target_object.position();	
-        target_width = current_target_object.outerWidth();	
+        target_width = current_target_object.outerWidth();
         target_height = current_target_object.outerHeight();
         var right_position = inSingleColumnView() ? 1 : 46;
          $('#copy_to_clipboard').css({	
