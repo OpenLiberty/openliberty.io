@@ -9,7 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-
  #guide_content #mobile_prereqs_title {
     font-size: 16px;
     font-weight: 500;        
@@ -53,6 +52,7 @@
     background-color: rgb(241, 244, 254);
 }
 
+
 /* HEADER and BREADCRUMB */
 header {
     position: sticky;
@@ -67,15 +67,10 @@ header {
     width: 100%;
 }
 
-#doc_title {
-    margin-left: 23px;
-}
-
 /* GUIDE CONTENT */
 
 .centered_content {
-    margin: 0 auto;
-    max-width: 1400px;
+    margin: 0 auto; 
     background-color: white;    
 }
 
@@ -174,20 +169,11 @@ header {
     border: none;
     border-radius: 0;
     padding: 30px;
-}
+    word-wrap: normal;
 
-#guide_content .listingblock.command .content pre,
-#guide_content .command .listingblock:not(.no_copy):not(.code_command) .content pre {
-    background-color: #FFFFFF;
-    border: 1px solid #96bc32;
-    border-left: 8px solid #96bc32;
-    border-radius: 3px;    
-    overflow: hidden;
-    white-space: pre-wrap;       /* css-3 */
-    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-    white-space: -pre-wrap;      /* Opera 4-6 */
-    white-space: -o-pre-wrap;    /* Opera 7 */
-    word-wrap: break-word;  
+    & code {
+        white-space: pre;
+    }
 }
 
 #guide_content .listingblock.command .content pre,
@@ -207,6 +193,7 @@ header {
     & code {
         background-color: inherit;
         color: inherit;
+        white-space: pre-wrap;
     }
 }
 
@@ -309,7 +296,18 @@ header {
     padding-bottom: 23px;
 }
 
-#guide_content table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+#guide_content table {
+    background:#fff;
+    margin-bottom:1.25em;
+    border:solid 1px #dedede;       
+      
+    &.wrap_table {
+        /* Prevent overflow of table contents */
+        display: block;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+}
 #guide_content table thead, #guide_content table tfoot{background:#f7f8f7;font-weight:bold}
 #guide_content table thead tr th,#guide_content table thead tr td,#guide_content table tfoot tr th,#guide_content table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
 #guide_content table tr th,#guide_content table tr td{padding: 0em 1.625em;font-size:inherit;color:rgba(0,0,0,.8)}
@@ -319,23 +317,32 @@ header {
 .tab_link {
     display: inline-block;
     padding-right: 15px;
+    margin-bottom: 10px;
     cursor: pointer;
     & :hover {
         color: #CC4D19;
     }
 }
 
-.tab_link.active {
-    color: #CC4D19;
-    cursor: auto;
-    & > p {
-        border-bottom: 2px solid #CC4D19;
+#guide_content .tab_link.active > p {
+    border-bottom: 2px solid #CC4D19;
+    & > code {
+        color: #CC4D19;
+        cursor: auto;
     }
 }
 
-#windows_link > p, #mac_link > p, #linux_link > p {
+#guide_content .windows_link > p, #guide_content .mac_link > p, #guide_content .linux_link > p {
     padding-top: 0px;
     padding-bottom: 0px;
+
+    & code {
+        background-color: white;
+    }
+}
+
+.tab_content {
+    padding-left: 30px;
 }
 
 /* GUIDE PAGE LAYOUT */
@@ -500,7 +507,6 @@ header {
 @media (min-width: 1440px) {
     #guide_column {
         width: calc(100% - 400px);
-        max-width: 1000px;
         display: inline-block;
     }
     
