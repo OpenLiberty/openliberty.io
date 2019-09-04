@@ -154,8 +154,8 @@ var handleHotspotHover = debounce(function(hotspot){
     if(hotspot.data('hovering') == false){
         return;
     }
-    $("#github_clone_popup_container").data('hotspot-hovered', true); // Track if a hotspot was hovered over to hide the github popup
-    hideGithubPopup();
+    $("#prereqs_container").data('hotspot-hovered', true); // Track if a hotspot was hovered over to hide the prereqs popup
+    hidePrereqsPopup();
     var header = get_header_from_element(hotspot);
     var fileIndex = hotspot.data('file-index');
     if(!fileIndex){
@@ -190,8 +190,8 @@ var handleHotspotHover = debounce(function(hotspot){
     }
 }, 250);
 
-function showGithubPopup(){
-    $("#github_clone_popup_container").fadeIn();
+function showPrereqsPopup(){
+    $("#prereqs_container").fadeIn();
     $("#code_column .code_column, #code_column_tabs_container").addClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', true);
     $(".copyFileButton").hide();
@@ -200,8 +200,8 @@ function showGithubPopup(){
     });
 }
 
-function hideGithubPopup(){
-    $("#github_clone_popup_container").fadeOut();
+function hidePrereqsPopup(){
+    $("#prereqs_container").fadeOut();
     $("#code_column .code_column, #code_column_tabs_container").removeClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', false);
     $(".copyFileButton").show();
@@ -211,16 +211,16 @@ function hideGithubPopup(){
 }
 
 /*
-   Handle showing/hiding the Github popup.
+   Handle showing/hiding the prereqs popup.
 */
-function handleGithubPopup() {
-    var githubPopup = $("#github_clone_popup_container");
-    if(githubPopup.length > 0){
+function handlePrereqsPopup() {
+    var prereqsPopup = $("#prereqs_container");
+    if(prereqsPopup.length > 0){
         // Check if the first guide section that has code to show on the right has been scrolled past yet.
-        // If so, then the Github popup will be dismissed. If the first section hasn't been scrolled past yet but a hotspot is showing on the next section then also hide it.
+        // If so, then the prereqs popup will be dismissed. If the first section hasn't been scrolled past yet but a hotspot is showing on the next section then also hide it.
         var firstCodeSection = $('[data-has-code]').first();
         if(firstCodeSection.length === 0){
-            showGithubPopup();
+            showPrereqsPopup();
             return;
         }
         if(firstCodeSection.is('h3')){
@@ -234,17 +234,18 @@ function handleGithubPopup() {
         var firstHotspotRect = firstHotspot.getBoundingClientRect();
         var firstHotspotInView = (firstHotspotRect.top > 0) && (firstHotspotRect.bottom <= window.innerHeight);
 
-        // Only show the Github popup if above the first section with code
+        // Only show the prereqs popup if above the first section with code
         // and if hotspots weren't hovered over to reveal the code behind the popup.
-        var hotspotHovered = $("#github_clone_popup_container").data('hotspot-hovered');
+        var hotspotHovered = $("#prereqs_container").data('hotspot-hovered');
         if(blurCodeOnRight && !(firstHotspotInView && hotspotHovered)){
-            showGithubPopup();
+            showPrereqsPopup();
         }
         else{            
-            hideGithubPopup();         
+            hidePrereqsPopup();         
         }
     }                
 }
+
 
 // Look through current step's tabs and if a duplicate file was already shown then hide it.
 function hideDuplicateTabs(id){
@@ -451,19 +452,6 @@ $(document).ready(function() {
     $(window).on('resize', function(){
         restoreCodeColumn();
     });
-     
-     /* Copy button for the github clone command  that pops up initially when opening a guide. */
-    $("#github_clone_popup_copy").click(function(event){
-        event.preventDefault();
-        target = $("#github_clone_popup_repo").get(0);
-        copy_element_to_clipboard(target, function(){
-            var position = $('#github_clone_popup_container').position();
-            $('#code_section_copied_confirmation').css({	
-                top: position.top - 20,
-                right: 20	
-            }).stop().fadeIn().delay(1000).fadeOut();
-        });
-    });
 
     // Move the code snippets to the code column on the right side.
     // Each code section is duplicated to show the full file in the right column and just the snippet of code relevant to the guide in the left column in single column / mobile view.
@@ -473,7 +461,8 @@ $(document).ready(function() {
         if(metadata_sect.length > 0){
             var fileName = metadata_sect[0].innerText;
 
-            code_block.hide();
+            // code_block.hide();
+            $('#code_column .code_column:not(:first)').hide();
 
             var header = get_header_from_element(code_block);            
             header.setAttribute('data-has-code', 'true');
@@ -522,7 +511,7 @@ $(document).ready(function() {
                 $('#code_column_tabs').append(tab);
             }            
 
-            code_block.addClass('dimmed'); // Dim the code at first while the github popup takes focus.
+            code_block.addClass('dimmed'); // Dim the code at first while the prereqs popup takes focus.
             code_block.appendTo('#code_column_content'); // Move code to the right column
         }
     });
@@ -756,17 +745,16 @@ $(document).ready(function() {
                 delta *= 150;
             }
             codeColumnContent.scrollTop -= delta;
-            handleGithubPopup();
+            handlePrereqsPopup();
             event.preventDefault();  
             event.stopPropagation();
         }            
     });
 
-    // Set the github clone popup top to match the first section
+    // Set the prereqs popup top to match the first section
     var firstSection = $(".sect1:not(#guide_meta)").first();
     if(firstSection.length > 0){
         var firstSectionTop = firstSection.get(0).offsetTop;
-        $("#github_clone_popup_container").css('top', firstSectionTop);
     }
 
     $(".copyFileButton").click(function(event){
@@ -798,7 +786,7 @@ $(document).ready(function() {
         if($("body").data('scrolling') === true){
             return;
         }
-        handleGithubPopup();
+        handlePrereqsPopup();
     });
 
     $(window).on('load', function(){
@@ -811,7 +799,7 @@ $(document).ready(function() {
         }
 
         if(window.location.hash === ""){
-            handleGithubPopup();
+            handlePrereqsPopup();
         }
     });
 });
