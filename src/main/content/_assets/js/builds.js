@@ -53,7 +53,14 @@ function render_builds(builds, parent) {
                         package_column.append($('<a href="' +  href +'" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + 
                         download_arrow + 'ZIP</a>'));
                         if (package_name.indexOf("java") > -1) {
-                            row.append("<td>Java EE 8</td>")
+                            // 19.0.0.6 and higher should be labeled "Jakarta EE 8", and anything before should be "Java EE 8"
+                            buildVersionYear = parseInt(build.version.substring(0, build.version.indexOf(".")), 10);
+                            buildVersionMonth = parseInt(build.version.substring(build.version.lastIndexOf(".")), 10);
+                            if (buildVersionYear > 19 || (buildVersionYear === 19 && buildVersionMonth > 5)) {
+                                row.append("<td>Jakarta EE 8</td>")
+                            } else {
+                                row.append("<td>Java EE 8</td>")                        
+                            }
                             row.append(package_column);
                         }
                         else if (package_name.indexOf("web") > -1) {
