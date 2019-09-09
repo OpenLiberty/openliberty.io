@@ -9,6 +9,11 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
  
+
+body {
+    overflow-x: hidden;
+}
+
 /* INTRO */
 
 #intro_background {
@@ -32,21 +37,21 @@
 
 #cloud_1 {
     position: absolute;
-    top: 676px;
-    right: 1373px;
+    top: 780px;
+    right: 1260px;
     transform: scaleX(-1);
 }
 
 #cloud_2 {
     position: absolute;
-    top: 720px;
-    right: 830px;
+    top: 760px;
+    right: 770px;
 }
 
 #cloud_3 {
     position: absolute;
-    top: 800px;
-    right: 0px;
+    top: 785px;
+    right: -200px;
 }
 
 #beam {
@@ -55,14 +60,18 @@
     right: 82px;
     width: 965px;
     height: 724px;
+
+
+    right: -90px;
 }
 
 #ufo {
     position: absolute;
     top: 82px;
     right: 175px;
-    width: 461px;
-    height: 247px;
+
+
+    right: 0px;
 }
 
 #person_1 {
@@ -73,6 +82,9 @@
     height: 309px;
     animation: object_hovering 4.5s infinite;
     animation-timing-function: linear;
+
+
+    right: 286px;
 }
 
 #coffee {
@@ -81,6 +93,9 @@
     right: 385px;
     animation: object_hovering 4s infinite;
     animation-timing-function: linear;
+
+
+    right: 190px;
 }
 
 #shoe {
@@ -89,6 +104,9 @@
     right: 360px;
     animation: object_hovering 3.5s infinite;
     animation-timing-function: linear;
+
+
+    right: 175px;
 }
 
 
@@ -98,6 +116,9 @@
     right: 450px;
     animation: object_hovering 5.5s infinite;
     animation-timing-function: linear;
+
+
+    right: 290px;
 }
 
 
@@ -107,6 +128,9 @@
     right: 676px;
     animation: object_hovering 3.6s infinite;
     animation-timing-function: linear;
+
+
+    right: 480px;
 }
 
 
@@ -116,6 +140,9 @@
     right: 674px;
     animation: object_hovering 3.5s infinite;
     animation-timing-function: linear;
+
+
+    right: 480px;
 }
 
 #phone {
@@ -124,6 +151,9 @@
     right: 525px;    
     animation: object_hovering 5s infinite;
     animation-timing-function: linear;
+
+
+    right: 355px;
 }
 
 #mouse {
@@ -132,18 +162,22 @@
     right: 218px;
     animation: object_hovering 5.5s infinite;
     animation-timing-function: linear;
+
+
+    right: 44px;
 }
 
 #cloud_4 {
     position: absolute;
     top: 818px;
-    right: 100px;
+    right: -235px;
 }
 
 #cloud_5 {
     position: absolute;
     top: 825px;
-    right: 390px;
+    right: 295px;
+    transform: scaleX(1.2);
 }
 
 #person_2 {
@@ -152,9 +186,12 @@
     right: 205px;
     animation: object_hovering 4.3s infinite;
     animation-timing-function: linear;
+
+    
+    right: 45px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
     @keyframes object_hovering {
         50% {
             transform: translateY(16px) translateX(-6px) rotate(4deg);
@@ -263,77 +300,12 @@
     }
 }
 
-@media (max-width: 1199.98px) {
-
-   #intro_content {
-        margin-top: 160px;
-   }
-
-    #intro_paragraph {
-        max-width: none;
-    }
-
-    #an_ibm_open_source_project {
-        top: 83px;
-        right: calc(50% - 190px);
-    }
-
-    #star1 {
-        top: 400px;
-        right: calc(50% - 480px);
-    }
-
-    #star2 {
-        top: 210px;
-        right: calc(50% - 140px);
-    }
-
-    #star3 {
-        top: 110px;
-        right: calc(50% + 380px);
-    }
-
-}
-
-@media (max-width: 991.98px) {
-   
-    #logo {
-        margin-bottom: 10px;
-        width: 400px;
-    }
-
-    #intro_content {
-        margin-top: 20px;
-    }
-
-    #an_ibm_open_source_project {
-        font-size: 11px;
-        top: 75px;
-        right: calc(50% - 145px);
-    }
-
-    #star1 {
-        top: 320px;
-        right: calc(50% - 370px);
-    }
-
-    #star2 {
-        top: 170px;
-        right: calc(50% - 130px);
-    }
-
-    #star3 {
-        top: 80px;
-        right: calc(50% + 300px);
-    }
-
-}
-
 
 
 /* DEVELOP, DEPLOY, MONITOR */
 
 #develop_container {
+    padding-top: 50px;
     margin-bottom: 100px;
 }
 
@@ -341,19 +313,22 @@
     position: absolute;
     top: 1250px;
     left: 0%;
+    transform: scale(1.5);
 }
 
 #cloud_7 {
     position: absolute;
-    top: 1555px;
+    top: 1608px;
     right: 0%;
+    transform: scale(1.3) rotate(-13deg);
 }
 
 .develop_title {
     font-size: 32px;
     font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
     margin-top: 0;
-    margin-bottom: 28px;
+    padding-bottom: 26px;
+    background-color: white;
 }
 
 .develop_text {
@@ -396,10 +371,12 @@
 }
 
 .graph {
-    height: 376px;
     background: #FFFFFF;
     box-shadow: 0 2px 8px 0 rgba(63,70,89,0.31);
     border-radius: 3px;
+    & img {
+        max-width: 100%;
+    }
 }
 
 #graph1 {
@@ -424,110 +401,9 @@
     padding-bottom: 30px;
     border-bottom: 2px solid #979797;
 }
+
 .logos_row {
     padding: 42px 0px;
-}
-
-
-/* QUICK START */
-
-#quick_start_background {
-    position: relative;
-    background-color: #313653;
-    color: white;
-    padding-top: 96px;
-}
-
-#quick_start_title {
-    font-size: 35px;
-    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
-    margin-top: 0;
-    margin-bottom: 45px;
-}
-
-#quick_start_paragraph {
-    display: inline-block;
-    margin-bottom: 40px;
-}
-
-#code_container {
-    font-size: 20px;
-    color: #E6EDA8;
-    background-color: #151629;
-    padding-top: 56px;
-    padding-left: 54px;
-    padding-right: 54px;
-    padding-bottom: 49px;
-    max-width: 800px;
-    -webkit-box-shadow: -7px 6px 5px 0 rgba(14,15,35,0.29);
-    -moz-box-shadow: -7px 6px 5px 0 rgba(14,15,35,0.29);
-    box-shadow: -7px 6px 5px 0 rgba(14,15,35,0.29);
-    border-radius:7px;
-    cursor: text;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    line-height: 60px;
-}
-
-#sample_app_browser_link{
-    color: white;
-}
-
-@media (max-width: 767.98px) {
-
-    #code_container{
-        width: 100%;
-        height: auto;
-    }
-
-    #quick_start_background {
-        padding-top: 60px;
-    }
-}
-
-/* GUIDES */
-#guides_container {
-    padding-top: 154px;
-    padding-bottom: 151px;
-}
-
-#guides_title {
-    font-size: 35px;
-    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
-    margin-bottom: 31px;
-}
-
-#guides_description {
-    font-size: 16px;
-    letter-spacing: 0;
-    line-height: 22px;
-    margin-bottom: 49px;
-}
-
-#guides_link_container {
-    display: inline-block;
-}
-
-#guides_link {
-    display: block;
-    font-size: 20px;
-    font-weight: 500;
-    color: #24253A;
-    background-color: #E6EDA8;
-    border-radius: 3px;
-    padding: 15px 40px;
-    margin-bottom: 8px;
-    text-align: center;
-    transition: background-color .2s;    
-    min-width: 280px;
-}
-
-#guides_link:hover {
-    background-color: #F7FBD2;
-}
-
-#guides_ufo {
-    margin-top: 65px;
 }
 
 
@@ -537,55 +413,57 @@
     padding-top: 84px;
 }
 
-#cloud_8 {
+.cloud_images_div {
     position: absolute;
-    top: 2827px;
-    right: 1300px;
-    // right: 68%;
-    // width: 35vw;
+    height: 0px;
+}
+
+#get_involved_row {
+    padding-top: 40px;
+}
+
+#cloud_8 {
+    position: relative;
+    top: -189px;
+    right: 450px;
 }
 
 #cloud_9 {
-    position: absolute;
-    top: 2835px;
-    right: 1150px;
-    // right: 60%;
-    // width: 27vw;
+    position: relative;
+    top: -445px;
+    right: 315px;
     transform: scaleX(-1);
 }
 
 #cloud_10 {
-    position: absolute;
-    top: 2800px;
-    right: 190px;
-    // right: 10%;
-    // width: 27vw;
+    position: relative;
+    top: -770px;
+    right: -800px;
 }
 
 #cloud_11 {
-    position: absolute;
-    top: 2800px;
-    right: -203px;
-    // right: 0%;
-    // width: 35vw;
+    position: relative;
+    top: -1085px;
+    right: -1185px;
 }
 
 #cloud_12 {
-    position: absolute;
-    top: 3000px;
-    right: 69%;
+    position: relative;
+    top: -1145px;
+    right: 330px;
 }
 
 #cloud_13 {
-    position: absolute;
-    top: 3060px;
-    right: 0%;
+    position: relative;
+    top: -1250px;
+    right: -1155px;
+    transform: scaleX(-1);
 }
 
 #cloud_14 {
-    position: absolute;
-    top: 3405px;
-    right: 45%;
+    position: relative;
+    top: -1150px;
+    right: -200px;
 }
 
 #news_title {
@@ -847,49 +725,46 @@
     position: relative;
     top: -600px;
     right: -300px;
+    right: 32px;
     transform: scaleX(-1);
 }
 
 #cloud_18 {
     position: relative;
-    top: -695px;
-    right: -575px;
+    top: -783px;
+    right: -549px;
+    transform: rotate(-5deg);
 }
 
 #cloud_19 {
     position: relative;
-    top: -995px;
+    top: -1140px;
     right: -1005px;
 }
 
 #cloud_20 {
     position: relative;
-    top: -1100px;
+    top: -1300px;
     right: -375px;
 }
 
 #ufo_1 {
     position: relative;
-    top: -1600px;
+    top: -1815px;
     right: -626px;
 }
 
 #ufo_2 {
     position: relative;
-    top: -1600px;
+    top: -1800px;
     right: -900px;
     transform: scaleX(-1) rotate(18deg);
 }
 
 #ufo_3 {
     position: relative;
-    top: -1530px;
+    top: -1700px;
     right: -730px;
-}
-
-#get_involved_row {
-    position: relative;
-    top: -1725px;
 }
 
 #get_involved_title {
@@ -942,7 +817,328 @@
 }
 
 
+@media (max-width: 1199.98px) {
+
+    #intro_background {
+        height: 800px;
+    }
+
+   #intro_content {
+        margin-top: 160px;
+   }
+
+    #intro_paragraph {
+        max-width: none;
+    }
+
+    #an_ibm_open_source_project {
+        top: 83px;
+        right: calc(50% - 190px);
+    }
+
+    #star1 {
+        top: 400px;
+        right: calc(50% - 480px);
+    }
+
+    #star2 {
+        top: 210px;
+        right: calc(50% - 140px);
+    }
+
+    #star3 {
+        top: 110px;
+        right: calc(50% + 380px);
+    }
+
+    #cloud_3 {
+        top: 695px;
+    }
+
+    #cloud_1 {
+        top: 689px;
+        right: 400px;
+    }
+
+    #cloud_2 {
+        top: 661px;
+        right: 500px;
+    }
+
+    #beam {
+        width: 772px;
+        height: 617px;
+        right: -72px;
+    }
+
+    #ufo {
+        width: 369px;
+        height: 198px;
+        top: 100px;
+    }
+
+    #person_1 {
+        width: 190px;
+        height: 247px;
+        right: 250px;
+    }
+
+    #coffee {
+        width: 48px;
+        height: 61px;
+        top: 330px;
+        right: 165px;
+    }
+
+    #shoe {
+        width: 44px;
+        height: 26px;
+        top: 455px;
+        right: 153px;
+    }
+
+    #laptop {
+        width: 91px;
+        height: 102px;
+        top: 560px;
+        right: 262px;
+    }
+
+    #ball {
+        width: 26px;
+        height: 26px;
+        top: 605px;
+        right: 443px;
+    }
+
+    #dog {
+        width: 143px;
+        height: 141px;
+        top: 610px;
+        right: 425px;
+    }
+
+    #phone {
+        width: 34px;
+        height: 63px;
+        top: 715px;
+        right: 274px;
+    }
+
+    #mouse {
+        width: 68px;
+        height: 107px;
+        top: 575px;
+        right: 26px;
+    }
+
+    #cloud_4 {
+        top: 745px;
+        right: -165px;
+        width: 480px;
+        height: 195px;
+    }
+
+    #cloud_5 {
+        top: 751px;
+        right: 153px;
+    }
+
+    #person_2 {
+        width: 168px;
+        height: 261px;
+        top: 515px;
+    }
+
+    #cloud_10 {
+        right: -600px;
+    }
+
+    #cloud_13 {
+        right: -800px;
+    }
+
+    #develop_image {
+        padding-top: 50px;
+    }
+
+}
+
+@media (min-width: 767.98px ) and (max-width: 991.98px) {
+    #ufo_images_container img {
+        transform: scale(.7);
+    }
+}
+
+@media (max-width: 991.98px) {
+    #intro_background {
+        height: 650px;
+    }
+
+    #cloud_3 {
+        top: 540px;
+    }
+
+    #intro_content {
+        margin-top: 115px;
+    }
+
+    #intro_logo {
+        margin-bottom: 16px;
+    }
+
+    #intro_lighten_up_title {
+        margin-bottom: 12px;
+    }
+
+    #intro_paragraph {
+        margin-bottom: 20px;
+    }
+
+    #cloud_1 {
+        top: 510px;
+        right: 223px;
+    }
+
+    #cloud_2 {
+        top: 521px;
+        right: 331px;
+    }
+
+    #beam {
+        top: 130px;
+        right: -190px;
+    }
+
+    #ufo {
+        right: -75px;
+    }
+
+    #person_1 {
+        top: 223px;
+        right: 82px;
+    }
+
+    #coffee {
+        top: 340px;
+        right: 59px;
+    }
+
+    #shoe {
+        top: 430px;
+        right: 79px;
+    }
+
+    #laptop {
+        top: 444px;
+        right: 144px;
+    }
+
+    #ball {
+        top: 490px;
+        right: 270px;
+    }
+
+    #dog {
+        top: 490px;
+        right: 255px;
+    }
+
+    #phone {
+        top: 564px;
+        right: 200px;
+    }
+
+    #mouse {
+        top: 482px;
+        right: -10px;
+    }
+
+    #person_2 {
+        top: 440px;
+        right: -15px;
+    }
+
+    #cloud_4 {
+        top: 581px;
+        right: -222px;
+    }
+
+    #cloud_5 {
+        top: 582px;
+        right: -25px;
+        transform: scale(1) !important;
+    }
+
+    #logo {
+        margin-bottom: 10px;
+        width: 400px;
+    }
+
+    #an_ibm_open_source_project {
+        font-size: 11px;
+        top: 72px;
+        right: calc(50% - 140px);
+    }
+
+    #star1 {
+        top: 320px;
+        right: calc(50% - 370px);
+    }
+
+    #star2 {
+        top: 170px;
+        right: calc(50% - 130px);
+    }
+
+    #star3 {
+        top: 80px;
+        right: calc(50% + 300px);
+    }
+
+    #develop_image {
+        padding-top: 100px;
+    }
+
+    #deploy_image {
+        padding-top: 30px;
+    }
+    
+    #monitor_image {
+        padding-top: 50px;
+    }
+
+    .learn_more_container {
+        margin-bottom: 70px;
+    }
+
+    #graph1 {
+        margin-right: 0px;
+    }
+
+    #cloud_9 {
+        right: 440px;
+    }
+
+    #cloud_10 {
+        right: -490px;
+    }
+
+    #cloud_13 {
+       right: -400px;
+    }
+
+    #contributors_div {
+        width: 392px;
+    }
+
+}
+
+
 @media (max-width: 767.98px) {
+    #intro_background {
+        height: 790px;
+    }
 
     .bg-custom {
         background-color: #3F4664;
@@ -953,6 +1149,19 @@
     }
 
 
+    #intro_content_container {
+        max-width: none;
+    }
+
+    #intro_content {
+        margin-top: 20px;
+    }
+
+    #intro_content, #ufo_images_container {
+        width: 70%;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
     #star1 {
         top: 500px;
@@ -969,53 +1178,60 @@
         right: 7%;
     }
 
+
+    #cloud_1 {
+        top: 301px;
+        right: 162px;
+    }
+
     #cloud_3 {
-        top: 740px;
+        top: 675px;
     }
 
     #cloud_4 {
-        top: 822px;
-        right: -50px;
+        top: 352px;
+        right: -65px;
         z-index: 1;
+        transform: scaleX(-1);
     }
 
     #beam {
-        top: 565px;
+        top: 95px;
         right: -20px;
         width: 400px;
         height: 300px;
     }
 
     #ufo {
-        top: 500px;
+        top: 30px;
         right: 15px;
         width: 200px;
         height: 100px;
     }
 
     #person_1 {
-        top: 620px;
+        top: 150px;
         right: 115px;
         width: 165px;
         height: 207px;
     }
 
     #coffee {
-        top: 600px;
+        top: 140px;
         right: 85px;
         width: 38px;
         height: 48px;
     }
 
     #shoe {
-        top: 720px;
+        top: 245px;
         right: 60px;
         width: 48px;
         height: 38px;
     }
 
     #person_2 {
-        top: 773px;
+        top: 300px;
         right: 10px;
         width: 136px;
         height: 211px;
@@ -1092,7 +1308,14 @@
         right: -62px;
     }
 
+    #cloud_10 {
+        top: -460px;
+        right: -400px;
+    }
 
+    #cloud_12 {
+        top: -685px;
+    }
 
     #blog_post {
         padding: 30px;
@@ -1102,7 +1325,6 @@
         margin: auto;
         width: 250px;
     }
-
 
     #support_container {
         padding-top: 60px;
@@ -1121,7 +1343,17 @@
     }
 
     #get_involved_container {
-        margin-top: 80px;
+        margin-top: 70px;
+    }
+
+    #get_involved_row {
+        padding-top: 0px;
+    }
+
+    #cloud_16 {
+        position: relative;
+        top: -145px;
+        right: 120px;
     }
 
     #cloud_16 {
@@ -1130,11 +1362,6 @@
         right: 120px;
     }
     
-    #get_involved_row {
-        position: relative;
-        top: -340px;
-    }
-
     #get_involved_title {
         text-align: center;
     }
@@ -1158,4 +1385,16 @@
         margin-bottom: 20px;
     }
 
+}
+
+@media (max-width: 575.98px) {
+    #develop_container {
+        padding-top: 75px;
+    }
+}
+
+@media (max-width: 482px) {
+    #develop_container {
+        padding-top: 95px;
+    }
 }
