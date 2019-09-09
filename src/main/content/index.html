@@ -56,8 +56,8 @@ css: home
 
 <!-- DEVELOP, DEPLOY, MONITOR -->
 <div id="develop_container">
-    <img id="cloud_6" class="d-none d-md-block" src="/img/home_cloud_6.png" alt="Cloud 6">
-    <img id="cloud_7" class="d-none d-md-block" src="/img/home_cloud_6.png" alt="Cloud 7">
+    <img id="cloud_6" class="d-none d-md-block lazy" data-src="/img/home_cloud_6.png" alt="Cloud 6">
+    <img id="cloud_7" class="d-none d-md-block lazy" data-src="/img/home_cloud_6.png" alt="Cloud 7">
     <div class="container">
         <div class="row">
             <div class="col-md-6">
@@ -71,12 +71,12 @@ css: home
                 </div>
             </div>
             <div class="col-md-6">
-                <img id="develop_image" class="d-none d-md-block img-fluid" src="/img/home_develop.svg" alt="Develop graphic">
+                <img id="develop_image" class="d-none d-md-block img-fluid lazy" data-src="/img/home_develop.svg" alt="Develop graphic">
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
-                <img id="deploy_image" class="d-none d-md-block img-fluid" src="/img/home_deploy.svg" alt="Deploy graphic">
+                <img id="deploy_image" class="d-none d-md-block img-fluid lazy" data-src="/img/home_deploy.svg" alt="Deploy graphic">
             </div>
             <div class="col-md-6">
                 <h2 class="develop_title">Deploy in containers to any cloud</h2>
@@ -99,7 +99,7 @@ css: home
                 </div>
             </div>
             <div class="col-md-6">
-                <img id="monitor_image" class="d-none d-md-block img-fluid" src="/img/home_monitor.svg" alt="Monitor graphic">
+                <img id="monitor_image" class="d-none d-md-block img-fluid lazy" data-src="/img/home_monitor.svg" alt="Monitor graphic">
             </div>
         </div>
     </div>
@@ -110,10 +110,10 @@ css: home
     <div class="container" id="graph_container">
         <div class="row">
             <div class="col-xs-12 col-lg graph" id="graph1">
-                <img src="/img/graph_1.png" alt="OpenJ9 start-up time graph: Open Liberty vs. other lightweight Java servers">
+                <img class="lazy" data-src="/img/graph_1.png" alt="OpenJ9 start-up time graph: Open Liberty vs. other lightweight Java servers">
             </div>
             <div class="col-xs-12 col-lg graph" id="graph2">
-                <img src="/img/graph_2.png" alt="Hotspot start-up time graph: Open Liberty vs. other lightweight Java servers">
+                <img class="lazy" data-src="/img/graph_2.png" alt="Hotspot start-up time graph: Open Liberty vs. other lightweight Java servers">
             </div>
         </div>
     </div>
@@ -137,9 +137,9 @@ css: home
         <img id="cloud_9" class="d-none d-md-block" src="/img/home_cloud_1.png" alt="Cloud 9">
         <img id="cloud_10" class="d-none d-sm-block" src="/img/home_cloud_1.png" alt="Cloud 10">
         <img id="cloud_11" class="d-none d-sm-block" src="/img/home_cloud_1.png" alt="Cloud 11">
-        <img id="cloud_12" class="d-none d-md-block" src="/img/home_cloud_6.png" alt="Cloud 12">
-        <img id="cloud_13" class="d-none d-md-block" src="/img/home_cloud_6.png" alt="Cloud 13">
-        <img id="cloud_14" class="d-none d-md-block" src="/img/home_cloud_6.png" alt="Cloud 14">
+        <img id="cloud_12" class="d-none d-md-block lazy" data-src="/img/home_cloud_6.png" alt="Cloud 12">
+        <img id="cloud_13" class="d-none d-md-block lazy" data-src="/img/home_cloud_6.png" alt="Cloud 13">
+        <img id="cloud_14" class="d-none d-md-block lazy" data-src="/img/home_cloud_6.png" alt="Cloud 14">
     </div>
     <h2 id="news_title">Open Liberty News</h2>
     <p id="news_text">Check out the latest news on our blog and follow us on Twitter.</p>
@@ -165,9 +165,9 @@ css: home
                     {% endfor %}
                     <div class="blog_post_author_data_container">
                         <div class="author_images_container">
-                            <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                            <img class="blog_post_author_image lazy" data-src="{{ post.author_picture }}" alt="Blog author picture">
                             {% for author in post.additional_authors %}
-                                <img src="{{ author.image }}" class="blog_post_author_image" alt="Image of author">
+                                <img class="blog_post_author_image lazy" data-src="{{ author.image }}" alt="Image of author">
                             {% endfor %}
                         </div>
                         <a class="blog_post_author_name" href="{{ post.author_github }}" target="_blank" rel="noopener">{{ post.author }}</a>
@@ -198,12 +198,13 @@ css: home
         </div>
         <div class="col-xs-12 col-md-6">
             <div id="twitter_follow_div">
-                <img id="ufo_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+                <img id="ufo_logo" class="lazy" data-src="/img/home_logo.svg" alt="Open Liberty Logo">
                 <a id="twitter_handle" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@openliberty.io</a>
                 <a id="twitter_link" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">Follow</a>
             </div>
             <div id="twitter_iframe_div">
-                <a class="twitter-timeline" href="https://twitter.com/OpenLibertyIO?ref_src=twsrc%5Etfw" rel="noopener" data-tweet-limit="3" data-chrome="noheader nofooter"></a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                <a class="twitter-timeline" href="https://twitter.com/OpenLibertyIO?ref_src=twsrc%5Etfw" rel="noopener" data-tweet-limit="3" data-chrome="noheader nofooter"></a>
+                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
             </div>
         </div>
     </div>
@@ -235,7 +236,7 @@ css: home
                 <span id="star10" class="star d-none d-sm-block"></span>
                 <span id="star11" class="star d-none d-sm-block"></span>
                 <span id="star12" class="star d-none d-sm-block"></span>
-                <img id="support_ufo" src="/img/home_ufo_with_guide.svg" class="img-fluid" alt="Mothership UFO">
+                <img id="support_ufo" class="img-fluid lazy" data-src="/img/home_ufo_with_guide.svg" alt="Mothership UFO">
             </div>
         </div>
     </div>
@@ -249,7 +250,7 @@ css: home
         <img id="cloud_17" class="d-none d-sm-block" src="/img/home_cloud_1.png" alt="Cloud 17">
         <img id="cloud_18" class="d-none d-sm-block" src="/img/home_cloud_1.png" alt="Cloud 18">
         <img id="cloud_19" class="d-none d-sm-block" src="/img/home_cloud_1.png" alt="Cloud 19">
-        <img id="cloud_20" class="d-none d-md-block" src="/img/home_cloud_6.png" alt="Cloud 20">
+        <img id="cloud_20" class="d-none d-md-block lazy" data-src="/img/home_cloud_6.png" alt="Cloud 20">
         <img id="ufo_1" class="d-none d-md-block" src="/img/home_ufo_1.svg" alt="Small ufo">
         <img id="ufo_2" class="d-none d-md-block" src="/img/home_ufo_2.svg" alt="Small ufo 2">
         <img id="ufo_3" class="d-none d-md-block" src="/img/home_ufo_3.svg" alt="Small ufo 3">
@@ -266,12 +267,12 @@ css: home
             </div>
             <p id="contributors_title">Here are some of our awesome contributors!</p>
             <div id="contributors_div">
-                <img src="https://avatars0.githubusercontent.com/u/4081634?s=50" class="contributor_image" alt="Contributor picture">
-                <img src="https://avatars3.githubusercontent.com/u/3322532?s=50" class="contributor_image" alt="Contributor picture">
-                <img src="https://avatars2.githubusercontent.com/u/5427967?s=50" class="contributor_image" alt="Contributor picture">
-                <img src="https://avatars0.githubusercontent.com/u/2011102?s=50" class="contributor_image" alt="Contributor picture">
-                <img src="https://avatars0.githubusercontent.com/u/1906689?s=50" class="contributor_image" alt="Contributor picture">
-                <img src="https://avatars0.githubusercontent.com/u/22085207?s=50" class="contributor_image" alt="Contributor picture">
+                <img class="contributor_image lazy" data-src="https://avatars0.githubusercontent.com/u/4081634?s=50" alt="Contributor picture">
+                <img class="contributor_image lazy" data-src="https://avatars3.githubusercontent.com/u/3322532?s=50" alt="Contributor picture">
+                <img class="contributor_image lazy" data-src="https://avatars2.githubusercontent.com/u/5427967?s=50" alt="Contributor picture">
+                <img class="contributor_image lazy" data-src="https://avatars0.githubusercontent.com/u/2011102?s=50" alt="Contributor picture">
+                <img class="contributor_image lazy" data-src="https://avatars0.githubusercontent.com/u/1906689?s=50" alt="Contributor picture">
+                <img class="contributor_image lazy" data-src="https://avatars0.githubusercontent.com/u/22085207?s=50" alt="Contributor picture">
             </div>
         </div>
     </div>

@@ -29,4 +29,41 @@ $(document).ready(function() {
         $(".twitter-timeline").contents().find(".TweetAuthor-decoratedName").css("display", "inline");
         $(".twitter-timeline").contents().find(".timeline-Body").css("border-bottom", "none");
     });
+
+    function isInViewport(el){
+        var rect = el.getBoundingClientRect();
+    
+        return (
+            rect.bottom >= 0 && 
+            rect.right >= 0 && 
+        
+            rect.top <= (
+            window.innerHeight || 
+            document.documentElement.clientHeight) && 
+        
+            rect.left <= (
+            window.innerWidth || 
+            document.documentElement.clientWidth)
+        );
+    }
+
+    function lazyLoad() {
+        var lazy = $('.lazy');
+
+        for (var i = 0; i < lazy.length; i++) {
+            if (isInViewport(lazy[i])) {
+                lazy[i].src = lazy[i].getAttribute('data-src');
+            }
+        }
+    }
+
+    $(document).ready(function() {
+        lazyLoad();
+    })
+    
+    $(window).scroll(function() {
+        lazyLoad();
+    })
+
+
 });
