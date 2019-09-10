@@ -55,7 +55,7 @@ function render_builds(builds, parent) {
                         if (package_name.indexOf("java") > -1) {
                             // 19.0.0.6 and higher should be labeled "Jakarta EE 8", and anything before should be "Java EE 8"
                             buildVersionYear = parseInt(build.version.substring(0, build.version.indexOf(".")), 10);
-                            buildVersionMonth = parseInt(build.version.substring(build.version.lastIndexOf(".")), 10);
+                            buildVersionMonth = parseInt(build.version.substring(build.version.lastIndexOf(".") + 1), 10);
                             if (buildVersionYear > 19 || (buildVersionYear === 19 && buildVersionMonth > 5)) {
                                 row.append("<td>Jakarta EE 8</td>")
                             } else {
