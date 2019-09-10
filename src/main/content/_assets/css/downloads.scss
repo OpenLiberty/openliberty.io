@@ -79,8 +79,7 @@ html, body{
 }
 
 #downloads_intro_background {
-    padding-bottom: 35.5px;
-    margin-bottom: 46px;
+    padding-bottom: 60px;
     overflow: hidden;
     background-image: url(/img/blue_background.png);
     background-size: cover;
@@ -112,106 +111,19 @@ html, body{
 }
 
 #downloads_intro_text {
-    margin-top: 190px;
+    margin-top: 130px;
+}
+
+#get_started {
+    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
+    font-size: 55px;
 }
 
 #intro_text_1 {
-    margin-top: 39px;
+    margin-top: 18px;
+    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
     font-size: 20px;
     color: #2C2E50;
-}
-
-#intro_text_2 {
-    margin-top: 16px;
-    color: #2C2E50;
-}
-
-#main_download_link_container .download_link {
-    border-radius: 7px;
-    text-decoration: none;
-    position: relative;
-    transition: border .2s, background-color .2s;
-    float: right;
-    color:#2C2E50;
-}
-
-.runtime_download_button_label_container {
-    display: inline-block;
-    width: 357px;
-}
-
-.eclipse_download_button_label_container {
-    display: inline-block;
-    width: 353px;    
-}
-
-.runtime_button_sub_label {
-    font-size: 13px;
-    margin-left: 159px;
-    margin-right: 149px;
-    margin-top: -54px;
-    margin-bottom: 32px;
-}
-
-.eclipse_button_sub_label {
-    font-size: 13px;
-    margin-left: 210px;
-    margin-right: 98px;
-    margin-top: -31px;
-    margin-bottom: 13px;
-}
-
-#runtime_releases_title_container {
-    background-color: #F5F8FD;
-    text-align: center;
-}
-
-#runtime_download_link_container {
-    font-size: 20px;
-    margin-top: 48.5px;
-    margin-bottom: 3.5px;
-    float: right;
-}
-
-#eclipse_download_link_container {
-    font-size: 16px;
-    float: right;
-}
-
-.runtime_download_button_label {
-    font-weight: 500;
-    padding-top: 20px;
-    padding-bottom: 32px;
-    padding-left: 36px;
-    padding-right: 85px;
-}
-
-.eclipse_download_button_label {
-    padding-top: 11px;
-    padding-bottom: 11px;
-    padding-left: 36px;
-    padding-right: 36px;
-}
-
-#runtime_download_link {
-    color: #282A4A;
-    background-color: #AAD34B;
-    text-align: left;
-}
-
-#runtime_download_link .arrow {
-    width: 12px;
-    height: 17px;
-    background-image: url('/img/download_downarrow.svg');
-    background-repeat: no-repeat;
-    position: absolute;
-    right: 31px;
-    top: calc(50% - 12px);
-    transition: all .3s;
-}
-
-#runtime_download_link:hover .arrow, td a:hover .table_arrow {
-    transform: translateY(2px);
 }
 
 .download_arrow {
@@ -236,70 +148,83 @@ html, body{
     position: relative;
 }
 
-#runtime_download_link .line {
-    width: 12px;
-    height: 3px;
-    background-image: url('/img/download_arrow_line.svg');
-    background-repeat: no-repeat;
-    position: absolute;
-    right: 31px;
-    top: calc(50% + 8.5px);
+#quick_start_section {
+    margin-top: 70px;
+    margin-bottom: 90px;
 }
 
-#runtime_download_link:hover .line {
-    transform: translateY(-1px);
+.section_title {
+    font-size: 30px;
+    color: #5E6B8D;
 }
 
-#runtime_download_link:hover {
-    background-color: #C7EE63;
+.code_container {
+    background-color: #F1F4FE;
+    font-family: Courier;
+    padding: 30px 40px;
+    border-radius: 7px;
+    margin-bottom: 30px;
+
+    & .indent {
+        padding-left: 35px;
+    }
 }
 
+#sample_app_browser_link {
+    padding-left: 30px;
 
-
-#eclipse_developer_tools_download_link {
-    border: solid 2px #AAD34B;
-    color: #EAF0FF;
-    min-width: 178.5px;
-    min-height: 21px;
-    text-align: left;
+    & a {
+        border: solid 2px #AAD34B;
+        border-radius: 7px;
+        padding: 10px 15px;
+        margin-left: 10px;
+    }
 }
 
-#eclipse_developer_tools_download_link:hover {
-    border-color: #E6EDA8;
+#install_section {
+    margin-bottom: 90px;
 }
 
-#eclipse_developer_tools_download_link_version_text {
-    color: #5D6A8E;
+#maven .code_container, #gradle .code_container, #docker .code_container {
+    height: 204px;
+    margin-bottom: 0px;
 }
 
-#eclipse_developer_tools_download_link .arrow {
-    width: 12px;
-    height: 17px;
-    background-image: url('/img/download_downarrow.svg');
-    background-repeat: no-repeat;
-    position: absolute;
-    right: 31px;
-    top: calc(50% - 12px);
-    transition: all .3s;
-}
+#vertical_tabs {
+    padding-top: 10px;
 
-#eclipse_developer_tools_download_link:hover .arrow {
-    transform: translateY(2px);
-}
+    & .nav-tabs {
+        & .nav-item {
+            display: block;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.3s;
+            border-bottom: 1px solid #979797;
+            height: 50px;
 
-#eclipse_developer_tools_download_link .line {
-    width: 12px;
-    height: 3px;
-    background-image: url('/img/download_arrow_line.svg');
-    background-repeat: no-repeat;
-    position: absolute;
-    right: 31px;
-    top: calc(50% + 8.5px);
-}
+            & .nav-link {
+                font-size: 16px;
+                border: none;
+                font-weight: 500;
+                color: #5E6B8D;
+                padding-top: 12px;
+                padding-bottom: 12px;
 
-#eclipse_developer_tools_download_link:hover .line {
-    background-image: url('/img/download_arrow_line.svg');
-    transform: translateY(-1px);
+                &:hover {
+                    color: #F4914D;
+                }
+            }
+
+            & .nav-link.active, .nav-link.active:hover {
+                font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+                font-size: 17px;
+                color: #CC4D19;
+                background-color: transparent;
+                padding-top: 14px;
+            }
+        }
+
+    }
 }
 
 
@@ -424,7 +349,7 @@ html, body{
 
 /* TABS */
 
-#tabs_container {
+#tabs_container #horizontal_tabs {
     border-bottom: 4px solid rgba(200, 210, 210, 0.41);
     & .nav-tabs {
         border-bottom: 1px solid #FFFFFF;
@@ -458,25 +383,6 @@ html, body{
 
 
 /* RELEASES, DEVELOPMENT BUILDS, ECLIPSE DEVELOPER TOOLS */
-
-.section_title {
-    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
-    font-size: 40px;
-    color: #24253A;
-    margin-top: 49px;
-    margin-bottom: 20px;
-}
-
-.section_title_container {
-    background-color: #F5F8FD;
-    text-align: center;
-}
-
-.section_bar {
-    width: 86px;
-    height: 7px;
-    margin-bottom: 40px;
-}
 
 .builds_container {
     margin-bottom: 80px;
@@ -680,25 +586,16 @@ html, body{
 
 @media (max-width: 991.98px) {
 
+    #get_started {
+        text-align: center;
+        font-size: 48px;
+    }
+
     #intro_text_1 {
         font-weight: 500;
-        margin-top: -80px;
         text-align: center;
     }
 
-    #intro_text_2 {
-        text-align: center;
-    }
-
-    #runtime_download_link_container, #eclipse_download_link_container, #main_download_link_container {
-        margin-left: auto;
-        margin-right: auto;
-        clear: right;
-    }
-
-    #runtime_download_link_container {
-        margin-top: 10px;
-    }
 }
 
 @media (max-width: 767.98px) {
@@ -713,27 +610,26 @@ html, body{
         z-index: -1;
     }
 
-    #intro_text_1 {
-        margin-top: -114px;
-        margin-left: 18px;
-        margin-right: 18px;
-        text-align: left;
+    #get_started {
+        font-size: 36px;
     }
 
-    #intro_text_2 {
-        margin-left: 18px;
-        margin-right: 10px;
-        text-align: left;
+    #quick_start_section, #install_section {
+        margin-bottom: 50px;
     }
 
-    .runtime_download_button_label_container {
-        width: 262px;
+    .code_container {
+        overflow-x: scroll;
+    }
+
+    #maven .code_container, #gradle .code_container, #docker .code_container {
+        height: auto;
+    }
+
+    #vertical_tabs .nav-tabs .nav-item {
+        width: 33%;
     }
     
-    .eclipse_download_button_label_container {
-        width: 258px;
-    }
-
     #tabs_container {
         margin-top: 0px;
     }
