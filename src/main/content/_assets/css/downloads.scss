@@ -156,6 +156,11 @@ html, body{
 .section_title {
     font-size: 30px;
     color: #5E6B8D;
+
+    & + p {
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
 }
 
 .code_container {
@@ -181,50 +186,12 @@ html, body{
     }
 }
 
-#install_section {
+#get_section {
     margin-bottom: 90px;
 }
 
 #maven .code_container, #gradle .code_container, #docker .code_container {
-    height: 204px;
     margin-bottom: 0px;
-}
-
-#vertical_tabs {
-    padding-top: 10px;
-
-    & .nav-tabs {
-        & .nav-item {
-            display: block;
-            width: 100%;
-            cursor: pointer;
-            transition: 0.3s;
-            border-bottom: 1px solid #979797;
-            height: 50px;
-
-            & .nav-link {
-                font-size: 16px;
-                border: none;
-                font-weight: 500;
-                color: #5E6B8D;
-                padding-top: 12px;
-                padding-bottom: 12px;
-
-                &:hover {
-                    color: #F4914D;
-                }
-            }
-
-            & .nav-link.active, .nav-link.active:hover {
-                font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
-                font-size: 17px;
-                color: #CC4D19;
-                background-color: transparent;
-                padding-top: 14px;
-            }
-        }
-
-    }
 }
 
 
@@ -349,8 +316,9 @@ html, body{
 
 /* TABS */
 
-#tabs_container #horizontal_tabs {
+.tabs_container {
     border-bottom: 4px solid rgba(200, 210, 210, 0.41);
+    margin-bottom: 41px;
     & .nav-tabs {
         border-bottom: 1px solid #FFFFFF;
         & > .nav-item > .nav-link {
@@ -362,7 +330,6 @@ html, body{
             padding-bottom: 15px;
             margin-right: 0px;
             margin-left: 0px;
-            margin-top: 20px;
             font-weight: 500;
         }
         & .nav-link.active, .nav-link.active:hover {
@@ -388,18 +355,12 @@ html, body{
     margin-bottom: 80px;
 }
 
-#runtime_releases_paragraph {
-    margin-top: 41px;
-    margin-bottom: 41px;
-}
-
 #runtime_development_builds_title {
     margin-top: 0;
     margin-bottom: 20px;
 }
 
 #runtime_development_builds_paragraph {
-    margin-top: 41px;
     margin-bottom: 41px;
 }
 
@@ -614,7 +575,7 @@ html, body{
         font-size: 36px;
     }
 
-    #quick_start_section, #install_section {
+    #quick_start_section, #get_section {
         margin-bottom: 50px;
     }
 
@@ -648,7 +609,7 @@ html, body{
         font-size: 12px;
     }
 
-    #runtime_releases_paragraph, #runtime_development_builds_paragraph, #eclipse_development_tools_text {
+    #runtime_development_builds_paragraph, #eclipse_development_tools_text {
         margin-top: 26px;
         margin-bottom: 22px;
     }
