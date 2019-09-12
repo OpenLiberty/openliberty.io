@@ -26,44 +26,31 @@ $(document).ready(function() {
     $('#twitter_iframe_div').on('DOMSubtreeModified propertychange',"#twitter-widget-0", function() {
         $(".twitter-timeline").contents().find(".timeline-Tweet-media").css("display", "none");
         $(".twitter-timeline").contents().find(".timeline-Tweet-text").css({"font-size": "16px", "margin-bottom": "-10px"});
-        $(".twitter-timeline").contents().find(".TweetAuthor-decoratedName").css("display", "inline");
         $(".twitter-timeline").contents().find(".timeline-Body").css("border-bottom", "none");
     });
 
-    function isInViewport(el){
-        var rect = el.getBoundingClientRect();
-    
-        return (
-            rect.bottom >= 0 && 
-            rect.right >= 0 && 
-        
-            rect.top <= (
-            window.innerHeight || 
-            document.documentElement.clientHeight) && 
-        
-            rect.left <= (
-            window.innerWidth || 
-            document.documentElement.clientWidth)
-        );
-    }
+});
 
-    function lazyLoad() {
-        var lazy = $('.lazy');
 
-        for (var i = 0; i < lazy.length; i++) {
-            if (isInViewport(lazy[i])) {
-                lazy[i].src = lazy[i].getAttribute('data-src');
-            }
+function isInViewport(el){
+    var rect = el.getBoundingClientRect();
+
+    return (
+        rect.top >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) /*or $(window).height() */
+    );
+
+}
+
+function lazyLoad() {
+    var lazy = $('.lazy');
+
+    for (var i = 0; i < lazy.length; i++) {
+        if (isInViewport(lazy[i])) {
+            lazy[i].src = lazy[i].getAttribute('data-src');
         }
     }
+}
 
-    $(document).ready(function() {
-        lazyLoad();
-    })
-    
-    $(window).scroll(function() {
-        lazyLoad();
-    })
+$(window).on('DOMContentLoaded load resize scroll', lazyLoad); 
 
-
-});
