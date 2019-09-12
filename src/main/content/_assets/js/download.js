@@ -32,25 +32,19 @@ $(document).ready(function() {
 });
 
 
-function isInViewport(el){
-    var rect = el.getBoundingClientRect();
-
-    return (
-        rect.top >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) /*or $(window).height() */
-    );
-
-}
-
-function lazyLoad() {
-    var lazy = $('.lazy');
-
-    for (var i = 0; i < lazy.length; i++) {
-        if (isInViewport(lazy[i])) {
-            lazy[i].src = lazy[i].getAttribute('data-src');
-        }
-    }
-}
-
-$(window).on('DOMContentLoaded load resize scroll', lazyLoad); 
-
+document.addEventListener("DOMContentLoaded", function() {
+    const imageObserver = new IntersectionObserver((entries, imgObserver) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                const lazyImage = entry.target
+                lazyImage.src = lazyImage.dataset.src
+                lazyImage.classList.remove("lazy");
+                imgObserver.unobserve(lazyImage);
+            }
+        })
+    });
+    const arr = document.querySelectorAll('img.lazy')
+    arr.forEach((v) => {
+        imageObserver.observe(v);
+    })
+})
