@@ -19,23 +19,31 @@
 
     $('#preamble').detach().insertAfter('#duration_container');  
 
-    $("#mobile_github_clone_popup_copy").click(function(event){
-        event.preventDefault();
-        target = $("#mobile_github_clone_popup_repo > span").get(0);
-        copy_element_to_clipboard(target, function(){
-            var current_target_object = $(event.currentTarget);
-            var position = current_target_object.position();	
-            $('#guide_section_copied_confirmation').css({	
-                top: position.top - 20,	
-                right: 25	
-            }).stop().fadeIn().delay(1000).fadeOut();
+    // Read prereqs from json file and add to html
+    $.getJSON( "../../guides/guides-common/guide_prereqs.json", function(data) {
+        var guide_name = window.location.pathname.replace('.html','').replace('/guides/', '');
+        var prereq_html = '';
+        $.each(data.prereqs, function(i, prereq) {
+            // if guide found in prereqs list, add it to the html
+            if (prereq.guides.indexOf(guide_name) > -1) {
+                prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq" target="_blank">' + prereq.name + '</a></div>';
+            }
+            // if prereqs list contains * add prereq to all guides except for excluded guides (if they exist)
+            else if (prereq.guides.indexOf("*") > -1) {
+                if (prereq.exclude) {
+                    // if guide not in prereq exclude list, add it to the html
+                    if (prereq.exclude.indexOf(guide_name) <= -1) {
+                        prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq" target="_blank">' + prereq.name + '</a></div>'; 
+                    }
+                }
+                // guides has * but no exclude, add all to html
+                else {
+                    prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq" target="_blank">' + prereq.name + '</a></div>'; 
+                }
+            }
         });
-    });
 
-    $("#github_clone_popup_copy, #mobile_github_clone_popup_copy").on('keydown', function(event){
-        if(event.which === 13 || event.keyCode === 13){
-            $(this).trigger('click');
-        }
+        $(".prereqs_list").html(prereq_html);
     });
 
     function handleSectionChanging(event){
@@ -67,12 +75,12 @@
         }
     }
 
-    $('#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre)').hover(function(event) {
+    $('#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre):not(.code_column pre)').hover(function(event) {
         offset = $('#guide_column').position();	
         target = event.currentTarget;	
-        var current_target_object = $(event.currentTarget);	
+        var current_target_object = $(event.currentTarget);
         target_position = current_target_object.position();	
-        target_width = current_target_object.outerWidth();	
+        target_width = current_target_object.outerWidth();
         target_height = current_target_object.outerHeight();
         var right_position = inSingleColumnView() ? 1 : 46;
          $('#copy_to_clipboard').css({	

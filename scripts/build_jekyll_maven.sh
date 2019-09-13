@@ -37,11 +37,15 @@ if [ "$JEKYLL_ENV" != "production" ]; then
         ./scripts/build_clone_docs.sh "draft" # Argument is branch name of OpenLiberty/docs
     else
         ./scripts/build_clone_docs.sh "develop" # Argument is branch name of OpenLiberty/docs
+        ./scripts/build_clone_certifications.sh "dev" # Argument is branch name of OpenLiberty/certifications
     fi
 else
     # Production!
     echo "Clone published docs!"
     ./scripts/build_clone_docs.sh "master" # Argument is branch name of OpenLiberty/docs
+
+    echo "Clone published certifications!"
+    ./scripts/build_clone_certifications.sh "master" # Argument is branch name of OpenLiberty/certifications
 fi
 
 # Development environments that enable the draft blogs in the _draft directory.
