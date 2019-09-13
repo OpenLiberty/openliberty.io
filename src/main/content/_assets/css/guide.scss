@@ -62,10 +62,15 @@ header {
     width: 100%;
 }
 
+#doc_title {
+    margin-left: 23px;
+}
+
 /* GUIDE CONTENT */
 
 .centered_content {
-    margin: 0 auto; 
+    margin: 0 auto;
+    max-width: 1400px;
     background-color: white;    
 }
 
@@ -164,11 +169,6 @@ header {
     border: none;
     border-radius: 0;
     padding: 30px;
-    word-wrap: normal;
-
-    & code {
-        white-space: pre;
-    }
 }
 
 #guide_content .listingblock.command .content pre,
@@ -188,7 +188,6 @@ header {
     & code {
         background-color: inherit;
         color: inherit;
-        white-space: pre-wrap;
     }
 }
 
@@ -312,32 +311,23 @@ header {
 .tab_link {
     display: inline-block;
     padding-right: 15px;
-    margin-bottom: 10px;
     cursor: pointer;
     & :hover {
         color: #CC4D19;
     }
 }
 
-#guide_content .tab_link.active > p {
-    border-bottom: 2px solid #CC4D19;
-    & > code {
-        color: #CC4D19;
-        cursor: auto;
+.tab_link.active {
+    color: #CC4D19;
+    cursor: auto;
+    & > p {
+        border-bottom: 2px solid #CC4D19;
     }
 }
 
-#guide_content .windows_link > p, #guide_content .mac_link > p, #guide_content .linux_link > p {
+#windows_link > p, #mac_link > p, #linux_link > p {
     padding-top: 0px;
     padding-bottom: 0px;
-
-    & code {
-        background-color: white;
-    }
-}
-
-.tab_content {
-    padding-left: 30px;
 }
 
 /* GUIDE PAGE LAYOUT */
@@ -502,6 +492,7 @@ header {
 @media (min-width: 1440px) {
     #guide_column {
         width: calc(100% - 400px);
+        max-width: 1000px;
         display: inline-block;
     }
     
