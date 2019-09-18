@@ -9,19 +9,166 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
  
+
+body {
+    overflow-x: hidden;
+}
+
 /* INTRO */
 
-#intro_background_image {
-    background-image: url('/img/home1.png');
-    background-repeat: no-repeat;
-    background-position: center 20px;
-    height: 734px;
-    padding-top: 60px;
+#intro_background {
+    background-image: radial-gradient(circle at top right, #5E6B8D, #2C2E50);
+    height: 922px;
+}
+
+.star {
+    width: 4px;
+    height: 4px;
+    background-color: #C8D2D2;
+    border-radius: 50%;
+    position: absolute;
+}
+
+#cloud_shadow {
+    position: absolute;
+    top: 310px;
+    right: 0px;
+}
+
+#cloud_1 {
+    position: absolute;
+    top: 780px;
+    right: 1260px;
+    transform: scaleX(-1);
+}
+
+#cloud_2 {
+    position: absolute;
+    top: 760px;
+    right: 770px;
+}
+
+#cloud_3 {
+    position: absolute;
+    top: 785px;
+    right: -200px;
+}
+
+#beam {
+    position: absolute;
+    top: 232px;
+    right: -90px;
+    width: 965px;
+    height: 724px;
+}
+
+#ufo {
+    position: absolute;
+    top: 82px;
+    right: 0px;
+}
+
+#person_1 {
+    position: absolute;
+    top: 310px;
+    right: 286px;
+    width: 238px;
+    height: 309px;
+    animation: object_hovering 4.5s infinite;
+    animation-timing-function: linear;
+}
+
+#coffee {
+    position: absolute;
+    top: 335px;
+    right: 190px;
+    animation: object_hovering 4s infinite;
+    animation-timing-function: linear;
+}
+
+#shoe {
+    position: absolute;
+    top: 475px;
+    right: 175px;
+    animation: object_hovering 3.5s infinite;
+    animation-timing-function: linear;
+}
+
+
+#laptop {
+    position: absolute;
+    top: 600px;
+    right: 290px;
+    animation: object_hovering 5.5s infinite;
+    animation-timing-function: linear;
+}
+
+
+#ball {
+    position: absolute;
+    top: 645px;
+    right: 480px;
+    animation: object_hovering 3.6s infinite;
+    animation-timing-function: linear;
+}
+
+
+#dog {
+    position: absolute;
+    top: 660px;
+    right: 480px;
+    animation: object_hovering 3.5s infinite;
+    animation-timing-function: linear;
+}
+
+#phone {
+    position: absolute;
+    top: 775px;
+    right: 355px;
+    animation: object_hovering 5s infinite;
+    animation-timing-function: linear;
+}
+
+#mouse {
+    position: absolute;
+    top: 633px;
+    right: 44px;
+    animation: object_hovering 5.5s infinite;
+    animation-timing-function: linear;
+}
+
+#cloud_4 {
+    position: absolute;
+    top: 818px;
+    right: -235px;
+}
+
+#cloud_5 {
+    position: absolute;
+    top: 825px;
+    right: 295px;
+    transform: scaleX(1.2);
+}
+
+#person_2 {
+    position: absolute;
+    top: 535px;
+    right: 45px;
+    animation: object_hovering 4.3s infinite;
+    animation-timing-function: linear;
+}
+
+@media (min-width: 992px) {
+    @keyframes object_hovering {
+        50% {
+            transform: translateY(16px) translateX(-6px) rotate(4deg);
+        }
+    }
 }
 
 #intro_content {
     position: relative;
-    margin-top: 220px;
+    margin-top: 200px;
     color: white;
 }
 
@@ -29,6 +176,13 @@
     height: 101px;
     width: 502px;
     margin-bottom: 48px;
+}
+
+#an_ibm_open_source_project {
+    position: absolute;
+    font-size: 14px;
+    top: 87px;
+    right: calc(50% - 185px);
 }
 
 #intro_lighten_up_title {
@@ -44,145 +198,55 @@
     margin-bottom: 30px;
 }
 
-#download_links_container {
-    display: inline-block
-}
-
 #download_link {
     display: block;
     font-size: 20px;
     color: #1A1B31;
     background-color: #ABD155;
-    border-radius: 3px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 40px;
-    padding-right: 40px;
+    border-radius: 7px;
+    padding-top: 12px;
+    padding-bottom: 12px;
     margin-bottom: 8px;
     text-align: center;
     transition: background-color .2s;    
-    min-width: 280px;
-}
-
-#download_link:hover {
-    background-color: #C7EE63;
+    width: 260px;
+    
+    &:hover {
+        background-color: #C7EE63;
+    }
 }
 
 #more_downloads_link {
     font-size: 16px;
+    padding-left: 52px;
 }
 
-#an_ibm_open_source_project {
-    position: absolute;
-    font-size: 14px;
-    top: 87px;
-    right: calc(50% - 185px);
-}
-
-#shooting_star_1 {
-    position: absolute;
-    top: 280px;
-    right: calc(50% + 500px);
-    animation: shooting_star_1_fly_lg 20s infinite;
-}
-
-
-@keyframes shooting_star_1_fly_lg {
-    0% {
-        opacity: 0;
-    }
-    30% {
-        opacity: 0;
-        top: 280px;
-        transform: translateX(-30px);
-    }
-    33% {
-        opacity: 1;
-    }
-    37% {
-        opacity: 0;
-        top: 120px;
-        transform: translateX(600px);
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-@keyframes shooting_star_1_fly_md {
-    0% {
-        opacity: 0;
-    }
-    30% {
-        opacity: 0;
-        top: 200px;
-        transform: translateX(50px);
-    }
-    33% {
-        opacity: 1;
-    }
-    37% {
-        opacity: 0;
-        top: 100px;
-        transform: translateX(560px);
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-@keyframes shooting_star_1_fly_sm {
-    0% {
-        opacity: 0;
-    }
-    30% {
-        opacity: 0;
-        top: 120px;
-        transform: translateX(170px);
-    }
-    33% {
-        opacity: 1;
-    }
-    37% {
-        opacity: 0;
-        top: 70px;
-        transform: translateX(550px);
-    }
-    100% {
-        opacity: 0;
-    }
-}
 
 #star1 {
-    position: absolute;
     top: 430px;
-    right: calc(50% - 550px);
+    right: calc(50% - 730px);
     animation: blink 3s infinite;
 }
 
 #star2 {
-    position: absolute;
     top: 240px;
     right: calc(50% - 180px);
     animation: blink 4s infinite;
 }
 
 #star3 {
-    position: absolute;
     top: 110px;
     right: calc(50% + 420px);
     animation: blink 5s infinite;
 }
 
 #star4 {
-    position: absolute;
     top: 620px;
     right: calc(50% + 660px);
     animation: blink 6s infinite;
 }
 
 #star5 {
-    position: absolute;
     top: 330px;
     right: calc(50% + 630px);
     animation: blink 7s infinite;
@@ -203,12 +267,556 @@
     }
 }
 
+
+
+/* DEVELOP, DEPLOY, MONITOR */
+
+#develop_container {
+    padding-top: 50px;
+    margin-bottom: 100px;
+}
+
+#cloud_6 {
+    position: absolute;
+    top: 1250px;
+    left: 0%;
+    transform: scale(1.5);
+}
+
+#cloud_7 {
+    position: absolute;
+    top: 1608px;
+    right: 0%;
+    transform: scale(1.3) rotate(-13deg);
+}
+
+.develop_title {
+    font-size: 32px;
+    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
+    margin-top: 0;
+    padding-bottom: 26px;
+    background-color: white;
+}
+
+.develop_text {
+    font-size: 16px;
+    margin-bottom: 36px;
+}
+
+.learn_more_container {
+    margin-bottom: 100px;
+}
+
+.learn_more_link {
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #5E6B8D;
+    border-radius: 7px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+    text-align: center;
+    transition: background-color .2s;
+
+    &:hover {
+        color: #ffffff;
+        background-color: #24253A;
+    }
+}
+
+#dark_blue_background {
+    position: relative;
+    background-color: #313653;
+    color: white;
+    padding-top: 96px;
+    padding-bottom: 150px;
+}
+
+#graph_container {
+    margin-top: -200px;
+}
+
+.graph {
+    background: #FFFFFF;
+    box-shadow: 0 2px 8px 0 rgba(63,70,89,0.31);
+    border-radius: 3px;
+    height: 692px;
+    text-align: center;
+
+    & img {
+        max-width: 100%;
+    }
+}
+
+#graph1 {
+    margin-right: 37px;
+}
+
+#logos_section {
+    background: #FFFFFF;
+    box-shadow: 0 2px 4px 0 rgba(63,70,89,0.31);
+    border-radius: 3px;
+    margin-top: 58px;
+    color: #313653;
+    padding: 45px 100px;
+}
+
+#logos_title {
+    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+    font-size: 30px;
+    text-align: center;
+    color: #3F4664;
+    padding-bottom: 30px;
+}
+
+#logo_image_row {
+    padding-bottom: 45px;
+    border-bottom: 2px solid #979797;
+
+    & img {
+        height: fit-content;
+    }
+}
+
+#microprofile_logo {
+    padding-left: 50px;
+}
+
+#jakarta_ee_logo {
+    padding-right: 50px;
+    float: right;
+}
+
+.logos_row {
+    padding-top: 32px;
+
+    & p {
+        padding: 5px 22px;
+        border-radius: 30px;
+        color: #ffffff;
+        background-color: #3F4664;;
+        margin-left: 30px;
+        margin-right: 30px;
+        margin-bottom: 0px;
+    }
+}
+
+
+/* NEWS */
+
+#news_container {
+    padding-top: 84px;
+}
+
+.cloud_images_div {
+    position: absolute;
+    height: 0px;
+}
+
+#get_involved_row {
+    padding-top: 40px;
+}
+
+#cloud_8 {
+    position: relative;
+    top: -189px;
+    right: 450px;
+}
+
+#cloud_9 {
+    position: relative;
+    top: -445px;
+    right: 315px;
+    transform: scaleX(-1);
+}
+
+#cloud_10 {
+    position: relative;
+    top: -770px;
+    right: -800px;
+}
+
+#cloud_11 {
+    position: relative;
+    top: -1085px;
+    right: -1185px;
+}
+
+#cloud_12 {
+    position: relative;
+    top: -1145px;
+    right: 330px;
+}
+
+#cloud_13 {
+    position: relative;
+    top: -1250px;
+    right: -1155px;
+    transform: scaleX(-1);
+}
+
+#cloud_14 {
+    position: relative;
+    top: -1200px;
+    right: -200px;
+}
+
+#news_title {
+    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
+    font-size: 40px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+#news_text {
+    font-size: 16px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 62px;
+}
+
+#blog_post {
+    box-shadow: 0 2px 4px 0 rgba(63,70,89,0.31);
+    border-radius: 3px;
+    padding: 47px 57px;
+    background: #ffffff;
+    margin-bottom: 18px;
+}
+
+.blog_post_title_link {
+    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
+    font-size: 35px;
+    color: #5E6B8D;
+    transition: color .2s;
+
+    &:hover {
+        color: #3F4659;
+    }
+}
+
+.continued_text {
+    font-size: 16px;
+    color: #F69144;
+}
+
+.blog_post_author_data_container {
+    margin-bottom: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    @media (max-width: 767.98px) {
+        display: none;
+    }
+}
+
+.author_images_container {
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.blog_post_author_image {
+    height: 32px;
+    width: 32px;
+    border-radius: 100%;
+    vertical-align: middle;
+}
+
+.blog_post_author_name {
+    font-size: 16px;
+    color: #24253A;
+}
+
+.blog_post_date {
+    font-size: 16px;
+    margin-left: 2px;
+    color: #6f7878;
+}
+
+#blog_link {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    color: #24253A;
+    background-color: #ABD155;
+    border-radius: 7px;
+    padding: 12px 0px;
+    text-align: center;
+    transition: background-color .2s;    
+    width: 283px;
+    
+    &:hover {
+        color: #24253A;
+        background-color: #C7EE63;
+    }
+}
+
+.blog_post_paragraph {
+    font-size: 16px;
+}
+
+#twitter_follow_div {
+    box-shadow: 0 2px 4px 0 rgba(63,70,89,0.31);
+    border-radius: 3px;
+    padding: 14px 22px;
+    margin-bottom: 18px;
+    background: #ffffff;
+}
+
+#ufo_logo {
+    width: 59px;
+    height: 43px;
+}
+
+#twitter_handle {
+    display: inline-block;
+    font-size: 22px;
+    color: #5D6A8E;
+    margin-bottom: 0px;
+
+    &:hover {
+        color: #3F4659;
+    }
+}
+
+#twitter_link {
+    display: inline-block;
+    float: right;
+    font-size: 16px;
+    font-weight: 500;
+    color: #24253A;
+    background-color: #ABD155;
+    border-radius: 7px;
+    padding: 8px 0px;
+    text-align: center;
+    transition: background-color .2s;    
+    width: 130px;
+    
+    &:hover {
+        color: #24253A;
+        background-color: #C7EE63;
+    }
+}
+
+#twitter_iframe_div {
+    box-shadow: 0 2px 4px 0 rgba(63, 70, 89, 0.31);
+    border-radius: 3px;
+    margin-bottom: 60px;
+}
+
+
+/* SUPPORT */
+
+#support_background {
+    background-image: radial-gradient(circle at top right, #141427 0%, #515B7D 70%, #515B7D 100%);
+    height: 780px;
+}
+
+#support_container {
+    padding-top: 90px;
+}
+
+#support_title {
+    font-size: 35px;
+    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
+    color: #ffffff;
+    margin-bottom: 23px;
+}
+
+#support_text {
+    font-size: 16px;
+    color: #C8D2D2;
+    padding-bottom: 40px;
+    margin-bottom: 0px;
+}
+
+#support_link {
+    display: block;
+    font-size: 17px;
+    font-weight: 500;
+    color: #24253A;
+    background-color: #E6EDA8;
+    border-radius: 7px;
+    padding: 12px 0px;
+    text-align: center;
+    transition: background-color .2s;    
+    width: 260px;
+    
+    &:hover {
+        color: #24253A;
+        background-color: #F7FBD2;
+    }
+}
+
+#support_image {
+    text-align: center;
+}
+
+#star6 {
+    top: 20px;
+    right: calc(50% + 131px);
+    animation: blink 5s infinite;
+}
+
+#star7 {
+    top: -30px;
+    right: calc(50% - 183px);
+    animation: blink 4s infinite;
+}
+
+#star8 {
+    top: 76px;
+    right: calc(50% - 280px);
+    animation: blink 3s infinite;
+}
+
+#star9 {
+    top: 204px;
+    right: calc(50% - 250px);
+    animation: blink 6s infinite;
+}
+
+#star10 {
+    top: 256px;
+    right: calc(50% + 242px);
+    animation: blink 3s infinite;
+}
+
+#star11 {
+    top: 272px;
+    right: calc(50% + 254px);
+    animation: blink 4s infinite;
+}
+
+#star12 {
+    top: 372px;
+    right: calc(50% - 38px);
+    animation: blink 7s infinite;
+}
+
+
+/* GET INVOLVED */
+
+#get_involved_container {
+    margin-top: -185px;
+    height: 455px;
+}
+
+#cloud_15 {
+    position: relative;
+    right: 450px;
+
+}
+
+#cloud_16 {
+    position: relative;
+    top: -400px;
+    right: 230px;
+}
+
+#cloud_17 {
+    position: relative;
+    top: -600px;
+    right: 32px;
+    transform: scaleX(-1);
+}
+
+#cloud_18 {
+    position: relative;
+    top: -783px;
+    right: -549px;
+    transform: rotate(-5deg);
+}
+
+#cloud_19 {
+    position: relative;
+    top: -1140px;
+    right: -1005px;
+}
+
+#ufo_1 {
+    position: relative;
+    top: -1595px;
+    right: -626px;
+}
+
+#ufo_2 {
+    position: relative;
+    top: -1580px;
+    right: -900px;
+    transform: scaleX(-1) rotate(18deg);
+}
+
+#ufo_3 {
+    position: relative;
+    top: -1480px;
+    right: -730px;
+}
+
+#cloud_20 {
+    position: relative;
+    top: -1520px;
+    right: -375px;
+}
+
+#get_involved_title {
+    font-size: 35px;
+    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
+    margin-bottom: 23px;
+}
+
+#get_involved_text {
+    padding-bottom: 40px;
+    margin-bottom: 0px;
+    font-size: 16px;
+}
+
+#get_involved_text, #contribute_link_container {
+    background: #ffffff;
+}
+
+#contribute_link {
+    display: block;
+    font-size: 17px;
+    font-weight: 500;
+    color: #24253A;
+    background-color: #ABD155;
+    border-radius: 7px;
+    padding: 12px 0px;
+    text-align: center;
+    transition: background-color .2s;    
+    margin-bottom: 34px;
+    width: 260px;
+
+    &:hover {
+        color: #24253A;
+        background-color: #C7EE63;
+    }
+}
+
+#contributors_title {
+    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+    font-size: 20px;
+    line-height: 24px;
+    margin-bottom: 24px;
+}
+
+.contributor_image {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    margin: 0 6px;
+}
+
+
 @media (max-width: 1199.98px) {
-   
-   #intro_background_image {
-      background-size: auto 650px;
-      height: 670px;
-   }
+
+    #intro_background {
+        height: 800px;
+    }
 
    #intro_content {
         margin-top: 160px;
@@ -234,37 +842,255 @@
     }
 
     #star3 {
-        position: absolute;
         top: 110px;
         right: calc(50% + 380px);
     }
 
-    #shooting_star_1 {
-        animation: shooting_star_1_fly_md 15s infinite;
+    #cloud_3 {
+        top: 695px;
     }
 
+    #cloud_1 {
+        top: 689px;
+        right: 400px;
+    }
+
+    #cloud_2 {
+        top: 661px;
+        right: 500px;
+    }
+
+    #beam {
+        width: 772px;
+        height: 617px;
+        right: -72px;
+    }
+
+    #ufo {
+        width: 369px;
+        height: 198px;
+        top: 100px;
+    }
+
+    #person_1 {
+        width: 190px;
+        height: 247px;
+        right: 250px;
+    }
+
+    #coffee {
+        width: 48px;
+        height: 61px;
+        top: 330px;
+        right: 165px;
+    }
+
+    #shoe {
+        width: 44px;
+        height: 26px;
+        top: 455px;
+        right: 153px;
+    }
+
+    #laptop {
+        width: 91px;
+        height: 102px;
+        top: 560px;
+        right: 262px;
+    }
+
+    #ball {
+        width: 26px;
+        height: 26px;
+        top: 605px;
+        right: 443px;
+    }
+
+    #dog {
+        width: 143px;
+        height: 141px;
+        top: 610px;
+        right: 425px;
+    }
+
+    #phone {
+        width: 34px;
+        height: 63px;
+        top: 715px;
+        right: 274px;
+    }
+
+    #mouse {
+        width: 68px;
+        height: 107px;
+        top: 575px;
+        right: 26px;
+    }
+
+    #cloud_4 {
+        top: 745px;
+        right: -165px;
+        width: 480px;
+        height: 195px;
+    }
+
+    #cloud_5 {
+        top: 751px;
+        right: 153px;
+    }
+
+    #person_2 {
+        width: 168px;
+        height: 261px;
+        top: 515px;
+    }
+
+    #cloud_10 {
+        right: -600px;
+    }
+
+    #cloud_13 {
+        right: -800px;
+    }
+
+    #develop_image {
+        padding-top: 50px;
+    }
+
+    .graph {
+        height: 573px;
+    }
+
+    #microprofile_logo {
+        display: block;
+        padding-left: 0px;
+        margin: 0 auto;
+    }
+
+    #jakarta_ee_logo {
+        float: none;
+        display: block;
+        padding-right: 0px;
+        margin: 0 auto;
+    }
+
+    .logos_row p {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+}
+
+@media (min-width: 767.98px ) and (max-width: 991.98px) {
+    #ufo_images_container img {
+        transform: scale(.7);
+    }
 }
 
 @media (max-width: 991.98px) {
 
-    #intro_background_image {
-        background-size: auto 500px;
-        height: 520px;
+    #intro_background {
+        height: 650px;
     }
-   
-    #logo {
-        margin-bottom: 10px;
-        width: 400px;
+
+    #cloud_3 {
+        top: 540px;
     }
 
     #intro_content {
-        margin-top: 20px;
+        margin-top: 115px;
+    }
+
+    #intro_logo {
+        margin-bottom: 16px;
+    }
+
+    #intro_lighten_up_title {
+        margin-bottom: 12px;
+    }
+
+    #intro_paragraph {
+        margin-bottom: 20px;
+    }
+
+    #cloud_1 {
+        top: 510px;
+        right: 223px;
+    }
+
+    #cloud_2 {
+        top: 521px;
+        right: 331px;
+    }
+
+    #beam {
+        top: 130px;
+        right: -190px;
+    }
+
+    #ufo {
+        right: -75px;
+    }
+
+    #person_1 {
+        top: 223px;
+        right: 82px;
+    }
+
+    #coffee {
+        top: 340px;
+        right: 59px;
+    }
+
+    #shoe {
+        top: 430px;
+        right: 79px;
+    }
+
+    #laptop {
+        top: 444px;
+        right: 144px;
+    }
+
+    #ball {
+        top: 490px;
+        right: 270px;
+    }
+
+    #dog {
+        top: 490px;
+        right: 255px;
+    }
+
+    #phone {
+        top: 564px;
+        right: 200px;
+    }
+
+    #mouse {
+        top: 482px;
+        right: -10px;
+    }
+
+    #person_2 {
+        top: 440px;
+        right: -15px;
+    }
+
+    #cloud_4 {
+        top: 581px;
+        right: -222px;
+    }
+
+    #cloud_5 {
+        top: 582px;
+        right: -25px;
+        transform: scale(1) !important;
     }
 
     #an_ibm_open_source_project {
         font-size: 11px;
-        top: 75px;
-        right: calc(50% - 145px);
+        top: 72px;
+        right: calc(50% - 140px);
     }
 
     #star1 {
@@ -282,360 +1108,329 @@
         right: calc(50% + 300px);
     }
 
-    #shooting_star_1 {
-        animation: shooting_star_1_fly_sm 15s infinite;
+    #develop_image {
+        padding-top: 100px;
+    }
+
+    #deploy_image {
+        padding-top: 30px;
+    }
+    
+    #monitor_image {
+        padding-top: 50px;
+    }
+
+    .learn_more_container {
+        margin-bottom: 70px;
+    }
+
+    .graph {
+        height: 743px;
+    }
+
+    #graph1 {
+        margin-right: 0px;
+        margin-bottom: 50px;
+    }
+
+    .logos_row p {
+        margin-left: 30px;
+        margin-right: 30px;
+        margin-bottom: 32px;
+    }
+
+    #cloud_9 {
+        right: 440px;
+    }
+
+    #cloud_10 {
+        right: -490px;
+    }
+
+    #cloud_13 {
+       right: -400px;
+    }
+
+    #contributors_div {
+        width: 392px;
     }
 
 }
 
+
 @media (max-width: 767.98px) {
-
     #intro_background {
-        padding-bottom: 30px;
-    }
-   
-    #intro_background_image {
-        padding-top: 0;
-        background: none;
-        height: inherit;
+        height: 831px;
+        position: relative;
+        overflow: hidden;
     }
 
-    #intro_paragraph {
-        margin-bottom: 60px;
+    .bg-custom {
+        background-color: #3F4664;
     }
 
-    #download_links_container {
-        display: block;
+    .navbar-dark .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgb(255, 255, 255)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
     }
 
-    #download_link {
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 300px;
+
+    #intro_content_container {
+        max-width: none;
     }
 
     #intro_content {
-        margin-top: 76px;
+        margin-top: 20px;
+    }
+
+    #intro_content, #ufo_images_container {
+        width: 70%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #star1 {
+        top: 500px;
+        right: 88%;
+    }
+
+    #star2 {
+        top: 515px;
+        right: 85%;
+    }
+    
+    #star3 {
+        top: 700px;
+        right: 7%;
+    }
+
+    #cloud_1 {
+        top: 301px;
+        right: 162px;
+    }
+
+    #cloud_3 {
+        top: 675px;
+    }
+
+    #cloud_4 {
+        top: 352px;
+        right: -65px;
+        z-index: 1;
+        transform: scaleX(-1);
+    }
+
+    #beam {
+        top: 95px;
+        right: -20px;
+        width: 400px;
+        height: 300px;
+    }
+
+    #ufo {
+        top: 30px;
+        right: 15px;
+        width: 200px;
+        height: 100px;
+    }
+
+    #person_1 {
+        top: 150px;
+        right: 115px;
+        width: 165px;
+        height: 207px;
+    }
+
+    #coffee {
+        top: 140px;
+        right: 85px;
+        width: 38px;
+        height: 48px;
+    }
+
+    #shoe {
+        top: 245px;
+        right: 60px;
+        width: 48px;
+        height: 38px;
+    }
+
+    #person_2 {
+        top: 300px;
+        right: 10px;
+        width: 136px;
+        height: 211px;
+    }
+
+    #intro_content_container {
+        background-color: #ffffff;
     }
 
     #intro_logo {
-        width: 100%; 
-        margin-bottom: 5px;
+        z-index: 99999;
+        position: absolute;
+        height: 25px;
+        left: 51px;
+        width: 150px;
+        top: -48px;
     }
 
-    #an_ibm_open_source_project {
-        font-size: 14px;
+    #intro_lighten_up_title {
         text-align: center;
-        position: static;
+        color: #2C2E50;
+        padding-top: 60px;
+    }
+
+    #intro_paragraph {
+        color: #242643;
+    }
+
+    #download_links_container {
+        text-align: center;
+        padding-bottom: 40px;
+    }
+
+    #download_link {
+        width: 242px;
+        margin: 0 auto;
+        margin-bottom: 8px;
+    }
+
+    #more_downloads_link {
+        color: #191B31;
+        padding-left: 0px;
+    }
+
+    .develop_title {
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .develop_text {
+        position: relative;
+        z-index: 1;
+    }
+
+    .learn_more_container {
+        text-align: center;
+        margin-bottom: 55px;
+    }
+
+    .graph {
+        height: 650px;
+    }
+
+    #graph1, #graph2 {
+        margin: 10px;
+    }
+
+    #logos_section {
+        padding: 30px;
+    }
+
+    #logo_image_row img {
+        max-width: 100%;
+    }
+
+    #cloud_9 {
+        top: 820px;
+        right: -62px;
+    }
+
+    #cloud_10 {
+        top: -460px;
+        right: -400px;
+    }
+
+    #cloud_12 {
+        top: -685px;
+    }
+
+    #blog_post {
+        padding: 30px;
+    }
+
+    #blog_link {
+        margin: auto;
+        width: 250px;
+    }
+
+    #ufo_logo {
+        display: none;
+    }
+
+    #twitter_link {
+        margin-top: -3px;
+    }
+
+    #support_container {
+        padding-top: 60px;
+    }
+
+    #support_title {
+        text-align: center;
+    }
+
+    #support_link {
+        margin: auto;
+    }
+
+    #support_ufo {
         margin-bottom: 30px;
     }
 
+    #get_involved_container {
+        margin-top: 70px;
+    }
+
+    #get_involved_row {
+        padding-top: 0px;
+    }
+
+    #cloud_16 {
+        position: relative;
+        top: -145px;
+        right: 0;
+        max-width: 100%;
+        margin-top: 25px;        
+    }
+    
+    #get_involved_title {
+        text-align: center;
+    }
+
+    #contribute_link {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #contributors_title {
+        text-align: center;
+    }
+
+    #contributors_div {
+        width: 194px;
+        margin: auto;
+    }
+
+    .contributor_image {
+        margin-bottom: 20px;
+    }
+
 }
 
+@media (max-width: 575.98px) {
+    #develop_container {
+        padding-top: 75px;
+    }
 
-
-/* QUICK START */
-
-#quick_start_background {
-    position: relative;
-    background-color: #313653;
-    color: white;
-    padding-top: 96px;
-}
-
- #quick_start_background_bottom_border {
-    position: absolute;
-    bottom: 0px;
-    height: 110px;
-    width: 100%;
-    background-color: #1D1E3C;
-} 
-
-#quick_start_title {
-    font-size: 35px;
-    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
-    margin-top: 0;
-    margin-bottom: 45px;
-}
-
-#quick_start_paragraph {
-    display: inline-block;
-    margin-bottom: 40px;
-}
-
-#code_container {
-    font-size: 20px;
-    color: #E6EDA8;
-    background-color: #151629;
-    padding-top: 56px;
-    padding-left: 54px;
-    padding-right: 54px;
-    padding-bottom: 49px;
-    max-width: 800px;
-    -webkit-box-shadow: -7px 6px 5px 0 rgba(14,15,35,0.29);
-    -moz-box-shadow: -7px 6px 5px 0 rgba(14,15,35,0.29);
-    box-shadow: -7px 6px 5px 0 rgba(14,15,35,0.29);
-    border-radius:7px;
-    cursor: text;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    line-height: 60px;
-}
-
-#sample_app_browser_link{
-    color: white;
-}
-
-@media (max-width: 767.98px) {
-
-    #code_container{
-        width: 100%;
+    .graph {
         height: auto;
     }
+}
 
-    #quick_start_background {
-        padding-top: 60px;
+@media (max-width: 482px) {
+    #develop_container {
+        padding-top: 95px;
     }
-}
-
-/* GUIDES */
-#guides_container {
-    padding-top: 154px;
-    padding-bottom: 151px;
-}
-
-#guides_title {
-    font-size: 35px;
-    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
-    margin-bottom: 31px;
-}
-
-#guides_description {
-    font-size: 16px;
-    letter-spacing: 0;
-    line-height: 22px;
-    margin-bottom: 49px;
-}
-
-#guides_link_container {
-    display: inline-block;
-}
-
-#guides_link {
-    display: block;
-    font-size: 20px;
-    font-weight: 500;
-    color: #24253A;
-    background-color: #E6EDA8;
-    border-radius: 3px;
-    padding: 15px 40px;
-    margin-bottom: 8px;
-    text-align: center;
-    transition: background-color .2s;    
-    min-width: 280px;
-}
-
-#guides_link:hover {
-    background-color: #F7FBD2;
-}
-
-#guides_ufo {
-    margin-top: 65px;
-}
-
-
-/* COLLABORATE */
-
-#collaborate_background {
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#313653), to(#5C688E));
-    background-image: -webkit-linear-gradient(top, #313653, #5C688E);
-    background-image: -moz-linear-gradient(top, #313653, #5C688E);
-    background-image: linear-gradient(to bottom, #313653 0%, #5C688E 100%);
-    color: #F2F2F2;
-}
-
-#collaborate_container {
-    padding-top: 30px;
-    margin-bottom: 50px;
-    padding-bottom: 151px;
-}
-
-#collaborate_community {
-    margin-bottom: 107px;
-}
-
-#collaborate_title, #get_involved_title {
-    font-size: 35px;
-    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
-    margin-top: 0;
-    margin-bottom: 23px;
-}
-
-.collaborate_link_container {
-    display: inline-block;
-}
-
-.collaborate_link {
-    display: block;
-    font-size: 20px;
-    font-weight: 500;
-    color: #24253A;
-    background-color: #E6EDA8;
-    border-radius: 3px;
-    padding: 15px 0px;
-    margin-bottom: 8px;
-    text-align: center;
-    transition: background-color .2s;    
-    margin-bottom: 24px;
-    width: 300px;
-}
-
-.collaborate_link:hover {
-    color: #24253A;
-    background-color: #F7FBD2;
-}
-
-#collaborate_text, #get_involved_text {
-    margin-bottom: 46px;
-}
-
-
-@media (max-width: 767.98px) {
-
-    #collaborate_container {
-        padding-top: 60px;
-        margin-bottom: 70px;
-        padding-bottom: 50px;
-    }
-
-    #collaborate_image {
-        padding: 20px;
-    }
-
-    #collaborate_get_involved {
-        margin-top: 200px;
-    }
-}
-
-
-
-/* CONNECT */
-
-#connect_container {
-    position: relative;
-    margin-bottom: 70px;
-}
-
-#connect_content {
-    margin-top: 190px;
-    margin-left: 42px;
-}
-
-#connect_title {
-    font-size: 35px;
-    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 30px;
-    line-height: 55px;
-}
-
-#connect_twitter_image {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-}
-
-#connect_container .connect_item {
-    margin-bottom: 10px;
-}
-
-#connect_paragraph_1, #connect_paragraph_2 {
-    margin-bottom: 32px;
-    text-align: center;
-}
-
-#twitter_link {
-    display: block;
-    margin: auto;
-    margin-bottom: 73px;
-    width:234px;
-    font-size: 16px;
-    font-weight: 500;
-    color: #1A1B31;
-    background-color: #ABD155;
-    border-radius: 3px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 40px;
-    padding-right: 40px;
-    text-align: center;
-    transition: background-color .2s;    
-    min-width: 280px; 
-}
-
-#twitter_link:hover {
-    background-color: #C7EE63;
-}
-
-#blog_link {
-    display: block;
-    margin: auto;
-    margin-bottom: 73px;
-    width:234px;
-    font-size: 16px;
-    font-weight: 500;
-    color:#4f660a;
-    background-color: white;
-    border:3px solid #abd155;
-    border-radius: 3px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 40px;
-    padding-right: 40px;
-    text-align: center;
-    transition: background-color .2s;    
-    min-width: 280px; 
-}
-
-#blog_link:hover {
-    background-color: #abd155;
-}
-
-
-@media (max-width: 1199.98px) {
-
-    #connect_content {
-        margin-top: 40px;
-    }
-
-}
-
-@media (max-width: 991.98px) {
-
-    #connect_content {
-        margin-top: 0px;
-    }
-
-}
-
-@media (max-width: 767.98px) {
-
-    #connect_content {
-        margin-left: 0;
-    }
-
-    #connect_container {
-        margin-bottom: 40px;
-    }
-
-    #connect_title {
-        margin-top: 0;
-    }
-
-    #connect_planet_image {
-        padding: 20px;
-        padding-bottom: 0;
-    }
-
 }

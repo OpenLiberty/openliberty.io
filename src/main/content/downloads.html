@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Downloads
+title: Get Started
 css: downloads
 js: builds
 permalink: /downloads/
@@ -15,37 +15,96 @@ permalink: /downloads/
 
     <div class="container" id="downloads_intro_text">
         <div class="row">
-            <div class="col-lg-6">
-                <img id="intro_logo" class="d-none d-lg-block" src="{{ "/img/downloads_title.svg" | relative }}" class="img-fluid" alt="Downloads">
+            <div class="col">
+                <h1 id="get_started">Get started with Open Liberty</h1>
                 <p id="intro_text_1">
-                    Stay up to date with all Open Liberty downloads!
-                </p>
-                <p id="intro_text_2">
-                    We recommend using the latest release,
-                    but development builds are also available for use. Once downloaded, you’re ready for lift-off.
+                    Whether trying or updating Open Liberty, we've got you covered!
                 </p>
             </div>
-            <div class="col-lg-6 center_content_vertically">
-                <div id="main_download_link_container">
-                    <div id="runtime_download_link_container" class="row">
-                        <a id="runtime_download_link" class="download_link skip_outbound_link_analytics" href="">
-                            <div class="runtime_download_button_label_container">
-                                <div class="runtime_download_button_label">Open Liberty</div>
-                                <div class="runtime_button_sub_label" id="runtime_download_button_version">&nbsp</div>
+        </div>
+    </div>
+</div>
+
+
+<!-- QUICK START -->
+<div id="quick_start_section" class="container">
+    <div class="row">
+        <div class="col">
+            <h2 class="section_title">Launch a sample app</h2>
+            <p id="quick_start_paragraph">
+                Open Liberty is fast and composable, but don’t 
+                take our word for it - try it out!
+            </p>
+            <div class="code_container text-left d-block mx-auto">
+                git clone https://github.com/OpenLiberty/sample-getting-started.git
+                <br><br>
+                cd sample-getting-started
+                <br><br>
+                mvn clean package liberty:run-server
+                <br>
+            </div>
+            <span id="sample_app_browser_link">Then, go to: <a class="light_green_link_light_background" target="_blank" rel="noopener" href="http://localhost:9080">http://localhost:9080</a></span>
+        </div>
+    </div>
+</div>
+
+
+<!-- MAVEN, GRADLE, DOCKER -->
+<div id="get_section" class="container">
+    <h2 class="section_title">Get Open Liberty</h2>
+    <p>Get Open Liberty using these commands for Maven, Gradle, or Docker.</p>
+    <div class="row tabs_container">
+        <!-- TABS -->
+        <div class="col">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#maven" role="tab">Maven</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#gradle">Gradle</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#docker">Docker</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        <!-- TAB CONTENT -->
+            <div class="tab-content">
+                <!-- MAVEN -->
+                <div id="maven" class="tab-pane fade show active" role="tabpanel">
+                    <div class="code_container">
+                        &lt;dependency&gt;
+                            <br>
+                            <div class="indent">
+                                &lt;groupId&gt;io.openliberty&lt;/groupId&gt;
+                                <br>
+                                &lt;artifactId&gt;openliberty-runtime&lt;/artifactId&gt;
+                                <br>
+                                &lt;version&gt;19.0.0.8&lt;/version&gt;
+                                <br>
+                                &lt;type&gt;zip&lt;/type&gt;
+                                <br>
                             </div>
-                            <div class="arrow"></div>
-                            <div class="line"></div>
-                        </a>
+                        &lt;/dependency&gt;
                     </div>
-                    <div id="eclipse_download_link_container" class="row"> 
-                        <a id="eclipse_developer_tools_download_link" class="download_link skip_outbound_link_analytics" href="">
-                            <div class="eclipse_download_button_label_container">
-                                <div class="eclipse_download_button_label">Eclipse developer tools</div>
-                                <div class="eclipse_button_sub_label" id="eclipse_developer_tools_download_link_version_text">&nbsp</div>
+                </div>
+                <!-- GRADLE -->
+                <div id="gradle" class="tab-pane fade" role="tabpanel">
+                    <div class="code_container">
+                        dependencies {
+                            <div class="indent">
+                                libertyRuntime group: 'io.openliberty', name: 'openliberty-runtime', version: '[19.0.0.8,)'
                             </div>
-                            <div class="arrow"></div>
-                            <div class="line"></div>
-                        </a>
+                        }
+                    </div>
+                </div>
+                <!-- DOCKER -->
+                <div id="docker" class="tab-pane fade" role="tabpanel">
+                    <div class="code_container">
+                        docker pull open-liberty
                     </div>
                 </div>
             </div>
@@ -54,9 +113,12 @@ permalink: /downloads/
 </div>
 
 
-<!-- TABS -->
-<div class="container" id="tabs_container">
-    <div class="row">
+
+<!-- DOWNLOADS TABLE TABS -->
+<div class="container">
+    <h2 class="section_title">Download package</h2>
+    <p>We recommend using the latest release, but development builds are also available for use. Once downloaded, you're ready for lift-off.</p>
+    <div class="row tabs_container">
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" data-toggle="tab" href="#runtime_releases" role="tab">Releases</a>
@@ -72,8 +134,8 @@ permalink: /downloads/
 </div>
 
 
+<!-- DOWNLOADS TABLE TAB CONTENT -->
 <div class="tab-content">
-
     <!-- RELEASES -->
     <div id="runtime_releases" class="container builds_container tab-pane fade show active" role="tabpanel">
         <div class="row">
@@ -98,9 +160,6 @@ permalink: /downloads/
             </div>
         </div>
     </div>
-
-
-
     <!-- DEVELOPMENT BUILDS -->
     <div id="development_builds" class="container builds_container tab-pane fade" role="tabpanel">
         <div class="row">
@@ -125,9 +184,6 @@ permalink: /downloads/
             </div>
         </div>
     </div>
-
-
-
     <!-- ECLIPSE DEVELOPER TOOLS -->
     <div id="eclipse_developer_tools" class="container builds_container tab-pane fade" role="tabpanel">
         <div class="row">
@@ -171,9 +227,9 @@ permalink: /downloads/
             </div>
         </div>
     </div>
-
 </div>
 
+<!-- UFO IMAGES -->
 <div id="bottom_images_container" class="container">
     <img id="ufo" src="{{ "/img/ufo.png" | relative }}" alt="">
     <img id="ufobeam" src="{{ "/img/ufo_beam.png" | relative }}" alt="">
