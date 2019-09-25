@@ -20,21 +20,3 @@ $(document).ready(function() {
     });
 
 });
-
-
-document.addEventListener("DOMContentLoaded", function() {
-    const imageObserver = new IntersectionObserver(function(entries, imgObserver) {
-        entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-                const lazyImage = entry.target;
-                lazyImage.src = lazyImage.dataset.src;
-                lazyImage.classList.remove("lazy");
-                imgObserver.unobserve(lazyImage);
-            }
-        });
-    });
-    const arr = document.querySelectorAll('img.lazy');
-    arr.forEach(function(v) {
-        imageObserver.observe(v);
-    });
-})

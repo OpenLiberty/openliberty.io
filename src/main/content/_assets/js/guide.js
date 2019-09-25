@@ -26,19 +26,19 @@
         $.each(data.prereqs, function(i, prereq) {
             // if guide found in prereqs list, add it to the html
             if (prereq.guides.indexOf(guide_name) > -1) {
-                prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq" target="_blank">' + prereq.name + '</a></div>';
+                prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank">' + prereq.name + '</a></div>';
             }
             // if prereqs list contains * add prereq to all guides except for excluded guides (if they exist)
             else if (prereq.guides.indexOf("*") > -1) {
                 if (prereq.exclude) {
                     // if guide not in prereq exclude list, add it to the html
                     if (prereq.exclude.indexOf(guide_name) <= -1) {
-                        prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq" target="_blank">' + prereq.name + '</a></div>'; 
+                        prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank">' + prereq.name + '</a></div>'; 
                     }
                 }
                 // guides has * but no exclude, add all to html
                 else {
-                    prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq" target="_blank">' + prereq.name + '</a></div>'; 
+                    prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank">' + prereq.name + '</a></div>'; 
                 }
             }
         });
