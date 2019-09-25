@@ -25,6 +25,11 @@ function render_builds(builds, parent) {
     var analytics_class_name = 'link_' + parent.parent().data('builds-id');
     var download_arrow = '<div class="download_arrow"><div class="table_arrow"></div><div class="table_line"></div></div>';
 
+    // update maven and gradle commands to use latest version
+    if (parent.parent().data('builds-id') == "runtime_releases") {
+        $('.latest_version').html(builds[0].version);
+    }
+
     builds.forEach(function(build) {
         var row = $('<tr></tr>');
         // both releases tables (ol releases and eclipse developer tools releases)
