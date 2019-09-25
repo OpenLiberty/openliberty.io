@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
@@ -57,7 +58,11 @@ public class BuildInfo {
 			obj.add(Constants.TESTS_LOG, testLog);
 		}
 		if (packageLocations != null) {
-			obj.add(Constants.PACKAGE_LOCATIONS, Json.createArrayBuilder(packageLocations).build());
+			JsonArrayBuilder array = Json.createArrayBuilder();
+			for (String pkgLoc : packageLocations) {
+				array.add(pkgLoc);
+			}
+			obj.add(Constants.PACKAGE_LOCATIONS, array.build());
 		}
 		return obj.build();
 	}
