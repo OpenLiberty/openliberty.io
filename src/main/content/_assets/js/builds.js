@@ -27,7 +27,13 @@ function render_builds(builds, parent) {
 
     // update maven and gradle commands to use latest version
     if (parent.parent().data('builds-id') == "runtime_releases") {
-        $('.latest_version').html(builds[0].version);
+        var latest_version = builds[0].version.trim();
+
+        // check that latest version matches x.x.x.x before updating
+        var re = /^\d+\.\d\.\d\.\d+/;
+        if (re.test(latest_version)) {
+            $('.latest_version').html(latest_version);
+        }
     }
 
     builds.forEach(function(build) {
