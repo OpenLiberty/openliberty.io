@@ -352,6 +352,5 @@ end
 
 # Hooks into Jekyll's post_render event.
 Jekyll::Hooks.register %i[pages documents], :post_render do |doc|
-  puts "In the post render"
   Jekyll::TargetBlank.process(doc) if Jekyll::TargetBlank.document_processable?(doc)
 end
