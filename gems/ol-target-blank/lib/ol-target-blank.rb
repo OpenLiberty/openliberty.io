@@ -50,7 +50,7 @@ module Jekyll
         begin
         (doc.is_a?(Jekyll::Page) || doc.write?) &&
           doc.output_ext == ".html" || (doc.permalink&.end_with?("/"))
-        rescue
+        rescue => error
         end
       end
 
@@ -212,9 +212,12 @@ module Jekyll
       #
       # link - a url.
       def external?(link)
+        begin
           if link =~ URI.regexp(%w(http https))
-            URI.parse(CGI.escape(link)).host != URI.parse(@site_url).host
+            URI.parse(link).host != URI.parse(@site_url).host
           end        
+        rescue => error
+        end
       end
 
       # Private: Checks if a css class name is specified in config
