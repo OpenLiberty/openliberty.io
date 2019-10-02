@@ -16,7 +16,7 @@ echo `npm -v`
 npm i -g @antora/cli@2.1 @antora/site-generator-default@2.1
 
 # Install the Antora site generator package
- npm i @antora/site-generator-default@2.1
+npm i @antora/site-generator-default@2.1
 
 # Guides that are ready to be published to openliberty.io
 echo "Cloning repositories with name starting with guide or iguide..."
