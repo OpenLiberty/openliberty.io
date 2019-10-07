@@ -9,12 +9,16 @@ function getTags(callback) {
                 $('#featured_tags_list').append(featured_tags_html);
             }
             $(".blog_post_title_link").each(function(i, link) {
-                var href = this.getAttribute('href');
-                post_name = href.substring(17).replace('.html', '');
+                if (this.hasAttribute('data-path')) {
+                    var post_name = this.getAttribute('data-path').substring(19).replace(".adoc", "");
+                }
+                else {
+                    var post_name = this.getAttribute('href').substring(17).replace('.html', '');
+                }
                 var tags_html = "";
                 if (tag.posts.indexOf(post_name) > -1) {
                     tags_html = '<p class="blog_tag" onclick="filterPosts(' + "'" + tag_class + "'" + '); updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tag.name + '</p>' + '<span>, </span>';
-
+                    
                     $(".blog_post_content:eq(" + i + ")").addClass(tag_class.toLowerCase());
                     $(".blog_tags_container:eq(" + i + ")").append(tags_html);
                 }
