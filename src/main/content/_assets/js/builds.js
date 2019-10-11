@@ -11,6 +11,7 @@
 
 var builds = [];
 
+var latest_releases = [];
 var runtime_releases = [];
 var runtime_development_builds = [];
 var developer_tools_releases = [];
@@ -27,7 +28,7 @@ function render_builds(builds, parent) {
 
     // update maven and gradle commands to use latest version
     if (parent.parent().data('builds-id') == "runtime_releases") {
-        var latest_version = builds[0].version.trim();
+        var latest_version = latest_releases.runtime.version.trim();
 
         // check that latest version matches x.x.x.x before updating
         var re = /^\d+\.\d\.\d\.\d+/;
@@ -213,20 +214,21 @@ $(document).ready(function() {
     }).done(function(data) {
 
         if(data.latest_releases){
-            if(data.latest_releases.runtime){
-                if(data.latest_releases.runtime.version){
-                    $('#runtime_download_button_version').text(data.latest_releases.runtime.version);
+            latest_releases = data.latest_releases;
+            if(latest_releases.runtime){
+                if(latest_releases.runtime.version){
+                    $('#runtime_download_button_version').text(latest_releases.runtime.version);
                 }
-                if(data.latest_releases.runtime.driver_location){
-                    $('#runtime_download_link').attr('href', data.latest_releases.runtime.driver_location);
+                if(latest_releases.runtime.driver_location){
+                    $('#runtime_download_link').attr('href', latest_releases.runtime.driver_location);
                 }
             }
-            if(data.latest_releases.tools){
-                if(data.latest_releases.tools.version){
-                    $('#eclipse_developer_tools_download_link_version_text').text(data.latest_releases.tools.version);
+            if(latest_releases.tools){
+                if(latest_releases.tools.version){
+                    $('#eclipse_developer_tools_download_link_version_text').text(latest_releases.tools.version);
                 }
-                if(data.latest_releases.tools.driver_location){
-                    $('#eclipse_developer_tools_download_link').attr('href', data.latest_releases.tools.driver_location);
+                if(latest_releases.tools.driver_location){
+                    $('#eclipse_developer_tools_download_link').attr('href', latest_releases.tools.driver_location);
                 }
             }
         }      
@@ -245,13 +247,13 @@ $(document).ready(function() {
             if(data.builds.runtime_releases){
                 runtime_releases = formatBuilds(data.builds.runtime_releases);
                 builds['runtime_releases'] = runtime_releases;
-                sort_builds(runtime_releases, 'version', true);
+                sort_builds(runtime_releases, 'date', true);
                 render_builds(runtime_releases, $('table[data-builds-id="runtime_releases"] tbody'));
             }    
             if(data.builds.tools_releases){
                 developer_tools_releases = formatBuilds(data.builds.tools_releases);
                 builds['developer_tools_releases'] = developer_tools_releases;
-                sort_builds(developer_tools_releases, 'version', true);
+                sort_builds(developer_tools_releases, 'date', true);
                 render_builds(developer_tools_releases, $('table[data-builds-id="developer_tools_releases"] tbody'));       
             }
             if(data.builds.runtime_nightly_builds){
