@@ -1,12 +1,129 @@
-<header class="header">
-  <nav class="navbar">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="{{or site.url (or siteRootUrl siteRootPath)}}">{{site.title}}</a>
-      <button class="navbar-burger" data-target="topbar-nav">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+<header>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button id="navbar_responsive_button" class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" aria-label="Open Liberty Home Page">
+                    <img id="doc_logo" src="../../_/img/docs_openliberty_logo.png" class="img-responsive" alt="Home" />
+                </a>
+                <div id="doc_title">
+                    <img src="../../_/img/doc_header_title.svg" alt="Docs">
+                </div>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-left"> 
+                    <li>
+                        <a href="/guides">Guides</a>
+                    </li>
+                    <!-- Single button -->
+                    <li id="reference_dropdown_container" class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle reference_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Reference <span id="reference_caret" class="hidden-md hidden-lg"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="/docs/ref/javaee/">Java EE API</a></li>
+                                <li><a href="/docs/ref/microprofile/">MicroProfile API</a></li>
+                                <li><a href="/docs/ref/config/">Server Config</a></li>
+                                <li><a href="/docs/ref/feature/">Server Features</a></li>
+                                <li><a href="/docs/ref/command/">Server Commands</a></li>
+                                <li><a href="/docs/ref/general/">General</a></li>
+                            </ul>
+                    </li>
+                </ul>
+                <div id="header_round_links_container" class="visible-xs">
+                    <a id="header_twitter_link" class="header_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener" aria-label="Twitter"></a>
+                    <a id="header_stackoverflow_link" class="header_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener" aria-label="Open Liberty questions on Stack Overflow"></a>
+                    <a id="header_groupsio_link" class="header_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener" aria-label="Open Liberty Groups.io"></a>
+                </div>
+            </div>
+            <div id="breadcrumb_row">
+
+                <ol class="breadcrumb fluid-container">   
+                    <li>
+                        <a href="/docs">Docs</a>
+                    </li>
+
+                    <!-- Javadocs -->
+                    {{!-- {{ debug page.component.name }} --}}
+                    {{#if (eq page.component.name 'javaee-javadoc') }}
+                      <li>
+                          <a class="inactive_link">Reference</a>
+                      </li>
+                      <li class="active"> {{ page.doc-type }} </li>
+                        
+                    {{else if (eq page.component.name 'config') }}
+                      <li>
+                          <a class="inactive_link">Reference</a>
+                      </li>
+                      <li>
+                          <a href="/docs/ref/config/">Config</a>
+                      </li>
+
+                    {{else if (eq page.component.name 'general-reference') }}
+                      <li>
+                          <a class="inactive_link">Reference</a>
+                      </li>
+                      <li>
+                          <a href="/docs/ref/general/">General</a>
+                      </li>
+
+                    <!-- Intro docs -->
+                    {{else if (contains page.url '/docs/intro') }}
+                      <li class="active">{{ page.title }}</li>
+
+                    {{else if (eq page.component.name 'feature') }}
+                      <li>
+                          <a class="inactive_link">Reference</a>
+                      </li>
+                      <li>
+                          <a href="/docs/ref/feature/">Features</a>
+                      </li>
+
+                    {{else if (eq page.component.name 'command') }}
+                      <li>
+                          <a class="inactive_link">Reference</a>
+                      </li>
+                      <li>
+                          <a href="/docs/ref/command/">Commands</a>
+                      </li>
+                    <!-- All Guides page -->
+                    {{else if (eq page.url '/guides/') }}
+                        <li class="active">Guides</li>
+                    
+                    <!-- Individual Guides -->
+                    {{else }}
+                        <li> 
+                            <a href="/guides">Guides</a>
+                        </li>
+                        <li class="active">{{ page.title }}</li>
+                    {{/if }}
+                </ol>
+            </div> 
+            {{!-- {{#if (eq page.component.name 'config') or (eq page.component.name 'feature') or (eq page.component.name 'command') or (eq page.component.name 'general') }} --}}
+            {{#if (eq page.component.name 'config') }}
+                <div class="breadcrumb_hamburger_nav" role="button" data-toggle="collapse" data-target="#toc_column" aria-expanded="true" aria-controls="toc_column">
+                    <!-- Hamburger icon for showing the table of contents -->
+                    <button id="breadcrumb_hamburger" class="collapsed" type="button">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <span id="breadcrumb_hamburger_title">Table of Content</span>
+                </div>
+            {{/if }}
+        </div>
+    </nav>
+    <!-- Docs -->
+    <div id="header_background"></div>
+    <div class="hidden">
+        <img src="../../_/img/small_logo_white.svg">
+        <img src="../../_/img/github_navbar_hover.svg">
     </div>
-  </nav>
 </header>
