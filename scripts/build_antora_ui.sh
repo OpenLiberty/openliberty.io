@@ -5,6 +5,6 @@ npm install gulp -g
 npm install node-sass gulp-sass --save-dev
 npm install
 gulp sass:convert
-gulp build
+SOURCEMAPS=true gulp build
 gulp bundle:pack
 popd
