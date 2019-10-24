@@ -2,8 +2,8 @@ Gem::Specification.new do |s|
   s.name               = 'ol-target-blank'
   s.version            = '0.0.1'
   s.date               = '2019-09-24'
-  s.summary            = 'OpenLiberty Asciidoc extensions'
-  s.description        = 'A set of extensions to Asciidoc for OpenLiberty project'
+  s.summary            = 'OpenLiberty External Link processing'
+  s.description        = 'OpenLiberty Target Blank automatically modifies external links to open in a new browser for the OpenLiberty project and adds a notranslate class to localhost links.'
   s.authors            = ["Steven Zvonek"]
   s.email              = 'szvonek@us.ibm.com'
   s.files              = ["lib/ol-target-blank.rb"]
