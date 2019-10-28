@@ -50,14 +50,14 @@
                     </li>
 
                     <!-- Javadocs -->
-                    {{!-- {{ debug page.component.name }} --}}
-                    {{#if (eq page.component.name 'javaee-javadoc') }}
+                    {{ debug page.layout }}
+                    {{#if (eq page.layout 'javadoc') }}
                       <li>
                           <a class="inactive_link">Reference</a>
                       </li>
-                      <li class="active"> {{ page.doc-type }} </li>
+                      <li class="active"> {{ page.component.title }} </li>
                         
-                    {{else if (eq page.component.name 'config') }}
+                    {{else if (eq page.layout 'config') }}
                       <li>
                           <a class="inactive_link">Reference</a>
                       </li>
@@ -65,7 +65,7 @@
                           <a href="/docs/ref/config/">Config</a>
                       </li>
 
-                    {{else if (eq page.component.name 'general-reference') }}
+                    {{else if (eq page.layout 'general-reference') }}
                       <li>
                           <a class="inactive_link">Reference</a>
                       </li>
@@ -77,7 +77,7 @@
                     {{else if (contains page.url '/docs/intro') }}
                       <li class="active">{{ page.title }}</li>
 
-                    {{else if (eq page.component.name 'feature') }}
+                    {{else if (eq page.layout 'feature') }}
                       <li>
                           <a class="inactive_link">Reference</a>
                       </li>
@@ -85,7 +85,7 @@
                           <a href="/docs/ref/feature/">Features</a>
                       </li>
 
-                    {{else if (eq page.component.name 'command') }}
+                    {{else if (eq page.layout 'server-command') }}
                       <li>
                           <a class="inactive_link">Reference</a>
                       </li>
