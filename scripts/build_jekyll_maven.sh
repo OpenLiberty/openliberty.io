@@ -43,6 +43,9 @@ if [ "$JEKYLL_ENV" != "production" ]; then
     fi
 fi
 
+# Clone docs repo to retrieve the Antora playbook
+./scripts/build_clone_docs.sh "antora"
+
 # Development environments that enable the draft blogs in the _draft directory.
 if [ "$JEKYLL_DRAFT_BLOGS" == "true" ]; then
     # Include draft blog posts for non production environments
@@ -89,9 +92,6 @@ if [ "$ga" = true ]
   else
     jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --destination target/jekyll-webapp 
 fi
-
-# Clone docs repo to retrieve the Antora playbook
-./scripts/build_clone_docs.sh "antora"
 
 # Install Antora packages and build the Antora UI bundle
 ./scripts/build_antora_ui.sh
