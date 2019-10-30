@@ -6,6 +6,8 @@
 {{> breadcrumbs}}
 {{> page-versions}}
   {{#if (and page.editUrl (not page.origin.private))}}
-  <div class="edit-this-page"><a href="{{page.editUrl}}" target="_blank" rel="noopener">Edit this Page</a></div>
+    {{#unless (eq page.layout 'javadoc') }}
+    <div class="edit-this-page"><a href="{{page.editUrl}}" target="_blank" rel="noopener">Edit this Page</a></div>
+    {{/unless}}
   {{/if}}
 </div>
