@@ -4,6 +4,8 @@
   var navContainer = document.querySelector('.nav-container')
   var navToggle = document.querySelector('.nav-toggle')
 
+  if (!navContainer) return
+
   navToggle.addEventListener('click', showNav)
   // NOTE don't let click events propagate outside of nav container
   navContainer.addEventListener('click', concealEvent)

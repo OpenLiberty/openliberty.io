@@ -5,13 +5,13 @@
   {{/if}}
 {{> breadcrumbs}}
 {{> page-versions}}
-  {{#if (and page.editUrl (not page.origin.private))}}
-    {{#unless (eq page.layout 'javadoc') }}
-    {{#unless (eq page.layout 'feature') }}
-    {{#unless (eq page.layout 'config') }}
-    <div class="edit-this-page"><a href="{{page.editUrl}}" target="_blank" rel="noopener">Edit this Page</a></div>
-    {{/unless}}
-    {{/unless}}
-    {{/unless}}
-  {{/if}}
+{{#if (and page.editUrl (not page.origin.private))}}
+  {{#unless (eq page.layout 'javadoc') }}
+  {{#unless (eq page.layout 'feature') }}
+  {{#unless (eq page.layout 'config') }}
+  <div class="edit-this-page"><a href="{{page.editUrl}}" target="_blank" rel="noopener">Edit this Page</a></div>
+  {{/unless}}
+  {{/unless}}
+  {{/unless}}
+{{/if}}
 </div>
