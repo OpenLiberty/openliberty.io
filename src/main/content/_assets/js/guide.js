@@ -138,25 +138,37 @@
 
     // determine user's operating system and show prerequisite instructions for that OS
     function setDefaultTab() {
-        // set default OS to windows
-        var OSName = "windows";
-        // get user's operating system
+        var OSName = "";
+        // Detect user's operating system
         var ua = navigator.userAgent.toLowerCase();
         if (ua.indexOf("win") != -1) {
             OSName = "windows";
         }
         if (ua.indexOf("mac") != -1) {
-            OSName = "mac";
+            // OSName = "mac";
         }
         if (ua.indexOf("linux") != -1) {
             OSName = "linux";
         }
         // hide tab content except for selected tab and add active class to selected tab
-        var os_section = "." + OSName + "_section";
-        var os_class = "." + OSName + "_link";
         $(".tab_content").hide();
-        $(os_section).show();
-        $(os_class).addClass("active");
+
+        // For each of the groups of tab contents, show the first one unless an OS is detected
+        var sections = $('.sectionbody:has(.tab_content)');
+        for(var i = 0; i < sections.length; i++){
+            var section = $(sections.get(i));
+            if(!OSName){
+                // Show the first tab's contents
+                var first_tab = section.find('.tab_content').first();
+                first_tab.show();
+                var first_link = section.find('.tab_link').first();
+                first_link.addClass("active");
+            }
+            else {
+                section.find("." + OSName + "_section").show();
+                section.find("." + OSName + "_link").addClass("active");
+            }
+        }
     }
 
     $(window).on('scroll', function(event) {
