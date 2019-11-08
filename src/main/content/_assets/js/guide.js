@@ -145,7 +145,7 @@
             OSName = "windows";
         }
         if (ua.indexOf("mac") != -1) {
-            // OSName = "mac";
+            OSName = "mac";
         }
         if (ua.indexOf("linux") != -1) {
             OSName = "linux";
@@ -158,11 +158,20 @@
         for(var i = 0; i < sections.length; i++){
             var section = $(sections.get(i));
             if(!OSName){
-                // Show the first tab's contents
-                var first_tab = section.find('.tab_content').first();
-                first_tab.show();
-                var first_link = section.find('.tab_link').first();
-                first_link.addClass("active");
+                // Show the first tab's contents for every set of tabs in this section.
+                var first_tab = section.find('.tab_link').first();
+                // Find OS name to show all of its tab contents in this section.
+                var class_list = first_tab[0].classList;
+                for (var j = 0; j < class_list.length; j++) {
+                    var class_name = class_list[j];
+                    if (class_name !== "tab_link" && class_name.indexOf("_link") > -1) {
+                        var tab_class = "." + class_name;
+                        var tab_content_class = "." + class_name.replace("link", "section");
+                        section.find(tab_class).addClass("active");
+                        section.find(tab_content_class).show();
+                        break;
+                    }
+                }
             }
             else {
                 section.find("." + OSName + "_section").show();
