@@ -74,7 +74,7 @@ permalink: /blog/
                             {% if count <= latest_posts_count %}
                                     <div class="blog_post_content">
                                     {% if post.redirect_link %}
-                                        <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link">{{ post.title | escape }}</a>
+                                        <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" data-path="{{ post.path | relative_url }}" target="_blank" rel="noopener" class="blog_post_title_link">{{ post.title | escape }}</a>
                                             <span class="continued_text">
                                                 {% assign continue_text = ' [Continued on ' %}
                                                 {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
@@ -131,7 +131,7 @@ permalink: /blog/
                             {% else %}
                                 <div class="blog_post_content">
                                     {% if post.redirect_link %}
-                                        <h2 class="blog_post_title_condensed"><a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link blog_post_title_link_condensed">{{ post.title | escape }}</a>
+                                        <h2 class="blog_post_title_condensed"><a href="{{ post.redirect_link }}" data-path="{{ post.path | relative_url }}" target="_blank" rel="noopener" class="blog_post_title_link blog_post_title_link_condensed">{{ post.title | escape }}</a>
                                             <span class="continued_text">
                                                 {% assign continue_text = ' [Continued on ' %}
                                                 {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
