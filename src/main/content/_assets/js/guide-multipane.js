@@ -717,38 +717,23 @@ $(document).ready(function() {
         } 
     });
 
-    // Handle scrolling in the code column.
-    // Prevents the default scroll behavior which would scroll the whole browser.
-    // The code column scrolling is independent of the guide column.
-    $('.code_column').on('wheel mousewheel DOMMouseScroll', function(event){
-        if(inSingleColumnView()){
-            return;
-        }
-        $(this).stop(); // Stop animations taking place with this code section.
+    $('#code_column').mouseenter(function() {
+        var page_width = window.innerWidth; // Page width with scrollbar
+        var document_width = document.documentElement.clientWidth; // Page width without scrollbar  
+        var scrollbar_width = page_width - document_width;
 
-        var event0 = event.originalEvent;
-        var dir = (event0.deltaY) < 0 ? 'up' : 'down';
-        var codeColumn = $("#code_column")[0];
-        var codeColumnContent = $("#code_column_content").get(0);
+        // Adjust the body with padding to account for no scrollbar
+        $("body").css("padding-right", scrollbar_width);
+        $("body").addClass("unscrollable");
 
-        if(!(this.scrollTop > 0 || this.offsetHeight > codeColumnContent.offsetHeight)){
-            // Element is not scrollable. If the code file has no scrollbar, the page will still scroll if the event is propagated to the window scroll listener so we need to prevent propagation.
-            event.stopPropagation();
-            event.preventDefault();
-        }
-
-        // If the code column is at the top and the browser is scrolled down, the element has no scrollTop and does not respond to changing its scrollTop.
-        else if(!(dir == 'down' && this.parentElement.scrollTop === 0)){
-            var delta = event0.wheelDelta || -event0.detail || -event0.deltaY;
-            // Firefox's scroll value is always 1 so multiply by 150 to scroll faster.
-            if(delta === 1 || delta === -1){
-                delta *= 150;
-            }
-            codeColumnContent.scrollTop -= delta;
-            handlePrereqsPopup();
-            event.preventDefault();  
-            event.stopPropagation();
-        }            
+        // Move code column to the left to adjust its position with no scrollbar.
+        $("#code_column").css("left", "calc(100% - " + (780 + scrollbar_width) + "px)");
+    });
+    $('#code_column').mouseleave(function() {
+        $("body").removeClass("unscrollable");
+        $("body").css("padding-right", 0);
+        
+        $("#code_column").css("left", "calc(100% - 780px)");
     });
 
     // Set the prereqs popup top to match the first section
