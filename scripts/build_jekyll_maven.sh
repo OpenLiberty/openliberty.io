@@ -61,6 +61,12 @@ gem build ol-asciidoc.gemspec
 gem install ol-asciidoc-0.0.1.gem
 popd
 
+# Special external link handling
+pushd gems/ol-target-blank
+gem build ol-target-blank.gemspec
+gem install ol-target-blank-0.0.1.gem
+popd
+
 echo "Copying guide images to /img/guide"
 mkdir -p src/main/content/img/guide
 
