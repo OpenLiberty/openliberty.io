@@ -50,6 +50,8 @@ var blog = function(){
 
         // show filter message at top of page
         $('#filter').show();
+        $('#filter_message').show();
+        $('#no_results_message').hide();
         $('#filter_tag').text(tag.replace("_", " "));
 
         // hide posts that dont have tag
@@ -65,19 +67,32 @@ var blog = function(){
         $('#older_posts').show();
     }
 
+    function showNoResultsMessage(){
+        // hide posts that dont have tag
+        $('.blog_post_content').hide();
+        $('#older_posts').hide();
+
+        // show filter message at top of page
+        $('#filter').show();
+        $('#filter_message').hide();
+        $('#no_results_message').show();        
+    }
+
     $(window).on('popstate', function(){
+        removeFilter();
         var tag = get_tag_from_url();
         if (tag) {
             filterPosts(tag);
-        }
-        else {
-            removeFilter();
         }
     });
 
     function get_tag_from_url(){
         var tag;
         var query_string = location.search;
+
+        if(query_string === ""){
+            return;
+        }
 
         // Process the url parameters for searching
         if (query_string.length > 0) {
@@ -88,6 +103,9 @@ var blog = function(){
                     // Check if the tag search query is in the list of supported tags before filtering
                     if(tag_names.indexOf(tag_name.toLowerCase()) > -1){
                         tag = tag_name;
+                    }
+                    else {
+                        showNoResultsMessage();
                     }                
                     break;
                 }
