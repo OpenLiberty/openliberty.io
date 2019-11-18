@@ -718,22 +718,28 @@ $(document).ready(function() {
     });
 
     $('#code_column').mouseenter(function() {
-        var page_width = window.innerWidth; // Page width with scrollbar
-        var document_width = document.documentElement.clientWidth; // Page width without scrollbar  
-        var scrollbar_width = page_width - document_width;
+        if(!inSingleColumnView()){
+            var page_width = window.innerWidth; // Page width with scrollbar
+            var document_width = document.documentElement.clientWidth; // Page width without scrollbar  
+            var scrollbar_width = page_width - document_width;
+            if(scrollbar_width <= 0){
+                return;
+            }
 
-        // Adjust the body with padding to account for no scrollbar
-        $("body").css("padding-right", scrollbar_width);
-        $("body").addClass("unscrollable");
+            // Adjust the body with padding to account for no scrollbar
+            $("html").css("padding-right", scrollbar_width);
+            $("html").addClass("unscrollable");
 
-        // Move code column to the left to adjust its position with no scrollbar.
-        $("#code_column").css("left", "calc(100% - " + (780 + scrollbar_width) + "px)");
+            // Move code column to the left to adjust its position with no scrollbar.
+            $("#code_column").css("left", "calc(100% - " + (780 + scrollbar_width) + "px)");
+        }        
     });
     $('#code_column').mouseleave(function() {
-        $("body").removeClass("unscrollable");
-        $("body").css("padding-right", 0);
-        
-        $("#code_column").css("left", "calc(100% - 780px)");
+        if(!inSingleColumnView()){
+            $("html").removeClass("unscrollable");
+            $("html").css("padding-right", 0);            
+            $("#code_column").css("left", "calc(100% - 780px)");
+        }
     });
 
     // Set the prereqs popup top to match the first section
