@@ -59,12 +59,16 @@ var blog = function(){
         $('#older_posts').hide();
         $("." + tag.toLowerCase()).show();
         $('#final_post').show();
+
+        // Unstick footer
+        handlestickyFooter(false);
     }
 
     function removeFilter() {
         $('#filter').hide();
         $('.blog_post_content').show();
         $('#older_posts').show();
+        handlestickyFooter(false);
     }
 
     function showNoResultsMessage(){
@@ -75,7 +79,10 @@ var blog = function(){
         // show filter message at top of page
         $('#filter').show();
         $('#filter_message').hide();
-        $('#no_results_message').show();        
+        $('#no_results_message').show(); 
+        
+        // Stick footer to the bottom of the page
+        handlestickyFooter(true);
     }
 
     $(window).on('popstate', function(){
@@ -112,6 +119,23 @@ var blog = function(){
             }        
         }
         return tag;
+    }
+
+    function handlestickyFooter(stick){
+        if(stick){
+            $('footer').css({
+                'position': 'absolute',
+                'bottom': '0',
+                'width': '100%'
+            });
+        }
+        else {
+            $('footer').css({
+                'position': 'relative',
+                'bottom': '',
+                'width': ''
+            });
+        }
     }
 
 
