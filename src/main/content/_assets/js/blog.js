@@ -121,8 +121,8 @@ var blog = function(){
         return tag;
     }
 
-    function handlestickyFooter(stick){
-        if(stick){
+    function handlestickyFooter(stickToBottom){
+        if(stickToBottom){
             $('footer').css({
                 'position': 'absolute',
                 'bottom': '0',
@@ -136,6 +136,17 @@ var blog = function(){
                 'width': ''
             });
         }
+        adjustWhiteBackground();
+    }
+
+    // Calculate the viewport height and make sure that the blogs column takes up at least
+    // that height.
+    function adjustWhiteBackground(){
+        var page_height = window.innerHeight;
+        var nav_height = $('nav').outerHeight();
+        var footer_height = $('footer').outerHeight();
+        var min_height = page_height - nav_height - footer_height;
+        $('#right_column').css({'min-height': min_height});
     }
 
 
@@ -157,10 +168,15 @@ var blog = function(){
         getTags: getTags,
         updateSearchUrl: updateSearchUrl,    
         filterPosts: filterPosts,
-        removeFilter: removeFilter,        
+        removeFilter: removeFilter,
+        adjustWhiteBackground: adjustWhiteBackground,   
         init: init
     };
 }();
+
+$(window).on('resize', function(){
+    blog.adjustWhiteBackground();
+});
 
 $(document).ready(function() {
     blog.getTags(function () {
