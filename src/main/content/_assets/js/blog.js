@@ -60,15 +60,14 @@ var blog = function(){
         $("." + tag.toLowerCase()).show();
         $('#final_post').show();
 
-        // Unstick footer
-        handlestickyFooter(false);
+        adjustWhiteBackground();
     }
 
     function removeFilter() {
         $('#filter').hide();
         $('.blog_post_content').show();
         $('#older_posts').show();
-        handlestickyFooter(false);
+        adjustWhiteBackground();
     }
 
     function showNoResultsMessage(){
@@ -81,8 +80,7 @@ var blog = function(){
         $('#filter_message').hide();
         $('#no_results_message').show(); 
         
-        // Stick footer to the bottom of the page
-        handlestickyFooter(true);
+        adjustWhiteBackground();
     }
 
     $(window).on('popstate', function(){
@@ -119,24 +117,6 @@ var blog = function(){
             }        
         }
         return tag;
-    }
-
-    function handlestickyFooter(stickToBottom){
-        if(stickToBottom){
-            $('footer').css({
-                'position': 'absolute',
-                'bottom': '0',
-                'width': '100%'
-            });
-        }
-        else {
-            $('footer').css({
-                'position': 'relative',
-                'bottom': '',
-                'width': ''
-            });
-        }
-        adjustWhiteBackground();
     }
 
     // Calculate the viewport height and make sure that the blogs column takes up at least
