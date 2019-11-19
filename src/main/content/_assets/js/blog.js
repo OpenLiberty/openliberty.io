@@ -80,13 +80,13 @@ var blog = function(){
 
     $(window).on('popstate', function(){
         removeFilter();
-        var tag = get_tag_from_url();
+        var tag = getTagFromUrl();
         if (tag) {
             filterPosts(tag);
         }
     });
 
-    function get_tag_from_url(){
+    function getTagFromUrl(){
         var tag;
         var query_string = location.search;
 
@@ -116,7 +116,7 @@ var blog = function(){
 
 
     function init() {
-        var tag = get_tag_from_url();
+        var tag = getTagFromUrl();
         if(tag){
             filterPosts(tag);
         }
