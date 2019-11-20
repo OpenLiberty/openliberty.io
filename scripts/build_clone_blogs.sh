@@ -16,6 +16,8 @@ mv publish/ _posts
 
 mv blogs_temp/img/blog img
 
+mv blogs_temp/blog_tags.json .
+
 rm -rf blogs_temp
 popd
 echo "Done cloning blogs repository!"🚫
