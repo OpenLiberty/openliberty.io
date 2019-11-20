@@ -20,6 +20,10 @@ asciidoctor:
 
 markdown: kramdown  
 
+# Adds target=_blank, noopener, and noreferrer to all external links
+target-blank: 
+  add_css_classes: "notranslate" # Add notranslate class to localhost links
+
 assets:
   compress:
     css: true
@@ -33,6 +37,7 @@ plugins:
   - jekyll-asciidoc
   - jekyll-assets
   - ol-asciidoc
+  - ol-target-blank
   - octopress-minify-html
 exclude:
   - vendor # TravisCI bundles all gems in the vendor directory on its build servers, which Jekyll will mistakenly read and explode on.
