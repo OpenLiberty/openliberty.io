@@ -157,25 +157,30 @@
         var sections = $('.sectionbody:has(.tab_content)');
         for(var i = 0; i < sections.length; i++){
             var section = $(sections.get(i));
-            if(!OSName){
-                // Show the first tab's contents for every set of tabs in this section.
-                var first_tab = section.find('.tab_link').first();
-                // Find OS name to show all of its tab contents in this section.
-                var class_list = first_tab[0].classList;
-                for (var j = 0; j < class_list.length; j++) {
-                    var class_name = class_list[j];
-                    if (class_name !== "tab_link" && class_name.indexOf("_link") > -1) {
-                        var tab_class = "." + class_name;
-                        var tab_content_class = "." + class_name.replace("link", "section");
-                        section.find(tab_class).addClass("active");
-                        section.find(tab_content_class).show();
-                        break;
-                    }
-                }
+            // Check if the current OS tab exists in the section
+            if(OSName){
+                var content = section.find("." + OSName + "_section");
+                var tab = section.find("." + OSName + "_link");
+                if(content.length > 0 && (content.length === tab.length)){
+                    content.show();                
+                    tab.addClass("active");
+                    continue;
+                }                
             }
-            else {
-                section.find("." + OSName + "_section").show();
-                section.find("." + OSName + "_link").addClass("active");
+            // If the current Operating System's tab has not been found
+            // show the first tab's contents for every set of tabs in this section.
+            var first_tab = section.find('.tab_link').first();
+            // Find OS name to show all of its tab contents in this section.
+            var class_list = first_tab[0].classList;
+            for (var j = 0; j < class_list.length; j++) {
+                var class_name = class_list[j];
+                if (class_name !== "tab_link" && class_name.indexOf("_link") > -1) {
+                    var tab_class = "." + class_name;
+                    var tab_content_class = "." + class_name.replace("link", "section");
+                    section.find(tab_class).addClass("active");
+                    section.find(tab_content_class).show();
+                    break;
+                }
             }
         }
     }
