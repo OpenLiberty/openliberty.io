@@ -161,7 +161,7 @@
             if(OSName){
                 var content = section.find("." + OSName + "_section");
                 var tab = section.find("." + OSName + "_link");
-                if(content.length > 0 && (content.length === tab.length)){
+                if(content.length > 0 && tab.length > 0){
                     content.show();                
                     tab.addClass("active");
                     continue;
