@@ -59,12 +59,15 @@ var blog = function(){
         $('#older_posts').hide();
         $("." + tag.toLowerCase()).show();
         $('#final_post').show();
+
+        adjustWhiteBackground();
     }
 
     function removeFilter() {
         $('#filter').hide();
         $('.blog_post_content').show();
         $('#older_posts').show();
+        adjustWhiteBackground();
     }
 
     function showNoResultsMessage(){
@@ -75,7 +78,9 @@ var blog = function(){
         // show filter message at top of page
         $('#filter').show();
         $('#filter_message').hide();
-        $('#no_results_message').show();        
+        $('#no_results_message').show(); 
+        
+        adjustWhiteBackground();
     }
 
     $(window).on('popstate', function(){
@@ -114,6 +119,16 @@ var blog = function(){
         return tag;
     }
 
+    // Calculate the viewport height and make sure that the blogs column takes up at least
+    // that height.
+    function adjustWhiteBackground(){
+        var page_height = window.innerHeight;
+        var nav_height = $('nav').outerHeight();
+        var footer_height = $('footer').outerHeight();
+        var min_height = page_height - nav_height - footer_height;
+        $('#right_column').css({'min-height': min_height});
+    }
+
 
     function init() {
         var tag = getTagFromUrl();
@@ -133,10 +148,15 @@ var blog = function(){
         getTags: getTags,
         updateSearchUrl: updateSearchUrl,    
         filterPosts: filterPosts,
-        removeFilter: removeFilter,        
+        removeFilter: removeFilter,
+        adjustWhiteBackground: adjustWhiteBackground,   
         init: init
     };
 }();
+
+$(window).on('resize', function(){
+    blog.adjustWhiteBackground();
+});
 
 $(document).ready(function() {
     blog.getTags(function () {
