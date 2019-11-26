@@ -4,12 +4,20 @@
   var article = document.querySelector('article.doc')
   var toolbar = document.querySelector('.toolbar')
 
+  function computeNavHeight(){
+    var navHeight = document.querySelector('nav').clientHeight;
+    var breadcrumbHeight = document.querySelector('#breadcrumb_row').clientHeight;
+    return navHeight + breadcrumbHeight;
+  }
+
   function computePosition (el, sum) {
+    var position;
     if (article.contains(el)) {
-      return computePosition(el.offsetParent, el.offsetTop + sum)
+      position = computePosition(el.offsetParent, el.offsetTop + sum)
     } else {
-      return sum
+      position = sum    
     }
+    return position;
   }
 
   function jumpToAnchor (e) {
@@ -17,7 +25,7 @@
       window.location.hash = '#' + this.id
       e.preventDefault()
     }
-    window.scrollTo(0, computePosition(this, 0) - toolbar.getBoundingClientRect().bottom)
+    window.scrollTo(0, computePosition(this, 0) - computeNavHeight())
   }
 
   window.addEventListener('load', function jumpOnLoad (e) {
