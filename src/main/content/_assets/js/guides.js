@@ -254,6 +254,7 @@ $(document).ready(function() {
 
     // Create popover when search bar is focused
     $('#guide_search_input').popover({
+        sanitize: false,
         container: '#guides_search_container',
         delay: {
             show: '520'
