@@ -463,14 +463,14 @@ function addTitletoGuideTabs() {
             // create array that contains paths to files
             var path_array = [];
             var match;
-            re = /include::finish(\/.+)+\.[a-z]+/g;
+            re = /include::finish(\/.+)+(\.[a-z]+)?/g;
             while ((match = re.exec(response)) != null) {
-                path_array.push(match[0].replace("include::finish/", ""));
+                path_array.push(match[0].replace("include::finish/", "").replace(/ *\[[^\]]*]/g, ""));
             }
 
             // add titles to code column tabs
             $('.code_column_tab').each(function() {
-                var found = path_array.find(el => el.includes(($(this).find("a")).text()));
+                found = path_array.find(el => el.includes(($(this).find("a")).text()));
                 $(this).attr('title', found);
             });
         }
