@@ -470,8 +470,20 @@ function addTitletoGuideTabs() {
 
             // add titles to code column tabs
             $('.code_column_tab').each(function() {
+                tab_name = ($(this).find("a")).text();
+                console.log("tab_name:", tab_name);
+
                 found = path_array.find(el => el.includes(($(this).find("a")).text()));
-                $(this).attr('title', found);
+
+                // if not found in array and file name contains slash, use tab text as title
+                // if found in array, then use path as title
+                if (!found && tab_name.indexOf("/" > -1)) {
+                    console.log("not found in list and contains slash");
+                    $(this).attr('title', tab_name);
+                }
+                else {
+                    $(this).attr('title', found);
+                }
             });
         }
     });
