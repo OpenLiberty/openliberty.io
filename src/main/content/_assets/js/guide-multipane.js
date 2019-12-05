@@ -540,14 +540,15 @@ $(document).ready(function() {
             // add titles to code column tabs
             $('.code_column_tab').each(function() {
                 tab_name = ($(this).find("a")).text();
-                console.log("tab_name:", tab_name);
 
-                found = path_array.find(el => el.includes(($(this).find("a")).text()));
-
+                // check if file name in tab is found in array of paths
+                found = path_array.find(function(el) {
+                    return el.includes(tab_name);
+                });
+                
                 // if not found in array and file name contains slash, use tab text as title
                 // if found in array, then use path as title
                 if (!found && tab_name.indexOf("/" > -1)) {
-                    console.log("not found in list and contains slash");
                     $(this).attr('title', tab_name);
                 }
                 else {
