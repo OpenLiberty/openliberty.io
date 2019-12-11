@@ -74,6 +74,18 @@
                                 </div>
                                 <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
                                 <span class="guide_duration">{{related-guide-metadata.duration}}</span>
+                                
+                                <!-- Add New flag to guides from the past 6 weeks.
+                                3628800 is 6 weeks in seconds (6 weeks * 7 days * 24 hours * 60 minutes * 60 seconds) -->
+                                {% assign date_published = related-guide-metadata.releasedate | date:'%s' %}
+                                {% assign date_now = 'now' | date:'%s' %}
+                                {% assign date_difference = date_now | minus: date_published %}
+                                {% if date_difference < 3628800 %}
+                                <div class="new_guide_container">
+                                    <span class="guide_interactive">New</span>
+                                </div>                    
+                                {% endif %}
+
                                 {% if related-guide-metadata.layout == 'interactive-guide' or related-guide-metadata.layout == 'iguide-multipane' %}
                                 <div class="guide_interactive_container">
                                   <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
