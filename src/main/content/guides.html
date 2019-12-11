@@ -11,9 +11,8 @@ permalink: /guides/
 <!-- Build a list of all the documents in the guides code base -->
 {% assign static-guides = site.pages | where: 'layout', 'guide' %}
 {% assign multipane-static-guides = site.pages | where: 'layout', 'guide-multipane' %}
-{% assign interactive-guides = site.pages | where: 'layout', 'interactive-guide' %}
 {% assign multipane-iguides = site.pages | where: 'layout', 'iguide-multipane' %}
-{% assign all-markdown-files = static-guides | concat: interactive-guides | concat: multipane-static-guides | concat: multipane-iguides | sort: 'releasedate' | reverse %}
+{% assign all-markdown-files = static-guides | concat: multipane-static-guides | concat: multipane-iguides | sort: 'releasedate' | reverse %}
 {% assign all-guides = '' | split: '' %}
 
 <!-- Remove any documents deemed private (archived, templates, etc) -->
@@ -144,7 +143,7 @@ permalink: /guides/
                 </div>
                 {% endif %}
 
-                {% if guide.layout == 'interactive-guide' or guide.layout == 'iguide-multipane' %}
+                {% if guide.layout == 'iguide-multipane' %}
                 <div class="guide_interactive_container">
                     <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
                     <span class="guide_interactive">Interactive</span>
@@ -181,7 +180,7 @@ permalink: /guides/
                     </div>
                     {% endif %}
 
-                    {% if guide.layout == 'interactive-guide' or guide.layout == 'iguide-multipane' %}
+                    {% if guide.layout == 'iguide-multipane' %}
                     <div class="guide_interactive_container">
                         <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
                         <span class="guide_interactive">Interactive</span>
@@ -231,7 +230,7 @@ permalink: /guides/
                 </div>
                 {% endif %}
 
-                {% if guide.layout == 'interactive-guide' or guide.layout == 'iguide-multipane' %}
+                {% if guide.layout == 'iguide-multipane' %}
                 <div class="guide_interactive_container">
                     <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
                     <span class="guide_interactive">Interactive</span>
