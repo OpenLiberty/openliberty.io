@@ -447,6 +447,7 @@ function parse_tags(code_block){
     code.html(code.html().trim());
 }
 
+
 $(document).ready(function() { 
 
     $(window).on('resize', function(){
@@ -456,7 +457,7 @@ $(document).ready(function() {
     // Move the code snippets to the code column on the right side.
     // Each code section is duplicated to show the full file in the right column and just the snippet of code relevant to the guide in the left column in single column / mobile view.
     $('.code_column').each(function(){
-        var code_block = $(this);        
+        var code_block = $(this);   
         var metadata_sect = code_block.prev().find('p');
         if(metadata_sect.length > 0){
             var fileName = metadata_sect[0].innerText;
@@ -516,7 +517,46 @@ $(document).ready(function() {
         }
     });
 
-        
+    // Add file path to title attribute for code column tabs
+    // get project id of guide and build request url to get readme for guide
+    project_id = window.location.pathname.replace("/guides/", "").replace(".html", "");
+    request_url = "https://api.github.com/repos/OpenLiberty/guide-" + project_id + "/readme";
+
+    $.ajax({
+        headers: {          
+            Accept: "application/vnd.github.v3.raw" 
+        }, 
+        url: request_url,
+        type: "GET",
+        success: function(response) {
+            // create array that contains paths to files
+            var path_array = [];
+            var match;
+            re = /include::finish(\/.+)+(\.[a-z]+)?/g;
+            while ((match = re.exec(response)) != null) {
+                path_array.push(match[0].replace("include::finish/", "").replace(/ *\[[^\]]*]/g, ""));
+            }
+
+            // add titles to code column tabs
+            $('.code_column_tab').each(function() {
+                tab_name = ($(this).find("a")).text();
+
+                // check if file name in tab is found in array of paths
+                found = path_array.find(function(el) {
+                    return el.includes(tab_name);
+                });
+                
+                // if not found in array and file name contains slash, use tab text as title
+                // if found in array, then use path as title
+                if (!found && tab_name.indexOf("/" > -1)) {
+                    $(this).attr('title', tab_name);
+                }
+                else {
+                    $(this).attr('title', found);
+                }
+            });
+        }
+    });
 
     // Map the guide sections that don't have any code sections to the previous section's code. This assumes that the first section is what you'll learn which has no code to show on the right to begin with.
     var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2, .sect2:not(#guide_meta):not(#related-guides) > h3');
