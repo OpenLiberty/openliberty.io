@@ -10,7 +10,48 @@
  *******************************************************************************/
 
  
- /* ENTERPRISE SUPPORT */
+/* ENTERPRISE SUPPORT */
+
+#cloud_images_div {
+    position: absolute;
+}
+
+#cloud_1 {
+    position: relative;
+    top: 150px;
+    right: 300px;
+}
+
+#cloud_2 {
+    position: relative;
+    top: -70px;
+    right: -1000px;
+}
+
+#cloud_3 {
+    position: relative;
+    top: -200px;
+}
+
+#cloud_4 {
+    position: relative;
+    top: -400px;
+    right: -500px;
+}
+
+#cloud_5 {
+    position: relative;
+    top: -560px;
+    right: 250px;
+    transform: scaleX(-1);
+}
+
+#cloud_6 {
+    position: relative;
+    top: -770px;
+    right: -800px;
+    transform: scaleX(-1.2);
+}
 
 #not_alone_text{
     font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
@@ -24,63 +65,93 @@
     font-size: 24px;
     text-align: center;
     margin-top: 12px;
+    margin-bottom: 40px;
 }
 
-#green_background {
-    background-color: rgba(236, 243, 174, 0.4);
-    height: 321px;
-    margin-top: 109px;
-    border-radius: 7px;
-}
-
-#mothership {
-    position: relative;
-    margin-left: 41px;
-    margin-top: -43px;
-    padding-right: 40px;
-    max-width: 100%;
-}
-
-#enterprise_support_title {
-    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
-    font-size: 60px;
-    margin-top: 30px;
-}
-
-#enterprise_support_text {
-    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
-    font-size: 24px;
-    margin-top: 10px;
-    margin-bottom: 0px;
-    width: 83%;
-}
-
-#support_link {
-    color: #24243B;
-    background-color: #95BE21;
-    font-size: 16px;
-    font-weight: 500;
+.support_box {
+    box-shadow: 0 2px 4px 0 rgba(63,70,89,0.31);
+    border-radius: 3px;
     text-align: center;
-    display: inline-block;
-    position: relative;
-    border-radius: 7px;
-    width: 260px;
-    padding-top: 15px;
-    padding-bottom: 17px;
-    margin-top: 17px;
+    padding: 40px 27px;
+    background-color: #ffffff;
 }
 
-#support_link:hover {
+@media (min-width: 991px) {
+    .support_box {
+        max-width: 32%;
+        padding: 40px 50px;
+    }
+
+    #enterprise_support_section .support_box:nth-child(2) {
+        margin: 0% 2%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .support_box {
+        max-width: 29%;
+    }
+
+    #enterprise_support_section .support_box:nth-child(2) {
+        margin: 0% 6%;
+    }
+}
+
+.support_box h2 {
+    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
+    height: 66px;
+}
+
+.support_box p {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    height: 108px;
+}
+
+.support_link {
+    display: block;
+    font-size: 17px;
+    font-weight: 500;
+    color: #24253A;
+    background-color: #ABD155;
+    border-radius: 7px;
+    padding: 12px;
+    text-align: center;
+    transition: background-color .2s;
+    margin-bottom: 34px;
+    margin: 0 auto;
+}
+
+.support_link:hover {
+    color: #24253A;
     background-color: #C7EE63;
 }
 
+@media (max-width: 991.98px) {
+    .support_link {
+        width: 200px;
+    }
+}
 
+@media (max-width: 767.98px) {
+    .support_link {
+        width: 230px;
+    }
+
+    .support_box h2 {
+        height: auto;
+    }
+
+    .support_box p {
+        height: auto;
+    }
+}
 
 /* COMMUNITY SUPPORT */
 
 #community_support_section {
     background-image: linear-gradient(-178deg, #141427 0%, #515B7D 67%, #515B7D 67%);
-    margin-top: 116px;
+    margin-top: 80px;
 }
 
 #community_support_title {
@@ -280,30 +351,8 @@
         max-width: 100%;
     }
 
-    #green_background {
-        margin-top: 60px;
-    }
-
-    #mothership {
-        margin: 0 auto;
-        padding-right: 0px;
-        height: 70%;
-        display: block;
-        top: calc(13%);
-        vertical-align: middle;
-    }
-
-    #enterprise_support_title {
-        margin-top: 43px;
-        font-size: 40px;
-    }
-
-    #enterprise_support_text {
-        width: 90%;
-    }
-
     #community_support_section {
-        margin-top: 0px;
+        margin-top: 60px;
     }
 
     #community_support_title {
@@ -357,18 +406,16 @@
     #support_for_all_text {
         font-size: 20px;
         margin-top: 80px;
-        margin-bottom: 123px;
+        margin-bottom: 40px;
         width: 80%;
         text-align: left;
     }
 
-    #mothership {
-        margin-top: -115px;
-        width: 295px;
-        height: 229px;
+    #community_support_section {
+        margin-top: 0px;
     }
 
-    #enterprise_support_title, #community_support_title {
+    #community_support_title {
         width: 80%;
         line-height: 1;
         text-align: left;
@@ -376,19 +423,15 @@
         margin-right: auto;
     }
 
-    #enterprise_support_text, #community_support_text, #fix_text {
+    #community_support_text, #fix_text {
         width: 80%;
         text-align: left;
         margin-left: auto;
         margin-right: auto;
     }
 
-    #support_link_container, #github_link_container {
+    #github_link_container {
         text-align: center;
-    }
-
-    #green_background {
-        height: 547px;
     }
 
     .card {
