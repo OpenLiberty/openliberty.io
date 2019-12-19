@@ -57,6 +57,18 @@ js:
                 <div id="duration_container">
                     <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
                     <span id="guide_duration">{{ page.duration }}</span>
+
+                    <!-- Add New flag to guides from the past 6 weeks.
+                    3628800 is 6 weeks in seconds (6 weeks * 7 days * 24 hours * 60 minutes * 60 seconds) -->
+                    {% assign date_published = page.releasedate | date:'%s' %}
+                    {% assign date_now = 'now' | date:'%s' %}
+                    {% assign date_difference = date_now | minus: date_published %}
+                    {% if date_difference < 3628800 %}
+                    <div class="new_guide_container">
+                        <span class="guide_interactive">New</span>
+                    </div>                    
+                    {% endif %}
+
                     <div class="guide_interactive_container">
                         <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
                         <span class="guide_interactive">Interactive</span>
