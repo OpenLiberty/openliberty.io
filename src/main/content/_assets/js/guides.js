@@ -272,7 +272,7 @@ $(document).ready(function() {
     });
 
     // Click buttons to fill search bar
-    $('#guides_search_container').on('click', '.tag_button', function() {
+    $('#guides_search_container').on('tap click', '.tag_button', function() {
         var input_value = 'tag: ' + $(this).html();
         $('#guide_search_input').val(input_value);
         $('.tag_button').removeClass('hidden');
