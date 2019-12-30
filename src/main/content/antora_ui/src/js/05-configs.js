@@ -53,9 +53,9 @@ function addTOCClick() {
         }
         updateHashInUrl(currentHref);
         createClickableBreadcrumb(getContentBreadcrumbTitle(), true);
-    }
+    };
 
-    $("#toc_container a").off("click").on("click", onclick);
+    // $("#toc_container a").off("click").on("click", onclick);
 
     $("#toc_container a").off('keypress').on('keypress', function (event) {
         event.stopPropagation();
@@ -85,32 +85,34 @@ function setSelectedTOC(resource, scrollTo) {
     var currentTOCSelected = $(".is-current-page");
     var newHref = resource.attr("href");
 
-    if (currentTOCSelected.length === 1) {
-        var href = currentTOCSelected.find("a").attr("href");
-        if (href.indexOf("#") !== -1) {
-            href = href.substring(0, href.indexOf("#"));
+    if(newHref){
+        if (currentTOCSelected.length === 1) {
+            var href = currentTOCSelected.find("a").attr("href");
+            if (href.indexOf("#") !== -1) {
+                href = href.substring(0, href.indexOf("#"));
+            }
+            // remove all hash href created based on the content if a different TOC element is clicked
+            if (newHref.indexOf(href) === -1) {
+                removeHashRefTOC(href);
+            }
+            currentTOCSelected.removeClass("is-current-page");
+            if (currentTOCSelected.hasClass("toc_main_selected")) {
+                currentTOCSelected.removeClass("toc_main_selected");
+            } else if (currentTOCSelected.hasClass("toc_sub_selected")) {
+                currentTOCSelected.removeClass("toc_sub_selected");
+            }
         }
-        // remove all hash href created based on the content if a different TOC element is clicked
-        if (newHref.indexOf(href) === -1) {
-            removeHashRefTOC(href);
+        resource.parent().addClass("is-current-page");
+        if (newHref.indexOf("#") === -1) {
+            resource.parent().addClass("toc_main_selected");
+        } else {
+            resource.parent().addClass("toc_sub_selected");
         }
-        currentTOCSelected.removeClass("is-current-page");
-        if (currentTOCSelected.hasClass("toc_main_selected")) {
-            currentTOCSelected.removeClass("toc_main_selected");
-        } else if (currentTOCSelected.hasClass("toc_sub_selected")) {
-            currentTOCSelected.removeClass("toc_sub_selected");
-        }
-    }
-    resource.parent().addClass("is-current-page");
-    if (newHref.indexOf("#") === -1) {
-        resource.parent().addClass("toc_main_selected");
-    } else {
-        resource.parent().addClass("toc_sub_selected");
-    }
 
-    // if (scrollTo) {
-    //     adjustTOCView(resource);
-    // }
+        // if (scrollTo) {
+        //     adjustTOCView(resource);
+        // }
+    }
 }
 
 // Remove the 2nd level subtitles from TOC
@@ -168,8 +170,8 @@ function scrollToPos(pos) {
 
 // Handle history event involving expand/collapse toggle button
 function handleExpandCollapseState(titleId, isExpand) {
-    var iframeContents = $('iframe[name=contentFrame]').contents();
-    var hrefElement = iframeContents.find('a[id="' + titleId + '"]');
+    // Steven
+    var hrefElement = $("article.doc").find('a[id="' + titleId + '"]');
     if (hrefElement.length === 1) {
         if (!hrefElement.is(":visible")) {
             // make its parent(s) visible
@@ -177,13 +179,13 @@ function handleExpandCollapseState(titleId, isExpand) {
             var parentTitleId = titleSplits[0];
             for (var i = 1; i < titleSplits.length - 1; i++) {
                 parentTitleId += "/" + titleSplits[i];
-                var parentToggleButton = iframeContents.find("a[id='" + parentTitleId + "']").parent().find(".toggle");
+                var parentToggleButton = $("article.doc").find("a[id='" + parentTitleId + "']").parent().find(".toggle");
                 if (parentToggleButton.attr("collapsed") === "true") {
                     handleExpandCollapseToggleButton(parentToggleButton, false);
                 }
             }
         }
-        var toggleButton = iframeContents.find("a[id='" + titleId + "']").parent().find(".toggle");
+        var toggleButton = $("article.doc").find("a[id='" + titleId + "']").parent().find(".toggle");
         if ((isExpand === true && (toggleButton.attr("collapsed") === "true")) ||
             (isExpand === false && (toggleButton.attr("collapsed") === "false"))) {
             handleExpandCollapseToggleButton(toggleButton, false);
@@ -430,8 +432,8 @@ function handleExpandCollapseToggleButton(buttonElement, updateUrl) {
 }
 
 function handleExpandCollapseTitle(titleId, isShow) {
-    var iframeContents = $('iframe[name=contentFrame]').contents();
-    var matchingElements = iframeContents.find('[data-id^="' + titleId + '"]');
+    var content = $('article.doc');
+    var matchingElements = content.find('[data-id^="' + titleId + '"]');
     var hideElements = [];
     $(matchingElements).each(function () {
         var dataId = getDataId($(this));
@@ -440,7 +442,7 @@ function handleExpandCollapseTitle(titleId, isShow) {
             var toggleButton = $(this).find(".toggle");
             if (toggleButton.length === 1) {
                 if (toggleButton.attr("collapsed") === "true") {
-                    var elements = iframeContents.find("[data-id^='" + dataId + "']");
+                    var elements = content.find("[data-id^='" + dataId + "']");
                     $(elements).each(function () {
                         var nestedDataId = getDataId($(this));
                         if ((nestedDataId === dataId && $(this).is("table")) ||
@@ -469,12 +471,11 @@ function handleExpandCollapseTitle(titleId, isShow) {
         $(this).hide();
     })
     if (!isMobileView()) {
-        $('iframe[name=contentFrame]').contents().trigger("scroll"); // trigger a scroll event to update the breadcrumb
+        content.trigger("scroll"); // trigger a scroll event to update the breadcrumb
     }
 }
 
 function handleDeferredExpandCollapseElements(deferredElements) {
-    var iframeContents = $('iframe[name=contentFrame]').contents();
     $(deferredElements).each(function () {
         var subHeading = $(this).attr("heading");
         var titleId = $(this).attr("anchorTitleId");
@@ -519,21 +520,29 @@ function modifyFixedTableColumnWidth() {
 // (as in the case of the hash populated by clicking on the content breadcrumb), return undefined.
 function findTOCElement(processHash) {
     var index = location.href.indexOf('#');
-    var href = location.href.substring(index + 1);
+    var href = location.href.substring(index);
     var matchingTOCElement;
-    // if (!processHash) {
-    //     matchingTOCElement = $("#toc_container a[href='" + href + "']");
-    // } else {
+    if (!processHash) {
+        matchingTOCElement = $("#toc_container a[href='" + href + "']");
+    } else {
+        // Steven
+        // Remove the path and version from the url
+        var lastSlash = location.href.lastIndexOf('/');
+        var newUrl = location.href.substring(lastSlash + 1);
+        var endIndex = newUrl.indexOf(".html");
+        var hash = newUrl.substring(0, endIndex);
+        // console.error("hash is: " + hash);
+        
         // var hash = iframeContents.attr("location").hash;
-        // if (hash !== undefined && hash !== "") {
-        //     href = href + hash;
+        if (hash !== undefined && hash !== "") {
+            href = href + hash;
 
             matchingTOCElement = $("#toc_container a[href='" + href + "']");
             if (matchingTOCElement.length === 0) {
                 matchingTOCElement = undefined;
             }
-        // }
-    // }
+        }
+    }
     return matchingTOCElement;
 }
 
@@ -984,6 +993,7 @@ function isIPadView() {
 }
 
 function updateHashAfterRedirect() {
+    return; // Steven add back if needed
     var hashValue = window.location.hash;
     var href = "";
     if (hashValue !== "" && hashValue.indexOf("#rwlp_config_") !== -1) {
