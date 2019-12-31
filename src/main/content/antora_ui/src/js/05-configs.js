@@ -64,20 +64,6 @@ function addTOCClick() {
             $(this).trigger('click');
         }
     });
-
-    // listen for focusin causing by tab. not mouse
-    // var mousedown = false;
-    // $("#toc_container a").off('mousedown').on('mousedown', function() {
-    //     mousedown = true;
-    // });
-
-    // $("#toc_container a").off('focusin').on('focusin', function(event) {
-    //     if (!mousedown) {
-    //         // move the TOC in viewport if it is out of viewport
-    //         adjustTOCView($(event.currentTarget));
-    //     }
-    //     mousedown = false;
-    // });
 }
 
 // Add css to selected TOC. If scrollTo is specified, scroll the TOC element into viewport.
@@ -108,10 +94,6 @@ function setSelectedTOC(resource, scrollTo) {
         } else {
             resource.parent().addClass("toc_sub_selected");
         }
-
-        // if (scrollTo) {
-        //     adjustTOCView(resource);
-        // }
     }
 }
 
@@ -120,7 +102,7 @@ function removeHashRefTOC(href) {
     var hashHref = $("#toc_container").find("a[href^='" + href + "#']");
     $(hashHref).each(function () {
         $(this).parent().remove();
-    })
+    });
 }
 
 // Update doc header breadcrumb with the current TOC title
@@ -199,6 +181,7 @@ function handleExpandCollapseState(titleId, isExpand) {
 //   href: the content url including hash to point to the nested title
 //   expand: use only if the event is triggered by the toggle button to expand/collapse the content
 function updateHashInUrl(href, isExpand) {
+    // Steven
     var hashInUrl = href;
     if (href.indexOf("/config/") !== -1) {
         hashInUrl = href.substring(17);
@@ -224,8 +207,7 @@ function updateHashInUrl(href, isExpand) {
 function selectFirstDoc() {
     if (!isMobileView()) {
         var firstTOCElement = $("#toc_container a").first();
-        firstTOCElement.click();
-        // var href = firstTOCElement.attr("href");        
+        firstTOCElement.click();     
     }
 }
 
@@ -272,8 +254,9 @@ function addAnchorToSubHeadings() {
 
 // Extract the first part of the content title as the breadcrumb title
 function getContentBreadcrumbTitle() {
-    var iframeContents = $('iframe[name=contentFrame]').contents();
-    return (getTitle(iframeContents.find("#config_title").text()));
+    var title = $('article.doc h1.page').text();
+    var parsedTitle = getTitle(title);
+    return parsedTitle;
 }
 
 function getTitle(title) {
@@ -384,7 +367,7 @@ function getDataId(element) {
 }
 
 function addExpandAndCollapseToggleButtons(subHeading, titleId) {
-    var toggleButton = $('<div class="toggle" collapsed="true" tabindex=0><img src="/img/all_guides_plus.svg" alt="Expand" aria-label="Expand" /></div>');
+    var toggleButton = $('<div class="toggle" collapsed="true" tabindex=0><img src="../../_/img/all_guides_plus.svg" alt="Expand" aria-label="Expand" /></div>');
     handleExpandCollapseTitle(titleId, false);
     toggleButton.on('click', function () {
         handleExpandCollapseToggleButton($(this), true);
@@ -414,14 +397,14 @@ function handleExpandCollapseToggleButton(buttonElement, updateUrl) {
     var titleId = getDataId(buttonElement.parent());
     if (collapsed === "true") {
         // Expand to show the table and nested elements
-        buttonElement.empty().append($('<img src="/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
+        buttonElement.empty().append($('<img src="../../_/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
         buttonElement.attr('collapsed', false);
         // this call needs to be done after collapsed is set to false
         handleExpandCollapseTitle(titleId, true);
     } else {
         // Collapse the table and nested elements
         handleExpandCollapseTitle(titleId, false);
-        buttonElement.empty().append($('<img src="/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
+        buttonElement.empty().append($('<img src="../../_/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
         buttonElement.attr('collapsed', true);
     }
     // adjustFrameHeight();
@@ -519,21 +502,16 @@ function modifyFixedTableColumnWidth() {
 // the TOC sub element corresponding to the hash. If there is no TOC sub element for it
 // (as in the case of the hash populated by clicking on the content breadcrumb), return undefined.
 function findTOCElement(processHash) {
-    var index = location.href.indexOf('#');
-    var href = location.href.substring(index);
+    // Remove the path and version from the url
+    var lastSlash = location.href.lastIndexOf('/');
+    var href = location.href.substring(lastSlash + 1);
     var matchingTOCElement;
     if (!processHash) {
         matchingTOCElement = $("#toc_container a[href='" + href + "']");
     } else {
-        // Steven
-        // Remove the path and version from the url
-        var lastSlash = location.href.lastIndexOf('/');
-        var newUrl = location.href.substring(lastSlash + 1);
-        var endIndex = newUrl.indexOf(".html");
-        var hash = newUrl.substring(0, endIndex);
-        // console.error("hash is: " + hash);
-        
-        // var hash = iframeContents.attr("location").hash;
+        var index = href.indexOf('#');
+        var hash = href.substring(index);
+        console.error("hash is: " + hash);
         if (hash !== undefined && hash !== "") {
             href = href + hash;
 
@@ -799,20 +777,6 @@ function handleParentWindowScrolling() {
     }
 }
 
-// display the toc element in viewport
-// function adjustTOCView(resource) {
-//     var resourceTop = resource.parent()[0].getBoundingClientRect().top;
-//     var tocTitleTop = $("#toc_title")[0].getBoundingClientRect().top;
-//     var tocTitleHeight = $("#toc_title").outerHeight();
-//     var tocColumnHeight = $("#toc_column").outerHeight();
-//     // make toc element visible if it is not when going thru history backward and forward click
-//     if (resourceTop < tocTitleTop + tocTitleHeight || resourceTop >= tocColumnHeight) {
-//         // position the element in the middle part of the toc
-//         $("#toc_column").scrollTop(resourceTop - $("#toc_column").offset().top +
-//             $("#toc_column").scrollTop() - tocTitleHeight - tocColumnHeight / 2);
-//     }
-// }
-
 // If the doc content is in focus by means of other than a mouse click, then goto the top of the 
 // doc.
 function addConfigContentFocusListener() {
@@ -878,9 +842,6 @@ function handlePopstate() {
                 if (TOCSubElement.length === 1) {
                     setSelectedTOC(TOCSubElement, true);
                 }
-            } else {
-                // load the new content document
-                // setIframeLocationHref(event.state.href, true);
             }
 
             // hamburger for TOC is in expanded state, collapse it and display the content iframe 
@@ -923,7 +884,6 @@ function initialContentBreadcrumbVisibility() {
 
 // Enable/disable content breadcrumb visibility
 function handleContentBreadcrumbVisibility(isShow) {
-    //if (!isMobileView()) {
     if (!isMobileView() && !isIPadView()) {
         if (isShow && !$('.contentStickyBreadcrumbHeader').is(":visible")) {
             // with scrolling listener not on the iframe content anymore, disable scrolling listener until animation is done
@@ -992,24 +952,23 @@ function isIPadView() {
     }
 }
 
-function updateHashAfterRedirect() {
-    return; // Steven add back if needed
-    var hashValue = window.location.hash;
-    var href = "";
-    if (hashValue !== "" && hashValue.indexOf("#rwlp_config_") !== -1) {
-        hashValue = hashValue.substring("#rwlp_config_".length);
-        //hashValue = hashValue.substring(1);
-        if (hashValue.indexOf("&") !== -1) {
-            href = "/docs/ref/config/" + hashValue.substring(0, hashValue.indexOf("&"));
-        } else {
-            href = "/docs/ref/config/" + hashValue;
-        }
+// function updateHashAfterRedirect() {
+//     var hashValue = window.location.hash;
+//     var href = "";
+//     if (hashValue !== "" && hashValue.indexOf("#rwlp_config_") !== -1) {
+//         hashValue = hashValue.substring("#rwlp_config_".length);
+//         //hashValue = hashValue.substring(1);
+//         if (hashValue.indexOf("&") !== -1) {
+//             href = "/docs/ref/config/" + hashValue.substring(0, hashValue.indexOf("&"));
+//         } else {
+//             href = "/docs/ref/config/" + hashValue;
+//         }
     
-        if (location.pathname + location.hash === href) {
-            replaceHistoryState('#' + hashValue);
-        }
-    }
-}
+//         if (location.pathname + location.hash === href) {
+//             replaceHistoryState('#' + hashValue);
+//         }
+//     }
+// }
 
 function replaceHistoryState(hashToReplace) {
     var fullHref = "/docs/ref/config/" + hashToReplace.substring(1);
@@ -1074,61 +1033,45 @@ $(document).ready(function () {
     addWindowResizeListener();
     handlePopstate();
 
-    // $('iframe[name="contentFrame"]').load(function () {
-        addOverviewPageClickAndScroll();
-        // if ($(this)[0].contentDocument.title !== "Not Found") {
-            initialContentBreadcrumbVisibility();
-            modifyFixedTableColumnWidth();
-            handleSubHeadingsInContent();
-            var TOCElement = findTOCElement();
-            handleSubHeadingsInTOC(TOCElement);
-            // adjustFrameHeight();
-            var TOCSubElement = findTOCElement(true);
-            if (TOCSubElement) {
-                setSelectedTOC(TOCSubElement, true)
-            } else if (TOCElement) {
-                setSelectedTOC(TOCElement, true);
-            }
-            if (TOCElement) {
-                updateMainBreadcrumb(TOCElement);
-            }
+    addOverviewPageClickAndScroll();
+    initialContentBreadcrumbVisibility();
+    modifyFixedTableColumnWidth();
+    handleSubHeadingsInContent();
+    var TOCElement = findTOCElement();
+    handleSubHeadingsInTOC(TOCElement);
+    var TOCSubElement = findTOCElement(true);
+    if (TOCSubElement) {
+        setSelectedTOC(TOCSubElement, true);
+    } else if (TOCElement) {
+        setSelectedTOC(TOCElement, true);
+    }
+    if (TOCElement) {
+        updateMainBreadcrumb(TOCElement);
+    }
 
-            if (!isMobileView() && !isIPadView()) {         
-                handleContentScrolling();
-            } 
+    if (!isMobileView() && !isIPadView()) {         
+        handleContentScrolling();
+    } 
 
-            if (window.location.hash !== "" && window.location.hash !== undefined &&
-                window.location.hash.indexOf("&expand=") !== -1) {
-                var isExpand;
-                if (window.location.hash.indexOf("&expand=true") !== -1) {
-                    isExpand = true;
-                } else if (window.location.hash.indexOf("&expand=false") !== -1) {
-                    isExpand = false;
-                }
-                var hash = window.location.hash.substring(1);
-                if (hash.indexOf("#") !== -1) {
-                    var titleId = hash.substring(hash.indexOf('#') + 1, hash.indexOf("&"));
-                    handleExpandCollapseState(titleId, isExpand);
-                }
-            }
+    if (window.location.hash !== "" && window.location.hash !== undefined &&
+        window.location.hash.indexOf("&expand=") !== -1) {
+        var isExpand;
+        if (window.location.hash.indexOf("&expand=true") !== -1) {
+            isExpand = true;
+        } else if (window.location.hash.indexOf("&expand=false") !== -1) {
+            isExpand = false;
+        }
+        var hash = window.location.hash.substring(1);
+        if (hash.indexOf("#") !== -1) {
+            var titleId = hash.substring(hash.indexOf('#') + 1, hash.indexOf("&"));
+            handleExpandCollapseState(titleId, isExpand);
+        }
+    }
 
-            // update hash if it is redirect
-            updateHashAfterRedirect();
+    // update hash if it is redirect
+    // updateHashAfterRedirect();
 
-            if (isMobileView() && $("#toc_column").hasClass('in')) {
-                $(".breadcrumb_hamburger_nav").trigger('click');
-            }
-            // handleIFrameDocPosition($(this).contents().attr("location").href);
-            // if (isMobileView()) {
-            //     $('footer').show();
-            // }
-        // }
-    // });
+    if (isMobileView() && $("#toc_column").hasClass('in')) {
+        $(".breadcrumb_hamburger_nav").trigger('click');
+    }
 });
-
-// Change height of toc if footer is in view so that fixed toc isn't visible through footer
-// $(window).scroll(function() {
-//     if (!isMobileView()) {
-//         $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
-//     }
-// });
