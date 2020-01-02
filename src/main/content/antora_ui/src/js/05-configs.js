@@ -37,10 +37,8 @@ function addTOCClick() {
 
         if (currentHref.indexOf("#") === -1) {
             // loading initial content
-            // - load iframe content
             // - update main breadcrumb 
             // Note: content breadcrumb not visible with initial loading
-            // setIframeLocationHref(currentHref);
             updateMainBreadcrumb(resource);
             updateTitle(resource.text());
         } else {
@@ -49,13 +47,12 @@ function addTOCClick() {
             // - scroll to the 2nd level subtitle
             // Note: main breadcrumb only contains main title not 2nd level subtitle
             handleContentBreadcrumbVisibility(true);
-            // handleIFrameDocPosition(currentHref);
         }
         updateHashInUrl(currentHref);
         createClickableBreadcrumb(getContentBreadcrumbTitle(), true);
     };
 
-    // $("#toc_container a").off("click").on("click", onclick);
+    $("#toc_container a").off("click").on("click", onclick);
 
     $("#toc_container a").off('keypress').on('keypress', function (event) {
         event.stopPropagation();
@@ -70,7 +67,9 @@ function addTOCClick() {
 function setSelectedTOC(resource, scrollTo) {
     var currentTOCSelected = $(".is-current-page");
     var newHref = resource.attr("href");
-
+    
+    // console.error('newHref:');
+    // console.error(newHref);
     if(newHref){
         if (currentTOCSelected.length === 1) {
             var href = currentTOCSelected.find("a").attr("href");
@@ -94,6 +93,9 @@ function setSelectedTOC(resource, scrollTo) {
         } else {
             resource.parent().addClass("toc_sub_selected");
         }
+    } else {
+        // should not be here
+        console.error("Should not be here. newHref is undefined");
     }
 }
 
@@ -136,6 +138,7 @@ function updateTitle(currentPage) {
 // Method:
 //      Adjust the viewport of the iframe content
 function scrollToPos(pos) {
+    return;
     var iframeContents = $('iframe[name=contentFrame]').contents();
     if (isMobileView()) {
         $("#background_container").css('height', iframeContents.height() + "px");
@@ -152,7 +155,6 @@ function scrollToPos(pos) {
 
 // Handle history event involving expand/collapse toggle button
 function handleExpandCollapseState(titleId, isExpand) {
-    // Steven
     var hrefElement = $("article.doc").find('a[id="' + titleId + '"]');
     if (hrefElement.length === 1) {
         if (!hrefElement.is(":visible")) {
@@ -181,7 +183,6 @@ function handleExpandCollapseState(titleId, isExpand) {
 //   href: the content url including hash to point to the nested title
 //   expand: use only if the event is triggered by the toggle button to expand/collapse the content
 function updateHashInUrl(href, isExpand) {
-    // Steven
     var hashInUrl = href;
     if (href.indexOf("/config/") !== -1) {
         hashInUrl = href.substring(17);
@@ -503,15 +504,18 @@ function modifyFixedTableColumnWidth() {
 // (as in the case of the hash populated by clicking on the content breadcrumb), return undefined.
 function findTOCElement(processHash) {
     // Remove the path and version from the url
-    var lastSlash = location.href.lastIndexOf('/');
-    var href = location.href.substring(lastSlash + 1);
+    var configIndex = location.href.indexOf('/config/');
+    var href = location.href.substring(configIndex + 8);
+    var slashIndex = href.indexOf('/');
+    href = href.substring(slashIndex + 1); // Remove Antora version from href
+    var hashIndex = href.indexOf('#');
+    var hash = href.substring(hashIndex);
+    href = href.substring(0, hashIndex);
+
     var matchingTOCElement;
     if (!processHash) {
         matchingTOCElement = $("#toc_container a[href='" + href + "']");
     } else {
-        var index = href.indexOf('#');
-        var hash = href.substring(index);
-        console.error("hash is: " + hash);
         if (hash !== undefined && hash !== "") {
             href = href + hash;
 
@@ -721,7 +725,7 @@ function createClickableBreadcrumb(breadcrumbText, highlightLastItem) {
             var paddingWidth = parseInt($(".contentStickyBreadcrumbHeader").css("padding-left")) +
                 parseInt($(".contentStickyBreadcrumbHeader").css("padding-right"));
             var breadcrumbWidth = $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").width() + paddingWidth;
-            var contentWindowWidth = document.documentElement.clientWidth;
+            var contentWindowWidth = $('article.doc').width();
             var fontSize = 32;
             while (breadcrumbWidth > contentWindowWidth && fontSize > 0) {
                 $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").css("font-size", fontSize + "px");
@@ -1045,6 +1049,7 @@ $(document).ready(function () {
     } else if (TOCElement) {
         setSelectedTOC(TOCElement, true);
     }
+    createClickableBreadcrumb(getContentBreadcrumbTitle(), true);
     if (TOCElement) {
         updateMainBreadcrumb(TOCElement);
     }
