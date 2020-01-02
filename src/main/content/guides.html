@@ -11,9 +11,8 @@ permalink: /guides/
 <!-- Build a list of all the documents in the guides code base -->
 {% assign static-guides = site.pages | where: 'layout', 'guide' %}
 {% assign multipane-static-guides = site.pages | where: 'layout', 'guide-multipane' %}
-{% assign interactive-guides = site.pages | where: 'layout', 'interactive-guide' %}
 {% assign multipane-iguides = site.pages | where: 'layout', 'iguide-multipane' %}
-{% assign all-markdown-files = static-guides | concat: interactive-guides | concat: multipane-static-guides | concat: multipane-iguides | sort: 'releasedate' | reverse %}
+{% assign all-markdown-files = static-guides | concat: multipane-static-guides | concat: multipane-iguides | sort: 'releasedate' | reverse %}
 {% assign all-guides = '' | split: '' %}
 
 <!-- Remove any documents deemed private (archived, templates, etc) -->
@@ -88,6 +87,17 @@ permalink: /guides/
                 </div>
                 <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
                 <span class="guide_duration">{{guide.duration}}</span>
+
+                <!-- Add New flag to guides from the past 6 weeks.
+                3628800 is 6 weeks in seconds (6 weeks * 7 days * 24 hours * 60 minutes * 60 seconds) -->
+                {% assign date_published = guide.releasedate | date:'%s' %}
+                {% assign date_now = 'now' | date:'%s' %}
+                {% assign date_difference = date_now | minus: date_published %}
+                {% if date_difference < 3628800 %}
+                <div class="new_guide_container">
+                    <span class="guide_interactive">New</span>
+                </div>
+                {% endif %}
             </a>
         </div>
         {% endfor %}
@@ -121,7 +131,19 @@ permalink: /guides/
                 </div>
                 <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
                 <span class="guide_duration">{{guide.duration}}</span>
-                {% if guide.layout == 'interactive-guide' or guide.layout == 'iguide-multipane' %}
+
+                <!-- Add New flag to guides from the past 6 weeks.
+                3628800 is 6 weeks in seconds (6 weeks * 7 days * 24 hours * 60 minutes * 60 seconds) -->
+                {% assign date_published = guide.releasedate | date:'%s' %}
+                {% assign date_now = 'now' | date:'%s' %}
+                {% assign date_difference = date_now | minus: date_published %}
+                {% if date_difference < 3628800 %}
+                <div class="new_guide_container">
+                    <span class="guide_interactive">New</span>
+                </div>
+                {% endif %}
+
+                {% if guide.layout == 'iguide-multipane' %}
                 <div class="guide_interactive_container">
                     <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
                     <span class="guide_interactive">Interactive</span>
@@ -133,13 +155,7 @@ permalink: /guides/
     </div>
     <div class="row extraMP">
         <div class="col-xs-12">
-
             <p id="additional_microprofile_guides">{{microprofile-guides.size}} additional MicroProfile Guides</p>
-            <!----
-            <button id="microprofile_more_guides_button" type="button" class="btn">
-                <p><span id="microprofile_more_guides_icon">+</span><b>{{microprofile-guides.size}} additional MicroProfile Guides</b></p>
-            </button>
-            -->
         </div>
     </div>
     <div id="microprofile_more_guides" class="row">
@@ -152,7 +168,19 @@ permalink: /guides/
                     </div>
                     <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
                     <span class="guide_duration">{{guide.duration}}</span>
-                    {% if guide.layout == 'interactive-guide' or guide.layout == 'iguide-multipane' %}
+
+                    <!-- Add New flag to guides from the past 6 weeks.
+                    3628800 is 6 weeks in seconds (6 weeks * 7 days * 24 hours * 60 minutes * 60 seconds) -->
+                    {% assign date_published = guide.releasedate | date:'%s' %}
+                    {% assign date_now = 'now' | date:'%s' %}
+                    {% assign date_difference = date_now | minus: date_published %}
+                    {% if date_difference < 3628800 %}
+                    <div class="new_guide_container">
+                        <span class="guide_interactive">New</span>
+                    </div>
+                    {% endif %}
+
+                    {% if guide.layout == 'iguide-multipane' %}
                     <div class="guide_interactive_container">
                         <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
                         <span class="guide_interactive">Interactive</span>
@@ -190,7 +218,19 @@ permalink: /guides/
                 </div>
                 <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
                 <span class="guide_duration">{{guide.duration}}</span>
-                {% if guide.layout == 'interactive-guide' or guide.layout == 'iguide-multipane' %}
+
+                <!--Add New flag to guides from the past 6 weeks.
+                3628800 is 6 weeks in seconds (6 weeks * 7 days * 24 hours * 60 minutes * 60 seconds) -->
+                {% assign date_published = guide.releasedate | date:'%s' %}
+                {% assign date_now = 'now' | date:'%s' %}
+                {% assign date_difference = date_now | minus: date_published %}
+                {% if date_difference < 3628800 %}
+                <div class="new_guide_container">
+                    <span class="guide_interactive">New</span>
+                </div>
+                {% endif %}
+
+                {% if guide.layout == 'iguide-multipane' %}
                 <div class="guide_interactive_container">
                     <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
                     <span class="guide_interactive">Interactive</span>

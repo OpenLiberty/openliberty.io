@@ -37,14 +37,6 @@ function link_hotspots_to_file(code_block, header, index){
 //       to_line: Integer for what line to end highlighting.
 //       scroll: boolean if the code should be scrolled to
 function highlight_code_range(code_section, fromLine, toLine, scroll){
-    // Wrap each leftover piece of text in a span to handle highlighting a range of lines.
-    code_section.find('code').contents().each(function(){
-        if (!$(this).is('span')) {
-                var newText = $(this).wrap('<span class="string"></span>');
-                $(this).replaceWith(newText);
-        }
-    });
-    
     // Wrap code block lines in a div to highlight
     var highlightStart = code_section.find('.line-numbers').filter(function(){
         return parseInt(this.innerText.trim()) === fromLine;        
