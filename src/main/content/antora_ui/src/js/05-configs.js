@@ -68,8 +68,6 @@ function setSelectedTOC(resource, scrollTo) {
     var currentTOCSelected = $(".is-current-page");
     var newHref = resource.attr("href");
     
-    // console.error('newHref:');
-    // console.error(newHref);
     if(newHref){
         if (currentTOCSelected.length === 1) {
             var href = currentTOCSelected.find("a").attr("href");
@@ -95,7 +93,6 @@ function setSelectedTOC(resource, scrollTo) {
         }
     } else {
         // should not be here
-        console.error("Should not be here. newHref is undefined");
     }
 }
 
@@ -607,11 +604,13 @@ function handleContentScrolling() {
             }
             if (breadcrumbVisible) {
                 // go through subheadings to determine the content of breadcrumb
-                var frameView = $(this);
-                var anchors = $('article.doc').find("div.paragraph > p > a");
+                // var frameView = $(this);
+                // article = $('article.doc');
+                // Steven changed frameView
+                var anchors = article.find("div.paragraph > p > a");
                 var closestAnchor = {};
                 $(anchors).each(function () {
-                    if ($(this).parent().is(":visible") && isInViewport($(this), frameView, closestAnchor)) {
+                    if ($(this).parent().is(":visible") && isInViewport($(this), closestAnchor)) {
                         return false;
                     }
                 });
@@ -650,23 +649,22 @@ function isInitialContentInView(currentViewPos) {
     return inViewPort;
 }
 
-function isInViewport(anchorElement, viewWindow, closestAnchor) {
+function isInViewport(anchorElement, closestAnchor) {
     var element = anchorElement.parent();
     var elementTop = element[0].getBoundingClientRect().top;
     // factor in the fixed header height including the main header if the parent scrollbar is scrolled to the 
     // bottom to reveal the footer
-    var headerHeight = contentBreadcrumbHeight + $(window.parent.document).scrollTop();
+    var headerHeight = contentBreadcrumbHeight + 101; // Nav height is 101 but we can't calculate it.
 
     // timing problem that the height could be overriden and be 1. Stepping thru debugger won't have the problem.
     //var contentBreadcrumbHeight = $(".contentStickyBreadcrumbHeader").outerHeight();
 
     var contentTop = elementTop - headerHeight;
     var contentBottom = contentTop + parseInt(element.css("height"));
-    var viewportHeight = viewWindow[0].documentElement.getBoundingClientRect().height;
+    var viewportHeight = document.documentElement.clientHeight;
     var contentHeight = viewportHeight - headerHeight;
     if ((contentTop >= 0 || contentBottom > 0) && contentBottom <= contentHeight) {
         // element is not covered by the breadcrumb and is in the viewport - we're done
-
         // if the next element is the second level subheading and is near the top of the viewport,
         // return it to be used as the breadcrumb
         if (element.text().split(">").length === 2 && contentTop < 50) {
@@ -757,15 +755,15 @@ function handleParentWindowScrolling() {
             // for parent window scrolling, need to adjust breadcrumb only when content breadcrumb is visible
             if (breadcrumbVisible) {
                 // go through subheadings to determine the content of breadcrumb
-                var frameView = $(this);
                 var article = $('article.doc');
                 var anchors = article.find("div.paragraph > p > a");
                 var closestAnchor = {};
                 $(anchors).each(function () {
-                    if ($(this).parent().is(":visible") && isInViewport($(this), article, closestAnchor)) {
+                    // steven
+                    if ($(this).parent().is(":visible") && isInViewport($(this), closestAnchor)) {
                         return false;
                     }
-                })
+                });
 
                 if (closestAnchor.element && !closestAnchor.inView) {
                     // normal scrolling elements
