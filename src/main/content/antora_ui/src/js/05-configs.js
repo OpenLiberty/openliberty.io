@@ -604,9 +604,6 @@ function handleContentScrolling() {
             }
             if (breadcrumbVisible) {
                 // go through subheadings to determine the content of breadcrumb
-                // var frameView = $(this);
-                // article = $('article.doc');
-                // Steven changed frameView
                 var anchors = article.find("div.paragraph > p > a");
                 var closestAnchor = {};
                 $(anchors).each(function () {
@@ -743,6 +740,16 @@ function addContentBreadcrumbClick() {
         event.preventDefault();
         var href = $(event.currentTarget).attr("href");
         updateHashInUrl(href);
+
+        // Find anchor and jump to it
+        var scrollTop = 0;
+        var hashIndex = href.indexOf('#');
+        var hash = href.substring(hashIndex + 1); 
+        var anchor = $('article.doc').find("div.paragraph > p > a[id='" + hash + "']");
+        if(anchor.length == 1){
+            scrollTop = anchor.offset().top;
+        }    
+        $('html,body').animate({scrollTop: scrollTop - 101}, 500);         
     });
 }
 
@@ -759,7 +766,6 @@ function handleParentWindowScrolling() {
                 var anchors = article.find("div.paragraph > p > a");
                 var closestAnchor = {};
                 $(anchors).each(function () {
-                    // steven
                     if ($(this).parent().is(":visible") && isInViewport($(this), closestAnchor)) {
                         return false;
                     }
@@ -824,7 +830,6 @@ function handlePopstate() {
                 popstateHrefPathname = event.state.href.substring(0, event.state.href.indexOf("#"));
             }
 
-            // Steven
             if (iframeHrefObj.pathname === popstateHrefPathname) {
                 // if content document is already loaded, 
                 // - expand/collapse the subheading if the expand property is set
