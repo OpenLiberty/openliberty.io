@@ -67,6 +67,11 @@ function addTOCClick() {
 function setSelectedTOC(resource, scrollTo) {
     var currentTOCSelected = $(".is-current-page");
     var newHref = resource.attr("href");
+
+    // console.log("resource");
+    // console.log(resource);
+    // console.log("Current href is: " + location.href);
+    // console.log("newHref is: " + newHref);
     
     if(newHref){
         if (currentTOCSelected.length === 1) {
@@ -807,7 +812,6 @@ function handleInitialContent() {
     if (window.location.hash !== "" && window.location.hash !== undefined) {
         updateTitle(window.location.hash.replace("#", "").replace(".html", ""));
     } else {
-        selectFirstDoc();
         updateTitle("OVERVIEW");
     }
 }
@@ -861,9 +865,6 @@ function handlePopstate() {
                 if (!$("#toc_column").hasClass('in')) {
                     $(".breadcrumb_hamburger_nav").trigger('click');
                 }
-            } else {
-                // if no state object is included, load the first content document 
-                selectFirstDoc();
             }
         }
     }
@@ -1045,6 +1046,7 @@ $(document).ready(function () {
     modifyFixedTableColumnWidth();
     handleSubHeadingsInContent();
     var TOCElement = findTOCElement();
+    TOCElement.click();
     handleSubHeadingsInTOC(TOCElement);
     var TOCSubElement = findTOCElement(true);
     if (TOCSubElement) {
