@@ -67,11 +67,6 @@ function addTOCClick() {
 function setSelectedTOC(resource, scrollTo) {
     var currentTOCSelected = $(".is-current-page");
     var newHref = resource.attr("href");
-
-    // console.log("resource");
-    // console.log(resource);
-    // console.log("Current href is: " + location.href);
-    // console.log("newHref is: " + newHref);
     
     if(newHref){
         if (currentTOCSelected.length === 1) {
@@ -141,7 +136,6 @@ function updateTitle(currentPage) {
 //      Adjust the viewport of the iframe content
 function scrollToPos(pos) {
     return;
-    var iframeContents = $('iframe[name=contentFrame]').contents();
     if (isMobileView()) {
         $("#background_container").css('height', iframeContents.height() + "px");
         $('html, body').animate({
@@ -204,14 +198,6 @@ function updateHashInUrl(href, isExpand) {
         }
     }
     window.history.pushState(state, null, '#' + hashInUrl);
-}
-
-// Display the first doc content by default
-function selectFirstDoc() {
-    if (!isMobileView()) {
-        var firstTOCElement = $("#toc_container a").first();
-        firstTOCElement.click();     
-    }
 }
 
 /// Modify the flat hierachary of the content to include nested levels with expand/collapse button
@@ -511,8 +497,10 @@ function findTOCElement(processHash) {
     var slashIndex = href.indexOf('/');
     href = href.substring(slashIndex + 1); // Remove Antora version from href
     var hashIndex = href.indexOf('#');
-    var hash = href.substring(hashIndex);
-    href = href.substring(0, hashIndex);
+    if(hashIndex !== -1){
+        var hash = href.substring(hashIndex);
+        href = href.substring(0, hashIndex);
+    }    
 
     var matchingTOCElement;
     if (!processHash) {
@@ -520,7 +508,6 @@ function findTOCElement(processHash) {
     } else {
         if (hash !== undefined && hash !== "") {
             href = href + hash;
-
             matchingTOCElement = $("#toc_container a[href='" + href + "']");
             if (matchingTOCElement.length === 0) {
                 matchingTOCElement = undefined;
@@ -1009,7 +996,6 @@ function addWindowResizeListener() {
             }
             $("#breadcrumb_hamburger").hide();
             $("#breadcrumb_hamburger_title").hide();
-            // adjustFrameHeight();
         }
     });
 }
@@ -1046,8 +1032,7 @@ $(document).ready(function () {
     modifyFixedTableColumnWidth();
     handleSubHeadingsInContent();
     var TOCElement = findTOCElement();
-    TOCElement.click();
-    handleSubHeadingsInTOC(TOCElement);
+    handleSubHeadingsInTOC(TOCElement); // this adds the sub elements to li so check here for the hash usage
     var TOCSubElement = findTOCElement(true);
     if (TOCSubElement) {
         setSelectedTOC(TOCSubElement, true);
