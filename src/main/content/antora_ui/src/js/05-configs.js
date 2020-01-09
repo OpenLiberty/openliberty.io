@@ -571,7 +571,7 @@ function handleContentScrolling() {
             lastViewPos = currentScrollTop;
             var breadcrumbVisible = $('.contentStickyBreadcrumbHeader').is(':visible');
 
-            if(article.find('#overview_title').length > 0) {
+            if(article.find('.page').text() == "Server configuration overview") {
                 // No top breadcrumb bar for overview pages,
                 // therefore skip all the breadcrumb handling code
                 return;
