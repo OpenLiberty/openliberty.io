@@ -30,8 +30,9 @@ function addTOCClick() {
         // event.preventDefault();
         // event.stopPropagation();
 
-        if (isMobileView()) {
+        if (isMobileView() || isIPadView()) {
             $("#breadcrumb_hamburger").trigger("click");
+            $('.nav-container').removeClass('is-active'); // Hide the nav menu
             $('footer').hide();
         }
 
