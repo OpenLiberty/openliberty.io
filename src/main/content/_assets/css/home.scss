@@ -326,20 +326,31 @@ body {
 }
 
 #develop_image {
-    border-collapse: separate;
-    border-spacing: 4px;
-    table-layout: fixed;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    background-color: transparent;
 
-    & td, th {
+    & div {
         padding: 0px 4.1px;
-        vertical-align: middle;
-        border-top: none;
+        margin-bottom: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     @media (max-width: 991.98px) {
         width: 365px;
-        max-width: none;
-        border-spacing: 3px;
+
+        & div {
+            margin-bottom: 3px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        display: none;
     }
 }
 
@@ -359,14 +370,19 @@ body {
         display: block;
         padding: 18px 0px;
         color: #3F4664;
+        width: 100%;
     }
 
     & .long_title {
         padding: 8px 0px;
     }
 
+    &.space_holder {
+        background-color: transparent;
+    }
+
     @media (max-width: 1199.98px) {
-        width: 85px;
+        width: 87px;
         height: 48px;
         font-size: 12px;
 
@@ -380,7 +396,7 @@ body {
     }
 
     @media (max-width: 991.98px) {
-        width: 68px;
+        width: 70px;
         height: 38px;
         font-size: 10px;
 
