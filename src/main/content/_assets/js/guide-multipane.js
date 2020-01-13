@@ -36,7 +36,7 @@ function link_hotspots_to_file(code_block, header, index){
 //       from_line: Integer for what line to start highlighting from.
 //       to_line: Integer for what line to end highlighting.
 //       scroll: boolean if the code should be scrolled to
-function highlight_code_range(code_section, fromLine, toLine, scroll){
+function highlight_code_range(code_section, fromLine, toLine, scroll){  
     // Wrap code block lines in a div to highlight
     var highlightStart = code_section.find('.line-numbers').filter(function(){
         return parseInt(this.innerText.trim()) === fromLine;        
@@ -359,7 +359,7 @@ function parse_tags(code_block){
     // Wrap the standalone text in spans so they can be selected between the range of start and end tags using jQuery's nextUntil()
     code_block.find('code').contents().each(function(){
         if (!$(this).is('span')) {
-            var newText = $(this).wrap('<span class="string"></span>');     
+            var newText = $(this).wrap('<span class="string"></span>');   
             $(this).replaceWith(newText);           
         }
     });
@@ -382,7 +382,7 @@ function parse_tags(code_block){
 
     var start_tags = code_block.find('span:contains(tag::)');
     var end_tags = code_block.find('span:contains(end::)');
-
+    
     start_tags.each(function(){
         var text = $(this).text();
         var start_index = text.indexOf('tag::') + 5;
@@ -449,7 +449,16 @@ $(document).ready(function() {
     // Move the code snippets to the code column on the right side.
     // Each code section is duplicated to show the full file in the right column and just the snippet of code relevant to the guide in the left column in single column / mobile view.
     $('.code_column').each(function(){
-        var code_block = $(this);   
+        var code_block = $(this);
+        
+        // Add extra line number at the end of the code block
+        // This prevents whitespace from getting highlighted when there are nested tags at the end of a file
+        var hiddenNode = document.createElement('span');
+        hiddenNode.className = 'line-numbers';
+        var lastLine = parseInt(code_block.find('.line-numbers').last().text().trim());
+        hiddenNode.innerHTML = lastLine + 1;
+        code_block.find('code')[0].appendChild(hiddenNode);
+
         var metadata_sect = code_block.prev().find('p');
         if(metadata_sect.length > 0){
             var fileName = metadata_sect[0].innerText;
