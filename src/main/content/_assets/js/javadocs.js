@@ -320,7 +320,7 @@ function addClickListeners() {
 }
 
 function addClickListener(contents) {
-    contents.bind("click", function(e) {
+    contents.on('click', function(e) {
         var handlingClick = true;
         var iframeName = CLASS_FRAME;
         var hashKey = CLASS_HASH;
@@ -521,7 +521,7 @@ $(document).ready(function() {
         resizeJavaDocWindow();
     });
 
-    $('#javadoc_container').load(function() {
+    $('#javadoc_container').on('load', function() {
         resizeJavaDocWindow();
         addAccessibility();
         addExpandAndCollapseToggleButtons();  

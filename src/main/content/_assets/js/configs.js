@@ -688,7 +688,7 @@ function handleContentScrolling() {
             }
         };
 
-        $(window.parent.document).unbind('scroll').bind('scroll', onContentScroll);
+        $(window.parent.document).off('scroll').on('scroll', onContentScroll);
     }
 }
 
@@ -985,7 +985,7 @@ function handleContentBreadcrumbVisibility(isShow) {
     if (!isMobileView() && !isIPadView()) {
         if (isShow && !$('.contentStickyBreadcrumbHeader').is(":visible")) {
             // with scrolling listener not on the iframe content anymore, disable scrolling listener until animation is done
-            $(window.parent.document).unbind('scroll');
+            $(window.parent.document).off('scroll');
             $('.contentStickyBreadcrumbHeader').slideDown(500, function() {
                 handleContentScrolling();
             });
@@ -993,7 +993,7 @@ function handleContentBreadcrumbVisibility(isShow) {
             adjustFrameHeight();
         } else if (!isShow && $('.contentStickyBreadcrumbHeader').is(":visible")) {
             // with scrolling listener not on the iframe content anymore, disable scrolling listener until animation is done
-            $(window.parent.document).unbind('scroll')
+            $(window.parent.document).off('scroll')
             $('.contentStickyBreadcrumbHeader').slideUp(500, function() {
                 handleContentScrolling();
             });
@@ -1130,7 +1130,7 @@ function replaceHistoryState(hashToReplace) {
 // Take care of displaying the table of content, comand content, and hamburger correctly when
 // browser window resizes from mobile to non-mobile width and vice versa.
 function addWindowResizeListener() {
-    $(window).resize(function() {
+    $(window).on('resize', function() {
         if (isMobileView()) {
             addHamburgerClick();
         } else {
@@ -1171,7 +1171,7 @@ $(document).ready(function () {
     addWindowResizeListener();
     handlePopstate();
 
-    $('iframe[name="contentFrame"]').load(function () {
+    $('iframe[name="contentFrame"]').on('load', function () {
         addOverviewPageClickAndScroll();
         if ($(this)[0].contentDocument.title !== "Not Found") {
             initialContentBreadcrumbVisibility();
@@ -1224,7 +1224,7 @@ $(document).ready(function () {
 });
 
 // Change height of toc if footer is in view so that fixed toc isn't visible through footer
-$(window).scroll(function() {
+$(window).on('scroll', function() {
     if (!isMobileView()) {
         $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
     }

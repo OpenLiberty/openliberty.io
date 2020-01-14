@@ -104,7 +104,7 @@ function loadContent(targetTOC, tocHref, addHash, versionHref) {
                 }
             }
             updateTitle(targetTOC);
-            $(this).focus(); // switch focus to the content for the reader
+            $(this).trigger('focus'); // switch focus to the content for the reader
         } else {
             $('footer').show();
         }
@@ -193,7 +193,7 @@ function loadVersionContent(versionElement, versionHref) {
             setupDisplayContent();
             updateMainBreadcrumb(versionElement, 'full_title');
 
-            $(this).focus(); // switch focus to the content for the reader
+            $(this).trigger('focus'); // switch focus to the content for the reader
         }
         $('footer').show();
     });
@@ -392,7 +392,7 @@ function addHashListener() {
 // Take care of displaying the table of content, comand content, and hamburger correctly when
 // browser window resizes from mobile to non-mobile width and vice versa.
 function addWindowResizeListener() {
-    $(window).resize(function() {
+    $(window).on('resize', function() {
         if (isMobileView()) {
             addHamburgerClick();
         } else {
@@ -421,6 +421,6 @@ $(document).ready(function () {
 })
 
 // Change height of toc if footer is in view so that fixed toc isn't visible through footer
-$(window).scroll(function() {
+$(window).on('scroll', function() {
     $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
 });
