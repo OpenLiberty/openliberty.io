@@ -614,7 +614,7 @@ function handleContentScrolling() {
             }
         };
 
-        $(window.parent.document).unbind('scroll').bind('scroll', onContentScroll);
+        $(window.parent.document).off('scroll').on('scroll', onContentScroll);
     }
 }
 
@@ -883,13 +883,13 @@ function handleContentBreadcrumbVisibility(isShow) {
     if (!isMobileView() && !isIPadView()) {
         if (isShow && !$('.contentStickyBreadcrumbHeader').is(":visible")) {
             // with scrolling listener not on the iframe content anymore, disable scrolling listener until animation is done
-            $(window.parent.document).unbind('scroll');
+            $(window.parent.document).off('scroll');
             $('.contentStickyBreadcrumbHeader').slideDown(500, function() {
                 handleContentScrolling();
             });
         } else if (!isShow && $('.contentStickyBreadcrumbHeader').is(":visible")) {
             // with scrolling listener not on the iframe content anymore, disable scrolling listener until animation is done
-            $(window.parent.document).unbind('scroll')
+            $(window.parent.document).off('scroll')
             $('.contentStickyBreadcrumbHeader').slideUp(500, function() {
                 handleContentScrolling();
             });
@@ -988,7 +988,7 @@ function replaceHistoryState(hashToReplace) {
 // Take care of displaying the table of content, comand content, and hamburger correctly when
 // browser window resizes from mobile to non-mobile width and vice versa.
 function addWindowResizeListener() {
-    $(window).resize(function() {
+    $(window).on('resize', function() {
         if (isMobileView()) {
             addHamburgerClick();
         } else {
