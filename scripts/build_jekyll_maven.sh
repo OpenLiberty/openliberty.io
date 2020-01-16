@@ -73,13 +73,13 @@ mkdir -p src/main/content/img/guide
 # Find images in draft guides and copy to img/guide/{projectid}
 find src/main/content/guides/draft-guide*/assets/* | while read line; do
     imgPath=$(echo "$line" | sed -e 's/guides\/draft-guide-/img\/guide\//g' | sed 's/\/assets\/.*//g')
-    mkdir -p $imgPath && cp $line "$_"
+    mkdir -p $imgPath && cp -R $line "$_"
 done
 
 # Find images in published guides and copy to img/guide/{projectid}
 find src/main/content/guides/guide*/assets/* | while read line; do
     imgPath=$(echo "$line" | sed -e 's/guides\/guide-/img\/guide\//g' | sed 's/\/assets\/.*//g')
-    mkdir -p $imgPath && cp $line "$_"
+    mkdir -p $imgPath && cp -R $line "$_"
 done
 
 # Move any js/css files from guides to the _assets folder for jekyll-assets minification.
