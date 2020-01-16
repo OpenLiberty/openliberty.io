@@ -70,19 +70,6 @@ popd
 echo "Copying guide images to /img/guide"
 mkdir -p src/main/content/img/guide
 
-# Check if any draft guide images exist.
-if ls src/main/content/guides/draft-guide*/assets/* 1> /dev/null 2>&1; then
-    echo "Copying draft guide images to /img/guide"
-    cp -n src/main/content/guides/draft-guide*/assets/* src/main/content/img/guide/ || true
-fi
-# Check if any published guide images exist.
-if ls src/main/content/guides/guide*/assets/* 1> /dev/null 2>&1; then
-    echo "Copying published guide images to /img/guide"
-    cp -n src/main/content/guides/guide*/assets/* src/main/content/img/guide/ || true
-fi
-
-
-
 # Find images in draft guides and copy to img/guide/{projectid}
 find src/main/content/guides/draft-guide*/assets/* | while read line; do
     imgPath=$(echo "$line" | sed -e 's/guides\/draft-guide-/img\/guide\//g' | sed 's/\/assets\/.*//g')
