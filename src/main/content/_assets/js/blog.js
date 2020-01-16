@@ -9,7 +9,7 @@ var blog = function(){
                 tag_names.push(tag_class.toLowerCase());
                 // get featured tags from json
                 if (tag.featured) {
-                    featured_tags_html = '<p class="featured_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tag.name + '</p>' + '<span>, </span>';
+                    featured_tags_html = '<p tabindex="0" role="listitem" class="featured_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');" onkeypress="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tag.name + '</p>' + '<span>, </span>';
                     $('#featured_tags_list').append(featured_tags_html);
                 }
                 $(".blog_post_title_link").each(function(i, link) {
@@ -21,7 +21,7 @@ var blog = function(){
                     }
                     var tags_html = "";
                     if (tag.posts.indexOf(post_name) > -1) {
-                        tags_html = '<p class="blog_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tag.name + '</p>' + '<span>, </span>';
+                        tags_html = '<p tabindex="0" role="listitem" class="blog_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');" onkeypress="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tag.name + '</p>' + '<span>, </span>';
                         
                         $(".blog_post_content:eq(" + i + ")").addClass(tag_class.toLowerCase());
                         $(".blog_tags_container:eq(" + i + ")").append(tags_html);
