@@ -270,5 +270,87 @@ $(document).ready(function() {
             }
         }
     });
-    
+
+    // Set up the tab groups to work according to accessibility guidelines
+    // For each item in the tab group...
+    $('.nav.nav-tabs').find("li > a").each(
+        function(a) {
+            var $tab = $(this);
+
+            // Set the click event for each tab link
+            $tab.click(
+                 function(e) {
+                    var $tabList = $tab.closest('.tabs_container');
+                    var $tabContent = $tabList.next();
+
+                    // Remove tab stop from previously selected tab and content
+                    $tabList.find("li > a").attr({"tabindex": "-1"});
+                    $tabContent.find('.tab-content .active').attr({"tabindex": "-1"});
+
+                    // Select the given tab and show its associated pane. The tab
+                    // that was previously selected becomes unselected and its associated 
+                    // pane is hidden.
+                    $tab.tab('show');
+
+                    // Add tab stop to newly selected tab and content
+                    $tabList.find("li > a.active").attr({"tabindex": "0"});
+                    $tabContent.find(".tab-pane").eq($tab.parent().index()).attr({"tabindex": "0"});
+                }
+            );
+
+            $tab.keydown(
+                function(e) {
+                    var currentTab = $tab.closest("li");
+                    switch(e.which) {
+                        case 37:  // left
+                        //case 38:  // up
+                            // Navigate to previous tab with left/up key
+                            e.preventDefault();
+                            if (currentTab.prev().length === 0) {
+                                // If on first tab, cycle back to last
+                                currentTab.nextAll().last().find("a").click();
+                            } else {
+                                currentTab.prev().find("a").click();
+                            }
+                            break;
+
+                        case 39:  // right
+                        //case 40:  // down
+                            // Navigate to next tab with right/down key
+                            e.preventDefault();
+                            if (currentTab.next().length == 0) {
+                                // If on last tab, cycle back to 1st
+                                currentTab.prevAll().last().find("a").click();
+                            } else {
+                                currentTab.next().find("a").click();
+                            }
+                            break;
+
+                        case 36:  // home
+                            // Navigate to first tab
+                            e.preventDefault();
+                            if (currentTab.prev().length > 0) {
+                                currentTab.prevAll().last().find("a").click();
+                            }
+                            break;
+
+                        case 35:  // end
+                            // Navigate to last tab
+                            e.preventDefault();
+                            if (currentTab.next().length > 0) {
+                                currentTab.nextAll().last().find("a").click();
+                            }
+                            break;                      
+                    }
+                }
+            );
+
+            // This event fires on tab show after a tab has been shown.
+            $tab.on('shown.bs.tab', function (e) {
+                var activeTab = e.target;          // newly activated tab
+                $(activeTab).focus();
+            });
+        }
+    );
+
 });
