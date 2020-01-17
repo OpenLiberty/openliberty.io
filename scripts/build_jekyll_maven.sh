@@ -91,9 +91,6 @@ find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/cont
 # Build draft and published blogs
 ./scripts/build_clone_blogs.sh
 
-# Clean maven
-mvn clean
-
 # Jekyll build
 echo "Building with jekyll..."
 echo `jekyll -version`
