@@ -108,4 +108,4 @@ python3 ./scripts/parse-feature-toc.py
 
 # Maven packaging
 echo "Running maven (mvn)..."
-mvn -B -X -U package
+mvn -B -X package
