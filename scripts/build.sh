@@ -7,11 +7,15 @@ sudo apt-get install python3-bs4 -y
 # Update maven
 pushd /opt/IBM/
 sudo wget http://www-eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+echo "List contents 1:"
+ls -l
 sudo tar -xvzf apache-maven-3.3.9-bin.tar.gz
+echo "List contents 2 after tar:"
+ls -l
 sudo mv apache-maven-3.3.9 maven
-popd
 echo "List the maven versions in dir:"
-ls /opt/IBM/maven
+ls maven
+popd
 export PATH=/opt/IBM/maven/apache-maven-3.3.9/bin:$PATH
 echo "Maven version:"
 mvn -v
