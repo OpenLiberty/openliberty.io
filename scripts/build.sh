@@ -11,7 +11,7 @@ sudo wget http://www-eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-mave
 sudo tar -xvzf apache-maven-3.3.9-bin.tar.gz
 sudo mv apache-maven-3.3.9 maven
 popd
-export PATH=/opt/IBM/maven/apache-maven-3.3.9/bin:PATH
+export PATH=/opt/IBM/maven/apache-maven-3.3.9/bin:$PATH
 echo "Maven version:"
 mvn -v
 # End update maven
