@@ -23,7 +23,8 @@ function render_builds(builds, parent) {
 
     parent.empty();
 
-    var analytics_class_name = 'link_' + parent.parent().data('builds-id');
+    var tableID = parent.parent().data('builds-id');
+    var analytics_class_name = 'link_' + tableID;
     var download_arrow = '<div class="download_arrow"><div class="table_arrow"></div><div class="table_line"></div></div>';
 
     // update maven and gradle commands to use latest version
@@ -38,30 +39,33 @@ function render_builds(builds, parent) {
     }
 
     builds.forEach(function(build) {
+        var web_profile_row = null,
+            microprofile_row = null,
+            all_ga_features_row = null;
         var row = $('<tr></tr>');
         // both releases tables (ol releases and eclipse developer tools releases)
         if(parent.hasClass('release_table_body')) {
             if(build.version.indexOf('-RC') > -1){
                 build.version.replace('-RC', ' Release Candidate');
             }
-            var zip_column;
+            var version_column, zip_column;
 
             // ol releases table only
             if(parent.parent().data('builds-id') == "runtime_releases"){
-                var web_profile_row = $('<tr></tr>');
-                var microprofile_row = $('<tr></tr>');
-                var all_ga_features_row = $('<tr></tr>');
+                web_profile_row = $('<tr></tr>');
+                microprofile_row = $('<tr></tr>');
+                all_ga_features_row = $('<tr></tr>');
                 var package_locations = build.package_locations;
                 if(package_locations !== null && package_locations !== undefined){
                     var num_packages = package_locations.length + 1;
-                    var version_column = $('<td rowspan="' + num_packages + '"><span class="table_date">' + build.version + '</span></td>');
+                    version_column = $('<td headers="releases_version" rowspan="' + num_packages + '"><span class="table_date">' + build.version + '</span></td>');
                     row.append(version_column);
 
                     for(var i = 0; i < package_locations.length; i++){
                         var package_name = package_locations[i].split("=")[0];
                         package_name = package_name.toLowerCase();
                         var href = package_locations[i].split("=")[1];
-                        var package_column = $('<td></td>');
+                        var package_column = $('<td headers="releases_download"></td>');
                         package_column.append($('<a href="' +  href +'" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + 
                         download_arrow + 'ZIP</a>'));
                         if (package_name.indexOf("java") > -1) {
@@ -69,35 +73,35 @@ function render_builds(builds, parent) {
                             buildVersionYear = parseInt(build.version.substring(0, build.version.indexOf(".")), 10);
                             buildVersionMonth = parseInt(build.version.substring(build.version.lastIndexOf(".") + 1), 10);
                             if (buildVersionYear > 19 || (buildVersionYear === 19 && buildVersionMonth > 5)) {
-                                row.append("<td>Jakarta EE 8</td>")
+                                row.append("<td headers='releases_package'>Jakarta EE 8</td>");
                             } else {
-                                row.append("<td>Java EE 8</td>")                        
+                                row.append("<td headers='releases_package'>Java EE 8</td>");                        
                             }
                             row.append(package_column);
                         }
                         else if (package_name.indexOf("web") > -1) {
-                            web_profile_row.append("<td>Web Profile 8</td>");
+                            web_profile_row.append("<td headers='releases_package'>Web Profile 8</td>");
                             web_profile_row.append(package_column);
                         }
                         else if (package_name.indexOf("microprofile") > -1) {
-                            microprofile_row.append('<td>MicroProfile 3</td>');
+                            microprofile_row.append('<td headers="releases_package">MicroProfile 3</td>');
                             microprofile_row.append(package_column);
                         }
 
                     }
-                    all_ga_features_row.append('<td>All GA Features</td>');
-                    all_ga_features_row.append('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
+                    all_ga_features_row.append('<td headers="releases_package">All GA Features</td>');
+                    all_ga_features_row.append('<td headers="releases_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
                 }
                 else{
-                    var version_column = $('<td><span class="table_date">' + build.version + '</span></td>');            
+                    version_column = $('<td headers="releases_version"><span class="table_date">' + build.version + '</span></td>');            
                     row.append(version_column);
-                    row.append('<td>All GA Features</td>');
-                    row.append('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
+                    row.append('<td headers="releases_package">All GA Features</td>');
+                    row.append('<td headers="releases_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
                 }
             // eclipse developer tools releases only
             }  else {
-                var version_column = $('<td><span class="table_date">' + build.version + '</span></td>');
-                zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
+                version_column = $('<td headers="eclipse_releases_version"><span class="table_date">' + build.version + '</span></td>');
+                zip_column = $('<td headers="eclipse_releases_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
                 row.append(version_column);
                 row.append(zip_column);
             }
@@ -109,23 +113,23 @@ function render_builds(builds, parent) {
             var day = date.getDate();
             var hour = date.getHours();
             var minute = date.getMinutes();
-            var date_column = $('<td><span class="table_date">' + year + '-' + add_lead_zero(month) + '-' + add_lead_zero(day) + ', ' + add_lead_zero(hour) + ':' + add_lead_zero(minute) + '</span></td>');
+            var date_column = $('<td headers="' + tableID + '_date"><span class="table_date">' + year + '-' + add_lead_zero(month) + '-' + add_lead_zero(day) + ', ' + add_lead_zero(hour) + ':' + add_lead_zero(minute) + '</span></td>');
             row.append(date_column);
             
-            var tests_column = $('<td><a href="' +  build.tests_log +'" class="'+ analytics_class_name + ' skip_outbound_link_analytics tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
+            var tests_column = $('<td headers="' + tableID + '_tests"><a href="' +  build.tests_log +'" class="'+ analytics_class_name + ' skip_outbound_link_analytics tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
             row.append(tests_column);
             
-            var log_column = $('<td><a href="' + build.build_log + '" class="' + analytics_class_name + ' skip_outbound_link_analytics view_logs_link" target="_blank" rel="noopener">View logs</a></td>');            
+            var log_column = $('<td headers="' + tableID + '_logs"><a href="' + build.build_log + '" class="' + analytics_class_name + ' skip_outbound_link_analytics view_logs_link" target="_blank" rel="noopener">View logs</a></td>');            
             row.append(log_column);
 
-            var zip_column = $('<td><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
-            row.append(zip_column);
+            var download_zip_column = $('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
+            row.append(download_zip_column);
         }
 
         parent.append(row);
         parent.append(web_profile_row);
         parent.append(microprofile_row);
-        parent.append(all_ga_features_row)
+        parent.append(all_ga_features_row);
 
     });
 }
@@ -212,7 +216,7 @@ $(document).ready(function() {
     $.ajax({
         url: builds_url
     }).done(function(data) {
-
+        
         if(data.latest_releases){
             latest_releases = data.latest_releases;
             if(latest_releases.runtime){
