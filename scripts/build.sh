@@ -4,7 +4,7 @@
 sudo apt-get update
 sudo apt-get install libgdbm-dev libncurses5-dev automake libtool bison libffi-dev -y
 sudo apt-get install python3-bs4 -y
-sudo apt-get upgrade
+sudo apt-get upgrade -y
 # Update maven
 pushd /opt/IBM/
 sudo wget http://www-eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
