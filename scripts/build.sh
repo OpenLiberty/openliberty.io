@@ -36,9 +36,14 @@ export LANG="en_US.UTF-8"
 
 SCRIPT_DIR=$(dirname $0)
 
-echo "Copy project's Maven settings.xml into m2 settings"
 echo "List contents:"
-ls
-cp settings.xml ${HOME}/.m2/settings.xml 2>/dev/null
+ls ${HOME}
+echo "Copy project's Maven settings.xml into m2 settings"
+cp settings.xml ${HOME}/.m2/settings.xml 2>/dev/null || :
+if [[ $? -eq 0 ]]; then
+    echo "Copied settings.xml to Maven dir";
+else
+    echo "Unable to copy settings.xml to Maven dir";
+fi
 
 source $SCRIPT_DIR/build_jekyll_maven.sh
