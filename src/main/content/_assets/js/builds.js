@@ -204,10 +204,8 @@ $(document).ready(function() {
     // Change url when tab is clicked so that page can be bookmarked on a specific tab
     $(function(){
         var hash = window.location.hash;
-        hash && $('ul.nav a[href="' + hash + '"]').tab('show');
       
         $('.nav-tabs a').click(function (e) {
-          $(this).tab('show');
           window.location.hash = this.hash;
         });
       });
@@ -216,7 +214,7 @@ $(document).ready(function() {
     $.ajax({
         url: builds_url
     }).done(function(data) {
-        
+
         if(data.latest_releases){
             latest_releases = data.latest_releases;
             if(latest_releases.runtime){
