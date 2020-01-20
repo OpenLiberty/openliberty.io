@@ -39,14 +39,13 @@ SCRIPT_DIR=$(dirname $0)
 echo "List contents:"
 ls -a ${HOME}
 echo "Copy project's Maven settings.xml into m2 settings"
-mkdir ${HOME}/.m2
 cp settings.xml ${HOME}/.m2/settings.xml 2>/dev/null || :
 if [[ $? -eq 0 ]]; then
     echo "Copied settings.xml to Maven dir";
 else
     echo "Unable to copy settings.xml to Maven dir";
 fi
-"m2 contents:"
+echo "m2 contents:"
 ls -a ${HOME}/.m2
 
 source $SCRIPT_DIR/build_jekyll_maven.sh
