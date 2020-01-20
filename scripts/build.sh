@@ -36,6 +36,10 @@ export LANG="en_US.UTF-8"
 
 SCRIPT_DIR=$(dirname $0)
 
+echo "Begin global maven settings"
+cat /opt/IBM/maven/conf/settings.xml
+echo "End global maven settings"
+
 echo "List contents:"
 ls -a ${HOME}
 echo "Copy project's Maven settings.xml into m2 settings"
