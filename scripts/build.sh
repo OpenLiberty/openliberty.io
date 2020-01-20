@@ -37,8 +37,8 @@ export LANG="en_US.UTF-8"
 SCRIPT_DIR=$(dirname $0)
 
 echo "Copy project's Maven settings.xml into m2 settings"
-echo "Directory:"
-pwd
+echo "List contents:"
+ls
 cp settings.xml ${HOME}/.m2/settings.xml 2>/dev/null
 
 source $SCRIPT_DIR/build_jekyll_maven.sh
