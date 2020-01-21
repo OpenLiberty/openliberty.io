@@ -107,5 +107,6 @@ fi
 python3 ./scripts/parse-feature-toc.py
 
 # Maven packaging
+# Set the TLS Protocol to 1.2 for the maven wrapper on Java version 1.7
 echo "Running maven (mvn)..."
-./mvnw -B -X -Dhttps.protocols=TLSv1.2 package
+./mvnw -B -Dhttps.protocols=TLSv1.2 package
