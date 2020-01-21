@@ -9,7 +9,7 @@ permalink: /jakartaee.xml
     <description>{{ site.description | xml_escape }}</description>
     <link>{{ site.url }}{{ site.baseurl }}/</link>
     <atom:link href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" rel="self" type="application/rss+xml"/>
-    {% assign date_format = site.minima.date_format | default: "%-d %b %y" %}
+    {% assign date_format = site.minima.date_format | default: date_to_rfc822 %}
     <pubDate>{{ site.time | date: date_format }}</pubDate>    
     <lastBuildDate>{{ site.time | date: date_format }}</lastBuildDate>
     <generator>Jekyll v{{ jekyll.version }}</generator>
