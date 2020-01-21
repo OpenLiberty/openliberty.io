@@ -107,6 +107,7 @@ fi
 python3 ./scripts/parse-feature-toc.py
 
 # Maven packaging
+# A Maven wrapper is used to set our own Maven version independent of the build environment and is specified in ./mvn/wrapper/maven-wrapper.properties
 # Set the TLS Protocol to 1.2 for the maven wrapper on Java version 1.7
 echo "Running maven (mvn)..."
 ./mvnw -B -Dhttps.protocols=TLSv1.2 package
