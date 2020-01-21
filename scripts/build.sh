@@ -20,10 +20,6 @@ export LANG="en_US.UTF-8"
 
 SCRIPT_DIR=$(dirname $0)
 
-echo "Begin global maven settings"
-cat /opt/IBM/maven/conf/settings.xml
-echo "End global maven settings"
-
 echo "List contents:"
 ls -a ${HOME}
 echo "Copy project's Maven settings.xml into m2 settings"
@@ -36,5 +32,9 @@ else
 fi
 echo "m2 contents:"
 ls -a ${HOME}/.m2
+
+# Print out Java version
+echo "Java version:"
+java -version
 
 source $SCRIPT_DIR/build_jekyll_maven.sh
