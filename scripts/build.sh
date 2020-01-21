@@ -37,7 +37,4 @@ fi
 echo "m2 contents:"
 ls -a ${HOME}/.m2
 
-# Install maven wrapper to set the maven version to 3.6.3
-mvn -N io.takari:maven:0.7.7:wrapper -Dmaven=3.6.3
-
 source $SCRIPT_DIR/build_jekyll_maven.sh
