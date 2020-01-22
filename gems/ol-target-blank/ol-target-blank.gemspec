@@ -9,7 +9,6 @@ Gem::Specification.new do |s|
   s.files              = ["lib/ol-target-blank.rb"]
   s.homepage           = 'https://github.com/OpenLiberty/openliberty.io'
   s.license = "MIT"
-  s.files = `git ls-files -z`.split("\x0")
   s.require_paths = ["lib"]
   s.required_ruby_version = ">= 2.3.0"
 
