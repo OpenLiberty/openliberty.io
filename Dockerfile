@@ -77,6 +77,11 @@ RUN pushd gems/ol-asciidoc \
     && gem build ol-asciidoc.gemspec \
     && gem install ol-asciidoc-0.0.1.gem \
     && popd
+    
+RUN pushd gems/ol-target-blank \
+    && gem build ol-target-blank.gemspec \
+    && gem install ol-target-blank-0.0.1.gem \
+    && popd
 
 # Serve the site
 ENTRYPOINT ["bash", "./scripts/jekyll_serve_dev.sh"]
