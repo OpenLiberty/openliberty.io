@@ -72,7 +72,7 @@ function copy_element_to_clipboard(target, callback){
         var text = $(target).clone().find('br').prepend('\r\n').end().text().trim();
         temp.text(text);
         $("body").append(temp);
-        temp.select();
+        temp.trigger('select');
         
         // Try to copy the selection and if it fails display a popup to copy manually.
         if(document.execCommand('copy')) { 
@@ -379,7 +379,7 @@ function accessContentsFromHash(hash, callback) {
         $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
         $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
             // Callback after animation.  Change the focus.
-            $focusSection.focus();
+            $focusSection.trigger('focus');
             $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again.
             // Check if the section was actually focused
             if ($focusSection.is(":focus")) {
@@ -392,7 +392,7 @@ function accessContentsFromHash(hash, callback) {
                 // tabindex = -1 means that the element should be focusable,
                 // but not via sequential keyboard navigation.
                 $focusSection.attr('tabindex', '-1');
-                $focusSection.focus();
+                $focusSection.trigger('focus');
                 if(callback){
                     callback();
                 }
@@ -437,7 +437,7 @@ $(document).ready(function() {
         });
     }
 
-    $("#feedback_ratings img").hover (function(event) {
+    $("#feedback_ratings img").on('mouseenter', function(event) {
       $("#feedback_ratings img").not($(this)).css('opacity', '.50');
       $(this).css('opacity', '1');
     });
@@ -496,7 +496,7 @@ $(document).ready(function() {
                     }
                     else {
                         accessContentsFromHash(prevStepHash, function(){
-                            $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)').last().focus();
+                            $("#code_column").find('[tabindex=0], a[href], button, instruction, action').filter(':visible:not(:disabled)').last().trigger('focus');
                         });
                     }
                 }
@@ -504,7 +504,7 @@ $(document).ready(function() {
                     // On the first actual guide step. Send focus to the guide meta section.
                     if (inSingleColumnView()){
                       //In single column view, the TOC hamburger button is in between the first guide step and guide_meta section
-                      $('.breadcrumb_hamburger toc-toggle collapsed').focus();
+                      $('.breadcrumb_hamburger toc-toggle collapsed').trigger('focus');
                     } else {
                       elemToFocus = $('#guide_meta');
                     }
@@ -520,7 +520,7 @@ $(document).ready(function() {
                     if (nextStepHash) {
                         // Load the next step
                         accessContentsFromHash(nextStepHash, function(){
-                            $(nextStepHash).focus();
+                            $(nextStepHash).trigger('focus');
                         });
                     } else{
                         // The very first time you visit the guide and nothing is selected in the TOC, tab to the first step.
@@ -583,7 +583,7 @@ $(document).ready(function() {
                 if (nextStepHash) {
                     // Load the next step
                     accessContentsFromHash(nextStepHash, function(){
-                        $(nextStepHash).focus();
+                        $(nextStepHash).trigger('focus');
                     });
                 } else {
                     // The very first time you visit the guide and nothing is selected in the TOC, tab to the first step.
@@ -593,7 +593,7 @@ $(document).ready(function() {
                     }
                     // On the last step's code column, tab to the end of guide
                     else if($('#toc_container li').last().hasClass('liSelected')){
-                        $('#end_of_guide_left_section').focus();
+                        $('#end_of_guide_left_section').trigger('focus');
                     }
                 }
 
@@ -653,7 +653,7 @@ $(document).ready(function() {
         if(elemToFocus && elemToFocus.length > 0){
             // Only stop the default tab/shift+tab behavior if we found a custom element to override the default behavior to tab to.
             e.preventDefault();
-            elemToFocus.focus();
+            elemToFocus.trigger('focus');
         }
       }
     });
