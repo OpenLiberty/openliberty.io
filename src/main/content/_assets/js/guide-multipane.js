@@ -367,7 +367,7 @@ function parse_tags(code_block){
     // Remove the line numbers before the start/end tags and space between the line numbers and start/end tags
     code_block.find("span:contains('tag::'), span:contains('end::')").each(function(){
         var line_num = $(this).prevAll('.line-numbers').first();
-        line_num.nextUntil($(this)).andSelf().remove();
+        line_num.nextUntil($(this)).addBack().remove();
     });
 
     // Parse the tags that should be hidden.
@@ -758,7 +758,7 @@ $(document).ready(function() {
         } 
     });
 
-    $('#code_column').mouseenter(function() {
+    $('#code_column').on('mouseenter', function() {
         if(!inSingleColumnView()){
             var page_width = window.innerWidth; // Page width with scrollbar
             var document_width = document.documentElement.clientWidth; // Page width without scrollbar  
@@ -774,8 +774,7 @@ $(document).ready(function() {
             // Move code column to the left to adjust its position with no scrollbar.
             $("#code_column").css("left", "calc(100% - " + (780 + scrollbar_width) + "px)");
         }        
-    });
-    $('#code_column').mouseleave(function() {
+    }).on('mouseleave', function() {
         if(!inSingleColumnView()){
             $("html").removeClass("unscrollable");
             $("html").css("padding-right", 0);            
@@ -789,7 +788,7 @@ $(document).ready(function() {
         var firstSectionTop = firstSection.get(0).offsetTop;
     }
 
-    $(".copyFileButton").click(function(event){
+    $(".copyFileButton").on('click', function(event){
         event.preventDefault();
         // Remove the line numbers from being copied.
         var target_copy = $("#code_column .code_column:visible .content code").clone();

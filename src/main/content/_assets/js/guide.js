@@ -75,7 +75,7 @@
         }
     }
 
-    $('#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre):not(.code_column pre)').hover(function(event) {
+    $('#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre):not(.code_column pre)').on('mouseenter', function(event) {
         offset = $('#guide_column').position();	
         target = event.currentTarget;	
         var current_target_object = $(event.currentTarget);
@@ -86,9 +86,9 @@
          $('#copy_to_clipboard').css({	
             top: target_position.top + 1,	
             right: parseInt($('#guide_column').css('padding-right')) + right_position	
-        });	
+        });
         $('#copy_to_clipboard').stop().fadeIn();	
-     }, function(event) {	
+     }).on('mouseleave', function(event) {	
         if(offset){
             var x = event.clientX - offset.left;	
             var y = event.clientY - offset.top + $(window).scrollTop();	
@@ -100,9 +100,9 @@
                 $('#guide_section_copied_confirmation').stop().fadeOut();	
             }
         }          	
-     });	
+     });
 
-     $('#copy_to_clipboard').click(function(event) {
+     $('#copy_to_clipboard').on('click', function(event) {
         event.preventDefault();
         // Target was assigned while hovering over the element to copy.
         copy_element_to_clipboard(target, function(){
@@ -116,7 +116,7 @@
     });
 
     // show content for clicked OS tab
-    $('.tab_link').click(function(event) {
+    $('.tab_link').on('click', function(event) {
         // hide all tab content and remove active class from all links
         $(".tab_content").hide();
         $(".tab_link").removeClass("active");
