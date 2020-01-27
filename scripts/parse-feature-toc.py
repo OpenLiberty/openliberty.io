@@ -26,20 +26,28 @@ def createHrefNewTag(parent, tocHref, tocString):
         hrefTag.string = docVersion
     return hrefTag
 
-featureIndex = BeautifulSoup(open('./target/jekyll-webapp/docs/ref/feature/index.html'), "html.parser")
+
+# rename the original index.html
+# os.rename('./target/jekyll-webapp/docs/build/site/feature/latest/featureOverview.html', './target/jekyll-webapp/docs/build/site/feature/latest/featureOverview.html.orig')
+
+featureIndex = BeautifulSoup(open('./target/jekyll-webapp/docs/build/site/feature/latest/featureOverview.html'), "html.parser")
+# print(featureIndex)
 
 commonTOCs = {};
 # gather TOCs with version in the title
-for featureTOC in featureIndex.find_all(href=True, role='button'):
+for featureTOC in featureIndex.find_all('a', {'class': 'nav-link'}, href=True):
     toc = featureTOC.string
-    pattern = re.compile('^(?P<preString>[\s\D]*) (?P<version>\d+[.]?\d*)(?P<postString>[\s\D]*)')
+    # print (toc)
+    pattern = re.compile('^(?P<preString>[\s\D]*)-(?P<version>\d+[.]?\d*)(?P<postString>[\s\D]*)')
     matches = pattern.match(toc)
+    # print(matches)
     if matches is None:
         # take care of title with J2EE ...
-        pattern = re.compile('^(?P<preString>J2EE[\s\D]+) (?P<version>\d+[.]?\d*)(?P<postString>[\s\D]*)')
+        pattern = re.compile('^(?P<preString>J2EE[\s\D]+)-(?P<version>\d+[.]?\d*)(?P<postString>[\s\D]*)')
         matches = pattern.match(toc)
+        # print(matches)
     if matches is not None and matches.group('version') is not None:
-        tocCompileString = '^' + matches.group('preString') + ' \d+[.]?\d*' + matches.group('postString') + "$"
+        tocCompileString = '^' + matches.group('preString') + '-\d+[.]?\d*' + matches.group('postString') + "$"
         tocCommonString = matches.group('preString') + matches.group('postString')
         if tocCommonString not in commonTOCs:
             #commonTOCs.append(tocCompileString)
@@ -48,9 +56,18 @@ for featureTOC in featureIndex.find_all(href=True, role='button'):
 # process each TOC with version in the title
 commonTOCKeys = commonTOCs.keys()
 commonTOCKeys = list(commonTOCKeys)
+
+# print("commonTOCKeys")
+# print(commonTOCKeys)
+
+# print("commonTOCKeys")
+# print(commonTOCKeys)
 for commonTOC in commonTOCKeys:
+    print(commonTOC)
     commonTOCMatchString = commonTOCs[commonTOC]
-    matchingTitleTOCs = featureIndex.find_all(href=True, role='button', string=re.compile(commonTOCMatchString))
+    # matchingTitleTOCs = featureIndex.find_all('a', {'class': 'nav-link'}, href=True, string=re.compile(commonTOCMatchString))
+    matchingTitleTOCs = featureIndex.find_all('a', {'class': 'nav-link'}, string=re.compile(commonTOCMatchString))
+    print(matchingTitleTOCs)
     firstElement = True;
     # determine whether there are multiple versions
     if len(matchingTitleTOCs) > 1:
@@ -91,7 +108,6 @@ for commonTOC in commonTOCKeys:
         matchingTOC = matchingTitleTOCs[0]
         matchingTOC.string = commonTOC
 
-# rename the original index.html and write the new index.html with version control in it
-os.rename('./target/jekyll-webapp/docs/ref/feature/index.html', './target/jekyll-webapp/docs/ref/feature/index.html.orig')
-with open('./target/jekyll-webapp/docs/ref/feature/index.html', "w") as file:
-    file.write(str(featureIndex))
+# write the new index.html with version control in it
+# with open('./target/jekyll-webapp/docs/build/site/feature/latest/featureOverview.html', "w") as file:
+#     file.write(str(featureIndex))
