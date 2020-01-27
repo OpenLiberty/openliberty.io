@@ -420,9 +420,54 @@ function defaultToFirstPage() {
     history.replaceState(null, null, newPath);
 }
 
+// Read tags from json file and add tag to class
+function getTags() {
+    $.getJSON( "../../guides/guides-common/guide_tags.json", function(data) {
+        $.each(data.guide_tags, function(j, tag) {
+
+            var tag_name = tag.name;
+            // var tag_guides = tag.guides;
+
+            if (tag.hidden) {
+                console.log(tag.name, "is hidden");
+            }
+
+            var project_id = window.location.pathname.replace("/guides/", "").replace(".html", "");
+            console.log("project id", project_id);
+
+            // <a href="/guides?search={{ tag }}&key=tag">{{ tag }}</a>
+
+            if (tag.guides.indexOf(project_id) > -1) {
+                console.log(tag_name, "found for current guide,", project_id);
+                var tag_html = '<a href="/guides?search=' + tag_name + '&key=tag">'+ tag_name + '</a>';
+                console.log("tag_html:", tag_html);
+                $('#tags_container').append(tag_html);
+                // <a href="/guides?search=" + tag_name + "&key=tag">tag_name</a>
+            }
+            else {
+                console.log(tag_name, "not found for current guide", project_id);
+            }
+
+        });
+    });
+    // console.log("hiding previous element: ", $("#tags_container:empty").prev());
+    // $("#tags_container:empty").prev().hide();    
+
+}
+
+
+
 
 $(document).ready(function() {
 
+    getTags();
+    if ($('#tags_container').is(':empty')){
+        console.log("tags contaienr is empty");
+    }
+    else {
+        console.log("showing previous element: ", $("#tags_container:not:empty").prev());
+        $("#tags_container").prev().show();
+    }
     function addGuideRatingsListener(){
         $("#feedback_ratings img").on('click', function(event){
             var rating = $(this).data('guide-rating');
