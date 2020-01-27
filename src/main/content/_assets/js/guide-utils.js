@@ -465,12 +465,6 @@ $(document).ready(function() {
         //       above to be invoked.
     });
 
-    $(window).on('load', function(){
-        handleFloatingTableOfContent();
-        addGuideRatingsListener();
-        handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
-    });
-
     // Handle tabbing from inside the guide column
     function getGuideColumnFocusElement(elementWithFocus, shiftIsPressed){
         var elemToFocus;
@@ -658,3 +652,12 @@ $(document).ready(function() {
       }
     });
 });
+
+$(window).on("load", function(){
+    $.ready.then(function(){
+       // Both ready and loaded
+       handleFloatingTableOfContent();
+       addGuideRatingsListener();
+       handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
+    });
+ })
