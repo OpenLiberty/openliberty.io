@@ -656,7 +656,6 @@ $(document).ready(function() {
 $(window).on("load", function(){
     $.ready.then(function(){
        // Both ready and loaded
-       console.log("load called in guide-utils.js (both ready and loaded");
        handleFloatingTableOfContent();
        addGuideRatingsListener();
        handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
