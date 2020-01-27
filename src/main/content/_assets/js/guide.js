@@ -63,7 +63,7 @@
                 history.replaceState(null, null, newPath);
 
                 // Update the selected TOC entry
-                updateTOCHighlighting(id);                    
+                updateTOCHighlighting(id);    
             }
             if(window.innerWidth > twoColumnBreakpoint) {
                 // multipane view
@@ -136,55 +136,6 @@
         $(tab_class).addClass("active");
     });
 
-    // determine user's operating system and show prerequisite instructions for that OS
-    function setDefaultTab() {
-        var OSName = "";
-        // Detect user's operating system
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("win") != -1) {
-            OSName = "windows";
-        }
-        if (ua.indexOf("mac") != -1) {
-            OSName = "mac";
-        }
-        if (ua.indexOf("linux") != -1) {
-            OSName = "linux";
-        }
-        // hide tab content except for selected tab and add active class to selected tab
-        $(".tab_content").hide();
-
-        // For each of the groups of tab contents, show the first one unless an OS is detected
-        var sections = $('.sectionbody:has(.tab_content)');
-        for(var i = 0; i < sections.length; i++){
-            var section = $(sections.get(i));
-            // Check if the current OS tab exists in the section
-            if(OSName){
-                var content = section.find("." + OSName + "_section");
-                var tab = section.find("." + OSName + "_link");
-                if(content.length > 0 && tab.length > 0){
-                    content.show();                
-                    tab.addClass("active");
-                    continue;
-                }                
-            }
-            // If the current Operating System's tab has not been found
-            // show the first tab's contents for every set of tabs in this section.
-            var first_tab = section.find('.tab_link').first();
-            // Find OS name to show all of its tab contents in this section.
-            var class_list = first_tab[0].classList;
-            for (var j = 0; j < class_list.length; j++) {
-                var class_name = class_list[j];
-                if (class_name !== "tab_link" && class_name.indexOf("_link") > -1) {
-                    var tab_class = "." + class_name;
-                    var tab_content_class = "." + class_name.replace("link", "section");
-                    section.find(tab_class).addClass("active");
-                    section.find(tab_content_class).show();
-                    break;
-                }
-            }
-        }
-    }
-
     $(window).on('scroll', function(event) {
         // Check if a scroll animation from another piece of code is taking place and prevent normal behavior.
         if($("body").data('scrolling') === true){
@@ -193,14 +144,67 @@
         handleSectionChanging(event);
     });
 
-    $(window).on('load', function(){
-        createEndOfGuideContent();
-        setDefaultTab();
-
-        if (location.hash){
-            handleFloatingTableOfContent();
-            var hash = location.hash;
-            accessContentsFromHash(hash);
-        }
-    });
 });
+
+// determine user's operating system and show prerequisite instructions for that OS
+function setDefaultTab() {
+    var OSName = "";
+    // Detect user's operating system
+    var ua = navigator.userAgent.toLowerCase();
+    if (ua.indexOf("win") != -1) {
+        OSName = "windows";
+    }
+    if (ua.indexOf("mac") != -1) {
+        OSName = "mac";
+    }
+    if (ua.indexOf("linux") != -1) {
+        OSName = "linux";
+    }
+    // hide tab content except for selected tab and add active class to selected tab
+    $(".tab_content").hide();
+
+    // For each of the groups of tab contents, show the first one unless an OS is detected
+    var sections = $('.sectionbody:has(.tab_content)');
+    for(var i = 0; i < sections.length; i++){
+        var section = $(sections.get(i));
+        // Check if the current OS tab exists in the section
+        if(OSName){
+            var content = section.find("." + OSName + "_section");
+            var tab = section.find("." + OSName + "_link");
+            if(content.length > 0 && tab.length > 0){
+                content.show();                
+                tab.addClass("active");
+                continue;
+            }                
+        }
+        // If the current Operating System's tab has not been found
+        // show the first tab's contents for every set of tabs in this section.
+        var first_tab = section.find('.tab_link').first();
+        // Find OS name to show all of its tab contents in this section.
+        var class_list = first_tab[0].classList;
+        for (var j = 0; j < class_list.length; j++) {
+            var class_name = class_list[j];
+            if (class_name !== "tab_link" && class_name.indexOf("_link") > -1) {
+                var tab_class = "." + class_name;
+                var tab_content_class = "." + class_name.replace("link", "section");
+                section.find(tab_class).addClass("active");
+                section.find(tab_content_class).show();
+                break;
+            }
+        }
+    }
+}
+
+$(window).on("load", function(){
+    $.ready.then(function(){
+       // Both ready and loaded
+       createEndOfGuideContent();
+       setDefaultTab();
+   
+       if (location.hash){
+           handleFloatingTableOfContent();
+           var hash = location.hash;
+           accessContentsFromHash(hash);
+       }
+    });
+ })

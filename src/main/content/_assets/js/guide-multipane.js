@@ -819,8 +819,12 @@ $(document).ready(function() {
         }
         handlePrereqsPopup();
     });
+});
 
-    $(window).on('load', function(){
+$(window).on("load", function(){
+    $.ready.then(function(){
+       // Both ready and loaded
+       console.log("load called in guide-multipane.js (ready and loaded)");
         resizeGuideSections();
 
         if (location.hash){
@@ -833,4 +837,4 @@ $(document).ready(function() {
             handlePrereqsPopup();
         }
     });
-});
+ })
