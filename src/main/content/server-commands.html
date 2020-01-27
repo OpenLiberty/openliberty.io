@@ -24,7 +24,7 @@ permalink: /docs/ref/command/
                 <ul>
                     {% for overview in commandOverviewDoc %}
                     <li>
-                        <div class="overview_button" role="button" href="{{ overview.url }}" tabindex="0">OVERVIEW</div>
+                        <div class="overview_button" role="button" href="{{ overview.url }}" aria-label="Overview" tabindex="0">OVERVIEW</div>
                     </li>
                     {% endfor %}
                 </ul>
@@ -33,7 +33,7 @@ permalink: /docs/ref/command/
                     {% assign noCommand = command.title | split: ' command' %}
                     {% assign noServer = noCommand[0] | split: 'server ' %}
                     <li>
-                        <div role="button" href="{{ command.url }}" tabindex="0">{{ noServer }}</div>
+                        <div role="button" href="{{ command.url }}" aria-label="{{ noServer }}" tabindex="0">{{ noServer }}</div>
                     </li>
                     {% endfor %}
                 </ul>

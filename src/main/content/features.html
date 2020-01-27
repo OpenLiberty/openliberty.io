@@ -24,7 +24,7 @@ permalink: /docs/ref/feature/
                 <ul>
                     {% for overview in configOverviewDoc %}
                     <li>
-                        <div role="button" class="overview_button" href="{{ overview.url }}" tabindex="0">OVERVIEW</div>
+                        <div role="button" class="overview_button" aria-label="Overview" href="{{ overview.url }}" tabindex="0">OVERVIEW</div>
                     </li>
                     {% endfor %}
                 </ul>
@@ -32,7 +32,7 @@ permalink: /docs/ref/feature/
                 <ul>
                     {% for feature in featureDocs %}
                     <li>
-                        <div role="button" href="{{ feature.url }}" tabindex="0">{{ feature.title }}</div>
+                        <div role="button" href="{{ feature.url }}" aria-label="{{ feature.title }}" tabindex="0">{{ feature.title }}</div>
                     </li>
                     {% endfor %}
                 </ul>
