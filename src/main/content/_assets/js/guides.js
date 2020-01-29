@@ -17,19 +17,49 @@ $(document).ready(function() {
     var search_term_key = 8;
     var num_of_additional_microprofile_guides = 0;
 
+    // Read tags from json file and add tag to class
+    function getTags(callback) {
+        console.log("getTags called");
+        $.getJSON( "../../guides/guides-common/guide_tags.json", function(data) {
+            $.each(data.guide_tags, function(j, tag) {
+                // add tags to data-tags attribute (regardless of if it's hidden or not)
+                $(".guide_item").each(function(i, link) {
+                    var project_id = $(this).attr('href').replace("/guides/", "").replace(".html", "");
+                    // console.log("project id:", project_id);
+
+                    if (tag.guides.indexOf(project_id) > -1) {
+                        // console.log(project_id, "found for", tag.name);
+                        if ($(this).data('tags')) {
+                            console.log(project_id, "already has data-tags attribute. Add to it.");
+                            $(this).data("tags", $(this).data("tags") + " " + tag.name.toLowerCase());
+                        }
+                        else {
+                            console.log(project_id, "does not have data-tags attribute. Create new one.");
+                            $(this).data("tags", tag.name.toLowerCase());
+                        }
+                    }
+                });
+                
+            });
+            callback();
+        });
+    }
+    
     // Look for guides that contain every search word
     function filter_guides(key, search_value) {
+        console.log('filtering guides');
         $('.guide_item').each(function(index, element) {
-            
             var guide_item = $(element);
+            console.log("guide_item:", guide_item);
             var title = guide_item.data('title');
             var description = guide_item.data('description');
             var tags = guide_item.data('tags');
+            console.log("title:", title);
+            console.log("tags:", tags);
             var search_terms = guide_item.data('search-keywords');
-
             // Split on whitespaces.  Treat consecutive whitespaces as one.
             var tokens = search_value.trim().split(/\s+/);
-
+            console.log('tokens: ', tokens);
             // Look for guides that contain all the search words.
             var matches_all_words = false;
             for(var i = 0; i < tokens.length; i++) {
@@ -160,7 +190,7 @@ $(document).ready(function() {
         }        
     }
 
-
+    
     $('#guide_search_input').on("keyup", function(event) {
         var input_value = event.currentTarget.value.toLowerCase();
         processSearch(input_value);
@@ -224,6 +254,7 @@ $(document).ready(function() {
     }
 
     function init() {
+        console.log('init being called');
 
         num_of_additional_microprofile_guides = getTotal_additional_MP_guides();
 
@@ -281,5 +312,8 @@ $(document).ready(function() {
         processSearch(input_value);
     });
 
-    init();
+    getTags(function() {
+        init();
+    });
+    
 });

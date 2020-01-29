@@ -424,35 +424,32 @@ function defaultToFirstPage() {
 function getTags() {
     $.getJSON( "../../guides/guides-common/guide_tags.json", function(data) {
         $.each(data.guide_tags, function(j, tag) {
-
             var tag_name = tag.name;
-            // var tag_guides = tag.guides;
 
-            if (tag.hidden) {
-                console.log(tag.name, "is hidden");
-            }
+            // if tag is not hidden, add it to the tags container
+            if (!(tag.hidden)) {
+                console.log(tag.name, "is not hidden");
 
-            var project_id = window.location.pathname.replace("/guides/", "").replace(".html", "");
-            console.log("project id", project_id);
-
-            // <a href="/guides?search={{ tag }}&key=tag">{{ tag }}</a>
-
-            if (tag.guides.indexOf(project_id) > -1) {
-                console.log(tag_name, "found for current guide,", project_id);
-                var tag_html = '<a href="/guides?search=' + tag_name + '&key=tag">'+ tag_name + '</a>';
-                console.log("tag_html:", tag_html);
-                $('#tags_container').append(tag_html);
-                // <a href="/guides?search=" + tag_name + "&key=tag">tag_name</a>
+                var project_id = window.location.pathname.replace("/guides/", "").replace(".html", "");
+    
+                // <a href="/guides?search={{ tag }}&key=tag">{{ tag }}</a>
+    
+                if (tag.guides.indexOf(project_id) > -1) {
+                    console.log(tag_name, "found for current guide,", project_id);
+                    var tag_html = '<a href="/guides?search=' + tag_name + '&key=tag">'+ tag_name + '</a>';
+                    console.log("tag_html:", tag_html);
+                    $('#tags_container').append(tag_html);
+                    // <a href="/guides?search=" + tag_name + "&key=tag">tag_name</a>
+                }
+                else {
+                    console.log(tag_name, "not found for current guide", project_id);
+                }
             }
             else {
-                console.log(tag_name, "not found for current guide", project_id);
+                console.log(tag.name, "is hidden");
             }
-
         });
     });
-    // console.log("hiding previous element: ", $("#tags_container:empty").prev());
-    // $("#tags_container:empty").prev().hide();    
-
 }
 
 
@@ -461,26 +458,6 @@ function getTags() {
 $(document).ready(function() {
 
     getTags();
-    if ($('#tags_container').is(':empty')){
-        console.log("tags contaienr is empty");
-    }
-    else {
-        console.log("showing previous element: ", $("#tags_container:not:empty").prev());
-        $("#tags_container").prev().show();
-    }
-    function addGuideRatingsListener(){
-        $("#feedback_ratings img").on('click', function(event){
-            var rating = $(this).data('guide-rating');
-            // Send rating to google analytics
-            // The first parameter '1' is the slot for the custom variable
-            // The last parameter '3' is opt_scope is which is page level storage
-            if(typeof ga === "function"){
-                ga(1, "Guide Review", rating, 3);
-            }
-            $("#feedback_ratings img").not($(this)).css('opacity', '.30');
-            $(this).css('opacity', '1');
-        });
-    }
 
     $("#feedback_ratings img").on('mouseenter', function(event) {
       $("#feedback_ratings img").not($(this)).css('opacity', '.50');
@@ -698,11 +675,28 @@ $(document).ready(function() {
     });
 });
 
+function addGuideRatingsListener(){
+    $("#feedback_ratings img").on('click', function(event){
+        var rating = $(this).data('guide-rating');
+        // Send rating to google analytics
+        // The first parameter '1' is the slot for the custom variable
+        // The last parameter '3' is opt_scope is which is page level storage
+        if(typeof ga === "function"){
+            ga(1, "Guide Review", rating, 3);
+        }
+        $("#feedback_ratings img").not($(this)).css('opacity', '.30');
+        $(this).css('opacity', '1');
+    });
+}
+
 $(window).on("load", function(){
     $.ready.then(function(){
        // Both ready and loaded
        handleFloatingTableOfContent();
        addGuideRatingsListener();
        handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
+
+       // If there are no tags for the guide, hide the tag title
+       $("#tags_container:empty").prev().hide();
     });
  })
