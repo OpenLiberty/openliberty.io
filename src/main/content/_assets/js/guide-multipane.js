@@ -186,10 +186,12 @@ function showPrereqsPopup(){
     $("#prereqs_container").fadeIn();
     $("#code_column .code_column, #code_column_tabs_container").addClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', true);
+    $('.code_column_tab').attr('aria-disabled', true);
     $(".copyFileButton").hide();
     $('#code_column_content').css({
         'overflow-y': 'hidden'
     });
+    $('#code_column_content').attr("aria-disabled", true);
 }
 
 function hidePrereqsPopup(){
@@ -200,6 +202,8 @@ function hidePrereqsPopup(){
     $('#code_column_content').css({
         'overflow-y': 'scroll'
     });
+    $('#code_column_content').removeAttr("aria-disabled");
+    $('.code_column_tab').removeAttr("aria-disabled");
 }
 
 /*
@@ -482,7 +486,7 @@ $(document).ready(function() {
             parse_tags(code_block);
 
             // Create a tab in the code column for this file.
-            var tab = $("<li class='code_column_tab' role='presentation' tabindex='0'></li>");
+            var tab = $("<li class='code_column_tab' role='tab' tabindex='0'></li>");
             tab.attr('data-section-id', header.id);
             var anchor = $("<a>" + fileName + "</a>");
             tab.append(anchor);
