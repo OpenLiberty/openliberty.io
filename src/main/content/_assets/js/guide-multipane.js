@@ -486,7 +486,7 @@ $(document).ready(function() {
             parse_tags(code_block);
 
             // Create a tab in the code column for this file.
-            var tab = $("<li class='code_column_tab' role='presentation' tabindex='0'></li>");
+            var tab = $("<li class='code_column_tab' role='tab' tabindex='0'></li>");
             tab.attr('data-section-id', header.id);
             var anchor = $("<a>" + fileName + "</a>");
             tab.append(anchor);
