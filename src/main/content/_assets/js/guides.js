@@ -190,7 +190,7 @@ $(document).ready(function() {
         }        
     }
 
-    
+
     $('#guide_search_input').on("keyup", function(event) {
         var input_value = event.currentTarget.value.toLowerCase();
         processSearch(input_value);

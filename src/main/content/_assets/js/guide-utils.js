@@ -427,7 +427,7 @@ function getTags() {
             var tag_name = tag.name;
 
             // if tag is not hidden, add it to the tags container
-            if (!(tag.hidden)) {
+            if (tag.visible) {
                 console.log(tag.name, "is not hidden");
 
                 var project_id = window.location.pathname.replace("/guides/", "").replace(".html", "");
