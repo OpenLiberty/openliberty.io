@@ -424,29 +424,23 @@ function defaultToFirstPage() {
 function getTags() {
     $.getJSON( "../../guides/guides-common/guide_tags.json", function(data) {
         $.each(data.guide_tags, function(j, tag) {
-            var tag_name = tag.name;
+
+            // if tag.name is array, only show first tag in list.
+            if (Array.isArray(tag.name)) {
+                var tag_name = tag.name[0];
+            }
+            else {
+                var tag_name = tag.name;
+            }
 
             // if tag is not hidden, add it to the tags container
             if (tag.visible) {
-                console.log(tag.name, "is not hidden");
-
                 var project_id = window.location.pathname.replace("/guides/", "").replace(".html", "");
-    
-                // <a href="/guides?search={{ tag }}&key=tag">{{ tag }}</a>
-    
+        
                 if (tag.guides.indexOf(project_id) > -1) {
-                    console.log(tag_name, "found for current guide,", project_id);
                     var tag_html = '<a href="/guides?search=' + tag_name + '&key=tag">'+ tag_name + '</a>';
-                    console.log("tag_html:", tag_html);
                     $('#tags_container').append(tag_html);
-                    // <a href="/guides?search=" + tag_name + "&key=tag">tag_name</a>
                 }
-                else {
-                    console.log(tag_name, "not found for current guide", project_id);
-                }
-            }
-            else {
-                console.log(tag.name, "is hidden");
             }
         });
     });
