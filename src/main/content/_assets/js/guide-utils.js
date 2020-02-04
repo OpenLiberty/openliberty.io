@@ -420,26 +420,22 @@ function defaultToFirstPage() {
     history.replaceState(null, null, newPath);
 }
 
-// Read tags from json file and add tag to class
+// Read tags from json file and add link to guides page with tag search
 function getTags() {
     $.getJSON( "../../guides/guides-common/guide_tags.json", function(data) {
-        $.each(data.guide_tags, function(j, tag) {
-
-            tag_name = tag.name;
-
-            // if tag is not hidden, add it to the tags container
+        $.each(data.guide_tags, function(i, tag) {
+            // Check if tag is visible before adding it
             if (tag.visible) {
-                var project_id = window.location.pathname.replace("/guides/", "").replace(".html", "");
-        
+                project_id = window.location.pathname.replace("/guides/", "").replace(".html", "");
+                // Add tag to tags_container if the guide's project id is in the array for that tag
                 if (tag.guides.indexOf(project_id) > -1) {
-                    var tag_html = '<a href="/guides?search=' + tag_name + '&key=tag">'+ tag_name + '</a>';
+                    tag_html = '<a href="/guides?search=' + tag.name + '&key=tag">'+ tag.name + '</a>';
                     $('#tags_container').append(tag_html);
                 }
             }
         });
     });
 }
-
 
 
 

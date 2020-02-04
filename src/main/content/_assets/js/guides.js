@@ -17,27 +17,27 @@ $(document).ready(function() {
     var search_term_key = 8;
     var num_of_additional_microprofile_guides = 0;
 
-    // Read tags from json file and add tag to data-tags attribute
+    // Read tags from json file and add tags to data-tags attribute to make tags searchable
     function getTags(callback) {
         $.getJSON( "../../guides/guides-common/guide_tags.json", function(data) {
-            $.each(data.guide_tags, function(j, tag) {
-                search_terms_string = " ";
-                if (tag.search_terms) {
-                    if (Array.isArray(tag.search_terms)) {
-                        tag.search_terms.forEach(function(search_term) {
-                            search_terms_string += search_term + " ";
+            $.each(data.guide_tags, function(i, tag) {
+                // Check if tag has additional search terms to add to data-tags attribute
+                search_terms_string = "";
+                if (tag.additional_search_terms) {
+                    if (Array.isArray(tag.additional_search_terms)) {
+                        tag.additional_search_terms.forEach(function(search_term) {
+                            search_terms_string += " " + search_term;
                         })
                     }
                     else {
-                        search_terms_string += tag.search_terms + " ";
+                        search_terms_string += " " + tag.additional_search_terms;
                     }
                 }
-
                 tag_name = tag.name + search_terms_string;
 
-                // add tags to data-tags attribute (regardless of if it's hidden or not)
-                $(".guide_item").each(function(i, link) {
-                    var project_id = $(this).attr('href').replace("/guides/", "").replace(".html", "");
+                $(".guide_item").each(function(j, guide_item) {
+                    project_id = $(this).attr('href').replace("/guides/", "").replace(".html", "");
+                    // Add tag to data-tags attribute if the guide's project id is in the array for that tag
                     if (tag.guides.indexOf(project_id) > -1) {
                         if ($(this).data('tags')) {
                             $(this).data("tags", $(this).data("tags") + " " + tag_name.toLowerCase());
