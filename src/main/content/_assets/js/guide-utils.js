@@ -425,13 +425,7 @@ function getTags() {
     $.getJSON( "../../guides/guides-common/guide_tags.json", function(data) {
         $.each(data.guide_tags, function(j, tag) {
 
-            // if tag.name is array, only show first tag in list.
-            if (Array.isArray(tag.name)) {
-                var tag_name = tag.name[0];
-            }
-            else {
-                var tag_name = tag.name;
-            }
+            tag_name = tag.name;
 
             // if tag is not hidden, add it to the tags container
             if (tag.visible) {
