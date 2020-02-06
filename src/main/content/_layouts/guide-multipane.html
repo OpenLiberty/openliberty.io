@@ -14,6 +14,36 @@ js:
 - guide-multipane
 ---
 
+<!-- Build a list of all the documents in the guides code base -->
+{% assign static-guides = site.pages | where: 'layout', 'guide' %}
+{% assign multipane-static-guides = site.pages | where: 'layout', 'guide-multipane' %}
+{% assign multipane-iguides = site.pages | where: 'layout', 'iguide-multipane' %}
+{% assign all-markdown-files = static-guides | concat: multipane-static-guides | concat: multipane-iguides | sort: 'releasedate' | reverse %}
+{% assign all-guides = '' | split: '' %}
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+{% for guide in all-markdown-files %}
+    {% unless guide.archived or guide.path contains "guides/guides-template" or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
+        {% assign all-guides = all-guides | push: guide %} 
+    {% endunless %}
+{% endfor %}
+
+<!-- Count number of guides from past 30 days-->
+{% assign new_guide_count = 0 %}
+{% for guide in all-guides %}
+    {% assign date_published = guide.releasedate | date:'%s' %}
+    {% assign date_now = 'now' | date:'%s' %}
+    {% assign date_difference = date_now | minus: date_published %}
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    {% if date_difference < 2592000 %}
+        {% assign new_guide_count = new_guide_count | plus: 1 %}
+    {% endif %}
+{% endfor %}
+
+<!-- Sort list of guides by date with most recent first -->
+{% assign all_guides_by_date = all-guides | sort: "releasedate" | reverse %}
+
 {% include visible-tags.liquid %}
 
 <div id="background_container">
@@ -62,15 +92,26 @@ js:
                         <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
                         <span id="guide_duration">{{ page.duration }}</span>
 
-                        <!-- Add New flag to guides from the past 6 weeks.
-                        3628800 is 6 weeks in seconds (6 weeks * 7 days * 24 hours * 60 minutes * 60 seconds) -->
-                        {% assign date_published = page.releasedate | date:'%s' %}
-                        {% assign date_now = 'now' | date:'%s' %}
-                        {% assign date_difference = date_now | minus: date_published %}
-                        {% if date_difference < 3628800 %}
-                        <div class="new_guide_container">
-                            <span class="guide_interactive">New</span>
-                        </div>                    
+                        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                        <!-- If new posts count is less than 4, use 4 most recent posts -->
+                        {% if new_guide_count < 4 %}
+                            {% if page.title ==  all_guides_by_date[0].title or page.title ==  all_guides_by_date[1].title 
+                            or page.title ==  all_guides_by_date[2].title or page.title ==  all_guides_by_date[3].title %}
+                                <div class="new_guide_container">
+                                    <span class="guide_new">New</span>
+                                </div>
+                            {% endif %}
+                        <!-- If new posts count is >= 4, use posts from last 30 days-->
+                        {% else %}
+                            {% assign date_published = guide.releasedate | date:'%s' %}
+                            {% assign date_now = 'now' | date:'%s' %}
+                            {% assign date_difference = date_now | minus: date_published %}
+                            <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+                            {% if date_difference < 2592000 %}
+                                <div class="new_guide_container">
+                                    <span class="guide_new">New</span>
+                                </div>
+                            {% endif %}
                         {% endif %}
                     </div>
                     <div id="mobile_prereqs_section">
