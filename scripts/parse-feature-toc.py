@@ -16,15 +16,16 @@ def getTOCVersion(tocString):
        return None
 
 def createHrefNewTag(parent, tocHref, tocString):
-    # print('create new href tag')
-    # print(parent)
+    # print('Setting href to: ' + tocHref)
     hrefTag = parent.new_tag('div', href=tocHref)
     hrefTag['role'] = 'button'
     hrefTag['class'] = 'feature_version'
+    # print("Display string is: " + "{}".format(tocString))
     hrefTag['full_title'] = "{}".format(tocString)
     hrefTag['tabindex'] = '0'
     docVersion = getTOCVersion(tocString)
     if docVersion is not None:
+        print("Setting display string to: " + docVersion)
         hrefTag.string = docVersion
     return hrefTag
 
@@ -33,6 +34,8 @@ def createHrefNewTag(parent, tocHref, tocString):
 
 featureIndex = BeautifulSoup(open('./target/jekyll-webapp/docs/ref/feature/latest/featureOverview.html'), "html.parser")
 
+# Keep track of new href with updated versions to update the TOCs later
+combinedHrefs = [];
 commonTOCs = {};
 # gather TOCs with version in the title
 for featureTOC in featureIndex.find_all('a', {'class': 'nav-link'}, href=True):
@@ -48,16 +51,18 @@ for featureTOC in featureIndex.find_all('a', {'class': 'nav-link'}, href=True):
         tocCommonString = matches.group('preString') + matches.group('postString')
         if tocCommonString not in commonTOCs:
             commonTOCs[tocCommonString] = tocCompileString
+    # If matches is still none add it to the href later to modify the toc
+    if matches is None:
+        # combinedHrefs.append('/docs/ref/feature/latest/' + toc)
+        combinedHrefs.append(toc)
+
        
 # process each TOC with version in the title
 commonTOCKeys = commonTOCs.keys()
 commonTOCKeys = list(commonTOCKeys)
 
-# Keep track of new href with updated versions to update the TOCs later
-combinedPages = [];
-
 # Add to version href if we need it for linking
-antora_path = "./target/jekyll-webapp/docs/ref/feature/latest/"
+antora_path = "target/jekyll-webapp/docs/ref/feature/latest/"
 
 for commonTOC in commonTOCKeys:
     commonTOCMatchString = commonTOCs[commonTOC]
@@ -85,41 +90,36 @@ for commonTOC in commonTOCKeys:
                    del htmlSplits[-1]
                    combineHtml = "-".join(htmlSplits) + '.html'
                    del hrefSplits[-1]
-                   newTOCHref = '/'.join(hrefSplits) + '/' + combineHtml
-                   newTOCHref = '/docs/ref/feature/latest' + newTOCHref
-                #    print("newTOCHref:" + newTOCHref)
+                   newTOCHref = '/'.join(hrefSplits) + combineHtml
+                #    newTOCHref = '/docs/ref/feature/latest' + newTOCHref
+                   print("newTOCHref:" + newTOCHref)
                    matchingTOC['href'] = newTOCHref
-                   combinedPages.append(newTOCHref)
+                   combinedHrefs.append(newTOCHref)
                    hrefTag = createHrefNewTag(featureIndex, tocHref, matchingTOC.get('href'))
-                #    print("matchingTOC.string: " + matchingTOC.string)
-                #    print("matchingTOC.get('href'): " + matchingTOC.get('href'))
                    hrefTag.string = matchingTOC.string
                    featureTitle.append(hrefTag)
             else:
                 hrefTag = createHrefNewTag(featureIndex, tocHref, matchingTOC.get('href'))
-                print("appending first hrefTag: " + str(hrefTag))
                 featureTitle.append(hrefTag)
                 matchingTOC.parent.decompose()
-            # print("featureTitle")
-            # print(featureTitle)
         # write to the common version doc to a file
-        # TODO Need to just write the contents of the page over itself with the title changed to add the versions
-        with open('./target/jekyll-webapp/' + newTOCHref, "w") as file:            
+        with open('./target/jekyll-webapp/docs/ref/feature/latest/' + newTOCHref, "w") as file:            
             file.write(str(featureIndex))
-        # with open('./target/jekyll-webapp/docs/ref/feature/latest/featureOverview.html', "w") as file:            
-        #     file.write(str(featureIndex))
     elif len(matchingTitleTOCs) == 1:
         # single version doc is found, just strip off the version from the TOC title
         matchingTOC = matchingTitleTOCs[0]
         matchingTOC.string = commonTOC
 
-for page in combinedPages:    
-    print("page " + page)
+# record the toc in the featureIndex
+combinedTOC = featureIndex.find('ul', {'id': 'toc_container'})
 
-# write the new toc to each page in the antora version
-# BeautifulSoup(open('./target/jekyll-webapp/docs/ref/feature/latest/*')
-# Read in the current page and write over the TOC with the removed duplicates
-
-# write the new index.html with version control in it
-# with open('./target/jekyll-webapp/docs/ref/feature/latest/featureOverview.html', "w") as file:
-#     file.write(str(featureIndex))
+for file_name in os.listdir(antora_path):
+    href = antora_path + file_name
+    page = BeautifulSoup(open(href), "html.parser")
+    # Find the toc and replace it with the modified toc
+    toc = page.find('ul', {'id': 'toc_container'})
+    toc.clear()
+    toc.append(combinedTOC)
+    with open(href, "w") as file:            
+            file.write(str(page))
+    
