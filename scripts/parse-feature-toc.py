@@ -104,13 +104,13 @@ for commonTOC in commonTOCKeys:
             file.write(str(featureIndex))
 
 # record the toc in the featureIndex
-combinedTOC = featureIndex.find('ul', {'id': 'toc_container'})
+combinedTOC = featureIndex.find_all('ul', {'class': 'nav-list'})[1]
 
 for file_name in os.listdir(antora_path):
     href = antora_path + file_name
     page = BeautifulSoup(open(href), "html.parser")
     # Find the toc and replace it with the modified toc
-    toc = page.find('ul', {'id': 'toc_container'})
+    toc = page.find_all('ul', {'class': 'nav-list'})[1]
     toc.clear()
     toc.append(combinedTOC)
     with open(href, "w") as file:            
