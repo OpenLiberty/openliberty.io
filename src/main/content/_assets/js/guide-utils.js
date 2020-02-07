@@ -420,22 +420,28 @@ function defaultToFirstPage() {
     history.replaceState(null, null, newPath);
 }
 
+// Read tags from json file and add link to guides page with tag search
+function getTags() {
+    $.getJSON( "../../guides/guides-common/guide_tags.json", function(data) {
+        $.each(data.guide_tags, function(i, tag) {
+            // Check if tag is visible before adding it
+            if (tag.visible) {
+                project_id = window.location.pathname.replace("/guides/", "").replace(".html", "");
+                // Add tag to tags_container if the guide's project id is in the array for that tag
+                if (tag.guides.indexOf(project_id) > -1) {
+                    tag_html = ' <a href="/guides?search=' + tag.name + '&key=tag">'+ tag.name + '</a>';
+                    $('#tags_container').append(tag_html);
+                }
+            }
+        });
+    });
+}
+
+
 
 $(document).ready(function() {
 
-    function addGuideRatingsListener(){
-        $("#feedback_ratings img").on('click', function(event){
-            var rating = $(this).data('guide-rating');
-            // Send rating to google analytics
-            // The first parameter '1' is the slot for the custom variable
-            // The last parameter '3' is opt_scope is which is page level storage
-            if(typeof ga === "function"){
-                ga(1, "Guide Review", rating, 3);
-            }
-            $("#feedback_ratings img").not($(this)).css('opacity', '.30');
-            $(this).css('opacity', '1');
-        });
-    }
+    getTags();
 
     $("#feedback_ratings img").on('mouseenter', function(event) {
       $("#feedback_ratings img").not($(this)).css('opacity', '.50');
@@ -653,11 +659,28 @@ $(document).ready(function() {
     });
 });
 
+function addGuideRatingsListener(){
+    $("#feedback_ratings img").on('click', function(event){
+        var rating = $(this).data('guide-rating');
+        // Send rating to google analytics
+        // The first parameter '1' is the slot for the custom variable
+        // The last parameter '3' is opt_scope is which is page level storage
+        if(typeof ga === "function"){
+            ga(1, "Guide Review", rating, 3);
+        }
+        $("#feedback_ratings img").not($(this)).css('opacity', '.30');
+        $(this).css('opacity', '1');
+    });
+}
+
 $(window).on("load", function(){
     $.ready.then(function(){
        // Both ready and loaded
        handleFloatingTableOfContent();
        addGuideRatingsListener();
        handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
+
+       // If there are no tags for the guide, hide the tag title
+       $("#tags_container:empty").prev().hide();
     });
  })
