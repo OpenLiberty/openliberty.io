@@ -53,9 +53,9 @@ function addTOCClick() {
         createClickableBreadcrumb(getContentBreadcrumbTitle(), true);
     };
 
-    $("#toc_container a").off("click").on("click", onclick);
+    $(".nav-container a").off("click").on("click", onclick);
 
-    $("#toc_container a").off('keypress').on('keypress', function (event) {
+    $(".nav-container a").off('keypress').on('keypress', function (event) {
         event.stopPropagation();
         // Space key
         if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
@@ -99,7 +99,7 @@ function setSelectedTOC(resource, scrollTo) {
 
 // Remove the 2nd level subtitles from TOC
 function removeHashRefTOC(href) {
-    var hashHref = $("#toc_container").find("a[href^='" + href + "#']");
+    var hashHref = $(".nav-container").find("a[href^='" + href + "#']");
     $(hashHref).each(function () {
         $(this).parent().remove();
     });
@@ -505,11 +505,11 @@ function findTOCElement(processHash) {
 
     var matchingTOCElement;
     if (!processHash) {
-        matchingTOCElement = $("#toc_container a[href='" + href + "']");
+        matchingTOCElement = $(".nav-container a[href='" + href + "']");
     } else {
         if (hash !== undefined && hash !== "") {
             href = href + hash;
-            matchingTOCElement = $("#toc_container a[href='" + href + "']");
+            matchingTOCElement = $(".nav-container a[href='" + href + "']");
             if (matchingTOCElement.length === 0) {
                 matchingTOCElement = undefined;
             }
@@ -837,7 +837,7 @@ function handlePopstate() {
                 }
 
                 // select TOC
-                var TOCSubElement = $("#toc_container").find("a[href='" + event.state.href + "']");
+                var TOCSubElement = $(".nav-container").find("a[href='" + event.state.href + "']");
                 if (TOCSubElement.length === 1) {
                     setSelectedTOC(TOCSubElement, true);
                 }
