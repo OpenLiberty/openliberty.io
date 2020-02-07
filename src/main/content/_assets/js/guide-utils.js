@@ -429,7 +429,7 @@ function getTags() {
                 project_id = window.location.pathname.replace("/guides/", "").replace(".html", "");
                 // Add tag to tags_container if the guide's project id is in the array for that tag
                 if (tag.guides.indexOf(project_id) > -1) {
-                    tag_html = '<a href="/guides?search=' + tag.name + '&key=tag">'+ tag.name + '</a>';
+                    tag_html = ' <a href="/guides?search=' + tag.name + '&key=tag">'+ tag.name + '</a>';
                     $('#tags_container').append(tag_html);
                 }
             }
