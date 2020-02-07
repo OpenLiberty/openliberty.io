@@ -16,7 +16,8 @@ def getTOCVersion(tocString):
        return None
 
 def createHrefNewTag(parent, tocHref, tocString):
-    # print('Setting href to: ' + tocHref)
+    print("tocHref: " + tocHref)
+    print("tocString: " + tocString)
     hrefTag = parent.new_tag('div', href=tocHref)
     hrefTag['role'] = 'button'
     hrefTag['class'] = 'feature_version'
@@ -27,6 +28,8 @@ def createHrefNewTag(parent, tocHref, tocString):
     if docVersion is not None:
         print("Setting display string to: " + docVersion)
         hrefTag.string = docVersion
+    else: 
+        print("No doc version")
     return hrefTag
 
 # rename the original index.html
@@ -35,7 +38,6 @@ def createHrefNewTag(parent, tocHref, tocString):
 featureIndex = BeautifulSoup(open('./target/jekyll-webapp/docs/ref/feature/latest/featureOverview.html'), "html.parser")
 
 # Keep track of new href with updated versions to update the TOCs later
-combinedHrefs = [];
 commonTOCs = {};
 # gather TOCs with version in the title
 for featureTOC in featureIndex.find_all('a', {'class': 'nav-link'}, href=True):
@@ -51,11 +53,6 @@ for featureTOC in featureIndex.find_all('a', {'class': 'nav-link'}, href=True):
         tocCommonString = matches.group('preString') + matches.group('postString')
         if tocCommonString not in commonTOCs:
             commonTOCs[tocCommonString] = tocCompileString
-    # If matches is still none add it to the href later to modify the toc
-    if matches is None:
-        # combinedHrefs.append('/docs/ref/feature/latest/' + toc)
-        combinedHrefs.append(toc)
-
        
 # process each TOC with version in the title
 commonTOCKeys = commonTOCs.keys()
@@ -92,10 +89,10 @@ for commonTOC in commonTOCKeys:
                    del hrefSplits[-1]
                    newTOCHref = '/'.join(hrefSplits) + combineHtml
                 #    newTOCHref = '/docs/ref/feature/latest' + newTOCHref
-                   print("newTOCHref:" + newTOCHref)
+                #    print("newTOCHref:" + newTOCHref)
                    matchingTOC['href'] = newTOCHref
-                   combinedHrefs.append(newTOCHref)
                    hrefTag = createHrefNewTag(featureIndex, tocHref, matchingTOC.get('href'))
+                #    print("Setting display string to: " + matchingTOC.string) # This one is ok it is the combined toc
                    hrefTag.string = matchingTOC.string
                    featureTitle.append(hrefTag)
             else:
@@ -105,10 +102,6 @@ for commonTOC in commonTOCKeys:
         # write to the common version doc to a file
         with open('./target/jekyll-webapp/docs/ref/feature/latest/' + newTOCHref, "w") as file:            
             file.write(str(featureIndex))
-    elif len(matchingTitleTOCs) == 1:
-        # single version doc is found, just strip off the version from the TOC title
-        matchingTOC = matchingTitleTOCs[0]
-        matchingTOC.string = commonTOC
 
 # record the toc in the featureIndex
 combinedTOC = featureIndex.find('ul', {'id': 'toc_container'})
