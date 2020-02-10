@@ -39,32 +39,33 @@ sudo: false # route your build to the container-based infrastructure for a faste
 
 # deploy only the specified build to each route
 deploy:
-  - provider: script
-    skip_cleanup: true
-    on:
-      branch: master
-      condition: $ROUTE = $SITE_QA_DOMAIN
-    script: ./.travis/cf-push.sh
-  - provider: script
-    skip_cleanup: true
-    on:
-      branch: master
-      condition: $ROUTE = $SITE_DRAFT_DOMAIN
-    script: ./.travis/cf-push.sh
-  - provider: script
-    skip_cleanup: true
-    on:
-      branch: development
-      condition: $ROUTE = $SITE_DEV_DOMAIN
-    script: env ROUTE=$SITE_DEV_DOMAIN ./.travis/cf-push.sh
-  - provider: script
-    skip_cleanup: true
-    on:
-      branch: demo1
-    script: ./.travis/cf-push.sh
-  - provider: script
-    skip_cleanup: true
-    on:
-      branch: hotspots
-    script: env ROUTE=$SITE_HOTSPOT_DOMAIN ./.travis/cf-push.sh
+  - <<: *defaults
+    - provider: script
+      skip_cleanup: true
+      on:
+        branch: master
+        condition: $ROUTE = $SITE_QA_DOMAIN
+      script: ./.travis/cf-push.sh
+    - provider: script
+      skip_cleanup: true
+      on:
+        branch: master
+        condition: $ROUTE = $SITE_DRAFT_DOMAIN
+      script: ./.travis/cf-push.sh
+    - provider: script
+      skip_cleanup: true
+      on:
+        branch: development
+        condition: $ROUTE = $SITE_DEV_DOMAIN
+      script: env ROUTE=$SITE_DEV_DOMAIN ./.travis/cf-push.sh
+    - provider: script
+      skip_cleanup: true
+      on:
+        branch: demo1
+      script: ./.travis/cf-push.sh
+    - provider: script
+      skip_cleanup: true
+      on:
+        branch: hotspots
+      script: env ROUTE=$SITE_HOTSPOT_DOMAIN ./.travis/cf-push.sh
 
