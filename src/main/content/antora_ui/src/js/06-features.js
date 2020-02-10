@@ -419,8 +419,3 @@ $(document).ready(function () {
         selectFirstDoc();
     }
 })
-
-// Change height of toc if footer is in view so that fixed toc isn't visible through footer
-$(window).scroll(function() {
-    $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
-});

@@ -8,32 +8,25 @@ def getTOCVersion(tocString):
     versionMatches = versionPattern.match(tocString)
     if versionMatches is not None:
        version = versionMatches.group('version')
-       #return versionMatches.group('version')
        if version == "7" and tocString.startswith("Java EE 7"):
            version = "EE 7"
        return version
     else:
        return None
 
-def createHrefNewTag(parent, tocHref, tocString):
-    print("tocHref: " + tocHref)
-    print("tocString: " + tocString)
+def createHrefNewTag(parent, tocHref, tocString, matchingTOCString):
     hrefTag = parent.new_tag('div', href=tocHref)
     hrefTag['role'] = 'button'
     hrefTag['class'] = 'feature_version'
-    # print("Display string is: " + "{}".format(tocString))
     hrefTag['full_title'] = "{}".format(tocString)
     hrefTag['tabindex'] = '0'
     docVersion = getTOCVersion(tocString)
     if docVersion is not None:
-        print("Setting display string to: " + docVersion)
         hrefTag.string = docVersion
     else: 
-        print("No doc version")
+        # The first doc version has no number in its display string. Combine the feature name with its version from the href
+        hrefTag.string = matchingTOCString + " " + getTOCVersion(tocHref)
     return hrefTag
-
-# rename the original index.html
-# os.rename('./target/jekyll-webapp/docs/build/site/feature/latest/featureOverview.html', './target/jekyll-webapp/docs/build/site/feature/latest/featureOverview.html.orig')
 
 featureIndex = BeautifulSoup(open('./target/jekyll-webapp/docs/ref/feature/latest/featureOverview.html'), "html.parser")
 
@@ -88,15 +81,11 @@ for commonTOC in commonTOCKeys:
                    combineHtml = "-".join(htmlSplits) + '.html'
                    del hrefSplits[-1]
                    newTOCHref = '/'.join(hrefSplits) + combineHtml
-                #    newTOCHref = '/docs/ref/feature/latest' + newTOCHref
-                #    print("newTOCHref:" + newTOCHref)
                    matchingTOC['href'] = newTOCHref
-                   hrefTag = createHrefNewTag(featureIndex, tocHref, matchingTOC.get('href'))
-                #    print("Setting display string to: " + matchingTOC.string) # This one is ok it is the combined toc
-                   hrefTag.string = matchingTOC.string
+                   hrefTag = createHrefNewTag(featureIndex, tocHref, matchingTOC.get('href'), matchingTOC.string)
                    featureTitle.append(hrefTag)
             else:
-                hrefTag = createHrefNewTag(featureIndex, tocHref, matchingTOC.get('href'))
+                hrefTag = createHrefNewTag(featureIndex, tocHref, matchingTOC.get('href'), None)
                 featureTitle.append(hrefTag)
                 matchingTOC.parent.decompose()
         # write to the common version doc to a file
