@@ -25,11 +25,6 @@ function addTOCClick() {
         setSelectedTOC(resource, false);
         var currentHref = resource.attr("href");
 
-        // handle the click event ourselves so as to take care of updating the hash and creating
-        // the push state 
-        // event.preventDefault();
-        // event.stopPropagation();
-
         if (isMobileView() || isIPadView()) {
             $("#breadcrumb_hamburger").trigger("click");
             $('.nav-container').removeClass('is-active'); // Hide the nav menu
@@ -134,11 +129,10 @@ function updateTitle(currentPage) {
 //      a delay for the scrollTop to work.  In large resolutions, the animation scroll is
 //      is not needed.
 // Method:
-//      Adjust the viewport of the iframe content
 function scrollToPos(pos) {
     return;
     if (isMobileView()) {
-        $("#background_container").css('height', iframeContents.height() + "px");
+        // $("#background_container").css('height', iframeContents.height() + "px");
         $('html, body').animate({
             scrollTop: pos
         }, 400);
@@ -397,7 +391,6 @@ function handleExpandCollapseToggleButton(buttonElement, updateUrl) {
         buttonElement.empty().append($('<img src="../../_/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
         buttonElement.attr('collapsed', true);
     }
-    // adjustFrameHeight();
     if (updateUrl) {
         var href = getSelectedDocHtml() + "#";
         updateHashInUrl(href + titleId, true);
@@ -555,7 +548,6 @@ function getSelectedDocHtml() {
     return href;
 }
 
-// Add custom scrolling behavior to the iframe containing the documentation
 function handleContentScrolling() {
     if (!isMobileView()) {
         var article = $('article.doc');
@@ -709,7 +701,7 @@ function createClickableBreadcrumb(breadcrumbText, highlightLastItem) {
             }
             $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").append(stickyHeaderBreadcrumb);
 
-            // adjust the breadcrumb font if its width is larger than the iframe width
+            // adjust the breadcrumb font if its width is larger than the page width
             var paddingWidth = parseInt($(".contentStickyBreadcrumbHeader").css("padding-left")) +
                 parseInt($(".contentStickyBreadcrumbHeader").css("padding-right"));
             var breadcrumbWidth = $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").width() + paddingWidth;
@@ -804,25 +796,15 @@ function handleInitialContent() {
     }
 }
 
-// Return the iframe content url
-function getFullHrefFromIframe() {
-    var href = {};
-    href.pathname = location.pathname;
-    href.hash = location.hash;
-    return href;
-}
-
 function handlePopstate() {
     window.onpopstate = function (event) {
         if (event.state) {
-            var iframeHrefObj = getFullHrefFromIframe();
-            var iframeHref = iframeHrefObj.pathname;
             var popstateHrefPathname = event.state.href;
             if (event.state.href.indexOf("#") !== -1) {
                 popstateHrefPathname = event.state.href.substring(0, event.state.href.indexOf("#"));
             }
 
-            if (iframeHrefObj.pathname === popstateHrefPathname) {
+            if (location.pathname === popstateHrefPathname) {
                 // if content document is already loaded, 
                 // - expand/collapse the subheading if the expand property is set
                 // - scroll to the matching heading
@@ -843,13 +825,13 @@ function handlePopstate() {
                 }
             }
 
-            // hamburger for TOC is in expanded state, collapse it and display the content iframe 
+            // hamburger for TOC is in expanded state, collapse it and display the content 
             if (isMobileView() && $("#toc_column").hasClass('in')) {
                 $(".breadcrumb_hamburger_nav").trigger('click');
             }
         } else {
             if (isMobileView()) {
-                // hamburger for TOC is in collapsed state, expand it and hide the content iframe
+                // hamburger for TOC is in collapsed state, expand it and hide the content
                 if (!$("#toc_column").hasClass('in')) {
                     $(".breadcrumb_hamburger_nav").trigger('click');
                 }
@@ -859,7 +841,7 @@ function handlePopstate() {
 }
 
 // Determine the content breadcrumb visibility:
-// - content breadcrumb not display in initial content loading in iframe
+// - content breadcrumb not display in initial content
 // - once the overview of the content is scrolled thru, display the content breadcrumb right before the
 //   first 2nd subtitle is scrolled into.
 function initialContentBreadcrumbVisibility() {
@@ -882,13 +864,13 @@ function initialContentBreadcrumbVisibility() {
 function handleContentBreadcrumbVisibility(isShow) {
     if (!isMobileView() && !isIPadView()) {
         if (isShow && !$('.contentStickyBreadcrumbHeader').is(":visible")) {
-            // with scrolling listener not on the iframe content anymore, disable scrolling listener until animation is done
+            // with scrolling listener not on the content anymore, disable scrolling listener until animation is done
             $(window.parent.document).off('scroll');
             $('.contentStickyBreadcrumbHeader').slideDown(500, function() {
                 handleContentScrolling();
             });
         } else if (!isShow && $('.contentStickyBreadcrumbHeader').is(":visible")) {
-            // with scrolling listener not on the iframe content anymore, disable scrolling listener until animation is done
+            // with scrolling listener not on the content anymore, disable scrolling listener until animation is done
             $(window.parent.document).off('scroll')
             $('.contentStickyBreadcrumbHeader').slideUp(500, function() {
                 handleContentScrolling();
@@ -898,7 +880,7 @@ function handleContentBreadcrumbVisibility(isShow) {
     }
 }
 
-// Handling the hamburger for TOC to hide/display config content in iframe
+// Handling the hamburger for TOC to hide/display config content
 function addHamburgerClick() {
     if (isMobileView()) {
         var hamburger = $(".breadcrumb_hamburger_nav");
@@ -1005,7 +987,6 @@ function addWindowResizeListener() {
 // When we have a page that has an anchor that references another section in the same page,
 // the browser scrolls that section, on the same page, into view.
 // When the scrolling occurs, the whole page was being scrolled "under" our top navigation bar.
-// Override the default scrolling behavior so that the scroll only occurs within the iframe
 // rather than the whole page
 function addOverviewPageClickAndScroll() {
     var article = $('article.doc');
