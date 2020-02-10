@@ -1,20 +1,16 @@
----
-defaults: &defaults
-  memory: 512M
-  instances: 1
-  disk_quota: 1024M
-  path: target/openliberty.war
+memory: 512M
+instances: 1
+disk_quota: 1024M
+path: target/openliberty.war
 
 applications:
 # US South
 - name: openliberty-blue
-  <<: *defaults
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
     - route: us-south.openliberty.io
 - name: openliberty-green
-  <<: *defaults
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
@@ -24,52 +20,44 @@ applications:
     - route: openlibertydev.mybluemix.net
 # US East
 - name: openliberty-blue-east
-  <<: *defaults
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
     - route: us-east.openliberty.io
 - name: openliberty-green-east
-  <<: *defaults
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
     - route: us-east.openliberty.io
 # United Kingdom
 - name: openliberty-blue-uk
-  <<: *defaults
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
     - route: eu-gb.openliberty.io
 - name: openliberty-green-uk
-  <<: *defaults
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
     - route: eu-gb.openliberty.io
 # Germany
 - name: openliberty-blue-germany
-  <<: *defaults
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
     - route: eu-de.openliberty.io
 - name: openliberty-green-germany
-  <<: *defaults
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
     - route: eu-de.openliberty.io
 # Sydney
 - name: openliberty-blue-sydney
-  <<: *defaults
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
     - route: au-syd.openliberty.io
 - name: openliberty-green-sydney
-  <<: *defaults
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
