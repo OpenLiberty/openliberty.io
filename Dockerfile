@@ -73,10 +73,6 @@ RUN scripts/build_gem_dependencies.sh
 
 # openliberty.io custom gems
 COPY ./gems /home/jekyll/gems
-RUN pushd gems/ol-asciidoc \
-    && gem build ol-asciidoc.gemspec \
-    && gem install ol-asciidoc-0.0.1.gem \
-    && popd
 
 # Serve the site
 ENTRYPOINT ["bash", "./scripts/jekyll_serve_dev.sh"]

@@ -52,11 +52,6 @@ if [ "$JEKYLL_DRAFT_BLOGS" == "true" ]; then
     JEKYLL_BUILD_FLAGS="--drafts"
 fi
 
-pushd gems/ol-asciidoc
-gem build ol-asciidoc.gemspec
-gem install ol-asciidoc-0.0.1.gem
-popd
-
 echo "Copying guide images to /img/guide"
 mkdir -p src/main/content/img/guide
 
