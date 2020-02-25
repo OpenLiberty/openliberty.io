@@ -51,6 +51,22 @@ $(document).ready(function() {
             callback();
         });
     }
+
+    // Read guide categories from json file and
+    function getCategories(callback) {
+        $.getJSON( "../../guides/guides-common/guide_categories.json", function(data) {
+            $.each(data, function(i, category) {
+                // add categories to TOC 
+                $("#toc_column > #toc_container > .sectlevel1").append(`<div id="toc_separator"></div><h1 class="toc_title">` + category.category + `</h1>`);
+                $.each(category.subcategories, function(j, subcategory) {
+                    // add subcategories to TOC
+                    $("#toc_column > #toc_container > .sectlevel1").append(`<li><a href="">` + subcategory.subcategory + `</a></li>`);
+
+                });
+            });
+            callback();
+        });
+    }
     
     // Look for guides that contain every search word
     function filter_guides(key, search_value) {
@@ -310,6 +326,10 @@ $(document).ready(function() {
         $(this).addClass('hidden');
         $('#guide_search_input').trigger('focus');
         processSearch(input_value);
+    });
+
+    getCategories(function() {
+        init();
     });
 
     getTags(function() {

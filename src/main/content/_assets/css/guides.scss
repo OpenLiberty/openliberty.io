@@ -35,6 +35,83 @@ $blue-grey-color: #5d6a8e;
 
 // -----------
 
+// TOC
+
+#toc_column {
+    display: inline-block;
+    width: 225px;
+    border-right: 1px solid #EAECF1;
+}
+
+#guides_container {
+    display: inline-block;
+    width: calc(100% - 225px);
+    float: right;
+}
+
+#toc_container {
+    .toc_title {
+        font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+        font-size: 14px;
+        color: #313653;
+        letter-spacing: 0.2px;
+        line-height: 26px;
+        padding-left: 34px;
+        text-transform: uppercase;
+    }
+
+    ul {
+        padding: 0px;
+    }
+
+    li {
+        list-style: none;
+        word-wrap: break-word;
+        padding-left: 26px;
+        padding-right: 26px;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+    }
+
+    a {
+        display: inline-block;
+        color:#5d6a8e;
+        min-height: 30px;
+    }
+    
+    a:hover {
+        color:#313653;
+    }
+}
+
+#toc_separator {
+    position: absolute;
+    left: 0px;
+    width: 225px;
+    height: 2px;
+    border: solid 1px #d4d7e3;
+    margin: auto;
+
+    &:first-child {
+        display: none;
+    }
+}
+
+#toc_container > .sectlevel1 > li:not(.liSelected):hover, #toc_container .sectlevel2 > li:not(.liSelected):hover {
+    border-left: 8px solid #fdf2ea;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+#toc_container > .sectlevel1 > .liSelected, #toc_container .sectlevel2 > .liSelected {
+    background: #fdf2ea;
+    border-left: 8px solid #f4914d;
+    font-weight: 500;
+}
+
+
+
+
 #contribute_intro_paragraph_1 {
     margin-bottom: 0;
 
@@ -275,10 +352,17 @@ $blue-grey-color: #5d6a8e;
 }
 
 .guide_category_title {
-    font-size: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    background-color: #DEE1E8;
+    padding: 20px 0px 20px 30px;
+    margin-top: 0px;
     color: #3f4659;
+}
+
+.guide_subcategory_title {
+    background-color: #F2F3F6;
+    border-top: 2px solid #DEE1E8;
+    border-bottom: 2px solid #DEE1E8;
+    padding: 10px 0px 10px 38px;
 }
 
 .total_guide_count {
