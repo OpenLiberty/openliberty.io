@@ -52,15 +52,32 @@ $(document).ready(function() {
         });
     }
 
+    // move guide cards to correct subcategories
+    function sortGuides(subcategory, guideList) {
+        // iterate over array of guides from json file
+        $.each(guideList, function(index, guide) {
+            // look for guide card that matches the guide's projectid from the array
+            var guide_card = $(".guide_item[href='/guides/" + guide + ".html']");
+            // move guide card to div with class that matches subcategory
+            guide_card.parent().removeClass("hidden").appendTo("." + subcategory);
+        });
+    }
+
     // Read guide categories from json file and
     function getCategories(callback) {
         $.getJSON( "../../guides/guides-common/guide_categories.json", function(data) {
             $.each(data, function(i, category) {
                 // add categories to TOC 
-                $("#toc_column > #toc_container > .sectlevel1").append(`<div id="toc_separator"></div><h1 class="toc_title">` + category.category + `</h1>`);
+                $("#toc_column > #toc_container > .sectlevel1").append('<div id="toc_separator"></div><h1 class="toc_title">' + category.category_name + '</h1>');
+                // create header for each category
+                $("#guides_container").append('<h3 class="guide_category_title">' + category.title + '</h3>');
                 $.each(category.subcategories, function(j, subcategory) {
                     // add subcategories to TOC
-                    $("#toc_column > #toc_container > .sectlevel1").append(`<li><a href="">` + subcategory.subcategory + `</a></li>`);
+                    $("#toc_column > #toc_container > .sectlevel1").append('<li><a href="">' + subcategory.subcategory + '</a></li>');
+                    // create header and div for each subcategory
+                    $("#guides_container").append('<h4 class="guide_subcategory_title">' + subcategory.subcategory + '</h4><div class="row ' + subcategory.subcategory.toLowerCase().replace(/ /g,"_") +'"></div>');
+
+                    sortGuides(subcategory.subcategory.toLowerCase().replace(/ /g,"_"), subcategory.guides);
 
                 });
             });

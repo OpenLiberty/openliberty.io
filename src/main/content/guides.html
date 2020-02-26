@@ -68,9 +68,9 @@ permalink: /guides/
             data-toggle="popover" data-placement="bottom" data-html="true" aria-label="Search">
             <button class="clear_btn" type="reset" tabindex=0 aria-label="Clear search bar"></button>
             <div id="popover_content" class="hide">
-                    <p class="tags_title">Suggested tags</p>
-                    <button type="button" class="tag_button">interactive</button>
-                    <button type="button" class="tag_button">microprofile</button>
+                <p class="tags_title">Suggested tags</p>
+                <button type="button" class="tag_button">interactive</button>
+                <button type="button" class="tag_button">microprofile</button>
             </div>
         </div>
     </div>
@@ -86,11 +86,42 @@ permalink: /guides/
 </div>
 
 <div id="guides_container">
-    <h3 class="guide_category_title">Developing your Cloud-Native Application</h3>
+    <div class="row">
+        {% for guide in all-guides %}
+        <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+            <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="" data-search-keywords="{{ guide.search-keywords | join: ' ' | downcase }}">
+                <div class="guide_title_and_description_container">
+                    <h3 class="guide_title">{{guide.title}}</h3>
+                    <p class="guide_description" title="{{guide.description}}">{{guide.description}}</p>
+                </div>
+                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                <span class="guide_duration">{{guide.duration}}</span>
+                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                    {% if new_guide_count < 4 %}
+                    {% if guide ==  all_guides_by_date[0] or guide ==  all_guides_by_date[1] 
+                    or guide ==  all_guides_by_date[2] or guide ==  all_guides_by_date[3] %}
+                        <div class="new_guide_container">
+                            <span class="guide_new">New</span>
+                        </div>
+                    {% endif %}
 
-    <h4 class="guide_subcategory_title">Basics</h4>
+                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                {% else %}
+                    {% assign date_published = guide.releasedate | date:'%s' %}
+                    {% assign date_now = 'now' | date:'%s' %}
+                    {% assign date_difference = date_now | minus: date_published %}
 
-
+                    {% if date_difference < 2592000 %}
+                        <div class="new_guide_container">
+                            <span class="guide_new">New</span>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </a>
+        </div>
+        {% endfor %}
+    </div>
 
     <!-- BASIC GUIDES -->
     <!-- <div id="guides_basic_banner" class="basic_section container">
@@ -103,7 +134,7 @@ permalink: /guides/
             </div>
         </div>
     </div> -->
-    <div id="guides_basic_container" class="basic_section container">
+    <!-- <div id="guides_basic_container" class="basic_section container">
         <div class="subtitle">
             <p><b class="essential">{{basic-essential-guides.size}} essentials</b></p>
         </div>
@@ -116,20 +147,20 @@ permalink: /guides/
                         <p class="guide_description" title="{{guide.description}}">{{guide.description}}</p>
                     </div>
                     <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
-                    <span class="guide_duration">{{guide.duration}}</span>
+                    <span class="guide_duration">{{guide.duration}}</span> -->
 
                     <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
                     <!-- If new posts count is less than 4, use 4 most recent posts -->
-                    {% if new_guide_count < 4 %}
+                    <!-- {% if new_guide_count < 4 %}
                         {% if guide ==  all_guides_by_date[0] or guide ==  all_guides_by_date[1] 
                         or guide ==  all_guides_by_date[2] or guide ==  all_guides_by_date[3] %}
                             <div class="new_guide_container">
                                 <span class="guide_new">New</span>
                             </div>
-                        {% endif %}
+                        {% endif %} -->
 
                     <!-- If new posts count is >= 4, use posts from last 30 days-->
-                    {% else %}
+                    <!-- {% else %}
                         {% assign date_published = guide.releasedate | date:'%s' %}
                         {% assign date_now = 'now' | date:'%s' %}
                         {% assign date_difference = date_now | minus: date_published %}
@@ -144,11 +175,11 @@ permalink: /guides/
             </div>
             {% endfor %}
         </div>
-    </div>
+    </div> -->
 
 
     <!-- MICROPROFILE GUIDES -->
-    <div id="guides_microprofile_banner" class="microprofile_section container">
+    <!-- <div id="guides_microprofile_banner" class="microprofile_section container">
         <div class="row">
             <div class="col-sm-9">
                 <h2 class="guide_category_title"><b>MicroProfile</b> - Developing microservices with ease</h2>
@@ -172,20 +203,20 @@ permalink: /guides/
                         <p class="guide_description" title="{{guide.description}}">{{guide.description}}</p>
                     </div>
                     <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
-                    <span class="guide_duration">{{guide.duration}}</span>
+                    <span class="guide_duration">{{guide.duration}}</span> -->
 
                     <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
                     <!-- If new posts count is less than 4, use 4 most recent posts -->
-                    {% if new_guide_count < 4 %}
+                    <!-- {% if new_guide_count < 4 %}
                         {% if guide ==  all_guides_by_date[0] or guide ==  all_guides_by_date[1] 
                         or guide ==  all_guides_by_date[2] or guide ==  all_guides_by_date[3] %}
                             <div class="new_guide_container">
                                 <span class="guide_new">New</span>
                             </div>
-                        {% endif %}
+                        {% endif %} -->
 
                     <!-- If new posts count is >= 4, use posts from last 30 days-->
-                    {% else %}
+                    <!-- {% else %}
                         {% assign date_published = guide.releasedate | date:'%s' %}
                         {% assign date_now = 'now' | date:'%s' %}
                         {% assign date_difference = date_now | minus: date_published %}
@@ -221,20 +252,20 @@ permalink: /guides/
                             <p class="guide_description" title="{{guide.description}}">{{guide.description}}</p>
                         </div>
                         <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
-                        <span class="guide_duration">{{guide.duration}}</span>
+                        <span class="guide_duration">{{guide.duration}}</span> -->
 
                         <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
                         <!-- If new posts count is less than 4, use 4 most recent posts -->
-                        {% if new_guide_count < 4 %}
+                        <!-- {% if new_guide_count < 4 %}
                             {% if guide ==  all_guides_by_date[0] or guide ==  all_guides_by_date[1] 
                             or guide ==  all_guides_by_date[2] or guide ==  all_guides_by_date[3] %}
                                 <div class="new_guide_container">
                                     <span class="guide_new">New</span>
                                 </div>
-                            {% endif %}
+                            {% endif %} -->
 
                         <!-- If new posts count is >= 4, use posts from last 30 days-->
-                        {% else %}
+                        <!-- {% else %}
                             {% assign date_published = guide.releasedate | date:'%s' %}
                             {% assign date_now = 'now' | date:'%s' %}
                             {% assign date_difference = date_now | minus: date_published %}
@@ -256,11 +287,11 @@ permalink: /guides/
             </div>
             {% endfor %}
         </div>
-    </div>
+    </div> -->
 
 
     <!-- MORE GUIDES -->
-    <div id="guides_additional_banner" class="more_section container">
+    <!-- <div id="guides_additional_banner" class="more_section container">
         <div class="row">
             <div class="col-sm-9">
                 <h2 class="guide_category_title"><b>More Guides</b> - Continue exploring</h2>
@@ -284,19 +315,19 @@ permalink: /guides/
                     </div>
                     <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
                     <span class="guide_duration">{{guide.duration}}</span>
-
+ -->
                     <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
                     <!-- If new posts count is less than 4, use 4 most recent posts -->
-                    {% if new_guide_count < 4 %}
+                    <!-- {% if new_guide_count < 4 %}
                         {% if guide ==  all_guides_by_date[0] or guide ==  all_guides_by_date[1] 
                         or guide ==  all_guides_by_date[2] or guide ==  all_guides_by_date[3] %}
                             <div class="new_guide_container">
                                 <span class="guide_new">New</span>
                             </div>
-                        {% endif %}
+                        {% endif %} -->
 
                     <!-- If new posts count is >= 4, use posts from last 30 days-->
-                    {% else %}
+                    <!-- {% else %}
                         {% assign date_published = guide.releasedate | date:'%s' %}
                         {% assign date_now = 'now' | date:'%s' %}
                         {% assign date_difference = date_now | minus: date_published %}
@@ -318,11 +349,11 @@ permalink: /guides/
             </div>
             {% endfor %}
         </div>
-    </div>
+    </div> -->
 
 
     <!-- Zero Search Results -->
-    <div id="no_search_results_banner" class="no_results_section container">
+    <!-- <div id="no_search_results_banner" class="no_results_section container">
         <div class="row">
             <div class="col-sm-9">
                 <h2 class="guide_category_title"><b class="search_term"></b> - No results found</h2>
@@ -339,5 +370,5 @@ permalink: /guides/
         </div>
 
         <button id="back_to_guides_button" class="btn"><img class="arrow" src="/img/guides_arrow_left.svg" alt=""><b>Back to all Open Liberty guides</b></button>
-    </div>
+    </div> -->
 </div>
