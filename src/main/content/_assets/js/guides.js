@@ -52,6 +52,18 @@ $(document).ready(function() {
         });
     }
 
+    $(window).scroll(function(e){ 
+        // make toc fixed once you scroll past header (281px)
+        var toc_column = $('#toc_column'); 
+        var isPositionFixed = (toc_column.css('position') == 'fixed');
+        if ($(this).scrollTop() > 281 && !isPositionFixed){ 
+          toc_column.css({'position': 'fixed', 'top': '0px'}); 
+        }
+        if ($(this).scrollTop() < 281 && isPositionFixed){
+          toc_column.css({'position': 'static', 'top': '0px'}); 
+        } 
+      });
+
     // move guide cards to correct subcategories
     function sortGuides(subcategory, guideList) {
         // iterate over array of guides from json file
@@ -72,12 +84,14 @@ $(document).ready(function() {
                 // create header for each category
                 $("#guides_container").append('<h3 class="guide_category_title">' + category.title + '</h3>');
                 $.each(category.subcategories, function(j, subcategory) {
+                    // make lowercase, replace spaces with underscores
+                    subcategory_class = subcategory.subcategory.toLowerCase().replace(/ /g,"_");
                     // add subcategories to TOC
-                    $("#toc_column > #toc_container > .sectlevel1").append('<li><a href="">' + subcategory.subcategory + '</a></li>');
+                    $("#toc_column > #toc_container > .sectlevel1").append('<li><a href="#' + subcategory_class + '">' + subcategory.subcategory + '</a></li>');
                     // create header and div for each subcategory
-                    $("#guides_container").append('<h4 class="guide_subcategory_title">' + subcategory.subcategory + '</h4><div class="row ' + subcategory.subcategory.toLowerCase().replace(/ /g,"_") +'"></div>');
+                    $("#guides_container").append('<h4 class="guide_subcategory_title" id="' + subcategory_class + '">' + subcategory.subcategory + '</h4><div class="row guide_subcategory_row ' + subcategory_class +'"></div>');
 
-                    sortGuides(subcategory.subcategory.toLowerCase().replace(/ /g,"_"), subcategory.guides);
+                    sortGuides(subcategory_class, subcategory.guides);
 
                 });
             });
@@ -354,3 +368,14 @@ $(document).ready(function() {
     });
     
 });
+
+
+
+$(window).on("load", function(){
+    $.ready.then(function(){
+       // Both ready and loaded
+       if (location.hash){
+           $(window).scrollTop($(location.hash).offset().top);
+       }
+    });
+})
