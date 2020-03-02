@@ -630,3 +630,33 @@ footer {
 .halign-right {
     text-align: right;
 }
+
+/* Callouts */
+.colist.arabic {
+    padding-left: 5px;
+
+    & table, & caption, & tbody, & tfoot, & thead, & tr, & th, & td {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font-size: 100%;
+        vertical-align: baseline;
+        background: transparent;
+        box-shadow: none;
+    }
+    & tr {
+        padding: 13px 0;
+        & td:first-child {
+            width: 30px;
+            &:before {
+                /* Add parenthesis before the number of each row */
+                content: "(";
+            }  
+            &:after {
+                /* Add parenthesis after the number of each row */
+                content: ")";
+            }            
+        }
+    }
+}
