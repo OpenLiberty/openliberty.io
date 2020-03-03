@@ -11,6 +11,111 @@
 
 $(document).ready(function() {
 
+    // Remove previous TOC section highlighted and highlight correct step
+    function updateTOCHighlighting(id) {
+        $('.liSelected').removeClass('liSelected');
+        var anchor = $("#toc_container a[href='#" + id + "']");
+        anchor.parent().addClass('liSelected');
+    }
+
+    // Find the section that is most visible in the viewport and return the id.
+    function getMostVisible($elements) {
+        var element,
+            viewportHeight = $(window).height(),
+            max = 0;
+
+        $elements.each(function() {
+            var visiblePx = getVisibleHeightPx($(this), viewportHeight);
+            if (visiblePx > max) {
+                max = visiblePx;
+                element = this;
+            }
+        });
+
+        return $elements.filter(element).attr('id');
+    }
+
+    function getVisibleHeightPx($element, viewportHeight) {
+        var rect = $element.get(0).getBoundingClientRect(),
+            height = rect.bottom - rect.top,
+            visible = {
+                top: rect.top >= 0 && rect.top < viewportHeight,
+                bottom: rect.bottom > 0 && rect.bottom < viewportHeight
+            },
+            visiblePx = 0;
+
+        if (visible.top && visible.bottom) {
+            // Whole element is visible
+            visiblePx = height;
+        } else if (visible.top) {
+            visiblePx = viewportHeight - rect.top;
+        } else if (visible.bottom) {
+            visiblePx = rect.bottom;
+        } else if (height > viewportHeight && rect.top < 0) {
+            var absTop = Math.abs(rect.top);
+
+            if (absTop < height) {
+                // Part of the element is visible
+                visiblePx = height - absTop;
+            }
+        }
+
+        return visiblePx;
+    }
+
+    function handleSectionChanging(event){
+        var sections = $('.guide_subcategory_section');
+        // Get the id of the section most in view
+        var id = getMostVisible(sections);
+        if (id !== null) {
+            var windowHash = window.location.hash;
+            var scrolledToHash = id === "" ? id : '#' + id;
+            if (windowHash !== scrolledToHash) {
+                // Update the URL hash with new section we scrolled into....
+                var currentPath = window.location.pathname;
+                var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + scrolledToHash;
+
+                // Not setting window.location.hash here because that causes an
+                // onHashChange event to fire which will scroll to the top of the
+                // section.  replaceState updates the URL without causing an
+                // onHashChange event.
+                history.replaceState(null, null, newPath);
+
+                // Update the selected TOC entry
+                updateTOCHighlighting(id);
+            }
+        }
+    }
+
+    $(window).on('scroll', function(event) {
+        // make toc fixed once you scroll past header (281px)
+        var isPositionFixed = ($('#toc_column').css('position') == 'fixed');
+        var navbar_height = getVisibleHeightPx($('nav.navbar.navbar-default'), $(window).height());
+        var banner_height = getVisibleHeightPx($('#guides_information_container'), $(window).height());
+        var top_section_height = navbar_height + banner_height;
+
+        if ($(this).scrollTop() > 281){ 
+            $('#toc_container').css({'height': 'calc(100vh)'});
+            if (!isPositionFixed) {
+                $('#toc_column').css({'position': 'fixed', 'top': '0px'});
+            }
+        }
+        if ($(this).scrollTop() < 281){
+            $('#toc_container').css({'height': 'calc(100vh - ' + top_section_height + 'px)'});
+            if (isPositionFixed){
+                $('#toc_column').css({'position': 'static', 'top': '0px'});
+            }
+        } 
+
+        handleSectionChanging(event);
+    });
+
+    $(document).on('click','#toc_container a',function(e) {
+        var hash = $(this).attr('href').replace("#", "");
+        updateTOCHighlighting(hash);
+    });
+
+
     var title_key = 1;
     var description_key = 2;
     var tags_key = 4;
@@ -52,18 +157,6 @@ $(document).ready(function() {
         });
     }
 
-    $(window).scroll(function(e){ 
-        // make toc fixed once you scroll past header (281px)
-        var toc_column = $('#toc_column'); 
-        var isPositionFixed = (toc_column.css('position') == 'fixed');
-        if ($(this).scrollTop() > 281 && !isPositionFixed){ 
-          toc_column.css({'position': 'fixed', 'top': '0px'}); 
-        }
-        if ($(this).scrollTop() < 281 && isPositionFixed){
-          toc_column.css({'position': 'static', 'top': '0px'}); 
-        } 
-      });
-
     // move guide cards to correct subcategories
     function sortGuides(subcategory, guideList) {
         // iterate over array of guides from json file
@@ -89,7 +182,7 @@ $(document).ready(function() {
                     // add subcategories to TOC
                     $("#toc_column > #toc_container > .sectlevel1").append('<li><a href="#' + subcategory_class + '">' + subcategory.subcategory + '</a></li>');
                     // create header and div for each subcategory
-                    $("#guides_container").append('<h4 class="guide_subcategory_title" id="' + subcategory_class + '">' + subcategory.subcategory + '</h4><div class="row guide_subcategory_row ' + subcategory_class +'"></div>');
+                    $("#guides_container").append('<div id="' + subcategory_class + '" class="guide_subcategory_section"><h4 class="guide_subcategory_title" id="' + subcategory_class + '_title">' + subcategory.subcategory + '</h4><div class="row guide_subcategory_row ' + subcategory_class +'"></div></div>');
 
                     sortGuides(subcategory_class, subcategory.guides);
 
@@ -368,7 +461,6 @@ $(document).ready(function() {
     });
     
 });
-
 
 
 $(window).on("load", function(){
