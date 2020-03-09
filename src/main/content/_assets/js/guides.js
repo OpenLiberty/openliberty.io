@@ -18,21 +18,40 @@ $(document).ready(function() {
         anchor.parent().addClass('liSelected');
     }
 
-    // Find the section that is most visible in the viewport and return the id.
+    // Find the first subcategory header that is visible in the viewport and return the id.
     function getMostVisible($elements) {
-        var element,
-            viewportHeight = $(window).height(),
-            max = 0;
-
-        $elements.each(function() {
-            var visiblePx = getVisibleHeightPx($(this), viewportHeight);
-            if (visiblePx > max) {
-                max = visiblePx;
-                element = this;
+        var topBorder = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
+        var scrolledToBottom = $(window).scrollTop() + $(window).height() == $(document).height();
+        if ($(window).scrollTop() <= topBorder) {
+            // Header section is visible, don't look for subcategory headers.
+            id = " ";
+        }
+        else {
+            var visibleSectionCount = 0;
+            var lastDiv = $elements.last();
+            highlightElement = $(location.hash);
+            // make sure last section gets highlighted (since it will never be first visible subcategory header)
+            if (scrolledToBottom) {
+                highlightElement = lastDiv;
             }
-        });
+            else {
+            // iterate over subcategory headers and get first on screen
+                $elements.each(function(index, element) {
+                    var visiblePx = getVisibleHeightPx($(this), $(window).height());
+                    // check if element is on screen
+                    if (visiblePx > 0) {
+                        if (visibleSectionCount == 0) {
+                            // found first subcategory header that is visible on screen
+                            highlightElement = this;
+                        }
+                        visibleSectionCount += 1;
+                    }
+                })
+            }
+            id = $elements.filter(highlightElement).attr('id');
+        }
 
-        return $elements.filter(element).attr('id');
+        return id;
     }
 
     function getVisibleHeightPx($element, viewportHeight) {
@@ -64,27 +83,24 @@ $(document).ready(function() {
     }
 
     function handleSectionChanging(event){
-        var sections = $('.guide_subcategory_section');
+        var sections = $('.guide_subcategory_title');
         // Get the id of the section most in view
         var id = getMostVisible(sections);
-        if (id !== null) {
+        if (id !== " ") {
             var windowHash = window.location.hash;
-            var scrolledToHash = id === "" ? id : '#' + id;
+            var scrolledToHash = id === "" ? id : '#' + id;            
             if (windowHash !== scrolledToHash) {
                 // Update the URL hash with new section we scrolled into....
                 var currentPath = window.location.pathname;
                 var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + scrolledToHash;
-
-                // Not setting window.location.hash here because that causes an
-                // onHashChange event to fire which will scroll to the top of the
-                // section.  replaceState updates the URL without causing an
-                // onHashChange event.
-                history.replaceState(null, null, newPath);
-
-                // Update the selected TOC entry
-                updateTOCHighlighting(id);
             }
         }
+        else {
+            newPath = id;
+        }
+        // add hash to url and update TOC highlighting
+        history.replaceState(null, null, newPath);
+        updateTOCHighlighting(id);
     }
 
     $(window).on('scroll', function(event) {
@@ -164,7 +180,7 @@ $(document).ready(function() {
             // look for guide card that matches the guide's projectid from the array
             var guide_card = $(".guide_item[href='/guides/" + guide + ".html']");
             // move guide card to div with class that matches subcategory
-            guide_card.parent().removeClass("hidden").appendTo("." + subcategory);
+            guide_card.parent().removeClass("hidden").appendTo("#" + subcategory + "_row");
         });
     }
 
@@ -182,7 +198,7 @@ $(document).ready(function() {
                     // add subcategories to TOC
                     $("#toc_column > #toc_container > .sectlevel1").append('<li><a href="#' + subcategory_class + '">' + subcategory.subcategory + '</a></li>');
                     // create header and div for each subcategory
-                    $("#guides_container").append('<div id="' + subcategory_class + '" class="guide_subcategory_section"><h4 class="guide_subcategory_title" id="' + subcategory_class + '_title">' + subcategory.subcategory + '</h4><div class="row guide_subcategory_row ' + subcategory_class +'"></div></div>');
+                    $("#guides_container").append('<div id="' + subcategory_class + '_section" class="guide_subcategory_section"><h4 id="' + subcategory_class + '" class="guide_subcategory_title">' + subcategory.subcategory + '</h4><div class="row guide_subcategory_row" id="' + subcategory_class +'_row"></div></div>');
 
                     sortGuides(subcategory_class, subcategory.guides);
 
@@ -469,5 +485,5 @@ $(window).on("load", function(){
        if (location.hash){
            $(window).scrollTop($(location.hash).offset().top);
        }
-    });
-})
+    })
+});
