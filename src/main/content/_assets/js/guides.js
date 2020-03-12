@@ -11,6 +11,11 @@
 
 $(document).ready(function() {
 
+    var title_key = 1;
+    var description_key = 2;
+    var tags_key = 4;
+    var search_term_key = 8;
+    
     // Remove previous TOC section highlighted and highlight correct step
     function updateTOCHighlighting(id) {
         $('.liSelected').removeClass('liSelected');
@@ -35,7 +40,7 @@ $(document).ready(function() {
                 highlightElement = lastDiv;
             }
             else {
-            // iterate over subcategory headers and get first on screen
+                // iterate over subcategory headers and get first on screen
                 $elements.each(function(index, element) {
                     var visiblePx = getVisibleHeightPx($(this), $(window).height());
                     // check if element is on screen
@@ -131,13 +136,6 @@ $(document).ready(function() {
         updateTOCHighlighting(hash);
     });
 
-
-    var title_key = 1;
-    var description_key = 2;
-    var tags_key = 4;
-    var search_term_key = 8;
-    var num_of_additional_microprofile_guides = 0;
-
     // Read tags from json file and add tags to data-tags attribute to make tags searchable
     function getTags(callback) {
         $.getJSON( "../../guides/guides-common/guide_tags.json", function(data) {
@@ -187,21 +185,22 @@ $(document).ready(function() {
     // Read guide categories from json file and
     function getCategories(callback) {
         $.getJSON( "../../guides/guides-common/guide_categories.json", function(data) {
-            $.each(data, function(i, category) {
+            $.each(data, function(index, category) {
+                // make lowercase, replace spaces with underscores
+                category_id = category.category_name.toLowerCase().replace(/ /g,"_");
                 // add categories to TOC 
-                $("#toc_column > #toc_container > .sectlevel1").append('<div id="toc_separator"></div><h1 class="toc_title">' + category.category_name + '</h1>');
-                // create header for each category
-                $("#guides_container").append('<h3 class="guide_category_title">' + category.title + '</h3>');
+                $("#toc_column > #toc_container > ul").append('<div id="toc_separator"></div><h1 class="toc_title">' + category.category_name + '</h1>');
+                // create div and header for each category
+                $("#guides_container").append('<div id="' + category_id + '" class="category_section"><h3 class="guide_category_title">' + category.title + '</h3></div>');
                 $.each(category.subcategories, function(j, subcategory) {
                     // make lowercase, replace spaces with underscores
-                    subcategory_class = subcategory.subcategory.toLowerCase().replace(/ /g,"_");
+                    subcategory_id = subcategory.subcategory.toLowerCase().replace(/ /g,"_");
                     // add subcategories to TOC
-                    $("#toc_column > #toc_container > .sectlevel1").append('<li><a href="#' + subcategory_class + '">' + subcategory.subcategory + '</a></li>');
-                    // create header and div for each subcategory
-                    $("#guides_container").append('<div id="' + subcategory_class + '_section" class="guide_subcategory_section"><h4 id="' + subcategory_class + '" class="guide_subcategory_title">' + subcategory.subcategory + '</h4><div class="row guide_subcategory_row" id="' + subcategory_class +'_row"></div></div>');
-
-                    sortGuides(subcategory_class, subcategory.guides);
-
+                    $("#toc_column > #toc_container > ul").append('<li><a href="#' + subcategory_id + '">' + subcategory.subcategory + '</a></li>');
+                    // create div and header for each subcategory
+                    $("#" + category_id).append('<div id="' + subcategory_id + '_section" class="guide_subcategory_section"><h4 id="' + subcategory_id + '" class="guide_subcategory_title">' + subcategory.subcategory + '</h4><div class="row guide_subcategory_row" id="' + subcategory_id +'_row"></div></div>');
+                    // sort guides into appropriate subcategories
+                    sortGuides(subcategory_id, subcategory.guides);
                 });
             });
             callback();
@@ -248,95 +247,56 @@ $(document).ready(function() {
         });
     }
 
-    // Change the numbers on the page based on the search results
-    function updateTotals(no_search_text) {
-
-        // Change the label for how many guides are visible to help indicate if the view is filtered
-        var count_label = ' search results';
-        if(no_search_text !== undefined && no_search_text) {
-            count_label = ' guides';
-            $('#additional_microprofile_guides').text(num_of_additional_microprofile_guides + ' additional MicroProfile Guides');
-            showAllCategories();
-        }
-
-        // Count the number of visible guides to calculate the total number
-        var numBasicResults = $('#guides_basic_container .guide_column').children(':visible').length;
-        var numMPResults = $('#guides_microprofile_container .guide_column').children(':visible').length;
-        var numMPEssentialResults = $('#guides_microprofile_container .essential .guide_column').children(':visible').length;
-        var numAdditionalResults = $('#guides_additional_container .guide_column').children(':visible').length;
-        hideEmptyCategories(
-            numBasicResults == 0, 
-            numMPResults == 0,
-            numMPEssentialResults == 0, 
-            numAdditionalResults == 0
-        );
-
-        // Change the total search results in each categorys' banner    
-        $('#guides_basic_banner .total_guide_count b').text(numBasicResults + count_label);
-        $('#guides_microprofile_banner .total_guide_count b').text(numMPResults + count_label);
-        $('#guides_additional_banner .total_guide_count b').text(numAdditionalResults + count_label);
-
-        // Change essential search result number
-        var numBasicEssentialResults = $('#guides_basic_container .essential .guide_column').children(':visible').length;
-        var numMPEssentialResults = $('#guides_microprofile_container .essential .guide_column').children(':visible').length;
-        $('#guides_basic_container .subtitle .essential').text(numBasicEssentialResults + ' essentials');
-        $('#guides_microprofile_container .subtitle .essential').text(numMPEssentialResults + ' essentials');
-
-        // Change the additional MicroProfile search result number
-        var numMPMoreResults = $('#microprofile_more_guides .guide_column').children(':visible').length;
-        $('#additional_microprofile_guides').text(numMPMoreResults + ' additional MicroProfile Guides');
-    }
-
     function showAllCategories() {
-        $('.basic_section').show();
-        $('.microprofile_section').show();
-        $('.more_section').show();
+        $('.no_results_section').hide();
+        $('.guide_category_title').show();
+        $('.guide_subcategory_section').show();
+        $('.guide_subcategory_title').show();
+        $('.guide_column').show();
     }
 
-    function hideEmptyCategories(hideBasic, hideMP, hideMPEssentials, hideAdditional) {
-        if(hideBasic) {
-            $('.basic_section').hide();
-        } else {
-            $('.basic_section').show();
-        }
-        if(hideMP) {
-            $('.microprofile_section').hide();
-        } else {
-            $('.microprofile_section').show();
-        }
-        // hide unnecessary labels when there are 0 essential MP guides
-        if(hideMPEssentials) {
-            $('.extraMP').hide();
-        } else {
-            $('.extraMP').show();
-        }
-        if(hideAdditional) {
-            $('.more_section').hide();
-        } else {
-            $('.more_section').show();
-        }
-        if(hideBasic && hideMP && hideAdditional) {
-            // All categories are hidden
-            // Show no results
+    // hide and show categories based on whether or not there are search results in that category
+    function updateVisibleCategories() {
+        // iterate over subcategories and determine if all the guide cards are hidden
+        $('.guide_subcategory_row').each(function(index, row) {
+            if($(this).children(':visible').length == 0) {
+                // all guide cards hidden in subcategory. Hide subcategory title
+                $(this).prev().hide();
+            }
+            else {
+                // visible guide cards found in subcategory. Show subcategory title
+                if ($(this).prev().is(":hidden")) {
+                    $(this).prev().show();
+                }
+            }
+        })
+        // iterate over categories and determine if all subcategories are hidden
+        $('.category_section').each(function(index, section) {
+            if ($(this).find('.guide_subcategory_title:visible').length == 0) {
+                $(this).find('.guide_category_title').hide();
+            }
+            else {
+                $(this).find('.guide_category_title').show();
+            }
+        })
+
+        // check if there are no search results
+        if($('#guides_container').find('.guide_category_title:visible').length == 0) {
+            // All categories are hidden. Show no results section
             $('.no_results_section').show();
 
             var search_text = $('#guide_search_input').val();
             $('.search_term').text('"' + search_text + '"');
-        } else {
+        } 
+        else {
+            // All categories not hidden. Hide no results section
             $('.no_results_section').hide();
         }
     }
 
-    // Show everything on the guides page
-    function defaultView() {
-        $('.guide_column').show();
-        var no_search_text = true;
-        updateTotals(no_search_text);
-    }
-
     function processSearch(input_value) {
         if(input_value.length == 0) {
-            defaultView();
+            showAllCategories();
         } else {
             if(input_value.indexOf('tag:') === 0) {
                 var search_value = input_value.substring(4).trim();
@@ -344,7 +304,7 @@ $(document).ready(function() {
             } else {
                 filter_guides(title_key | description_key | tags_key | search_term_key, input_value);
             }
-            updateTotals();
+            updateVisibleCategories();
         }        
     }
 
@@ -454,8 +414,10 @@ $(document).ready(function() {
     
     $('#back_to_guides_button').on('click', function() {
         $('#guide_search_input').val('');
-        defaultView();
-        // TODO: Need to clear any `?search=*` from the URL
+        var searchInput = $('#guide_search_input').val();
+        updateSearchUrl(searchInput);
+        processSearch(searchInput);        
+        showAllCategories();
     });
 
     // Click buttons to fill search bar
