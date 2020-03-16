@@ -42,69 +42,6 @@
                     <a id="header_groupsio_link" class="header_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener" aria-label="Open Liberty Groups.io"></a>
                 </div>
             </div>
-            <div id="breadcrumb_row">
-
-                <ol class="breadcrumb fluid-container">   
-                    <li>
-                        <a href="/docs">Docs</a>
-                    </li>
-
-                    <!-- Javadocs -->
-                    {{!-- {{ debug page.layout }} --}}
-                    {{#if (eq page.layout 'javadoc') }}
-                      <li>
-                          <a class="inactive_link">Reference</a>
-                      </li>
-                      <li class="active"> {{ page.component.title }} </li>
-                        
-                    {{else if (eq page.layout 'config') }}
-                      <li>
-                          <a class="inactive_link">Reference</a>
-                      </li>
-                      <li>
-                          <a href="/docs/ref/config/">Config</a>
-                      </li>
-
-                    {{else if (eq page.layout 'general-reference') }}
-                      <li>
-                          <a class="inactive_link">Reference</a>
-                      </li>
-                      <li>
-                          <a href="/docs/ref/general/">General</a>
-                      </li>
-
-                    <!-- Intro docs -->
-                    {{else if (contains page.url '/docs/intro') }}
-                      <li class="active">{{ page.title }}</li>
-
-                    {{else if (eq page.layout 'feature') }}
-                      <li>
-                          <a class="inactive_link">Reference</a>
-                      </li>
-                      <li>
-                          <a href="/docs/ref/feature/">Features</a>
-                      </li>
-
-                    {{else if (eq page.layout 'server-command') }}
-                      <li>
-                          <a class="inactive_link">Reference</a>
-                      </li>
-                      <li>
-                          <a href="/docs/ref/command/">Commands</a>
-                      </li>
-                    <!-- All Guides page -->
-                    {{else if (eq page.url '/guides/') }}
-                        <li class="active">Guides</li>
-                    
-                    <!-- Individual Guides -->
-                    {{else }}
-                        <li> 
-                            <a href="/guides">Guides</a>
-                        </li>
-                        <li class="active">{{ page.title }}</li>
-                    {{/if }}
-                </ol>
-            </div> 
         </div>
     </nav>
     <!-- Docs -->
