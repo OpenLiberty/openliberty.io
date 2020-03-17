@@ -81,11 +81,19 @@ $blue-grey-color: #5d6a8e;
     font-size: 50px;
     color: white;
     letter-spacing: 0;
+    
+    @media (max-width: 767.98px) {
+        text-align: center;
+    }
 }
 
 #guides_description {
     font-size: 16px;
     color: white;
+
+    @media (max-width: 767.98px) {
+        text-align: center;
+    }
 }
 
 #clouds {
@@ -237,43 +245,47 @@ $blue-grey-color: #5d6a8e;
 
     ul {
         padding: 0px;
-    }
 
-    li {
-        list-style: none;
-        word-wrap: break-word;
-        padding-left: 26px;
-        padding-right: 26px;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        
-        &:not(.liSelected):hover {
-            border-left: 8px solid #fdf2ea;
-            font-weight: 500;
-            cursor: pointer;
+        li {
+            list-style: none;
+            word-wrap: break-word;
+            padding-left: 26px;
+            padding-right: 26px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            
+            &:not(.liSelected):hover {
+                border-left: 8px solid #fdf2ea;
+                font-weight: 500;
+                cursor: pointer;
+            }
+
+            &.liSelected {
+                background: #fdf2ea;
+                border-left: 8px solid #f4914d;
+                font-weight: 500;
+            }
+
+            a {
+                display: inline-block;
+                color:#5d6a8e;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                width: 100%;
+                
+                &:hover {
+                    color:#313653;
+                }
+
+                img {
+                    display: none;
+                }
+            }
         }
-
-        &.liSelected {
-            background: #fdf2ea;
-            border-left: 8px solid #f4914d;
-            font-weight: 500;
-        }
-    }
-
-    a {
-        display: inline-block;
-        color:#5d6a8e;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        width: 100%;
-    }
-    
-    a:hover {
-        color:#313653;
     }
 }
 
-#toc_separator {
+.toc_separator {
     left: 0px;
     width: 225px;
     height: 2px;
@@ -293,6 +305,76 @@ $blue-grey-color: #5d6a8e;
     line-height: 26px;
     padding-left: 34px;
     text-transform: uppercase;
+}
+
+.caret_button {
+    display: none;
+}
+
+.num_guides {
+    display: none;
+}
+
+
+// MOBILE TOC
+
+@media (max-width: 767.98px) {
+
+    #toc_column {
+        width: 100%;
+    }
+
+    #toc_container {
+        height: auto;
+
+        ul li {
+            border-bottom: 1px solid #dee1e8;
+
+            a {
+                display: inline-block;
+                padding-top: 10px;
+                padding-bottom: 10px;
+
+                img {
+                    display: inline-block;
+                    padding-right: 20px;
+                }
+            }
+        }
+    }
+
+    .toc_separator {
+        display: none;
+    }
+
+    .toc_title {
+        background-color: #dee1e8;
+        font-family: "Asap", Trebuchet MS, Helvetica, Arial;
+        margin: 0px;
+        padding-top: 10px;
+        text-transform: capitalize;
+    }
+
+    .caret_button {
+        display: block;
+        float: right;
+        border: none;
+        background: none;
+    }
+
+    .num_guides {
+        display: block;
+        background-color: #dee1e8;
+        padding-left: 34px;
+        padding-top: 5px;
+        padding-bottom: 10px;
+        font-size: 12px;
+    }
+
+    .guide_item {
+        margin-bottom: 0px;
+    }
+
 }
 
 // GUIDES SECTION
@@ -355,5 +437,11 @@ $blue-grey-color: #5d6a8e;
 
     & .search_term {
         word-wrap: break-word;
+    }
+}
+
+@media (max-width: 767.98px) {
+    #guides_container {
+        display: none;
     }
 }
