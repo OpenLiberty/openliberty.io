@@ -44,7 +44,7 @@ if [ "$JEKYLL_ENV" != "production" ]; then
 fi
 
 # Clone docs repo
-./scripts/build_clone_docs.sh "modules"
+./scripts/build_clone_docs.sh "antora"
 
 # Development environments that enable the draft blogs in the _draft directory.
 if [ "$JEKYLL_DRAFT_BLOGS" == "true" ]; then
