@@ -151,6 +151,7 @@ $(document).ready(function() {
             updateTOCHighlighting(hash);
         }
         else {
+            e.preventDefault();
             clicked_id = $(this).attr('href').toLowerCase().replace(/ /g,"_");
             var showSection = $(clicked_id + "_row");
             var img = $(this).find('img');
@@ -226,7 +227,7 @@ $(document).ready(function() {
                 // make lowercase, replace spaces with underscores
                 category_id = category.category_name.toLowerCase().replace(/ /g,"_");
                 // add categories to TOC 
-                $("#toc_column > #toc_container > ul").append('<div class="toc_separator"></div><h1 class="toc_title">' + category.category_name + '</h1><button class="caret_button"><img src="/img/guides_caret_up.svg" alt="Collapse" aria-label="Collapse"></button><div class="num_guides">26 guides</div>');
+                $("#toc_column > #toc_container > ul").append('<h1 class="toc_title">' + category.category_name + '</h1><button class="caret_button"><img src="/img/guides_caret_up.svg" alt="Collapse" aria-label="Collapse"></button><div class="num_guides">26 guides</div>');
                 // create div and header for each category
                 $("#guides_container").append('<div id="' + category_id + '" class="category_section"><h3 class="guide_category_title">' + category.title + '</h3></div>');
                 $.each(category.subcategories, function(j, subcategory) {
@@ -239,6 +240,7 @@ $(document).ready(function() {
                     // sort guides into appropriate subcategories
                     sortGuides(subcategory_id, subcategory.guides);
                 });
+                $("#toc_column > #toc_container > ul").append('<div class="toc_separator">');
             });
             callback();
         });
@@ -472,7 +474,7 @@ $(document).ready(function() {
         console.log("caret clicked");
         // clicked_id = $(this).prev().text().toLowerCase().replace(/ /g,"_");
         // console.log("clicked_id: ", clicked_id);
-        var showSection = $(this).next().nextUntil(':not(li)');
+        var showSection = $(this).next().nextUntil('.toc_separator');
         console.log("showSection: ", showSection);
         // var showSection = $(clicked_id + "_row");
         var img = $(this).find('img');
