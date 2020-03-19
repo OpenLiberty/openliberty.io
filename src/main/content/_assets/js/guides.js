@@ -18,10 +18,6 @@ $(document).ready(function() {
     var tabletBreakpoint = 767.98;
 
     function isMobileView() {
-        console.log("calling isMobileView()");
-        console.log("window.innerWidth: ", window.innerWidth);
-        console.log("tabletBreakpoint: ", tabletBreakpoint);
-        console.log("window.innerWidth <= tabletBreakpoint", window.innerWidth <= tabletBreakpoint);
         return(window.innerWidth <= tabletBreakpoint);
     }
 
@@ -224,13 +220,16 @@ $(document).ready(function() {
     function getCategories(callback) {
         $.getJSON( "../../guides/guides-common/guide_categories.json", function(data) {
             $.each(data, function(index, category) {
+                // count number of guides in each category
+                var num_guides = 0;
                 // make lowercase, replace spaces with underscores
                 category_id = category.category_name.toLowerCase().replace(/ /g,"_");
                 // add categories to TOC 
-                $("#toc_column > #toc_container > ul").append('<h1 class="toc_title">' + category.category_name + '</h1><button class="caret_button"><img src="/img/guides_caret_up.svg" alt="Collapse" aria-label="Collapse"></button><div class="num_guides">26 guides</div>');
+                $("#toc_column > #toc_container > ul").append('<h1 class="toc_title">' + category.category_name + '</h1><button class="caret_button"><img src="/img/guides_caret_up.svg" alt="Collapse" aria-label="Collapse"></button><div id="' + category_id + '_num_guides" class="num_guides"></div>');
                 // create div and header for each category
                 $("#guides_container").append('<div id="' + category_id + '" class="category_section"><h3 class="guide_category_title">' + category.title + '</h3></div>');
                 $.each(category.subcategories, function(j, subcategory) {
+                    num_guides += subcategory.guides.length;
                     // make lowercase, replace spaces with underscores
                     subcategory_id = subcategory.subcategory.toLowerCase().replace(/ /g,"_");
                     // add subcategories to TOC
@@ -239,8 +238,10 @@ $(document).ready(function() {
                     $("#" + category_id).append('<div id="' + subcategory_id + '_section" class="guide_subcategory_section"><h4 id="' + subcategory_id + '" class="guide_subcategory_title">' + subcategory.subcategory + '</h4><div class="row guide_subcategory_row" id="' + subcategory_id +'_row"></div></div>');
                     // sort guides into appropriate subcategories
                     sortGuides(subcategory_id, subcategory.guides);
-                });
+                });                
                 $("#toc_column > #toc_container > ul").append('<div class="toc_separator">');
+
+                $('#' + category_id + "_num_guides").text(num_guides + " guides");
             });
             callback();
         });
