@@ -231,11 +231,18 @@ $blue-grey-color: #5d6a8e;
     }
 }
 
+#tablet_toc_accordion_container {
+    display: none;
+}
+
+
 // TOC
 
-#toc_column {
-    display: inline-block;
-    width: 225px;
+@media (min-width: 991px) {
+    #toc_column {
+        display: inline-block;
+        width: 225px;
+    }
 }
 
 #toc_container {
@@ -285,6 +292,10 @@ $blue-grey-color: #5d6a8e;
     }
 }
 
+#tablet_toc_close {
+    display: none;
+}
+
 .toc_title {
     font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
     font-size: 14px;
@@ -309,84 +320,6 @@ $blue-grey-color: #5d6a8e;
     height: 2px;
     border: solid 1px #d4d7e3;
     margin-top: 5px;
-
-    &:last-child {
-        display: none;
-    }
-}
-
-
-// MOBILE TOC
-
-@media (max-width: 767.98px) {
-
-    #toc_column {
-        width: 100%;
-    }
-
-    #toc_container {
-        height: auto;
-
-        ul li {
-            border-bottom: 1px solid #dee1e8;
-
-            a {
-                display: inline-block;
-                padding-top: 10px;
-                padding-bottom: 10px;
-
-                img {
-                    display: inline-block;
-                    padding-right: 20px;
-                }
-            }
-        }
-    }
-
-    .toc_title {
-        background-color: #dee1e8;
-        font-family: "Asap", Trebuchet MS, Helvetica, Arial;
-        margin: 0px;
-        padding-top: 10px;
-        text-transform: capitalize;
-    }
-
-    .caret_button {
-        display: block;
-        float: right;
-        border: none;
-        background: none;
-        margin-top: -14px;
-    }
-
-    .num_guides {
-        display: block;
-        background-color: #dee1e8;
-        padding-left: 34px;
-        padding-top: 5px;
-        padding-bottom: 10px;
-        font-size: 12px;
-    }
-
-    .guide_item {
-        margin-bottom: 0px;
-        height: 110px;
-        // width: calc(100% - 14px);
-        // float: right;
-    }
-
-    .guide_title_and_description_container {
-        height: 55px;
-    }
-
-    .guide_description {
-        display: none;
-    }
-
-    .toc_separator {
-        display: none;
-    }
-
 }
 
 // GUIDES SECTION
@@ -452,8 +385,158 @@ $blue-grey-color: #5d6a8e;
     }
 }
 
+
+// TABLET
+
+@media (min-width: 767.98px) and (max-width: 991.98px) {
+    #toc_column {
+        position: fixed;
+        top: 0;
+        z-index: 9999;
+        background-color: #ffffff;
+    }
+
+    #toc_container {
+        height: 100vh;
+
+        ul {
+            margin-top: -38px;
+
+            li {
+                padding-left: 47px;
+            }
+        }
+    }
+
+    #tablet_toc_close {
+        display: block;
+
+        img {
+            margin-top: 8px;
+            margin-left: 8px;
+            padding: 10px;
+            cursor: pointer;
+        }
+    }
+
+    .toc_title {
+        padding-left: 55px;
+    }
+
+    #guides_container {
+        width: 100%;
+    }
+
+    #tablet_toc_accordion_container {
+        position: static;
+        top: 0px;
+        display: table;
+        width: 100%;
+        height: 41px;
+        text-align: center;
+        border: 1px solid #d4d7e3;
+        z-index: 7;
+        background-color: #ffffff;
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    #tablet_toc_accordion {
+        vertical-align: middle;
+        display: table-cell;
+    }
+
+    .breadcrumb_hamburger {
+        border: none;
+        background: none;
+    }
+
+    .icon-bar {
+        background-color: #96bc32;
+        display: block;
+        width: 20px;
+        height: 2px;
+        border-radius: 1px;
+    }
+
+    .icon-bar+.icon-bar {
+        margin-top: 4px;
+    }
+}
+
+// MOBILE 
+
 @media (max-width: 767.98px) {
+
+    #toc_column {
+        display: block;
+        width: 100%;
+    }
+
+    #toc_container {
+        height: auto;
+
+        ul li {
+            border-bottom: 1px solid #dee1e8;
+
+            a {
+                display: inline-block;
+                padding-top: 10px;
+                padding-bottom: 10px;
+
+                img {
+                    display: inline-block;
+                    padding-right: 20px;
+                }
+            }
+        }
+    }
+
+    .toc_title {
+        background-color: #dee1e8;
+        font-family: "Asap", Trebuchet MS, Helvetica, Arial;
+        margin: 0px;
+        padding-top: 10px;
+        text-transform: capitalize;
+    }
+
+    .caret_button {
+        display: block;
+        float: right;
+        border: none;
+        background: none;
+        margin-top: -14px;
+    }
+
+    .num_guides {
+        display: block;
+        background-color: #dee1e8;
+        padding-left: 34px;
+        padding-top: 5px;
+        padding-bottom: 10px;
+        font-size: 12px;
+    }
+
+    .guide_item {
+        margin-bottom: 0px;
+        height: 110px;
+    }
+
+    .guide_title_and_description_container {
+        height: 55px;
+    }
+
+    .guide_description {
+        display: none;
+    }
+
+    .toc_separator {
+        display: none;
+    }
+
     #guides_container {
         display: none;
     }
+
 }

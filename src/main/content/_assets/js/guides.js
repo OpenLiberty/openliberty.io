@@ -9,17 +9,27 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
+var mobileBreakpoint = 767.98;
+var tabletBreakpoint = 991.98;
+
+function isMobileView() {
+    return(window.innerWidth <= mobileBreakpoint);
+}
+
+function isTabletView() {
+    return(window.innerWidth <= tabletBreakpoint && window.innerWidth > mobileBreakpoint);
+}
+
+function isDesktopView() {
+    return(window.innerWidth > tabletBreakpoint);
+}
+
 $(document).ready(function() {
 
     var title_key = 1;
     var description_key = 2;
     var tags_key = 4;
     var search_term_key = 8;
-    var tabletBreakpoint = 767.98;
-
-    function isMobileView() {
-        return(window.innerWidth <= tabletBreakpoint);
-    }
 
     // Remove previous TOC section highlighted and highlight correct step
     function updateTOCHighlighting(id) {
@@ -92,7 +102,7 @@ $(document).ready(function() {
         return visiblePx;
     }
 
-    function handleSectionChanging (event){
+    function handleSectionChanging(event) {
         var sections = $('.guide_subcategory_title');
         // Get the id of the section most in view
         var id = getMostVisible(sections);
@@ -114,39 +124,86 @@ $(document).ready(function() {
     }
 
     $(window).on('scroll', function(event) {
+        var top_section_height = getVisibleHeightPx($('nav.navbar.navbar-default'), $(window).height()) + getVisibleHeightPx($('#guides_information_container'), $(window).height());
+        var nav_banner_bottom = $('#guides_information_container').position().top + $('#guides_information_container').outerHeight(true);
+        var isTOCPositionFixed = ($('#toc_column').css('position') == 'fixed');
+        var isAccordionPositionFixed = ($('#tablet_toc_accordion_container').css('position') == 'fixed');
 
-        if (!(isMobileView())) {
-
-            // make toc fixed once you scroll past header (281px)
-            var isPositionFixed = ($('#toc_column').css('position') == 'fixed');
-            var navbar_height = getVisibleHeightPx($('nav.navbar.navbar-default'), $(window).height());
-            var banner_height = getVisibleHeightPx($('#guides_information_container'), $(window).height());
-            var top_section_height = navbar_height + banner_height;
-
-            if ($(this).scrollTop() > 281){ 
+        // make toc fixed once you scroll past header
+        if ($(this).scrollTop() > nav_banner_bottom){
+            if (isDesktopView()) {
                 $('#toc_container').css({'height': 'calc(100vh)'});
-                if (!isPositionFixed) {
+                if (!isTOCPositionFixed) {
                     $('#toc_column').css({'position': 'fixed', 'top': '0px'});
                 }
             }
-            if ($(this).scrollTop() < 281){
+            if (isTabletView()) {
+                if (!isAccordionPositionFixed) {
+                    $('#tablet_toc_accordion_container').css({'position': 'fixed', 'top': '0px'});
+                }
+            }
+        }
+        if ($(this).scrollTop() < nav_banner_bottom){
+            if (isDesktopView()) {
                 $('#toc_container').css({'height': 'calc(100vh - ' + top_section_height + 'px)'});
-                if (isPositionFixed){
+                if (isTOCPositionFixed){
                     $('#toc_column').css({'position': 'static', 'top': '0px'});
                 }
-            } 
+            }
+            if (isTabletView()) {
+                if (isAccordionPositionFixed){
+                    $('#tablet_toc_accordion_container').css({'position': 'static', 'top': '0px'});
+                }
+            }
+        }
 
+        if (!isMobileView()) {
             handleSectionChanging(event);
-
         }
     });
 
-    $(document).on('click','#toc_container a', function(e) {
-        if (!(isMobileView())) {
-            var hash = $(this).attr('href').replace("#", "");
-            updateTOCHighlighting(hash);
-        }
-        else {
+    // function accessContentsFromHash(hash, callback) {
+    //     console.log("accessContentFromHash called");
+    //     var $focusSection = $(hash);
+    //     console.log("focusSection: ", $focusSection);
+    //     if ($focusSection.length > 0) {
+    //         console.log("focus section found");
+    //         updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
+    //         var scrollSpot = $focusSection.offset().top;
+    //         console.log("initial scrollSpot: ", scrollSpot)
+    //         if (isTabletView()) {
+    //             console.log('tablet view. updating scroll spot');
+    //             scrollSpot -= $('#tablet_toc_accordion_container').height();
+    //         }
+    //         console.log("scrollSpot = ", scrollSpot);
+    //         $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
+    //         $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
+    //             // Callback after animation.  Change the focus.
+    //             $focusSection.trigger('focus');
+    //             $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again.
+    //             // Check if the section was actually focused
+    //             if ($focusSection.is(":focus")) {
+    //                 if(callback){
+    //                     callback();
+    //                 }
+    //                 return false;
+    //             } else {
+    //                 // Add a tabindex to section header since they aren't focusable.
+    //                 // tabindex = -1 means that the element should be focusable,
+    //                 // but not via sequential keyboard navigation.
+    //                 $focusSection.attr('tabindex', '-1');
+    //                 $focusSection.trigger('focus');
+    //                 if(callback){
+    //                     callback();
+    //                 }
+    //             }
+    //         });
+    //     }
+
+    // }
+
+    $(document).on('click','#toc_container li > a', function(e) {
+        if (isMobileView()) {
             e.preventDefault();
             clicked_id = $(this).attr('href').toLowerCase().replace(/ /g,"_");
             var showSection = $(clicked_id + "_row");
@@ -164,11 +221,44 @@ $(document).ready(function() {
                 img.attr({"src": "/img/guides_gray_plus.svg", "alt": "Expand", "aria-label": "Expand"});
 
                 // hide guides section
+                $(clicked_id + "_section").append(showSection);
                 showSection.hide();
             }
 
         }
+
+        if (isTabletView()) {
+            e.preventDefault();
+            var accordion_height = $('#tablet_toc_accordion_container').height();
+            $("html, body").animate({ scrollTop: $($(this).attr("href")).offset().top - accordion_height }, 500);
+        }
+
+        else {
+            var hash = $(this).attr('href').replace("#", "");
+            updateTOCHighlighting(hash);
+        }
     });
+
+    $(window).on('hashchange', function(e) {
+        console.log('hash changed');
+        if (isTabletView()) {
+            var accordion_height = $('#tablet_toc_accordion_container').height();
+            $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
+            $("html, body").animate({ scrollTop: $(window.location.hash).offset().top - accordion_height}, 500);
+        }
+        else {
+            console.log('not tablet view');
+        }
+    } );
+
+    // window.addEventListener("hashchange", function(e){
+    //     e.preventDefault();
+
+    //     var hash = location.hash;
+    //     accessContentsFromHash(hash);
+    //     // Note: Scrolling to the new content will cause the onScroll method
+    //     //       above to be invoked.
+    // });
 
     // Read tags from json file and add tags to data-tags attribute to make tags searchable
     function getTags(callback) {
@@ -221,34 +311,48 @@ $(document).ready(function() {
         $.getJSON( "../../guides/guides-common/guide_categories.json", function(data) {
             $.each(data, function(index, category) {
                 // count number of guides in each category
-                var num_guides = 0;
                 // make lowercase, replace spaces with underscores
                 category_id = category.category_name.toLowerCase().replace(/ /g,"_");
                 // add categories to TOC 
                 $("#toc_column > #toc_container > ul").append('<h1 class="toc_title">' + category.category_name + '</h1><button class="caret_button"><img src="/img/guides_caret_up.svg" alt="Collapse" aria-label="Collapse"></button><div id="' + category_id + '_num_guides" class="num_guides"></div>');
                 // create div and header for each category
-                $("#guides_container").append('<div id="' + category_id + '" class="category_section"><h3 class="guide_category_title">' + category.title + '</h3></div>');
+                $("#guides_container").append('<div id="' + category_id + '_category" class="category_section"><h3 class="guide_category_title">' + category.title + '</h3></div>');
                 $.each(category.subcategories, function(j, subcategory) {
-                    num_guides += subcategory.guides.length;
                     // make lowercase, replace spaces with underscores
                     subcategory_id = subcategory.subcategory.toLowerCase().replace(/ /g,"_");
                     // add subcategories to TOC
                     $("#toc_column > #toc_container > ul").append('<li><a href="#' + subcategory_id + '"><img src="/img/guides_gray_plus.svg" alt="Expand" aria-label="Expand">' + subcategory.subcategory + '</a></li>');
                     // create div and header for each subcategory
-                    $("#" + category_id).append('<div id="' + subcategory_id + '_section" class="guide_subcategory_section"><h4 id="' + subcategory_id + '" class="guide_subcategory_title">' + subcategory.subcategory + '</h4><div class="row guide_subcategory_row" id="' + subcategory_id +'_row"></div></div>');
+                    $("#" + category_id + "_category").append('<div id="' + subcategory_id + '_section" class="guide_subcategory_section"><h4 id="' + subcategory_id + '" class="guide_subcategory_title">' + subcategory.subcategory + '</h4><div class="row guide_subcategory_row" id="' + subcategory_id +'_row"></div></div>');
                     // sort guides into appropriate subcategories
                     sortGuides(subcategory_id, subcategory.guides);
                 });                
                 $("#toc_column > #toc_container > ul").append('<div class="toc_separator">');
-
-                $('#' + category_id + "_num_guides").text(num_guides + " guides");
+                resetTotals();
             });
+            // remove guides that have not been put into categories
+            $(".guide_column").not(".guide_subcategory_row .guide_column").remove();
+
             callback();
         });
+    }
+
+    // Reset number of guides to total per category
+    function resetTotals(no_search_text) {
+        $('.category_section').each(function(index, category) {
+            // count number of guide cards in each category
+            var updatedTotal = $(this).find('.guide_column').length;
+            // update num_guides
+            $('#' + $(this).attr('id').replace("_category", "_num_guides")).html(updatedTotal + ' guides');
+        })
     }
     
     // Look for guides that contain every search word
     function filter_guides(key, search_value) {
+        develop_count = 0;
+        build_count = 0;
+        deploy_count = 0;
+
         $('.guide_item').each(function(index, element) {
             var guide_item = $(element);
             var title = guide_item.data('title');
@@ -279,12 +383,29 @@ $(document).ready(function() {
 
             if(matches_all_words) {
                 guide_item.parent().show();
+                var category = guide_item.closest('.category_section').attr('id');
+
+                if (category == 'develop_category') {
+                    develop_count += 1;
+                }
+                if (category == 'build_category') {
+                    build_count += 1;
+                }
+                if (category == 'deploy_category') {
+                    deploy_count += 1;
+                }
                 // Make sure we are not hiding categories when there are visible guide cards
                 guide_item.closest('.container').show();
             } else {
                 guide_item.parent().hide();
             }
         });
+        // console.log("develop count: ", develop_count);
+        // console.log("build count: ", build_count);
+        // console.log("deploy count: ", deploy_count);
+        $('#develop_num_guides').html(develop_count + ' guides');
+        $('#build_num_guides').html(build_count + ' guides');
+        $('#deploy_num_guides').html(deploy_count + ' guides');
     }
 
     function showAllCategories() {
@@ -337,6 +458,7 @@ $(document).ready(function() {
     function processSearch(input_value) {
         if(input_value.length == 0) {
             showAllCategories();
+            resetTotals();
         } else {
             if(input_value.indexOf('tag:') === 0) {
                 var search_value = input_value.substring(4).trim();
@@ -368,6 +490,7 @@ $(document).ready(function() {
         updateSearchUrl(searchInput);
         processSearch(searchInput);        
         showAllCategories();
+        resetTotals();
     });
 
     $('#guide_search_input').on("keypress", function(event) {
@@ -472,16 +595,12 @@ $(document).ready(function() {
 
 
     $('#toc_container').on('click', '.caret_button', function() {
-        console.log("caret clicked");
-        // clicked_id = $(this).prev().text().toLowerCase().replace(/ /g,"_");
-        // console.log("clicked_id: ", clicked_id);
         var showSection = $(this).next().nextUntil('.toc_separator');
         console.log("showSection: ", showSection);
         // var showSection = $(clicked_id + "_row");
         var img = $(this).find('img');
         if (img.attr('src') == "/img/guides_caret_up.svg") {
             // change up caret to down caret
-            console.log("image is up");
             img.attr({"src": "/img/guides_caret_down.svg", "alt": "Collapse", "aria-label": "Collapse"});
 
             // add margin-bottom to num_guides
@@ -492,7 +611,6 @@ $(document).ready(function() {
         }
         else {
             // change down caret to up caret
-            console.log("image is down");
             img.attr({"src": "/img/guides_caret_up.svg", "alt": "Expand", "aria-label": "Expand"});
 
             // remove margin-bottom to num_guides
@@ -503,6 +621,17 @@ $(document).ready(function() {
             showSection.show();
         }
 
+    });
+
+    $("#breadcrumb_hamburger").on('click', function(){
+        if ($("#toc_column").hasClass('in')) {
+            // TOC is expanded
+            $("#guide_column").addClass('expanded');
+        }
+        else {
+            // TOC is closed
+            $("#guide_column").removeClass('expanded');
+        }
     });
 
     getCategories(function() {
@@ -518,9 +647,17 @@ $(document).ready(function() {
 
 $(window).on("load", function(){
     $.ready.then(function(){
-       // Both ready and loaded
-       if (location.hash){
-           $(window).scrollTop($(location.hash).offset().top);
-       }
+        // Both ready and loaded
+        if (location.hash){
+            if (isTabletView()) {
+                var accordion_height = $('#tablet_toc_accordion_container').height();
+                console.log("accordion_height", accordion_height);
+                $(window).scrollTop($(location.hash).offset().top - accordion_height);
+            }
+            else {
+                $(window).scrollTop($(location.hash).offset().top);
+
+            }
+        }
     })
 });

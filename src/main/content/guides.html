@@ -23,13 +23,13 @@ permalink: /guides/
 {% endfor %}
 
 <!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
 {% assign new_guide_count = 0 %}
 {% for guide in all-guides %}
     {% assign date_published = guide.releasedate | date:'%s' %}
     {% assign date_now = 'now' | date:'%s' %}
     {% assign date_difference = date_now | minus: date_published %}
 
-    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
     {% if date_difference < 2592000 %}
         {% assign new_guide_count = new_guide_count | plus: 1 %}
     {% endif %}
@@ -60,10 +60,14 @@ permalink: /guides/
     </div>
 </div>
 
+<div role="menu" id="tablet_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column"><div role="menuitem" id="tablet_toc_accordion"> <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button"> </button> <span>Table of contents</span></div></div>
 
 <!-- TOC -->
-<div id="toc_column">
+<div id="toc_column" class="collapse inline open">
     <div id="toc_container">
+        <div id="tablet_toc_close" data-toggle="collapse" data-target="#toc_column" aria-expanded="true" aria-controls="toc_column">
+            <img src="/img/toc_close_navy.svg" alt="Table of contents close button">
+        </div>
         <ul>
         </ul>
     </div>

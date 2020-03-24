@@ -29,13 +29,13 @@ js:
 {% endfor %}
 
 <!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
 {% assign new_guide_count = 0 %}
 {% for guide in all-guides %}
     {% assign date_published = guide.releasedate | date:'%s' %}
     {% assign date_now = 'now' | date:'%s' %}
     {% assign date_difference = date_now | minus: date_published %}
 
-    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
     {% if date_difference < 2592000 %}
         {% assign new_guide_count = new_guide_count | plus: 1 %}
     {% endif %}
