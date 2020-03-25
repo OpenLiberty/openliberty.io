@@ -309,7 +309,7 @@ $(document).ready(function() {
 
     // Read guide categories from json file and
     function getCategories(callback) {
-        $.getJSON( "../../guides/guides-common/guide_categories.json", function(data) {
+        $.getJSON( "../../guide_categories.json", function(data) {
             $.each(data, function(index, category) {
                 // count number of guides in each category
                 // make lowercase, replace spaces with underscores
@@ -364,7 +364,7 @@ $(document).ready(function() {
             var tokens = search_value.trim().split(/\s+/);
             // Look for guides that contain all the search words.
             var matches_all_words = false;
-            for(var i = 0; i < tokens.length; i++) {
+            for (var i = 0; i < tokens.length; i++) {
                 var word = tokens[i];
                 if (((key & title_key) && title.indexOf(word) != -1)
                 || ((key & description_key) && description.indexOf(word) != -1)
