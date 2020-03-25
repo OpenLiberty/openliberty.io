@@ -31,6 +31,8 @@ $(document).ready(function() {
     var tags_key = 4;
     var search_term_key = 8;
 
+    var nav_banner_bottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
+
     // Remove previous TOC section highlighted and highlight correct step
     function updateTOCHighlighting(id) {
         $('.liSelected').removeClass('liSelected');
@@ -40,9 +42,8 @@ $(document).ready(function() {
 
     // Find the first subcategory header that is visible in the viewport and return the id.
     function getMostVisible($elements) {
-        var topBorder = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
         var scrolledToBottom = $(window).scrollTop() + $(window).height() == $(document).height();
-        if ($(window).scrollTop() <= topBorder) {
+        if ($(window).scrollTop() <= nav_banner_bottom) {
             // Header section is visible, don't look for subcategory headers.
             id = " ";
         }
@@ -103,7 +104,7 @@ $(document).ready(function() {
     }
 
     function handleSectionChanging(event) {
-        var sections = $('.guide_subcategory_title');
+        var sections = $('.guide_subcategory_title:visible');
         // Get the id of the section most in view
         var id = getMostVisible(sections);
         if (id !== " ") {
@@ -125,32 +126,37 @@ $(document).ready(function() {
 
     $(window).on('scroll', function(event) {
         var top_section_height = getVisibleHeightPx($('nav.navbar.navbar-default'), $(window).height()) + getVisibleHeightPx($('#guides_information_container'), $(window).height());
-        var nav_banner_bottom = $('#guides_information_container').position().top + $('#guides_information_container').outerHeight(true);
         var isTOCPositionFixed = ($('#toc_column').css('position') == 'fixed');
         var isAccordionPositionFixed = ($('#tablet_toc_accordion_container').css('position') == 'fixed');
-
+        var accordion_height = $('#tablet_toc_accordion_container').outerHeight();
         // make toc fixed once you scroll past header
         if ($(this).scrollTop() > nav_banner_bottom){
             if (isDesktopView()) {
-                $('#toc_container').css({'height': 'calc(100vh)'});
+                $('#toc_container').css({'height': 'calc(100%)'});
                 if (!isTOCPositionFixed) {
                     $('#toc_column').css({'position': 'fixed', 'top': '0px'});
                 }
             }
             if (isTabletView()) {
+                if (!isTOCPositionFixed) {
+                    $('#toc_column').css({'position': 'fixed', 'top': accordion_height + 'px'});
+                }
                 if (!isAccordionPositionFixed) {
                     $('#tablet_toc_accordion_container').css({'position': 'fixed', 'top': '0px'});
                 }
             }
         }
-        if ($(this).scrollTop() < nav_banner_bottom){
+        if ($(this).scrollTop() <= nav_banner_bottom){
             if (isDesktopView()) {
-                $('#toc_container').css({'height': 'calc(100vh - ' + top_section_height + 'px)'});
+                $('#toc_container').css({'height': 'calc(100% - ' + top_section_height + 'px)'});
                 if (isTOCPositionFixed){
                     $('#toc_column').css({'position': 'static', 'top': '0px'});
                 }
             }
             if (isTabletView()) {
+                if (isTOCPositionFixed){
+                    $('#toc_column').css({'position': 'absolute', 'top': 'auto'});
+                }
                 if (isAccordionPositionFixed){
                     $('#tablet_toc_accordion_container').css({'position': 'static', 'top': '0px'});
                 }
@@ -224,7 +230,6 @@ $(document).ready(function() {
                 $(clicked_id + "_section").append(showSection);
                 showSection.hide();
             }
-
         }
 
         if (isTabletView()) {
@@ -240,14 +245,10 @@ $(document).ready(function() {
     });
 
     $(window).on('hashchange', function(e) {
-        console.log('hash changed');
         if (isTabletView()) {
             var accordion_height = $('#tablet_toc_accordion_container').height();
             $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
             $("html, body").animate({ scrollTop: $(window.location.hash).offset().top - accordion_height}, 500);
-        }
-        else {
-            console.log('not tablet view');
         }
     } );
 
@@ -380,9 +381,8 @@ $(document).ready(function() {
                     break;
                 }
             }
-
-            if(matches_all_words) {
-                guide_item.parent().show();
+            if (matches_all_words) {
+                guide_item.parent().removeClass('hidden_guide');
                 var category = guide_item.closest('.category_section').attr('id');
 
                 if (category == 'develop_category') {
@@ -397,12 +397,9 @@ $(document).ready(function() {
                 // Make sure we are not hiding categories when there are visible guide cards
                 guide_item.closest('.container').show();
             } else {
-                guide_item.parent().hide();
+                guide_item.parent().addClass('hidden_guide');
             }
         });
-        // console.log("develop count: ", develop_count);
-        // console.log("build count: ", build_count);
-        // console.log("deploy count: ", deploy_count);
         $('#develop_num_guides').html(develop_count + ' guides');
         $('#build_num_guides').html(build_count + ' guides');
         $('#deploy_num_guides').html(deploy_count + ' guides');
@@ -413,21 +410,28 @@ $(document).ready(function() {
         $('.guide_category_title').show();
         $('.guide_subcategory_section').show();
         $('.guide_subcategory_title').show();
-        $('.guide_column').show();
+        $('#toc_container ul li a').removeClass('disabled');
+        $('.guide_column').removeClass('hidden_guide');
     }
 
     // hide and show categories based on whether or not there are search results in that category
     function updateVisibleCategories() {
         // iterate over subcategories and determine if all the guide cards are hidden
         $('.guide_subcategory_row').each(function(index, row) {
-            if($(this).children(':visible').length == 0) {
+            var id = $(this).prev().attr('id');
+            var anchor = $("#toc_container a[href='#" + id + "']");
+            if($(this).children().not('.hidden_guide').length == 0) {
                 // all guide cards hidden in subcategory. Hide subcategory title
                 $(this).prev().hide();
+                anchor.addClass('disabled');
+                anchor.parent().css('cursor', 'not-allowed');
+                // anchor.attr("disabled", "disabled");
             }
             else {
                 // visible guide cards found in subcategory. Show subcategory title
                 if ($(this).prev().is(":hidden")) {
                     $(this).prev().show();
+                    anchor.removeClass('disabled');
                 }
             }
         })
@@ -596,7 +600,6 @@ $(document).ready(function() {
 
     $('#toc_container').on('click', '.caret_button', function() {
         var showSection = $(this).next().nextUntil('.toc_separator');
-        console.log("showSection: ", showSection);
         // var showSection = $(clicked_id + "_row");
         var img = $(this).find('img');
         if (img.attr('src') == "/img/guides_caret_up.svg") {
@@ -651,7 +654,6 @@ $(window).on("load", function(){
         if (location.hash){
             if (isTabletView()) {
                 var accordion_height = $('#tablet_toc_accordion_container').height();
-                console.log("accordion_height", accordion_height);
                 $(window).scrollTop($(location.hash).offset().top - accordion_height);
             }
             else {
