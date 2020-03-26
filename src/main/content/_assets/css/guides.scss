@@ -248,7 +248,7 @@ $blue-grey-color: #5d6a8e;
 
 #toc_container {
     height: calc(100vh - 281px);
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
 
     ul {
@@ -302,7 +302,14 @@ $blue-grey-color: #5d6a8e;
     display: none;
 }
 
+.toc_title_container {
+    font-family: "Asap", Trebuchet MS, Helvetica, Arial;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
 .toc_title {
+    display: inline-block;
     font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
     font-size: 14px;
     color: #313653;
@@ -310,13 +317,17 @@ $blue-grey-color: #5d6a8e;
     line-height: 26px;
     padding-left: 34px;
     text-transform: uppercase;
-}
-
-.caret_button {
-    display: none;
+    margin: 0px;
 }
 
 .num_guides {
+    display: inline-block;
+    font-size: 12px;
+    margin: 0px;
+    padding-left: 8px;
+}
+
+.caret_button {
     display: none;
 }
 
@@ -506,11 +517,13 @@ $blue-grey-color: #5d6a8e;
         }
     }
 
-    .toc_title {
+    .toc_title_container {
         background-color: #dee1e8;
-        font-family: "Asap", Trebuchet MS, Helvetica, Arial;
-        margin: 0px;
         padding-top: 10px;
+    }
+
+    .toc_title {
+        font-family: "Asap", Trebuchet MS, Helvetica, Arial;
         text-transform: capitalize;
     }
 
@@ -519,16 +532,6 @@ $blue-grey-color: #5d6a8e;
         float: right;
         border: none;
         background: none;
-        margin-top: -14px;
-    }
-
-    .num_guides {
-        display: block;
-        background-color: #dee1e8;
-        padding-left: 34px;
-        padding-top: 5px;
-        padding-bottom: 10px;
-        font-size: 12px;
     }
 
     .guide_item {

@@ -315,7 +315,7 @@ $(document).ready(function() {
                 // make lowercase, replace spaces with underscores
                 category_id = category.category_name.toLowerCase().replace(/ /g,"_");
                 // add categories to TOC 
-                $("#toc_column > #toc_container > ul").append('<h1 class="toc_title">' + category.category_name + '</h1><button class="caret_button"><img src="/img/guides_caret_up.svg" alt="Collapse" aria-label="Collapse"></button><div id="' + category_id + '_num_guides" class="num_guides"></div>');
+                $("#toc_column > #toc_container > ul").append('<div class="toc_title_container"><h1 class="toc_title">' + category.category_name + '</h1><p id="' + category_id + '_num_guides" class="num_guides"></p><button class="caret_button"><img src="/img/guides_caret_up.svg" alt="Collapse" aria-label="Collapse"></button></div>');
                 // create div and header for each category
                 $("#guides_container").append('<div id="' + category_id + '_category" class="category_section"><h3 class="guide_category_title">' + category.title + '</h3></div>');
                 $.each(category.subcategories, function(j, subcategory) {
@@ -329,31 +329,29 @@ $(document).ready(function() {
                     sortGuides(subcategory_id, subcategory.guides);
                 });                
                 $("#toc_column > #toc_container > ul").append('<div class="toc_separator">');
-                resetTotals();
             });
             // remove guides that have not been put into categories
             $(".guide_column").not(".guide_subcategory_row .guide_column").remove();
-
+            updateTotals();
             callback();
         });
     }
 
     // Reset number of guides to total per category
-    function resetTotals(no_search_text) {
+    function updateTotals(no_search_text) {
         $('.category_section').each(function(index, category) {
-            // count number of guide cards in each category
-            var updatedTotal = $(this).find('.guide_column').length;
+            // count number of guide cards visible in each category
+            var count = $(this).find('.guide_column').not('.hidden_guide').length;
+            // Count total number of guides per category (including hidden ones)
+            var total = $(this).find('.guide_column').length;
+
             // update num_guides
-            $('#' + $(this).attr('id').replace("_category", "_num_guides")).html(updatedTotal + ' guides');
+            $('#' + $(this).attr('id').replace("_category", "_num_guides")).html('(' + count + '/' + total + ' guides)');
         })
     }
     
     // Look for guides that contain every search word
     function filter_guides(key, search_value) {
-        develop_count = 0;
-        build_count = 0;
-        deploy_count = 0;
-
         $('.guide_item').each(function(index, element) {
             var guide_item = $(element);
             var title = guide_item.data('title');
@@ -383,26 +381,12 @@ $(document).ready(function() {
             }
             if (matches_all_words) {
                 guide_item.parent().removeClass('hidden_guide');
-                var category = guide_item.closest('.category_section').attr('id');
-
-                if (category == 'develop_category') {
-                    develop_count += 1;
-                }
-                if (category == 'build_category') {
-                    build_count += 1;
-                }
-                if (category == 'deploy_category') {
-                    deploy_count += 1;
-                }
                 // Make sure we are not hiding categories when there are visible guide cards
                 guide_item.closest('.container').show();
             } else {
                 guide_item.parent().addClass('hidden_guide');
             }
         });
-        $('#develop_num_guides').html(develop_count + ' guides');
-        $('#build_num_guides').html(build_count + ' guides');
-        $('#deploy_num_guides').html(deploy_count + ' guides');
     }
 
     function showAllCategories() {
@@ -467,7 +451,6 @@ $(document).ready(function() {
     function processSearch(input_value) {
         if(input_value.length == 0) {
             showAllCategories();
-            resetTotals();
         } else {
             if(input_value.indexOf('tag:') === 0) {
                 var search_value = input_value.substring(4).trim();
@@ -476,7 +459,8 @@ $(document).ready(function() {
                 filter_guides(title_key | description_key | tags_key | search_term_key, input_value);
             }
             updateVisibleCategories();
-        }        
+        }
+        updateTotals();
     }
 
 
@@ -499,7 +483,7 @@ $(document).ready(function() {
         updateSearchUrl(searchInput);
         processSearch(searchInput);        
         showAllCategories();
-        resetTotals();
+        updateTotals();
     });
 
     $('#guide_search_input').on("keypress", function(event) {
@@ -604,7 +588,7 @@ $(document).ready(function() {
 
 
     $('#toc_container').on('click', '.caret_button', function() {
-        var showSection = $(this).next().nextUntil('.toc_separator');
+        var showSection = $(this).parent().nextUntil('.toc_separator');
         // var showSection = $(clicked_id + "_row");
         var img = $(this).find('img');
         if (img.attr('src') == "/img/guides_caret_up.svg") {
@@ -612,7 +596,7 @@ $(document).ready(function() {
             img.attr({"src": "/img/guides_caret_down.svg", "alt": "Collapse", "aria-label": "Collapse"});
 
             // add margin-bottom to num_guides
-            $(this).next().css('margin-bottom', '4px');
+            $(this).parent().css('margin-bottom', '4px');
 
             // hide guides section
             showSection.hide();
@@ -622,7 +606,7 @@ $(document).ready(function() {
             img.attr({"src": "/img/guides_caret_up.svg", "alt": "Expand", "aria-label": "Expand"});
 
             // remove margin-bottom to num_guides
-            $(this).next().css('margin-bottom', '0px');
+            $(this).parent().css('margin-bottom', '0px');
 
 
             // show guides section
