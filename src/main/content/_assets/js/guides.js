@@ -132,7 +132,7 @@ $(document).ready(function() {
         // make toc fixed once you scroll past header
         if ($(this).scrollTop() > nav_banner_bottom){
             if (isDesktopView()) {
-                $('#toc_container').css({'height': 'calc(100%)'});
+                $('#toc_container').css({'height': 'calc(100vh)'});
                 if (!isTOCPositionFixed) {
                     $('#toc_column').css({'position': 'fixed', 'top': '0px'});
                 }
@@ -148,7 +148,7 @@ $(document).ready(function() {
         }
         if ($(this).scrollTop() <= nav_banner_bottom){
             if (isDesktopView()) {
-                $('#toc_container').css({'height': 'calc(100% - ' + top_section_height + 'px)'});
+                $('#toc_container').css({'height': 'calc(100vh - ' + top_section_height + 'px)'});
                 if (isTOCPositionFixed){
                     $('#toc_column').css({'position': 'static', 'top': '0px'});
                 }
@@ -411,6 +411,8 @@ $(document).ready(function() {
         $('.guide_subcategory_section').show();
         $('.guide_subcategory_title').show();
         $('#toc_container ul li a').removeClass('disabled');
+        $('#toc_container ul li').removeAttr("title");
+        $('#toc_container ul li').css('cursor', 'auto');
         $('.guide_column').removeClass('hidden_guide');
     }
 
@@ -424,7 +426,8 @@ $(document).ready(function() {
                 // all guide cards hidden in subcategory. Hide subcategory title
                 $(this).prev().hide();
                 anchor.addClass('disabled');
-                anchor.parent().css('cursor', 'not-allowed');
+                anchor.parent().attr('title', 'No guides matching search.');
+                anchor.parent().css('cursor', 'text');
                 // anchor.attr("disabled", "disabled");
             }
             else {
@@ -432,6 +435,8 @@ $(document).ready(function() {
                 if ($(this).prev().is(":hidden")) {
                     $(this).prev().show();
                     anchor.removeClass('disabled');
+                    anchor.parent().removeAttr("title");
+                    anchor.parent().css('cursor', 'auto');
                 }
             }
         })
