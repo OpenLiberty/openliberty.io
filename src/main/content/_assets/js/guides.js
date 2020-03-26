@@ -317,14 +317,14 @@ $(document).ready(function() {
                 // add categories to TOC 
                 $("#toc_column > #toc_container > ul").append('<div class="toc_title_container"><h1 class="toc_title">' + category.category_name + '</h1><p id="' + category_id + '_num_guides" class="num_guides"></p><button class="caret_button"><img src="/img/guides_caret_up.svg" alt="Collapse" aria-label="Collapse"></button></div>');
                 // create div and header for each category
-                $("#guides_container").append('<div id="' + category_id + '_category" class="category_section"><h3 class="guide_category_title">' + category.title + '</h3></div>');
+                $("#guides_container").append('<div id="' + category_id + '_category" class="category_section"><h3 class="guide_category_title">' + category.category_title + '</h3></div>');
                 $.each(category.subcategories, function(j, subcategory) {
                     // make lowercase, replace spaces with underscores
-                    subcategory_id = subcategory.subcategory.toLowerCase().replace(/ /g,"_");
+                    subcategory_id = subcategory.subcategory_name.toLowerCase().replace(/ /g,"_");
                     // add subcategories to TOC
-                    $("#toc_column > #toc_container > ul").append('<li><a href="#' + subcategory_id + '"><img src="/img/guides_gray_plus.svg" alt="Expand" aria-label="Expand">' + subcategory.subcategory + '</a></li>');
+                    $("#toc_column > #toc_container > ul").append('<li><a href="#' + subcategory_id + '"><img src="/img/guides_gray_plus.svg" alt="Expand" aria-label="Expand">' + subcategory.subcategory_name + '</a></li>');
                     // create div and header for each subcategory
-                    $("#" + category_id + "_category").append('<div id="' + subcategory_id + '_section" class="guide_subcategory_section"><h4 id="' + subcategory_id + '" class="guide_subcategory_title">' + subcategory.subcategory + '</h4><div class="row guide_subcategory_row" id="' + subcategory_id +'_row"></div></div>');
+                    $("#" + category_id + "_category").append('<div id="' + subcategory_id + '_section" class="guide_subcategory_section"><h4 id="' + subcategory_id + '" class="guide_subcategory_title">' + subcategory.subcategory_name + '</h4><div class="row guide_subcategory_row" id="' + subcategory_id +'_row"></div></div>');
                     // sort guides into appropriate subcategories
                     sortGuides(subcategory_id, subcategory.guides);
                 });                
