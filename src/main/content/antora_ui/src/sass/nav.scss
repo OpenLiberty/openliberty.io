@@ -63,6 +63,7 @@ html.is-clipped--nav {
   display: flex;
   flex-direction: column;
   height: var(--nav-panel-height);
+  top: var(--drawer-height);
 }
 
 @media screen and (min-width: 1024px) {
@@ -80,7 +81,7 @@ html.is-clipped--nav {
   background: rgba(0, 0, 0, 0.5);
   display: block;
   position: absolute;
-  top: 0;
+  top: var(--drawer-height);
   right: 0;
   bottom: 0;
   left: 0;
@@ -185,9 +186,9 @@ html.is-clipped--nav {
   background: var(--nav-background);
   display: flex;
   flex-direction: column;
-  position: absolute;
+  // position: absolute;
   right: 0;
-  bottom: 0;
+  top: 0;
   left: 0;
   max-height: calc(50% + var(--drawer-height));
 }
@@ -204,6 +205,12 @@ html.is-clipped--nav {
   cursor: pointer;
   line-height: 1;
   height: var(--drawer-height);
+
+  color: #1A1B31;
+  border: 3px solid #ABD155;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
 }
 
 .nav-panel-explore .context .version {
