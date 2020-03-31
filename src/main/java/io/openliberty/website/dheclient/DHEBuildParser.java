@@ -135,7 +135,7 @@ public class DHEBuildParser {
 	 * should NOT schedule a new job. The first job's Future should be returned to
 	 * the second thread.
 	 */
-	private synchronized Future<LastUpdate> scheduleAsyncUpdate() {
+	public synchronized Future<LastUpdate> scheduleAsyncUpdate() {
 		if (scheduledUpdate == null) {
 			scheduledUpdate = exec.submit(new UpdateBuildData());
 		}
