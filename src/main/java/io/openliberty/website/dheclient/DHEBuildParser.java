@@ -43,7 +43,9 @@ public class DHEBuildParser {
 	@Inject
 	private DHEClient dheClient;
 
-	private final ExecutorService exec = new ForkJoinPool();
+	@Inject
+	private ExecutorService exec;
+
 	private final LastUpdate lastUpdate = new LastUpdate();
 
 	private volatile BuildData buildData = new BuildData(new LatestReleases(), new BuildLists());
@@ -57,6 +59,7 @@ public class DHEBuildParser {
 	/** Allow for unittest injection */
 	public DHEBuildParser(DHEClient client) {
 		dheClient = client;
+		exec = new ForkJoinPool();
 	}
 
 	public LastUpdate getLastUpdate() {
@@ -137,7 +140,7 @@ public class DHEBuildParser {
 	 */
 	public synchronized Future<LastUpdate> scheduleAsyncUpdate() {
 		if (scheduledUpdate == null) {
-			scheduledUpdate = exec.submit(new UpdateBuildData());
+			scheduledUpdate = submit(new UpdateBuildData());
 		}
 		if (logger.isLoggable(Level.FINER)) {
 			logger.log(Level.FINE, "scheduleAsyncUpdate()", scheduledUpdate);
@@ -149,6 +152,10 @@ public class DHEBuildParser {
 		scheduledUpdate = null;
 	}
 
+	private <T> Future<T> submit(Callable<T> c) {
+		return exec.submit(c);
+	}
+
 	class UpdateBuildData implements Callable<LastUpdate> {
 
 		@Override
@@ -158,13 +165,15 @@ public class DHEBuildParser {
             }
 			lastUpdate.markUpdateAttempt();
 
-			Future<List<BuildInfo>> runtimeReleases = exec.submit(
+			System.out.println("Starting to process");
+
+			Future<List<BuildInfo>> runtimeReleases = submit(
 					new RetrieveBuildList(Constants.DHE_RUNTIME_PATH_SEGMENT, Constants.DHE_RELEASE_PATH_SEGMENT));
-			Future<List<BuildInfo>> runtimeNightly = exec.submit(
+			Future<List<BuildInfo>> runtimeNightly = submit(
 					new RetrieveBuildList(Constants.DHE_RUNTIME_PATH_SEGMENT, Constants.DHE_NIGHTLY_PATH_SEGMENT));
-			Future<List<BuildInfo>> toolsReleases = exec.submit(
+			Future<List<BuildInfo>> toolsReleases = submit(
 					new RetrieveBuildList(Constants.DHE_TOOLS_PATH_SEGMENT, Constants.DHE_RELEASE_PATH_SEGMENT));
-			Future<List<BuildInfo>> toolsNightly = exec.submit(
+			Future<List<BuildInfo>> toolsNightly = submit(
 					new RetrieveBuildList(Constants.DHE_TOOLS_PATH_SEGMENT, Constants.DHE_NIGHTLY_PATH_SEGMENT));
 
 			List<BuildInfo> updatedRuntimeReleases = getSafe(runtimeReleases);
@@ -201,6 +210,7 @@ public class DHEBuildParser {
 			if (logger.isLoggable(Level.FINER)) {
 				logger.log(Level.FINE, "lastUpdate=", lastUpdate.asJsonObject());
 			}
+			System.out.println("Processed");
 			return lastUpdate;
 		}
 
@@ -368,7 +378,7 @@ public class DHEBuildParser {
 					List<Future<BuildInfo>> buildInfoFutures = new ArrayList<>();
 					for (JsonValue value : (JsonArray) versionsObject) {
 						if (value instanceof JsonString) {
-							buildInfoFutures.add(exec.submit(new RetrieveBuildInfo(artifactPath, buildTypePath,
+							buildInfoFutures.add(submit(new RetrieveBuildInfo(artifactPath, buildTypePath,
 									((JsonString) value).getString())));
 						}
 					}

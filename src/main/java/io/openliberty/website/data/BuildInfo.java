@@ -58,11 +58,7 @@ public class BuildInfo {
 			obj.add(Constants.TESTS_LOG, testLog);
 		}
 		if (packageLocations != null) {
-			JsonArrayBuilder array = Json.createArrayBuilder();
-			for (String pkgLoc : packageLocations) {
-				array.add(pkgLoc);
-			}
-			obj.add(Constants.PACKAGE_LOCATIONS, array.build());
+			obj.add(Constants.PACKAGE_LOCATIONS, Json.createArrayBuilder(packageLocations).build());
 		}
 		return obj.build();
 	}
