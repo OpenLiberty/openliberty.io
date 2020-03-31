@@ -136,6 +136,7 @@ html.is-clipped--nav {
 
 .nav-item {
   list-style: none;
+  color: #5D6A8E;
 }
 
 /* adds some breathing room below a nested list */
@@ -165,21 +166,29 @@ html.is-clipped--nav {
     width: calc(var(--nav-line-height) * 1em);
     margin-top: -0.05em;
     margin-left: calc(var(--nav-line-height) * -1em);
-    &:hover {
-      // Turns orange
+    // &:hover {
+    //   // Turns orange
+    //   background: transparent url(../img/all_guides_plus.svg) no-repeat center / 50%;
+    // }
+  }
+  &:hover {
+    & .nav-item-toggle {
       background: transparent url(../img/all_guides_plus.svg) no-repeat center / 50%;
+    }
+    & .nav-text {
+      color: #f4914d;
     }
   }
 }
 
-
-
-.nav-item.is-active > .nav-item-toggle {
-  // transform: rotate(90deg);
-  background: transparent url(../img/minus.svg) no-repeat center / 50%;
+.nav-item.is-active {
+  & .nav-item-toggle{
+    background: transparent url(../img/minus.svg) no-repeat center / 50%;
+  }
   &:hover {
-    // Turns orange
-    background: transparent url(../img/all_guides_minus.svg) no-repeat center / 50%;
+    & .nav-item-toggle {
+      background: transparent url(../img/all_guides_minus.svg) no-repeat center / 50%;
+    }
   }
 }
 
