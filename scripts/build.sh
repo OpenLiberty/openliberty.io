@@ -4,7 +4,12 @@
 sudo apt-get update
 sudo apt-get install nodejs python3-bs4 libgdbm-dev libncurses5-dev automake libtool bison libffi-dev -y
 
-gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+SCRIPT_DIR=$(dirname $0)
+
+# Import the signing keys used for rvm to gpg for verification
+cat $SCRIPT_DIR/gpg/mpapis.asc | gpg --import -
+cat $SCRIPT_DIR/gpg/pkuczynski.asc | gpg --import -
+
 curl -sSL https://get.rvm.io | bash -s stable
 source /usr/local/rvm/scripts/rvm
 rvm requirements
@@ -16,5 +21,5 @@ echo "Default locale:"
 echo `locale`
 export LANG="en_US.UTF-8"
 
-SCRIPT_DIR=$(dirname $0)
+
 source $SCRIPT_DIR/build_jekyll_maven.sh
