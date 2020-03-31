@@ -41,14 +41,13 @@ $(document).ready(function() {
     }
 
     // Find the first subcategory header that is visible in the viewport and return the id.
-    function getMostVisible($elements) {
+    function getFirstVisibleTitle($elements) {
         var scrolledToBottom = $(window).scrollTop() + $(window).height() == $(document).height();
         if ($(window).scrollTop() <= nav_banner_bottom) {
             // Header section is visible, don't look for subcategory headers.
             id = " ";
         }
         else {
-            var visibleSectionCount = 0;
             var lastDiv = $elements.last();
             highlightElement = $(location.hash);
             // make sure last section gets highlighted (since it will never be first visible subcategory header)
@@ -58,14 +57,9 @@ $(document).ready(function() {
             else {
                 // iterate over subcategory headers and get first on screen
                 $elements.each(function(index, element) {
-                    var visiblePx = getVisibleHeightPx($(this), $(window).height());
-                    // check if element is on screen
-                    if (visiblePx > 0) {
-                        if (visibleSectionCount == 0) {
-                            // found first subcategory header that is visible on screen
-                            highlightElement = this;
-                        }
-                        visibleSectionCount += 1;
+                    if ($(this).isInViewport()) {
+                        highlightElement = $(this);
+                        return false; // break out of loop because we found first title in viewport. No need to keep looking.
                     }
                 })
             }
@@ -74,6 +68,16 @@ $(document).ready(function() {
 
         return id;
     }
+
+    $.fn.isInViewport = function() {
+        var elementTop = $(this).offset().top;
+        var elementBottom = elementTop + $(this).outerHeight();
+    
+        var viewportTop = $(window).scrollTop();
+        var viewportBottom = viewportTop + $(window).height();
+    
+        return elementBottom > viewportTop && elementTop < viewportBottom;
+    };
 
     function getVisibleHeightPx($element, viewportHeight) {
         var rect = $element.get(0).getBoundingClientRect(),
@@ -106,7 +110,7 @@ $(document).ready(function() {
     function handleSectionChanging(event) {
         var sections = $('.guide_subcategory_title:visible');
         // Get the id of the section most in view
-        var id = getMostVisible(sections);
+        var id = getFirstVisibleTitle(sections);
         if (id !== " ") {
             var windowHash = window.location.hash;
             var scrolledToHash = id === "" ? id : '#' + id;            
@@ -119,20 +123,68 @@ $(document).ready(function() {
         else {
             newPath = id;
         }
-        // add hash to url and update TOC highlighting
+        // Add hash to url and update TOC highlighting
         history.replaceState(null, null, newPath);
         updateTOCHighlighting(id);
     }
+
+    var width = window.outerWidth;
+    $(window).on('resize', function() {
+        // going from mobile to tablet view
+        if (width < mobileBreakpoint && $(this).width() > mobileBreakpoint) {
+            // look for guides that have been moved to the toc on mobile view and move them back to their place in the guides section
+            $('#toc_container ul').find('.guide_subcategory_row').each(function() {
+                // move subcategory row back to it's section
+                $("#" + $(this).attr('id').replace("row", "section")).append($(this));
+                $(this).show(); // show subcategory row in case it was hidden on mobile when it's category was collapsed
+            });
+
+            // Add collapsed sections back to toc
+            $('#toc_container ul').find('li:hidden').show();
+            $('.toc_title_container').css('margin-bottom', "0");
+
+            // Override toc height set in tablet or desktop view
+            $('#toc_container').css('height', '100vh');
+        }
+
+        // going from tablet to mobile view
+        if (width > mobileBreakpoint && $(this).width() < mobileBreakpoint) {
+            // look for minus sign (previously opened subcategory) and move guides back to that place in toc
+            $('#toc_container ul').find('img[src$="guides_gray_minus.svg"]').each(function() {
+                expanded_id = $(this).parent().attr('href').toLowerCase().replace(/ /g,"_");
+                var showSection = $(expanded_id + "_row");
+                $(this).parent().parent().after(showSection);
+            });
+
+            // look for caret facing down (previsouly collapsed category) and hide those subcategories again
+            // var showSection = $(this).parent().nextUntil('.toc_separator');
+            $('#toc_container ul').find('img[src$="guides_caret_down.svg"]').each(function() {
+                var showSection = $(this).parent().parent().nextUntil('.toc_separator');
+                showSection.hide();
+                $(this).parent().parent().css('margin-bottom', '4px');
+            });
+
+            // Override toc_container height set on mobile or desktop view
+            $('#toc_container').css('height', 'auto');
+        }
+
+        // update width with new width after resizing
+        if ($(this).width() != width) {
+            width = $(this).width();
+        }
+    });
 
     $(window).on('scroll', function(event) {
         var top_section_height = getVisibleHeightPx($('nav.navbar.navbar-default'), $(window).height()) + getVisibleHeightPx($('#guides_information_container'), $(window).height());
         var isTOCPositionFixed = ($('#toc_column').css('position') == 'fixed');
         var isAccordionPositionFixed = ($('#tablet_toc_accordion_container').css('position') == 'fixed');
         var accordion_height = $('#tablet_toc_accordion_container').outerHeight();
+        var nav_banner_bottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
+
         // make toc fixed once you scroll past header
         if ($(this).scrollTop() > nav_banner_bottom){
             if (isDesktopView()) {
-                $('#toc_container').css({'height': 'calc(100vh)'});
+                $('#toc_container').height($('footer').offset().top + 25 - $('#toc_container').offset().top);
                 if (!isTOCPositionFixed) {
                     $('#toc_column').css({'position': 'fixed', 'top': '0px'});
                 }
@@ -168,49 +220,58 @@ $(document).ready(function() {
         }
     });
 
-    // function accessContentsFromHash(hash, callback) {
-    //     console.log("accessContentFromHash called");
-    //     var $focusSection = $(hash);
-    //     console.log("focusSection: ", $focusSection);
-    //     if ($focusSection.length > 0) {
-    //         console.log("focus section found");
-    //         updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
-    //         var scrollSpot = $focusSection.offset().top;
-    //         console.log("initial scrollSpot: ", scrollSpot)
-    //         if (isTabletView()) {
-    //             console.log('tablet view. updating scroll spot');
-    //             scrollSpot -= $('#tablet_toc_accordion_container').height();
-    //         }
-    //         console.log("scrollSpot = ", scrollSpot);
-    //         $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
-    //         $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
-    //             // Callback after animation.  Change the focus.
-    //             $focusSection.trigger('focus');
-    //             $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again.
-    //             // Check if the section was actually focused
-    //             if ($focusSection.is(":focus")) {
-    //                 if(callback){
-    //                     callback();
-    //                 }
-    //                 return false;
-    //             } else {
-    //                 // Add a tabindex to section header since they aren't focusable.
-    //                 // tabindex = -1 means that the element should be focusable,
-    //                 // but not via sequential keyboard navigation.
-    //                 $focusSection.attr('tabindex', '-1');
-    //                 $focusSection.trigger('focus');
-    //                 if(callback){
-    //                     callback();
-    //                 }
-    //             }
-    //         });
-    //     }
+    window.addEventListener("hashchange", function(e){
+        e.preventDefault();
 
-    // }
+        var hash = location.hash;
+        accessContentsFromHash(hash);
+        // Note: Scrolling to the new content will cause the onScroll method
+        //       above to be invoked.
+    });
+
+    function accessContentsFromHash(hash, callback) {
+        // console.log("accessContentFromHash called");
+        var $focusSection = $(hash);
+        // console.log("focusSection: ", $focusSection);
+        if ($focusSection.length > 0) {
+            // console.log("focus section found");
+            updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
+            var scrollSpot = $focusSection.offset().top;
+            // console.log("initial scrollSpot: ", scrollSpot)
+            if (isTabletView()) {
+                // console.log('tablet view. updating scroll spot');
+                scrollSpot -= $('#tablet_toc_accordion_container').height();
+            }
+            // console.log("scrollSpot = ", scrollSpot);
+            $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
+            $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
+                // Callback after animation.  Change the focus.
+                $focusSection.trigger('focus');
+                $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again.
+                // Check if the section was actually focused
+                if ($focusSection.is(":focus")) {
+                    if(callback){
+                        callback();
+                    }
+                    return false;
+                } else {
+                    // Add a tabindex to section header since they aren't focusable.
+                    // tabindex = -1 means that the element should be focusable,
+                    // but not via sequential keyboard navigation.
+                    $focusSection.attr('tabindex', '-1');
+                    $focusSection.trigger('focus');
+                    if(callback){
+                        callback();
+                    }
+                }
+            });
+        }
+        $('#toc_container').height($('footer').offset().top + 25 - $('#toc_container').offset().top);
+    }
 
     $(document).on('click','#toc_container li > a', function(e) {
+        e.preventDefault();
         if (isMobileView()) {
-            e.preventDefault();
             clicked_id = $(this).attr('href').toLowerCase().replace(/ /g,"_");
             var showSection = $(clicked_id + "_row");
             var img = $(this).find('img');
@@ -220,7 +281,6 @@ $(document).ready(function() {
 
                 // show guides section
                 $(this).parent().after(showSection);
-                showSection.show();
             }
             else {
                 // change minus to plus
@@ -228,17 +288,16 @@ $(document).ready(function() {
 
                 // hide guides section
                 $(clicked_id + "_section").append(showSection);
-                showSection.hide();
             }
         }
 
-        if (isTabletView()) {
-            e.preventDefault();
+        else if (isTabletView()) {
             var accordion_height = $('#tablet_toc_accordion_container').height();
             $("html, body").animate({ scrollTop: $($(this).attr("href")).offset().top - accordion_height }, 500);
         }
 
         else {
+            $("html, body").animate({ scrollTop: $($(this).attr("href")).offset().top}, 500);
             var hash = $(this).attr('href').replace("#", "");
             updateTOCHighlighting(hash);
         }
@@ -338,7 +397,7 @@ $(document).ready(function() {
     }
 
     // Reset number of guides to total per category
-    function updateTotals(no_search_text) {
+    function updateTotals() {
         $('.category_section').each(function(index, category) {
             // count number of guide cards visible in each category
             var count = $(this).find('.guide_column').not('.hidden_guide').length;
@@ -404,11 +463,12 @@ $(document).ready(function() {
     function updateVisibleCategories() {
         // iterate over subcategories and determine if all the guide cards are hidden
         $('.guide_subcategory_row').each(function(index, row) {
-            var id = $(this).prev().attr('id');
-            var anchor = $("#toc_container a[href='#" + id + "']");
+            var subcategory_title_id = $(this).attr('id').replace("_row", "");
+            var anchor = $("#toc_container a[href='#" + subcategory_title_id + "']");
+            var subcategory_title = $('#' + subcategory_title_id);
             if($(this).children().not('.hidden_guide').length == 0) {
                 // all guide cards hidden in subcategory. Hide subcategory title
-                $(this).prev().hide();
+                subcategory_title.hide();
                 anchor.addClass('disabled');
                 anchor.parent().attr('title', 'No guides matching search.');
                 anchor.parent().css('cursor', 'text');
@@ -417,7 +477,7 @@ $(document).ready(function() {
             else {
                 // visible guide cards found in subcategory. Show subcategory title
                 if ($(this).prev().is(":hidden")) {
-                    $(this).prev().show();
+                    subcategory_title.show();
                     anchor.removeClass('disabled');
                     anchor.parent().removeAttr("title");
                     anchor.parent().css('cursor', 'auto');
@@ -435,13 +495,14 @@ $(document).ready(function() {
         })
 
         // check if there are no search results
-        if($('#guides_container').find('.guide_category_title:visible').length == 0) {
+        if ($('#toc_container ul').find('a:not(.disabled)').length == 0) {
             // All categories are hidden. Show no results section
             $('.no_results_section').show();
 
             var search_text = $('#guide_search_input').val();
             $('.search_term').text('"' + search_text + '"');
-        } 
+        }
+        
         else {
             // All categories not hidden. Hide no results section
             $('.no_results_section').hide();
@@ -589,7 +650,6 @@ $(document).ready(function() {
 
     $('#toc_container').on('click', '.caret_button', function() {
         var showSection = $(this).parent().nextUntil('.toc_separator');
-        // var showSection = $(clicked_id + "_row");
         var img = $(this).find('img');
         if (img.attr('src') == "/img/guides_caret_up.svg") {
             // change up caret to down caret
@@ -647,7 +707,7 @@ $(window).on("load", function(){
             }
             else {
                 $(window).scrollTop($(location.hash).offset().top);
-
+                $('#toc_container').height($('footer').offset().top - $('#toc_container').offset().top);
             }
         }
     })
