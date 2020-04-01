@@ -27,9 +27,9 @@ function isDesktopView() {
 function accessContentsFromHash(hash, callback) {
     console.log("accessContentsFromHash called");
     var $focusSection = $(hash);
-    // console.log("focusSection: ", $focusSection);
+    console.log("focusSection: ", $focusSection);
     if ($focusSection.length > 0) {
-        // console.log("focus section found");
+        console.log("focus section found");
         updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
         var scrollSpot = $focusSection.offset().top;
         console.log("initial scrollSpot: ", scrollSpot)
@@ -61,6 +61,7 @@ function accessContentsFromHash(hash, callback) {
                 }
             }
         });
+        programScrolling = true;
     }
     $('#toc_container').height($('footer').offset().top + 25 - $('#toc_container').offset().top);
 }
@@ -79,6 +80,8 @@ $(document).ready(function() {
     var search_term_key = 8;
 
     var nav_banner_bottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
+
+    var programScrolling = false;
 
     // Remove previous TOC section highlighted and highlight correct step
     // function updateTOCHighlighting(id) {
@@ -157,7 +160,7 @@ $(document).ready(function() {
     function handleSectionChanging(event) {
         var sections = $('.guide_subcategory_title:visible');
         // Get the id of the section most in view
-        var id = getFirstVisibleTitle(sections);
+        var id = getFirstVisibleTitle(sections); 
         if (id !== " ") {
             var windowHash = window.location.hash;
             var scrolledToHash = id === "" ? id : '#' + id;            
@@ -273,9 +276,17 @@ $(document).ready(function() {
             }
         }
 
-        if (!isMobileView()) {
-            handleSectionChanging(event);
+        if (!programScrolling) {
+            console.log("user scrolling");
+            if (!isMobileView()) {
+                handleSectionChanging(event);
+            }
         }
+        else {
+            console.log("program scrolling");
+            // programScrolling = false;
+        }
+
     });
 
     window.addEventListener("hashchange", function(e){
@@ -350,23 +361,44 @@ $(document).ready(function() {
             }
         }
 
-        else if (isTabletView()) {
-            var accordion_height = $('#tablet_toc_accordion_container').height();
-            $("html, body").animate({ scrollTop: $($(this).attr("href")).offset().top - accordion_height }, 500);
-        }
+        else  {
+            console.log("click. tablet or desktop view");
+            if (isTabletView()) {
+                var accordion_height = $('#tablet_toc_accordion_container').height();
+            }
+            else {
+                var accordion_height = 0;
+            }
 
-        else {
-            $("html, body").animate({ scrollTop: $($(this).attr("href")).offset().top}, 500);
-            var hash = $(this).attr('href').replace("#", "");
-            updateTOCHighlighting(hash);
+            disable_scroll = true;
+            $('html,body').animate({
+                scrollTop: $(this).offset().top + 1
+            }, function(){
+                disable_scroll = false;
+            });
+
+
+            programScrolling = true;
+            $("html, body").animate({ scrollTop: $($(this).attr("href")).offset().top - accordion_height }, 500, function() {
+                programScrolling = false;
+            });
+
+            var hash = $(this).attr('href');
+            updateTOCHighlighting(hash.replace("#", ""));
+
+            var currentPath = window.location.pathname;
+            var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + hash;
+            history.replaceState(null, null, newPath);
         }
     });
 
     $(window).on('hashchange', function(e) {
+        console.log('hash change');
         if (isTabletView()) {
             var accordion_height = $('#tablet_toc_accordion_container').height();
             $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
             $("html, body").animate({ scrollTop: $(window.location.hash).offset().top - accordion_height}, 500);
+            programScrolling = true;
         }
     } );
 
@@ -772,23 +804,39 @@ $(document).ready(function() {
         init();
     });
     
+    $(window).on("load", function(){
+            // Both ready and loaded
+            if (location.hash){
+                // if (isTabletView()) {
+                //     var accordion_height = $('#tablet_toc_accordion_container').height();
+                //     $(window).scrollTop($(location.hash).offset().top - accordion_height);
+                // }
+                // else {
+                //     $(window).scrollTop($(location.hash).offset().top);
+                //     $('#toc_container').height($('footer').offset().top - $('#toc_container').offset().top);
+                // }
+                var hash = location.hash;
+                accessContentsFromHash(hash);
+            }
+        
+    });
 });
 
 
-$(window).on("load", function(){
-    $.ready.then(function(){
-        // Both ready and loaded
-        if (location.hash){
-            // if (isTabletView()) {
-            //     var accordion_height = $('#tablet_toc_accordion_container').height();
-            //     $(window).scrollTop($(location.hash).offset().top - accordion_height);
-            // }
-            // else {
-            //     $(window).scrollTop($(location.hash).offset().top);
-            //     $('#toc_container').height($('footer').offset().top - $('#toc_container').offset().top);
-            // }
-            var hash = location.hash;
-            accessContentsFromHash(hash);
-        }
-    })
-});
+// $(window).on("load", function(){
+//     $.ready.then(function(){
+//         // Both ready and loaded
+//         if (location.hash){
+//             // if (isTabletView()) {
+//             //     var accordion_height = $('#tablet_toc_accordion_container').height();
+//             //     $(window).scrollTop($(location.hash).offset().top - accordion_height);
+//             // }
+//             // else {
+//             //     $(window).scrollTop($(location.hash).offset().top);
+//             //     $('#toc_container').height($('footer').offset().top - $('#toc_container').offset().top);
+//             // }
+//             var hash = location.hash;
+//             accessContentsFromHash(hash);
+//         }
+//     })
+// });
