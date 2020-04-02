@@ -362,7 +362,6 @@ $(document).ready(function() {
         }
 
         else  {
-            console.log("click. tablet or desktop view");
             if (isTabletView()) {
                 var accordion_height = $('#tablet_toc_accordion_container').height();
             }
@@ -393,7 +392,6 @@ $(document).ready(function() {
     });
 
     $(window).on('hashchange', function(e) {
-        console.log('hash change');
         if (isTabletView()) {
             var accordion_height = $('#tablet_toc_accordion_container').height();
             $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
@@ -692,11 +690,10 @@ $(document).ready(function() {
     }
 
     function init() {
-        num_of_additional_microprofile_guides = getTotal_additional_MP_guides();
 
         var query_string = location.search;
         // Process the url parameters for searching
-        if(query_string.length > 0) {
+        if (query_string.length > 0) {
             var parameters = decodeURI(query_string.substring(1)).split('&');
             var search_value = false;
             var search_key = false;
@@ -717,6 +714,12 @@ $(document).ready(function() {
             var input_value = $('#guide_search_input').val().toLowerCase();
             processSearch(input_value);
         }
+
+        if (location.hash) {
+            var hash = location.hash;
+            accessContentsFromHash(hash);
+        }
+
     }
 
     // Create popover when search bar is focused
@@ -804,22 +807,22 @@ $(document).ready(function() {
         init();
     });
     
-    $(window).on("load", function(){
-            // Both ready and loaded
-            if (location.hash){
-                // if (isTabletView()) {
-                //     var accordion_height = $('#tablet_toc_accordion_container').height();
-                //     $(window).scrollTop($(location.hash).offset().top - accordion_height);
-                // }
-                // else {
-                //     $(window).scrollTop($(location.hash).offset().top);
-                //     $('#toc_container').height($('footer').offset().top - $('#toc_container').offset().top);
-                // }
-                var hash = location.hash;
-                accessContentsFromHash(hash);
-            }
+    // $(window).on("load", function(){
+    //         // Both ready and loaded
+    //         if (location.hash){
+    //             // if (isTabletView()) {
+    //             //     var accordion_height = $('#tablet_toc_accordion_container').height();
+    //             //     $(window).scrollTop($(location.hash).offset().top - accordion_height);
+    //             // }
+    //             // else {
+    //             //     $(window).scrollTop($(location.hash).offset().top);
+    //             //     $('#toc_container').height($('footer').offset().top - $('#toc_container').offset().top);
+    //             // }
+    //             var hash = location.hash;
+    //             accessContentsFromHash(hash);
+    //         }
         
-    });
+    // });
 });
 
 
