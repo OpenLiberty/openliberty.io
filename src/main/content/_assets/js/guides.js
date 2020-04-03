@@ -9,69 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-var mobileBreakpoint = 767.98;
-var tabletBreakpoint = 991.98;
-
-function isMobileView() {
-    return(window.innerWidth <= mobileBreakpoint);
-}
-
-function isTabletView() {
-    return(window.innerWidth <= tabletBreakpoint && window.innerWidth > mobileBreakpoint);
-}
-
-function isDesktopView() {
-    return(window.innerWidth > tabletBreakpoint);
-}
-
-function accessContentsFromHash(hash, callback) {
-    console.log("accessContentsFromHash called");
-    var $focusSection = $(hash);
-    console.log("focusSection: ", $focusSection);
-    if ($focusSection.length > 0) {
-        console.log("focus section found");
-        updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
-        var scrollSpot = $focusSection.offset().top;
-        console.log("initial scrollSpot: ", scrollSpot)
-        if (isTabletView()) {
-            console.log('tablet view. updating scroll spot');
-            scrollSpot -= $('#tablet_toc_accordion_container').height();
-            // scrollSpot -= 80;
-        }
-        console.log("scrollSpot = ", scrollSpot);
-        $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
-        $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
-            // Callback after animation.  Change the focus.
-            $focusSection.trigger('focus');
-            $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again.
-            // Check if the section was actually focused
-            if ($focusSection.is(":focus")) {
-                if(callback){
-                    callback();
-                }
-                return false;
-            } else {
-                // Add a tabindex to section header since they aren't focusable.
-                // tabindex = -1 means that the element should be focusable,
-                // but not via sequential keyboard navigation.
-                $focusSection.attr('tabindex', '-1');
-                $focusSection.trigger('focus');
-                if(callback){
-                    callback();
-                }
-            }
-        });
-        programScrolling = true;
-    }
-    $('#toc_container').height($('footer').offset().top + 25 - $('#toc_container').offset().top);
-}
-
-function updateTOCHighlighting(id) {
-    $('.liSelected').removeClass('liSelected');
-    var anchor = $("#toc_container a[href='#" + id + "']");
-    anchor.parent().addClass('liSelected');
-}
-
 $(document).ready(function() {
 
     var title_key = 1;
@@ -79,19 +16,33 @@ $(document).ready(function() {
     var tags_key = 4;
     var search_term_key = 8;
 
-    var nav_banner_bottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
-
     var programScrolling = false;
 
+    var mobileBreakpoint = 767.98;
+    var tabletBreakpoint = 991.98;
+    
+    function isMobileView() {
+        return(window.innerWidth <= mobileBreakpoint);
+    }
+    
+    function isTabletView() {
+        return(window.innerWidth <= tabletBreakpoint && window.innerWidth > mobileBreakpoint);
+    }
+    
+    function isDesktopView() {
+        return(window.innerWidth > tabletBreakpoint);
+    }
+
     // Remove previous TOC section highlighted and highlight correct step
-    // function updateTOCHighlighting(id) {
-    //     $('.liSelected').removeClass('liSelected');
-    //     var anchor = $("#toc_container a[href='#" + id + "']");
-    //     anchor.parent().addClass('liSelected');
-    // }
+    function updateTOCHighlighting(id) {
+        $('.liSelected').removeClass('liSelected');
+        var anchor = $("#toc_container a[href='#" + id + "']");
+        anchor.parent().addClass('liSelected');
+    }
 
     // Find the first subcategory header that is visible in the viewport and return the id.
     function getFirstVisibleTitle($elements) {
+        var nav_banner_bottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
         var scrolledToBottom = $(window).scrollTop() + $(window).height() == $(document).height();
         if ($(window).scrollTop() <= nav_banner_bottom) {
             // Header section is visible, don't look for subcategory headers.
@@ -161,6 +112,7 @@ $(document).ready(function() {
         var sections = $('.guide_subcategory_title:visible');
         // Get the id of the section most in view
         var id = getFirstVisibleTitle(sections); 
+        console.log("first visible id: ", id);
         if (id !== " ") {
             var windowHash = window.location.hash;
             var scrolledToHash = id === "" ? id : '#' + id;            
@@ -180,8 +132,10 @@ $(document).ready(function() {
 
     var width = window.outerWidth;
     $(window).on('resize', function() {
+        var nav_banner_bottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
+
         // going from mobile to tablet view
-        if (width < mobileBreakpoint && $(this).width() > mobileBreakpoint) {
+        if (width < mobileBreakpoint && $(this).outerWidth() > mobileBreakpoint) {
             // look for guides that have been moved to the toc on mobile view and move them back to their place in the guides section
             $('#toc_container ul').find('.guide_subcategory_row').each(function() {
                 // move subcategory row back to it's section
@@ -202,7 +156,7 @@ $(document).ready(function() {
         }
 
         // going from tablet to mobile view
-        if (width > mobileBreakpoint && $(this).width() < mobileBreakpoint) {
+        if (width > mobileBreakpoint && $(this).outerWidth() < mobileBreakpoint) {
             // look for minus sign (previously opened subcategory) and move guides back to that place in toc
             $('#toc_container ul').find('img[src$="guides_gray_minus.svg"]').each(function() {
                 expanded_id = $(this).parent().attr('href').toLowerCase().replace(/ /g,"_");
@@ -229,9 +183,19 @@ $(document).ready(function() {
 
         }
 
+        // going from desktop to tablet view
+        if (width > tabletBreakpoint && $(this).outerWidth() < tabletBreakpoint) {
+            if ($(window).scrollTop() > nav_banner_bottom) {
+                $('#tablet_toc_accordion_container').css({'position': 'fixed', 'top': '0px'});
+            }
+            else {
+                $('#tablet_toc_accordion_container').css({'position': 'static', 'top': '0px'});
+            }
+        }
+
         // update width with new width after resizing
-        if ($(this).width() != width) {
-            width = $(this).width();
+        if ($(this).outerWidth() != width) {
+            width = $(this).outerWidth();
         }
     });
 
@@ -277,67 +241,48 @@ $(document).ready(function() {
         }
 
         if (!programScrolling) {
-            console.log("user scrolling");
             if (!isMobileView()) {
                 handleSectionChanging(event);
             }
         }
-        else {
-            console.log("program scrolling");
-            // programScrolling = false;
+
+    });
+
+    function accessContentsFromHash(hash, callback) {
+        var $focusSection = $(hash);
+        if ($focusSection.length > 0) {
+            updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
+            var scrollSpot = $focusSection.offset().top;
+            if (isTabletView()) {
+                scrollSpot -= 80; // adjust scrollSpot to account for hamburger menu
+            }
+            $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
+            programScrolling = true;
+            $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
+                // Callback after animation.  Change the focus.
+                $focusSection.trigger('focus');
+                $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again.
+                // Check if the section was actually focused
+                if ($focusSection.is(":focus")) {
+                    if(callback){
+                        callback();
+                    }
+                    return false;
+                } else {
+                    // Add a tabindex to section header since they aren't focusable.
+                    // tabindex = -1 means that the element should be focusable,
+                    // but not via sequential keyboard navigation.
+                    $focusSection.attr('tabindex', '-1');
+                    $focusSection.trigger('focus');
+                    if(callback){
+                        callback();
+                    }
+                }
+                programScrolling = false;
+            });
         }
-
-    });
-
-    window.addEventListener("hashchange", function(e){
-        e.preventDefault();
-
-        var hash = location.hash;
-        accessContentsFromHash(hash);
-        // Note: Scrolling to the new content will cause the onScroll method
-        //       above to be invoked.
-    });
-
-    // function accessContentsFromHash(hash, callback) {
-    //     console.log("accessContentsFromHash called");
-    //     var $focusSection = $(hash);
-    //     // console.log("focusSection: ", $focusSection);
-    //     if ($focusSection.length > 0) {
-    //         // console.log("focus section found");
-    //         updateTOCHighlighting(hash.substring(1));  // Remove the '#' in the hash
-    //         var scrollSpot = $focusSection.offset().top;
-    //         console.log("initial scrollSpot: ", scrollSpot)
-    //         if (isTabletView()) {
-    //             console.log('tablet view. updating scroll spot');
-    //             scrollSpot -= $('#tablet_toc_accordion_container').height();
-    //             // scrollSpot -= 80;
-    //         }
-    //         console.log("scrollSpot = ", scrollSpot);
-    //         $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
-    //         $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
-    //             // Callback after animation.  Change the focus.
-    //             $focusSection.trigger('focus');
-    //             $("body").data('scrolling', false);   // Allow the default window scroll listener to process scrolls again.
-    //             // Check if the section was actually focused
-    //             if ($focusSection.is(":focus")) {
-    //                 if(callback){
-    //                     callback();
-    //                 }
-    //                 return false;
-    //             } else {
-    //                 // Add a tabindex to section header since they aren't focusable.
-    //                 // tabindex = -1 means that the element should be focusable,
-    //                 // but not via sequential keyboard navigation.
-    //                 $focusSection.attr('tabindex', '-1');
-    //                 $focusSection.trigger('focus');
-    //                 if(callback){
-    //                     callback();
-    //                 }
-    //             }
-    //         });
-    //     }
-    //     $('#toc_container').height($('footer').offset().top + 25 - $('#toc_container').offset().top);
-    // }
+        $('#toc_container').height($('footer').offset().top + 25 - $('#toc_container').offset().top);
+    }
 
     $(document).on('click','#toc_container li > a', function(e) {
         e.preventDefault();
@@ -391,23 +336,14 @@ $(document).ready(function() {
         }
     });
 
-    $(window).on('hashchange', function(e) {
-        if (isTabletView()) {
-            var accordion_height = $('#tablet_toc_accordion_container').height();
-            $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
-            $("html, body").animate({ scrollTop: $(window.location.hash).offset().top - accordion_height}, 500);
-            programScrolling = true;
-        }
-    } );
+    $(window).on('hashchange', function(e){
+        e.preventDefault();
 
-    // window.addEventListener("hashchange", function(e){
-    //     e.preventDefault();
-
-    //     var hash = location.hash;
-    //     accessContentsFromHash(hash);
-    //     // Note: Scrolling to the new content will cause the onScroll method
-    //     //       above to be invoked.
-    // });
+        var hash = location.hash;
+        accessContentsFromHash(hash);
+        // Note: Scrolling to the new content will cause the onScroll method
+        //       above to be invoked.
+    });
 
     // Read tags from json file and add tags to data-tags attribute to make tags searchable
     function getTags(callback) {
@@ -595,7 +531,6 @@ $(document).ready(function() {
 
             // if on mobile view, move no results message into toc so it is visible
             if (isMobileView()) {
-                console.log("no search results on mobile. moving no_results_section");
                 $('#toc_container').prepend($('.no_results_section'));
                 $('#toc_container ul').hide();
             }
@@ -682,11 +617,6 @@ $(document).ready(function() {
             history.pushState(null, "", search_value);
             document.activeElement.blur()
         }
-    }
-
-    function getTotal_additional_MP_guides() {
-        var label = $('#additional_microprofile_guides').text();
-        return label.split(' ')[0];
     }
 
     function init() {
@@ -807,39 +737,6 @@ $(document).ready(function() {
         init();
     });
     
-    // $(window).on("load", function(){
-    //         // Both ready and loaded
-    //         if (location.hash){
-    //             // if (isTabletView()) {
-    //             //     var accordion_height = $('#tablet_toc_accordion_container').height();
-    //             //     $(window).scrollTop($(location.hash).offset().top - accordion_height);
-    //             // }
-    //             // else {
-    //             //     $(window).scrollTop($(location.hash).offset().top);
-    //             //     $('#toc_container').height($('footer').offset().top - $('#toc_container').offset().top);
-    //             // }
-    //             var hash = location.hash;
-    //             accessContentsFromHash(hash);
-    //         }
-        
-    // });
 });
 
 
-// $(window).on("load", function(){
-//     $.ready.then(function(){
-//         // Both ready and loaded
-//         if (location.hash){
-//             // if (isTabletView()) {
-//             //     var accordion_height = $('#tablet_toc_accordion_container').height();
-//             //     $(window).scrollTop($(location.hash).offset().top - accordion_height);
-//             // }
-//             // else {
-//             //     $(window).scrollTop($(location.hash).offset().top);
-//             //     $('#toc_container').height($('footer').offset().top - $('#toc_container').offset().top);
-//             // }
-//             var hash = location.hash;
-//             accessContentsFromHash(hash);
-//         }
-//     })
-// });
