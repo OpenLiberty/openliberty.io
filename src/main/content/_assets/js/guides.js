@@ -22,15 +22,15 @@ $(document).ready(function() {
     var tabletBreakpoint = 991.98;
     
     function isMobileView() {
-        return(window.innerWidth <= mobileBreakpoint);
+        return (window.innerWidth <= mobileBreakpoint);
     }
     
     function isTabletView() {
-        return(window.innerWidth <= tabletBreakpoint && window.innerWidth > mobileBreakpoint);
+        return (window.innerWidth <= tabletBreakpoint && window.innerWidth > mobileBreakpoint);
     }
     
     function isDesktopView() {
-        return(window.innerWidth > tabletBreakpoint);
+        return (window.innerWidth > tabletBreakpoint);
     }
 
     // Remove previous TOC section highlighted and highlight correct step
@@ -40,36 +40,30 @@ $(document).ready(function() {
         anchor.parent().addClass('liSelected');
     }
 
-    // Find the first subcategory header that is visible in the viewport and return the id.
+    // Find the first subcategory header that is visible in the viewport and return the id
     function getFirstVisibleTitle($elements) {
-        var nav_banner_bottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
         var scrolledToBottom = $(window).scrollTop() + $(window).height() == $(document).height();
-        if ($(window).scrollTop() <= nav_banner_bottom) {
-            // Header section is visible, don't look for subcategory headers.
-            id = " ";
+        var lastDiv = $elements.last();
+        var highlightElement = $(location.hash);
+        // make sure last section gets highlighted (since it will never be first visible subcategory header)
+        if (scrolledToBottom) {
+            highlightElement = lastDiv;
         }
         else {
-            var lastDiv = $elements.last();
-            highlightElement = $(location.hash);
-            // make sure last section gets highlighted (since it will never be first visible subcategory header)
-            if (scrolledToBottom) {
-                highlightElement = lastDiv;
-            }
-            else {
-                // iterate over subcategory headers and get first on screen
-                $elements.each(function(index, element) {
-                    if ($(this).isInViewport()) {
-                        highlightElement = $(this);
-                        return false; // break out of loop because we found first title in viewport. No need to keep looking.
-                    }
-                })
-            }
-            id = $elements.filter(highlightElement).attr('id');
+            // iterate over subcategory headers and get first on screen
+            $elements.each(function(index, element) {
+                if ($(this).isInViewport()) {
+                    highlightElement = $(this);
+                    return false; // break out of loop because we found first title in viewport. No need to keep looking.
+                }
+            })
         }
+        id = $elements.filter(highlightElement).attr('id');
 
         return id;
     }
 
+    // Determine if an element is in the viewport
     $.fn.isInViewport = function() {
         var elementTop = $(this).offset().top;
         var elementBottom = elementTop + $(this).outerHeight();
@@ -80,7 +74,9 @@ $(document).ready(function() {
         return elementBottom > viewportTop && elementTop < viewportBottom;
     };
 
-    function getVisibleHeightPx($element, viewportHeight) {
+    // Get number of pixels that are visible in viewport for $element
+    function getVisibleHeightPx($element) {
+        var viewportHeight = $(window).height();
         var rect = $element.get(0).getBoundingClientRect(),
             height = rect.bottom - rect.top,
             visible = {
@@ -90,7 +86,7 @@ $(document).ready(function() {
             visiblePx = 0;
 
         if (visible.top && visible.bottom) {
-            // Whole element is visible
+            // whole element is visible
             visiblePx = height;
         } else if (visible.top) {
             visiblePx = viewportHeight - rect.top;
@@ -100,7 +96,7 @@ $(document).ready(function() {
             var absTop = Math.abs(rect.top);
 
             if (absTop < height) {
-                // Part of the element is visible
+                // part of the element is visible
                 visiblePx = height - absTop;
             }
         }
@@ -108,11 +104,8 @@ $(document).ready(function() {
         return visiblePx;
     }
 
-    function handleSectionChanging(event) {
-        var sections = $('.guide_subcategory_title:visible');
-        // Get the id of the section most in view
-        var id = getFirstVisibleTitle(sections); 
-        console.log("first visible id: ", id);
+    // Add hash to url and update TOC highlighting
+    function handleSectionChanging(id) {
         if (id !== " ") {
             var windowHash = window.location.hash;
             var scrolledToHash = id === "" ? id : '#' + id;            
@@ -125,39 +118,70 @@ $(document).ready(function() {
         else {
             newPath = id;
         }
-        // Add hash to url and update TOC highlighting
         history.replaceState(null, null, newPath);
         updateTOCHighlighting(id);
     }
 
+    function fixTOCHeight() {
+        var headerVisibleHeight = getVisibleHeightPx($('nav.navbar.navbar-default')) + getVisibleHeightPx($('#guides_information_container'));
+        var tocHeight = $('#toc_container ul').height();
+        var footerVisibleHeight = getVisibleHeightPx($('footer'));
+        var totalHeight = headerVisibleHeight + tocHeight + footerVisibleHeight;
+        var windowHeight = $(window).height();
+        var headerAndFooterHeight = headerVisibleHeight + footerVisibleHeight;
+
+        if (totalHeight > windowHeight) {
+            $('#toc_container').css({'height': 'calc(100vh - ' + headerAndFooterHeight + 'px)'});
+        }
+        else {
+            $('#toc_container').css({'height': 'auto'});
+        }
+    }
+
     var width = window.outerWidth;
     $(window).on('resize', function() {
-        var nav_banner_bottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
+        var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
+
+        // fix TOC height to account for footer and make it scrollable if necessary
+        if (isDesktopView()) {
+            fixTOCHeight();
+        }
 
         // going from mobile to tablet view
-        if (width < mobileBreakpoint && $(this).outerWidth() > mobileBreakpoint) {
-            // look for guides that have been moved to the toc on mobile view and move them back to their place in the guides section
+        if (width <= mobileBreakpoint && $(this).outerWidth() > mobileBreakpoint && $(this).outerWidth() <= tabletBreakpoint) {
+            // look for guides that have been moved to the TOC on mobile view and move them back to their place in the guides section
             $('#toc_container ul').find('.guide_subcategory_row').each(function() {
                 // move subcategory row back to it's section
                 $("#" + $(this).attr('id').replace("row", "section")).append($(this));
-                $(this).show(); // show subcategory row in case it was hidden on mobile when it's category was collapsed
+                // show subcategory row in case it was hidden on mobile when it's category was collapsed
+                $(this).show();
             });
 
-            // Add collapsed sections back to toc
+            // add collapsed sections back to TOC
             $('#toc_container ul').find('li:hidden').show();
             $('.toc_title_container').css('margin-bottom', "0");
 
-            // If there are no search results, move no_results_section back to guides_container and show toc again
+            // if scrolled past banner, show hamburger menu
+            if ($(window).scrollTop() > navBannerBottom) {
+                $('#tablet_toc_accordion_container').css({'position': 'fixed', 'top': '0px'});
+                $('#toc_column').css({'position': 'fixed', 'top': '41px', 'height': 'auto'});
+            }
+            else {
+                $('#tablet_toc_accordion_container').css({'position': 'static', 'top': '0px'});
+                $('#toc_column').css({'position': 'absolute', 'top': 'auto'});
+            }
+
+            // move no_results_section back to guides_container and show TOC again
             $('#guides_container').prepend($('.no_results_section'));
             $('#toc_container ul').show();
 
-            // Override toc height set in tablet or desktop view
+            // override TOC height set in mobile view
             $('#toc_container').css('height', '100vh');
         }
 
         // going from tablet to mobile view
-        if (width > mobileBreakpoint && $(this).outerWidth() < mobileBreakpoint) {
-            // look for minus sign (previously opened subcategory) and move guides back to that place in toc
+        if (width > mobileBreakpoint && width <= tabletBreakpoint && $(this).outerWidth() <= mobileBreakpoint) {            
+            // look for minus sign (previously opened subcategory) and move guides back to that place in TOC
             $('#toc_container ul').find('img[src$="guides_gray_minus.svg"]').each(function() {
                 expanded_id = $(this).parent().attr('href').toLowerCase().replace(/ /g,"_");
                 var showSection = $(expanded_id + "_row");
@@ -165,34 +189,53 @@ $(document).ready(function() {
             });
 
             // look for caret facing down (previsouly collapsed category) and hide those subcategories again
-            // var showSection = $(this).parent().nextUntil('.toc_separator');
             $('#toc_container ul').find('img[src$="guides_caret_down.svg"]').each(function() {
                 var showSection = $(this).parent().parent().nextUntil('.toc_separator');
                 showSection.hide();
                 $(this).parent().parent().css('margin-bottom', '4px');
             });
 
-            // If there are no search results, move no_results_section back to guides_container
+            // move no_results_section back to guides_container
             $('#toc_container').prepend($('.no_results_section'));
             
-            // Override toc_container height set on mobile or desktop view
+            // reset TOC to how it should appear on mobile
+            $('#toc_column').css({'position': 'static', 'height': 'auto'});
             $('#toc_container').css('height', 'auto');
-
-            // Remove highlighting from TOC
             $('#toc_container').find('li.liSelected').removeClass('liSelected');
-
         }
 
         // going from desktop to tablet view
-        if (width > tabletBreakpoint && $(this).outerWidth() < tabletBreakpoint) {
-            if ($(window).scrollTop() > nav_banner_bottom) {
+        if (width > tabletBreakpoint && $(this).outerWidth() <= tabletBreakpoint && $(this).outerWidth() > mobileBreakpoint) {
+            // if scrolled past banner, show hamburger menu
+            if ($(window).scrollTop() > navBannerBottom) {
                 $('#tablet_toc_accordion_container').css({'position': 'fixed', 'top': '0px'});
+                $('#toc_column').css({'position': 'fixed', 'top': '41px', 'height': 'auto'});
             }
             else {
                 $('#tablet_toc_accordion_container').css({'position': 'static', 'top': '0px'});
+                $('#toc_column').css({'position': 'absolute', 'top': 'auto'});
+            }
+
+            // override toc_container height set on desktop view
+            $('#toc_container').css('height', '100vh');
+        }
+
+        // going from tablet to desktop view
+        if (width <= tabletBreakpoint && width > mobileBreakpoint && $(this).outerWidth() > tabletBreakpoint) {
+            // if scrolled past banner, fix TOC to top
+            if ($(window).scrollTop() > navBannerBottom) {
+                $('#toc_column').css({'position': 'fixed', 'top': '0px'});
+            }
+            else {
+                $('#toc_column').css({'position': 'static', 'top': '0px'});
             }
         }
 
+        // going from desktop to mobile view
+        if (width > tabletBreakpoint && $(this).outerWidth() <= mobileBreakpoint) {
+            $('#toc_column').css({'height': 'auto', 'position': 'static', 'top': '0px'});
+        }
+        
         // update width with new width after resizing
         if ($(this).outerWidth() != width) {
             width = $(this).outerWidth();
@@ -200,32 +243,38 @@ $(document).ready(function() {
     });
 
     $(window).on('scroll', function(event) {
-        var top_section_height = getVisibleHeightPx($('nav.navbar.navbar-default'), $(window).height()) + getVisibleHeightPx($('#guides_information_container'), $(window).height());
         var isTOCPositionFixed = ($('#toc_column').css('position') == 'fixed');
         var isAccordionPositionFixed = ($('#tablet_toc_accordion_container').css('position') == 'fixed');
-        var accordion_height = $('#tablet_toc_accordion_container').outerHeight();
-        var nav_banner_bottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
+        var accordionHeight = $('#tablet_toc_accordion_container').outerHeight();
+        var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
+        
+        // fix TOC height to account for footer and make it scrollable if necessary
+        if (isDesktopView()) {
+            fixTOCHeight();
+        }
 
-        // make toc fixed once you scroll past header
-        if ($(this).scrollTop() > nav_banner_bottom){
+        // make TOC fixed once you scroll past header
+        if ($(this).scrollTop() > navBannerBottom){
             if (isDesktopView()) {
-                $('#toc_container').height($('footer').offset().top + 25 - $('#toc_container').offset().top);
                 if (!isTOCPositionFixed) {
                     $('#toc_column').css({'position': 'fixed', 'top': '0px'});
                 }
             }
             if (isTabletView()) {
                 if (!isTOCPositionFixed) {
-                    $('#toc_column').css({'position': 'fixed', 'top': accordion_height + 'px'});
+                    $('#toc_column').css({'position': 'fixed', 'top': accordionHeight + 'px'});
                 }
                 if (!isAccordionPositionFixed) {
                     $('#tablet_toc_accordion_container').css({'position': 'fixed', 'top': '0px'});
                 }
             }
+            // get the id of the section most in view
+            var id = getFirstVisibleTitle($('.guide_subcategory_title:visible')); 
         }
-        if ($(this).scrollTop() <= nav_banner_bottom){
+
+        // make TOC static once you scroll above header
+        if ($(this).scrollTop() <= navBannerBottom){
             if (isDesktopView()) {
-                $('#toc_container').css({'height': 'calc(100vh - ' + top_section_height + 'px)'});
                 if (isTOCPositionFixed){
                     $('#toc_column').css({'position': 'static', 'top': '0px'});
                 }
@@ -238,11 +287,12 @@ $(document).ready(function() {
                     $('#tablet_toc_accordion_container').css({'position': 'static', 'top': '0px'});
                 }
             }
+            var id = " ";
         }
 
         if (!programScrolling) {
             if (!isMobileView()) {
-                handleSectionChanging(event);
+                handleSectionChanging(id);
             }
         }
 
@@ -308,31 +358,19 @@ $(document).ready(function() {
 
         else  {
             if (isTabletView()) {
-                var accordion_height = $('#tablet_toc_accordion_container').height();
+                var accordionHeight = $('#tablet_toc_accordion_container').height();
             }
             else {
-                var accordion_height = 0;
+                var accordionHeight = 0;
             }
 
-            disable_scroll = true;
-            $('html,body').animate({
-                scrollTop: $(this).offset().top + 1
-            }, function(){
-                disable_scroll = false;
-            });
-
-
             programScrolling = true;
-            $("html, body").animate({ scrollTop: $($(this).attr("href")).offset().top - accordion_height }, 500, function() {
+            $("html, body").animate({ scrollTop: $($(this).attr("href")).offset().top - accordionHeight }, 500, function() {
                 programScrolling = false;
             });
 
-            var hash = $(this).attr('href');
-            updateTOCHighlighting(hash.replace("#", ""));
-
-            var currentPath = window.location.pathname;
-            var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + hash;
-            history.replaceState(null, null, newPath);
+            var id = $(this).attr('href').replace("#", "");
+            handleSectionChanging(id);
         }
     });
 
@@ -345,11 +383,11 @@ $(document).ready(function() {
         //       above to be invoked.
     });
 
-    // Read tags from json file and add tags to data-tags attribute to make tags searchable
+    // Read tags from JSON file and add tags to data-tags attribute to make tags searchable
     function getTags(callback) {
         $.getJSON( "../../guides/guides-common/guide_tags.json", function(data) {
             $.each(data.guide_tags, function(i, tag) {
-                // Check if tag has additional search terms to add to data-tags attribute
+                // check if tag has additional search terms to add to data-tags attribute
                 search_terms_string = "";
                 if (tag.additional_search_terms) {
                     if (Array.isArray(tag.additional_search_terms)) {
@@ -365,7 +403,7 @@ $(document).ready(function() {
 
                 $(".guide_item").each(function(j, guide_item) {
                     project_id = $(this).attr('href').replace("/guides/", "").replace(".html", "");
-                    // Add tag to data-tags attribute if the guide's project id is in the array for that tag
+                    // add tag to data-tags attribute if the guide's project id is in the array for that tag
                     if (tag.guides.indexOf(project_id) > -1) {
                         if ($(this).data('tags')) {
                             $(this).data("tags", $(this).data("tags") + " " + tag_name.toLowerCase());
@@ -380,9 +418,9 @@ $(document).ready(function() {
         });
     }
 
-    // move guide cards to correct subcategories
+    // Move guide cards to correct subcategories
     function sortGuides(subcategory, guideList) {
-        // iterate over array of guides from json file
+        // iterate over array of guides from JSON file
         $.each(guideList, function(index, guide) {
             // look for guide card that matches the guide's projectid from the array
             var guide_card = $(".guide_item[href='/guides/" + guide + ".html']");
@@ -391,27 +429,26 @@ $(document).ready(function() {
         });
     }
 
-    // Read guide categories from json file and
+    // Read guide categories from JSON file and create TOC and category sections
     function getCategories(callback) {
         $.getJSON( "../../guide_categories.json", function(data) {
             $.each(data, function(index, category) {
-                // count number of guides in each category
-                // make lowercase, replace spaces with underscores
-                category_id = category.category_name.toLowerCase().replace(/ /g,"_");
+                // make category name lowercase and replace spaces with underscores
+                categoryId = category.category_name.toLowerCase().replace(/ /g,"_");
                 // add categories to TOC 
-                $("#toc_column > #toc_container > ul").append('<div class="toc_title_container"><h1 class="toc_title">' + category.category_name + '</h1><p id="' + category_id + '_num_guides" class="num_guides"></p><button class="caret_button"><img src="/img/guides_caret_up.svg" alt="Collapse" aria-label="Collapse"></button></div>');
-                // create div and header for each category
-                $("#guides_container").append('<div id="' + category_id + '_category" class="category_section"><h3 class="guide_category_title">' + category.category_title + '</h3></div>');
+                $("#toc_column > #toc_container > ul").append('<div class="toc_title_container"><h1 class="toc_title">' + category.category_name + '</h1><p id="' + categoryId + '_num_guides" class="num_guides"></p><button class="caret_button"><img src="/img/guides_caret_up.svg" alt="Collapse" aria-label="Collapse"></button></div>');
+                // create div and header in guides section for each category
+                $("#guides_container").append('<div id="' + categoryId + '_category" class="category_section"><h3 class="guide_category_title">' + category.category_title + '</h3></div>');
                 $.each(category.subcategories, function(j, subcategory) {
-                    // make lowercase, replace spaces with underscores
-                    subcategory_id = subcategory.subcategory_name.toLowerCase().replace(/ /g,"_");
+                    // make subcategory name lowercase and replace spaces with underscores
+                    subcategoryId = subcategory.subcategory_name.toLowerCase().replace(/ /g,"_");
                     // add subcategories to TOC
-                    $("#toc_column > #toc_container > ul").append('<li><a href="#' + subcategory_id + '"><img src="/img/guides_gray_plus.svg" alt="Expand" aria-label="Expand">' + subcategory.subcategory_name + '</a></li>');
-                    // create div and header for each subcategory
-                    $("#" + category_id + "_category").append('<div id="' + subcategory_id + '_section" class="guide_subcategory_section"><h4 id="' + subcategory_id + '" class="guide_subcategory_title">' + subcategory.subcategory_name + '</h4><div class="row guide_subcategory_row" id="' + subcategory_id +'_row"></div></div>');
+                    $("#toc_column > #toc_container > ul").append('<li><a href="#' + subcategoryId + '"><img src="/img/guides_gray_plus.svg" alt="Expand" aria-label="Expand">' + subcategory.subcategory_name + '</a></li>');
+                    // create div and header in guides section for each subcategory
+                    $("#" + categoryId + "_category").append('<div id="' + subcategoryId + '_section" class="guide_subcategory_section"><h4 id="' + subcategoryId + '" class="guide_subcategory_title">' + subcategory.subcategory_name + '</h4><div class="row guide_subcategory_row" id="' + subcategoryId +'_row"></div></div>');
                     // sort guides into appropriate subcategories
-                    sortGuides(subcategory_id, subcategory.guides);
-                });                
+                    sortGuides(subcategoryId, subcategory.guides);
+                });
                 $("#toc_column > #toc_container > ul").append('<div class="toc_separator">');
             });
             // remove guides that have not been put into categories
@@ -421,21 +458,20 @@ $(document).ready(function() {
         });
     }
 
-    // Reset number of guides to total per category
+    // Update number of guides count for each category
     function updateTotals() {
         $('.category_section').each(function(index, category) {
             // count number of guide cards visible in each category
             var count = $(this).find('.guide_column').not('.hidden_guide').length;
-            // Count total number of guides per category (including hidden ones)
+            // count total number of guides in each category (including hidden ones)
             var total = $(this).find('.guide_column').length;
-
             // update num_guides
             $('#' + $(this).attr('id').replace("_category", "_num_guides")).html('(' + count + '/' + total + ' guides)');
         })
     }
     
     // Look for guides that contain every search word
-    function filter_guides(key, search_value) {
+    function filterGuides(key, search_value) {
         $('.guide_item').each(function(index, element) {
             var guide_item = $(element);
             var title = guide_item.data('title');
@@ -464,18 +500,21 @@ $(document).ready(function() {
                 }
             }
             if (matches_all_words) {
+                // Show hidden guides again
                 guide_item.parent().removeClass('hidden_guide');
                 // Make sure we are not hiding categories when there are visible guide cards
                 guide_item.closest('.container').show();
 
-                // Show toc if it was hidden on mobile when there were no search results
+                // Show TOC if it was hidden on mobile when there were no search results
                 $('#toc_container ul').show();
             } else {
+                // Hide guides that don't match search
                 guide_item.parent().addClass('hidden_guide');
             }
         });
     }
 
+    // Show all hidden categories again
     function showAllCategories() {
         $('.no_results_section').hide();
         $('.guide_category_title').show();
@@ -488,25 +527,28 @@ $(document).ready(function() {
         $('.guide_column').removeClass('hidden_guide');
     }
 
-    // hide and show categories based on whether or not there are search results in that category
+    // Hide and show categories based on whether or not there are search results in that category
     function updateVisibleCategories() {
         // iterate over subcategories and determine if all the guide cards are hidden
         $('.guide_subcategory_row').each(function(index, row) {
             var subcategory_title_id = $(this).attr('id').replace("_row", "");
             var anchor = $("#toc_container a[href='#" + subcategory_title_id + "']");
             var subcategory_title = $('#' + subcategory_title_id);
+            // all guide cards hidden in subcategory
             if($(this).children().not('.hidden_guide').length == 0) {
-                // all guide cards hidden in subcategory. Hide subcategory title
+                // hide subcategory title
                 subcategory_title.hide();
+                // disable links in TOC
                 anchor.addClass('disabled');
                 anchor.parent().attr('title', 'No guides matching search.');
                 anchor.parent().css('cursor', 'text');
-                // anchor.attr("disabled", "disabled");
             }
+            // visible guide cards found in subcategory
             else {
-                // visible guide cards found in subcategory. Show subcategory title
                 if ($(this).prev().is(":hidden")) {
+                    // show subcategory title
                     subcategory_title.show();
+                    // reenable links in TOC
                     anchor.removeClass('disabled');
                     anchor.parent().removeAttr("title");
                     anchor.parent().css('cursor', 'auto');
@@ -516,9 +558,11 @@ $(document).ready(function() {
 
         // iterate over categories and determine if all subcategories are hidden
         $('.category_section').each(function(index, section) {
+            // all subcategories hidden, hide category
             if ($(this).find('.guide_subcategory_title:visible').length == 0) {
                 $(this).find('.guide_category_title').hide();
             }
+            // visible subcategories found, show category
             else {
                 $(this).find('.guide_category_title').show();
             }
@@ -526,10 +570,10 @@ $(document).ready(function() {
 
         // check if there are no search results
         if ($('#toc_container ul').find('a:not(.disabled)').length == 0) {
-            // All categories are hidden. Show no results section
+            // all categories are hidden. Show no results section
             $('.no_results_section').show();
 
-            // if on mobile view, move no results message into toc so it is visible
+            // if on mobile view, move no results message into TOC so it is visible
             if (isMobileView()) {
                 $('#toc_container').prepend($('.no_results_section'));
                 $('#toc_container ul').hide();
@@ -540,40 +584,39 @@ $(document).ready(function() {
         }
         
         else {
-            // All categories not hidden. Hide no results section
+            // all categories not hidden. Hide no results section
             $('.no_results_section').hide();
         }
     }
 
-    function processSearch(input_value) {
-        if(input_value.length == 0) {
+    function processSearch(inputValue) {
+        if (inputValue.length == 0) {
             showAllCategories();
         } else {
-            if(input_value.indexOf('tag:') === 0) {
-                var search_value = input_value.substring(4).trim();
-                filter_guides(tags_key, search_value);
+            if(inputValue.indexOf('tag:') === 0) {
+                var search_value = inputValue.substring(4).trim();
+                filterGuides(tags_key, search_value);
             } else {
-                filter_guides(title_key | description_key | tags_key | search_term_key, input_value);
+                filterGuides(title_key | description_key | tags_key | search_term_key, inputValue);
             }
             updateVisibleCategories();
         }
         updateTotals();
     }
 
-
     $('#guide_search_input').on("keyup", function(event) {
-        var input_value = event.currentTarget.value.toLowerCase();
-        processSearch(input_value);
+        var inputValue = event.currentTarget.value.toLowerCase();
+        processSearch(inputValue);
     });
 
     $(window).on('popstate', function(){
-        var input_value = location.search;
-        query_string = input_value.substring(8);
-        document.getElementById("guide_search_input").value = query_string;
-        processSearch(query_string);
+        var inputValue = location.search;
+        queryString = inputValue.substring(8);
+        document.getElementById("guide_search_input").value = queryString;
+        processSearch(queryString);
     });
 
-    // clear search input when x button clicked
+    // Clear search input when x button clicked
     $('.clear_btn').on('click', function(){
         $('#guide_search_input').val('');
         var searchInput = $('#guide_search_input').val();
@@ -620,11 +663,14 @@ $(document).ready(function() {
     }
 
     function init() {
+        if (isDesktopView()) {
+            fixTOCHeight();
+        }
 
-        var query_string = location.search;
+        var queryString = location.search;
         // Process the url parameters for searching
-        if (query_string.length > 0) {
-            var parameters = decodeURI(query_string.substring(1)).split('&');
+        if (queryString.length > 0) {
+            var parameters = decodeURI(queryString.substring(1)).split('&');
             var search_value = false;
             var search_key = false;
             for(var i = 0; i < parameters.length; i++) {
@@ -641,15 +687,14 @@ $(document).ready(function() {
         }
         // If the search field is still populated from returning to this page, process the search value
         else if($('#guide_search_input').val()){
-            var input_value = $('#guide_search_input').val().toLowerCase();
-            processSearch(input_value);
+            var inputValue = $('#guide_search_input').val().toLowerCase();
+            processSearch(inputValue);
         }
 
         if (location.hash) {
             var hash = location.hash;
             accessContentsFromHash(hash);
         }
-
     }
 
     // Create popover when search bar is focused
@@ -665,13 +710,6 @@ $(document).ready(function() {
         trigger: 'focus'
     });
     
-
-
-    // Bind resize event
-    // $(window).bind('resize', function(){
-    //     $('#guide_search_input').popover('show');
-    // });
-
     $('#back_to_guides_button').on('click', function() {
         $('#guide_search_input').val('');
         var searchInput = $('#guide_search_input').val();
@@ -682,15 +720,15 @@ $(document).ready(function() {
 
     // Click buttons to fill search bar
     $('#guides_search_container').on('click', '.tag_button', function() {
-        var input_value = 'tag: ' + $(this).html();
-        $('#guide_search_input').val(input_value);
+        var inputValue = 'tag: ' + $(this).html();
+        $('#guide_search_input').val(inputValue);
         $('.tag_button').removeClass('hidden');
         $(this).addClass('hidden');
         $('#guide_search_input').trigger('focus');
-        processSearch(input_value);
+        processSearch(inputValue);
     });
 
-
+    // Handle click on caret button on mobile view
     $('#toc_container').on('click', '.caret_button', function() {
         var showSection = $(this).parent().nextUntil('.toc_separator');
         var img = $(this).find('img');
@@ -711,11 +749,9 @@ $(document).ready(function() {
             // remove margin-bottom to num_guides
             $(this).parent().css('margin-bottom', '0px');
 
-
             // show guides section
             showSection.show();
         }
-
     });
 
     $("#breadcrumb_hamburger").on('click', function(){
@@ -738,5 +774,3 @@ $(document).ready(function() {
     });
     
 });
-
-
