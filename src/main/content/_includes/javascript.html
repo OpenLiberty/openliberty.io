@@ -9,12 +9,10 @@
 
 {% asset devEnvironment.js %}
 
-{% for js_name in page.js %}
-  {% asset {{js_name}} %}
-{% endfor %}
-
 {% for js_name in layout.js %}
-  {% asset {{js_name}} %}
+  {% asset {{js_name}}.js %}
 {% endfor %}
 
-{% asset openliberty %}
+{% for js_name in page.js %}
+  {% asset {{js_name}}.js %}
+{% endfor %}
