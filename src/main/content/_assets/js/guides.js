@@ -431,7 +431,7 @@ $(document).ready(function() {
 
     // Read guide categories from JSON file and create TOC and category sections
     function getCategories(callback) {
-        $.getJSON( "../../guide_categories.json", function(data) {
+        $.getJSON( "../../guides/guides-common/guide_categories.json", function(data) {
             $.each(data, function(index, category) {
                 // make category name lowercase and replace spaces with underscores
                 categoryId = category.category_name.toLowerCase().replace(/ /g,"_");
