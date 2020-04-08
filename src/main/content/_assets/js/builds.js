@@ -66,7 +66,7 @@ function render_builds(builds, parent) {
                         package_name = package_name.toLowerCase();
                         var href = package_locations[i].split("=")[1];
                         var package_column = $('<td headers="' + tableID + '_download"></td>');
-                        package_column.append($('<a href="' +  href +'" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + 
+                        package_column.append($('<a href="' +  href +'" class="' + analytics_class_name + '">' + 
                         download_arrow + 'ZIP</a>'));
                         if (package_name.indexOf("java") > -1) {
                             // 19.0.0.6 and higher should be labeled "Jakarta EE 8", and anything before should be "Java EE 8"
@@ -90,18 +90,18 @@ function render_builds(builds, parent) {
 
                     }
                     all_ga_features_row.append('<td headers="' + tableID + '_package">All GA Features</td>');
-                    all_ga_features_row.append('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
+                    all_ga_features_row.append('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + '">' + download_arrow + 'ZIP</a></td>');
                 }
                 else{
                     version_column = $('<td headers="' + tableID + '_version"><span class="table_date">' + build.version + '</span></td>');            
                     row.append(version_column);
                     row.append('<td headers="' + tableID + '_package">All GA Features</td>');
-                    row.append('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
+                    row.append('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + '">' + download_arrow + 'ZIP</a></td>');
                 }
             // eclipse developer tools releases only
             }  else {
                 version_column = $('<td headers="' + tableID + '_version"><span class="table_date">' + build.version + '</span></td>');
-                zip_column = $('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
+                zip_column = $('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + '">' + download_arrow + 'ZIP</a></td>');
                 row.append(version_column);
                 row.append(zip_column);
             }
@@ -116,13 +116,13 @@ function render_builds(builds, parent) {
             var date_column = $('<td headers="' + tableID + '_date"><span class="table_date">' + year + '-' + add_lead_zero(month) + '-' + add_lead_zero(day) + ', ' + add_lead_zero(hour) + ':' + add_lead_zero(minute) + '</span></td>');
             row.append(date_column);
             
-            var tests_column = $('<td headers="' + tableID + '_tests"><a href="' +  build.tests_log +'" class="'+ analytics_class_name + ' skip_outbound_link_analytics tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
+            var tests_column = $('<td headers="' + tableID + '_tests"><a href="' +  build.tests_log +'" class="'+ analytics_class_name + ' tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
             row.append(tests_column);
             
-            var log_column = $('<td headers="' + tableID + '_logs"><a href="' + build.build_log + '" class="' + analytics_class_name + ' skip_outbound_link_analytics view_logs_link" target="_blank" rel="noopener">View logs</a></td>');            
+            var log_column = $('<td headers="' + tableID + '_logs"><a href="' + build.build_log + '" class="' + analytics_class_name + ' view_logs_link" target="_blank" rel="noopener">View logs</a></td>');            
             row.append(log_column);
 
-            var download_zip_column = $('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + ' skip_outbound_link_analytics">' + download_arrow + 'ZIP</a></td>');
+            var download_zip_column = $('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + '">' + download_arrow + 'ZIP</a></td>');
             row.append(download_zip_column);
         }
 
