@@ -3,6 +3,7 @@ package io.openliberty.website;
 import java.io.IOException;
 import java.util.Set;
 
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.CDI;
 import javax.servlet.ServletContext;
 
@@ -21,6 +22,9 @@ public class ContainerInit implements ServletContainerInitializer {
     // By initializing the DHE Build Parser and calling scheduleAsyncUpdate
     // we start building the build list from external data sources at startup
     // rather than on first request.
-    CDI.current().select(DHEBuildParser.class).get().scheduleAsyncUpdate();
+    Instance<DHEBuildParser> mgr = CDI.current().select(DHEBuildParser.class);
+    if (!mgr.isUnsatisfied()) {
+        mgr.get().scheduleAsyncUpdate();
+    }
   }
 }
