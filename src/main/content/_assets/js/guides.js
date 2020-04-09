@@ -58,9 +58,7 @@ $(document).ready(function() {
                 }
             })
         }
-        id = $elements.filter(highlightElement).attr('id');
-
-        return id;
+        return highlightElement.attr('id');
     }
 
     // Determine if an element is in the viewport
@@ -453,20 +451,25 @@ $(document).ready(function() {
             });
             // remove guides that have not been put into categories
             $(".guide_column").not(".guide_subcategory_row .guide_column").remove();
-            updateTotals();
+            updateTotals(false);
             callback();
         });
     }
 
     // Update number of guides count for each category
-    function updateTotals() {
+    function updateTotals(showTotal) {
         $('.category_section').each(function(index, category) {
             // count number of guide cards visible in each category
             var count = $(this).find('.guide_column').not('.hidden_guide').length;
             // count total number of guides in each category (including hidden ones)
             var total = $(this).find('.guide_column').length;
             // update num_guides
-            $('#' + $(this).attr('id').replace("_category", "_num_guides")).html('(' + count + '/' + total + ' guides)');
+            if (showTotal) {
+                $('#' + $(this).attr('id').replace("_category", "_num_guides")).html('(' + count + '/' + total + ' guides)');
+            }
+            else {
+                $('#' + $(this).attr('id').replace("_category", "_num_guides")).html('(' + count + ' guides)');
+            }
         })
     }
     
@@ -592,6 +595,7 @@ $(document).ready(function() {
     function processSearch(inputValue) {
         if (inputValue.length == 0) {
             showAllCategories();
+            updateTotals(false);
         } else {
             if(inputValue.indexOf('tag:') === 0) {
                 var search_value = inputValue.substring(4).trim();
@@ -600,8 +604,8 @@ $(document).ready(function() {
                 filterGuides(title_key | description_key | tags_key | search_term_key, inputValue);
             }
             updateVisibleCategories();
+            updateTotals(true);
         }
-        updateTotals();
     }
 
     $('#guide_search_input').on("keyup", function(event) {
@@ -623,7 +627,7 @@ $(document).ready(function() {
         updateSearchUrl(searchInput);
         processSearch(searchInput);        
         showAllCategories();
-        updateTotals();
+        updateTotals(false);
     });
 
     $('#guide_search_input').on("keypress", function(event) {
@@ -634,7 +638,7 @@ $(document).ready(function() {
     });
 
     function updateSearchUrl(value) {
-        if(! value) {
+        if (!value) {
             // Remove query string because search text is empty
             search_value = [location.protocol, '//', location.host, location.pathname].join('');
             history.pushState(null, "", search_value);
@@ -648,7 +652,7 @@ $(document).ready(function() {
         // We support searching with prefex
         // 1.  tag: <tag text>
         // 2.  Free form text
-        if(value.startsWith('tag:')) {
+        if (value.startsWith('tag:')) {
             var searchTextWithoutTag = value.substring(value.indexOf(':') + 1);
             searchTextWithoutTag = searchTextWithoutTag.trim();
             search_value = '?search=' + encodeURIComponent(searchTextWithoutTag) + '&key=tag';
