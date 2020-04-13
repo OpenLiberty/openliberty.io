@@ -33,6 +33,18 @@ $blue-grey-color: #5d6a8e;
     }
 }
 
+// override bootstrap breakpoint to trigger 3 guides per row earlier
+@media (min-width: 1150px) and (max-width: 1400px) {
+    .guide_column.col-lg-3 {
+        width: 33.33333333%;
+    }
+}
+
+@media (min-width: 991px) and (max-width: 1150px) {
+    .guide_column.col-lg-3 {
+        width: 50%;
+    }
+}
 // -----------
 
 
@@ -244,6 +256,7 @@ $blue-grey-color: #5d6a8e;
     #toc_column {
         display: inline-block;
         width: 225px;
+        float: left;
     }
 }
 
@@ -353,10 +366,6 @@ $blue-grey-color: #5d6a8e;
     }
 }
 
-#guides_container .category_section:last-child .guide_subcategory_section:last-child {
-    padding-bottom: 150px;
-}
-
 #no_search_results_container {
     @extend %full-width-and-padding;
     margin-top: 35px;
@@ -446,7 +455,7 @@ $blue-grey-color: #5d6a8e;
     }
 
     #guides_container {
-        width: 100%;
+        width: auto;
     }
 
     #tablet_toc_accordion_container {

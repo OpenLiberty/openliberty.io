@@ -42,22 +42,14 @@ $(document).ready(function() {
 
     // Find the first subcategory header that is visible in the viewport and return the id
     function getFirstVisibleTitle($elements) {
-        var scrolledToBottom = $(window).scrollTop() + $(window).height() == $(document).height();
-        var lastDiv = $elements.last();
         var highlightElement = $(location.hash);
-        // make sure last section gets highlighted (since it will never be first visible subcategory header)
-        if (scrolledToBottom) {
-            highlightElement = lastDiv;
-        }
-        else {
-            // iterate over subcategory headers and get first on screen
-            $elements.each(function(index, element) {
-                if ($(this).isInViewport()) {
-                    highlightElement = $(this);
-                    return false; // break out of loop because we found first title in viewport. No need to keep looking.
-                }
-            })
-        }
+        // iterate over subcategory headers and get first on screen
+        $elements.each(function(index, element) {
+            if ($(this).isInViewport()) {
+                highlightElement = $(this);
+                return false; // break out of loop because we found first title in viewport. No need to keep looking.
+            }
+        })
         return highlightElement.attr('id');
     }
 
@@ -71,6 +63,21 @@ $(document).ready(function() {
     
         return elementBottom > viewportTop && elementTop < viewportBottom;
     };
+
+    // add enough padding to last subcategory so that it gets highlighted in toc
+    function addPadding() {
+        var lastSection = $("#guides_container .category_section:last-child .guide_subcategory_section:last-child");
+        if (isDesktopView()) {
+            var lastSectionHeight = lastSection.height();
+            var windowHeight = $(window).height()
+            var footerHeight = $('footer').outerHeight();
+            var padding = windowHeight - lastSectionHeight - footerHeight - 50;
+            lastSection.css('padding-bottom', padding + 'px');
+        }
+        else {
+            lastSection.css('padding-bottom', '50px');
+        }
+    }
 
     // Get number of pixels that are visible in viewport for $element
     function getVisibleHeightPx($element) {
@@ -105,19 +112,19 @@ $(document).ready(function() {
     // Add hash to url and update TOC highlighting
     function handleSectionChanging(id) {
         if (id !== " ") {
-            var windowHash = window.location.hash;
-            var scrolledToHash = id === "" ? id : '#' + id;            
-            if (windowHash !== scrolledToHash) {
-                // Update the URL hash with new section we scrolled into....
-                var currentPath = window.location.pathname;
-                var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + scrolledToHash;
-            }
+            scrolledToHash = '#' + id;
+            var currentPath = window.location.pathname;
+            var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + scrolledToHash;
         }
         else {
+            scrolledToHash = "";
             newPath = id;
         }
-        history.replaceState(null, null, newPath);
-        updateTOCHighlighting(id);
+        // update the URL hash with new section we scrolled into
+        if (window.location.hash !== scrolledToHash) {
+            history.replaceState(null, null, newPath);
+            updateTOCHighlighting(id);
+        }
     }
 
     function fixTOCHeight() {
@@ -138,6 +145,7 @@ $(document).ready(function() {
 
     var width = window.outerWidth;
     $(window).on('resize', function() {
+        addPadding();
         var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
 
         // fix TOC height to account for footer and make it scrollable if necessary
@@ -145,8 +153,8 @@ $(document).ready(function() {
             fixTOCHeight();
         }
 
-        // going from mobile to tablet view
-        if (width <= mobileBreakpoint && $(this).outerWidth() > mobileBreakpoint && $(this).outerWidth() <= tabletBreakpoint) {
+        // going from mobile to tablet or desktop view
+        if (width <= mobileBreakpoint && $(this).outerWidth() > mobileBreakpoint) {
             // look for guides that have been moved to the TOC on mobile view and move them back to their place in the guides section
             $('#toc_container ul').find('.guide_subcategory_row').each(function() {
                 // move subcategory row back to it's section
@@ -159,26 +167,30 @@ $(document).ready(function() {
             $('#toc_container ul').find('li:hidden').show();
             $('.toc_title_container').css('margin-bottom', "0");
 
-            // if scrolled past banner, show hamburger menu
-            if ($(window).scrollTop() > navBannerBottom) {
-                $('#tablet_toc_accordion_container').css({'position': 'fixed', 'top': '0px'});
-                $('#toc_column').css({'position': 'fixed', 'top': '41px', 'height': 'auto'});
-            }
-            else {
-                $('#tablet_toc_accordion_container').css({'position': 'static', 'top': '0px'});
-                $('#toc_column').css({'position': 'absolute', 'top': 'auto'});
-            }
-
             // move no_results_section back to guides_container and show TOC again
             $('#guides_container').prepend($('.no_results_section'));
             $('#toc_container ul').show();
 
-            // override TOC height set in mobile view
-            $('#toc_container').css('height', '100vh');
+            // mobile to tablet only
+            if ($(this).outerWidth() <= tabletBreakpoint) {
+                // if scrolled past banner, show hamburger menu
+                if ($(window).scrollTop() > navBannerBottom) {
+                    $('#tablet_toc_accordion_container').css({'position': 'fixed', 'top': '0px'});
+                    $('#toc_column').css({'position': 'fixed', 'top': '41px', 'height': 'auto'});
+                }
+                else {
+                    $('#tablet_toc_accordion_container').css({'position': 'static', 'top': '0px'});
+                    $('#toc_column').css({'position': 'absolute', 'top': 'auto'});
+                }
+
+                // override TOC height set in mobile view
+                $('#toc_container').css('height', '100vh');
+            }
+
         }
 
-        // going from tablet to mobile view
-        if (width > mobileBreakpoint && width <= tabletBreakpoint && $(this).outerWidth() <= mobileBreakpoint) {            
+        // going from tablet to mobile or desktop to mobile
+        if (width > mobileBreakpoint && $(this).outerWidth() <= mobileBreakpoint) {      
             // look for minus sign (previously opened subcategory) and move guides back to that place in TOC
             $('#toc_container ul').find('img[src$="guides_gray_minus.svg"]').each(function() {
                 expanded_id = $(this).parent().attr('href').toLowerCase().replace(/ /g,"_");
@@ -195,7 +207,7 @@ $(document).ready(function() {
 
             // move no_results_section back to guides_container
             $('#toc_container').prepend($('.no_results_section'));
-            
+
             // reset TOC to how it should appear on mobile
             $('#toc_column').css({'position': 'static', 'height': 'auto'});
             $('#toc_container').css('height', 'auto');
@@ -225,13 +237,8 @@ $(document).ready(function() {
                 $('#toc_column').css({'position': 'fixed', 'top': '0px'});
             }
             else {
-                $('#toc_column').css({'position': 'static', 'top': '0px'});
+                $('#toc_column').css({'position': '', 'top': ''});
             }
-        }
-
-        // going from desktop to mobile view
-        if (width > tabletBreakpoint && $(this).outerWidth() <= mobileBreakpoint) {
-            $('#toc_column').css({'height': 'auto', 'position': 'static', 'top': '0px'});
         }
         
         // update width with new width after resizing
@@ -699,6 +706,8 @@ $(document).ready(function() {
             var hash = location.hash;
             accessContentsFromHash(hash);
         }
+
+        addPadding();
     }
 
     // Create popover when search bar is focused
