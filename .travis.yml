@@ -16,6 +16,8 @@ jobs:
       if: branch = development
     - env: ROUTE=$SITE_DEMO1_DOMAIN
       if: branch = demo1
+    - env: ROUTE=$SITE_DEMO2_DOMAIN
+      if: branch = demo2
     - env: ROUTE=$SITE_HOTSPOT_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_HOTSPOT_BRANCH JEKYLL_DRAFT_GUIDES=true
       if: branch = hotspots
     - env: ROUTE=$SITE_ANTORA_DOMAIN
@@ -35,6 +37,7 @@ branches:
     - master
     - development
     - demo1
+    - demo2
     - hotspots
     - antora
 
@@ -65,6 +68,11 @@ deploy:
     on:
       branch: demo1
     script: ./.travis/cf-push.sh
+  - provider: script
+    skip_cleanup: true
+    on:
+      branch: demo2
+    script: env ROUTE=$SITE_DEMO2_DOMAIN ./.travis/cf-push-2.sh
   - provider: script
     skip_cleanup: true
     on:
