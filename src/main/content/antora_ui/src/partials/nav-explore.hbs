@@ -8,12 +8,12 @@
   <ul class="components">
     {{#each site.components}}
     <li class="component{{#if (eq this @root.page.component)}} is-current{{/if}}">
-      {{!-- <span class="title">{{{./title}}}</span> --}}
       <ul class="versions">
         {{#each ./versions}}
         <li class="version
           {{~#if (and (eq ../this @root.page.component) (eq this @root.page.componentVersion))}} is-current{{/if~}}
           {{~#if (eq this ../latestVersion)}} is-latest{{/if}}">
+          <span class="title">Version</span>
           <a href="{{{relativize ./url}}}">{{./displayVersion}}</a>
         </li>
         {{/each}}
