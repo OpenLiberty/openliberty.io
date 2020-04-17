@@ -39,6 +39,23 @@
     nav.querySelector('[data-panel=' + activatePanel + ']').classList.toggle('is-active')	
   })
 
+  $('.nav-item ').on('click', function(e){
+    console.error("clicked on: " + this);
+  });
+
+
+  $('.components .versions li a').on('click', function(e){
+    e.stopPropagation();
+    location.href = $(this)[0].href;
+  });
+
+  $('.components .versions li').on('click', function(e) {
+    e.stopPropagation();
+    var li = $(this);
+    var anchor = li.find('a');
+    anchor.click();
+  });
+
   // NOTE prevent text from being selected by double click
   menuPanel.addEventListener('mousedown', function (e) {
     if (e.detail > 1) e.preventDefault()
