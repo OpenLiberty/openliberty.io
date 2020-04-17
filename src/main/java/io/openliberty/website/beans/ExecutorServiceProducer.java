@@ -10,7 +10,7 @@
  *******************************************************************************/
 package io.openliberty.website.beans;
 
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
@@ -20,12 +20,11 @@ import javax.naming.NamingException;
 
 @ApplicationScoped
 public class ExecutorServiceProducer {
-
     @Produces
-    private ExecutorService getExecutorService() {
+    private ScheduledExecutorService getScheduledExecutorService() {
         try {
             Context ctx = new InitialContext();
-            return (ExecutorService) ctx.lookup("java:comp/DefaultManagedExecutorService");
+            return (ScheduledExecutorService) ctx.lookup("java:comp/DefaultManagedScheduledExecutorService");
         } catch (NamingException ne) {
             return null;
         }

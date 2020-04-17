@@ -24,7 +24,8 @@ public class ContainerInit implements ServletContainerInitializer {
     // rather than on first request.
     Instance<DHEBuildParser> mgr = CDI.current().select(DHEBuildParser.class);
     if (!mgr.isUnsatisfied()) {
-        mgr.get().scheduleAsyncUpdate();
+        System.out.println("About to get hold of instance");
+        mgr.get().getLastUpdate(); // do this just to initialize
     }
   }
 }

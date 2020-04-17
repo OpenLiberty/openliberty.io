@@ -12,13 +12,15 @@ package io.openliberty.website;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.json.JsonObject;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
+
+import io.openliberty.website.data.BuildData;
+import io.openliberty.website.data.LastUpdate;
+import io.openliberty.website.data.LatestReleases;
 
 @ApplicationPath("api")
 @Path("/")
@@ -31,29 +33,22 @@ public class OpenLibertyEndpoint extends Application {
     @GET
     @Path("builds")
     @Produces({ "application/json" })
-    public JsonObject status() {
-        return buildsManager.getStatus().asJsonObject();
+    public LastUpdate status() {
+        return buildsManager.getStatus();
     }
 
     @GET
     @Path("builds/data")
     @Produces({ "application/json" })
-    public JsonObject builds() {
-        return buildsManager.getData().asJsonObject();
+    public BuildData builds() {
+        return buildsManager.getData();
     }
 
     @GET
     @Path("builds/latest")
     @Produces({ "application/json" })
-    public JsonObject latestsReleases() {
-        return buildsManager.getLatestReleases().asJsonObject();
-    }
-
-    @PUT
-    @Path("builds")
-    @Produces({ "application/json" })
-    public JsonObject update() {
-        return buildsManager.updateBuilds().asJsonObject();
+    public LatestReleases latestsReleases() {
+        return buildsManager.getLatestReleases();
     }
 
     @GET

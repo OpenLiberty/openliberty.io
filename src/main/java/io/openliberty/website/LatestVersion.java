@@ -22,6 +22,8 @@ import io.openliberty.website.data.LatestReleases;
 @WebServlet("/latestVersion.js")
 public class LatestVersion extends HttpServlet {
 
+  private static final long serialVersionUID = -1106623346121641764L;
+
   @Inject
   private BuildsManager manager;
 
@@ -40,7 +42,7 @@ public class LatestVersion extends HttpServlet {
 
   public void init() {
     LatestReleases releases = manager.getLatestReleases();
-    String v = releases.getRuntimeRelease().getVersion();
+    String v = releases.runtime.version;
     if (!v.equals(version)) {
       response = template.replaceAll("0\\.0\\.0\\.0", v);
       version = v;

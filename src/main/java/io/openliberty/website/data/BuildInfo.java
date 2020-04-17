@@ -11,131 +11,95 @@
 package io.openliberty.website.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.annotation.JsonbProperty;
 
 import io.openliberty.website.Constants;
 
 public class BuildInfo {
-	private String version;
-	private String dateTime;
-	private String driverLocation;
-	private String sizeInBytes;
-	private String testPassed;
-	private String totalTests;
-	private String buildLog;
-	private String testLog;
-	private List<String> packageLocations;
+	@JsonbProperty(Constants.VERSION)
+	public String version;
+	@JsonbProperty(Constants.DATE)
+	public String dateTime;
+	@JsonbProperty(Constants.DRIVER_LOCATION)
+	public String driverLocation;
+	@JsonbProperty(Constants.SIZE_IN_BYTES)
+	public int sizeInBytes;
+	@JsonbProperty(Constants.TESTS_PASSED)
+	public int testPassed;
+	@JsonbProperty(Constants.TOTAL_TESTS)
+	public int totalTests;
+	@JsonbProperty(Constants.BUILD_LOG)
+	public String buildLog;
+	@JsonbProperty(Constants.TESTS_LOG)
+	public String testLog;
+	@JsonbProperty(Constants.PACKAGE_LOCATIONS)
+	public List<String> packageLocations = new ArrayList<>();
 
-	public JsonObject asJsonObject() {
-		JsonObjectBuilder obj = Json.createObjectBuilder();
-		if (version != null) {
-			obj.add(Constants.VERSION, version);
-		}
-		if (dateTime != null) {
-			obj.add(Constants.DATE, dateTime);
-		}
+
+	public BuildInfo(String buildLog, String driverLocation, int testPassed, int totalTests, String testLog) {
+		this.buildLog = buildLog;
+		this.driverLocation = driverLocation;
+		this.testPassed = testPassed;
+		this.totalTests = totalTests;
+		this.testLog = testLog;
+	}
+
+	public BuildInfo(String driverLocation, String version) {
+		this.driverLocation = driverLocation;
+		this.version = version;
+	}
+
+	public BuildInfo(String buildLog, String driverLocation, int testPassed, int totalTests, String testLog, String version, String ... driverLocations) {
+		this.buildLog = buildLog;
+		this.driverLocation = driverLocation;
+		this.testPassed = testPassed;
+		this.totalTests = totalTests;
+		this.testLog = testLog;
+		this.version = version;
+		packageLocations.addAll(Arrays.asList(driverLocations));
+	}
+
+	public BuildInfo() { }
+
+	public String toString() {
+		return JsonbBuilder.create().toJson(this);
+	}
+
+	public BuildInfo resolveLocations(String url, BuildType type, String dateTime) {
+		if (this.dateTime == null) this.dateTime = dateTime;
+		String prefix = url + type.getURISegment() + '/' + dateTime + '/';
+
 		if (driverLocation != null) {
-			obj.add(Constants.DRIVER_LOCATION, driverLocation);
-		}
-		if (sizeInBytes != null) {
-			obj.add(Constants.SIZE_IN_BYTES, sizeInBytes);
-		}
-		if (totalTests != null) {
-			obj.add(Constants.TOTAL_TESTS, totalTests);
-		}
-		if (testPassed != null) {
-			obj.add(Constants.TESTS_PASSED, testPassed);
+			driverLocation = prefix + driverLocation;
 		}
 		if (buildLog != null) {
-			obj.add(Constants.BUILD_LOG, buildLog);
+			buildLog = prefix + buildLog;
 		}
+
 		if (testLog != null) {
-			obj.add(Constants.TESTS_LOG, testLog);
+			testLog = prefix + testLog;
 		}
-		if (packageLocations != null) {
-			obj.add(Constants.PACKAGE_LOCATIONS, Json.createArrayBuilder(packageLocations).build());
+		
+		if (packageLocations != null && !packageLocations.isEmpty()) {
+			List<String> fixedPackageLocations = new ArrayList<>();
+			for (String packageLoc : packageLocations) {
+				int index = packageLoc.indexOf("-") + 1;
+				int endIndex = packageLoc.indexOf("-", index);
+				String name = packageLoc.substring(index, endIndex);
+				index = packageLoc.lastIndexOf(".");
+				String extension = packageLoc.substring(index);
+				fixedPackageLocations.add(name + extension + '=' + prefix + packageLoc);
+			}
+			packageLocations = fixedPackageLocations;
 		}
-		return obj.build();
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void addVersion(String version) {
-		this.version = version;
+		return this;
 	}
 
 	public String getDateTime() {
 		return dateTime;
 	}
-
-	public void addDateTime(String dateTime) {
-		this.dateTime = dateTime;
-	}
-
-	public String getDriverLocation() {
-		return driverLocation;
-	}
-
-	public void addDriverLocation(String driverLocation) {
-		this.driverLocation = driverLocation;
-	}
-
-	public String getSizeInBytes() {
-		return sizeInBytes;
-	}
-
-	public void addSizeInBytes(String sizeInBytes) {
-		this.sizeInBytes = sizeInBytes;
-	}
-
-	public String getTestPassed() {
-		return testPassed;
-	}
-
-	public void addTestPassed(String testPassed) {
-		this.testPassed = testPassed;
-	}
-
-	public String getTotalTests() {
-		return totalTests;
-	}
-
-	public void addTotalTests(String totalTests) {
-		this.totalTests = totalTests;
-	}
-
-	public String getBuildLog() {
-		return buildLog;
-	}
-
-	public void addBuildLog(String buildLog) {
-		this.buildLog = buildLog;
-	}
-
-	public String getTestLog() {
-		return testLog;
-	}
-
-	public void addTestLog(String testLog) {
-		this.testLog = testLog;
-	}
-
-	public List<String> getPackageLocations() {
-		return packageLocations;
-	}
-
-	public void addPackageLocation(String name, String location) {
-		if (packageLocations == null) {
-			packageLocations = new ArrayList<String>();
-		}
-		packageLocations.add(name + "=" + location);
-	}
-
 }
