@@ -39,10 +39,13 @@
     nav.querySelector('[data-panel=' + activatePanel + ']').classList.toggle('is-active')	
   })
 
+  /* Make the whole row clickable to trigger the toggle button click */
   $('.nav-item ').on('click', function(e){
-    console.error("clicked on: " + this);
+    e.stopPropagation();
+    if(!$(e.target).is('button')){
+      $(this).find('button').click();  
+    }
   });
-
 
   $('.components .versions li a').on('click', function(e){
     e.stopPropagation();
