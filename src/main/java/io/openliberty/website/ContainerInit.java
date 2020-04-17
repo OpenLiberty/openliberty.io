@@ -7,8 +7,6 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.CDI;
 import javax.servlet.ServletContext;
 
-import io.openliberty.website.dheclient.DHEBuildParser;
-
 import javax.servlet.ServletContainerInitializer;
 
 public class ContainerInit implements ServletContainerInitializer {
@@ -19,12 +17,13 @@ public class ContainerInit implements ServletContainerInitializer {
       e.printStackTrace();
     }
 
-    // By initializing the DHE Build Parser and calling scheduleAsyncUpdate
+    // By initializing the BuildManager and calling getStatus
     // we start building the build list from external data sources at startup
     // rather than on first request.
-    Instance<DHEBuildParser> mgr = CDI.current().select(DHEBuildParser.class);
+    Instance<BuildsManager> mgr = CDI.current().select(BuildsManager.class);
     if (!mgr.isUnsatisfied()) {
-        mgr.get().scheduleAsyncUpdate();
+        System.out.println("About to get hold of instance");
+        mgr.get().getStatus(); // do this just to initialize
     }
   }
 }

@@ -10,21 +10,20 @@
  *******************************************************************************/
 package io.openliberty.website.data;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import javax.json.bind.annotation.JsonbProperty;
 
 import io.openliberty.website.Constants;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+/**
+ * This is a JSON-B object that holds information abou the most recent 
+ * release of the runtime and tools.
+ */
 public class LatestReleases {
 
-	private static final Logger logger = Logger.getLogger(LatestReleases.class.getName());
-
-	private BuildInfo runtime;
-	private BuildInfo tools;
+	@JsonbProperty(Constants.RUNTIME)
+	public BuildInfo runtime;
+	@JsonbProperty(Constants.TOOLS)
+	public BuildInfo tools;
 	
 
 	public LatestReleases() {
@@ -33,23 +32,5 @@ public class LatestReleases {
 	public LatestReleases(BuildInfo runtime, BuildInfo tools) {
 		this.runtime = runtime;
 		this.tools = tools;
-	}
-
-	public JsonObject asJsonObject() {
-		JsonObjectBuilder json = Json.createObjectBuilder();
-		if (runtime != null) {
-			json.add(Constants.RUNTIME, runtime.asJsonObject());
-		}
-		if (tools != null) {
-			json.add(Constants.TOOLS, tools.asJsonObject());
-		}
-		return json.build();
-	}
-
-	public BuildInfo getRuntimeRelease() {
-		if (logger.isLoggable(Level.FINER)) {
-			logger.log(Level.FINE, "getRuntimeRelease()", runtime);
-		}
-		return runtime;
 	}
 }
