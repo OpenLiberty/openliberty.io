@@ -3,7 +3,6 @@
   <div class="context">
     <span class="title">Version</span>
     <a class="version" href="#">{{page.componentVersion.displayVersion}}</a>
-    {{!-- <img src="{{uiRootPath}}/img/chevron.svg"> --}}
   </div>
   {{/if}}
   <ul class="components">
@@ -11,13 +10,18 @@
     <li class="component{{#if (eq this @root.page.component)}} is-current{{/if}}">
       <ul class="versions">
         {{#each ./versions}}
-        <li class="version
-          {{~#if (and (eq ../this @root.page.component) (eq this @root.page.componentVersion))}} is-current{{/if~}}
-          {{~#if (eq this ../latestVersion)}} is-latest{{/if}}">
-          <span class="title">Version</span>
-          <a href="{{{relativize ./url}}}">{{./displayVersion}}</a>
-          {{!-- <img src="{{uiRootPath}}/img/chevron.svg"> --}}
-        </li>
+          <li class="version
+            {{~#if (and (eq ../this @root.page.component) (eq this @root.page.componentVersion))}} is-current{{/if~}}
+            {{~#if (eq this ../latestVersion)}} is-latest{{/if}}">
+            <span class="title">Version</span>
+            {{#if ../../page.versions }}
+              {{#each ../../page.versions }}
+                {{#if (eq ./version ../version)}}
+                    <a href="{{{relativize ./url}}}">{{./displayVersion}}</a>
+                {{/if}}                
+              {{/each}}
+            {{/if}}
+          </li>
         {{/each}}
       </ul>
     </li>
