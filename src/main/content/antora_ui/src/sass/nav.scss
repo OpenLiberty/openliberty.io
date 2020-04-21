@@ -72,21 +72,6 @@ html.is-clipped--nav {
   }
 }
 
-// .nav-panel-menu:not(.is-active) .nav-menu {
-//   opacity: 0.75;
-// }
-
-// .nav-panel-menu:not(.is-active)::after {
-//   content: "";
-//   background: rgba(0, 0, 0, 0.5);
-//   display: block;
-//   position: absolute;
-//   top: var(--drawer-height);
-//   right: 0;
-//   bottom: 0;
-//   left: 0;
-// }
-
 .nav-panel-menu::-webkit-scrollbar {
   width: 0.25rem;
 }
@@ -218,12 +203,12 @@ html.is-clipped--nav {
     padding-left: calc(2 * var(--TOC-indention));
   }
   &[data-depth="3"] {
-    margin-left: -57px;
-    padding-left: 57px;
+    margin-left: calc(-3 * var(--TOC-indention));
+    padding-left: calc(3 * var(--TOC-indention));
   }
   &[data-depth="4"] {
-    margin-left: -76px;
-    padding-left: 76px;
+    margin-left: calc(-4 * var(--TOC-indention));
+    padding-left: calc(4 * var(--TOC-indention));
   }
 }
 
@@ -271,7 +256,6 @@ html.is-clipped--nav {
     font-size: 11px;
     vertical-align: middle;
     color: #5D6A8E;
-    // opacity: 0.75;
     letter-spacing: 0;
 
     &:after {
@@ -371,7 +355,6 @@ html.is-clipped--nav {
   font-size: 11px;
   font-family: Asap-Medium;
   color: #5d6a8e;
-  // opacity: 0.75;
   white-space: nowrap;
   display: inline-block;
 }
