@@ -27,7 +27,7 @@ function addTOCClick() {
 
         if (isMobileView() || isIPadView()) {
             $("#breadcrumb_hamburger").trigger("click");
-            $('.nav-container').removeClass('is-active'); // Hide the nav menu
+            $('.nav-container .nav-panel-menu').removeClass('is-active'); // Hide the nav menu
             $('footer').hide();
         }
 
@@ -48,9 +48,9 @@ function addTOCClick() {
         createClickableBreadcrumb(getContentBreadcrumbTitle(), true);
     };
 
-    $(".nav-container a").off("click").on("click", onclick);
+    $(".nav-container .nav-panel-menu a").off("click").on("click", onclick);
 
-    $(".nav-container a").off('keypress').on('keypress', function (event) {
+    $(".nav-container .nav-panel-menu a").off('keypress').on('keypress', function (event) {
         event.stopPropagation();
         // Space key
         if (event.which === 13 || event.keyCode === 13 || event.which === 32 || event.keyCode === 32) {
@@ -61,7 +61,7 @@ function addTOCClick() {
 
 // Add css to selected TOC. If scrollTo is specified, scroll the TOC element into viewport.
 function setSelectedTOC(resource, scrollTo) {
-    var currentTOCSelected = $(".is-current-page");
+    var currentTOCSelected = $(".nav-menu .toc_sub_selected .is-current-page");
     var newHref = resource.attr("href");
     
     if(newHref){
@@ -94,7 +94,7 @@ function setSelectedTOC(resource, scrollTo) {
 
 // Remove the 2nd level subtitles from TOC
 function removeHashRefTOC(href) {
-    var hashHref = $(".nav-container").find("a[href^='" + href + "#']");
+    var hashHref = $(".nav-container .nav-panel-menu").find("a[href^='" + href + "#']");
     $(hashHref).each(function () {
         $(this).parent().remove();
     });
@@ -498,11 +498,11 @@ function findTOCElement(processHash) {
 
     var matchingTOCElement;
     if (!processHash) {
-        matchingTOCElement = $(".nav-container a[href='" + href + "']");
+        matchingTOCElement = $(".nav-container .nav-panel-menu a[href='" + href + "']");
     } else {
         if (hash !== undefined && hash !== "") {
             href = href + hash;
-            matchingTOCElement = $(".nav-container a[href='" + href + "']");
+            matchingTOCElement = $(".nav-container .nav-panel-menu a[href='" + href + "']");
             if (matchingTOCElement.length === 0) {
                 matchingTOCElement = undefined;
             }
@@ -819,7 +819,7 @@ function handlePopstate() {
                 }
 
                 // select TOC
-                var TOCSubElement = $(".nav-container").find("a[href='" + event.state.href + "']");
+                var TOCSubElement = $(".nav-container .nav-panel-menu").find("a[href='" + event.state.href + "']");
                 if (TOCSubElement.length === 1) {
                     setSelectedTOC(TOCSubElement, true);
                 }
