@@ -34,7 +34,7 @@ function disableFloatingTOC() {
 }
 
 function enableFloatingTOC() {
-    $('#toc_inner').css({"position":"fixed", "top":"100px"});    
+    $('#toc_inner').css({"position":"fixed", "top":"60px"});    
 }
 
 function calculateTOCHeight(){
