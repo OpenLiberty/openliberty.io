@@ -86,6 +86,7 @@ html.is-clipped--nav {
   width: 100%;
   line-height: var(--nav-line-height);
   position: relative;
+  overflow: hidden;
 }
 
 .nav-menu h3.title {
@@ -138,6 +139,8 @@ html.is-clipped--nav {
 .nav-menu > .nav-list {
   margin-bottom: 0.5rem;
   padding-left: 19px;
+  height: calc(100vh - 178.6px);
+  overflow: auto;
 }
 
 .nav-item {
@@ -163,15 +166,16 @@ html.is-clipped--nav {
 
 .nav-item {
   & > .nav-item-toggle {
+    float: right;
+    clear: both;
     background: transparent url(../img/chevron.svg) no-repeat center / 50%;
     transform: rotate(270deg);
     border: none;
     outline: none;
-    line-height: inherit;
-    position: absolute;
+    line-height: inherit;    
     height: 2em;
     width: 2em;
-    right: 5em;
+    margin-right: 5em;
   }
   &:hover {
     cursor: pointer;
