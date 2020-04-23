@@ -223,7 +223,7 @@ function handlePrereqsPopup() {
             firstCodeSection = firstCodeSection.parents('.sect1').find('h2').first();
         }
         var firstCodeSectionTop = Math.round(firstCodeSection[0].getBoundingClientRect().top);
-        var navHeight = $('.navbar').height();
+        var navHeight = $('nav').height();
         var blurCodeOnRight = (firstCodeSectionTop - navHeight) > 1;
 
         var firstHotspot = $("#guide_column .hotspot:visible")[0];
