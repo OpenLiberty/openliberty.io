@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 IBM Corporation and others.
+ * Copyright (c) 2018, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,34 +10,115 @@
  *******************************************************************************/
 package io.openliberty.website.data;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 
 import io.openliberty.website.Constants;
 
+/**
+ * This JSON-B object is the most important one since it is used to provide
+ * the list of all  builds to the openliberty.io website.
+ */
 public class BuildData {
-	private LatestReleases latestReleases;
-	private BuildLists builds;
+	@JsonbProperty(Constants.LATEST_RELEASES)
+	public LatestReleases latestReleases = new LatestReleases();
+	@JsonbProperty(Constants.BUILDS)
+	public ConcurrentMap<BuildType, Set<BuildInfo>> builds = new ConcurrentHashMap<>();
 
-	public BuildData(LatestReleases latestReleases, BuildLists builds) {
-		this.latestReleases = latestReleases;
-		this.builds = builds;
+	// These two fields should not be in the JSON-B payload
+	/** The object tracking the last update start and success */
+	@JsonbTransient
+	private LastUpdate lastUpdate;
+	/** Tracking how many builds are pending vs completed so we can successfully mark the update as complete */
+	@JsonbTransient
+	private AtomicInteger pendingBuilds = new AtomicInteger();
+
+	/**
+	 * The constructor for this initializes the builds map with a sorted set
+	 * of BuildInfos. Adding something new to BuildType will automatically update
+	 * the TreeSet, so we don't need to worry later about a get on builds returning
+	 * null. This is simpler than using another JSON-B object since the only thing
+	 * we need to do to add a new BuildType is update the enum.
+	 * 
+	 * @param lu The LastUpdate object.
+	 */
+	public BuildData(LastUpdate lu) {
+		lastUpdate = lu;
+
+		for (BuildType type : BuildType.values()) {
+			Set<BuildInfo> storedBuilds = new TreeSet<>(new Comparator<BuildInfo>() {
+
+				@Override
+				public int compare(BuildInfo o1, BuildInfo o2) {
+					return o2.dateTime.compareTo(o1.dateTime);
+				}
+			});
+			this.builds.put(type, storedBuilds);
+		}
 	}
 
-	public JsonObject asJsonObject() {
-		JsonObjectBuilder data = Json.createObjectBuilder();
-		data.add(Constants.LATEST_RELEASES, latestReleases != null ? latestReleases.asJsonObject() : Json.createObjectBuilder().build());
-		data.add(Constants.BUILDS, builds != null ? builds.asJsonObject() : Json.createObjectBuilder().build());
-		return data.build();
+	/**
+	 * This method is used to add a new build to the build data. This
+	 * method does two things. First it adds it to the map in the right place,
+	 * if the build already exists then the old data will be purged. It also
+	 * updates latestReleases with the new data.
+	 * 
+	 * <p>BuildInfo must have dateTime set when this is called or a NPE will occur</p>
+	 * 
+	 * @param type The type of build being added
+	 * @param bi the build info for the build.
+	 */
+	public synchronized void supply(BuildType type, BuildInfo bi) {
+		Set<BuildInfo> info = builds.get(type);
+		// Since the build may already exist we need to replace
+		// that involves removing the existing one and readding
+		// this is safe since the equals doesn't use all the data
+		// just the publication date.
+		info.remove(bi);
+		info.add(bi);
+
+		// We need to update the latest release for both tools and
+		// runtime. If the current value is null we set it to this, 
+		// otherwise we do a comparison based on the dateTime. If this
+		// build is the same or newer we update the release.
+		if (type == BuildType.runtime_releases) {
+			if (latestReleases.runtime == null || 
+			    latestReleases.runtime.dateTime.compareTo(bi.dateTime) <= 0) {
+				latestReleases.runtime = bi;
+			} 
+		} else if (type == BuildType.tools_releases) {
+			if (latestReleases.tools == null || 
+			    latestReleases.tools.dateTime.compareTo(bi.dateTime) <= 0) {
+				latestReleases.tools = bi;
+			} 
+		}
+
+		// Finally we want to decrement the pending builds and if it comes back
+		// as zero then we mark the build as successfully updated. The use of
+		// AtomicInteger is probalby over kill since there is a lock held when it
+		// is updated. Hopefully at some point in the future we can revisit to 
+		// remove the locks.
+		if (pendingBuilds.decrementAndGet() == 0) {
+			lastUpdate.markSuccessfulUpdate();
+		}
 	}
 
-	public LatestReleases getLatestReleases() {
-		return latestReleases;
+	/**
+	 * Used to indicate builds are about to be provided. This could be either new
+	 * builds or refreshing existing ones.
+	 * 
+	 * @param count The number of builds to add.
+	 */
+	public synchronized void pending(int count) {
+		if (pendingBuilds.getAndAdd(count) == 0) {
+			lastUpdate.markUpdateAttempt();
+		}
 	}
-
-	public BuildLists getBuilds() {
-		return builds;
-	}
-
 }

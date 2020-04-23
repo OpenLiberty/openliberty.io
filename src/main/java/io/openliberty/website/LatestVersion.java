@@ -19,8 +19,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import io.openliberty.website.data.LatestReleases;
 
+/**
+ * The Open Liberty landing page makes a request to a latestVersion.js file in order 
+ * to find out the most recently released version. This servlet returns the javascript
+ * file based on the data held by BuildManager. This means that as soon as a new build
+ * is descovered the Open Liberty landing page will know when accessed.
+ */
 @WebServlet("/latestVersion.js")
 public class LatestVersion extends HttpServlet {
+
+  private static final long serialVersionUID = -1106623346121641764L;
 
   @Inject
   private BuildsManager manager;
@@ -34,13 +42,23 @@ public class LatestVersion extends HttpServlet {
                             "};";
 
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    // send the response.
     resp.setContentType("application/javascript");
     resp.getWriter().println(response);
   }
 
+  /**
+   * This method gets the latest release and updates the template replacing the Liberty 
+   * version with the most recent version.
+   * 
+   * Note this was written assuming that doing it in init would be more efficient, however
+   * either each request results in a new servlet instance making this redundant, or there 
+   * is reuse at which point the data will be stale when the whole point of this is to be
+   * super current. This note is here because this needs looking at again.
+   */
   public void init() {
     LatestReleases releases = manager.getLatestReleases();
-    String v = releases.getRuntimeRelease().getVersion();
+    String v = releases.runtime.version;
     if (!v.equals(version)) {
       response = template.replaceAll("0\\.0\\.0\\.0", v);
       version = v;
