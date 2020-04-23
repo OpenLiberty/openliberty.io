@@ -200,6 +200,8 @@ public class DHEBuildParser {
 			for (String version : versions) {
 				BuildInfo info = store.getBuildInfo(type, version);
 
+				info.sizeInBytes = store.getFileSize(type, version, info.driverLocation);
+
 				add(type, version, info);
 			}
 		}

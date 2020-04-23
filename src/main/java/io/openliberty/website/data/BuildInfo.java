@@ -24,11 +24,6 @@ import io.openliberty.website.Constants;
  * returning directly from the Open Liberty REST API. Not all fields are mandatory. The DHE usage of this
  * has all locations relative, but from the Open Liberty REST API they are all absolute.
  * 
- * <p>At this time the size_in_bytes field is present, but does not appear used. The package_locations may not
- * be present. If present this is a list of alternative package locations. The format of this differs between
- * the DHE version of this and the Open Liberty REST API version. In DHE each entry is a simple file name, in
- * the Open Liberty REST API each entry in the array is a name = url format.</p>
- * 
  * <p>This can be used as a key in Map, if it is not set then a NPE will occur. The resolveLocations method is 
  * the primary method used prior to using this in this way, this is because the equals/hashcode uses dateTime
  * field for identity.</p>

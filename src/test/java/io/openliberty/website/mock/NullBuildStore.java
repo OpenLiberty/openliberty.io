@@ -10,6 +10,8 @@
  *******************************************************************************/
 package io.openliberty.website.mock;
 
+import javax.ws.rs.core.Response;
+
 import io.openliberty.website.data.BuildInfo;
 import io.openliberty.website.dheclient.BuildStore;
 import io.openliberty.website.dheclient.data.BuildListInfo;
@@ -23,6 +25,11 @@ public class NullBuildStore implements BuildStore {
 
     @Override
     public BuildInfo getBuildInfo(String downloadType, String buildType, String version) {
+        return null;
+    }
+
+    @Override
+    public Response getFileData(String downloadType, String buildType, String version, String fileName) {
         return null;
     }
     

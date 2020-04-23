@@ -13,10 +13,12 @@ package io.openliberty.website.dheclient;
 import java.time.temporal.ChronoUnit;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
@@ -91,6 +93,21 @@ public interface BuildStore {
     public BuildInfo getBuildInfo(@PathParam("downloadType") String downloadType, @PathParam("buildType") String buildType, @PathParam("version") String version);
 
     /**
+     * This method does a head for a given file to return metadata. The only client usage of this just
+     * wants the file size, but MP Rest Client doesn't make that simple to do, so this returns all the
+     * data in a Response.
+     * 
+     * @param downloadType The type of download (runtime or tools)
+     * @param buildType The build type (nightly or release)
+     * @param version The date/time that the build was published (nominally referred to in DHE as version)
+     * @param fileName The name of the file
+     * @return a Response encapsulating the returned data
+     */
+    @HEAD
+    @Path("{downloadType}/{buildType}/{version}/{fileName}")
+    public Response getFileData(@PathParam("downloadType") String downloadType, @PathParam("buildType") String buildType, @PathParam("version") String version, @PathParam("fileName") String fileName);
+
+    /**
      * This is a convenience method to allow getting a BuildInfo using the BuildType annotation so
      * clients do not need to know how to unpack this into the DHE structure. 
      * 
@@ -112,4 +129,19 @@ public interface BuildStore {
     public default BuildListInfo getBuildListInfo(BuildType type) {
         return getBuildListInfo(type.getType(), type.getStability());
     }
+
+    /**
+     * This is a convenience method to obtain from DHE the size of the given file. MP Rest Client
+     * doesn't provide a way to do this, so we convert from the getFileData MP Rest Client method
+     * 
+     * @param type the type of the build
+     * @param version the verison of the build
+     * @param fileName the file in the build
+     * @return the size of the file
+     */
+    public default int getFileSize(BuildType type, String version, String fileName) {
+        return getFileData(type.getType(), type.getStability(), version, fileName).getLength();
+    }
+
+
 }
