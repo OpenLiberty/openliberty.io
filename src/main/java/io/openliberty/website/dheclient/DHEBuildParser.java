@@ -10,406 +10,198 @@
  *******************************************************************************/
 package io.openliberty.website.dheclient;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.Future;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.json.JsonArray;
-import javax.json.JsonNumber;
-import javax.json.JsonObject;
-import javax.json.JsonString;
-import javax.json.JsonValue;
 
 import io.openliberty.website.Constants;
 import io.openliberty.website.data.BuildData;
 import io.openliberty.website.data.BuildInfo;
-import io.openliberty.website.data.BuildLists;
+import io.openliberty.website.data.BuildType;
 import io.openliberty.website.data.LastUpdate;
-import io.openliberty.website.data.LatestReleases;
+import io.openliberty.website.dheclient.data.BuildListInfo;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+/**
+ * This class manages accessing and updating the build data from DHE.
+ * DHE is an IBM managed download site where Liberty builds are physically stored.
+ */
+@ApplicationScoped
 public class DHEBuildParser {
 
 	private static final Logger logger = Logger.getLogger(DHEBuildParser.class.getName());
 
 	@Inject
-	private DHEClient dheClient;
+	private BuildStore store;
 
 	@Inject
-	private ExecutorService exec;
+	private ScheduledExecutorService exec;
 
 	private final LastUpdate lastUpdate = new LastUpdate();
 
-	private volatile BuildData buildData = new BuildData(new LatestReleases(), new BuildLists());
-	private volatile Future<LastUpdate> scheduledUpdate = null;
-
+	private volatile BuildData buildData = new BuildData(lastUpdate);
 
 	/** Defined default constructor */
 	public DHEBuildParser() {
 	}
 
 	/** Allow for unittest injection */
-	public DHEBuildParser(DHEClient client) {
-		dheClient = client;
-		exec = new ForkJoinPool();
+	public DHEBuildParser(BuildStore store) {
+		this.store = store;
+		exec = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
+		init();
 	}
 
 	public LastUpdate getLastUpdate() {
 		if (logger.isLoggable(Level.FINER)) {
-			logger.log(Level.FINE, "getLastUpdate()", lastUpdate.asJsonObject());
+			logger.log(Level.FINE, "getLastUpdate()", lastUpdate);
 		}
 		return lastUpdate;
 	}
 
 	public BuildData getBuildData() {
-		updateAsNeeded();
 		if (logger.isLoggable(Level.FINER)) {
-			logger.log(Level.FINE, "getBuildData()", buildData.asJsonObject());
+			logger.log(Level.FINE, "getBuildData()", buildData);
 		}
 		return buildData;
 	}
 
 	/**
-	 * Conditionally update. Only try to update if: A) We have never been
-	 * successfully updated B) We have not successfully updated recently
-	 *
-	 * In scenario (A), we want to update and block. In scenario (B), we want to
-	 * 'schedule' an update on a new thread.
+	 * This method initalizes build fetching for the specified build type. The 
+	 * intent for this method is to inline fetch the most recent release build,
+	 * but then defer loading the others to another thread. This way we always
+	 * have a build to return, but most builds are fetched async.
+	 * 
+	 * @param type the type of build to initalize
 	 */
-	private void updateAsNeeded() {
-		if (logger.isLoggable(Level.FINER)) {
-			logger.log(Level.FINE, "updateAsNeeded()");
-		}
-		
-		if (lastUpdate.hasNeverSuccessfullyUpdated()) {
-			blockingUpdate();
-		} else if (lastUpdate.isUpdateNeeded()) {
-			scheduleAsyncUpdate();
-		} 
+	private void initBuilds(BuildType type) {
+		// Do a sync get to load all versions
+		BuildListInfo buildList = store.getBuildListInfo(type);
 
-		// forcing an update if runtime nightly builds is empty		
-		BuildLists builds = buildData.getBuilds();
-		if (builds != null) {
-			if (logger.isLoggable(Level.FINER)) {
-				logger.log(Level.FINE, "builds=", builds.asJsonObject());
-			}
-			
-			List<BuildInfo> runtimeNightlyBuilds = builds.getRuntimeNightlyBuilds();
-			if (runtimeNightlyBuilds.isEmpty()) {
-				if (logger.isLoggable(Level.FINER)) {
-					logger.log(Level.FINE, "runtimeNightlyBuilds is empty - force an update");
+		// If something goes wrong this could be null, or an empty list so cope gracefully
+		if (buildList != null && !buildList.versions.isEmpty()) {
+			// Sort by reverse natural order, which means the most recently published build 
+			// will be first
+			Collections.sort(buildList.versions, Comparator.reverseOrder());
+
+			// notify the number of builds that are about  to be fetched.
+			buildData.pending(buildList.versions.size());
+
+			// remove the first one and fetch it syncronously.
+			String mostRecent = buildList.versions.remove(0);
+			BuildInfo info = store.getBuildInfo(type, mostRecent);
+
+			// add the build into the build data store.
+			add(type, mostRecent, info);
+
+			// Submit an async thread to go fetch all the other builds.
+			exec.submit(new RetrieveBuildList(type) {
+				public void run() {
+					processBuildList(buildList.versions);
 				}
-				blockingUpdate();
-			}
+			});
 		}
-	}
-
-	/** Unconditionally force an update, blocking the thread until complete. */
-	public LastUpdate blockingUpdate() {
-		LastUpdate ret = lastUpdate;
-		try {
-			ret = scheduleAsyncUpdate().get();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
-		if (logger.isLoggable(Level.FINER)) {
-			logger.log(Level.FINE, "blockingUpdate()", ret);
-		}
-		return ret;
 	}
 
 	/**
-	 * Handle the multi-threaded scenario where multiple threads may come in and
-	 * request updates. We only want to schedule one update, but return a common
-	 * indicator that the job is running.
-	 *
-	 * Need to handle the case where we have two threads coming in, asking for work
-	 * to be done, and the first thread schedules an update. The second thread
-	 * should NOT schedule a new job. The first job's Future should be returned to
-	 * the second thread.
+	 * BuildInfo's fetched from DHE need some post processing before they can
+	 * be returned by the website, so this method makes sure all that code is done
+	 * in one place.
+	 * 
+	 * @param type the type of build
+	 * @param version the date of publication
+	 * @param info the build info
 	 */
-	public synchronized Future<LastUpdate> scheduleAsyncUpdate() {
-		if (scheduledUpdate == null) {
-			scheduledUpdate = submit(new UpdateBuildData());
-		}
-		if (logger.isLoggable(Level.FINER)) {
-			logger.log(Level.FINE, "scheduleAsyncUpdate()", scheduledUpdate);
-		}
-		return scheduledUpdate;
-	}
-
-	private synchronized void clearScheduledUpdate() {
-		scheduledUpdate = null;
-	}
-
-	private <T> Future<T> submit(Callable<T> c) {
-		return exec.submit(c);
-	}
-
-	class UpdateBuildData implements Callable<LastUpdate> {
-
-		@Override
-		public LastUpdate call() throws Exception {
-			if (logger.isLoggable(Level.FINER)) {
-		        logger.log(Level.FINE, "UpdateBuildData.call()");
-            }
-			lastUpdate.markUpdateAttempt();
-
-			System.out.println("Starting to process");
-
-			Future<List<BuildInfo>> runtimeReleases = submit(
-					new RetrieveBuildList(Constants.DHE_RUNTIME_PATH_SEGMENT, Constants.DHE_RELEASE_PATH_SEGMENT));
-			Future<List<BuildInfo>> runtimeNightly = submit(
-					new RetrieveBuildList(Constants.DHE_RUNTIME_PATH_SEGMENT, Constants.DHE_NIGHTLY_PATH_SEGMENT));
-			Future<List<BuildInfo>> toolsReleases = submit(
-					new RetrieveBuildList(Constants.DHE_TOOLS_PATH_SEGMENT, Constants.DHE_RELEASE_PATH_SEGMENT));
-			Future<List<BuildInfo>> toolsNightly = submit(
-					new RetrieveBuildList(Constants.DHE_TOOLS_PATH_SEGMENT, Constants.DHE_NIGHTLY_PATH_SEGMENT));
-
-			List<BuildInfo> updatedRuntimeReleases = getSafe(runtimeReleases);
-			List<BuildInfo> updatedRuntimeNightlyBuilds = getSafe(runtimeNightly);
-			List<BuildInfo> updatedToolsReleases = getSafe(toolsReleases);
-			List<BuildInfo> updatedToolsNightlyBuilds = getSafe(toolsNightly);
-			if (logger.isLoggable(Level.FINER)) {
-				logger.log(Level.FINE, "updatedRuntimeReleases=", updatedRuntimeReleases);
-				logger.log(Level.FINE, "updatedRuntimeNightlyBuilds=", updatedRuntimeNightlyBuilds);
-				logger.log(Level.FINE, "updatedToolsReleases=", updatedToolsReleases);
-				logger.log(Level.FINE, "updatedToolsNightlyBuilds=", updatedToolsNightlyBuilds);
-			}
-			if (isNotEmpty(updatedRuntimeReleases) && isNotEmpty(updatedToolsReleases)) {
-				BuildInfo latestRuntimeRelease = pickLastestBuild(updatedRuntimeReleases);
-				BuildInfo latestToolsRelease = pickLastestBuild(updatedToolsReleases);
-				if (latestRuntimeRelease != null) {
-					LatestReleases latest = new LatestReleases(latestRuntimeRelease, latestToolsRelease);
-					BuildLists all = new BuildLists();
-					all.setRuntimeReleases(updatedRuntimeReleases);
-					all.setRuntimeNightlyBuilds(updatedRuntimeNightlyBuilds);
-					all.setToolsReleases(updatedToolsReleases);
-					all.setToolsNightlyBuild(updatedToolsNightlyBuilds);
-
-					buildData = new BuildData(latest, all);
-					lastUpdate.markSuccessfulUpdate();
-
-					if (logger.isLoggable(Level.FINER)) {
-						logger.log(Level.FINE, "buildData=", buildData.asJsonObject());
-					}
-				}
+	public void add(BuildType type, String version, BuildInfo info) {
+		if (info != null) {
+			// If the package locations is empty set it to null. This is important
+			// because the BuildInfo inits it to an empty list which means that when
+			// sent to the client if it is non-null the client gets an empty list
+			// and the website doesn't cope, by setting it to null it means it isn't
+			// sent and the website looks correct.
+			if (info.packageLocations.isEmpty()) {
+				info.packageLocations = null;
 			}
 
-			clearScheduledUpdate();
-			if (logger.isLoggable(Level.FINER)) {
-				logger.log(Level.FINE, "lastUpdate=", lastUpdate.asJsonObject());
-			}
-			System.out.println("Processed");
-			return lastUpdate;
-		}
-
-		private boolean isNotEmpty(List<BuildInfo> updatedRuntimeReleases) {
-			return (updatedRuntimeReleases != null) && (!updatedRuntimeReleases.isEmpty());
-		}
-
-		private List<BuildInfo> getSafe(Future<List<BuildInfo>> future) {
-			try {
-				return future.get();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		private BuildInfo pickLastestBuild(List<BuildInfo> buildsList) {
-			BuildInfo latest = null;
-
-			for (BuildInfo info : buildsList) {
-				if (latest == null) {
-					latest = info;
-				}
-				if (info.getDateTime().compareTo(latest.getDateTime()) > 0) {
-					latest = info;
-				}
-			}
-			if (logger.isLoggable(Level.FINER)) {
-				logger.log(Level.FINE, "pickLastestBuild()", latest == null? null : latest.asJsonObject());
-			}
-			return latest;
+			// Make sure we resolve the locations for the Build 
+			info.resolveLocations(Constants.DHE_URL, type, version);
+			// provide the build to the build data object.
+			buildData.supply(type, info);
 		}
 	}
 
-	class RetrieveBuildInfo implements Callable<BuildInfo> {
-		private String artifactPath;
-		private String buildTypePath;
-		private String dateTime;
+	/**
+	 * This method kicks of the initialization routines.
+	 */
+	@PostConstruct
+	public void init() {
+		// Start out by running init for the releases. We want to make sure we always
+		// have the most recent releases, but older ones are less critical in the situation
+		// where it takes time to fetch the data from DHE.
+		initBuilds(BuildType.runtime_releases);
+		initBuilds(BuildType.tools_releases);
 
-		RetrieveBuildInfo(String artifactPath, String buildTypePath, String dateTime) {
-			this.artifactPath = artifactPath;
-			this.buildTypePath = buildTypePath;
-			this.dateTime = dateTime;
+		// We kicked off the release already so we don't need to resync for an hour
+		exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.runtime_releases), 1, 1, TimeUnit.HOURS);
+		exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.tools_releases), 1, 1, TimeUnit.HOURS);
+		// We haven't read any data about nightly builds so we need to run this now
+		exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.runtime_nightly_builds), 0, 1, TimeUnit.HOURS);
+		exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.tools_nightly_builds), 0, 1, TimeUnit.HOURS);
+	}
+
+	/**
+	 * This Runnable handles fetching builds for a given type.
+	 */
+	class RetrieveBuildList implements Runnable {
+		private BuildType type;
+
+		RetrieveBuildList(BuildType t) {
+			type = t;
 		}
 
 		@Override
-		public BuildInfo call() throws Exception {
-			if (logger.isLoggable(Level.FINER)) {
-		        logger.log(Level.FINE, "RetrieveBuildInfo.call()");
-            }
-			String dateTimePath = dateTime + '/';
-			String informationFileURL = Constants.DHE_URL + artifactPath + buildTypePath + dateTimePath
-					+ Constants.DHE_INFO_JSON_FILE_NAME;
-			JsonObject buildInformationSrc = dheClient.retrieveJSON(informationFileURL);
-			if (buildInformationSrc != null) {
-				return parseBuildInformation(artifactPath, buildTypePath, dateTime, dateTimePath, buildInformationSrc);
+		public void run() {
+			//  find out which builds we need
+			BuildListInfo listInfo = store.getBuildListInfo(type);
+
+			// If we don't get any builds back just skip.
+			if (listInfo != null && !listInfo.versions.isEmpty()) {
+				// Sort by reverse order so we fetch newer builds first. This means that
+				// we will load builds we don't know about before refrehsing builds we
+				// already know about. Updating build data doesn't happen often, but it
+				// does happen.
+				Collections.sort(listInfo.versions, Comparator.reverseOrder());
+
+				// Notify that builds are pending
+				buildData.pending(listInfo.versions.size());
+
+				// process the build list.
+				processBuildList(listInfo.versions);
 			}
-			return null;
 		}
 
-		private BuildInfo parseBuildInformation(String artifactPath, String buildTypePath, String dateTime,
-				String dateTimePath, JsonObject buildInformationSrc) {
-			if (logger.isLoggable(Level.FINER)) {
-				logger.log(Level.FINE, "parseBuildInformation()", 
-				           new Object[]{ artifactPath, buildTypePath, dateTime,
-							             dateTimePath, buildInformationSrc });
+		/**
+		 * This method loads all the build info. The main reason it is a separate
+		 * method is because this class is subclassed in the initBuilds method
+		 * where the logic in the run method isn't required.
+		 * 
+		 * @param versions the versions to fetch.
+		 */
+		public void processBuildList(Collection<String> versions) {
+			for (String version : versions) {
+				BuildInfo info = store.getBuildInfo(type, version);
+
+				add(type, version, info);
 			}
-			BuildInfo info = new BuildInfo();
-			info.addDateTime(dateTime);
-
-			JsonValue versionObject = buildInformationSrc.get(Constants.VERSION);
-			if (versionObject instanceof JsonString) {
-				info.addVersion(((JsonString) versionObject).getString());
-			}
-
-			JsonValue testsPassedObject = buildInformationSrc.get(Constants.TESTS_PASSED);
-			if (testsPassedObject instanceof JsonString) {
-				info.addTestPassed(((JsonString) testsPassedObject).getString());
-			}
-			if (testsPassedObject instanceof JsonNumber) {
-				info.addTestPassed(((JsonNumber) testsPassedObject).toString());
-			}
-
-			JsonValue totalTestsObject = buildInformationSrc.get(Constants.TOTAL_TESTS);
-			if (totalTestsObject instanceof JsonString) {
-				info.addTotalTests(((JsonString) totalTestsObject).getString());
-			}
-			if (totalTestsObject instanceof JsonNumber) {
-				info.addTotalTests(((JsonNumber) totalTestsObject).toString());
-			}
-
-			JsonValue buildLogObject = buildInformationSrc.get(Constants.BUILD_LOG);
-			if (buildLogObject instanceof JsonString) {
-				String buildLog = ((JsonString) buildLogObject).getString();
-				String newBuildLog = Constants.DHE_URL + artifactPath + buildTypePath + dateTimePath + buildLog;
-				info.addBuildLog(newBuildLog);
-			}
-
-			JsonValue testLogObject = buildInformationSrc.get(Constants.TESTS_LOG);
-			if (testLogObject instanceof JsonString) {
-				String testsLog = ((JsonString) testLogObject).getString();
-				String newTestsLog = Constants.DHE_URL + artifactPath + buildTypePath + dateTimePath + testsLog;
-				info.addTestLog(newTestsLog);
-			}
-
-			JsonValue driverLocationObject = buildInformationSrc.get(Constants.DRIVER_LOCATION);
-			if (driverLocationObject instanceof JsonString) {
-				String driverLocation = ((JsonString) driverLocationObject).getString();
-				String newDrvierLocation = Constants.DHE_URL + artifactPath + buildTypePath + dateTimePath
-						+ driverLocation;
-				info.addDriverLocation(newDrvierLocation);
-
-				String size = dheClient.retrieveSize(newDrvierLocation);
-				if (size != null) {
-					info.addSizeInBytes(size);
-				}
-			}
-
-			JsonValue packageLocationsObject = buildInformationSrc.get(Constants.PACKAGE_LOCATIONS);
-			if (packageLocationsObject instanceof JsonArray) {
-				JsonArray packageLocations = (JsonArray) packageLocationsObject;
-				// Form an array of packageName=packageLocation
-				for (int i = 0; i < packageLocations.size(); i++) {
-					String packageLocation = ((JsonString) packageLocations.get(i)).getString();
-					String[] parts = packageLocation.split("-");
-					if (parts.length == 3) {
-						String packageName = parts[1];
-						String extension = parts[2];
-						String packageVersion = ((JsonString) buildInformationSrc.get(Constants.VERSION)).getString();
-						extension = extension.substring(extension.indexOf(packageVersion) + packageVersion.length());
-						String newLocation = Constants.DHE_URL + artifactPath + buildTypePath + dateTimePath
-								+ packageLocation;
-						info.addPackageLocation(packageName + extension, newLocation);
-					}
-				}
-			}
-			if (logger.isLoggable(Level.FINER)) {
-				logger.log(Level.FINE, "parseBuildInformation() info=", info == null? null : info.asJsonObject());
-			}
-			return info;
-		}
-
-	}
-
-	class RetrieveBuildList implements Callable<List<BuildInfo>> {
-		private String artifactPath;
-		private String buildTypePath;
-
-		RetrieveBuildList(String artifactPath, String buildTypePath) {
-			this.artifactPath = artifactPath;
-			this.buildTypePath = buildTypePath;
-		}
-
-		@Override
-		public List<BuildInfo> call() throws Exception {
-			List<BuildInfo> builds = new ArrayList<BuildInfo>();
-			String versionsURL = Constants.DHE_URL + artifactPath + buildTypePath + Constants.DHE_INFO_JSON_FILE_NAME;
-			JsonObject versions = dheClient.retrieveJSON(versionsURL);
-			if (versions != null) {
-				JsonValue versionsObject = versions.get(Constants.VERSIONS);
-				if (versionsObject instanceof JsonArray) {
-
-					List<Future<BuildInfo>> buildInfoFutures = new ArrayList<>();
-					for (JsonValue value : (JsonArray) versionsObject) {
-						if (value instanceof JsonString) {
-							buildInfoFutures.add(submit(new RetrieveBuildInfo(artifactPath, buildTypePath,
-									((JsonString) value).getString())));
-						}
-					}
-
-					for (Future<BuildInfo> f : buildInfoFutures) {
-						BuildInfo info = getSafe(f);						
-						if (info != null) {
-							if (logger.isLoggable(Level.FINER)) {
-								logger.log(Level.FINE, "RetrieveBuildList.call() build=", info.asJsonObject());
-							}
-							builds.add(info);
-						}
-					}
-
-				}
-			}
-			if (logger.isLoggable(Level.FINER)) {
-				logger.log(Level.FINE, "RetrieveBuildList.call() builds=", builds);
-			}
-			return builds;
-		}
-
-		private BuildInfo getSafe(Future<BuildInfo> future) {
-			try {
-				return future.get();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-			}
-			return null;
 		}
 	}
 }
