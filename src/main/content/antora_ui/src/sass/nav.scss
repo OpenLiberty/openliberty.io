@@ -186,6 +186,10 @@ html.is-clipped--nav {
   background:#fdf2ea;
   margin-left: calc(-1 * var(--TOC-indention));
   padding-left: var(--TOC-indention);
+  &[data-depth="1"] {
+    margin-left: calc(-2 * var(--TOC-indention));
+    padding-left: calc(2 * var(--TOC-indention) - var(--TOC-orange-border-width));
+  }
   &[data-depth="2"] {
     margin-left: calc(-3 * var(--TOC-indention));
     padding-left: calc(3 * var(--TOC-indention) - var(--TOC-orange-border-width));
