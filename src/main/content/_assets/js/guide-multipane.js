@@ -347,7 +347,7 @@ function restoreCodeColumn(){
     if(!inSingleColumnView()){
         $("body").removeClass("unscrollable");
         $("#code_column").css({
-            "top": "100px"
+            "top": "60px"
         });
         $("#code_column").removeClass("modal");
         remove_highlighting(); // Remove previously highlighted hotspots from mobile view
