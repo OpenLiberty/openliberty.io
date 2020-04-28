@@ -347,7 +347,7 @@ function restoreCodeColumn(){
     if(!inSingleColumnView()){
         $("body").removeClass("unscrollable");
         $("#code_column").css({
-            "top": "100px",
+            "top": "60px",
             "left": "calc(100% - 780px)"
         });
         $("#code_column").removeClass("modal");
