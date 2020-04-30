@@ -20,17 +20,17 @@ import io.openliberty.website.Constants;
  */
 public class LatestReleases {
 
-	@JsonbProperty(Constants.RUNTIME)
-	public BuildInfo runtime;
-	@JsonbProperty(Constants.TOOLS)
-	public BuildInfo tools;
-	
+    @JsonbProperty(Constants.RUNTIME)
+    public BuildInfo runtime;
+    @JsonbProperty(Constants.TOOLS)
+    public BuildInfo tools;
 
-	public LatestReleases() {
-	}
 
-	public LatestReleases(BuildInfo runtime, BuildInfo tools) {
-		this.runtime = runtime;
-		this.tools = tools;
-	}
+    public LatestReleases() {
+    }
+
+    public LatestReleases(BuildInfo runtime, BuildInfo tools) {
+        this.runtime = runtime;
+        this.tools = tools;
+    }
 }
