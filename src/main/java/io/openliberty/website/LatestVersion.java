@@ -11,13 +11,17 @@
 package io.openliberty.website;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import io.openliberty.website.data.LatestReleases;
+import io.openliberty.website.data.BuildInfo;
+import io.openliberty.website.events.RuntimeRelease;
 
 /**
  * The Open Liberty landing page makes a request to a latestVersion.js file in order 
@@ -33,35 +37,38 @@ public class LatestVersion extends HttpServlet {
     @Inject
     private BuildsManager manager;
 
-    private String response;
-    private String version = "0.0.0.0";
     private String template = "var latestReleasedVersion = {\r\n" +
                               "    version: '0.0.0.0',\r\n" +
                               "    productName : 'Open Liberty',\r\n" +
                               "    availableFrom : 'https://openliberty.io/downloads?welcome'\r\n" +
                               "};";
 
+    private static AtomicReference<String> response = new AtomicReference<>();
+
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         // send the response.
         resp.setContentType("application/javascript");
-        resp.getWriter().println(response);
+        resp.getWriter().println(response.get());
     }
 
     /**
      * This method gets the latest release and updates the template replacing the Liberty 
      * version with the most recent version.
      * 
-     * Note this was written assuming that doing it in init would be more efficient, however
-     * either each request results in a new servlet instance making this redundant, or there 
-     * is reuse at which point the data will be stale when the whole point of this is to be
-     * super current. This note is here because this needs looking at again.
      */
     public void init() {
-        LatestReleases releases = manager.getLatestReleases();
-        String v = releases.runtime.version;
-        if (!v.equals(version)) {
-            response = template.replaceAll("0\\.0\\.0\\.0", v);
-            version = v;
-        }
+        releaseUpdate(manager.getLatestReleases().runtime);
+    }
+
+    /**
+     * This method will update the response value when it is notified of a change
+     * to the runtime release.
+     * 
+     * @param releaseInfo the build info of the supplied release build
+     */
+    public void releaseUpdate(@Observes @RuntimeRelease BuildInfo releaseInfo) {
+        String newValue = template.replaceAll("0\\.0\\.0\\.0", releaseInfo.version);
+
+        response.set(newValue);
     }
 }

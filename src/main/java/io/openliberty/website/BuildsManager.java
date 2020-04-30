@@ -50,11 +50,11 @@ public class BuildsManager {
     }
 
     public Map<BuildType, Set<BuildInfo>> getBuilds() {
-        return dheBuilds.getBuildData().builds;
+        return dheBuilds.getBuildData().getBuilds();
     }
 
     public LatestReleases getLatestReleases() {
-        return dheBuilds.getBuildData().latestReleases;
+        return dheBuilds.getBuildData().getLatestReleases();
     }
 
     public LastUpdate getStatus() {

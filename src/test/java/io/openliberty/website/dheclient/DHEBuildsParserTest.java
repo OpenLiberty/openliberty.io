@@ -11,8 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.openliberty.website.Constants;
 import io.openliberty.website.data.BuildData;
@@ -29,14 +28,12 @@ public class DHEBuildsParserTest {
     public void constructor() {
         DHEBuildParser parser = new DHEBuildParser(new NullBuildStore());
         BuildData data = parser.getBuildData();
-        assertNotNull(data.latestReleases);
-        assertNotNull(data.builds);
+        assertNotNull(data.getLatestReleases());
+        assertNotNull(data.getBuilds());
     }
 
     // This test is @Ignored because it attempts to run against DHE live which will not return predictable results
     // It is kept in so it can be run for debug purposes.
-    @Test
-    @Ignore
     public void doRealStuff() {
         RestClientBuilder builder = RestClientBuilder.newBuilder().baseUri(URI.create(Constants.DHE_URL));
         builder.register(BuildInfoMessageBodyReader.class);
@@ -65,12 +62,12 @@ public class DHEBuildsParserTest {
         BuildData data = parser.getBuildData();
 
         assertNotNull("Build data should be present", data);
-        assertNotNull("Latest releases should not be null", data.latestReleases);
-        assertNotNull("Runtime release should not be null", data.latestReleases.runtime);
-        assertEquals("The version is wrong", "20.0.0.3", data.latestReleases.runtime.version);
+        assertNotNull("Latest releases should not be null", data.getLatestReleases());
+        assertNotNull("Runtime release should not be null", data.getLatestReleases().runtime);
+        assertEquals("The version is wrong", "20.0.0.3", data.getLatestReleases().runtime.version);
 
 
-        assertNotNull("The nightly tools build should be present", data.builds.get(BuildType.tools_nightly_builds));
-        assertFalse("There should be tools nightly builds: " + data.builds.get(BuildType.tools_nightly_builds), data.builds.get(BuildType.tools_nightly_builds).isEmpty());
+        assertNotNull("The nightly tools build should be present", data.getBuilds().get(BuildType.tools_nightly_builds));
+        assertFalse("There should be tools nightly builds: " + data.getBuilds().get(BuildType.tools_nightly_builds), data.getBuilds().get(BuildType.tools_nightly_builds).isEmpty());
     }
 }

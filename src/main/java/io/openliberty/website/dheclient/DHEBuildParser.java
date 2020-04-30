@@ -10,16 +10,24 @@
  *******************************************************************************/
 package io.openliberty.website.dheclient;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.ProcessingException;
+import javax.ws.rs.WebApplicationException;
+
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import io.openliberty.website.Constants;
 import io.openliberty.website.data.BuildData;
@@ -46,9 +54,17 @@ public class DHEBuildParser {
     @Inject
     private ScheduledExecutorService exec;
 
-    private final LastUpdate lastUpdate = new LastUpdate();
+    @Inject
+    @ConfigProperty(defaultValue = "1", name = "build.sync.period")
+    private int delay = 1;
+    @Inject
+    @ConfigProperty(defaultValue = "HOURS", name = "build.sync.period.unit")
+    private TimeUnit delayTime = TimeUnit.HOURS;
 
-    private volatile BuildData buildData = new BuildData(lastUpdate);
+    @Inject
+    private volatile BuildData buildData;
+
+    private List<ScheduledFuture<?>> futures = new ArrayList<>();
 
     /** Defined default constructor */
     public DHEBuildParser() {
@@ -57,11 +73,13 @@ public class DHEBuildParser {
     /** Allow for unittest injection */
     public DHEBuildParser(BuildStore store) {
         this.store = store;
+        this.buildData = new BuildData();
         exec = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
         init();
     }
 
     public LastUpdate getLastUpdate() {
+        LastUpdate lastUpdate = buildData.getLastUpdate();
         if (logger.isLoggable(Level.FINER)) {
             logger.log(Level.FINE, "getLastUpdate()", lastUpdate);
         }
@@ -84,31 +102,35 @@ public class DHEBuildParser {
      * @param type the type of build to initalize
      */
     private void initBuilds(BuildType type) {
-        // Do a sync get to load all versions
-        BuildListInfo buildList = store.getBuildListInfo(type);
+        try {
+            // Do a sync get to load all versions
+            BuildListInfo buildList = store.getBuildListInfo(type);
 
-        // If something goes wrong this could be null, or an empty list so cope gracefully
-        if (buildList != null && !buildList.versions.isEmpty()) {
-            // Sort by reverse natural order, which means the most recently published build 
-            // will be first
-            Collections.sort(buildList.versions, Comparator.reverseOrder());
+            // If something goes wrong this could be null, or an empty list so cope gracefully
+            if (buildList != null && !buildList.versions.isEmpty()) {
+                // Sort by reverse natural order, which means the most recently published build 
+                // will be first
+                Collections.sort(buildList.versions, Comparator.reverseOrder());
 
-            // notify the number of builds that are about  to be fetched.
-            buildData.pending(buildList.versions.size());
+                // notify the number of builds that are about  to be fetched.
+                buildData.pending(buildList.versions.size());
 
-            // remove the first one and fetch it syncronously.
-            String mostRecent = buildList.versions.remove(0);
-            BuildInfo info = store.getBuildInfo(type, mostRecent);
+                // remove the first one and fetch it syncronously.
+                String mostRecent = buildList.versions.remove(0);
+                BuildInfo info = store.getBuildInfo(type, mostRecent);
 
-            // add the build into the build data store.
-            add(type, mostRecent, info);
+                // add the build into the build data store.
+                add(type, mostRecent, info);
 
-            // Submit an async thread to go fetch all the other builds.
-            exec.submit(new RetrieveBuildList(type) {
-                public void run() {
-                    processBuildList(buildList.versions);
-                }
-            });
+                // Submit an async thread to go fetch all the other builds.
+                exec.submit(new RetrieveBuildList(type) {
+                    public void run() {
+                        processBuildList(buildList.versions);
+                    }
+                });
+            }
+        } catch (ProcessingException | WebApplicationException e) {
+            System.err.println("Failure accessing build: " + type + " error was: " + e.getMessage());
         }
     }
 
@@ -150,12 +172,21 @@ public class DHEBuildParser {
         initBuilds(BuildType.runtime_releases);
         initBuilds(BuildType.tools_releases);
 
+        System.out.println("Setting up build sync to run every " + delay + " " + delayTime.toString().toLowerCase());
+
         // We kicked off the release already so we don't need to resync for an hour
-        exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.runtime_releases), 1, 1, TimeUnit.HOURS);
-        exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.tools_releases), 1, 1, TimeUnit.HOURS);
+        futures.add(exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.runtime_releases), delay, delay, delayTime));
+        futures.add(exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.tools_releases), delay, delay, delayTime));
         // We haven't read any data about nightly builds so we need to run this now
-        exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.runtime_nightly_builds), 0, 1, TimeUnit.HOURS);
-        exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.tools_nightly_builds), 0, 1, TimeUnit.HOURS);
+        futures.add(exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.runtime_nightly_builds), 0, delay, delayTime));
+        futures.add(exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.tools_nightly_builds), 0, delay, delayTime));
+    }
+
+    @PreDestroy
+    public void destroy() {
+        for (ScheduledFuture<?> future : futures) {
+            future.cancel(false);
+        }
     }
 
     /**
@@ -170,22 +201,26 @@ public class DHEBuildParser {
 
         @Override
         public void run() {
-            //  find out which builds we need
-            BuildListInfo listInfo = store.getBuildListInfo(type);
+            try {
+                //  find out which builds we need
+                BuildListInfo listInfo = store.getBuildListInfo(type);
 
-            // If we don't get any builds back just skip.
-            if (listInfo != null && !listInfo.versions.isEmpty()) {
-                // Sort by reverse order so we fetch newer builds first. This means that
-                // we will load builds we don't know about before refrehsing builds we
-                // already know about. Updating build data doesn't happen often, but it
-                // does happen.
-                Collections.sort(listInfo.versions, Comparator.reverseOrder());
+                // If we don't get any builds back just skip.
+                if (listInfo != null && !listInfo.versions.isEmpty()) {
+                    // Sort by reverse order so we fetch newer builds first. This means that
+                    // we will load builds we don't know about before refrehsing builds we
+                    // already know about. Updating build data doesn't happen often, but it
+                    // does happen.
+                    Collections.sort(listInfo.versions, Comparator.reverseOrder());
 
-                // Notify that builds are pending
-                buildData.pending(listInfo.versions.size());
+                    // Notify that builds are pending
+                    buildData.pending(listInfo.versions.size());
 
-                // process the build list.
-                processBuildList(listInfo.versions);
+                    // process the build list.
+                    processBuildList(listInfo.versions);
+                }
+            } catch (ProcessingException | WebApplicationException e) {
+                System.err.println("Failure accessing builds: " + type + " error was: " + e.getMessage());
             }
         }
 
@@ -198,9 +233,13 @@ public class DHEBuildParser {
          */
         public void processBuildList(Collection<String> versions) {
             for (String version : versions) {
-                BuildInfo info = store.getBuildInfo(type, version);
+                try {
+                    BuildInfo info = store.getBuildInfo(type, version);
 
-                add(type, version, info);
+                    add(type, version, info);
+                } catch (ProcessingException | WebApplicationException e) {
+                    System.err.println("Failure accessing build: " + type + " at " + version + " error was: " + e.getMessage());
+                }
             }
         }
     }

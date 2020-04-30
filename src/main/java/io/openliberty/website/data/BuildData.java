@@ -11,34 +11,45 @@
 package io.openliberty.website.data;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.json.bind.annotation.JsonbTransient;
 
 import io.openliberty.website.Constants;
+import io.openliberty.website.events.RuntimeRelease;
 
 /**
  * This JSON-B object is the most important one since it is used to provide
  * the list of all  builds to the openliberty.io website.
  */
+@ApplicationScoped
 public class BuildData {
     @JsonbProperty(Constants.LATEST_RELEASES)
-    public LatestReleases latestReleases = new LatestReleases();
+    private LatestReleases latestReleases = new LatestReleases();
     @JsonbProperty(Constants.BUILDS)
-    public ConcurrentMap<BuildType, Set<BuildInfo>> builds = new ConcurrentHashMap<>();
+    private Map<BuildType, Set<BuildInfo>> builds = new HashMap<>();
 
     // These two fields should not be in the JSON-B payload
     /** The object tracking the last update start and success */
-    @JsonbTransient
     private LastUpdate lastUpdate;
     /** Tracking how many builds are pending vs completed so we can successfully mark the update as complete */
-    @JsonbTransient
     private AtomicInteger pendingBuilds = new AtomicInteger();
+    @Inject
+    @RuntimeRelease
+    private Event<BuildInfo> event;
+
+
+    public BuildData() {
+        this(new LastUpdate());
+    }
 
     /**
      * The constructor for this initializes the builds map with a sorted set
@@ -62,6 +73,29 @@ public class BuildData {
             });
             this.builds.put(type, storedBuilds);
         }
+    }
+
+    @JsonbTransient
+    public LastUpdate getLastUpdate() {
+        return lastUpdate;
+    }
+
+    @JsonbProperty(Constants.LATEST_RELEASES)
+    public LatestReleases getLatestReleases() {
+        return latestReleases;
+    }
+
+    public void setLatestReleases(LatestReleases latest) { 
+        this.latestReleases = latest;
+    }
+
+    public void setBuilds(Map<BuildType, Set<BuildInfo>> builds) {
+        this.builds = builds;
+    }
+
+    @JsonbProperty(Constants.BUILDS)
+    public Map<BuildType, Set<BuildInfo>> getBuilds() {
+        return builds;
     }
 
     /**
@@ -92,6 +126,10 @@ public class BuildData {
             if (latestReleases.runtime == null || 
                 latestReleases.runtime.dateTime.compareTo(bi.dateTime) <= 0) {
                 latestReleases.runtime = bi;
+                // Notify the build to any CDI event listeners.
+                if (type.isLatestBuildNotifiable() && event != null) {
+                    event.fire(bi);
+                }
             } 
         } else if (type == BuildType.tools_releases) {
             if (latestReleases.tools == null || 
