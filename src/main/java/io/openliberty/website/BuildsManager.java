@@ -28,36 +28,36 @@ import java.util.logging.Logger;
 @ApplicationScoped
 public class BuildsManager {
 
-	private static final Logger logger = Logger.getLogger(BuildsManager.class.getName());
+    private static final Logger logger = Logger.getLogger(BuildsManager.class.getName());
 
-	@Inject
-	private DHEBuildParser dheBuilds;
+    @Inject
+    private DHEBuildParser dheBuilds;
 
-	/** Defined default constructor */
-	public BuildsManager() {
-	}
+    /** Defined default constructor */
+    public BuildsManager() {
+    }
 
-	/** Allow for unittest injection */
-	BuildsManager(DHEBuildParser dheBuilds) {
-		if (logger.isLoggable(Level.FINER)) {
-			logger.log(Level.FINE, "BuildsManager() ", dheBuilds);
-		}
-		this.dheBuilds = dheBuilds;
-	}
+    /** Allow for unittest injection */
+    BuildsManager(DHEBuildParser dheBuilds) {
+        if (logger.isLoggable(Level.FINER)) {
+            logger.log(Level.FINE, "BuildsManager() ", dheBuilds);
+        }
+        this.dheBuilds = dheBuilds;
+    }
 
-	public BuildData getData() {
-		return dheBuilds.getBuildData();
-	}
+    public BuildData getData() {
+        return dheBuilds.getBuildData();
+    }
 
-	public Map<BuildType, Set<BuildInfo>> getBuilds() {
-		return dheBuilds.getBuildData().builds;
-	}
+    public Map<BuildType, Set<BuildInfo>> getBuilds() {
+        return dheBuilds.getBuildData().builds;
+    }
 
-	public LatestReleases getLatestReleases() {
-		return dheBuilds.getBuildData().latestReleases;
-	}
+    public LatestReleases getLatestReleases() {
+        return dheBuilds.getBuildData().latestReleases;
+    }
 
-	public LastUpdate getStatus() {
-		return dheBuilds.getLastUpdate();
-	}
+    public LastUpdate getStatus() {
+        return dheBuilds.getLastUpdate();
+    }
 }
