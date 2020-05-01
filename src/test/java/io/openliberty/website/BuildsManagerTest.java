@@ -36,17 +36,17 @@ public class BuildsManagerTest {
         assertTrue(builds.get(BuildType.tools_nightly_builds).isEmpty());
     }
 
-	@Test
-	public void validate_state_of_BuildManager_with_no_releases() {
-		BuildsManager bm = new BuildsManager(new DHEBuildParser(new EmptyVersionsBuildStore()));
-		LastUpdate status = bm.getStatus();
+    @Test
+    public void validate_state_of_BuildManager_with_no_releases() {
+        BuildsManager bm = new BuildsManager(new DHEBuildParser(new EmptyVersionsBuildStore()));
+        LastUpdate status = bm.getStatus();
 
         Map<BuildType, Set<BuildInfo>> builds = bm.getBuilds();
         assertTrue(builds.get(BuildType.runtime_releases).isEmpty());
         assertTrue(builds.get(BuildType.runtime_nightly_builds).isEmpty());
         assertTrue(builds.get(BuildType.tools_releases).isEmpty());
         assertTrue(builds.get(BuildType.tools_nightly_builds).isEmpty());
-	}
+    }
 
     @Test
     public void validate_state_of_BuildManager_after_successful_update() {
