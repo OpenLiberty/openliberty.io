@@ -182,9 +182,15 @@ function restoreCurrentStep(){
 }
 
 function open_TOC(){
-    if(!inSingleColumnView()){        
+    if(!inSingleColumnView()){
         $("#toc_title").css('margin-top', '0px');
-        $("#toc_column").addClass('inline');
+        if (window.innerWidth > threeColumnBreakpoint) {
+            $("#toc_column").addClass('inline');
+        }
+        else {
+            $("#toc_column").addClass('in');
+            $("#close_container img").focus(); //focus on 'X'
+        }
         $("#guide_column").removeClass('expanded');
 
         $("#toc_line").addClass("open");            
@@ -201,7 +207,12 @@ function close_TOC(){
     $("#toc_title").css('margin-top', '20px');
 
     // Remove display type from the table of contents
-    $("#toc_column").removeClass('inline');
+    if (window.innerWidth > threeColumnBreakpoint) {
+        $("#toc_column").removeClass('inline');
+    }
+    else {
+        $("#toc_column").removeClass('in');
+    }
 
     // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
     $("#guide_column").addClass('expanded');
@@ -231,16 +242,13 @@ $(document).ready(function() {
     // Add listener for clicking on the
     $("#toc_hotspot, #toc_indicator").on('mouseenter', function(){
         // Animate out the arrow and highlight the left side of the screen orange to indicate there is a TOC
-        if(!$("#toc_column").hasClass('open')){
-            $("#toc_line").css(
-                {'background-color': 'rgb(255, 216, 191)'}
-            );
+        if(!$("#toc_indicator").hasClass('open')){
             $("#toc_indicator").addClass('open');            
         }        
     });
 
     $("#toc_hotspot").on('mouseleave', function(){
-        if(!$("#toc_column").hasClass('open')){
+        if($("#toc_indicator").hasClass('open')){
             var x = event.x;
             var y = event.y;
             var headerHeight = $('header').height();
@@ -252,9 +260,6 @@ $(document).ready(function() {
                 return;
             }
 
-            $("#toc_line").css(
-                {'background-color': 'transparent'}
-            );  
             $("#toc_indicator").removeClass('open');
         }        
     });
