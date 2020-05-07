@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.openliberty.website.Constants;
 

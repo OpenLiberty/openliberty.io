@@ -26,7 +26,7 @@ import io.openliberty.website.data.LatestReleases;
  * This is the main JAX-RS entry point for the Open Liberty website REST API.
  * The API is defined in the source repo website-api.yml.
  */
-@ApplicationPath("api")
+@ApplicationPath("/api")
 @Path("/")
 @RequestScoped
 public class OpenLibertyEndpoint extends Application {
