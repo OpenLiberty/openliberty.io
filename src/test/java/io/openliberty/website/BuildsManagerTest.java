@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.openliberty.website.data.BuildType;
 import io.openliberty.website.data.BuildData;
@@ -27,8 +27,6 @@ public class BuildsManagerTest {
     public void validate_state_of_BuildManager_after_failed_update() {
         BuildsManager bm = new BuildsManager(new DHEBuildParser(new NullBuildStore()));
 
-        LastUpdate status = bm.getStatus();
-
         Map<BuildType, Set<BuildInfo>> builds = bm.getBuilds();
         assertTrue(builds.get(BuildType.runtime_releases).isEmpty());
         assertTrue(builds.get(BuildType.runtime_nightly_builds).isEmpty());
@@ -39,7 +37,6 @@ public class BuildsManagerTest {
     @Test
     public void validate_state_of_BuildManager_with_no_releases() {
         BuildsManager bm = new BuildsManager(new DHEBuildParser(new EmptyVersionsBuildStore()));
-        LastUpdate status = bm.getStatus();
 
         Map<BuildType, Set<BuildInfo>> builds = bm.getBuilds();
         assertTrue(builds.get(BuildType.runtime_releases).isEmpty());
@@ -77,10 +74,10 @@ public class BuildsManagerTest {
         BuildData data = bm.getData();
 
         assertNotNull("The build data should not be null", data);
-        assertNotNull("The latest releases should not be null", data.latestReleases);
-        assertNull("The latest runtime release should be null", data.latestReleases.runtime);
-        assertNull("The latest tools release should be null", data.latestReleases.tools);
-        assertNotNull("The builds list should be empty", data.builds);
+        assertNotNull("The latest releases should not be null", data.getLatestReleases());
+        assertNull("The latest runtime release should be null", data.getLatestReleases().runtime);
+        assertNull("The latest tools release should be null", data.getLatestReleases().tools);
+        assertNotNull("The builds list should be empty", data.getBuilds());
     }
 
 }
