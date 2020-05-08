@@ -6,8 +6,7 @@
 
   function computeNavHeight(){
     var navHeight = document.querySelector('nav').clientHeight;
-    var breadcrumbHeight = document.querySelector('#breadcrumb_row').clientHeight;
-    return navHeight + breadcrumbHeight;
+    return navHeight;
   }
 
   function computePosition (el, sum) {
