@@ -81,7 +81,7 @@
     position: fixed;
     z-index: 2;
     opacity: 0;
-    top: 101px;
+    top: 60px;
     left: 0; 
     width: 50px;
     height: 100%;
@@ -124,14 +124,49 @@
     padding-top: 20px;	
 }
 
+// @keyframes bounce {
+//     50% {transform: translateX(-40px);}
+//     100% {transform: translateX(0)}
+// }
+
+@keyframes slide-in-out {
+    0%, 50% {
+        left: -20px;
+        transform: scale(1.05,.95);
+    }
+
+    25%, 75% {
+        left: -15px;
+        transform: scale(1,1);
+    }
+
+    100% {
+        left: -40px;
+        transform: scale(1.05,.95);
+    }
+}
+
+// @media (min-width: 1170px) and (max-width: 1439.98px) {
+//     .bounce { 
+//         // -webkit-animation: slide-in-out; 
+//         // animation: slide-in-out 1s; 
+
+//         -webkit-animation: slide-in-out 2s linear 0s 1;
+//         -moz-animation: slide-in-out 2s linear 0s 1;
+//         -o-animation: slide-in-out 2s linear 0s 1;
+//         animation: slide-in-out 2s linear 0s 1;
+//     }
+// }
+
 #toc_indicator {
     z-index: 5;
+    top: 60px;
     left: 0;
     width: 5px;
     height: 30px;
     position: fixed;
     background-color: #f4914d;
-    transition: .5s ease-in;
+    padding: 7px 0;  
 
     &:hover {
         cursor: pointer;
@@ -140,7 +175,14 @@
     &.open{
         display: inline-block;
         width: 45px;
-        padding: 7px 0;
+        transition: .5s ease-in;
+    }
+
+    &.bounce { 
+        -webkit-animation: slide-in-out 1.5s ease 0s 1;
+        -moz-animation: slide-in-out 1.5s ease 0s 1;
+        -o-animation: slide-in-out 1.5s ease 0s 1;
+        animation: slide-in-out 1.5s ease 0s 1;
     }
 
     & > img {

@@ -233,9 +233,18 @@ function setInitialTOCLineHeight(){
     );
 }
 
+function TocIndicatorBounce() {
+    $('#toc_indicator').addClass('open bounce');
+    setTimeout(function(){
+        $('#toc_indicator').removeClass('open bounce');
+    },1500);
+}
+
 
 $(document).ready(function() {
-
+    if ($(this).outerWidth() >= twoColumnBreakpoint && $(this).outerWidth() <= threeColumnBreakpoint) {
+        TocIndicatorBounce();
+    }
     reorganizeTOCElements();
     setInitialTOCLineHeight();    
 
@@ -357,5 +366,32 @@ $(document).ready(function() {
         }
     });
 
+    var width = window.outerWidth;
+    $(window).on('resize', function() {
+        // going from 2 column to 3 column view
+        if (width < threeColumnBreakpoint && $(this).outerWidth() >= threeColumnBreakpoint) {
+            console.log("going from two column view to three column view");
+            // open_TOC();
+        }
+
+        // going from 3 column to 2 column view
+        if (width >= threeColumnBreakpoint && $(this).outerWidth() < threeColumnBreakpoint) {
+            // close_TOC();
+            TocIndicatorBounce();
+        }
+
+        // going from single column to 2 column view
+        if (width < twoColumnBreakpoint && $(this).outerWidth() >= twoColumnBreakpoint) {
+            // close_TOC();
+            TocIndicatorBounce();
+        }
+
+
+        // update width with new width after resizing
+        if ($(this).outerWidth() != width) {
+            width = $(this).outerWidth();
+        }
+
+    });
 
 });
