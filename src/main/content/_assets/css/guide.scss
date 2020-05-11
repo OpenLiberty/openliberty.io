@@ -49,11 +49,13 @@
 
 
 /* HEADER and BREADCRUMB */
-header {
-    position: sticky;
-    position: -webkit-sticky;
-    top: 0;    
-    z-index: 1;
+
+#nav_bar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
 }
 
 /* Internet Explorer only */
@@ -360,6 +362,11 @@ header {
 #guide_column {
     color: #24243B;
     width: 100%;
+    padding-top: 60px;
+
+    @media (max-width: 991.98px) {
+        padding-top: 45px;
+    }
 }
 
 #guide_content > .sect1 {

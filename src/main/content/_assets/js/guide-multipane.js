@@ -773,6 +773,7 @@ $(document).ready(function() {
 
             // Adjust the body with padding to account for no scrollbar
             $("html").css("padding-right", scrollbar_width);
+            $('#nav_bar').css("padding-right", "calc(10vw + " + scrollbar_width + "px)");
             $("html").addClass("unscrollable");
 
             // Move code column to the left to adjust its position with no scrollbar.
@@ -781,7 +782,8 @@ $(document).ready(function() {
     }).on('mouseleave', function() {
         if(!inSingleColumnView()){
             $("html").removeClass("unscrollable");
-            $("html").css("padding-right", 0);            
+            $("html").css("padding-right", 0);
+            $('#nav_bar').css("padding-right", "calc(10vw)");
             $("#code_column").css("left", "calc(100% - 780px)");
         }
     });
