@@ -423,12 +423,24 @@ $(document).ready(function() {
         });
     }
 
+    // Turn the "New" flag into an actual searchable tag
+    function createNewTag() {
+        $('.new_guide_container').each(function(i, j) {
+            if ($(this).parent().data('tags')) {
+                $(this).parent().data("tags", $(this).data("tags") + " new");
+            }
+            else {
+                $(this).parent().data("tags", "new");
+            }
+        })
+    }
+
     // Move guide cards to correct subcategories
     function sortGuides(subcategory, guideList) {
         // iterate over array of guides from JSON file
         $.each(guideList, function(index, guide) {
             // look for guide card that matches the guide's projectid from the array
-            var guide_card = $(".guide_item[href='/guides/" + guide + ".html']");
+            var guide_card = $(".guide_item[href='/guides/" + guide + ".html']");            
             // move guide card to div with class that matches subcategory
             guide_card.parent().removeClass("hidden").appendTo("#" + subcategory + "_row");
         });
@@ -786,4 +798,5 @@ $(document).ready(function() {
         init();
     });
     
+    createNewTag();
 });
