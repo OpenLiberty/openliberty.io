@@ -72,6 +72,10 @@ function setupDisplayContent() {
     }, 400);
 }
 
+function setTOCHeight() {
+    $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
+}
+
 // This function
 // - highlight the selected TOC 
 // - load the doc for the selected TOC
@@ -99,7 +103,8 @@ function loadContent(targetTOC, tocHref, addHash) {
             }
 
             $(this).trigger('focus'); // switch focus to the content for the reader
-
+            
+            setTOCHeight();
         }
     });
 }
@@ -316,5 +321,5 @@ $(document).ready(function () {
 
 // Change height of toc if footer is in view so that fixed toc isn't visible through footer
 $(document).on('scroll', function() {
-    $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
+    setTOCHeight();
 });
