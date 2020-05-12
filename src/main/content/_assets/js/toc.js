@@ -144,9 +144,7 @@ function TOCEntryClick(liElement, event) {
     event.stopPropagation();
 
     // Close the TOC if not in 3 column view
-    if(inSingleColumnView()){
-        $("#mobile_close_container").trigger('click');
-    } else if(window.innerWidth < threeColumnBreakpoint){
+    if (window.innerWidth < threeColumnBreakpoint){
         $("#breadcrumb_hamburger").trigger('click');
     }
 
@@ -222,7 +220,14 @@ function close_TOC(){
     $("#toc_column").removeClass("open");
     $("#guide_column").removeClass("open");
 
-    $("#toc_indicator").removeClass('open hidden');
+    // if in 3 column view and user closes TOC, show bounce animation
+    if (window.outerWidth >= threeColumnBreakpoint) {
+        $("#toc_indicator").removeClass('hidden');
+        TocIndicatorBounce();
+    }
+    else {
+        $("#toc_indicator").removeClass('open hidden');
+    }
 
     restoreCurrentStep();
 }
@@ -233,13 +238,18 @@ function setInitialTOCLineHeight(){
     );
 }
 
+// start the toc_indicator bounce animation
 function TocIndicatorBounce() {
-    $('#toc_indicator').addClass('open bounce');
-    setTimeout(function(){
-        $('#toc_indicator').removeClass('open bounce');
-    },1500);
+    $('#toc_indicator').addClass('open');
+    var toc_indicator = document.getElementById("toc_indicator");
+    toc_indicator.style.WebkitAnimation = "slide-in-out 1.5s ease 0s 1"; // code for Chrome, Safari and Opera
+    toc_indicator.style.animation = "slide-in-out 1.5s ease 0s 1;";     // standard syntax
 }
 
+// remove open class once animation is complete
+$('body').on('animationend webkitAnimationEnd oAnimationEnd', '#toc_indicator', function () {
+    $('#toc_indicator').removeClass('open');
+});
 
 $(document).ready(function() {
     if ($(this).outerWidth() >= twoColumnBreakpoint && $(this).outerWidth() <= threeColumnBreakpoint) {
@@ -302,9 +312,7 @@ $(document).ready(function() {
 
     //In single column view, set focus on 'X' initially when TOC is expanded
     $('#toc_column').on('shown.bs.collapse', function(){
-        if ($('#mobile_close_container').attr("class").trim().length == 0) { //TOC is visible, doesn't have class 'collapsed'
-            $("#mobile_close_container  img").focus(); //focus on 'X'
-        }
+        $("#close_container img").focus(); //focus on 'X'
     });
 
     //In single column view, close the TOC after tabbing from the last element in the TOC
@@ -315,7 +323,7 @@ $(document).ready(function() {
         var lastTag = $('#tags_container').children().last();
         if (tagWithFocus.is(lastTag)) { //tabbing from the last tag in TOC
           //hide the toc
-          $('#mobile_close_container').click();
+          $('#close_container').click();
         }
       }
     });
@@ -325,7 +333,7 @@ $(document).ready(function() {
       if(inSingleColumnView()) {
         if(e.which == 27){ //ESC key code
           //hide the toc
-          $('#mobile_close_container').click();
+          $('#close_container').click();
         }
       }
     });
@@ -339,13 +347,6 @@ $(document).ready(function() {
         // Enter key
         if(event.which === 13 || event.keyCode === 13){
             $('#close_container').click();
-        }
-    });
-
-    $('#mobile_close_container img').on('keydown', function(event) {
-        // Enter key
-        if(event.which === 13 || event.keyCode === 13){
-            $('#mobile_close_container').click();
         }
     });
 
@@ -368,16 +369,12 @@ $(document).ready(function() {
 
     var width = window.outerWidth;
     $(window).on('resize', function() {
-        // going from 2 column to 3 column view
-        if (width < threeColumnBreakpoint && $(this).outerWidth() >= threeColumnBreakpoint) {
-            console.log("going from two column view to three column view");
-            // open_TOC();
-        }
 
         // going from 3 column to 2 column view
         if (width >= threeColumnBreakpoint && $(this).outerWidth() < threeColumnBreakpoint) {
-            // close_TOC();
-            TocIndicatorBounce();
+            if (!$('#guide_column').hasClass('expanded')) {
+                TocIndicatorBounce();
+            }
         }
 
         // going from single column to 2 column view
