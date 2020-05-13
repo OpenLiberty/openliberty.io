@@ -7,12 +7,18 @@ rm -rf img/blog
 
 echo "Start cloning blogs repository..."
 
-git clone https://github.com/OpenLiberty/blogs.git --branch master blogs_temp
+BRANCH_NAME="prod"
+# Development environments with draft docs/guides
+else if [ "$JEKYLL_STAGING_BLOGS" == "true" ]; then
+    BRANCH_NAME="staging"
+else if [ "$JEKYLL_DRAFT_BLOGS" == "true" ]; then
+    BRANCH_NAME="draft"
+fi
 
-mv blogs_temp/drafts/ .
-mv drafts/ _drafts
-mv blogs_temp/publish/ .
-mv publish/ _posts
+git clone https://github.com/OpenLiberty/blogs.git --branch $BRANCH_NAME blogs_temp
+
+mv blogs_temp/posts/ .
+mv posts/ _posts
 
 mv blogs_temp/img/blog img
 
