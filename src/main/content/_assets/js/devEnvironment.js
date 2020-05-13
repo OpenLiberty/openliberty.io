@@ -3,8 +3,8 @@ $(document).ready(function(){
     var host = window.location.hostname;
     var label = $("<div></div>");
     label.addClass('qa-descriptor');
-    if (host.indexOf('qa-guides') > -1) {
-        label.text('QA Site');
+    if (host.indexOf('staging') > -1) {
+        label.text('Staging Site');
         $("#nav_bar").after(label);
     } else if (host.indexOf('draft-openlibertyio') > -1) {
         label.text('Draft Site');
