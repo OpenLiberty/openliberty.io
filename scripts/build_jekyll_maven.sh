@@ -5,8 +5,6 @@
 # Exit immediately if a simple command exits with a non-zero status.
 set -e
 
-JEKYLL_BUILD_FLAGS=""
-
 ./scripts/build_gem_dependencies.sh
 
 echo "Ruby version:"
@@ -46,12 +44,6 @@ else
 
     echo "Clone published certifications!"
     ./scripts/build_clone_certifications.sh "master" # Argument is branch name of OpenLiberty/certifications
-fi
-
-# Development environments that enable the draft blogs in the _draft directory.
-if [ "$JEKYLL_DRAFT_BLOGS" == "true" ]; then
-    # Include draft blog posts for non production environments
-    JEKYLL_BUILD_FLAGS="--drafts"
 fi
 
 # Special handling for javadocs
@@ -99,9 +91,9 @@ mkdir -p target/jekyll-webapp
 # Enable google analytics if ga is true
 if [ "$ga" = true ]
   then 
-    jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --config src/main/content/_config.yml,src/main/content/_google_analytics.yml --destination target/jekyll-webapp 
+    jekyll build --source src/main/content --config src/main/content/_config.yml,src/main/content/_google_analytics.yml --destination target/jekyll-webapp 
   else
-    jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --destination target/jekyll-webapp 
+    jekyll build --source src/main/content --destination target/jekyll-webapp 
 fi
 
 python3 ./scripts/parse-feature-toc.py
