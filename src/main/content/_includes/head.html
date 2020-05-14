@@ -35,7 +35,7 @@
   {% endfor %}
 
   {% if jekyll.environment == 'production' and site.google_tag_manager %}
-    {% include google_tag_manager_head.html %}
+    {% include_cached google_tag_manager_head.html %}
   {% endif %}
 
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
@@ -51,7 +51,7 @@
   <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
 
   {% if jekyll.environment != 'production' %}
-      {% include noindex.html %}
+      {% include_cached noindex.html %}
   {% endif %}
 
   <script async defer src="https://buttons.github.io/buttons.js"></script>
