@@ -347,7 +347,8 @@ function restoreCodeColumn(){
     if(!inSingleColumnView()){
         $("body").removeClass("unscrollable");
         $("#code_column").css({
-            "top": "100px"
+            "top": "100px",
+            "left": "calc(100% - 780px)"
         });
         $("#code_column").removeClass("modal");
         remove_highlighting(); // Remove previously highlighted hotspots from mobile view
@@ -716,6 +717,7 @@ $(document).ready(function() {
             var height = bottom - scrollTo;
             $("#code_column").css({
                 "top" : scrollTo + mobile_toc_height + hotspot_height + 5 + "px",
+                "left" : "0px",
                 "height" : height
             });
             handleHotspotHover($(this));
