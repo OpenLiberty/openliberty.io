@@ -245,3 +245,87 @@
         display: none;
     }
 }
+
+
+// Breadcrumb (only on javadocs)
+
+#breadcrumb_row {
+    position: absolute;
+    top: 61px;
+    height: 41px;
+    width: 100%;
+}
+
+#breadcrumb_row .breadcrumb {    
+    background-color: #24243A;
+    background-color: #D6D9E4;
+    padding-left: 30px;    
+    height: 100%;
+    margin-bottom: 0;
+    border-radius: 0;
+    white-space: nowrap;
+    border-bottom: 1px solid #C8CCD8;
+}
+
+#breadcrumb_row a {
+    color:#c8d6fb;
+    color: #253441;
+}
+
+/* Unclickable link */
+#breadcrumb_row a.inactive_link {
+    color:#FFFFFF;
+    color: #253441;
+}
+
+#breadcrumb_row a:hover, #breadcrumb_row a:focus,
+#breadcrumb_row > .breadcrumb > li.active, #breadcrumb_row > .breadcrumb > li.active + li:before {
+    color:white;
+    color: #253441;
+}
+
+/* Change default bootstrap breadcrumb separator */
+.breadcrumb > li + li:before {
+    content: "> ";
+    color: #253441;
+}
+
+.breadcrumb > li + .javadoc_version::before{
+    content: none;
+}
+
+#breadcrumb_line{
+    margin: 0px 10px;
+    font-size: 20px;
+    color: white;
+    color: #253441;
+    letter-spacing: 0;
+    line-height: 26px;
+    vertical-align: middle;
+}
+
+#breadcrumb_version{
+    font-size:14px;
+    color:#ffffff;
+    color: #253441;
+    letter-spacing:0;
+    line-height:26px;
+    text-align:left;
+}
+
+.javadoc_version {
+    margin: 0 7px;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 26px;
+}
+
+#breadcrumb_row .selected_javadoc__version {
+    color: #f4914d;
+    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;    
+}
+
+#breadcrumb_row a.selected_javadoc__version:hover {
+    color: #f4914d;
+    cursor: default;
+}
