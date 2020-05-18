@@ -675,12 +675,15 @@ function addGuideRatingsListener(){
 
 $(window).on("load", function(){
     $.ready.then(function(){
-       // Both ready and loaded
-       handleFloatingTableOfContent();
-       addGuideRatingsListener();
-       handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
+        // Both ready and loaded
+        addGuideRatingsListener();
+        handleFloatingCodeColumn(); // Must be called last to calculate how tall the code column is.
 
-       // If there are no tags for the guide, hide the tag title
-       $("#tags_container:empty").prev().hide();
+        if(location.hash){
+            handleFloatingTableOfContent();
+        }
+
+        // If there are no tags for the guide, hide the tag title
+        $("#tags_container:empty").prev().hide();
     });
  })
