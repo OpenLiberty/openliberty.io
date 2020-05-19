@@ -93,7 +93,8 @@ if [ "$ga" = true ]
   then 
     jekyll build --source src/main/content --config src/main/content/_config.yml,src/main/content/_google_analytics.yml --destination target/jekyll-webapp 
   else
-    jekyll build --source src/main/content --destination target/jekyll-webapp 
+    # Set the --future flag to show blogs with date timestamps in the future
+    jekyll build --future --source src/main/content --destination target/jekyll-webapp 
 fi
 
 python3 ./scripts/parse-feature-toc.py
