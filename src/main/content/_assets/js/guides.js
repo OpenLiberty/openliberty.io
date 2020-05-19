@@ -145,6 +145,23 @@ $(document).ready(function() {
 
     var width = window.outerWidth;
     $(window).on('resize', function() {
+
+        // fix positioning of filter box popover when page resized
+        if ($('#guide_search_input').is(':focus')) {
+            var popover_left_position = $("#guide_search_input").position().left;
+            var popover_width = $('.popover').outerWidth();
+            var search_box_width = $('#guide_search_input').outerWidth();
+
+            // if popover is wider than filter box, center popover below filter box
+            if (popover_width > search_box_width) {
+                $(".popover").css('left', popover_left_position - (popover_width - search_box_width)/2);
+            }
+            // else match popover position to filter box left position
+            else {
+                $(".popover").css('left', popover_left_position);
+            }
+        }
+
         addPadding();
         var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
 
