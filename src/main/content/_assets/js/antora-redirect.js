@@ -1,23 +1,31 @@
 $(document).ready(function(){
-    console.error('Entering redirect code');
+    var href = window.location.href;
     var path = window.location.pathname;
     var hash = window.location.hash;
-    if(path.indexOf('/docs/ref/feature/') > -1 || path.indexOf('/docs/ref/config/') > -1 || path.indexOf('/docs/ref/command/') > -1 || href.indexOf('/docs/ref/general/') > -1){
-        if(hash.indexOf('#') === 0){            
+    if(path.indexOf('/docs/ref/general/') > -1){
+        // General reference redirects to the ROOT Antora module with no page type in the url
+        if(hash.indexOf('#') === 0){
             hash = hash.substring(1); // Remove hash
         }
         window.location.replace(window.location.origin + '/docs/latest/' + hash);
+    }
+    if(path.indexOf('/docs/ref/feature/') > -1 || path.indexOf('/docs/ref/config/') > -1 || path.indexOf('/docs/ref/command/') > -1){
+        // Features, config, and command redirect to the reference module which has the doc type in the url
+        var resource_path = href.substring(href.indexOf('/docs/ref/') + 10);
+        var resource_type = resource_path.substring(0, resource_path.lastIndexOf('/'));       
+        if(hash.indexOf('#') === 0){
+            hash = hash.substring(1); // Remove hash
+        }
+        window.location.replace(window.location.origin + '/docs/latest/reference/' + resource_type + '/' + hash);
     } else if(path.indexOf('/docs/ref/javaee/') > -1){
-       // Remove /docs/ref/javaee/, version, and hash
-       // If there is no hash, just redirect to the overview of the javadoc
+       // Remove /docs/ref/javaee/ and the version
        var version_path = path.path.substring(17);
        var version = version_path.substring(0, version_path.indexOf('/'));
-        window.location.replace(window.location.origin + '/docs/latest/reference/liberty-javaee' + version + '-javadoc.html' + hash);
-    } else if(href.indexOf('/docs/ref/microprofile/') > -1) {
-        // Remove /docs/ref/microprofile/, version, and hash
-       // If there is no hash, just redirect to the overview of the javadoc
+        window.location.replace(window.location.origin + '/docs/latest/reference/javadoc/liberty-javaee' + version + '-javadoc.html' + hash);
+    } else if(path.indexOf('/docs/ref/microprofile/') > -1) {
+        // Remove /docs/ref/microprofile and the version
        var version_path = path.path.substring(23);
        var version = version_path.substring(0, version_path.indexOf('/'));
-        window.location.replace(window.location.origin + '/docs/latest/reference/microprofile-' + version + '-javadoc.html' + hash);
+        window.location.replace(window.location.origin + '/docs/latest/reference/javadoc/microprofile-' + version + '-javadoc.html' + hash);
     }
 });
