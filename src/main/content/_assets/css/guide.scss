@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
- #guide_content #mobile_prereqs_title {
+#guide_content #mobile_prereqs_title {
     font-size: 16px;
     font-weight: 500;        
     line-height: 1.63;
@@ -49,11 +49,15 @@
 
 
 /* HEADER and BREADCRUMB */
-header {
-    position: sticky;
-    position: -webkit-sticky;
-    top: 0;    
-    z-index: 1;
+
+@media (min-width: 1170px) {
+    #nav_bar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+    }
 }
 
 /* Internet Explorer only */
@@ -366,6 +370,11 @@ header {
 #guide_column {
     color: #24243B;
     width: 100%;
+
+    @media (min-width: 1170px) {
+        padding-top: 60px;
+    }
+
 }
 
 #guide_content > .sect1 {
@@ -460,7 +469,6 @@ header {
         
     #guide_column {
         width: auto;
-        padding-top: 10px;
         padding-bottom: 60px;
         box-shadow: none;
     } 

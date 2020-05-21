@@ -9,8 +9,14 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-#header_background {
-    padding-top: 0px
+@media (min-width: 767px) {
+    #nav_bar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+    }
 }
 
 /* table of column styling */
@@ -31,14 +37,16 @@
 
 #toc_column {
     height: 100%;
-    padding-top: 20px;
+    padding-top: 80px;
     padding-bottom: 20px;
     padding-left: 0px;
-}
 
-@media (min-width: 767px) {
-    #toc_column {
-        padding-top: 121px;
+    @media (max-width: 991.98px) {
+        padding-top: 65px;
+    }
+
+    @media (max-width: 767.98px) {
+        padding-top: 20px;
     }
 }
 
@@ -52,7 +60,7 @@
     #toc_inner {
         position: fixed;
         width: 25%;
-        max-height: calc(100% - 121px);
+        max-height: calc(100% - 60px);
     }
 }
 
@@ -77,11 +85,14 @@
 /* content styling */
 #command_content {
     overflow-y: scroll;
-}
+    padding-top: 60px;
 
-@media (min-width: 767px) {
-    #command_content {
-        padding-top: 101px;
+    @media (max-width: 991.98px) {
+        padding-top: 45px;
+    }
+
+    @media (max-width: 767.98px) {
+        padding-top: 0px;
     }
 }
 

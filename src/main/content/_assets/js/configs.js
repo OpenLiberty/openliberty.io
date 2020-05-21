@@ -38,16 +38,13 @@ function addTOCClick() {
         if (currentHref.indexOf("#") === -1) {
             // loading initial content
             // - load iframe content
-            // - update main breadcrumb 
-            // Note: content breadcrumb not visible with initial loading
+            // - update title in browser tab
             setIframeLocationHref(currentHref);
-            updateMainBreadcrumb(resource);
             updateTitle(resource.text());
         } else {
             // positioning to one of the 2nd level subtitiles
             // - enable content breadcrumb
             // - scroll to the 2nd level subtitle
-            // Note: main breadcrumb only contains main title not 2nd level subtitle
             handleContentBreadcrumbVisibility(true);
             handleIFrameDocPosition(currentHref);
         }
@@ -129,24 +126,6 @@ function setIframeLocationHref(href) {
     }
     // move focus to the content
     $('#config_content').focus();
-}
-
-// Update doc header breadcrumb with the current TOC title
-function updateMainBreadcrumb(resource) {
-    var currentHref = resource.attr("href");
-    // main breadcrumb only includes the main href without any hash to land to a subheading
-    if (currentHref !== undefined && currentHref.indexOf("#") === -1) {
-        var lastBreadcrumb = $(".breadcrumb.fluid-container").find("li:last-child");
-        var lastBreadcrumbAnchorTag = lastBreadcrumb.find("a");
-        var lastBreadcrumbHref = lastBreadcrumbAnchorTag.attr("doc-href");
-        if (currentHref !== lastBreadcrumbHref) {
-            if (lastBreadcrumbAnchorTag.hasClass("inactive_link")) {
-                // remove existing inactive link
-                lastBreadcrumb.remove();
-            }
-            $(".breadcrumb.fluid-container").append("<li><a class='inactive_link' doc-href='" + resource.attr("href") + "' target='contentFrame'>" + resource.text() + "</a></li>");
-        }
-    }
 }
 
 // Update title in browser tab to show current page
@@ -1185,9 +1164,6 @@ $(document).ready(function () {
                 setSelectedTOC(TOCSubElement, true)
             } else if (TOCElement) {
                 setSelectedTOC(TOCElement, true);
-            }
-            if (TOCElement) {
-                updateMainBreadcrumb(TOCElement);
             }
 
             if (!isMobileView() && !isIPadView()) {         

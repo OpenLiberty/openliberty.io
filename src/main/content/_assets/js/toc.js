@@ -34,7 +34,7 @@ function disableFloatingTOC() {
 }
 
 function enableFloatingTOC() {
-    $('#toc_inner').css({"position":"fixed", "top":"100px"});    
+    $('#toc_inner').css({"position":"fixed", "top":"60px"});    
 }
 
 function calculateTOCHeight(){
@@ -54,7 +54,7 @@ function shrinkTOCIndicator() {
 function expandTOCIndicator() {
     $('#toc_line').css({
         "position":"fixed",
-        "top":"101px",
+        "top":"60px",
         "height": calculateTOCHeight()
     });
 }
@@ -144,9 +144,7 @@ function TOCEntryClick(liElement, event) {
     event.stopPropagation();
 
     // Close the TOC if not in 3 column view
-    if(inSingleColumnView()){
-        $("#mobile_close_container").trigger('click');
-    } else if(window.innerWidth < threeColumnBreakpoint){
+    if (window.innerWidth < threeColumnBreakpoint){
         $("#breadcrumb_hamburger").trigger('click');
     }
 
@@ -182,9 +180,15 @@ function restoreCurrentStep(){
 }
 
 function open_TOC(){
-    if(!inSingleColumnView()){        
+    if(!inSingleColumnView()){
         $("#toc_title").css('margin-top', '0px');
-        $("#toc_column").addClass('inline');
+        if (window.innerWidth > threeColumnBreakpoint) {
+            $("#toc_column").addClass('inline');
+        }
+        else {
+            $("#toc_column").addClass('in');
+            $("#close_container img").focus(); //focus on 'X'
+        }
         $("#guide_column").removeClass('expanded');
 
         $("#toc_line").addClass("open");            
@@ -201,7 +205,12 @@ function close_TOC(){
     $("#toc_title").css('margin-top', '20px');
 
     // Remove display type from the table of contents
-    $("#toc_column").removeClass('inline');
+    if (window.innerWidth > threeColumnBreakpoint) {
+        $("#toc_column").removeClass('inline');
+    }
+    else {
+        $("#toc_column").removeClass('in');
+    }
 
     // Update the width of the guide_column to accomodate the larger space when the browser is in 3 column view.
     $("#guide_column").addClass('expanded');
@@ -211,7 +220,14 @@ function close_TOC(){
     $("#toc_column").removeClass("open");
     $("#guide_column").removeClass("open");
 
-    $("#toc_indicator").removeClass('open hidden');
+    // if in 3 column view and user closes TOC, show bounce animation
+    if (window.outerWidth >= threeColumnBreakpoint) {
+        $("#toc_indicator").removeClass('hidden');
+        TocIndicatorBounce();
+    }
+    else {
+        $("#toc_indicator").removeClass('open hidden');
+    }
 
     restoreCurrentStep();
 }
@@ -222,25 +238,36 @@ function setInitialTOCLineHeight(){
     );
 }
 
+// start the toc_indicator bounce animation
+function TocIndicatorBounce() {
+    $('#toc_indicator').addClass('open');
+    var toc_indicator = document.getElementById("toc_indicator");
+    toc_indicator.style.WebkitAnimation = "slide-in-out 1.5s ease 0s 1"; // code for Chrome, Safari and Opera
+    toc_indicator.style.animation = "slide-in-out 1.5s ease 0s 1;";     // standard syntax
+}
+
+// remove open class once animation is complete
+$('body').on('animationend webkitAnimationEnd oAnimationEnd', '#toc_indicator', function () {
+    $('#toc_indicator').removeClass('open');
+});
 
 $(document).ready(function() {
-
+    if ($(this).outerWidth() >= twoColumnBreakpoint && $(this).outerWidth() <= threeColumnBreakpoint) {
+        TocIndicatorBounce();
+    }
     reorganizeTOCElements();
     setInitialTOCLineHeight();    
 
     // Add listener for clicking on the
     $("#toc_hotspot, #toc_indicator").on('mouseenter', function(){
         // Animate out the arrow and highlight the left side of the screen orange to indicate there is a TOC
-        if(!$("#toc_column").hasClass('open')){
-            $("#toc_line").css(
-                {'background-color': 'rgb(255, 216, 191)'}
-            );
+        if(!$("#toc_indicator").hasClass('open')){
             $("#toc_indicator").addClass('open');            
         }        
     });
 
     $("#toc_hotspot").on('mouseleave', function(){
-        if(!$("#toc_column").hasClass('open')){
+        if($("#toc_indicator").hasClass('open')){
             var x = event.x;
             var y = event.y;
             var headerHeight = $('header').height();
@@ -252,9 +279,6 @@ $(document).ready(function() {
                 return;
             }
 
-            $("#toc_line").css(
-                {'background-color': 'transparent'}
-            );  
             $("#toc_indicator").removeClass('open');
         }        
     });
@@ -288,9 +312,7 @@ $(document).ready(function() {
 
     //In single column view, set focus on 'X' initially when TOC is expanded
     $('#toc_column').on('shown.bs.collapse', function(){
-        if ($('#mobile_close_container').attr("class").trim().length == 0) { //TOC is visible, doesn't have class 'collapsed'
-            $("#mobile_close_container  img").focus(); //focus on 'X'
-        }
+        $("#close_container img").focus(); //focus on 'X'
     });
 
     //In single column view, close the TOC after tabbing from the last element in the TOC
@@ -301,7 +323,7 @@ $(document).ready(function() {
         var lastTag = $('#tags_container').children().last();
         if (tagWithFocus.is(lastTag)) { //tabbing from the last tag in TOC
           //hide the toc
-          $('#mobile_close_container').click();
+          $('#close_container').click();
         }
       }
     });
@@ -311,7 +333,7 @@ $(document).ready(function() {
       if(inSingleColumnView()) {
         if(e.which == 27){ //ESC key code
           //hide the toc
-          $('#mobile_close_container').click();
+          $('#close_container').click();
         }
       }
     });
@@ -325,13 +347,6 @@ $(document).ready(function() {
         // Enter key
         if(event.which === 13 || event.keyCode === 13){
             $('#close_container').click();
-        }
-    });
-
-    $('#mobile_close_container img').on('keydown', function(event) {
-        // Enter key
-        if(event.which === 13 || event.keyCode === 13){
-            $('#mobile_close_container').click();
         }
     });
 
@@ -352,5 +367,28 @@ $(document).ready(function() {
         }
     });
 
+    var width = window.outerWidth;
+    $(window).on('resize', function() {
+
+        // going from 3 column to 2 column view
+        if (width >= threeColumnBreakpoint && $(this).outerWidth() < threeColumnBreakpoint) {
+            if (!$('#guide_column').hasClass('expanded')) {
+                TocIndicatorBounce();
+            }
+        }
+
+        // going from single column to 2 column view
+        if (width < twoColumnBreakpoint && $(this).outerWidth() >= twoColumnBreakpoint) {
+            // close_TOC();
+            TocIndicatorBounce();
+        }
+
+
+        // update width with new width after resizing
+        if ($(this).outerWidth() != width) {
+            width = $(this).outerWidth();
+        }
+
+    });
 
 });

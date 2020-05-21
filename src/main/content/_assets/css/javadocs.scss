@@ -9,11 +9,32 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
+#nav_bar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+}
+
+main {
+    padding-top: 101px;
+    margin-top: 0px;
+
+    @media (max-width: 991.98px) {
+        padding-top: 86px;
+    }
+
+    @media (max-width: 677.98px) {
+        padding-top: 116px;
+    }
+}
+
 html, body, main, iframe {
     height: 100%;
 }
 
- .extendedContainer {
+.extendedContainer {
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -o-transition: all 0.5s ease-in-out;
@@ -36,6 +57,6 @@ footer {
     display: none; /* Hide footer on initial load until user scrolls to the bottom */	
 }	
 
- #footer_container > .row {
+#footer_container > .row {
     padding-bottom: 10px;
 }
