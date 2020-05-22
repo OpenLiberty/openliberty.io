@@ -1,53 +1,38 @@
 <header>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button id="navbar_responsive_button" class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a href="/" aria-label="Open Liberty Home Page">
-                    <img id="doc_logo" src="{{uiRootPath}}/img/docs_openliberty_logo.png" class="img-responsive" alt="Home" />
-                </a>
-                <div id="doc_title">
-                    <img src="{{uiRootPath}}/img/doc_header_title.svg" alt="Docs">
-                </div>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-left"> 
-                    <li>
-                        <a href="/guides">Guides</a>
-                    </li>
-                    <!-- Single button -->
-                    <li id="reference_dropdown_container" class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle reference_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Reference <span id="reference_caret" class="hidden-md hidden-lg"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a href="/docs/ref/javaee/">Java EE API</a></li>
-                                <li><a href="/docs/ref/microprofile/">MicroProfile API</a></li>
-                                <li><a href="/docs/ref/config/">Server Config</a></li>
-                                <li><a href="/docs/ref/feature/">Server Features</a></li>
-                                <li><a href="/docs/ref/command/">Server Commands</a></li>
-                                <li><a href="/docs/ref/general/">General</a></li>
-                            </ul>
-                    </li>
-                </ul>
-                <div id="header_round_links_container" class="visible-xs">
-                    <a id="header_twitter_link" class="header_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener" aria-label="Twitter"></a>
-                    <a id="header_stackoverflow_link" class="header_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener" aria-label="Open Liberty questions on Stack Overflow"></a>
-                    <a id="header_groupsio_link" class="header_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener" aria-label="Open Liberty Groups.io"></a>
-                </div>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="{{uiRootPath}}/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/downloads">Get Started</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides">Guides</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs">Docs</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support">Support</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog">Blog</a>
+                </li>
+            </ul>
+            <a id="fork_button" class="nav-link" href="https://github.com/OpenLiberty/open-liberty" target="_blank" rel="noopener">Fork the code</a>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://gitter.im/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
             </div>
         </div>
     </nav>
-    <!-- Docs -->
-    <div id="header_background"></div>
-    <div class="hidden">
-        <img src="{{uiRootPath}}/img/small_logo_white.svg">
-        <img src="{{uiRootPath}}/img/github_navbar_hover.svg">
-    </div>
 </header>
