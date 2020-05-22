@@ -33,12 +33,12 @@ $(document).ready(function(){
         window.location.replace(window.location.origin + '/docs/latest/reference/' + resource_type + '/' + page + hash);
     } else if(path.indexOf('/docs/ref/javaee/') > -1){
        // Remove /docs/ref/javaee/ and the version
-       var version_path = path.path.substring(17);
+       var version_path = path.substring(17);
        var version = version_path.substring(0, version_path.indexOf('/'));
         window.location.replace(window.location.origin + '/docs/latest/reference/javadoc/liberty-javaee' + version + '-javadoc.html' + hash);
     } else if(path.indexOf('/docs/ref/microprofile/') > -1) {
         // Remove /docs/ref/microprofile and the version
-       var version_path = path.path.substring(23);
+       var version_path = path.substring(23);
        var version = version_path.substring(0, version_path.indexOf('/'));
         window.location.replace(window.location.origin + '/docs/latest/reference/javadoc/microprofile-' + version + '-javadoc.html' + hash);
     }
