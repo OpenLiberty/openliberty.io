@@ -223,7 +223,7 @@ function handlePrereqsPopup() {
             firstCodeSection = firstCodeSection.parents('.sect1').find('h2').first();
         }
         var firstCodeSectionTop = Math.round(firstCodeSection[0].getBoundingClientRect().top);
-        var navHeight = $('.navbar').height();
+        var navHeight = $('nav').height();
         var blurCodeOnRight = (firstCodeSectionTop - navHeight) > 1;
 
         var firstHotspot = $("#guide_column .hotspot:visible")[0];
@@ -347,7 +347,7 @@ function restoreCodeColumn(){
     if(!inSingleColumnView()){
         $("body").removeClass("unscrollable");
         $("#code_column").css({
-            "top": "100px",
+            "top": "60px",
             "left": "calc(100% - 780px)"
         });
         $("#code_column").removeClass("modal");
@@ -775,6 +775,7 @@ $(document).ready(function() {
 
             // Adjust the body with padding to account for no scrollbar
             $("html").css("padding-right", scrollbar_width);
+            $('#nav_bar').css("padding-right", "calc(10vw + " + scrollbar_width + "px)");
             $("html").addClass("unscrollable");
 
             // Move code column to the left to adjust its position with no scrollbar.
@@ -783,7 +784,8 @@ $(document).ready(function() {
     }).on('mouseleave', function() {
         if(!inSingleColumnView()){
             $("html").removeClass("unscrollable");
-            $("html").css("padding-right", 0);            
+            $("html").css("padding-right", 0);
+            $('#nav_bar').css("padding-right", "calc(10vw)");
             $("#code_column").css("left", "calc(100% - 780px)");
         }
     });
