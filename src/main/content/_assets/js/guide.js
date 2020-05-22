@@ -19,23 +19,31 @@
 
     $('#preamble').detach().insertAfter('#duration_container');  
 
-    $("#mobile_github_clone_popup_copy").click(function(event){
-        event.preventDefault();
-        target = $("#mobile_github_clone_popup_repo > span").get(0);
-        copy_element_to_clipboard(target, function(){
-            var current_target_object = $(event.currentTarget);
-            var position = current_target_object.position();	
-            $('#guide_section_copied_confirmation').css({	
-                top: position.top - 20,	
-                right: 25	
-            }).stop().fadeIn().delay(1000).fadeOut();
+    // Read prereqs from json file and add to html
+    $.getJSON( "../../guides/guides-common/guide_prereqs.json", function(data) {
+        var guide_name = window.location.pathname.replace('.html','').replace('/guides/', '');
+        var prereq_html = '';
+        $.each(data.prereqs, function(i, prereq) {
+            // if guide found in prereqs list, add it to the html
+            if (prereq.guides.indexOf(guide_name) > -1) {
+                prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank">' + prereq.name + '</a></div>';
+            }
+            // if prereqs list contains * add prereq to all guides except for excluded guides (if they exist)
+            else if (prereq.guides.indexOf("*") > -1) {
+                if (prereq.exclude) {
+                    // if guide not in prereq exclude list, add it to the html
+                    if (prereq.exclude.indexOf(guide_name) <= -1) {
+                        prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank">' + prereq.name + '</a></div>'; 
+                    }
+                }
+                // guides has * but no exclude, add all to html
+                else {
+                    prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank">' + prereq.name + '</a></div>'; 
+                }
+            }
         });
-    });
 
-    $("#github_clone_popup_copy, #mobile_github_clone_popup_copy").on('keydown', function(event){
-        if(event.which === 13 || event.keyCode === 13){
-            $(this).trigger('click');
-        }
+        $(".prereqs_list").html(prereq_html);
     });
 
     function handleSectionChanging(event){
@@ -55,7 +63,7 @@
                 history.replaceState(null, null, newPath);
 
                 // Update the selected TOC entry
-                updateTOCHighlighting(id);                    
+                updateTOCHighlighting(id);    
             }
             if(window.innerWidth > twoColumnBreakpoint) {
                 // multipane view
@@ -67,20 +75,20 @@
         }
     }
 
-    $('#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre)').hover(function(event) {
+    $('#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre):not(.code_column pre)').on('mouseenter', function(event) {
         offset = $('#guide_column').position();	
         target = event.currentTarget;	
-        var current_target_object = $(event.currentTarget);	
+        var current_target_object = $(event.currentTarget);
         target_position = current_target_object.position();	
-        target_width = current_target_object.outerWidth();	
+        target_width = current_target_object.outerWidth();
         target_height = current_target_object.outerHeight();
         var right_position = inSingleColumnView() ? 1 : 46;
          $('#copy_to_clipboard').css({	
             top: target_position.top + 1,	
             right: parseInt($('#guide_column').css('padding-right')) + right_position	
-        });	
+        });
         $('#copy_to_clipboard').stop().fadeIn();	
-     }, function(event) {	
+     }).on('mouseleave', function(event) {	
         if(offset){
             var x = event.clientX - offset.left;	
             var y = event.clientY - offset.top + $(window).scrollTop();	
@@ -92,9 +100,9 @@
                 $('#guide_section_copied_confirmation').stop().fadeOut();	
             }
         }          	
-     });	
+     });
 
-     $('#copy_to_clipboard').click(function(event) {
+     $('#copy_to_clipboard').on('click', function(event) {
         event.preventDefault();
         // Target was assigned while hovering over the element to copy.
         copy_element_to_clipboard(target, function(){
@@ -108,7 +116,7 @@
     });
 
     // show content for clicked OS tab
-    $('.tab_link').click(function(event) {
+    $('.tab_link').on('click', function(event) {
         // hide all tab content and remove active class from all links
         $(".tab_content").hide();
         $(".tab_link").removeClass("active");
@@ -128,29 +136,6 @@
         $(tab_class).addClass("active");
     });
 
-    // determine user's operating system and show prerequisite instructions for that OS
-    function setDefaultTab() {
-        // set default OS to windows
-        var OSName = "windows";
-        // get user's operating system
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.indexOf("win") != -1) {
-            OSName = "windows";
-        }
-        if (ua.indexOf("mac") != -1) {
-            OSName = "mac";
-        }
-        if (ua.indexOf("linux") != -1) {
-            OSName = "linux";
-        }
-        // hide tab content except for selected tab and add active class to selected tab
-        var os_section = "." + OSName + "_section";
-        var os_class = "." + OSName + "_link";
-        $(".tab_content").hide();
-        $(os_section).show();
-        $(os_class).addClass("active");
-    }
-
     $(window).on('scroll', function(event) {
         // Check if a scroll animation from another piece of code is taking place and prevent normal behavior.
         if($("body").data('scrolling') === true){
@@ -159,14 +144,67 @@
         handleSectionChanging(event);
     });
 
-    $(window).on('load', function(){
-        createEndOfGuideContent();
-        setDefaultTab();
-
-        if (location.hash){
-            handleFloatingTableOfContent();
-            var hash = location.hash;
-            accessContentsFromHash(hash);
-        }
-    });
 });
+
+// determine user's operating system and show prerequisite instructions for that OS
+function setDefaultTab() {
+    var OSName = "";
+    // Detect user's operating system
+    var ua = navigator.userAgent.toLowerCase();
+    if (ua.indexOf("win") != -1) {
+        OSName = "windows";
+    }
+    if (ua.indexOf("mac") != -1) {
+        OSName = "mac";
+    }
+    if (ua.indexOf("linux") != -1) {
+        OSName = "linux";
+    }
+    // hide tab content except for selected tab and add active class to selected tab
+    $(".tab_content").hide();
+
+    // For each of the groups of tab contents, show the first one unless an OS is detected
+    var sections = $('.sectionbody:has(.tab_content)');
+    for(var i = 0; i < sections.length; i++){
+        var section = $(sections.get(i));
+        // Check if the current OS tab exists in the section
+        if(OSName){
+            var content = section.find("." + OSName + "_section");
+            var tab = section.find("." + OSName + "_link");
+            if(content.length > 0 && tab.length > 0){
+                content.show();                
+                tab.addClass("active");
+                continue;
+            }                
+        }
+        // If the current Operating System's tab has not been found
+        // show the first tab's contents for every set of tabs in this section.
+        var first_tab = section.find('.tab_link').first();
+        // Find OS name to show all of its tab contents in this section.
+        var class_list = first_tab[0].classList;
+        for (var j = 0; j < class_list.length; j++) {
+            var class_name = class_list[j];
+            if (class_name !== "tab_link" && class_name.indexOf("_link") > -1) {
+                var tab_class = "." + class_name;
+                var tab_content_class = "." + class_name.replace("link", "section");
+                section.find(tab_class).addClass("active");
+                section.find(tab_content_class).show();
+                break;
+            }
+        }
+    }
+}
+
+$(window).on("load", function(){
+    $.ready.then(function(){
+       // Both ready and loaded
+       createEndOfGuideContent();
+       setDefaultTab();
+   
+       if (location.hash){
+           handleFloatingTableOfContent();
+           var hash = location.hash;
+           accessContentsFromHash(hash);
+       }
+    });
+ })

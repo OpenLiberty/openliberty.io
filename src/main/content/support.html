@@ -1,15 +1,22 @@
 ---
 layout: default
 title: Support
-css: 
-- support
-- header-light
+css: support
 js: support
 permalink: /support/
 ---
 
 <!-- ENTERPRISE SUPPORT SECTION -->
 <div id="enterprise_support_section" class="container">
+    <div id="cloud_images_div">
+        <img id="cloud_1" class="d-none d-lg-block" src="/img/home_cloud_2.png" alt="Cloud 1">
+        <img id="cloud_2" class="d-none d-lg-block" src="/img/home_cloud_2.png" alt="Cloud 2">
+        <img id="cloud_3" class="d-none d-lg-block" src="/img/home_cloud_2.png" alt="Cloud 3">
+        <img id="cloud_4" class="d-none d-lg-block" src="/img/home_cloud_2.png" alt="Cloud 4">
+        <img id="cloud_5" class="d-none d-lg-block" src="/img/home_cloud_2.png" alt="Cloud 5">
+        <img id="cloud_6" class="d-none d-lg-block" src="/img/home_cloud_2.png" alt="Cloud 6">
+    </div>
+
     <div id="not_alone_text">
         You are not alone...
     </div>
@@ -17,25 +24,21 @@ permalink: /support/
         Whether you're an enterprise or a smaller crew, there's Open Liberty support for all
     </p>
     
-    <div class="row" id="green_background">
-        <div class="col-md-6">
-            <img id="mothership" src="{{ "/img/mothership.svg" | relative }}" class="img-fluid" alt="mothership">
+    <div class="row">
+        <div class="support_box col-md-4">
+            <h2>IBM Cloud Pak for Applications</h2>
+            <p>I'm an IBM customer wanting to modernize to OpenShift.</p>
+            <a class="support_link" href="https://www.ibm.com/cloud/cloud-pak-for-applications" target="_blank" rel="noopener">IBM Support</a>
         </div>
-        <div class="col-md-6">
-            <div id="enterprise_support_title">
-                Enterprise support
-            </div>
-            <p id="enterprise_support_text">
-                Need support for a large fleet? Open Liberty enterprise support from IBM has you covered.
-            </p>
-
-            <div id="support_link_container">
-                <a id="support_link" class="skip_outbound_link_analytics" href="https://www.ibm.com/marketplace/elite-support-for-open-liberty" target="_blank" rel="noopener">
-                    <div class="support_link_label_container">
-                        <div class="button_label">Get support for your team</div>
-                    </div>
-                </a>
-            </div>
+        <div class="support_box col-md-4">
+            <h2>WebSphere Application Server</h2>
+            <p>I just want support for Open Liberty.</p>
+            <a class="support_link" href="https://www.ibm.com/cloud/websphere-application-server" target="_blank" rel="noopener">IBM Support</a>
+        </div>
+        <div class="support_box col-md-4">
+            <h2>Red Hat Runtimes</h2>
+            <p>I'm a Red Hat customer wanting to deploy into OpenShift.</p>
+            <a class="support_link" href="https://access.redhat.com/products/open-liberty" target="_blank" rel="noopener">Red Hat Support</a>
         </div>
     </div>
 </div>
@@ -53,10 +56,10 @@ permalink: /support/
 
         <div id="cards_container" class="container">
             <div class="row">
-                <div class="col-md-4 card_column">
+                <div class="col-md-6 col-lg-3 card_column">
                     <a href="https://twitter.com/OpenLibertyIO" class="card" target="_blank" rel="noopener">
-                        <figure id="twitter_logo_background" class="card_gradient_background">
-                            <img id="twitter_logo" src="{{ "/img/twitter_logo.svg" | relative }}" class="d-block mx-auto" alt="twitter">
+                        <figure aria-labelledby="twitter_logo" id="twitter_logo_background" class="card_gradient_background">
+                            <img id="twitter_logo" src="/img/twitter_logo.svg" class="d-block mx-auto" alt="twitter">
                         </figure>
                         <div class="card-body">
                             <h5 class="card-title">@openlibertyio</h5>
@@ -65,10 +68,10 @@ permalink: /support/
                     </a>
                 </div>
 
-                <div class="col-md-4 card_column">
+                <div class="col-md-6 col-lg-3 card_column">
                     <a href="https://stackoverflow.com/questions/tagged/open-liberty" class="card" target="_blank" rel="noopener">
-                        <figure id="stack_overflow_logo_background" class="card_gradient_background">
-                            <img id="stack_overflow_logo" src="{{ "/img/stack_overflow_logo.svg" | relative }}" class="d-block mx-auto" alt="stackoverflow">
+                        <figure aria-labelledby="stack_overflow_logo" id="stack_overflow_logo_background" class="card_gradient_background">
+                            <img id="stack_overflow_logo" src="/img/stack_overflow_logo.svg" class="d-block mx-auto" alt="stackoverflow">
                         </figure>
                         <div id="stack_overflow_body" class="card-body">
                             <h5 class="card-title">Stack Overflow</h5>
@@ -77,14 +80,26 @@ permalink: /support/
                     </a>
                 </div>
 
-                <div class="col-md-4 card_column">
+                <div class="col-md-6 col-lg-3 card_column">
                     <a href="https://groups.io/g/openliberty" class="card" target="_blank" rel="noopener">
-                        <figure id="groups_io_logo_background" class="card_gradient_background">
-                            <img id="groups_io_logo" src="{{ "/img/groups.io_logo.svg" | relative }}" class="d-block mx-auto" alt="groups">
+                        <figure aria-labelledby="groups_io_logo" id="groups_io_logo_background" class="card_gradient_background">
+                            <img id="groups_io_logo" src="/img/groups.io_logo.svg" class="d-block mx-auto" alt="groups">
                         </figure>
                         <div class="card-body">
                             <h5 class="card-title">Groups.io</h5>
                             <p class="card-text">Community forums</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-lg-3 card_column">
+                    <a href="https://gitter.im/OpenLiberty/" class="card" target="_blank" rel="noopener">
+                        <figure aria-labelledby="gitter_logo" id="gitter_logo_background" class="card_gradient_background">
+                            <img id="gitter_logo" src="/img/gitter_logo.svg" class="d-block mx-auto" alt="gitter">
+                        </figure>
+                        <div class="card-body">
+                            <h5 class="card-title">Gitter</h5>
+                            <p class="card-text">Community chat</p>
                         </div>
                     </a>
                 </div>
@@ -102,7 +117,7 @@ permalink: /support/
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-7">
                 <div id="github_link_container">
-                    <a id="github_link" class="skip_outbound_link_analytics" href="https://github.com/OpenLiberty/openliberty.io/issues" target="_blank" rel="noopener">
+                    <a id="github_link" href="https://github.com/OpenLiberty/openliberty.io/issues" target="_blank" rel="noopener">
                         <div class="github_link_label_container">
                             <div class="button_label">Open an issue on GitHub</div>
                         </div>
@@ -130,7 +145,7 @@ permalink: /support/
             Open Liberty is speeding toward the future, but your contributions can get us there at lightspeed
         </p>
         <div id="contribute_link_container">
-            <a id="contribute_link" class="skip_outbound_link_analytics" href="/contribute/">
+            <a id="contribute_link" href="/contribute/">
                 <div class="contribute_link_label_container">
                     <div class="button_label">Contribute to Open Liberty</div>
                 </div>

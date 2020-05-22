@@ -9,6 +9,10 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
+body {
+    overflow-x: hidden;
+}
+
 .unscrollable {
     overflow: hidden;
 }
@@ -20,6 +24,10 @@
 /* Table of Contents */
 #toc_column {
     left: 0;    
+}
+
+#toc_inner {
+    width: 274px;
 }
 
 #toc_line {
@@ -44,7 +52,7 @@
 
 #guide_content code.hotspot {
     background-color: #F1F4FE;
-    color:#5e6b8d;
+    color: #5e6b8d;
 }
 
 #guide_content .hotspot:not(.code_command) pre {
@@ -77,9 +85,10 @@
     position: fixed;
     width: 780px;
     left: calc(100% - 780px); /* Adjust for the width and padding */
-    top: 100px;
+    top: 60px;
     bottom: 0; /* Initially extend the code column the full height */
     overflow: hidden;
+    box-shadow: -2px 0px 2px rgba(0,0,0,0.12);
 
     #dismiss_button {
         display: none;
@@ -95,10 +104,6 @@
         &.modal {
             display: block;
             overflow: auto;
-
-            #github_clone_popup {
-                display: none;
-            }
 
             // Remove blur
             #code_column_tabs_container, .code_column {
@@ -162,61 +167,72 @@
     vertical-align: middle;
 }
 
-#github_clone_popup_container {
+#prereqs_container {
     position: absolute;
     display: none;
-    top: 31%;
+    top: 0%;
     width: 100%;
     z-index: 2;
-}
-
-#github_clone_popup {
-    height: 111px;
-    margin: 0 20px;
-    padding: 19px 0 0 20px;
+    padding: 30px 50px;
+    padding-bottom: 18px;
     background-color: #ffffff;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+    white-space: nowrap;
 }
 
-#github_clone_popup_title {
+#prereqs_title {
     font-size: 16px;
     font-weight: 500;
     line-height: 1.63;
     color: #1b1c34;
-    margin-bottom: 14px;
+    display: inline-block;
+    margin-bottom: 0px;
+    margin-right: 20px;
 }
 
-#github_clone_popup_repo {
+.prereq_div {
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+#prereqs_container .prereqs_list {
+    display: inline-block;
+}
+
+.prereq, #guide_content .prereq {
     font-size: 14px;
     line-height: 1.57;
-    color: #737373;
+    color: #4F660A;
     width: 95%;
-    border-bottom: solid 1px #96bc32;
+    border: 1px solid #abd155;
+    padding: 3px 12px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 3px;
+
+    &:hover {
+        color: #ffffff;
+        background-color: #4F660A;
+    }
 }
 
-#github_clone_popup_copy {
-    width: 48px;
-    height: 38px;
-    background-color: #96bc32;
-    position: absolute;
-    top: 0;
-    right: 20px;
-    padding: 8px 12px;
-    text-align: center;
+#mobile_prereqs_section .prereq {
+    margin-left: 0px;
+    margin-right: 16px;
 }
 
-#github_clone_popup_copy:hover {
-    border: solid 1px #b2bbd1;
-    cursor: pointer;
+#mobile_prereqs_section {
+    display: none;
 }
 
-#github_clone_popup_copy:active {
-    border: solid 1px #5e6b8d;
-}
+@media (max-width: 1169.98px) {
+    #mobile_prereqs_section {
+        display: block;
+    }
 
-#github_clone_popup_copy > img {
-    width: 14px;
-    height: 16px;
+    #prereqs_container {
+        display: none;
+    }
 }
 
 #code_column_tabs_container {

@@ -2,173 +2,82 @@ package io.openliberty.website;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-
-import io.openliberty.website.data.BuildLists;
+import io.openliberty.website.data.BuildType;
 import io.openliberty.website.data.BuildData;
 import io.openliberty.website.data.BuildInfo;
 import io.openliberty.website.data.LastUpdate;
+import io.openliberty.website.data.LatestReleases;
 import io.openliberty.website.dheclient.DHEBuildParser;
-import io.openliberty.website.mock.EmptyVersionsDHEClient;
-import io.openliberty.website.mock.MockDHEClient;
-import io.openliberty.website.mock.NullDHEClient;
+import io.openliberty.website.mock.EmptyVersionsBuildStore;
+import io.openliberty.website.mock.MockBuildStore;
+import io.openliberty.website.mock.NullBuildStore;
 
 public class BuildsManagerTest {
 
     @Test
-    public void default_initialized_BuildManager() {
-        BuildsManager bm = new BuildsManager(new DHEBuildParser(new NullDHEClient()));
+    public void validate_state_of_BuildManager_after_failed_update() {
+        BuildsManager bm = new BuildsManager(new DHEBuildParser(new NullBuildStore()));
 
-        LastUpdate status = bm.getStatus();
-        assertEquals(Constants.NEVER_ATTEMPTED, status.getLastUpdateAttempt());
-        assertEquals(Constants.NEVER_UPDATED, status.getLastSuccessfulUpdate());
+        Map<BuildType, Set<BuildInfo>> builds = bm.getBuilds();
+        assertTrue(builds.get(BuildType.runtime_releases).isEmpty());
+        assertTrue(builds.get(BuildType.runtime_nightly_builds).isEmpty());
+        assertTrue(builds.get(BuildType.tools_releases).isEmpty());
+        assertTrue(builds.get(BuildType.tools_nightly_builds).isEmpty());
     }
-
 
     @Test
-    public void validate_state_of_BuildManager_after_failed_update() {
-        BuildsManager bm = new BuildsManager(new DHEBuildParser(new NullDHEClient()));
-        LastUpdate status = bm.updateBuilds();
+    public void validate_state_of_BuildManager_with_no_releases() {
+        BuildsManager bm = new BuildsManager(new DHEBuildParser(new EmptyVersionsBuildStore()));
 
-        assertEquals(status, bm.getStatus());
-
-        assertFalse(Constants.NEVER_ATTEMPTED.equals(status.getLastUpdateAttempt()));
-        assertEquals(Constants.NEVER_UPDATED, status.getLastSuccessfulUpdate());
-
-        BuildLists builds = bm.getBuilds();
-        assertTrue(builds.getRuntimeReleases().isEmpty());
-        assertTrue(builds.getRuntimeNightlyBuilds().isEmpty());
-        assertTrue(builds.getToolsReleases().isEmpty());
-        assertTrue(builds.getToolsNightlyBuilds().isEmpty());
-
-        assertEquals("{}", bm.getLatestReleases().asJsonObject().toString());
-    }
-
-	@Test
-	public void validate_state_of_BuildManager_with_no_releases() {
-		BuildsManager bm = new BuildsManager(new DHEBuildParser(new EmptyVersionsDHEClient()));
-		LastUpdate status = bm.updateBuilds();
-
-		assertEquals(status, bm.getStatus());
-
-		assertFalse(Constants.NEVER_ATTEMPTED.equals(status.getLastUpdateAttempt()));
-		assertEquals(Constants.NEVER_UPDATED, status.getLastSuccessfulUpdate());
-
-        BuildLists builds = bm.getBuilds();
-        assertTrue(builds.getRuntimeReleases().isEmpty());
-        assertTrue(builds.getRuntimeNightlyBuilds().isEmpty());
-        assertTrue(builds.getToolsReleases().isEmpty());
-        assertTrue(builds.getToolsNightlyBuilds().isEmpty());
-
-		assertEquals("{}", bm.getLatestReleases().asJsonObject().toString());
-	}
-
-    private JsonObject getExpectedBuilds() {
-        JsonObjectBuilder expected = Json.createObjectBuilder();
-        expected.add("runtime_releases", Json.createArrayBuilder().add(createRuntimeTestRelease("https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release", "runtime-release-v1")).build());
-        expected.add("runtime_nightly_builds", Json.createArrayBuilder().add(createRuntimeTestRelease("https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/nightly", "runtime-nightly-v1")).build());
-        expected.add("tools_releases", Json.createArrayBuilder().add(createToolsTestRelease("https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/tools/release", "tools-release-v1")).build());
-        expected.add("tools_nightly_builds", Json.createArrayBuilder().add(createToolsTestRelease("https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/tools/nightly", "tools-nightly-v1")).build());
-        return expected.build();
-    }
-
-    private JsonObject createRuntimeTestRelease(String urlPath, String date_time) {
-        JsonObjectBuilder releaseInfo = Json.createObjectBuilder();
-        releaseInfo.add(Constants.VERSION, "v1");
-        releaseInfo.add(Constants.BUILD_LOG, urlPath+"/"+date_time+"/build-log-path");
-        releaseInfo.add(Constants.TESTS_LOG, urlPath+"/"+date_time+"/test-log-path");
-        releaseInfo.add(Constants.DRIVER_LOCATION, urlPath+"/"+date_time+"/driver-location");
-        releaseInfo.add(Constants.PACKAGE_LOCATIONS, Json.createArrayBuilder().add("package="+urlPath+"/"+date_time+"/my-package-v1").build());
-        releaseInfo.add(Constants.TESTS_PASSED, "8500");
-        releaseInfo.add(Constants.TOTAL_TESTS, "8501");
-        releaseInfo.add("date_time", date_time);
-        releaseInfo.add("size_in_bytes", "1234");
-        return releaseInfo.build();
-    }
-
-    private JsonObject createToolsTestRelease(String urlPath, String date_time) {
-        JsonObjectBuilder releaseInfo = Json.createObjectBuilder();
-        releaseInfo.add(Constants.VERSION, "v1");
-        releaseInfo.add(Constants.BUILD_LOG, urlPath+"/"+date_time+"/build-log-path");
-        releaseInfo.add(Constants.TESTS_LOG, urlPath+"/"+date_time+"/test-log-path");
-        releaseInfo.add(Constants.DRIVER_LOCATION, urlPath+"/"+date_time+"/driver-location");
-        releaseInfo.add(Constants.PACKAGE_LOCATIONS, Json.createArrayBuilder().add("package="+urlPath+"/"+date_time+"/my-package-v1").build());
-        releaseInfo.add(Constants.TESTS_PASSED, "114");
-        releaseInfo.add(Constants.TOTAL_TESTS, "115");
-        releaseInfo.add("date_time", date_time);
-        releaseInfo.add("size_in_bytes", "1234");
-        return releaseInfo.build();
+        Map<BuildType, Set<BuildInfo>> builds = bm.getBuilds();
+        assertTrue(builds.get(BuildType.runtime_releases).isEmpty());
+        assertTrue(builds.get(BuildType.runtime_nightly_builds).isEmpty());
+        assertTrue(builds.get(BuildType.tools_releases).isEmpty());
+        assertTrue(builds.get(BuildType.tools_nightly_builds).isEmpty());
     }
 
     @Test
     public void validate_state_of_BuildManager_after_successful_update() {
-        BuildsManager bm = new BuildsManager(new DHEBuildParser(new MockDHEClient()));
-        LastUpdate status = bm.updateBuilds();
-
-        assertEquals(status, bm.getStatus());
+        BuildsManager bm = new BuildsManager(new DHEBuildParser(new MockBuildStore()));
+        bm.getStatus().awaitSuccessfulUpdate();
+        
+        LastUpdate status = bm.getStatus();
 
         assertFalse(Constants.NEVER_ATTEMPTED.equals(status.getLastUpdateAttempt()));
         assertFalse(Constants.NEVER_UPDATED.equals(status.getLastSuccessfulUpdate()));
 
-        JsonObject expectedReleases = getExpectedReleases();
-        assertEquals(expectedReleases, bm.getLatestReleases().asJsonObject());
+        LatestReleases lr = bm.getLatestReleases();
 
-        JsonObject expectedBuilds = getExpectedBuilds();
-        assertEquals(expectedBuilds, bm.getBuilds().asJsonObject());
+        assertEquals("The most recent runtime release should be 20.0.0.3", "20.0.0.3", lr.runtime.version);
+        assertEquals("The most recent runtime release should be 20.0.0.3", "20.0.0.3", lr.tools.version);
+        assertEquals("The date and time for the most recent release is not right", "2020-03-05_1433", lr.runtime.dateTime);
 
-        BuildLists all = bm.getBuilds();
-        validRuntimeBuildsList(all.getRuntimeReleases(), "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release", "runtime-release-v1");
-        validRuntimeBuildsList(all.getRuntimeNightlyBuilds(), "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/nightly", "runtime-nightly-v1");
-        validToolsBuildsList(all.getToolsReleases(), "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/tools/release", "tools-release-v1");
-        validToolsBuildsList(all.getToolsNightlyBuilds(), "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/tools/nightly", "tools-nightly-v1");
-    }
+        assertEquals("The driver location is not resolved", "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-03-05_1433/openliberty-20.0.0.3.zip", lr.runtime.driverLocation);
+        assertEquals("The build log is not resolved", "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-03-05_1433/gradle.log", lr.runtime.buildLog);
+        assertEquals("The test log is not resolved", "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-03-05_1433/open-liberty.unitTest.results.zip", lr.runtime.testLog);
+        assertEquals("The first package location is not resolved", "javaee8.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-03-05_1433/openliberty-javaee8-20.0.0.3.zip", lr.runtime.packageLocations.get(0));
 
-	private void validRuntimeBuildsList(List<BuildInfo> list, String urlPath, String date_time) {
-		assertEquals(1, list.size());
-        BuildInfo info = list.get(0);
-        assertEquals(urlPath+"/"+date_time+"/build-log-path", info.getBuildLog());
-        assertEquals(date_time, info.getDateTime());
-        assertEquals(urlPath+"/"+date_time+"/driver-location", info.getDriverLocation());
-        assertEquals("1234", info.getSizeInBytes());
-        assertEquals(urlPath+"/"+date_time+"/test-log-path", info.getTestLog());
-        assertEquals("8500", info.getTestPassed());
-        assertEquals("8501", info.getTotalTests());
-        assertEquals("v1", info.getVersion());
-	}
-
-	private void validToolsBuildsList(List<BuildInfo> list, String urlPath, String date_time) {
-		assertEquals(1, list.size());
-        BuildInfo info = list.get(0);
-        assertEquals(urlPath+"/"+date_time+"/build-log-path", info.getBuildLog());
-        assertEquals(date_time, info.getDateTime());
-        assertEquals(urlPath+"/"+date_time+"/driver-location", info.getDriverLocation());
-        assertEquals("1234", info.getSizeInBytes());
-        assertEquals(urlPath+"/"+date_time+"/test-log-path", info.getTestLog());
-        assertEquals("114", info.getTestPassed());
-        assertEquals("115", info.getTotalTests());
-        assertEquals("v1", info.getVersion());
-	}
-
-    private JsonObject getExpectedReleases() {
-        JsonObjectBuilder expected = Json.createObjectBuilder();
-        expected.add("runtime", createRuntimeTestRelease("https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release", "runtime-release-v1"));
-        expected.add("tools", createToolsTestRelease("https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/tools/release", "tools-release-v1"));
-        return expected.build();
     }
 
     @Test
     public void getData_after_failed_update() {
-        BuildsManager bm = new BuildsManager(new DHEBuildParser(new NullDHEClient()));
+        BuildsManager bm = new BuildsManager(new DHEBuildParser(new NullBuildStore()));
         BuildData data = bm.getData();
-        assertEquals("{\"latest_releases\":{},\"builds\":{}}", data.asJsonObject().toString());
+
+        assertNotNull("The build data should not be null", data);
+        assertNotNull("The latest releases should not be null", data.getLatestReleases());
+        assertNull("The latest runtime release should be null", data.getLatestReleases().runtime);
+        assertNull("The latest tools release should be null", data.getLatestReleases().tools);
+        assertNotNull("The builds list should be empty", data.getBuilds());
     }
 
 }

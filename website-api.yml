@@ -1,0 +1,114 @@
+openapi: '3.0.2'
+info:
+  title: Open Liberty Website API
+  version: '1.0'
+servers:
+  - url: https://openliberty.io/api/
+components:
+  schemas:
+    update: 
+      type: object
+      properties:
+        last_update_attempt:
+          type: string
+        last_successful_update:
+          type: string
+    latestReleases:
+      type: object
+      properties: 
+        runtime:
+          $ref: "#/components/schemas/build"
+        tools:
+          $ref: "#/components/schemas/build"
+    build:
+      type: object
+      properties:
+        version:
+          type: "string"
+        date_time:
+          type: "string"
+        driver_location:
+          type: "string"
+        size_in_bytes:
+          type: "integer"
+        total_tests:
+          type: "integer"
+        test_passed:
+          type: "integer"
+        build_log:
+          type: "string"
+        tests_log:
+          type: "string"
+        package_locations:
+          type: array
+          items:
+            type: string
+          description: "This is an array of strings whose values are name=value, this should totally be an object"
+paths:
+  /builds:
+    get:
+      responses:
+        '200':
+          description: "The timestamp for the last attempt to update the builds, and the last successful run"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/update"
+    put:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/update"
+  /builds/data:
+    get:
+      responses: 
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  latest_releases:
+                    $ref: "#/components/schemas/latestReleases"
+                  builds:
+                    type: object
+                    properties:
+                      runtime_releases:
+                        type: array
+                        items: 
+                          $ref: "#/components/schemas/build"
+                      runtime_nightly_builds:
+                        type: array
+                        items:  
+                          $ref: "#/components/schemas/build"
+                      tools_releases:
+                        type: array
+                        items:  
+                          $ref: "#/components/schemas/build"
+                      tools_nightly_builds:
+                        type: array
+                        items:  
+                          $ref: "#/components/schemas/build"
+  /builds/latest:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/latestReleases"
+  /github/issues:
+    get:
+      responses:
+        '200':
+          description: "Returns the top 30 github issues using the format defined by GitHub. This is really just a pass through."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object

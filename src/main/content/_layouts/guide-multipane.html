@@ -1,7 +1,8 @@
 ---
 layout: doc
 css:
-- doc-header
+- header
+- header-dark
 - toc
 - end-of-guide
 - guide-card
@@ -14,6 +15,36 @@ js:
 - guide-multipane
 ---
 
+<!-- Build a list of all the documents in the guides code base -->
+{% assign static-guides = site.pages | where: 'layout', 'guide' %}
+{% assign multipane-static-guides = site.pages | where: 'layout', 'guide-multipane' %}
+{% assign multipane-iguides = site.pages | where: 'layout', 'iguide-multipane' %}
+{% assign all-markdown-files = static-guides | concat: multipane-static-guides | concat: multipane-iguides | sort: 'releasedate' | reverse %}
+{% assign all-guides = '' | split: '' %}
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+{% for guide in all-markdown-files %}
+    {% unless guide.archived or guide.path contains "guides/guides-template" or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
+        {% assign all-guides = all-guides | push: guide %} 
+    {% endunless %}
+{% endfor %}
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+{% assign new_guide_count = 0 %}
+{% for guide in all-guides %}
+    {% assign date_published = guide.releasedate | date:'%s' %}
+    {% assign date_now = 'now' | date:'%s' %}
+    {% assign date_difference = date_now | minus: date_published %}
+
+    {% if date_difference < 2592000 %}
+        {% assign new_guide_count = new_guide_count | plus: 1 %}
+    {% endif %}
+{% endfor %}
+
+<!-- Sort list of guides by date with most recent first -->
+{% assign all_guides_by_date = all-guides | sort: "releasedate" | reverse %}
+
 {% include visible-tags.liquid %}
 
 <div id="background_container">
@@ -24,10 +55,7 @@ js:
                 {% assign toc = page.document | tocify_asciidoc %}
                 {% if toc %}
                 <div id="close_container">
-                    <img id="toc_close_white" src="{{ " /img/toc_close_white.svg " | relative }}" alt="Close the table of contents" tabindex="0"/>
-                </div>
-                <div id="mobile_close_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
-                    <img src="{{ " /img/toc_close_green.svg " | relative }}" alt="Table of contents close button" tabindex="0"/>                        
+                    <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0"/>
                 </div>
                 <h3 id="toc_title">Contents</h3>
                 <div id="toc_container">
@@ -35,17 +63,8 @@ js:
                 </div>
                 <div id="toc_separator"></div>
                 {% endif %}
-                {% if page.tags %}
-                    <h3 id="tag_title">Tags</h3>
-                    <div id="tags_container">
-                        {% for tag in page.tags %}
-                            {% assign lowercase_tag = tag | downcase %}
-                            {% if visibleTags contains lowercase_tag %}
-                                <a href="/guides?search={{ tag }}&key=tag">{{ tag }}</a>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                {% endif %}                    
+                <h3 id="tag_title">Tags</h3>
+                <div id="tags_container"></div>
             </div>                                
         </div>      
         <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
@@ -61,27 +80,45 @@ js:
                     <div id="duration_container">
                         <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
                         <span id="guide_duration">{{ page.duration }}</span>
+
+                        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                        <!-- If new posts count is less than 4, use 4 most recent posts -->
+                        {% if new_guide_count < 4 %}
+                            {% if page.title ==  all_guides_by_date[0].title or page.title ==  all_guides_by_date[1].title 
+                            or page.title ==  all_guides_by_date[2].title or page.title ==  all_guides_by_date[3].title %}
+                                <div class="new_guide_container">
+                                    <span class="guide_new">New</span>
+                                </div>
+                            {% endif %}
+                        <!-- If new posts count is >= 4, use posts from last 30 days-->
+                        {% else %}
+                            {% assign date_published = guide.releasedate | date:'%s' %}
+                            {% assign date_now = 'now' | date:'%s' %}
+                            {% assign date_difference = date_now | minus: date_published %}
+                            <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+                            {% if date_difference < 2592000 %}
+                                <div class="new_guide_container">
+                                    <span class="guide_new">New</span>
+                                </div>
+                            {% endif %}
+                        {% endif %}
                     </div>
-                    <div id="mobile_github_section">
-                        <div id="mobile_github_clone_popup_title"><span class="dark_green_link_light_background">Git clone</span><span> to get going right away:</span></div>
-                        <div id="mobile_github_clone_popup_repo">
-                            <span>git clone https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}.git</span>
-                            <div id="mobile_github_clone_popup_copy" tabindex="0" aria-label="Copy the Github repository clone command">
-                                <img src="/img/guides_copy_button_black.svg" alt="Copy Github clone command" title="Copy Github clone command">
-                            </div>
+                    <div id="mobile_prereqs_section">
+                        <p id="mobile_prereqs_title">Prerequisites:</p>
+                        <div class="prereqs_list">
                         </div>
                     </div>
                 </div>
 
                 <div class="scroller_anchor"></div>
-                <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
-                    <div id="mobile_toc_accordion">
+                <div role="menu" id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
+                    <div role="menuitem" id="mobile_toc_accordion">
                         <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
                                 <span class="sr-only">Toggle navigation</span>
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
-                                <img src="{{ " /img/toc_close_green.svg " | relative }}" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button"/>
+                                <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button"/>
                         </button>
                         <span>Table of contents</span>
                     </div>
@@ -107,18 +144,11 @@ js:
             </div>
             <div id="code_column_content"></div>
 
-            <div id="github_clone_popup_container">
-                <div id="github_clone_popup" tabindex="0">
-                    <div id="github_clone_popup_title">Git clone this repo to get going right away:</div>
-                    <div id="github_clone_popup_repo">
-                            git clone https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}.git
-                    </div>
-                    <div id="github_clone_popup_copy" tabindex="0">
-                        <img src="/img/guides_copy_button_black.svg" alt="Copy github clone command" title="Copy github clone command">
-                    </div>
+            <div id="prereqs_container">
+                <p id="prereqs_title">Prerequisites:</p>
+                <div class="prereqs_list">
                 </div>
             </div>
-            <div id="code_section_copied_confirmation">Copied to clipboard</div>
             <button id="dismiss_button" aria-label="Back to text" tabindex="0">Back to text</button>
         </div>
 </div>

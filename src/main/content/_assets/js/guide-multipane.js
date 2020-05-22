@@ -36,15 +36,7 @@ function link_hotspots_to_file(code_block, header, index){
 //       from_line: Integer for what line to start highlighting from.
 //       to_line: Integer for what line to end highlighting.
 //       scroll: boolean if the code should be scrolled to
-function highlight_code_range(code_section, fromLine, toLine, scroll){
-    // Wrap each leftover piece of text in a span to handle highlighting a range of lines.
-    code_section.find('code').contents().each(function(){
-        if (!$(this).is('span')) {
-                var newText = $(this).wrap('<span class="string"></span>');
-                $(this).replaceWith(newText);
-        }
-    });
-    
+function highlight_code_range(code_section, fromLine, toLine, scroll){  
     // Wrap code block lines in a div to highlight
     var highlightStart = code_section.find('.line-numbers').filter(function(){
         return parseInt(this.innerText.trim()) === fromLine;        
@@ -154,8 +146,8 @@ var handleHotspotHover = debounce(function(hotspot){
     if(hotspot.data('hovering') == false){
         return;
     }
-    $("#github_clone_popup_container").data('hotspot-hovered', true); // Track if a hotspot was hovered over to hide the github popup
-    hideGithubPopup();
+    $("#prereqs_container").data('hotspot-hovered', true); // Track if a hotspot was hovered over to hide the prereqs popup
+    hidePrereqsPopup();
     var header = get_header_from_element(hotspot);
     var fileIndex = hotspot.data('file-index');
     if(!fileIndex){
@@ -190,61 +182,66 @@ var handleHotspotHover = debounce(function(hotspot){
     }
 }, 250);
 
-function showGithubPopup(){
-    $("#github_clone_popup_container").fadeIn();
+function showPrereqsPopup(){
+    $("#prereqs_container").fadeIn();
     $("#code_column .code_column, #code_column_tabs_container").addClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', true);
+    $('.code_column_tab').attr('aria-disabled', true);
     $(".copyFileButton").hide();
     $('#code_column_content').css({
         'overflow-y': 'hidden'
     });
+    $('#code_column_content').attr("aria-disabled", true);
 }
 
-function hideGithubPopup(){
-    $("#github_clone_popup_container").fadeOut();
+function hidePrereqsPopup(){
+    $("#prereqs_container").fadeOut();
     $("#code_column .code_column, #code_column_tabs_container").removeClass('dimmed', {duration:400});
     $('.code_column_tab').attr('disabled', false);
     $(".copyFileButton").show();
     $('#code_column_content').css({
         'overflow-y': 'scroll'
     });
+    $('#code_column_content').removeAttr("aria-disabled");
+    $('.code_column_tab').removeAttr("aria-disabled");
 }
 
 /*
-   Handle showing/hiding the Github popup.
+   Handle showing/hiding the prereqs popup.
 */
-function handleGithubPopup() {
-    var githubPopup = $("#github_clone_popup_container");
-    if(githubPopup.length > 0){
+function handlePrereqsPopup() {
+    var prereqsPopup = $("#prereqs_container");
+    if(prereqsPopup.length > 0){
         // Check if the first guide section that has code to show on the right has been scrolled past yet.
-        // If so, then the Github popup will be dismissed. If the first section hasn't been scrolled past yet but a hotspot is showing on the next section then also hide it.
+        // If so, then the prereqs popup will be dismissed. If the first section hasn't been scrolled past yet but a hotspot is showing on the next section then also hide it.
         var firstCodeSection = $('[data-has-code]').first();
         if(firstCodeSection.length === 0){
-            showGithubPopup();
+            showPrereqsPopup();
             return;
         }
         if(firstCodeSection.is('h3')){
             firstCodeSection = firstCodeSection.parents('.sect1').find('h2').first();
         }
         var firstCodeSectionTop = Math.round(firstCodeSection[0].getBoundingClientRect().top);
-        var navHeight = $('.navbar').height();
+        var navHeight = $('nav').height();
         var blurCodeOnRight = (firstCodeSectionTop - navHeight) > 1;
 
         var firstHotspot = $("#guide_column .hotspot:visible")[0];
         var firstHotspotRect = firstHotspot.getBoundingClientRect();
         var firstHotspotInView = (firstHotspotRect.top > 0) && (firstHotspotRect.bottom <= window.innerHeight);
 
-        // Only show the Github popup if above the first section with code
+        // Only show the prereqs popup if above the first section with code
         // and if hotspots weren't hovered over to reveal the code behind the popup.
-        var hotspotHovered = $("#github_clone_popup_container").data('hotspot-hovered');
+        var hotspotHovered = $("#prereqs_container").data('hotspot-hovered');
         if(blurCodeOnRight && !(firstHotspotInView && hotspotHovered)){
-            showGithubPopup();
+            showPrereqsPopup();
         }
         else{            
-            hideGithubPopup();         
+            hidePrereqsPopup();         
         }
     }                
 }
+
 
 // Look through current step's tabs and if a duplicate file was already shown then hide it.
 function hideDuplicateTabs(id){
@@ -350,7 +347,8 @@ function restoreCodeColumn(){
     if(!inSingleColumnView()){
         $("body").removeClass("unscrollable");
         $("#code_column").css({
-            "top": "100px"
+            "top": "60px",
+            "left": "calc(100% - 780px)"
         });
         $("#code_column").removeClass("modal");
         remove_highlighting(); // Remove previously highlighted hotspots from mobile view
@@ -366,7 +364,7 @@ function parse_tags(code_block){
     // Wrap the standalone text in spans so they can be selected between the range of start and end tags using jQuery's nextUntil()
     code_block.find('code').contents().each(function(){
         if (!$(this).is('span')) {
-            var newText = $(this).wrap('<span class="string"></span>');     
+            var newText = $(this).wrap('<span class="string"></span>');   
             $(this).replaceWith(newText);           
         }
     });
@@ -374,7 +372,7 @@ function parse_tags(code_block){
     // Remove the line numbers before the start/end tags and space between the line numbers and start/end tags
     code_block.find("span:contains('tag::'), span:contains('end::')").each(function(){
         var line_num = $(this).prevAll('.line-numbers').first();
-        line_num.nextUntil($(this)).andSelf().remove();
+        line_num.nextUntil($(this)).addBack().remove();
     });
 
     // Parse the tags that should be hidden.
@@ -389,7 +387,7 @@ function parse_tags(code_block){
 
     var start_tags = code_block.find('span:contains(tag::)');
     var end_tags = code_block.find('span:contains(end::)');
-
+    
     start_tags.each(function(){
         var text = $(this).text();
         var start_index = text.indexOf('tag::') + 5;
@@ -446,34 +444,32 @@ function parse_tags(code_block){
     code.html(code.html().trim());
 }
 
+
 $(document).ready(function() { 
 
     $(window).on('resize', function(){
         restoreCodeColumn();
     });
-     
-     /* Copy button for the github clone command  that pops up initially when opening a guide. */
-    $("#github_clone_popup_copy").click(function(event){
-        event.preventDefault();
-        target = $("#github_clone_popup_repo").get(0);
-        copy_element_to_clipboard(target, function(){
-            var position = $('#github_clone_popup_container').position();
-            $('#code_section_copied_confirmation').css({	
-                top: position.top - 20,
-                right: 20	
-            }).stop().fadeIn().delay(1000).fadeOut();
-        });
-    });
 
     // Move the code snippets to the code column on the right side.
     // Each code section is duplicated to show the full file in the right column and just the snippet of code relevant to the guide in the left column in single column / mobile view.
     $('.code_column').each(function(){
-        var code_block = $(this);        
+        var code_block = $(this);
+        
+        // Add extra line number at the end of the code block
+        // This prevents whitespace from getting highlighted when there are nested tags at the end of a file
+        var hiddenNode = document.createElement('span');
+        hiddenNode.className = 'line-numbers';
+        var lastLine = parseInt(code_block.find('.line-numbers').last().text().trim());
+        hiddenNode.innerHTML = lastLine + 1;
+        code_block.find('code')[0].appendChild(hiddenNode);
+
         var metadata_sect = code_block.prev().find('p');
         if(metadata_sect.length > 0){
             var fileName = metadata_sect[0].innerText;
 
-            code_block.hide();
+            // code_block.hide();
+            $('#code_column .code_column:not(:first)').hide();
 
             var header = get_header_from_element(code_block);            
             header.setAttribute('data-has-code', 'true');
@@ -491,7 +487,7 @@ $(document).ready(function() {
             parse_tags(code_block);
 
             // Create a tab in the code column for this file.
-            var tab = $("<li class='code_column_tab' role='presentation' tabindex='0'></li>");
+            var tab = $("<li class='code_column_tab' role='tab' tabindex='0'></li>");
             tab.attr('data-section-id', header.id);
             var anchor = $("<a>" + fileName + "</a>");
             tab.append(anchor);
@@ -522,12 +518,51 @@ $(document).ready(function() {
                 $('#code_column_tabs').append(tab);
             }            
 
-            code_block.addClass('dimmed'); // Dim the code at first while the github popup takes focus.
+            code_block.addClass('dimmed'); // Dim the code at first while the prereqs popup takes focus.
             code_block.appendTo('#code_column_content'); // Move code to the right column
         }
     });
 
-        
+    // Add file path to title attribute for code column tabs
+    // get project id of guide and build request url to get readme for guide
+    project_id = window.location.pathname.replace("/guides/", "").replace(".html", "");
+    request_url = "https://api.github.com/repos/OpenLiberty/guide-" + project_id + "/readme";
+
+    $.ajax({
+        headers: {          
+            Accept: "application/vnd.github.v3.raw" 
+        }, 
+        url: request_url,
+        type: "GET",
+        success: function(response) {
+            // create array that contains paths to files
+            var path_array = [];
+            var match;
+            re = /include::finish(\/.+)+(\.[a-z]+)?/g;
+            while ((match = re.exec(response)) != null) {
+                path_array.push(match[0].replace("include::finish/", "").replace(/ *\[[^\]]*]/g, ""));
+            }
+
+            // add titles to code column tabs
+            $('.code_column_tab').each(function() {
+                tab_name = ($(this).find("a")).text();
+
+                // check if file name in tab is found in array of paths
+                found = path_array.find(function(el) {
+                    return el.includes(tab_name);
+                });
+                
+                // if not found in array and file name contains slash, use tab text as title
+                // if found in array, then use path as title
+                if (!found && tab_name.indexOf("/" > -1)) {
+                    $(this).attr('title', tab_name);
+                }
+                else {
+                    $(this).attr('title', found);
+                }
+            });
+        }
+    });
 
     // Map the guide sections that don't have any code sections to the previous section's code. This assumes that the first section is what you'll learn which has no code to show on the right to begin with.
     var sections = $('.sect1:not(#guide_meta):not(#related-guides) > h2, .sect2:not(#guide_meta):not(#related-guides) > h3');
@@ -682,6 +717,7 @@ $(document).ready(function() {
             var height = bottom - scrollTo;
             $("#code_column").css({
                 "top" : scrollTo + mobile_toc_height + hotspot_height + 5 + "px",
+                "left" : "0px",
                 "height" : height
             });
             handleHotspotHover($(this));
@@ -728,48 +764,39 @@ $(document).ready(function() {
         } 
     });
 
-    // Handle scrolling in the code column.
-    // Prevents the default scroll behavior which would scroll the whole browser.
-    // The code column scrolling is independent of the guide column.
-    $('.code_column').on('wheel mousewheel DOMMouseScroll', function(event){
-        if(inSingleColumnView()){
-            return;
-        }
-        $(this).stop(); // Stop animations taking place with this code section.
-
-        var event0 = event.originalEvent;
-        var dir = (event0.deltaY) < 0 ? 'up' : 'down';
-        var codeColumn = $("#code_column")[0];
-        var codeColumnContent = $("#code_column_content").get(0);
-
-        if(!(this.scrollTop > 0 || this.offsetHeight > codeColumnContent.offsetHeight)){
-            // Element is not scrollable. If the code file has no scrollbar, the page will still scroll if the event is propagated to the window scroll listener so we need to prevent propagation.
-            event.stopPropagation();
-            event.preventDefault();
-        }
-
-        // If the code column is at the top and the browser is scrolled down, the element has no scrollTop and does not respond to changing its scrollTop.
-        else if(!(dir == 'down' && this.parentElement.scrollTop === 0)){
-            var delta = event0.wheelDelta || -event0.detail || -event0.deltaY;
-            // Firefox's scroll value is always 1 so multiply by 150 to scroll faster.
-            if(delta === 1 || delta === -1){
-                delta *= 150;
+    $('#code_column').on('mouseenter', function() {
+        if(!inSingleColumnView()){
+            var page_width = window.innerWidth; // Page width with scrollbar
+            var document_width = document.documentElement.clientWidth; // Page width without scrollbar  
+            var scrollbar_width = page_width - document_width;
+            if(scrollbar_width <= 0){
+                return;
             }
-            codeColumnContent.scrollTop -= delta;
-            handleGithubPopup();
-            event.preventDefault();  
-            event.stopPropagation();
-        }            
+
+            // Adjust the body with padding to account for no scrollbar
+            $("html").css("padding-right", scrollbar_width);
+            $('#nav_bar').css("padding-right", "calc(10vw + " + scrollbar_width + "px)");
+            $("html").addClass("unscrollable");
+
+            // Move code column to the left to adjust its position with no scrollbar.
+            $("#code_column").css("left", "calc(100% - " + (780 + scrollbar_width) + "px)");
+        }        
+    }).on('mouseleave', function() {
+        if(!inSingleColumnView()){
+            $("html").removeClass("unscrollable");
+            $("html").css("padding-right", 0);
+            $('#nav_bar').css("padding-right", "calc(10vw)");
+            $("#code_column").css("left", "calc(100% - 780px)");
+        }
     });
 
-    // Set the github clone popup top to match the first section
+    // Set the prereqs popup top to match the first section
     var firstSection = $(".sect1:not(#guide_meta)").first();
     if(firstSection.length > 0){
         var firstSectionTop = firstSection.get(0).offsetTop;
-        $("#github_clone_popup_container").css('top', firstSectionTop);
     }
 
-    $(".copyFileButton").click(function(event){
+    $(".copyFileButton").on('click', function(event){
         event.preventDefault();
         // Remove the line numbers from being copied.
         var target_copy = $("#code_column .code_column:visible .content code").clone();
@@ -798,10 +825,13 @@ $(document).ready(function() {
         if($("body").data('scrolling') === true){
             return;
         }
-        handleGithubPopup();
+        handlePrereqsPopup();
     });
+});
 
-    $(window).on('load', function(){
+$(window).on("load", function(){
+    $.ready.then(function(){
+       // Both ready and loaded
         resizeGuideSections();
 
         if (location.hash){
@@ -811,7 +841,7 @@ $(document).ready(function() {
         }
 
         if(window.location.hash === ""){
-            handleGithubPopup();
+            handlePrereqsPopup();
         }
     });
-});
+ })

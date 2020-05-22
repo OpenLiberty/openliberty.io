@@ -78,7 +78,7 @@ function setupDisplayContent() {
 // - load the doc for the selected TOC
 //   - once the doc is loaded, determine whether it is a version doc. 
 //     - if it is a version doc, select the default or version passed in.
-//     - if it is not a version doc, update main bread crumb, show the display content, 
+//     - if it is not a version doc, show the display content, 
 //       and update hash if requested
 function loadContent(targetTOC, tocHref, addHash, versionHref) {
     $('footer').hide();
@@ -94,7 +94,6 @@ function loadContent(targetTOC, tocHref, addHash, versionHref) {
                 }
                 $('footer').show();
             } else {
-                updateMainBreadcrumb(targetTOC);
                 setupDisplayContent();
                 $('footer').show();
 
@@ -104,7 +103,7 @@ function loadContent(targetTOC, tocHref, addHash, versionHref) {
                 }
             }
             updateTitle(targetTOC);
-            $(this).focus(); // switch focus to the content for the reader
+            $(this).trigger('focus'); // switch focus to the content for the reader
         } else {
             $('footer').show();
         }
@@ -184,38 +183,18 @@ function setSelectedVersion(resource) {
     resource.addClass('feature_version_selected');
 }
 
-// highlight selected version, load the version doc, and update the main breadcrumb 
+// highlight selected version and load the version doc 
 function loadVersionContent(versionElement, versionHref) {
     setSelectedVersion(versionElement);
     $("#common_feature_content").load(versionHref, function(response, status) {
         if (status === "success") {
             $('#feature_title').hide();
             setupDisplayContent();
-            updateMainBreadcrumb(versionElement, 'full_title');
 
-            $(this).focus(); // switch focus to the content for the reader
+            $(this).trigger('focus'); // switch focus to the content for the reader
         }
         $('footer').show();
     });
-}
-
-// update the main breadcrumb
-function updateMainBreadcrumb(resource, attrForTitle) {
-    var lastBreadcrumb = $(".breadcrumb.fluid-container").find("li:last-child");
-    var lastBreadcrumbAnchorTag = lastBreadcrumb.find("a");
-    if (lastBreadcrumbAnchorTag.hasClass("inactive_link")) {
-        // remove existing inactive link
-        lastBreadcrumb.remove();
-    }
-
-    if (resource !== undefined) {
-        // use default title or title retrieved from the passed in attribute
-        var title = resource.text();
-        if (attrForTitle) {
-            title = resource.attr(attrForTitle);
-        }
-        $(".breadcrumb.fluid-container").append("<li><a class='inactive_link'>" + title + "</a></li>");
-    }
 }
 
 // update hash in the url and set lastClickElementHref to be the same value as set in the hash
@@ -272,7 +251,6 @@ function selectFirstDoc() {
     if (!isMobileView()) {
         var firstTOCElement = $("#toc_container > ul > li > div").first();
         loadContent(firstTOCElement, firstTOCElement.attr("href"));
-        updateMainBreadcrumb();
         return firstTOCElement;
     }
 }
@@ -389,10 +367,10 @@ function addHashListener() {
     });
 }
 
-// Take care of displaying the table of content, comand content, and hamburger correctly when
+// Take care of displaying the table of content, command content, and hamburger correctly when
 // browser window resizes from mobile to non-mobile width and vice versa.
 function addWindowResizeListener() {
-    $(window).resize(function() {
+    $(window).on('resize', function() {
         if (isMobileView()) {
             addHamburgerClick();
         } else {
@@ -418,4 +396,4 @@ $(document).ready(function () {
     } else {
         selectFirstDoc();
     }
-})
+});

@@ -8,7 +8,17 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
- 
+
+@media (min-width: 767px) {
+    #nav_bar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+    }
+}
+
 /* table of column styling */
 .toc_title_selected {
     margin-left: -15px;
@@ -16,10 +26,18 @@
 
 #toc_column {
     height: 100%;
-    padding-top: 20px;
+    padding-top: 80px;
     padding-bottom: 20px;
     padding-left: 0px;
     padding-right: 0px;
+
+    @media (max-width: 991.98px) {
+        padding-top: 65px;
+    }
+
+    @media (max-width: 767.98px) {
+        padding-top: 20px;
+    }
 }
 
 #toc_inner {
@@ -55,6 +73,15 @@
 /* content styling */
 #feature_content {
     min-height: 100vh;
+    padding-top: 60px;
+
+    @media (max-width: 991.98px) {
+        padding-top: 45px;
+    }
+
+    @media (max-width: 767.98px) {
+        padding-top: 0px;
+    }
 }
 
 #feature_content:focus {
@@ -101,9 +128,15 @@ div.sectionbody > div.paragraph > p {
 
 .sect1 > h2 {
     color: #24243B;
+    font-size: 24px;
+    font-family: BunueloBold;
     letter-spacing: 0;
     line-height: 24px;
     padding-top: 18px;
+}
+
+.sect1 > h3 {
+    font-weight: 500;
 }
 
 pre, pre > code {

@@ -8,17 +8,16 @@ permalink: /jakartaee.xml
     <title>{{ site.title | xml_escape }}</title>
     <description>{{ site.description | xml_escape }}</description>
     <link>{{ site.url }}{{ site.baseurl }}/</link>
-    <atom:link href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" rel="self" type="application/rss+xml"/>
-    {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
-    <pubDate>{{ site.time | date: date_format }}</pubDate>    
-    <lastBuildDate>{{ site.time | date: date_format }}</lastBuildDate>
+    <atom:link href="{{ "/jakartaee.xml" | prepend: site.baseurl | prepend: site.url }}" rel="self" type="application/rss+xml"/>
+    <pubDate>{{ site.time | date_to_rfc822 }}</pubDate>    
+    <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
     <generator>Jekyll v{{ jekyll.version }}</generator>
 
     {% for post in site.tags["JakartaEE"] %}
       <item>
         <title>{{ post.title | xml_escape }}</title>
         <description>{{ post.content | xml_escape }}</description>        
-        <pubDate>{{ post.date | date: date_format }}</pubDate>
+        <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
         <link>{{ post.url | prepend: site.baseurl | prepend: site.url }}</link>
         <guid isPermaLink="true">{{ post.url | prepend: site.baseurl | prepend: site.url }}</guid>
         {% for tag in post.tags %}

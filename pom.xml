@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>io.openliberty.website</groupId>
@@ -11,53 +11,82 @@
 	<name>Open Liberty Website</name>
 
 	<properties>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<dependencies>
 		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-			<version>2.0</version>
+			<groupId>jakarta.platform</groupId>
+			<artifactId>jakarta.jakartaee-api</artifactId>
+			<version>8.0.0</version>
 			<scope>provided</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>3.2</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+		<!-- Junit 5 -->
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-			<scope>provided</scope>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.6.0</version>
+			<scope>test</scope>
 		</dependency>
+		<!-- MicroShed Testing-->
 		<dependency>
-			<groupId>javax.json</groupId>
-			<artifactId>javax.json-api</artifactId>
-			<version>1.0</version>
+			<groupId>org.microshed</groupId>
+			<artifactId>microshed-testing-liberty</artifactId>
+			<version>0.9</version>
+			<scope>test</scope>
 		</dependency>
+
+		<!-- CXF REST client for integration tests-->
 		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
-			<version>1.2</version>
-		</dependency>
-		<!-- BEGIN: Needed to compile and run unit tests -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.5</version>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-rs-mp-client</artifactId>
+			<version>3.3.5</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.glassfish.jersey.core</groupId>
-			<artifactId>jersey-client</artifactId>
-			<version>2.22.2</version>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-rs-extension-providers</artifactId>
+			<version>3.3.5</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- JSON-B implementation for tests -->
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>yasson</artifactId>
+			<version>1.0.6</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Enable Logging for MicroShed Testing-->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.26</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Mock server for mock DHE server support -->
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>mockserver</artifactId>
+			<version>1.14.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.glassfish</groupId>
-			<artifactId>javax.json</artifactId>
-			<version>1.0</version>
+			<groupId>org.mock-server</groupId>
+			<artifactId>mockserver-client-java</artifactId>
+			<version>5.5.4</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- END: Needed to compile and run unit tests -->
 	</dependencies>
 
 	<build>
@@ -78,15 +107,23 @@
 					</configuration>
 				</plugin>
 				<plugin>
-					<groupId>net.wasdev.wlp.maven.plugins</groupId>
+					<groupId>io.openliberty.tools</groupId>
 					<artifactId>liberty-maven-plugin</artifactId>
-					<version>1.2.1</version>
+					<version>3.2.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>3.0.0-M3</version>
+					<configuration>
+						<trimStackTrace>false</trimStackTrace>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
-				<groupId>net.wasdev.wlp.maven.plugins</groupId>
+				<groupId>io.openliberty.tools</groupId>
 				<artifactId>liberty-maven-plugin</artifactId>
 				<configuration>
 					<configFile>src/main/wlp/server.xml</configFile>
@@ -95,7 +132,18 @@
 					</bootstrapProperties>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>

@@ -20,6 +20,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * This ServletFilter exists to create an HttpSession to ensure the http
+ * load balancer does sticky routing. This ensures that in the case where
+ * an update is in progress we don't end up sending some requests to an
+ * out of date instance and some to the new one causing rendering issues.
+ */
 public class StickyRouting implements Filter {
     public void destroy() {
     }

@@ -81,7 +81,7 @@
     position: fixed;
     z-index: 2;
     opacity: 0;
-    top: 101px;
+    top: 60px;
     left: 0; 
     width: 50px;
     height: 100%;
@@ -90,6 +90,7 @@
 #toc_column {
     position: fixed;
     left: 0;
+    top: 0;
     padding-bottom: 22px;
     vertical-align: top;
     background-color: white;
@@ -100,8 +101,12 @@
         width: 280px;
     }
 
-    @media (max-width: 1169.98px) {
-        top: 0;
+    @media (min-width: 1170px) {
+        top: 61px;
+    }
+
+    @media (min-width: 1170px) and (max-width: 1439.98px) {
+        height: auto !important;
     }
 
     @media (min-width: 1440px) {
@@ -120,17 +125,33 @@
     }
 }
 
-#toc_inner {
-    padding-top: 20px;
+#toc_inner {	
+    padding-top: 20px;	
+}
+
+@keyframes slide-in-out {
+    0%, 50% {
+        transform: translateX(-20px) scale(1.05,.95);
+    }
+
+    25%, 75% {
+        transform: translateX(-15px) scale(1,1);
+    }
+
+    100% {
+        transform: translateX(-40px) scale(1.05,.95);
+    }
 }
 
 #toc_indicator {
     z-index: 5;
+    top: 60px;
     left: 0;
     width: 5px;
     height: 30px;
     position: fixed;
     background-color: #f4914d;
+    padding: 7px 0;  
 
     &:hover {
         cursor: pointer;
@@ -140,7 +161,6 @@
         display: inline-block;
         width: 45px;
         transition: .5s ease-in;
-        padding: 7px 0;
     }
 
     & > img {
@@ -255,7 +275,7 @@
 }
 
 #close_container {
-    display: none;
+    display: block;
 
     &:after {
         clear: both;
@@ -273,6 +293,7 @@
         width: 20px;
         height: 20px;    
         padding: 5px;
+        margin-right: -6px;
 
         &:hover {
             cursor: pointer;
@@ -282,30 +303,6 @@
             box-shadow: 0 0 2px 2px #51a7e8; /* keyboard-only focus styles */
         }
     }
-}
-
-#mobile_close_container {
-    display: none;
-}
-
-#mobile_close_container:after{
-    clear: both;
-    content: "";
-    height: 0;
-    visibility: hidden;
-    display: block;
-}
-
-#mobile_close_container > img {
-    position: absolute;
-    display: block;
-    top: -5px;
-    right: 27px;
-    margin-top: 20px;
-}
-
-#mobile_close_container > img:hover{
-    cursor: pointer;
 }
 
 #toc_title {
@@ -329,7 +326,6 @@
     color:#5d6a8e;
     margin-top: 5px;
     margin-bottom: 5px;
-
 }
 
 #toc_container a:hover {
@@ -371,9 +367,6 @@
 
 @media (max-width: 1169.98px) {
 
-    #toc_inner {
-        padding-top: 41px; /* This should be the same height as #mobile_toc_accordion_container */
-    }
 
     #mobile_toc_accordion_container {
         display: table;
@@ -412,17 +405,10 @@
     }
 }
 
-/* Breakpoint for when the hamburger navbar appears and the navbar links go into the hamburger
-   The breadcrumb still exists at this point */
+// Breakpoint for when the toc indicator appears
+
+
 @media (max-width: 1169.98px) {
-
-    #doc_logo {
-        display: inline-block;
-    }
-
-    #header_background {
-        padding-top: 0;
-    }
 
     .dropdown-toggle.btn-default {
         float: right;
@@ -432,25 +418,11 @@
         color: white;
     }
 
-    .navbar {
-        background-color: #313653;
-        position: static;
-    }
-
     #breadcrumb_row .breadcrumb {
         overflow: auto;
         white-space: nowrap;
     }
 
-
-    /* Table of Contents */
-    #toc_close_white {
-        display: none;
-    }
-
-    #mobile_close_container {
-        display: block;
-    }
 }
 
 @media (min-width: 1440px) {
@@ -474,10 +446,6 @@
         margin-right: 0;
     }
 
-    #close_container {
-        display: block;
-    }
-
     #toc_title {
         margin-top: 0;
     }
@@ -487,14 +455,22 @@
     }
 
     #toc_inner {
-        width: inherit;
+        height: calc(100vh - 61px);
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 }
 
-@media (max-width: 1439.98px) {
+@media (max-width: 1170.98px) {
     #toc_hotspot, 
     #toc_indicator,
     #toc_line {
         display: none !important; /* Important is to override the display set through javascript */
+    }
+}
+
+@media (min-width: 1170px) and (max-width: 1439.98px) {
+    #toc_indicator {
+        display: block !important; /* Important is to override the display from the hidden class */
     }
 }

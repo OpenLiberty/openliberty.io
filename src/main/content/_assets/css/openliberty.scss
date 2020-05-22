@@ -11,12 +11,12 @@
 
 @font-face {
     font-family: BunueloLight;
-    src: url("/fonts/BunueloCleanPro-Light.otf");
+    src: url("/fonts/BunueloCleanPro-Light.woff");
 }
 
 @font-face {
     font-family: BunueloBold;
-    src: url("/fonts/BunueloCleanPro-SemiBold.otf");
+    src: url("/fonts/BunueloCleanPro-SemiBold.woff");
 }
 
 /* BODY */
@@ -53,7 +53,7 @@ h4 {
 /* PARAGRAPHS */
 
 p {
-    font-size: 14px;
+    font-size: 16px;
 }
 
 
@@ -64,6 +64,15 @@ b {
     font-weight: 500;
 }
 
+/* BORDERS */
+
+.imageblock.img_border_light img {
+    border: 1px solid #f3f3f3; 
+}
+
+.imageblock.img_border_dark img {
+    border: 1px solid #dcdcdc;
+}
 
 /* LISTS */
 
@@ -407,7 +416,7 @@ footer {
     #footer_project {
         font-weight: 500;
         font-size: 11px;
-        color: #6F7878;
+        color: #6A7070;
         letter-spacing: 0;
         float: left;
         clear: left;
@@ -427,17 +436,10 @@ footer {
         background-size: cover;
     }
 
-    #footer_groupsio_link {
-        background-image: url("/img/Footer_GroupsIO.svg");
+    #footer_github_link {
+        background-image: url("/img/Footer_GitCat.svg");
         &:hover {
-            background-image: url("/img/Footer_GroupsIO_Hover.svg");
-        }
-    }
-
-    #footer_stackoverflow_link {
-        background-image: url("/img/Footer_StackO.svg");
-        &:hover {
-            background-image: url("/img/Footer_StackO_Hover.svg");
+            background-image: url("/img/Footer_GitCat_Hover.svg");
         }
     }
 
@@ -448,14 +450,28 @@ footer {
         }
     }
 
-    #footer_github_link {
-        background-image: url("/img/Footer_GitCat.svg");
+    #footer_stackoverflow_link {
+        background-image: url("/img/Footer_StackO.svg");
         &:hover {
-            background-image: url("/img/Footer_GitCat_Hover.svg");
+            background-image: url("/img/Footer_StackO_Hover.svg");
         }
     }
 
-    #footer_groupsio_link, #footer_stackoverflow_link, #footer_twitter_link {
+    #footer_groupsio_link {
+        background-image: url("/img/Footer_GroupsIO.svg");
+        &:hover {
+            background-image: url("/img/Footer_GroupsIO_Hover.svg");
+        }
+    }
+
+    #footer_gitter_link {
+        background-image: url("/img/footer_gitter.svg");
+        &:hover {
+            background-image: url("/img/footer_gitter_hover.svg");
+        }
+    }
+
+    .footer_round_btn + .footer_round_btn {
         margin-left: 21px;
     }
 
@@ -620,4 +636,35 @@ footer {
 }
 .halign-right {
     text-align: right;
+}
+
+/* Callouts */
+.colist.arabic {
+    padding-left: 5px;
+
+    & table, & caption, & tbody, & tfoot, & thead, & tr, & th, & td {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font-size: 100%;
+        vertical-align: baseline;
+        text-align: left;
+        background: transparent;
+        box-shadow: none;
+    }
+    & tr {
+        padding: 13px 0;
+        & td:first-child {
+            width: 30px;
+            &:before {
+                /* Add parenthesis before the number of each row */
+                content: "(";
+            }  
+            &:after {
+                /* Add parenthesis after the number of each row */
+                content: ")";
+            }            
+        }
+    }
 }

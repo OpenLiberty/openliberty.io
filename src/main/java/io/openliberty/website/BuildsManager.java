@@ -14,52 +14,50 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import io.openliberty.website.data.BuildData;
-import io.openliberty.website.data.BuildLists;
+import io.openliberty.website.data.BuildInfo;
+import io.openliberty.website.data.BuildType;
 import io.openliberty.website.data.LastUpdate;
 import io.openliberty.website.data.LatestReleases;
 import io.openliberty.website.dheclient.DHEBuildParser;
 
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
 public class BuildsManager {
 
-	private static final Logger logger = Logger.getLogger(BuildsManager.class.getName());
+    private static final Logger logger = Logger.getLogger(BuildsManager.class.getName());
 
-	@Inject
-	private DHEBuildParser dheBuilds;
+    @Inject
+    private DHEBuildParser dheBuilds;
 
-	/** Defined default constructor */
-	public BuildsManager() {
-	}
+    /** Defined default constructor */
+    public BuildsManager() {
+    }
 
-	/** Allow for unittest injection */
-	BuildsManager(DHEBuildParser dheBuilds) {
-		if (logger.isLoggable(Level.FINER)) {
-			logger.log(Level.FINE, "BuildsManager() ", dheBuilds);
-		}
-		this.dheBuilds = dheBuilds;
-	}
+    /** Allow for unittest injection */
+    BuildsManager(DHEBuildParser dheBuilds) {
+        if (logger.isLoggable(Level.FINER)) {
+            logger.log(Level.FINE, "BuildsManager() ", dheBuilds);
+        }
+        this.dheBuilds = dheBuilds;
+    }
 
-	public BuildData getData() {
-		return dheBuilds.getBuildData();
-	}
+    public BuildData getData() {
+        return dheBuilds.getBuildData();
+    }
 
-	public BuildLists getBuilds() {
-		return dheBuilds.getBuildData().getBuilds();
-	}
+    public Map<BuildType, Set<BuildInfo>> getBuilds() {
+        return dheBuilds.getBuildData().getBuilds();
+    }
 
-	public LatestReleases getLatestReleases() {
-		return dheBuilds.getBuildData().getLatestReleases();
-	}
+    public LatestReleases getLatestReleases() {
+        return dheBuilds.getBuildData().getLatestReleases();
+    }
 
-	public LastUpdate getStatus() {
-		return dheBuilds.getLastUpdate();
-	}
-
-	public LastUpdate updateBuilds() {
-		return dheBuilds.blockingUpdate();
-	}
-
+    public LastUpdate getStatus() {
+        return dheBuilds.getLastUpdate();
+    }
 }

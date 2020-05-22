@@ -19,6 +19,7 @@ def createHrefNewTag(parent, tocHref, tocString, matchingTOCString):
     hrefTag['role'] = 'button'
     hrefTag['class'] = 'feature_version'
     hrefTag['full_title'] = "{}".format(tocString)
+    hrefTag['aria-label'] = "{}".format(tocString)
     hrefTag['tabindex'] = '0'
     docVersion = getTOCVersion(tocString)
     if docVersion is not None:

@@ -72,10 +72,13 @@ function setupDisplayContent() {
     }, 400);
 }
 
+function setTOCHeight() {
+    $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
+}
+
 // This function
 // - highlight the selected TOC 
 // - load the doc for the selected TOC
-// - update main bread crumb 
 // - show the display content, 
 // - update hash if requested
 function loadContent(targetTOC, tocHref, addHash) {
@@ -89,7 +92,6 @@ function loadContent(targetTOC, tocHref, addHash) {
         $("#open_issue_link").attr("href", "https://github.com/OpenLiberty/docs/issues/new");
         $("#edit_topic_link").attr("href", "https://github.com/OpenLiberty/docs/edit/develop/ref/general/" + doc_adoc);
         if (status === "success") {
-            updateMainBreadcrumb(targetTOC);
             updateTitle(targetTOC);
             setupDisplayContent();
 
@@ -98,8 +100,9 @@ function loadContent(targetTOC, tocHref, addHash) {
                 updateHashInUrl(tocHref);
             }
 
-            $(this).focus(); // switch focus to the content for the reader
-
+            $(this).trigger('focus'); // switch focus to the content for the reader
+            
+            setTOCHeight();
         }
     });
 }
@@ -125,25 +128,6 @@ function addOutlineToTabFocus(selector) {
         mousedown = false;
         windowFocus = false;
     });
-}
-
-// update the main breadcrumb
-function updateMainBreadcrumb(resource, attrForTitle) {
-    var lastBreadcrumb = $(".breadcrumb.fluid-container").find("li:last-child");
-    var lastBreadcrumbAnchorTag = lastBreadcrumb.find("a");
-    if (lastBreadcrumbAnchorTag.hasClass("inactive_link")) {
-        // remove existing inactive link
-        lastBreadcrumb.remove();
-    }
-
-    if (resource !== undefined) {
-        // use default title or title retrieved from the passed in attribute
-        var title = resource.text();
-        if (attrForTitle) {
-            title = resource.attr(attrForTitle);
-        }
-        $(".breadcrumb.fluid-container").append("<li><a class='inactive_link'>" + title + "</a></li>");
-    }
 }
 
 // update hash in the url and set lastClickElementHref to be the same value as set in the hash
@@ -286,7 +270,7 @@ function addHashListener() {
 // Take care of displaying the table of content, comand content, and hamburger correctly when
 // browser window resizes from mobile to non-mobile width and vice versa.
 function addWindowResizeListener() {
-    $(window).resize(function() {
+    $(window).on('resize', function() {
         if (isMobileView()) {
             addHamburgerClick();
         } else {
@@ -315,6 +299,6 @@ $(document).ready(function () {
 });
 
 // Change height of toc if footer is in view so that fixed toc isn't visible through footer
-$(document).scroll(function() {
-    $('#toc_inner').height($('footer').offset().top - $('#toc_inner').offset().top);
+$(document).on('scroll', function() {
+    setTOCHeight();
 });

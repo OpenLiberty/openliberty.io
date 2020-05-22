@@ -23,13 +23,31 @@
     padding-top: 0px;
 }
 
+@media (min-width: 767px) {
+    #nav_bar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+    }
+}
+
 /* table of contents styling */
 
 #toc_column {
     height: 100%;
-    padding-top: 20px;
+    padding-top: 80px;
     padding-bottom: 20px;
     padding-left: 0px;
+
+    @media (max-width: 991.98px) {
+        padding-top: 65px;
+    }
+
+    @media (max-width: 767.98px) {
+        padding-top: 20px;
+    }
 }
 
 #toc_inner {
@@ -39,7 +57,7 @@
     @media (min-width: 767px) {
         position: fixed;
         width: 25%;
-        max-height: calc(100% - 121px);
+        max-height: calc(100% - 60px);
     }
 }
 
@@ -72,9 +90,15 @@
     }
 }
 
-@media (min-width: 767px) {
-    #general_content {
-        padding-top: 101px;
+#general_content {
+    padding-top: 60px;
+
+    @media (max-width: 991.98px) {
+        padding-top: 45px;
+    }
+
+    @media (max-width: 767.98px) {
+        padding-top: 0px;
     }
 }
 
@@ -92,7 +116,7 @@
 }
 
 div.sectionbody > div.paragraph > p, div.sectionbody > div.dlist > dl > dd > p {
-    font-size: 16px;
+    font-size: 14px;
     color: #24243B;
     letter-spacing: 0;
     line-height: 24px;
@@ -103,12 +127,17 @@ div.sectionbody > div.paragraph > p, div.sectionbody > div.dlist > dl > dd > p {
     padding-top: 6.5px;
 }
 
-.sect1 > h2 {
-    font-size: 20px;
+.sect1 h2 {
+    font-size: 24px;
+    font-family: BunueloBold;
     color: #24243B;
     letter-spacing: 0;
     line-height: 24px;
     padding-top: 11px;
+}
+
+.sect1 h3 {
+    font-weight: 500;
 }
 
 .hdlist1 {
@@ -178,9 +207,16 @@ td p {
     margin: 0;
     font-size: 14px;
 }
+p { /* For the text above table of security-vulnerabilities.html(secruity-vulnerabilities.adoc) */
+    font-size: 14px;
+}
 
 tr:nth-child(even) {
     background: #EEEFF3;
+
+    & a {
+        color: #2d6da3;    /* Anchors in colored table rows need to be darker */
+    }
 }
 
 tr:nth-child(odd) {

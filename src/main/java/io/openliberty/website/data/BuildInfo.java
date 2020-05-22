@@ -11,135 +11,154 @@
 package io.openliberty.website.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.annotation.JsonbProperty;
 
 import io.openliberty.website.Constants;
 
+/**
+ * A JSON-B class representing a build. This is suitable for parsing the info.json from DHE, but also
+ * returning directly from the Open Liberty REST API. Not all fields are mandatory. The DHE usage of this
+ * has all locations relative, but from the Open Liberty REST API they are all absolute.
+ * 
+ * <p>At this time the size_in_bytes field is present, but does not appear used. The package_locations may not
+ * be present. If present this is a list of alternative package locations. The format of this differs between
+ * the DHE version of this and the Open Liberty REST API version. In DHE each entry is a simple file name, in
+ * the Open Liberty REST API each entry in the array is a name = url format.</p>
+ * 
+ * <p>This can be used as a key in Map, if it is not set then a NPE will occur. The resolveLocations method is 
+ * the primary method used prior to using this in this way, this is because the equals/hashcode uses dateTime
+ * field for identity.</p>
+ * 
+ * <pre>
+ * {
+ *     "test_passed": 13064,
+ *     "total_tests": 13064,
+ *     "tests_log": "open-liberty.unitTest.results.zip",
+ *     "build_log": "gradle.log",
+ *     "driver_location": "openliberty-20.0.0.4.zip",
+ *     "package_locations": ["openliberty-javaee8-20.0.0.4.zip","openliberty-webProfile8-20.0.0.4.zip","openliberty-microProfile3-20.0.0.4.zip"],
+ *     "version": "20.0.0.4",
+ *     "date_time": "2017-09-27_1951",
+ *     "size_in_bytes": 12345
+ * }
+ * </pre>
+ */
 public class BuildInfo {
-	private String version;
-	private String dateTime;
-	private String driverLocation;
-	private String sizeInBytes;
-	private String testPassed;
-	private String totalTests;
-	private String buildLog;
-	private String testLog;
-	private List<String> packageLocations;
+    @JsonbProperty(Constants.VERSION)
+    public String version;
+    @JsonbProperty(Constants.DATE)
+    public String dateTime;
+    @JsonbProperty(Constants.DRIVER_LOCATION)
+    public String driverLocation;
+    @JsonbProperty(Constants.SIZE_IN_BYTES)
+    public int sizeInBytes;
+    @JsonbProperty(Constants.TESTS_PASSED)
+    public int testPassed;
+    @JsonbProperty(Constants.TOTAL_TESTS)
+    public int totalTests;
+    @JsonbProperty(Constants.BUILD_LOG)
+    public String buildLog;
+    @JsonbProperty(Constants.TESTS_LOG)
+    public String testLog;
+    @JsonbProperty(Constants.PACKAGE_LOCATIONS)
+    public List<String> packageLocations = new ArrayList<>();
 
-	public JsonObject asJsonObject() {
-		JsonObjectBuilder obj = Json.createObjectBuilder();
-		if (version != null) {
-			obj.add(Constants.VERSION, version);
-		}
-		if (dateTime != null) {
-			obj.add(Constants.DATE, dateTime);
-		}
-		if (driverLocation != null) {
-			obj.add(Constants.DRIVER_LOCATION, driverLocation);
-		}
-		if (sizeInBytes != null) {
-			obj.add(Constants.SIZE_IN_BYTES, sizeInBytes);
-		}
-		if (totalTests != null) {
-			obj.add(Constants.TOTAL_TESTS, totalTests);
-		}
-		if (testPassed != null) {
-			obj.add(Constants.TESTS_PASSED, testPassed);
-		}
-		if (buildLog != null) {
-			obj.add(Constants.BUILD_LOG, buildLog);
-		}
-		if (testLog != null) {
-			obj.add(Constants.TESTS_LOG, testLog);
-		}
-		if (packageLocations != null) {
-			JsonArrayBuilder array = Json.createArrayBuilder();
-			for (String pkgLoc : packageLocations) {
-				array.add(pkgLoc);
-			}
-			obj.add(Constants.PACKAGE_LOCATIONS, array.build());
-		}
-		return obj.build();
-	}
 
-	public String getVersion() {
-		return version;
-	}
+    public BuildInfo(String buildLog, String driverLocation, int testPassed, int totalTests, String testLog) {
+        this.buildLog = buildLog;
+        this.driverLocation = driverLocation;
+        this.testPassed = testPassed;
+        this.totalTests = totalTests;
+        this.testLog = testLog;
+    }
 
-	public void addVersion(String version) {
-		this.version = version;
-	}
+    public BuildInfo(String driverLocation, String version) {
+        this.driverLocation = driverLocation;
+        this.version = version;
+    }
 
-	public String getDateTime() {
-		return dateTime;
-	}
+    public BuildInfo(String buildLog, String driverLocation, int testPassed, int totalTests, String testLog, String version, String ... driverLocations) {
+        this.buildLog = buildLog;
+        this.driverLocation = driverLocation;
+        this.testPassed = testPassed;
+        this.totalTests = totalTests;
+        this.testLog = testLog;
+        this.version = version;
+        packageLocations.addAll(Arrays.asList(driverLocations));
+    }
 
-	public void addDateTime(String dateTime) {
-		this.dateTime = dateTime;
-	}
+    public BuildInfo() { }
 
-	public String getDriverLocation() {
-		return driverLocation;
-	}
+    public String toString() {
+        return JsonbBuilder.create().toJson(this);
+    }
 
-	public void addDriverLocation(String driverLocation) {
-		this.driverLocation = driverLocation;
-	}
+    /**
+     * This method must be called prior to this being returned on the Open Liberty REST API.
+     * This is because it handles converting from relative DHE urls to absolute ones. It also 
+     * sets the DateTime which is important before storing in a sorted set.
+     * 
+     * @param url The DHE url
+     * @param type The type of the build
+     * @param dateTime the date/time of publication
+     * @return This date time.
+     */
+    public void resolveLocations(String url, BuildType type, String dateTime) {
+        // first set date time if it isn't already set. This field isn't stored in
+        // DHE, but is returned by the Open Liberty REST API so this is really important
+        if (this.dateTime == null) this.dateTime = dateTime;
 
-	public String getSizeInBytes() {
-		return sizeInBytes;
-	}
+        // Setup the url prefix for the build logs and driver location
+        String prefix = url + type.getURISegment() + '/' + dateTime + '/';
 
-	public void addSizeInBytes(String sizeInBytes) {
-		this.sizeInBytes = sizeInBytes;
-	}
+        if (driverLocation != null) {
+            driverLocation = prefix + driverLocation;
+        }
+        if (buildLog != null) {
+            buildLog = prefix + buildLog;
+        }
 
-	public String getTestPassed() {
-		return testPassed;
-	}
+        if (testLog != null) {
+            testLog = prefix + testLog;
+        }
+        
+        // This is historic and not ideal. Ideally the package Locations would be an Object
+        // but at some point it was an array of name = value and this requires rework on the front
+        // end, it isn't a compatible change so for now stick with it. DHE stores a simple list
+        // of packages, but the Open Liberty REST API returns key=url and the key is derived
+        // from the package name, so this code extracts the key from the package name and 
+        // resolves the url for each entry. Package Locations may be null so in that case we
+        // need to cope.
+        if (packageLocations != null && !packageLocations.isEmpty()) {
+            List<String> fixedPackageLocations = new ArrayList<>();
+            for (String packageLoc : packageLocations) {
+                int index = packageLoc.indexOf("-") + 1;
+                int endIndex = packageLoc.indexOf("-", index);
+                String name = packageLoc.substring(index, endIndex);
+                index = packageLoc.lastIndexOf(".");
+                String extension = packageLoc.substring(index);
+                fixedPackageLocations.add(name + extension + '=' + prefix + packageLoc);
+            }
+            packageLocations = fixedPackageLocations;
+        }
+    }
 
-	public void addTestPassed(String testPassed) {
-		this.testPassed = testPassed;
-	}
+    public String getDateTime() {
+        return dateTime;
+    }
 
-	public String getTotalTests() {
-		return totalTests;
-	}
+    public int hashCode() {
+        return dateTime.hashCode();
+    }
 
-	public void addTotalTests(String totalTests) {
-		this.totalTests = totalTests;
-	}
-
-	public String getBuildLog() {
-		return buildLog;
-	}
-
-	public void addBuildLog(String buildLog) {
-		this.buildLog = buildLog;
-	}
-
-	public String getTestLog() {
-		return testLog;
-	}
-
-	public void addTestLog(String testLog) {
-		this.testLog = testLog;
-	}
-
-	public List<String> getPackageLocations() {
-		return packageLocations;
-	}
-
-	public void addPackageLocation(String name, String location) {
-		if (packageLocations == null) {
-			packageLocations = new ArrayList<String>();
-		}
-		packageLocations.add(name + "=" + location);
-	}
-
+    public boolean equals(BuildInfo other) {
+        if (this == other) return true;
+        if (other == null) return false;
+        if (this.dateTime.equals(other.dateTime)) return true;
+        return false;
+    }
 }

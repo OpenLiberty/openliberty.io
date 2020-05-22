@@ -2,8 +2,6 @@
 # Exit immediately if a simple command exits with a non-zero status.
 set -e
 
-JEKYLL_BUILD_FLAGS=""
-
 ./scripts/build_gem_dependencies.sh
 
 echo "Ruby version:"
@@ -40,16 +38,25 @@ if [ "$JEKYLL_ENV" != "production" ]; then
             find src/main/content/guides/draft-iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
         fi
     fi
+else
+    # Production!
+    echo "Clone published certifications!"
+    ./scripts/build_clone_certifications.sh "master" # Argument is branch name of OpenLiberty/certifications
 fi
 
 # Clone docs repo
 ./scripts/build_clone_docs.sh "antora"
 
-# Development environments that enable the draft blogs in the _draft directory.
-if [ "$JEKYLL_DRAFT_BLOGS" == "true" ]; then
-    # Include draft blog posts for non production environments
-    JEKYLL_BUILD_FLAGS="--drafts"
-fi
+pushd gems/ol-asciidoc
+gem build ol-asciidoc.gemspec
+gem install ol-asciidoc-0.0.1.gem
+popd
+
+# Special external link handling
+pushd gems/ol-target-blank
+gem build ol-target-blank.gemspec
+gem install ol-target-blank-0.0.1.gem
+popd
 
 echo "Copying guide images to /img/guide"
 mkdir -p src/main/content/img/guide
@@ -83,9 +90,10 @@ mkdir -p target/jekyll-webapp
 # Enable google analytics if ga is true
 if [ "$ga" = true ]
   then 
-    jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --config src/main/content/_config.yml,src/main/content/_google_analytics.yml --destination target/jekyll-webapp 
+    jekyll build --source src/main/content --config src/main/content/_config.yml,src/main/content/_google_analytics.yml --destination target/jekyll-webapp 
   else
-    jekyll build $JEKYLL_BUILD_FLAGS --source src/main/content --destination target/jekyll-webapp 
+    # Set the --future flag to show blogs with date timestamps in the future
+    jekyll build --future --source src/main/content --destination target/jekyll-webapp 
 fi
 
 # Install Antora packages and build the Antora UI bundle
@@ -105,5 +113,7 @@ cp -r src/main/content/docs/build/site/. target/jekyll-webapp/
 # python3 ./scripts/parse-feature-toc.py
 
 # Maven packaging
+# A Maven wrapper is used to set our own Maven version independent of the build environment and is specified in ./mvn/wrapper/maven-wrapper.properties
+# Set the TLS Protocol to 1.2 for the maven wrapper on Java version 1.7
 echo "Running maven (mvn)..."
-mvn -B package
+./mvnw -B -Dhttps.protocols=TLSv1.2 package

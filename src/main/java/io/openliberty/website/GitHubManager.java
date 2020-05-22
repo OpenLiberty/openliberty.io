@@ -17,6 +17,10 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
+/**
+ * The GitHub manager fetches issues from GitHub and passes it back to the Open Liberty website
+ * rest API. 
+ */
 @ApplicationScoped
 public class GitHubManager {
 

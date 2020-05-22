@@ -14,10 +14,10 @@ public interface Constants {
 
     // URL
     String DHE_URL = "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/";
-    String DHE_RUNTIME_PATH_SEGMENT = "runtime/";
-    String DHE_TOOLS_PATH_SEGMENT = "tools/";
-    String DHE_RELEASE_PATH_SEGMENT = "release/";
-    String DHE_NIGHTLY_PATH_SEGMENT = "nightly/";
+    String DHE_RUNTIME_PATH_SEGMENT = "runtime";
+    String DHE_TOOLS_PATH_SEGMENT = "tools";
+    String DHE_RELEASE_PATH_SEGMENT = "release";
+    String DHE_NIGHTLY_PATH_SEGMENT = "nightly";
     String DHE_INFO_JSON_FILE_NAME = "info.json";
 
     // JSON

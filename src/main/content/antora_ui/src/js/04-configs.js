@@ -35,13 +35,11 @@ function addTOCClick() {
             // loading initial content
             // - update main breadcrumb 
             // Note: content breadcrumb not visible with initial loading
-            updateMainBreadcrumb(resource);
             updateTitle(resource.text());
         } else {
             // positioning to one of the 2nd level subtitiles
             // - enable content breadcrumb
             // - scroll to the 2nd level subtitle
-            // Note: main breadcrumb only contains main title not 2nd level subtitle
             handleContentBreadcrumbVisibility(true);
         }
         updateHashInUrl(currentHref);
@@ -98,24 +96,6 @@ function removeHashRefTOC(href) {
     $(hashHref).each(function () {
         $(this).parent().remove();
     });
-}
-
-// Update doc header breadcrumb with the current TOC title
-function updateMainBreadcrumb(resource) {
-    var currentHref = resource.attr("href");
-    // main breadcrumb only includes the main href without any hash to land to a subheading
-    if (currentHref !== undefined && currentHref.indexOf("#") === -1) {
-        var lastBreadcrumb = $(".breadcrumb.fluid-container").find("li:last-child");
-        var lastBreadcrumbAnchorTag = lastBreadcrumb.find("a");
-        var lastBreadcrumbHref = lastBreadcrumbAnchorTag.attr("doc-href");
-        if (currentHref !== lastBreadcrumbHref) {
-            if (lastBreadcrumbAnchorTag.hasClass("inactive_link")) {
-                // remove existing inactive link
-                lastBreadcrumb.remove();
-            }
-            $(".breadcrumb.fluid-container").append("<li><a class='inactive_link' doc-href='" + resource.attr("href") + "'>" + resource.text() + "</a></li>");
-        }
-    }
 }
 
 // Update title in browser tab to show current page
