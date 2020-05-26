@@ -110,6 +110,9 @@ echo "Moving the Antora docs to the jekyll webapp"
 mkdir -p target/jekyll-webapp/docs/
 cp -r src/main/content/docs/build/site/. target/jekyll-webapp/
 
+# Special handling for javadocs
+./scripts/modify_javadoc.sh
+
 # python3 ./scripts/parse-feature-toc.py
 
 # Maven packaging
