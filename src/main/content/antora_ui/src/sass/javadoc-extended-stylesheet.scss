@@ -88,11 +88,6 @@ th > a {
     display: none; /* Hide the Summary subnav filters from javadoc */
 }
 
-/* Frames filter inside the Javadoc. Future versions should enable no frames */
-/* .subNav .navList:nth-of-type(2) {    
-    display: block;
-} */
-
 /* used in Start of Top NavBar with display: none */
 ul.navList, ul.subNavList {
     display: table;
@@ -181,12 +176,12 @@ ul.blockList ul.blockList ul.blockList li.blockList h3 {
     padding-left: 19px;
 	padding-top: 0px;
     word-wrap: break-word;
-}
 
-.indexContainer ul li:hover, .indexContainer ul li:focus {
-    background:#fdf2ea;
-    border-left: 8px solid #f4914d; 
-    font-weight: 500;
+    &.selected, &:hover, &:focus {
+        background:#fdf2ea;
+        border-left: 8px solid #f4914d; 
+        font-weight: 500;
+    }
 }
 
 .overviewSummary tr:nth-child(1):not(.altColor) {

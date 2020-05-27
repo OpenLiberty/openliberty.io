@@ -375,8 +375,12 @@ function addClickListener(contents) {
 
             var package = hashParams.substring(1).split("&").sort()[1].replace("package=", "");
             updateTitle(package);
+
+            // Remove all selected li in this list and add active class to parent li
+            $(e.target.parentNode).parents('.indexContainer').find('li.selected').removeClass('selected');
+            e.target.parentNode.classList.add('selected');
         }
-    })
+    });
 }
 
 function setPackageContainerHeight() {
