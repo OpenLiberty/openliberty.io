@@ -378,7 +378,7 @@ function addClickListener(contents) {
 
             // Remove all selected li in this list and add active class to parent li
             $(e.target.parentNode).parents('.indexContainer').find('li.selected').removeClass('selected');
-            e.target.parentNode.classList.add('selected');
+            $(e.target).parents('li').first().addClass('selected');
         }
     });
 }
