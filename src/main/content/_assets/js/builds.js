@@ -14,6 +14,7 @@ var builds = [];
 var latest_releases = [];
 var runtime_releases = [];
 var runtime_development_builds = [];
+var runtime_betas = [];
 var developer_tools_releases = [];
 var developer_tools_development_builds = [];
 
@@ -41,7 +42,8 @@ function render_builds(builds, parent) {
     builds.forEach(function(build) {
         var web_profile_row = null,
             microprofile_row = null,
-            all_ga_features_row = null;
+            all_ga_features_row = null,
+            jakarta_beta_releases_row = null;
         var row = $('<tr></tr>');
         // both releases tables (ol releases and eclipse developer tools releases)
         if(parent.hasClass('release_table_body')) {
@@ -62,8 +64,7 @@ function render_builds(builds, parent) {
                     row.append(version_column);
 
                     for(var i = 0; i < package_locations.length; i++){
-                        var package_name = package_locations[i].split("=")[0];
-                        package_name = package_name.toLowerCase();
+                        var package_name = package_locations[i].split("=")[0].toLowerCase();
                         var href = package_locations[i].split("=")[1];
                         var package_column = $('<td headers="' + tableID + '_download"></td>');
                         package_column.append($('<a href="' +  href +'" class="' + analytics_class_name + '">' + 
@@ -98,6 +99,30 @@ function render_builds(builds, parent) {
                     row.append('<td headers="' + tableID + '_package">All GA Features</td>');
                     row.append('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + '">' + download_arrow + 'ZIP</a></td>');
                 }
+
+            // beta releases table only
+            } else if (parent.parent().data('builds-id') == "runtime_betas"){
+                jakarta_beta_releases_row = $('<tr></tr>');
+                var package_locations = build.package_locations;
+                if(package_locations !== null && package_locations !== undefined){
+                    var num_packages = package_locations.length + 1;
+                    version_column = $('<td headers="' + tableID + '_version" rowspan="' + num_packages + '"><span class="table_date">' + build.version + '</span></td>');
+                    row.append(version_column);
+                    row.append('<td headers="' + tableID + '_package">All Beta Features</td>');
+                    row.append('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + '">' + download_arrow + 'ZIP</a></td>');
+
+                    for(var i = 0; i < package_locations.length; i++){
+                        var package_name = package_locations[i].split("=")[0].toLowerCase();
+                        var href = package_locations[i].split("=")[1];
+                        var download_column = $('<td headers="' + tableID + '_download"></td>');
+                        download_column.append($('<a href="' +  href +'" class="' + analytics_class_name + '">' + 
+                        download_arrow + 'ZIP</a>'));
+                        if (package_name.indexOf("jakarta") > -1) {
+                            jakarta_beta_releases_row.append("<td headers='" + tableID + "_package'>Jakarta EE 9 Beta Features</td>");
+                            jakarta_beta_releases_row.append(download_column);
+                        }
+                    }
+                }
             // eclipse developer tools releases only
             }  else {
                 version_column = $('<td headers="' + tableID + '_version"><span class="table_date">' + build.version + '</span></td>');
@@ -130,6 +155,7 @@ function render_builds(builds, parent) {
         parent.append(web_profile_row);
         parent.append(microprofile_row);
         parent.append(all_ga_features_row);
+        parent.append(jakarta_beta_releases_row);
 
     });
 }
@@ -246,6 +272,20 @@ $(document).ready(function() {
                 builds['developer_tools_releases'] = developer_tools_releases;
                 sort_builds(developer_tools_releases, 'date', true);
                 render_builds(developer_tools_releases, $('table[data-builds-id="developer_tools_releases"] tbody'));       
+            }
+            if(data.builds.runtime_betas){
+                // if betas info is empty (the betas are not on DHE yet), hide beta tab and content
+                if(data.builds.runtime_betas.length == 0){
+                    $('#downloads-betas').parent().hide();
+                    $('#runtime_betas').hide();
+                }
+                else {
+                    runtime_betas = formatBuilds(data.builds.runtime_betas);
+                    // runtime_betas = [{build_log: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-04-29_1655/gradle.log", date: 1588197300000, date_time: "2020-04-29_1655", driver_location: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-04-29_1655/openliberty-20.0.0.5.zip", package_locations: ["beta-jakartaee9.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2019-11-20_0300/openliberty-microProfile3-19.0.0.12.zip"], size_in_bytes: 0, test_passed: 13121, tests_log: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-04-29_1655/open-liberty.unitTest.results.zip", total_tests: 13121, version: "20.0.0.6-beta"}];
+                    builds['runtime_betas'] = runtime_betas;
+                    sort_builds(runtime_betas, 'date', true);
+                    render_builds(runtime_betas, $('table[data-builds-id="runtime_betas"] tbody'));
+                }
             }
             if(data.builds.runtime_nightly_builds){
                 runtime_development_builds = formatBuilds(data.builds.runtime_nightly_builds);

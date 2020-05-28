@@ -180,6 +180,7 @@ public class DHEBuildParser {
         // We haven't read any data about nightly builds so we need to run this now
         futures.add(exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.runtime_nightly_builds), 0, delay, delayTime));
         futures.add(exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.tools_nightly_builds), 0, delay, delayTime));
+        futures.add(exec.scheduleWithFixedDelay(new RetrieveBuildList(BuildType.runtime_betas), 0, delay, delayTime));
     }
 
     @PreDestroy
