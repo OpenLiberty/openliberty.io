@@ -81,7 +81,6 @@ $(document).ready(function() {
 
     // Get number of pixels that are visible in viewport for $element
     function getVisibleHeightPx($element) {
-        console.log("getting visible height of element");
         var viewportHeight = $(window).height();
         var rect = $element.get(0).getBoundingClientRect(),
             height = rect.bottom - rect.top,
