@@ -128,7 +128,7 @@ $(document).ready(function() {
     }
 
     function fixTOCHeight() {
-        var headerVisibleHeight = getVisibleHeightPx($('nav#nav_bar')) + getVisibleHeightPx($('#guides_information_container'));
+        var headerVisibleHeight = getVisibleHeightPx($('#nav_bar')) + getVisibleHeightPx($('#guides_information_container'));
         var tocHeight = $('#toc_container ul').height();
         var footerVisibleHeight = getVisibleHeightPx($('footer'));
         var totalHeight = headerVisibleHeight + tocHeight + footerVisibleHeight;
@@ -163,7 +163,7 @@ $(document).ready(function() {
         }
 
         addPadding();
-        var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('nav#nav_bar').outerHeight(true);
+        var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('#nav_bar').outerHeight(true);
 
         // fix TOC height to account for footer and make it scrollable if necessary
         if (isDesktopView()) {
@@ -268,7 +268,7 @@ $(document).ready(function() {
         var isTOCPositionFixed = ($('#toc_column').css('position') == 'fixed');
         var isAccordionPositionFixed = ($('#tablet_toc_accordion_container').css('position') == 'fixed');
         var accordionHeight = $('#tablet_toc_accordion_container').outerHeight();
-        var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('nav#nav_bar').outerHeight(true);
+        var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('#nav_bar').outerHeight(true);
         
         // fix TOC height to account for footer and make it scrollable if necessary
         if (isDesktopView()) {
