@@ -256,9 +256,34 @@ function addNavHoverListener() {
     })
 }
 
-function setDynamicIframeContent() {
+// Returns a json object with the package and class from the url
+function parseQueryParams(){
     var targetPage = {};
     var hashPage = parent.window.location.hash;
+    if (hashPage != "" && hashPage != undefined) {
+        hashPage = hashPage.substring(1);  // take out the #
+        var splitHashPage = hashPage.split("&");
+        for (i = 0; i < splitHashPage.length; i++) {
+            var hashString = splitHashPage[i].trim();
+            if (hashString.indexOf(PACKAGE_HASH) === 0) {                
+                targetPage.package = hashString.substring(8);
+            } else {
+                var tmpClassPage = hashString;
+                if (hashString.indexOf(CLASS_HASH) === 0) {                    
+                    tmpClassPage = hashString.substring(6);                    
+                } else if (hashString.indexOf("=") !== -1) {
+                    tmpClassPage = "";
+                }
+                if (tmpClassPage !== "") {
+                    targetPage.class = tmpClassPage;
+                }
+            }
+        }
+    }
+    return targetPage;
+}
+
+function setDynamicIframeContent() {
     
     // setup the default html path
     if (defaultPackageHtml === "") {
@@ -268,27 +293,7 @@ function setDynamicIframeContent() {
         defaultClassHtml = defaultHtmlRootPath + DEFAULT_CLASS_HTML;
     }
 
-    if (hashPage != "" && hashPage != undefined) {
-        hashPage = hashPage.substring(1);  // take out the #
-        var splitHashPage = hashPage.split("&");
-        for (i = 0; i < splitHashPage.length; i++) {
-            var hashString = splitHashPage[i].trim();
-            if (hashString.indexOf(PACKAGE_HASH) === 0) {
-                targetPage.package = hashString.substring(8);
-            } else {
-                var tmpClassPage = hashString;
-                if (hashString.indexOf(CLASS_HASH) === 0) {
-                    tmpClassPage = hashString.substring(6);
-                } else if (hashString.indexOf("=") !== -1) {
-                    tmpClassPage = "";
-                }
-                if (tmpClassPage !== "") {
-                    targetPage.class = tmpClassPage;
-                }
-            }
-        }
-    } 
-
+    var targetPage = parseQueryParams();
     if (targetPage.package) {
         setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + targetPage.package);
     }
@@ -403,7 +408,7 @@ function setIFrameContent(iframeName, href) {
     else {
         var currentVersion = path.slice(-2, -1);
         var allClassesHref = "/javadocs/liberty-javaee" + currentVersion + "-javadoc/allclasses-frame.html";
-    }
+    }   
 
     // check if href results in 404 and redirect to doc-404.html if it does
     var http = new XMLHttpRequest();
@@ -520,6 +525,24 @@ function versionClick(event) {
     event.target.href += window.location.hash;
 }
 
+// Highlight the iframe's TOC according to the query param in the URL
+function highlightTOC(iframeName){
+    var toc, href;
+    var targetPage = parseQueryParams();
+    var iframeContent = $("#javadoc_container").contents().find(iframeName).contents();
+    if(iframeName == '.leftTop iframe'){
+        href = targetPage.package;
+        toc = iframeContent.find('li a[href="' + href + '"]');       
+    } else if (iframeName == PACKAGE_FRAME){
+        href = targetPage.class;
+        href = href.substring(href.lastIndexOf('/')+1);
+        toc = iframeContent.find('li a[href="' + href + '"]');
+    }
+    if(toc) {
+        toc.parents('li').first().addClass('selected');
+    }            
+}
+
 $(document).ready(function() {
     
     $(window).on('resize', function(){
@@ -536,18 +559,21 @@ $(document).ready(function() {
         addScrollListener();
         addClickListeners();
         addiPadScrolling();
+        highlightTOC('.leftTop iframe');
+
+        $('#javadoc_container').contents().find(PACKAGE_FRAME).on('load', function(){
+            addClickListener($(this).contents());
+            // add back the toggle expand/collapse button
+            addExpandAndCollapseToggleButtonForPackageFrame($(this).contents(), $('#javadoc_container').contents().find(".leftBottom"));
+            addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
+            highlightTOC(PACKAGE_FRAME);
+        });
 
         $('#javadoc_container').contents().find(CLASS_FRAME).on('load', function(){
             addAccessibility();
             addNavHoverListener();
             addScrollListener();
             addClickListener($(this).contents());
-        });
-        $('#javadoc_container').contents().find(PACKAGE_FRAME).on('load', function(){
-            addClickListener($(this).contents());
-            // add back the toggle expand/collapse button
-            addExpandAndCollapseToggleButtonForPackageFrame($(this).contents(), $('#javadoc_container').contents().find(".leftBottom"));
-            addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
         });
 
         setDynamicIframeContent();
