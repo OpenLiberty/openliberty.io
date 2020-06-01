@@ -128,7 +128,7 @@ $(document).ready(function() {
     }
 
     function fixTOCHeight() {
-        var headerVisibleHeight = getVisibleHeightPx($('#nav_bar')) + getVisibleHeightPx($('#guides_information_container'));
+        var headerVisibleHeight = getVisibleHeightPx($('#guides_information_container'));
         var tocHeight = $('#toc_container ul').height();
         var footerVisibleHeight = getVisibleHeightPx($('footer'));
         var totalHeight = headerVisibleHeight + tocHeight + footerVisibleHeight;
