@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from pkg_resources import parse_version
-import os
+import os, fnmatch
 import re
 
 def getTOCVersion(tocString):
@@ -30,23 +30,39 @@ def createHrefNewTag(parent, tocHref, tocString, matchingTOCString):
     return hrefTag
 
 # Get all of the Antora versions
-featurePath = 'target/jekyll-webapp/docs/ref/feature/'
+# featurePath = 'target/jekyll-webapp/docs/ref/feature/'
+featurePath = 'target/jekyll-webapp/docs/'
+
+# full path is target/jekyll-webapp/docs/<version>/ref
+
 versions = []
 for version in os.listdir(featurePath):
-    if(os.path.isdir('target/jekyll-webapp/docs/ref/feature/' + version)):
-        for file in os.listdir(featurePath + version):
-            if(file == 'featureOverview.html'):
-                versions.append(version)
+    if(os.path.isdir(featurePath + version + "/reference/")):
+        for file in os.listdir(featurePath + version + "/reference/"):
+            if file == "feature":
+                # Look for featurePath + version + ref + feature
+                if version != "modules":
+                    versions.append(version)
+
+print(versions)
 
 # Loop through each Antora version to fix its feature TOC and combine the pages
 for version in versions:
-    featureIndex = BeautifulSoup(open('./target/jekyll-webapp/docs/ref/feature/' + version + '/featureOverview.html'), "html.parser")
+    # Read in front version/feature but write to all of the antora version later for changing the toc
+    antora_path = featurePath + version + "/reference/"
+
+    featureIndex = BeautifulSoup(open(antora_path + 'feature/featureOverview.html'), "html.parser")
 
     # Keep track of new href with updated versions to update the TOCs later
     commonTOCs = {};
     # gather TOCs with version in the title
-    for featureTOC in featureIndex.find_all('a', {'class': 'nav-link'}, href=True):
+    # Find TOC then find the feature section
+    toc = featureIndex.find('nav', {'class': 'nav-menu'})
+    featureDropdown = toc.find('span', text='Features').parent
+    print(featureDropdown)
+    for featureTOC in featureDropdown.find_all('a', {'class': 'nav-link'}, href=True):
         toc = featureTOC.get('href')
+        # print(toc)
         pattern = re.compile('^(?P<preString>[\s\D]*)-(?P<version>\d+[.]?\d*)(?P<postString>[\s\D]*)')
         matches = pattern.match(toc)
         if matches is None:
@@ -63,8 +79,8 @@ for version in versions:
     commonTOCKeys = commonTOCs.keys()
     commonTOCKeys = list(commonTOCKeys)
 
-    # Add to version href if we need it for linking
-    antora_path = "target/jekyll-webapp/docs/ref/feature/" + version + "/"
+    print(commonTOCKeys)
+    # antora_path = featurePath + version + "/feature/"
 
     for commonTOC in commonTOCKeys:
         commonTOCMatchString = commonTOCs[commonTOC]
@@ -96,25 +112,40 @@ for version in versions:
                         matchingTOC['href'] = newTOCHref
                         hrefTag = createHrefNewTag(featureIndex, tocHref, matchingTOC.get('href'), matchingTOC.string)
                         featureTitle.append(hrefTag)
+                        matchingTOC.string = commonTOC
                 else:
                     hrefTag = createHrefNewTag(featureIndex, tocHref, matchingTOC.get('href'), None)
                     featureTitle.append(hrefTag)
+                    # print(matchingTOC.parent)
                     matchingTOC.parent.decompose()
             # write to the common version doc to a file
-            with open('./target/jekyll-webapp/docs/ref/feature/' + version + '/' + newTOCHref, "w") as file:            
-                file.write(str(featureIndex))
+            print("Writing to page: " + antora_path + 'feature' + newTOCHref)
+            with open(antora_path + 'feature' + newTOCHref, "w") as file:   
+                # print(file)         
+                # file.write(str(featureIndex))
+                file.write(str(featureVersionTemplate))
 
     # record the toc in the featureIndex
     combinedTOC = featureIndex.find_all('ul', {'class': 'nav-list'})[1]
 
-    for file_name in os.listdir(antora_path):
-        href = antora_path + file_name
-        page = BeautifulSoup(open(href), "html.parser")
-        # Find the toc and replace it with the modified toc
-        toc = page.find_all('ul', {'class': 'nav-list'})[1]
-        toc.clear()
-        toc.append(combinedTOC)
-        with open(href, "w") as file:            
-                file.write(str(page))
+    # Change the TOC of all of the Antora doc pages
+    for version in versions:
+        path = featurePath + version 
+        for root, dirs, files in os.walk(path):
+            for basename in files:
+                if fnmatch.fnmatch(basename, "*.html"):
+                    if(basename != "index.html"):
+                        href = os.path.join(root, basename)
+                        print("Opening page to write to with href: " + href)
+                        print("basename: " + basename)
 
-    
+                        page = BeautifulSoup(open(href), "html.parser")
+                        # print(page)
+                        # Find the toc and replace it with the modified toc
+                        toc = page.find_all('ul', {'class': 'nav-list'})[1]
+                        toc.clear()
+                        toc.append(combinedTOC)
+                        # print("Writing to: " + href)
+                        with open(href, "w") as file:            
+                                file.write(str(page))
+                                 
