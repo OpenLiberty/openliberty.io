@@ -26,7 +26,7 @@ def createHrefNewTag(parent, tocHref, tocString):
         hrefTag.string = docVersion
     else: 
         # The first doc version has no number in its display string. Combine the feature name with its version from the href
-        hrefTag.string = matchingTOCString + " " + getTOCVersion(tocHref)
+        hrefTag.string = getTOCVersion(tocHref)
     return hrefTag
 
 # Get all of the Antora versions
