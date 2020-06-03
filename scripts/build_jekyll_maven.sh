@@ -113,7 +113,7 @@ cp -r src/main/content/docs/build/site/. target/jekyll-webapp/
 # Special handling for javadocs
 ./scripts/modify_javadoc.sh
 
-# python3 ./scripts/parse-feature-toc.py
+python3 ./scripts/parse-feature-toc.py
 
 # Maven packaging
 # A Maven wrapper is used to set our own Maven version independent of the build environment and is specified in ./mvn/wrapper/maven-wrapper.properties

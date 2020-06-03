@@ -14,7 +14,7 @@ def getTOCVersion(tocString):
     else:
        return None
 
-def createHrefNewTag(parent, tocHref, tocString, matchingTOCString):
+def createHrefNewTag(parent, tocHref, tocString):
     hrefTag = parent.new_tag('div', href=tocHref)
     hrefTag['role'] = 'button'
     hrefTag['class'] = 'feature_version'
@@ -30,10 +30,7 @@ def createHrefNewTag(parent, tocHref, tocString, matchingTOCString):
     return hrefTag
 
 # Get all of the Antora versions
-# featurePath = 'target/jekyll-webapp/docs/ref/feature/'
 featurePath = 'target/jekyll-webapp/docs/'
-
-# full path is target/jekyll-webapp/docs/<version>/ref
 
 versions = []
 for version in os.listdir(featurePath):
@@ -43,8 +40,6 @@ for version in os.listdir(featurePath):
                 # Look for featurePath + version + ref + feature
                 if version != "modules":
                     versions.append(version)
-
-print(versions)
 
 # Loop through each Antora version to fix its feature TOC and combine the pages
 for version in versions:
@@ -59,10 +54,8 @@ for version in versions:
     # Find TOC then find the feature section
     toc = featureIndex.find('nav', {'class': 'nav-menu'})
     featureDropdown = toc.find('span', text='Features').parent
-    print(featureDropdown)
     for featureTOC in featureDropdown.find_all('a', {'class': 'nav-link'}, href=True):
         toc = featureTOC.get('href')
-        # print(toc)
         pattern = re.compile('^(?P<preString>[\s\D]*)-(?P<version>\d+[.]?\d*)(?P<postString>[\s\D]*)')
         matches = pattern.match(toc)
         if matches is None:
@@ -79,9 +72,6 @@ for version in versions:
     commonTOCKeys = commonTOCs.keys()
     commonTOCKeys = list(commonTOCKeys)
 
-    print(commonTOCKeys)
-    # antora_path = featurePath + version + "/feature/"
-
     for commonTOC in commonTOCKeys:
         commonTOCMatchString = commonTOCs[commonTOC]
         matchingTitleTOCs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(commonTOCMatchString))
@@ -90,12 +80,14 @@ for version in versions:
         if len(matchingTitleTOCs) > 1:
             # multiple versions of the same title found, create a new html from the template
             # to put the versions at the top of the page
-            featureVersionTemplate  = BeautifulSoup(open('./scripts/feature-template/common-feature-content-template.html'), "html.parser")
-            featureTitle = featureIndex.find('h1', {'class': 'page'})
+            firstHref = matchingTitleTOCs[0].get('href')
+            featurePage  = BeautifulSoup(open(antora_path + '/feature/' + firstHref), "html.parser")
+            featureTitle = featurePage.find('h1', {'class': 'page'})
             featureTitle.string = ''
             newTOCHref = ''
             # in reverse descending order
             matchingTOCs = matchingTitleTOCs[::-1]
+            TOCToDecompose = []
             for matchingTOC in matchingTOCs:
                 tocHref = matchingTOC.get('href')
                 if firstElement:
@@ -108,22 +100,28 @@ for version in versions:
                         del htmlSplits[-1]
                         combineHtml = "-".join(htmlSplits) + '.html'
                         del hrefSplits[-1]
-                        newTOCHref = '/'.join(hrefSplits) + combineHtml
-                        matchingTOC['href'] = newTOCHref
-                        hrefTag = createHrefNewTag(featureIndex, tocHref, matchingTOC.get('href'), matchingTOC.string)
+                        hrefTag = createHrefNewTag(featurePage, tocHref, matchingTOC.string)
+                        hrefTag.string = matchingTOC.string
                         featureTitle.append(hrefTag)
                         matchingTOC.string = commonTOC
                 else:
-                    hrefTag = createHrefNewTag(featureIndex, tocHref, matchingTOC.get('href'), None)
+                    hrefTag = createHrefNewTag(featurePage, tocHref, matchingTOC.string)
                     featureTitle.append(hrefTag)
-                    # print(matchingTOC.parent)
-                    matchingTOC.parent.decompose()
-            # write to the common version doc to a file
-            print("Writing to page: " + antora_path + 'feature' + newTOCHref)
-            with open(antora_path + 'feature' + newTOCHref, "w") as file:   
-                # print(file)         
-                # file.write(str(featureIndex))
-                file.write(str(featureVersionTemplate))
+                    TOCToDecompose.append(matchingTOC.parent)
+
+            # New: Go thru the matching TOC pages and write the same version switcher (featureTitle) to the top of all of those same pages
+            for matchingTOC in matchingTOCs:
+                # Open page and rewrite the version part
+                versionHref = antora_path + 'feature/' + matchingTOC.get('href')
+                versionPage = BeautifulSoup(open(versionHref), "html.parser")
+                versionTitle = versionPage.find('h1', {'class': 'page'})
+                versionTitle.clear()
+                versionTitle.append(featureTitle)
+                with open (versionHref, "w") as file:
+                    file.write(str(versionPage))
+
+            for TOC in TOCToDecompose:
+                TOC.decompose
 
     # record the toc in the featureIndex
     combinedTOC = featureIndex.find_all('ul', {'class': 'nav-list'})[1]
@@ -136,16 +134,13 @@ for version in versions:
                 if fnmatch.fnmatch(basename, "*.html"):
                     if(basename != "index.html"):
                         href = os.path.join(root, basename)
-                        print("Opening page to write to with href: " + href)
-                        print("basename: " + basename)
-
                         page = BeautifulSoup(open(href), "html.parser")
-                        # print(page)
+
                         # Find the toc and replace it with the modified toc
-                        toc = page.find_all('ul', {'class': 'nav-list'})[1]
-                        toc.clear()
-                        toc.append(combinedTOC)
-                        # print("Writing to: " + href)
-                        with open(href, "w") as file:            
-                                file.write(str(page))
-                                 
+                        nav_lists = page.find_all('ul', {'class': 'nav-list'})
+                        if(nav_lists):
+                            toc = nav_lists[1]
+                            toc.clear()
+                            toc.append(combinedTOC)
+                            with open(href, "w") as file:            
+                                    file.write(str(page))
