@@ -14,7 +14,7 @@ def getTOCVersion(tocString):
     else:
        return None
 
-def createHrefNewTag(parent, tocHref, tocString):
+def createVersionHref(parent, tocHref, tocString, firstElement):
     hrefTag = parent.new_tag('div', href=tocHref)
     hrefTag['role'] = 'button'
     hrefTag['class'] = 'feature_version'
@@ -24,9 +24,11 @@ def createHrefNewTag(parent, tocHref, tocString):
     docVersion = getTOCVersion(tocString)
     if docVersion is not None:
         hrefTag.string = docVersion
-    else: 
-        # The first doc version has no number in its display string. Combine the feature name with its version from the href
-        hrefTag.string = getTOCVersion(tocHref)
+    else:
+        if firstElement:
+            hrefTag.string = tocString + " " + getTOCVersion(tocHref)
+        else:
+            hrefTag.string = getTOCVersion(tocHref)
     return hrefTag
 
 # Get all of the Antora versions
@@ -73,6 +75,8 @@ for version in versions:
     commonTOCKeys = list(commonTOCKeys)
 
     for commonTOC in commonTOCKeys:
+        # Read in updated featureIndex
+        # featureIndex = BeautifulSoup(open(antora_path + 'feature/featureOverview.html'), "html.parser")
         commonTOCMatchString = commonTOCs[commonTOC]
         matchingTitleTOCs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(commonTOCMatchString))
         firstElement = True;
@@ -100,33 +104,49 @@ for version in versions:
                         del htmlSplits[-1]
                         combineHtml = "-".join(htmlSplits) + '.html'
                         del hrefSplits[-1]
-                        hrefTag = createHrefNewTag(featurePage, tocHref, matchingTOC.string)
-                        hrefTag.string = matchingTOC.string
+                        hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string, True)
                         featureTitle.append(hrefTag)
                         matchingTOC.string = commonTOC
                 else:
-                    hrefTag = createHrefNewTag(featurePage, tocHref, matchingTOC.string)
+                    hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string, False)
                     featureTitle.append(hrefTag)
                     TOCToDecompose.append(matchingTOC.parent)
 
+            # print("TOCS to decompose:")
+            # print(TOCToDecompose)
+            for TOC in TOCToDecompose:
+                TOC.decompose
+
+            # After decomposing the TOC from the featureIndex, we need to write the new TOC to the featureIndex
+            # print("Writing over TOC of: " +  antora_path + "feature/featureOverview.html")
+            # with open(antora_path + 'feature/featureOverview.html', "w") as file:            
+            #     file.write(str(featureIndex))
+
+            
             # New: Go thru the matching TOC pages and write the same version switcher (featureTitle) to the top of all of those same pages
             for matchingTOC in matchingTOCs:
                 # Open page and rewrite the version part
                 versionHref = antora_path + 'feature/' + matchingTOC.get('href')
+                # print('opening ' + antora_path + 'feature/' + matchingTOC.get('href') + ' to write the versions to')
                 versionPage = BeautifulSoup(open(versionHref), "html.parser")
                 versionTitle = versionPage.find('h1', {'class': 'page'})
                 versionTitle.clear()
+                # featureIndex = BeautifulSoup(open(antora_path + 'feature/featureOverview.html'), "html.parser")
+                # featureTitle = featureIndex.find_all('ul', {'class': 'nav-list'})[1]
                 versionTitle.append(featureTitle)
                 with open (versionHref, "w") as file:
                     file.write(str(versionPage))
-
-            for TOC in TOCToDecompose:
-                TOC.decompose
+            
 
     # record the toc in the featureIndex
+    # Steven, might need to REREAD in featureIndex with all of the removed TOC entries
+    # featureIndex = BeautifulSoup(open(antora_path + 'feature/featureOverview.html'), "html.parser")
     combinedTOC = featureIndex.find_all('ul', {'class': 'nav-list'})[1]
+    # print("combinedTOC")
+    # print(combinedTOC)
 
     # Change the TOC of all of the Antora doc pages
+    print("Rewriting all of the docs TOCs to remove the duplicate feature versions")
     for version in versions:
         path = featurePath + version 
         for root, dirs, files in os.walk(path):
