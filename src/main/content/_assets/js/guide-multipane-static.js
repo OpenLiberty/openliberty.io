@@ -12,6 +12,8 @@
 var code_sections = {}; // Map guide sections to code blocks to show on the right column. Each guide section maps to its tab and code block.
 var recent_sections = {}; // Store the most recently viewed code_section for each guide section
 
+var twoColumnBreakpoint = 900; // This overrides the twoColumnBreakpoint set in guide-common.js
+
 // Map the hotspots for a given file to what index the file is in that section.
 // Input: Code_block: the code file
 //        Header: the section header for this code file
