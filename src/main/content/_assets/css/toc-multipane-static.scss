@@ -1,0 +1,484 @@
+/*******************************************************************************
+ * Copyright (c) 2018 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+ /* BREADCRUMB specific to the collapsable table of contents */
+
+#breadcrumb_row .breadcrumb {
+    display: block;
+    width: calc(100% - 76px); /* If you change this value then update guide.js too */
+    float: right;
+    padding-left: 0;
+}
+
+#breadcrumb_row .breadcrumbWithHamburger {
+    width: calc(100% - 76px);
+    float: right;
+}
+
+#breadcrumb_row .breadcrumb li:first-of-type {
+    padding-left: 30px;
+}
+
+#breadcrumb_hamburger {
+    display: inline-block;
+    width: 76px;
+    height: 100%;
+    background-color: #24243A;
+    border: none;
+    padding: 9px 10px;
+    border-right: 1px solid #474d6f;
+    padding: 4px 26px 7px 29px;
+}
+
+#breadcrumb_row .showHamburger {
+    display: inline-block;
+}
+
+#breadcrumb_hamburger:not(.collapsed) {
+    border-right: none;
+    background-color: #ffffff;
+}
+
+#breadcrumb_hamburger:not(.collapsed) > .sr-only, #breadcrumb_hamburger:not(.collapsed) > .icon-bar {
+    display: none;
+}
+
+#header_close_toc_svg {
+    display: none;
+}
+
+#breadcrumb_hamburger:not(.collapsed) > #header_close_toc_svg {
+    display: block !important;
+}
+
+#breadcrumb_hamburger:focus{
+    outline: none;
+    box-shadow: 0 0 2px 2px #51a7e8; /* keyboard-only focus styles */
+}
+
+#breadcrumb_hamburger .icon-bar {
+    background-color: #c8d6fb;
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 1px;
+}
+
+#breadcrumb_hamburger .icon-bar+.icon-bar {
+    margin-top: 4px;
+}
+
+/* TABLE OF CONTENTS */
+#toc_hotspot {
+    position: fixed;
+    z-index: 2;
+    opacity: 0;
+    top: 60px;
+    left: 0; 
+    width: 50px;
+    height: 100%;
+}
+
+#toc_column {
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding-bottom: 22px;
+    vertical-align: top;
+    background-color: white;
+    z-index: 7; /* to override the z-index valued of 4 and 6 for code mirror in interactive guide */
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.21);
+
+    &.open {
+        width: 280px;
+    }
+
+    @media (min-width: 900px) {
+        top: 45px;
+    }
+
+    @media (min-width: 992px) {
+        top: 60px;
+    }
+
+    @media (min-width: 900px) and (max-width: 1439.98px) {
+        height: auto !important;
+    }
+
+    @media (min-width: 1440px) {
+        float: left;
+        left: -400px;
+        position: relative;
+        padding-bottom: 22px;
+        background-color: white;
+        z-index: 0;
+        box-shadow: none;
+
+        &.open {
+            left: 0;
+            width: 400px;
+        }
+    }
+}
+
+#toc_inner {	
+    padding-top: 20px;	
+}
+
+@keyframes slide-in-out {
+    0%, 50% {
+        transform: translateX(-20px) scale(1.05,.95);
+    }
+
+    25%, 75% {
+        transform: translateX(-15px) scale(1,1);
+    }
+
+    100% {
+        transform: translateX(-40px) scale(1.05,.95);
+    }
+}
+
+#toc_indicator {
+    z-index: 5;
+    top: 60px;
+    left: 0;
+    width: 5px;
+    height: 30px;
+    position: fixed;
+    background-color: #f4914d;
+    padding: 7px 0;  
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &.open{
+        display: inline-block;
+        width: 45px;
+        transition: .5s ease-in;
+    }
+
+    & > img {
+        width: 16px;
+        height: 16px;
+        margin-right: 5px;
+        float: right;
+        transform: rotate(-90deg);
+    }
+
+    @media (max-width: 991.98px) {
+        top: 45px;
+    }
+}
+
+#toc_line {
+    display: inline-block;
+    left: 0;
+    width: 6px;
+    position: fixed;
+
+    &.open {
+        left: 394px; // 400px minus the width of 6 px
+        background-color: rgb(255, 216, 191);
+    }
+}
+
+.scroller_anchor {
+    height: 0px;
+    margin: 0;
+    padding: 0;
+}
+
+#mobile_toc_accordion_container {
+    display: none;
+    background-color: white;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+#mobile_toc_accordion {
+    vertical-align: middle;
+    display: table-cell;
+}
+
+#mobile_toc_accordion .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
+#mobile_toc_accordion .icon-bar {
+    background-color: #96bc32;
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 1px;
+}
+
+#mobile_toc_accordion .icon-bar+.icon-bar {
+    margin-top: 4px;
+}
+
+#toc_container {
+    .sectlevel1 > li, .sectlevel2 > li {
+        list-style: none;
+        font-weight: 300;
+        color: #5D6A8E;
+        font-size: 14px;
+        min-height: 30px;
+        border-left: 8px solid transparent;   
+        border-right: 8px solid transparent;     
+        word-wrap: break-word;
+    }
+
+    .sectlevel1 > li {
+        padding-left: 19px;
+        padding-right: 19px;
+    }    
+
+    .sectlevel2 {
+        padding-left: 0;
+    }
+
+    .sectlevel1 .sectlevel2 > li {
+        padding-left: 22px;        
+    }
+}
+
+/* After the sectlevel2 have been shifted to from under the sectlevel1 li to directly underneath the sectlevel1 step */
+#toc_container .sectlevel1 > .sectlevel2 {
+    padding-left: 0;
+
+    > li {
+        padding-left: 49px;
+    }
+}
+
+#toc_container > .sectlevel1 > li:not(.liSelected):hover, #toc_container .sectlevel2 > li:not(.liSelected):hover {
+    border-left: 8px solid #fdf2ea;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+#toc_container > .sectlevel1 > .liSelected, #toc_container .sectlevel2 > .liSelected {
+    background: #fdf2ea;
+    border-left: 8px solid #f4914d;
+    font-weight: 500;
+}
+
+#close_container {
+    display: block;
+
+    &:after {
+        clear: both;
+        content: "";
+        height: 0;
+        visibility: hidden;
+        display: block;
+    }
+
+    & > img {
+        position: absolute;
+        top: 0;
+        right: 5px;
+        background-color: #f4914d;
+        width: 20px;
+        height: 20px;    
+        padding: 5px;
+        margin-right: -6px;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &:focus {
+            box-shadow: 0 0 2px 2px #51a7e8; /* keyboard-only focus styles */
+        }
+    }
+}
+
+#toc_title {
+    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+    font-size:14px;
+    color:#313653;
+    margin-left: 27px;
+    margin-bottom: 22px;
+}
+
+#toc_container ul {
+    list-style-type: none;
+}
+
+#toc_container .sectlevel1 {
+    padding-left: 0;
+}
+
+#toc_container a {
+    display: inline-block;
+    color:#5d6a8e;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#toc_container a:hover {
+    color:#313653;
+}
+
+#toc_separator {
+    width: 232px;
+    height: 2px;
+    border: solid 1px #d4d7e3;
+    margin: auto;
+}
+
+#tag_title {
+    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+    font-size:14px;
+    color:#313653;
+    margin-left: 27px;
+    margin-right: 27px;
+    margin-bottom: 22px;
+}
+
+#tags_container {
+    margin-left: 27px;
+    margin-right: 27px;
+}
+
+#tags_container a {
+    color: #4f660a;
+    margin-right: 15px;
+    line-height: 30px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+#tags_container a:hover {
+    color: #4f660a;
+}
+
+@media (max-width: 899.98px) {
+
+
+    #mobile_toc_accordion_container {
+        display: table;
+        width: 100%;
+        height: 41px;
+        text-align: center;
+        border: 1px solid #d4d7e3;
+        z-index: 7; /* to override the z-index values of 4 and 6 for code mirror in interactive guide */
+    }
+
+    #mobile_toc_accordion_container .breadcrumb_hamburger {
+        border: none;
+        background: none;
+    }
+
+    .fixed_toc_accordion {
+        background-color: white;
+        border: 1px solid #d4d7e3;
+        position: fixed;
+        top: 0px;
+        overflow-y: auto;
+    }
+
+    #breadcrumb_hamburger, #code_column, #breadcrumb_row .showHamburger {
+        display: none;
+    }
+
+    #breadcrumb_row .breadcrumb:not(.breadcrumbWithHamburger) {
+        width: 100%;
+        float: none;
+    }
+
+    #breadcrumb_row .breadcrumbWithHamburger {
+        width: 100%;
+        float: none;
+    }
+}
+
+// Breakpoint for when the toc indicator appears
+
+
+@media (max-width: 899.98px) {
+
+    .dropdown-toggle.btn-default {
+        float: right;
+    }
+
+    #reference_dropdown_container .dropdown-menu > li > a:hover, #reference_dropdown_container .dropdown-menu > li > a:focus {
+        color: white;
+    }
+
+    #breadcrumb_row .breadcrumb {
+        overflow: auto;
+        white-space: nowrap;
+    }
+
+}
+
+@media (min-width: 1440px) {
+
+    #breadcrumb_hamburger {
+        display: none;
+    }
+
+    #breadcrumb_row .breadcrumb {
+        width: 100%;
+        float: none;
+    }
+
+    #breadcrumb_row .breadcrumbWithHamburger {
+        width: calc(100% - 76px);
+        float: right;
+    }
+
+    #background_container {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    #toc_title {
+        margin-top: 0;
+    }
+    
+    #toc_column.inline {
+        display: inline-block;
+    }
+
+    #toc_inner {
+        height: calc(100vh - 61px);
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+}
+
+@media (max-width: 899.98px) {
+    #toc_hotspot, 
+    #toc_indicator,
+    #toc_line {
+        display: none !important; /* Important is to override the display set through javascript */
+    }
+}
+
+@media (min-width: 900px) and (max-width: 1439.98px) {
+    #toc_indicator {
+        display: block !important; /* Important is to override the display from the hidden class */
+    }
+}

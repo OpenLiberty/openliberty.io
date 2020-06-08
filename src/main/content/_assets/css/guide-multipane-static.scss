@@ -1,0 +1,249 @@
+/*******************************************************************************
+ * Copyright (c) 2019 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+/* Code Column */
+#code_column {
+
+    @media (min-width: 900px) and (max-width: 1169.98px) {
+        left: 375px !important; // important needed to override left position set in javascript
+        width: calc(100vw - 375px);
+    }
+
+    @media (min-width: 900px) and (max-width: 991.98px) {
+        top: 45px !important; // important needed to override top position set in javascript
+    }
+
+    @media screen and (max-width: 899.98px) {
+        position: absolute;
+        display: none;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        &.modal {
+            display: block;
+            overflow: auto;
+
+            // Remove blur
+            #code_column_tabs_container, .code_column {
+                opacity: 1;
+                filter: none;
+            }
+
+            #code_column_tabs_container {
+                width: 100%;
+            }
+
+            #code_column_tabs {
+                // Give more room for the 'Back to text' button so the tabs don't overlap.
+                max-width: calc(100% - 135px);
+            }
+
+            #dismiss_button {
+                position: absolute;
+                display: inline-block;
+                top: 0;
+                right: 50px;
+                background:#ffffff;
+                border:1px solid #96bc32;
+                border-radius:3px;
+                width:92px;
+                height:38px;
+            }
+        }
+    }
+}
+
+#guide_column {
+    @media (min-width: 900px) {
+        width: 375px;
+        padding-top: 45px;
+    }
+
+    @media (min-width: 991px) {
+        padding-top: 60px;
+    }
+
+    @media (min-width: 1170px) {
+        width: calc(100% - 780px);
+    }
+}
+
+
+@media (max-width: 899.98px) {
+    #mobile_prereqs_section {
+        display: block;
+    }
+
+    #prereqs_container {
+        display: none;
+    }
+}
+
+@media (min-width: 900px) {
+    #code_column_tabs_container {
+        width: 100%;
+        border-radius: 4px 4px 4px 4px;
+        border: 1px solid #c8d6fb;
+    }
+    
+    #background_container {
+        background-image: inherit;
+        margin-bottom: 0;
+    }
+
+    /* Styling for the paragraphs following the edit commands */
+    #guide_content .edit_command_text {
+        position: relative;
+        margin-top: -2px; // Overlap the blue border of the command action.
+        border-left: 8px solid #96bc32;
+        & > p {
+            padding-left: 30px;
+        }
+    }
+
+    #guide_content code.hotspot:not(.code_command):hover {
+        color: #24253A;
+        background-color: #C7CCD9;
+    }
+}
+
+@media (max-width: 899.98px) {
+    #guide_content code.hotspot:hover,
+    #guide_content .code_command:hover {
+        cursor: pointer;
+    }
+
+    .listingblock.code_column {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media (min-width: 900px) and (max-width: 1169.98px) {
+    pre code {
+        white-space: pre;
+    }
+}
+
+@media (min-width: 900px) {
+    #nav_bar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+    }
+}
+
+
+
+// from toc.scss
+// @media (min-width: 900px) {
+//     #breadcrumb_hamburger, #code_column, #breadcrumb_row .showHamburger {
+//         display: block;
+//     }
+// }
+
+// @media (max-width: 899.98px) {
+//     #toc_hotspot, 
+//     #toc_indicator,
+//     #toc_line {
+//         display: none !important; /* Important is to override the display set through javascript */
+//     }
+// }
+
+// @media (min-width: 900px) and (max-width: 1439.98px) {
+//     #toc_indicator {
+//         display: block !important; /* Important is to override the display from the hidden class */
+//     }
+// }
+
+// @media (max-width: 991.98px) {
+//     #toc_indicator {
+//         top: 45px;
+//     }
+// }
+
+// #mobile_toc_accordion_container {
+//     display: none;
+// }
+
+// @media (max-width: 899.98px) {
+
+//     #mobile_toc_accordion_container {
+//         display: table;
+//         width: 100%;
+//         height: 41px;
+//         text-align: center;
+//         border: 1px solid #d4d7e3;
+//         z-index: 7; /* to override the z-index values of 4 and 6 for code mirror in interactive guide */
+//     }
+
+//     #mobile_toc_accordion_container .breadcrumb_hamburger {
+//         border: none;
+//         background: none;
+//     }
+
+//     .fixed_toc_accordion {
+//         background-color: white;
+//         border: 1px solid #d4d7e3;
+//         position: fixed;
+//         top: 0px;
+//         overflow-y: auto;
+//     }
+
+//     #breadcrumb_hamburger, #code_column, #breadcrumb_row .showHamburger {
+//         display: none;
+//     }
+
+//     #breadcrumb_row .breadcrumb:not(.breadcrumbWithHamburger) {
+//         width: 100%;
+//         float: none;
+//     }
+
+//     #breadcrumb_row .breadcrumbWithHamburger {
+//         width: 100%;
+//         float: none;
+//     }
+// }
+
+
+
+
+
+
+// #toc_column {
+//     @media (min-width: 900px) {
+//         top: 45px;
+//     }
+
+//     @media (min-width: 992px) {
+//         top: 60px;
+//     }
+// }
+
+// @media (max-width: 899.98px) {
+
+//     .dropdown-toggle.btn-default {
+//         float: right;
+//     }
+
+//     #reference_dropdown_container .dropdown-menu > li > a:hover, #reference_dropdown_container .dropdown-menu > li > a:focus {
+//         color: white;
+//     }
+
+//     #breadcrumb_row .breadcrumb {
+//         overflow: auto;
+//         white-space: nowrap;
+//     }
+
+// }
