@@ -767,7 +767,7 @@ $(document).ready(function() {
     });
 
     $('#code_column').on('mouseenter', function() {
-        if(!inSingleColumnView()){
+        if(window.innerWidth > 1170){
             var page_width = window.innerWidth; // Page width with scrollbar
             var document_width = document.documentElement.clientWidth; // Page width without scrollbar  
             var scrollbar_width = page_width - document_width;
@@ -784,7 +784,7 @@ $(document).ready(function() {
             $("#code_column").css("left", "calc(100% - " + (780 + scrollbar_width) + "px)");
         }        
     }).on('mouseleave', function() {
-        if(!inSingleColumnView()){
+        if(window.innerWidth > 1170){
             $("html").removeClass("unscrollable");
             $("html").css("padding-right", 0);
             $('#nav_bar').css("padding-right", "calc(10vw)");
