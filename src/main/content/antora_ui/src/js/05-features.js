@@ -45,5 +45,5 @@ function selectTOC(){
 
 $(document).ready(function () {  
     addVersionClick();
-    selectTOC();
+    // selectTOC();
 });

@@ -39,7 +39,6 @@ for version in os.listdir(featurePath):
     if(os.path.isdir(featurePath + version + "/reference/")):
         for file in os.listdir(featurePath + version + "/reference/"):
             if file == "feature":
-                # Look for featurePath + version + ref + feature
                 if version != "modules":
                     versions.append(version)
 
@@ -52,7 +51,6 @@ for version in versions:
 
     # Keep track of new href with updated versions to update the TOCs later
     commonTOCs = {};
-    TOCToDecompose = []
 
     # gather TOCs with version in the title
     # Find TOC then find the feature section
@@ -76,6 +74,7 @@ for version in versions:
     commonTOCKeys = commonTOCs.keys()
     commonTOCKeys = list(commonTOCKeys)
 
+    TOCToDecompose = []
     for commonTOC in commonTOCKeys:
         commonTOCMatchString = commonTOCs[commonTOC]
         matchingTitleTOCs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(commonTOCMatchString))
@@ -88,11 +87,11 @@ for version in versions:
             featurePage  = BeautifulSoup(open(antora_path + '/feature/' + firstHref), "html.parser")
             versionHrefs = featurePage.find('h1', {'class': 'page'})
             versionHrefs.string = ''
-            newTOCHref = ''
             # in reverse descending order
             matchingTOCs = matchingTitleTOCs[::-1]
             for matchingTOC in matchingTOCs:
                 tocHref = matchingTOC.get('href')
+                # print("tocHref: " + tocHref)
                 if firstElement:
                     firstElement = False
                     hrefSplits = tocHref.split('/')
@@ -101,7 +100,6 @@ for version in versions:
                     lastMatch = re.search(r'\d*.html$', htmlSplits[-1])
                     if lastMatch:
                         del htmlSplits[-1]
-                        combineHtml = "-".join(htmlSplits) + '.html'
                         del hrefSplits[-1]
                         hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string, True)
                         versionHrefs.append(hrefTag)
@@ -124,7 +122,7 @@ for version in versions:
         TOC.decompose()
 
     # rename the original featureOverview.html and write the new TOC to the featureOverview .html with version control in it
-    os.rename(antora_path + 'feature/featureOverview.html', antora_path + 'feature/featureOverview.html.orig')
+    # os.rename(antora_path + 'feature/featureOverview.html', antora_path + 'feature/featureOverview.html.orig')
     with open(antora_path + 'feature/featureOverview.html', "w") as file:     
         file.write(str(featureIndex))
 
@@ -132,6 +130,8 @@ for version in versions:
     featureIndex = BeautifulSoup(open(antora_path + 'feature/featureOverview.html'), "html.parser")
     toc = featureIndex.find_all('ul', {'class': 'nav-list'})[0]
     featureTOC = toc.find('span', text='Features').parent
+    # with open("featureTOC.html", "w") as file:
+    #     file.write(str(featureTOC))
 
     # Write the reduced feature TOC of all of the Antora doc pages in this version
     print("Modifying the docs TOCs of version " + version + " to remove the duplicate feature versions.")
@@ -144,8 +144,9 @@ for version in versions:
                     page = BeautifulSoup(open(href), "html.parser")
 
                     # Find the toc and replace it with the modified toc
-                    toc = page.find_all('ul', {'class': 'nav-list'})[0]
-                    toc_to_replace = toc.find('span', text='Features').parent
-                    toc_to_replace.replace_with(featureTOC)
+                    page_toc = page.find_all('ul', {'class': 'nav-list'})[0]
+                    toc_to_replace = page_toc.find('span', text='Features').parent
+                    toc_to_replace.clear()
+                    toc_to_replace.append(featureTOC)
                     with open(href, "w") as file:            
                         file.write(str(page))
