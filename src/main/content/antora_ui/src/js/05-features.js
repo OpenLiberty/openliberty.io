@@ -21,6 +21,15 @@ function addVersionClick(){
     $(".feature_version").on("click", onclick);
 }
 
+function highlightSelectedVersion(){
+    var url = window.location.href;
+    var version = url.substring(url.lastIndexOf('/') + 1);
+    var versionHref = $('.feature_version[href="' + version + '"]');
+    if(versionHref.length === 1){
+        versionHref.addClass('feature_version_selected');
+    }
+}
+
 // When loading the page, if the page from the url isn't selected in the TOC we need to look for its version in the TOC and highlight it since the multiple feature versions only have one TOC entry.
 function selectTOC(){
     var first_version = $('.feature_version').first();
@@ -39,11 +48,13 @@ function selectTOC(){
             parents.each(function(){
                 $(this).addClass('is-active is-current-path');
             });
+            // Scroll to the TOC
         }
     }
 }
 
 $(document).ready(function () {  
     addVersionClick();
-    // selectTOC();
+    highlightSelectedVersion();
+    selectTOC();
 });
