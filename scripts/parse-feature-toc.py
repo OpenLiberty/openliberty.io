@@ -46,7 +46,6 @@ for version in os.listdir(featurePath):
 for version in versions:
     # Read in front version/feature but write to all of the antora version later for changing the toc
     antora_path = featurePath + version + "/reference/"
-
     featureIndex = BeautifulSoup(open(antora_path + 'feature/featureOverview.html'), "html.parser")
 
     # Keep track of new href with updated versions to update the TOCs later
@@ -91,7 +90,6 @@ for version in versions:
             matchingTOCs = matchingTitleTOCs[::-1]
             for matchingTOC in matchingTOCs:
                 tocHref = matchingTOC.get('href')
-                # print("tocHref: " + tocHref)
                 if firstElement:
                     firstElement = False
                     hrefSplits = tocHref.split('/')
@@ -99,8 +97,6 @@ for version in versions:
                     htmlSplits = lastHrefSplit.split('-')
                     lastMatch = re.search(r'\d*.html$', htmlSplits[-1])
                     if lastMatch:
-                        del htmlSplits[-1]
-                        del hrefSplits[-1]
                         hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string, True)
                         versionHrefs.append(hrefTag)
                 else:
@@ -115,14 +111,13 @@ for version in versions:
                 versionPage = BeautifulSoup(open(versionHref), "html.parser")
                 versionTitle = versionPage.find('h1', {'class': 'page'})
                 versionTitle.replace_with(versionHrefs)
-                with open (versionHref, "w") as file:
+                with open(versionHref, "w") as file:
                     file.write(str(versionPage))
 
     for TOC in TOCToDecompose:
         TOC.decompose()
 
-    # rename the original featureOverview.html and write the new TOC to the featureOverview .html with version control in it
-    # os.rename(antora_path + 'feature/featureOverview.html', antora_path + 'feature/featureOverview.html.orig')
+    # Write the new TOC to the featureOverview.html with version control in it
     with open(antora_path + 'feature/featureOverview.html', "w") as file:     
         file.write(str(featureIndex))
 
@@ -130,8 +125,11 @@ for version in versions:
     featureIndex = BeautifulSoup(open(antora_path + 'feature/featureOverview.html'), "html.parser")
     toc = featureIndex.find_all('ul', {'class': 'nav-list'})[0]
     featureTOC = toc.find('span', text='Features').parent
-    # with open("featureTOC.html", "w") as file:
-    #     file.write(str(featureTOC))
+
+    # Change hrefs to full path so the links work from other doc pages
+    for feature in featureTOC.find_all('a', {'class': 'nav-link'}, href=True):
+        fullHref = '/docs/' + version + '/reference/feature/' + feature.get('href')
+        feature['href'] = fullHref
 
     # Write the reduced feature TOC of all of the Antora doc pages in this version
     print("Modifying the docs TOCs of version " + version + " to remove the duplicate feature versions.")
