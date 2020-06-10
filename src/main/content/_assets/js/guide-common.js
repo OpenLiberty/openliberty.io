@@ -373,7 +373,7 @@ function accessContentsFromHash(hash, callback) {
         } else {
             // Multi-column View
             // Account for the sticky header. Display the targeted section below it.
-            var stickyHeaderAdjustment = $('.container-fluid').height() || 0;
+            var stickyHeaderAdjustment = $('#nav_bar').outerHeight() || 0;
             scrollSpot -= stickyHeaderAdjustment;
         }
         $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
