@@ -34,9 +34,18 @@ function highlightSelectedVersion(){
 function selectTOC(){
     var first_version = $('.feature_version').first();
     var href = first_version.attr('href');
+    if(!href){
+        // If the feature is a single version it won't have a version switcher at the top. Get the href from the url.
+        href = window.location.href;
+        href = href.substring(href.lastIndexOf('/') + 1);
+    }
     // Look for toc under the features dropdown
     var featureDropdown = $('li > span:contains(Features)').parent();
-    var toc = featureDropdown.find('.nav-item a[href="' + href +'"]');
+    var toc = featureDropdown.find('.nav-item a').filter(function(){
+        var tocHref = $(this).attr('href');
+        tocHref = tocHref.substring(tocHref.lastIndexOf('/') + 1);
+        return href === tocHref;
+    });
     if(toc.length > 0){
         var li = toc.parent();
         if(!li.hasClass('is-current-page')){
@@ -49,6 +58,12 @@ function selectTOC(){
                 $(this).addClass('is-active is-current-path');
             });
             // Scroll to the TOC
+            var navListOffset =  $('.nav-menu > .nav-list')[0].offsetTop;
+            var offset = li[0].offsetTop;
+            var scrollTo = offset - navListOffset;
+            $('.nav-menu > .nav-list').animate({
+                scrollTop: scrollTo
+            });
         }
     }
 }
