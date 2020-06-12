@@ -116,6 +116,11 @@ for version in versions:
 
     for TOC in TOCToDecompose:
         TOC.decompose()
+    
+    # Remove .is-current-page so they don't show up as highlighted in other types of docs
+    tocs = featureIndex.find_all('li', {'class':'is-current-page'})
+    for toc in tocs:
+        toc['class'] = 'nav-item'
 
     # Write the new TOC to the featureOverview.html with version control in it
     with open(antora_path + 'feature/featureOverview.html', "w") as file:     

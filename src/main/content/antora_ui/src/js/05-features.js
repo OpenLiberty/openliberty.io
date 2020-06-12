@@ -21,6 +21,11 @@ function addVersionClick(){
     $(".feature_version").on("click", onclick);
 }
 
+function acivateNavMenu(){
+    // Add active class to the nav-menu
+    $('.nav-panel-menu').addClass('is-active');
+}
+
 function highlightSelectedVersion(){
     var url = window.location.href;
     var version = url.substring(url.lastIndexOf('/') + 1);
@@ -56,20 +61,19 @@ function selectTOC(){
             var parents = li.parents('li');
             parents.each(function(){
                 $(this).addClass('is-active is-current-path');
-            });
+            });            
             // Scroll to the TOC
             var navListOffset =  $('.nav-menu > .nav-list')[0].offsetTop;
             var offset = li[0].offsetTop;
             var scrollTo = offset - navListOffset;
-            $('.nav-menu > .nav-list').animate({
-                scrollTop: scrollTo
-            });
+            $('.nav-menu > .nav-list')[0].scrollTop = scrollTo;
         }
     }
 }
 
 $(document).ready(function () {  
     addVersionClick();
+    acivateNavMenu();
     highlightSelectedVersion();
     selectTOC();
 });
