@@ -331,7 +331,7 @@ function getDataId(element) {
 }
 
 function addExpandAndCollapseToggleButtons(subHeading, titleId) {
-    var toggleButton = $('<div class="toggle" collapsed="true" tabindex=0><img src="../../../_/img/all_guides_plus.svg" alt="Expand" aria-label="Expand" /></div>');
+    var toggleButton = $('<div class="toggle" collapsed="true" tabindex=0><img src="../../_/img/all_guides_plus.svg" alt="Expand" aria-label="Expand" /></div>');
     handleExpandCollapseTitle(titleId, false);
     toggleButton.on('click', function () {
         handleExpandCollapseToggleButton($(this), true);
@@ -361,14 +361,14 @@ function handleExpandCollapseToggleButton(buttonElement, updateUrl) {
     var titleId = getDataId(buttonElement.parent());
     if (collapsed === "true") {
         // Expand to show the table and nested elements
-        buttonElement.empty().append($('<img src="../../../_/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
+        buttonElement.empty().append($('<img src="../../_/img/all_guides_minus.svg" alt="Collapse" aria-label="Collapse"/>'));
         buttonElement.attr('collapsed', false);
         // this call needs to be done after collapsed is set to false
         handleExpandCollapseTitle(titleId, true);
     } else {
         // Collapse the table and nested elements
         handleExpandCollapseTitle(titleId, false);
-        buttonElement.empty().append($('<img src="../../../_/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
+        buttonElement.empty().append($('<img src="../../_/img/all_guides_plus.svg" alt="Expand" aria-label="Expand"/>'));
         buttonElement.attr('collapsed', true);
     }
     if (updateUrl) {
