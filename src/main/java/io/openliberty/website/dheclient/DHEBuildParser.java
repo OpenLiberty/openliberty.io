@@ -145,15 +145,6 @@ public class DHEBuildParser {
      */
     public void add(BuildType type, String version, BuildInfo info) {
         if (info != null) {
-            // If the package locations is empty set it to null. This is important
-            // because the BuildInfo inits it to an empty list which means that when
-            // sent to the client if it is non-null the client gets an empty list
-            // and the website doesn't cope, by setting it to null it means it isn't
-            // sent and the website looks correct.
-            if (info.packageLocations.isEmpty()) {
-                info.packageLocations = null;
-            }
-
             // Make sure we resolve the locations for the Build 
             info.resolveLocations(Constants.DHE_URL, type, version);
             // provide the build to the build data object.
