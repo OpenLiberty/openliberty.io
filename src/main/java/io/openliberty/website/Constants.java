@@ -14,7 +14,6 @@ public interface Constants {
 
     // URL
     String DHE_URL = "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/";
-    // String DHE_URL = "file:///Users/ellen.wyllie/Desktop/";
     String DHE_RUNTIME_PATH_SEGMENT = "runtime";
     String DHE_TOOLS_PATH_SEGMENT = "tools";
     String DHE_RELEASE_PATH_SEGMENT = "release";
