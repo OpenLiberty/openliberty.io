@@ -650,10 +650,24 @@ $(document).ready(function() {
     });
 
     $(window).on('popstate', function(){
-        var inputValue = location.search;
-        queryString = inputValue.substring(8);
-        document.getElementById("guide_search_input").value = queryString;
-        processSearch(queryString);
+        var queryString = location.search;
+        // Process the url parameters for searching
+        if (queryString.length > 0) {
+            var parameters = decodeURI(queryString.substring(1)).split('&');
+            var search_value = false;
+            var search_key = false;
+            for(var i = 0; i < parameters.length; i++) {
+                if(parameters[i].indexOf('search=') === 0) {
+                    search_value = parameters[i].substring(7);
+                } else if (parameters[i].indexOf('key=') === 0) {
+                    search_key = parameters[i].substring(4);
+                }
+            }
+            if(search_value) {
+                var input_text = search_key? search_key + ': ' + search_value : search_value;
+                $('#guide_search_input').val(input_text).keyup();
+            }
+        }
     });
 
     // Clear search input when x button clicked
@@ -768,6 +782,7 @@ $(document).ready(function() {
         $(this).addClass('hidden');
         $('#guide_search_input').trigger('focus');
         processSearch(inputValue);
+        updateSearchUrl(inputValue);
     });
 
     // Handle click on caret button on mobile view
