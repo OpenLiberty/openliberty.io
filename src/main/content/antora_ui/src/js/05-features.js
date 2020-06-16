@@ -51,23 +51,10 @@ function selectTOC(){
         tocHref = tocHref.substring(tocHref.lastIndexOf('/') + 1);
         return href === tocHref;
     });
-    if(toc.length > 0){
-        var li = toc.parent();
-        if(!li.hasClass('is-current-page')){
-            $('.is-active').removeClass('is-active is-current-page');
-            li.addClass('is-active is-current-page');
-
-            // Go through the parents and make sure they are expanded
-            var parents = li.parents('li');
-            parents.each(function(){
-                $(this).addClass('is-active is-current-path');
-            });            
-            // Scroll to the TOC
-            var navListOffset =  $('.nav-menu > .nav-list')[0].offsetTop;
-            var offset = li[0].offsetTop;
-            var scrollTo = offset - navListOffset;
-            $('.nav-menu > .nav-list')[0].scrollTop = scrollTo;
-        }
+    if(toc.length > 0){        
+        var li = toc.parent()[0];
+        navigation.activateCurrentPath(li);
+        navigation.scrollItemToMidpoint(li);
     }
 }
 
