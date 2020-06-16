@@ -116,7 +116,6 @@ function render_builds(builds, parent) {
                             row.append(version_column); // add version column for first item in package_locations
                         }
 
-
                         if (package_name.indexOf("jakarta") > -1) {
                             var package_column = "<td headers='" + tableID + "_package'>Jakarta EE 9 Beta Features</td>";
                         }
@@ -151,16 +150,18 @@ function render_builds(builds, parent) {
             var day = date.getDate();
             var hour = date.getHours();
             var minute = date.getMinutes();
+            
             var date_column = $('<td headers="' + tableID + '_date">' + year + '-' + add_lead_zero(month) + '-' + add_lead_zero(day) + ', ' + add_lead_zero(hour) + ':' + add_lead_zero(minute) + '</td>');
-            row.append(date_column);
             
             var tests_column = $('<td headers="' + tableID + '_tests"><a href="' +  build.tests_log +'" class="'+ analytics_class_name + ' tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
-            row.append(tests_column);
             
             var log_column = $('<td headers="' + tableID + '_logs"><a href="' + build.build_log + '" class="' + analytics_class_name + ' view_logs_link" target="_blank" rel="noopener">View logs</a></td>');            
-            row.append(log_column);
 
             var download_column = $('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + '">' + download_arrow + 'ZIP</a></td>');
+            
+            row.append(date_column);
+            row.append(tests_column);
+            row.append(log_column);
             row.append(download_column);
             parent.append(row);
         }
