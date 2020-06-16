@@ -49,6 +49,7 @@ public class MockDHEContainer implements SharedContainerConfiguration {
 
         try {
             loadBuilds(client, BuildType.runtime_releases, "2020-03-05_1433", "2020-04-01_1714");
+            loadBuilds(client, BuildType.runtime_betas, "2020-06-09_1652");
             loadBuilds(client, BuildType.tools_releases, "2019-12-13_0905", "2020-03-09_0937");
             loadBuilds(client, BuildType.runtime_nightly_builds, "2020-05-01_0529", "2020-05-01_1100");
             loadBuilds(client, BuildType.tools_nightly_builds, "2020-04-26_0904", "2020-04-29_0947");
