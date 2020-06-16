@@ -13,7 +13,7 @@
 
 #breadcrumb_row .breadcrumb {
     display: block;
-    width: calc(100% - 76px); /* If you change this value then update guide.js too */
+    width: calc(100% - 76px);
     float: right;
     padding-left: 0;
 }
@@ -59,7 +59,7 @@
     display: block !important;
 }
 
-#breadcrumb_hamburger:focus{
+#breadcrumb_hamburger:focus {
     outline: none;
     box-shadow: 0 0 2px 2px #51a7e8; /* keyboard-only focus styles */
 }
@@ -94,18 +94,22 @@
     padding-bottom: 22px;
     vertical-align: top;
     background-color: white;
-    z-index: 7; /* to override the z-index valued of 4 and 6 for code mirror in interactive guide */
+    z-index: 7;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.21);
 
     &.open {
         width: 280px;
     }
 
-    @media (min-width: 1170px) {
-        top: 61px;
+    @media (min-width: 900px) {
+        top: 45px;
     }
 
-    @media (min-width: 1170px) and (max-width: 1439.98px) {
+    @media (min-width: 992px) {
+        top: 60px;
+    }
+
+    @media (min-width: 900px) and (max-width: 1439.98px) {
         height: auto !important;
     }
 
@@ -169,6 +173,10 @@
         margin-right: 5px;
         float: right;
         transform: rotate(-90deg);
+    }
+
+    @media (max-width: 991.98px) {
+        top: 45px;
     }
 }
 
@@ -365,7 +373,7 @@
     color: #4f660a;
 }
 
-@media (max-width: 1169.98px) {
+@media (max-width: 899.98px) {
 
 
     #mobile_toc_accordion_container {
@@ -408,7 +416,7 @@
 // Breakpoint for when the toc indicator appears
 
 
-@media (max-width: 1169.98px) {
+@media (max-width: 899.98px) {
 
     .dropdown-toggle.btn-default {
         float: right;
@@ -461,7 +469,7 @@
     }
 }
 
-@media (max-width: 1169.98px) {
+@media (max-width: 899.98px) {
     #toc_hotspot, 
     #toc_indicator,
     #toc_line {
@@ -469,7 +477,7 @@
     }
 }
 
-@media (min-width: 1170px) and (max-width: 1439.98px) {
+@media (min-width: 900px) and (max-width: 1439.98px) {
     #toc_indicator {
         display: block !important; /* Important is to override the display from the hidden class */
     }
