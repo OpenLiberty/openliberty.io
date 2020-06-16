@@ -102,7 +102,6 @@ function render_builds(builds, parent) {
             // beta releases table only
             else if (parent.parent().data('builds-id') == "runtime_betas"){
                 var package_locations = build.package_locations;
-                // var package_locations = ["jakartaee9.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/beta/2020-06-09_1652/openliberty-jakartaee9-20.0.0.7-beta.zip", "openliberty.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/beta/2020-06-09_1652/openliberty-20.0.0.7-beta.zip"];
                 if (package_locations !== null && package_locations !== undefined){
                     var num_packages = package_locations.length;
                     var version_column = $('<td headers="' + tableID + '_version" rowspan="' + num_packages + '">' + build.version + '</td>');
@@ -289,7 +288,6 @@ $(document).ready(function() {
                 }
                 else {
                     runtime_betas = formatBuilds(data.builds.runtime_betas);
-                    // runtime_betas = [{build_log: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-04-29_1655/gradle.log", date: 1588197300000, date_time: "2020-04-29_1655", driver_location: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-04-29_1655/openliberty-20.0.0.5.zip", package_locations: ["beta-jakartaee9.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2019-11-20_0300/openliberty-microProfile3-19.0.0.12.zip"], size_in_bytes: 0, test_passed: 13121, tests_log: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-04-29_1655/open-liberty.unitTest.results.zip", total_tests: 13121, version: "20.0.0.6-beta"}];
                     builds['runtime_betas'] = runtime_betas;
                     sort_builds(runtime_betas, 'date', true);
                     render_builds(runtime_betas, $('table[data-builds-id="runtime_betas"] tbody'));
