@@ -13,6 +13,11 @@ var backgroundSizeAdjustment = 200;
 var twoColumnBreakpoint = 1170;
 var threeColumnBreakpoint = 1440;
 
+// update twoColumnBreakpoint for the only single pane guide
+if (window.location.href.indexOf("cloud-ibm") > -1) {
+    var twoColumnBreakpoint = 1440;
+}
+
 function inSingleColumnView(){
     return(window.innerWidth <= twoColumnBreakpoint);
 }
