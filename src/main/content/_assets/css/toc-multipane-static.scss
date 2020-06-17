@@ -181,15 +181,20 @@
 }
 
 #toc_line {
-    display: inline-block;
-    left: 0;
-    width: 6px;
-    position: fixed;
+    display: none;
 
-    &.open {
-        left: 394px; // 400px minus the width of 6 px
-        background-color: rgb(255, 216, 191);
+    @media(min-width: 1440px) {
+        display: inline-block;
+        left: 0;
+        width: 6px;
+        position: fixed;
+
+        &.open {
+            left: 394px; // 400px minus the width of 6 px
+            background-color: rgb(255, 216, 191);
+        }
     }
+
 }
 
 .scroller_anchor {
