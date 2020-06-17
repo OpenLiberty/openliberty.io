@@ -591,13 +591,13 @@ html, body{
         display: inline-block;
     }
 
-    .nav-tabs > .nav-item > .nav-link {
+    .tabs_container .nav-tabs > .nav-item > .nav-link {
         margin-top: 0px;
-        padding-left: 5px;
-        padding-right: 5px;
-        padding-top: 8px;
-        padding-bottom: 8px;
-        font-size: 12px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-size: 14px;
     }
 
     #runtime_development_builds_paragraph, #eclipse_development_tools_text {
@@ -642,8 +642,33 @@ html, body{
         white-space: nowrap;
     }
 
+    .tabs_container .nav-tabs > .nav-item > .nav-link {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        max-width: 130px;
+        text-align: center;
+    }
+
+    div:not(#get_section) .tabs_container .nav-tabs .nav-item:first-child a, div:not(#get_section) .tabs_container .nav-tabs .nav-item:nth-child(2) a {
+        padding-top: 18.5px;
+        padding-bottom: 18.5px;
+    }
 }
 
+@media (max-width: 408px) {
+
+    .tabs_container .nav-tabs > .nav-item > .nav-link {
+        max-width: none;
+    }
+
+    div:not(#get_section) .tabs_container .nav-tabs .nav-item:first-child a, div:not(#get_section) .tabs_container .nav-tabs .nav-item:nth-child(2) a {
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+}
 @media (max-width: 400px) {
 
     .narrow_table_container table {
