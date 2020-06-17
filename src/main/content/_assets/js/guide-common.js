@@ -22,16 +22,6 @@ function inSingleColumnView(){
     return(window.innerWidth <= twoColumnBreakpoint);
 }
 
-function inMobile(){
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
-}
-function onAppleDevice(){
-    return (/(Mac|iPhone|iPod|iPad)/i.test(navigator.userAgent));
-}
-function onIE(){
-    return (/(MSIE|Trident\/|Edge\/)/i.test(navigator.userAgent));
-}
-
 // Returns a function, that, as long as it continues to be invoked, will not
 // be triggered. The function will be called after it stops being called for
 // N milliseconds. If `immediate` is passed, trigger the function on the
@@ -146,15 +136,13 @@ function isBackgroundBottomVisible() {
 function resizeGuideSections() {
         // Two column view or three column view.
     if (window.innerWidth > twoColumnBreakpoint) {
-        if(!onAppleDevice() && !onIE()){
-            var viewportHeight = window.innerHeight;
-            var headerHeight = $('header').height();
-            var sectionTitleHeight = $("#guide_content h2").first().height();
-            var newSectionHeight = viewportHeight - headerHeight - sectionTitleHeight;
-            $('.sect1:not(#guide_meta):not(#related-guides)').css({
-                    'min-height': newSectionHeight + 'px'
-            });
-        }        
+        var viewportHeight = window.innerHeight;
+        var headerHeight = $('header').height();
+        var sectionTitleHeight = $("#guide_content h2").first().height();
+        var newSectionHeight = viewportHeight - headerHeight - sectionTitleHeight;
+        $('.sect1:not(#guide_meta):not(#related-guides)').css({
+                'min-height': newSectionHeight + 'px'
+        });
         if(window.innerWidth >= threeColumnBreakpoint){
             // In three column view set the width of the #guide_column appropriately.
             if ($("#toc_column").hasClass('in') || $("#toc_column").hasClass('inline')) {
