@@ -87,9 +87,10 @@ html.is-clipped--nav {
   line-height: var(--nav-line-height);
   position: relative;
   overflow: hidden;
+  padding: 0; // Needs to be 0 so the orange active background is full width.
 }
 
-.nav-menu h3.title {
+.nav-panel-menu h3.title {
   color: var(--nav-heading-font-color);
   font-size: 14px;
   font-family: BunueloBold;
@@ -106,7 +107,6 @@ html.is-clipped--nav {
 }
 
 .nav-list {
-  margin: 0;
   padding-left: var(--TOC-indention);
 }
 
@@ -130,7 +130,6 @@ html.is-clipped--nav {
 
 .nav-menu > .nav-list {
   margin-bottom: 0.5rem;
-  padding-left: 26px;
   height: calc(100vh - 178.6px);
   overflow: auto;
 }
@@ -140,6 +139,11 @@ html.is-clipped--nav {
   color: #5D6A8E;
   line-height: 18px;
   margin-top: .5em;
+
+  & > a, & > span {
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
 }
 
 /* adds some breathing room below a nested list */
@@ -166,9 +170,9 @@ html.is-clipped--nav {
     border: none;
     outline: none;
     line-height: inherit;    
-    height: 26px;
-    width: 26px;
-    margin-right: -3px;
+    height: var(--TOC-toggle-icon-size);
+    width: var(--TOC-toggle-icon-size);
+    margin-left: -20px;
   }
   &:hover {
     cursor: pointer;
@@ -188,7 +192,7 @@ html.is-clipped--nav {
     border-left: var(--TOC-orange-border-width) solid #f4914d;
     background: #fdf2ea;
     margin-left: calc(-1 * var(--TOC-indention));
-    padding-left: var(--TOC-indention);    
+    padding-left: calc(var(--TOC-indention) - var(--TOC-orange-border-width));    
   }
   &[data-depth="1"] {
     & > span, & > a {
@@ -210,7 +214,7 @@ html.is-clipped--nav {
   }
   &[data-depth="4"] {
     & > span, & > a {
-      margin-left: calc(-5 * var(--TOC-indention));
+      margin-left: calc(-4 * var(--TOC-indention));
       padding-left: calc(5 * var(--TOC-indention) - var(--TOC-orange-border-width));
     } 
   }

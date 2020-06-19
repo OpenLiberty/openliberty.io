@@ -44,14 +44,6 @@ var navigation = (function(){
     });
   };  
 
-  /* Make the whole row clickable to trigger the toggle button click */
-  $('.nav-item ').on('click', function(e){
-    e.stopPropagation();
-    if(!$(e.target).is('button')){
-      $(this).find('button').click();  
-    }
-  });
-
   $('.components .versions li a').on('click', function(e){
     e.stopPropagation();
     location.href = $(this)[0].href;
@@ -91,7 +83,8 @@ var navigation = (function(){
     navItem.classList.add('is-active', 'is-current-page');
   }
 
-  function toggleActive () {
+  function toggleActive (e) {
+    e.stopPropagation();
     this.classList.toggle('is-active');
   }
 
