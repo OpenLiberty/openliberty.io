@@ -1,0 +1,178 @@
+/*******************************************************************************
+ * Copyright (c) 2019 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+/* Code Column */
+#code_column {
+
+    @media (min-width: 900px) and (max-width: 1169.98px) {
+        left: 375px !important; // important needed to override left position set in javascript
+        width: calc(100vw - 375px);
+    }
+
+    @media (min-width: 900px) and (max-width: 991.98px) {
+        top: 45px !important; // important needed to override top position set in javascript
+    }
+
+    @media screen and (max-width: 899.98px) {
+        position: absolute;
+        display: none;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        &.modal {
+            display: block;
+            overflow: auto;
+
+            // Remove blur
+            #code_column_tabs_container, .code_column {
+                opacity: 1;
+                filter: none;
+            }
+
+            #code_column_tabs_container {
+                width: 100%;
+            }
+
+            #code_column_tabs {
+                // Give more room for the 'Back to text' button so the tabs don't overlap.
+                max-width: calc(100% - 135px);
+            }
+
+            #dismiss_button {
+                position: absolute;
+                display: inline-block;
+                top: 0;
+                right: 50px;
+                background:#ffffff;
+                border:1px solid #96bc32;
+                border-radius:3px;
+                width:92px;
+                height:38px;
+            }
+        }
+    }
+}
+
+#guide_column {
+    @media (min-width: 900px) {
+        width: 375px;
+        padding-top: 45px;
+        padding-bottom: 0px;
+    }
+
+    @media (min-width: 991px) {
+        padding-top: 60px;
+    }
+
+    @media (min-width: 1170px) {
+        width: calc(100% - 780px);
+    }
+}
+
+
+@media (max-width: 899.98px) {
+    #mobile_prereqs_section {
+        display: block;
+    }
+
+    #prereqs_container {
+        display: none;
+    }
+}
+
+@media (min-width: 900px) {
+    #code_column_tabs_container {
+        width: 100%;
+        border-radius: 4px 4px 4px 4px;
+        border: 1px solid #c8d6fb;
+    }
+    
+    #background_container {
+        background-image: inherit;
+        margin-bottom: 0;
+    }
+
+    /* Styling for the paragraphs following the edit commands */
+    #guide_content .edit_command_text {
+        position: relative;
+        margin-top: -2px; // Overlap the blue border of the command action.
+        border-left: 8px solid #96bc32;
+        & > p {
+            padding-left: 30px;
+        }
+    }
+
+    #guide_content code.hotspot:not(.code_command):hover {
+        color: #24253A;
+        background-color: #C7CCD9;
+    }
+}
+
+@media (max-width: 899.98px) {
+    #guide_content code.hotspot:hover,
+    #guide_content .code_command:hover {
+        cursor: pointer;
+    }
+
+    .listingblock.code_column {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media (min-width: 900px) and (max-width: 1169.98px) {
+    pre code {
+        white-space: pre;
+    }
+}
+
+@media (min-width: 900px) {
+    #nav_bar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+    }
+}
+
+// override some styling from guide-common.scss
+
+#guide_content pre {
+    padding: 30px;
+}
+
+.listingblock {
+    margin: 0;
+}
+
+#guide_content div.sect1 {
+    padding-left: 45px;
+    padding-right: 45px;
+}
+
+@media (max-width: 899.98px) {
+    #guide_content pre {
+        padding: 30px 16px;
+    }
+
+    #guide_content div.sect1 {
+        padding-left: 24px;
+        padding-right: 18px;
+    }
+
+    .listingblock {
+        margin-left: -24px;
+        margin-right: -18px;
+    }
+
+}

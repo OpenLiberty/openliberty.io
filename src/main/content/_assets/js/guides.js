@@ -649,9 +649,31 @@ $(document).ready(function() {
         processSearch(inputValue);
     });
 
+    // Update url with user's search query when they navigate to another page
+    $(window).on('beforeunload', function(){
+        var searchInput = $('#guide_search_input').val();
+        updateSearchUrl(searchInput);
+    });
+
     $(window).on('popstate', function(){
-        var inputValue = location.search;
-        queryString = inputValue.substring(8);
+        var queryString = location.search;
+        // Process the url parameters for searching
+        if (queryString.length > 0) {
+            var parameters = decodeURI(queryString.substring(1)).split('&');
+            var search_value = false;
+            var search_key = false;
+            for(var i = 0; i < parameters.length; i++) {
+                if(parameters[i].indexOf('search=') === 0) {
+                    search_value = parameters[i].substring(7);
+                } else if (parameters[i].indexOf('key=') === 0) {
+                    search_key = parameters[i].substring(4);
+                }
+            }
+            if(search_value) {
+                var input_text = search_key? search_key + ': ' + search_value : search_value;
+                $('#guide_search_input').val(input_text).keyup();
+            }
+        }
         document.getElementById("guide_search_input").value = queryString;
         processSearch(queryString);
     });
@@ -691,13 +713,17 @@ $(document).ready(function() {
         if (value.startsWith('tag:')) {
             var searchTextWithoutTag = value.substring(value.indexOf(':') + 1);
             searchTextWithoutTag = searchTextWithoutTag.trim();
-            search_value = '?search=' + encodeURIComponent(searchTextWithoutTag) + '&key=tag';
-            history.pushState(null, "", search_value);
+            search_value = '?search=' + encodeURIComponent(searchTextWithoutTag) + '&key=tag';            
+            if (location.search != search_value) {
+                history.pushState(null, "", search_value);
+            }
             document.activeElement.blur()
         } else {
             value = value.trim();
             search_value = '?search=' + encodeURIComponent(value);
-            history.pushState(null, "", search_value);
+            if (location.search != search_value) {
+                history.pushState(null, "", search_value);
+            }
             document.activeElement.blur()
         }
     }
@@ -768,6 +794,7 @@ $(document).ready(function() {
         $(this).addClass('hidden');
         $('#guide_search_input').trigger('focus');
         processSearch(inputValue);
+        updateSearchUrl(inputValue);
     });
 
     // Handle click on caret button on mobile view

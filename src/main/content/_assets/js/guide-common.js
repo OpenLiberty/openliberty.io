@@ -13,6 +13,11 @@ var backgroundSizeAdjustment = 200;
 var twoColumnBreakpoint = 1170;
 var threeColumnBreakpoint = 1440;
 
+// update twoColumnBreakpoint for the only single pane guide
+if (window.location.href.indexOf("cloud-ibm") > -1) {
+    var twoColumnBreakpoint = 1440;
+}
+
 function inSingleColumnView(){
     return(window.innerWidth <= twoColumnBreakpoint);
 }
@@ -373,7 +378,7 @@ function accessContentsFromHash(hash, callback) {
         } else {
             // Multi-column View
             // Account for the sticky header. Display the targeted section below it.
-            var stickyHeaderAdjustment = $('.container-fluid').height() || 0;
+            var stickyHeaderAdjustment = $('#nav_bar').outerHeight() || 0;
             scrollSpot -= stickyHeaderAdjustment;
         }
         $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
