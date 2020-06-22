@@ -393,16 +393,15 @@ $(document).ready(function() {
             });
         }
     );
-    
-    $(window).on("load", function(){
-        $.ready.then(function(){
-           var hash = window.location.hash;
-           hash && $('ul.nav a[href="' + hash + '"]').click();
-           
-           // scroll to tabs that contain section in hash
-           var nav_tabs = $('ul.nav a[href="' + hash + '"]').parent().parent();
-           $("html, body").animate({ scrollTop: nav_tabs.offset().top }, 500);
-        })
-    });
+});
 
+$(window).on("load", function(){
+    $.ready.then(function(){
+       var hash = window.location.hash;
+       hash && $('ul.nav a[href="' + hash + '"]').click();
+       
+       // scroll to tabs that contain section in hash
+       var nav_tabs = $('ul.nav a[href="' + hash + '"]').parent().parent();
+       $("html, body").animate({ scrollTop: nav_tabs.offset().top }, 500);
+    })
 });
