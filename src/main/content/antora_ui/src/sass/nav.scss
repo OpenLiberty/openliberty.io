@@ -68,7 +68,7 @@ html.is-clipped--nav {
 
 @media screen and (min-width: 1024px) {
   .nav-panel-menu {
-    height: calc(var(--nav-panel-height--desktop) + 39px);
+    height: calc(var(--nav-panel-height--desktop));
   }
 }
 
@@ -110,28 +110,36 @@ html.is-clipped--nav {
   padding-left: var(--TOC-indention);
 }
 
-/* First level TOC rows */
-.nav-menu > .nav-list > .nav-item {
-  font-size: 14px;
-  color: #313653;
-  letter-spacing: 0.2px;
-  line-height: 26px;
-
-  & > .nav-text {
-    font-family: BunueloBold;
-  }
-
-  /* sub TOC rows */
-  & .nav-item {
-    list-style: none;
-    color: #5D6A8E;  
-  }
-}
-
+/* Styling for the first level nav list */
 .nav-menu > .nav-list {
   margin-bottom: 0.5rem;
-  height: calc(100vh - 178.6px);
+  height: calc(100vh - 184.6px);
   overflow: auto;
+  padding-bottom: 50px;
+  padding-left: 0;
+
+  @media screen and (min-width: 1024px) {
+    padding-bottom: 20px;
+  }
+
+  /* First level TOC rows */
+  & > .nav-item {
+    font-size: 14px;
+    color: #313653;
+    letter-spacing: 0.2px;
+    line-height: 26px;
+    border-bottom: 1px solid #D6D9E4;
+    padding-left: var(--TOC-indention);
+
+    & > .nav-text {
+      font-family: BunueloBold;
+    }
+
+    /* sub TOC rows */
+    & .nav-item {
+      list-style: none;
+    }
+  }
 }
 
 .nav-item {
@@ -148,7 +156,7 @@ html.is-clipped--nav {
 
 /* adds some breathing room below a nested list */
 .nav-item-toggle ~ .nav-list {
-  padding-bottom: 0.125rem;
+  padding-bottom: 0.375rem;
 }
 
 /* matches list without a title */
@@ -172,17 +180,27 @@ html.is-clipped--nav {
     line-height: inherit;    
     height: var(--TOC-toggle-icon-size);
     width: var(--TOC-toggle-icon-size);
-    margin-left: -20px;
+    margin-left: -23px;
+    margin-top: -3px;
   }
-  &:hover {
-    cursor: pointer;
+  & > span, & > a {
+    &:hover{
+      color: #f4914d;
+      cursor: pointer;
+    }
   }
 }
 
-.nav-item.is-active {
+.nav-item.is-active {  
   & > .nav-item-toggle {
     background: transparent url(../img/chevron.svg) no-repeat center / 50%;
     transform: rotate(0deg); // Return to normal
+  }
+  & > span, & > a {
+    color: #313653;
+    &:hover{
+      color: #f4914d;
+    }
   }
 }
 

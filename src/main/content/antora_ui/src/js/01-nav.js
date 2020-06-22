@@ -83,8 +83,7 @@ var navigation = (function(){
     navItem.classList.add('is-active', 'is-current-page');
   }
 
-  function toggleActive (e) {
-    e.stopPropagation();
+  function toggleActive () {
     this.classList.toggle('is-active');
   }
 
