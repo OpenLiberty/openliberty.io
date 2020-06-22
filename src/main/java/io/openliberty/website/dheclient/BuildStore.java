@@ -48,6 +48,10 @@ import io.openliberty.website.dheclient.data.BuildListInfoMessageBodyReader;
  *      - info.json - list of available builds
  *      - <date-time> - a build as referenced in info.json
  *        - info.json - the info about the build
+ *    - beta
+ *      - info.json - list of available builds
+ *      - <date-time> - a build as referenced in info.json
+ *        - info.json - the info about the build
  * - tools
  *    - release
  *      - info.json - list of available builds
@@ -65,9 +69,9 @@ import io.openliberty.website.dheclient.data.BuildListInfoMessageBodyReader;
 public interface BuildStore {
     /**
      * This method fetches from DHE the list of available builds in the repository based on the type 
-     * of download (runtime vs tools) and the type of build (whether it is a nighly build or a GA one). 
+     * of download (runtime vs tools) and the type of build (whether it is a nighly build, beta or a GA one). 
      * @param downloadType The type of download (runtime or tools)
-     * @param buildType The build type (nightly or release)
+     * @param buildType The build type (nightly, release or beta)
      * @return The List of available builds.
      */
     @GET

@@ -114,10 +114,16 @@ public class BuildInfo {
 
         // Setup the url prefix for the build logs and driver location
         String prefix = url + type.getURISegment() + '/' + dateTime + '/';
+        
+        if (packageLocations != null) {
+            // add driver location to arraylist of package locations
+            packageLocations.add(driverLocation);
+        }
 
         if (driverLocation != null) {
             driverLocation = prefix + driverLocation;
         }
+
         if (buildLog != null) {
             buildLog = prefix + buildLog;
         }
@@ -125,7 +131,7 @@ public class BuildInfo {
         if (testLog != null) {
             testLog = prefix + testLog;
         }
-        
+
         // This is historic and not ideal. Ideally the package Locations would be an Object
         // but at some point it was an array of name = value and this requires rework on the front
         // end, it isn't a compatible change so for now stick with it. DHE stores a simple list
@@ -138,6 +144,10 @@ public class BuildInfo {
             for (String packageLoc : packageLocations) {
                 int index = packageLoc.indexOf("-") + 1;
                 int endIndex = packageLoc.indexOf("-", index);
+                if (endIndex == -1) {
+                    endIndex = index - 1;
+                    index = 0;
+                }
                 String name = packageLoc.substring(index, endIndex);
                 index = packageLoc.lastIndexOf(".");
                 String extension = packageLoc.substring(index);
