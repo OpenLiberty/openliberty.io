@@ -20,6 +20,7 @@ import io.openliberty.website.Constants;
 public enum BuildType {
     runtime_releases(Constants.DHE_RUNTIME_PATH_SEGMENT, Constants.DHE_RELEASE_PATH_SEGMENT, true),
     runtime_nightly_builds(Constants.DHE_RUNTIME_PATH_SEGMENT, Constants.DHE_NIGHTLY_PATH_SEGMENT, false),
+    runtime_betas(Constants.DHE_RUNTIME_PATH_SEGMENT, Constants.DHE_BETA_PATH_SEGMENT, false),
     tools_releases(Constants.DHE_TOOLS_PATH_SEGMENT, Constants.DHE_RELEASE_PATH_SEGMENT, false),
     tools_nightly_builds(Constants.DHE_TOOLS_PATH_SEGMENT, Constants.DHE_NIGHTLY_PATH_SEGMENT, false);
 

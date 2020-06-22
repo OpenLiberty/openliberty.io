@@ -29,6 +29,7 @@ public class BuildsManagerTest {
 
         Map<BuildType, Set<BuildInfo>> builds = bm.getBuilds();
         assertTrue(builds.get(BuildType.runtime_releases).isEmpty());
+        assertTrue(builds.get(BuildType.runtime_betas).isEmpty());        
         assertTrue(builds.get(BuildType.runtime_nightly_builds).isEmpty());
         assertTrue(builds.get(BuildType.tools_releases).isEmpty());
         assertTrue(builds.get(BuildType.tools_nightly_builds).isEmpty());
@@ -40,6 +41,7 @@ public class BuildsManagerTest {
 
         Map<BuildType, Set<BuildInfo>> builds = bm.getBuilds();
         assertTrue(builds.get(BuildType.runtime_releases).isEmpty());
+        assertTrue(builds.get(BuildType.runtime_betas).isEmpty());        
         assertTrue(builds.get(BuildType.runtime_nightly_builds).isEmpty());
         assertTrue(builds.get(BuildType.tools_releases).isEmpty());
         assertTrue(builds.get(BuildType.tools_nightly_builds).isEmpty());
