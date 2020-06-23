@@ -1142,6 +1142,40 @@ function addOverviewPageClickAndScroll() {
     });
 }
 
+/* Copy the target element to the clipboard
+target: element to copy
+callback: function to run if the copy is successful
+*/
+function copy_element_to_clipboard(target, callback){
+    // IE
+    if(window.clipboardData){
+        window.clipboardData.setData("Text", target.innerText);
+    } 
+    else{
+        var temp = $('<textarea>');
+        temp.css({
+            position: "absolute",
+            left:     "-1000px",
+            top:      "-1000px",
+        });       
+        
+        // Create a temporary element for copying the text.
+        // Prepend <br> with newlines because jQuery .text() strips the <br>'s and we use .text() because we don't want all of the html tags copied to the clipboard.
+        var text = $(target).clone().find('br').prepend('\r\n').end().text().trim();
+        temp.text(text);
+        $("body").append(temp);
+        temp.trigger('select');
+        
+        // Try to copy the selection and if it fails display a popup to copy manually.
+        if(document.execCommand('copy')) { 
+            callback();
+        } else {
+            alert('Copy failed. Copy the command manually: ' + target.innerText);
+        }
+        temp.remove(); // Remove temporary element.
+    }
+}
+
 $(document).ready(function () {
     addTOCClick();
     addConfigContentFocusListener();
@@ -1196,7 +1230,41 @@ $(document).ready(function () {
                 $('footer').show();
             }
         }
+
+        $(".config_content_frame").contents().find('pre').mouseenter(function(event) {
+            target = event.currentTarget;
+            var copy_code = $('<div id="copied_confirmation"></div><img id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">');
+            $(this).append(copy_code);
+            var copy_button = $(this).find('#copy_to_clipboard');
+            var copy_message = $(this).find('#copied_confirmation');
+
+            copy_button.css({
+                top: 0,
+                right: 0
+            });
+            copy_button.stop().fadeIn();
+
+            copy_button.click(function(event) {
+                event.preventDefault();
+                // Target was assigned while hovering over the element to copy.
+                copy_element_to_clipboard(target, function(){
+                    copy_message.text("Copied to clipboard");
+                    var current_target_object = $(event.currentTarget);
+                    var position = current_target_object.position();
+                    copy_message.css({	
+                        top: position.top - 18,
+                        right: 0	
+                    }).stop().fadeIn().delay(3500).fadeOut();
+                });	
+            });
+        }).mouseleave(function (e) {
+            $(this).find('#copied_confirmation').remove();
+            $(this).find('#copy_to_clipboard').remove();
+            $(this).find('#copy_to_clipboard').stop().fadeOut();
+        });
+
     });
+
 });
 
 // Change height of toc if footer is in view so that fixed toc isn't visible through footer
