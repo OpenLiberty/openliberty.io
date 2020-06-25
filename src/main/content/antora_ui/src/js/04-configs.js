@@ -26,7 +26,6 @@ function addTOCClick() {
         var currentHref = resource.attr("href");
 
         if (isMobileView() || isIPadView()) {
-            $("#breadcrumb_hamburger").trigger("click");
             $('.nav-container .nav-panel-menu').removeClass('is-active'); // Hide the nav menu
             $('footer').hide();
         }
@@ -59,7 +58,7 @@ function addTOCClick() {
 
 // Add css to selected TOC. If scrollTo is specified, scroll the TOC element into viewport.
 function setSelectedTOC(resource, scrollTo) {
-    var currentTOCSelected = $(".nav-menu .toc_sub_selected .is-current-page");
+    var currentTOCSelected = $(".nav-menu .toc_sub_selected.is-current-page");
     var newHref = resource.attr("href");
     
     if(newHref){
@@ -79,14 +78,13 @@ function setSelectedTOC(resource, scrollTo) {
                 currentTOCSelected.removeClass("toc_sub_selected");
             }
         }
+        $('.is-current-page').removeClass('is-current-page');
         resource.parent().addClass("is-current-page");
         if (newHref.indexOf("#") === -1) {
             resource.parent().addClass("toc_main_selected");
         } else {
             resource.parent().addClass("toc_sub_selected");
         }
-    } else {
-        // should not be here
     }
 }
 
@@ -494,11 +492,14 @@ function findTOCElement(processHash) {
 // add the second level headings to the TOC
 function handleSubHeadingsInTOC(TOCElement) {
     var href = getSelectedDocHtml();
-    removeHashRefTOC(href);
+    removeHashRefTOC(href);      
 
     var anchors = $("article.doc > div.paragraph > p > a");
     var anchorLI = TOCElement.parent();
+    var depth = anchorLI.data('depth') + 1; // Get the data-depth of the parent to add to the subchildren
     var anchorHref = TOCElement.attr("href");
+    var ul = $("<ul class='nav-list'></ul>");
+    anchorLI.append(ul);
     $(anchors).each(function () {
         var subHeading = $(this).parent();
         if (subHeading.hasClass("subsection") === false) {
@@ -508,9 +509,8 @@ function handleSubHeadingsInTOC(TOCElement) {
             if (anchorTitleTextIndex !== -1) {
                 anchorTitleText = anchorTitleText.substring(anchorTitleTextIndex + 3);
             }
-            var tocLI = $('<li class="nav-item" style="margin-left: 18px"><a href="' + anchorHref + '#' + anchorTitleId + '">' + anchorTitleText + '</a></li>');
-            anchorLI.after(tocLI);
-            anchorLI = tocLI;
+            var tocLI = $('<li class="nav-item" data-depth="' + depth + '"><a href="' + anchorHref + '#' + anchorTitleId + '">' + anchorTitleText + '</a></li>');            
+            ul.append(tocLI);
         }
     });
     addTOCClick();
@@ -804,18 +804,6 @@ function handlePopstate() {
                     setSelectedTOC(TOCSubElement, true);
                 }
             }
-
-            // hamburger for TOC is in expanded state, collapse it and display the content 
-            if (isMobileView() && $("#toc_column").hasClass('in')) {
-                $(".breadcrumb_hamburger_nav").trigger('click');
-            }
-        } else {
-            if (isMobileView()) {
-                // hamburger for TOC is in collapsed state, expand it and hide the content
-                if (!$("#toc_column").hasClass('in')) {
-                    $(".breadcrumb_hamburger_nav").trigger('click');
-                }
-            }
         }
     }
 }
@@ -855,42 +843,7 @@ function handleContentBreadcrumbVisibility(isShow) {
             $('.contentStickyBreadcrumbHeader').slideUp(500, function() {
                 handleContentScrolling();
             });
-            $('article.doc').css("padding-top", "0px");
         }
-    }
-}
-
-// Handling the hamburger for TOC to hide/display config content
-function addHamburgerClick() {
-    if (isMobileView()) {
-        var hamburger = $(".breadcrumb_hamburger_nav");
-
-        hamburger.on("click", function (e) {
-            if ($("#toc_column").hasClass('in')) {
-                $("#config_content").show();
-                $("#breadcrumb_hamburger").show();
-                $("#breadcrumb_hamburger_title").show();
-            } else {
-                $("#config_content").hide();
-                $("#breadcrumb_hamburger").hide();
-                $("#breadcrumb_hamburger_title").hide();
-                // reset the container height to show table of content
-                $("#background_container").css("height", "auto");
-                $("#toc_inner").css("height", "auto");
-                // since the opening/closing of the toc container is managed by the hamburger,
-                // it always scrolls back to the top of the TOC. The codes here cannot override  
-                // the scrolling position as the default hamburger click event has not been fired
-                // yet.
-                // $("#toc_column").show();
-                // var selectedTOC = $(".is-current-page");
-                // // move the TOC back to the previously selected spot
-                // $('#toc_column').scrollTop(selectedTOC[0].getBoundingClientRect().top);
-
-                if (window.location.hash) { 
-                    updateHashInUrl("");
-                }
-            }
-        })
     }
 }
 
@@ -947,22 +900,6 @@ function replaceHistoryState(hashToReplace) {
     return fullHref;
 }
 
-// Take care of displaying the table of content, comand content, and hamburger correctly when
-// browser window resizes from mobile to non-mobile width and vice versa.
-function addWindowResizeListener() {
-    $(window).on('resize', function() {
-        if (isMobileView()) {
-            addHamburgerClick();
-        } else {
-            if (!$('#toc_column').hasClass('in')) {
-                $(".breadcrumb_hamburger_nav").trigger('click');
-            }
-            $("#breadcrumb_hamburger").hide();
-            $("#breadcrumb_hamburger_title").hide();
-        }
-    });
-}
-
 // This function was written for the Server Configuration overview pages only.
 // When we have a page that has an anchor that references another section in the same page,
 // the browser scrolls that section, on the same page, into view.
@@ -985,10 +922,7 @@ $(document).ready(function () {
     addTOCClick();
     addConfigContentFocusListener();
     handleInitialContent();
-    addHamburgerClick();
-    addWindowResizeListener();
     handlePopstate();
-
     addOverviewPageClickAndScroll();
     initialContentBreadcrumbVisibility();
     modifyFixedTableColumnWidth();
@@ -1002,9 +936,6 @@ $(document).ready(function () {
         setSelectedTOC(TOCElement, true);
     }
     createClickableBreadcrumb(getContentBreadcrumbTitle(), true);
-    if (TOCElement) {
-        updateMainBreadcrumb(TOCElement);
-    }
 
     if (!isMobileView() && !isIPadView()) {         
         handleContentScrolling();
@@ -1027,8 +958,4 @@ $(document).ready(function () {
 
     // update hash if it is redirect
     // updateHashAfterRedirect();
-
-    if (isMobileView() && $("#toc_column").hasClass('in')) {
-        $(".breadcrumb_hamburger_nav").trigger('click');
-    }
 });
