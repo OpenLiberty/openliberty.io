@@ -26,31 +26,42 @@ $.getJSON( "../../../../blog_tags.json", function(data) {
 
 $('pre').on('mouseenter', function(event) {
     target = event.currentTarget;
-    var copy_code = '<div id="copied_confirmation"></div><img id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">';
-    $(this).append(copy_code);
+    var copy_code = '<div id="copied_confirmation">Copied to clipboard</div><img id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">';
+    $('main').append(copy_code);
+    var current_target_object = $(event.currentTarget);
     $('#copy_to_clipboard').css({
-        top: 0,
-        right: 0
+        top: current_target_object.offset().top + 1,
+        right: $(window).width() - (current_target_object.offset().left + current_target_object.outerWidth()) + 1
     });
     $('#copy_to_clipboard').stop().fadeIn();
 
-}).on('mouseleave', function(event) {	
-    $('#copied_confirmation').remove();
-    $('#copy_to_clipboard').remove();
-    $('#copy_to_clipboard').stop().fadeOut();
-    $('#guide_section_copied_confirmation').stop().fadeOut();
+}).on('mouseleave', function(event) {
+    var x = event.clientX;
+    var y = event.clientY + $(window).scrollTop();
+
+    var copy_button_top = $('#copy_to_clipboard').offset().top;
+    var copy_button_left = $('#copy_to_clipboard').offset().left;
+    var copy_button_bottom = copy_button_top + $('#copy_to_clipboard').outerHeight();
+    var copy_button_right = $('#copy_to_clipboard').offset().left + $('#copy_to_clipboard').outerWidth();
+    
+    if(!(x > copy_button_left
+        && x < copy_button_right	
+        && y > copy_button_top	
+        && y < copy_button_bottom)) {
+        $('#copied_confirmation').remove();
+        $('#copy_to_clipboard').remove();
+        $('#copy_to_clipboard').stop().fadeOut();
+    }
+
 });
 
 $(document).on("click","#copy_to_clipboard", function(event) {
     event.preventDefault();
     // Target was assigned while hovering over the element to copy.
     copy_element_to_clipboard(target, function(){
-        $('#copied_confirmation').text("Copied to clipboard");
-        var current_target_object = $(event.currentTarget);
-        var position = current_target_object.position();
         $('#copied_confirmation').css({	
-            top: position.top - 18,
-            right: 0	
+            top: $(target).offset().top - 15,
+            right: $(window).width() - ($(target).offset().left + $(target).outerWidth()) + 1
         }).stop().fadeIn().delay(3500).fadeOut();
     });	
 });

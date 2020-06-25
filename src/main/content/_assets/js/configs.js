@@ -1233,34 +1233,42 @@ $(document).ready(function () {
 
         $(".config_content_frame").contents().find('pre').mouseenter(function(event) {
             target = event.currentTarget;
-            var copy_code = $('<div id="copied_confirmation"></div><img id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">');
-            $(this).append(copy_code);
-            var copy_button = $(this).find('#copy_to_clipboard');
-            var copy_message = $(this).find('#copied_confirmation');
-
-            copy_button.css({
-                top: 0,
-                right: 0
+            var copy_code = '<div id="copied_confirmation">Copied to clipboard</div><img id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">';
+            $('main').append(copy_code);
+            var current_target_object = $(event.currentTarget);
+            $('#copy_to_clipboard').css({
+                top: current_target_object.offset().top + $(".config_content_frame").offset().top + 1,
+                right: $(window).width() - (current_target_object.offset().left + current_target_object.outerWidth() + $(".config_content_frame").offset().left) + 1
             });
-            copy_button.stop().fadeIn();
+            $('#copy_to_clipboard').stop().fadeIn();
 
-            copy_button.click(function(event) {
+            $('#copy_to_clipboard').click(function(event) {
                 event.preventDefault();
                 // Target was assigned while hovering over the element to copy.
                 copy_element_to_clipboard(target, function(){
-                    copy_message.text("Copied to clipboard");
-                    var current_target_object = $(event.currentTarget);
-                    var position = current_target_object.position();
-                    copy_message.css({	
-                        top: position.top - 18,
-                        right: 0	
+                    $('#copied_confirmation').css({	
+                        top: current_target_object.offset().top + $(".config_content_frame").offset().top - 15,
+                        right: $(window).width() - (current_target_object.offset().left + current_target_object.outerWidth() + $(".config_content_frame").offset().left)
                     }).stop().fadeIn().delay(3500).fadeOut();
                 });	
             });
-        }).mouseleave(function (e) {
-            $(this).find('#copied_confirmation').remove();
-            $(this).find('#copy_to_clipboard').remove();
-            $(this).find('#copy_to_clipboard').stop().fadeOut();
+        }).mouseleave(function(event) {
+            var x = event.clientX + $(".config_content_frame").offset().left;
+            var y = event.clientY + $(".config_content_frame").offset().top;
+            
+            var copy_button_top = $('#copy_to_clipboard').offset().top;
+            var copy_button_left = $('#copy_to_clipboard').offset().left;
+            var copy_button_bottom = copy_button_top + $('#copy_to_clipboard').outerHeight();
+            var copy_button_right = $('#copy_to_clipboard').offset().left + $('#copy_to_clipboard').outerWidth();
+
+            if(!(x > copy_button_left
+                && x < copy_button_right	
+                && y > copy_button_top	
+                && y < copy_button_bottom)) {
+                $('#copied_confirmation').remove();
+                $('#copy_to_clipboard').remove();
+                $('#copy_to_clipboard').stop().fadeOut();
+            }
         });
 
     });
