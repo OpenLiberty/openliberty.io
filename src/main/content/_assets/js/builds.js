@@ -346,21 +346,19 @@ $(document).ready(function() {
             });
         }
     );
+
+    // Show copy to clipboard button when mouse enters code block
     $('.code_container').on('mouseenter', function(event) {
-        target = event.currentTarget;
-        var copy_code = '<div id="copied_confirmation">Copied to clipboard</div><img id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">';
-        $('main').append(copy_code);
-        var current_target_object = $(event.currentTarget);
+        target = $(event.currentTarget);
+        $('main').append('<div id="copied_confirmation">Copied to clipboard</div><img id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">');
         $('#copy_to_clipboard').css({
-            top: current_target_object.offset().top + 1,
-            right: $(window).width() - (current_target_object.offset().left + current_target_object.outerWidth()) + 1
-        });
-        $('#copy_to_clipboard').stop().fadeIn();
-    
+            top: target.offset().top + 1,
+            right: $(window).width() - (target.offset().left + target.outerWidth()) + 1
+        }).stop().fadeIn();
+    // Hide copy to clipboard button when mouse leaves code block (unless mouse enters copy to clipboard button)
     }).on('mouseleave', function(event) {
         var x = event.clientX;
         var y = event.clientY + $(window).scrollTop();
-    
         var copy_button_top = $('#copy_to_clipboard').offset().top;
         var copy_button_left = $('#copy_to_clipboard').offset().left;
         var copy_button_bottom = copy_button_top + $('#copy_to_clipboard').outerHeight();
@@ -374,53 +372,53 @@ $(document).ready(function() {
             $('#copy_to_clipboard').remove();
             $('#copy_to_clipboard').stop().fadeOut();
         }
-    
     });
     
-    $(document).on("click","#copy_to_clipboard", function(event) {
+    // Copy target element and show copied confirmation when copy to clipboard button clicked
+    $(document).on("click", "#copy_to_clipboard", function(event) {
         event.preventDefault();
         // Target was assigned while hovering over the element to copy.
         copy_element_to_clipboard(target, function(){
             $('#copied_confirmation').css({	
-                top: $(target).offset().top - 15,
-                right: $(window).width() - ($(target).offset().left + $(target).outerWidth()) + 1
+                top: target.offset().top - 15,
+                right: $(window).width() - (target.offset().left + target.outerWidth()) + 1
             }).stop().fadeIn().delay(3500).fadeOut();
         });	
     });
 
-/* Copy the target element to the clipboard
-   target: element to copy
-   callback: function to run if the copy is successful
-*/
-function copy_element_to_clipboard(target, callback){
-    // IE
-    if(window.clipboardData){
-        window.clipboardData.setData("Text", target.innerText);
-    } 
-    else{
-        var temp = $('<textarea>');
-        temp.css({
-            position: "absolute",
-            left:     "-1000px",
-            top:      "-1000px",
-        });       
-        
-        // Create a temporary element for copying the text.
-        // Prepend <br> with newlines because jQuery .text() strips the <br>'s and we use .text() because we don't want all of the html tags copied to the clipboard.
-        var text = $(target).clone().find('br').prepend('\r\n').end().text().trim();
-        temp.text(text);
-        $("body").append(temp);
-        temp.trigger('select');
-        
-        // Try to copy the selection and if it fails display a popup to copy manually.
-        if(document.execCommand('copy')) { 
-            callback();
-        } else {
-            alert('Copy failed. Copy the command manually: ' + target.innerText);
+    /* Copy the target element to the clipboard
+    target: element to copy
+    callback: function to run if the copy is successful
+    */
+    function copy_element_to_clipboard(target, callback){
+        // IE
+        if(window.clipboardData){
+            window.clipboardData.setData("Text", target.innerText);
+        } 
+        else{
+            var temp = $('<textarea>');
+            temp.css({
+                position: "absolute",
+                left:     "-1000px",
+                top:      "-1000px",
+            });       
+            
+            // Create a temporary element for copying the text.
+            // Prepend <br> with newlines because jQuery .text() strips the <br>'s and we use .text() because we don't want all of the html tags copied to the clipboard.
+            var text = $(target).clone().find('br').prepend('\r\n').end().text().trim();
+            temp.text(text);
+            $("body").append(temp);
+            temp.trigger('select');
+            
+            // Try to copy the selection and if it fails display a popup to copy manually.
+            if(document.execCommand('copy')) { 
+                callback();
+            } else {
+                alert('Copy failed. Copy the command manually: ' + target.innerText);
+            }
+            temp.remove(); // Remove temporary element.
         }
-        temp.remove(); // Remove temporary element.
     }
-}
 
     $(window).on("load", function(){
         $.ready.then(function(){
