@@ -1,4 +1,15 @@
-.toolbar {
+/*******************************************************************************
+ * Copyright (c) 2020 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+ 
+ .toolbar {
   color: var(--toolbar-font-color);
   align-items: center;
   background-color: var(--toolbar-background);
@@ -66,17 +77,23 @@
   background-image: url(../img/home.svg);
 }
 
-.edit-this-page {
+.open-new-issue, .edit-this-page {
   display: none;
-  padding-right: 0.5rem;
-}
+  padding-right: 1rem;
+  font-family: "Asap", Trebuchet MS, Helvetica, Arial;
+  font-size: 14px;
 
-@media screen and (min-width: 767.98px) {
-  .edit-this-page {
-    display: block;
+  & a {
+    color: #337AC8;
+  }
+  
+  & a:hover, & a:focus {
+    color: #23527c;
   }
 }
 
-.toolbar .edit-this-page a {
-  color: var(--toolbar-muted-color);
+@media screen and (min-width: 767.98px) {
+  .open-new-issue, .edit-this-page {
+    display: block;
+  }
 }
