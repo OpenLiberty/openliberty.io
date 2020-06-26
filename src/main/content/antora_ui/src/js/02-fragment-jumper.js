@@ -4,11 +4,6 @@
   var article = document.querySelector('article.doc')
   var toolbar = document.querySelector('.toolbar')
 
-  function computeNavHeight(){
-    var navHeight = document.querySelector('nav').clientHeight;
-    return navHeight;
-  }
-
   function computePosition (el, sum) {
     var position;
     if (article.contains(el)) {
@@ -24,7 +19,7 @@
       window.location.hash = '#' + this.id
       e.preventDefault()
     }
-    window.scrollTo(0, computePosition(this, 0) - computeNavHeight())
+    window.scrollTo(0, computePosition(this, 0) - toolbar.getBoundingClientRect().bottom)
   }
 
   window.addEventListener('load', function jumpOnLoad (e) {
