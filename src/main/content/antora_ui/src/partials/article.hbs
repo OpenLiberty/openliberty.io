@@ -15,6 +15,20 @@ If you typed the URL of this page manually, please double check that you entered
 {{#if page.title}}
 <h1 class="page">{{{page.title}}}</h1>
 {{/if}}
+{{#if (and page.editUrl (not page.origin.private))}}
+  {{#unless (eq page.layout 'javadoc') }}
+  {{#unless (eq page.layout 'feature') }}
+  {{#unless (eq page.layout 'config') }}
+    <p id="github_link">
+      <img id="docs_github_logo" src="/img/docs_github_logo.svg" alt="GitHub logo"> Contribute on GitHub: 
+      <a id="open_issue_link" href="https://github.com/OpenLiberty/docs/issues/new" target="_blank">Open Issue</a> 
+      | 
+      <a id="edit_topic_link" href="{{page.editUrl}}" target="_blank" rel="noopener">Edit Topic</a>
+    </p>
+  {{/unless}}
+  {{/unless}}
+  {{/unless}}
+{{/if}}
 {{{page.contents}}}
 {{/if}}
 </article>
