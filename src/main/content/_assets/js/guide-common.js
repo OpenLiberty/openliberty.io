@@ -426,7 +426,7 @@ function defaultToFirstPage() {
 }
 
 // Read tags from json file and add link to guides page with tag search
-function getTags() {
+function getTags(callback) {
     $.getJSON( "../../guides/guides-common/guide_tags.json", function(data) {
         $.each(data.guide_tags, function(i, tag) {
             // Check if tag is visible before adding it
@@ -439,6 +439,7 @@ function getTags() {
                 }
             }
         });
+        callback()
     });
 }
 
@@ -446,7 +447,10 @@ function getTags() {
 
 $(document).ready(function() {
 
-    getTags();
+    getTags(function() {
+        // If there are no tags for the guide, hide the tags title
+        $("#tags_container:empty").prev().hide();
+    });
 
     $("#feedback_ratings img").on('mouseenter', function(event) {
       $("#feedback_ratings img").not($(this)).css('opacity', '.50');
@@ -687,8 +691,5 @@ $(window).on("load", function(){
         if(location.hash){
             handleFloatingTableOfContent();
         }
-
-        // If there are no tags for the guide, hide the tag title
-        $("#tags_container:empty").prev().hide();
     });
  })

@@ -18,6 +18,7 @@ public interface Constants {
     String DHE_TOOLS_PATH_SEGMENT = "tools";
     String DHE_RELEASE_PATH_SEGMENT = "release";
     String DHE_NIGHTLY_PATH_SEGMENT = "nightly";
+    String DHE_BETA_PATH_SEGMENT = "beta";
     String DHE_INFO_JSON_FILE_NAME = "info.json";
 
     // JSON
@@ -33,6 +34,7 @@ public interface Constants {
     String PACKAGE_LOCATIONS = "package_locations";
     String RUNTIME_RELEASES = "runtime_releases";
     String RUNTIME_NIGHTLY_BUILDS = "runtime_nightly_builds";
+    String RUNTIME_BETAS = "runtime_betas";
     String TOOLS_RELEASES = "tools_releases";
     String TOOLS_NIGHTLY_BUILDS = "tools_nightly_builds";
     String DATE = "date_time";

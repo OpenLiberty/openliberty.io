@@ -355,37 +355,17 @@ html, body {
 }
 
 
-/* RELEASES, DEVELOPMENT BUILDS, ECLIPSE DEVELOPER TOOLS */
+/* RELEASES, BETAS, DEVELOPMENT BUILDS, ECLIPSE DEVELOPER TOOLS */
 
 .builds_container {
     margin-bottom: 80px;
 }
 
-#runtime_development_builds_title {
-    margin-top: 0;
-    margin-bottom: 20px;
-}
-
-#runtime_development_builds_paragraph {
+.download_sentence {
     margin-bottom: 41px;
 }
 
-#eclipse_developer_tools_container {
-    margin-bottom: 70px;
-}
-
-#eclipse_development_tools_title {
-    margin-top: 0;
-    margin-bottom: 20px;
-}
-
-#eclipse_development_tools_text {
-    margin-top: 41px;
-    margin-bottom: 41px;
-    max-width: 800px;
-}
-
-#eclipse_development_tools_releases_title, #eclipse_development_tools_development_builds_title {
+.eclipse_development_tools_title {
     margin-top: 0;
     margin-bottom: 15px;
     font-weight: 500;
@@ -503,6 +483,14 @@ html, body {
     background-color: #f6f8fa;
 }
 
+#runtime_betas_table_container tbody tr {
+    background-color: #FFFFFF;
+}
+
+#runtime_betas_table_container .white_table tbody tr:nth-child(4n), #runtime_betas_table_container .white_table tbody tr:nth-child(4n-1) {
+    background-color: #f6f8fa;
+}
+
 .white_table tbody tr td, .white_table tbody tr td:last-child {
     padding-left: 24px;
     text-align: left;
@@ -595,13 +583,13 @@ html, body {
         display: inline-block;
     }
 
-    .nav-tabs > .nav-item > .nav-link {
+    .tabs_container .nav-tabs > .nav-item > .nav-link {
         margin-top: 0px;
-        padding-left: 5px;
-        padding-right: 5px;
-        padding-top: 8px;
-        padding-bottom: 8px;
-        font-size: 12px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-size: 14px;
     }
 
     #runtime_development_builds_paragraph, #eclipse_development_tools_text {
@@ -648,6 +636,34 @@ html, body {
 
 }
 
+@media (max-width: 540px) {
+    .tabs_container .nav-tabs > .nav-item > .nav-link {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        max-width: 130px;
+        text-align: center;
+    }
+
+    div:not(#get_section) .tabs_container .nav-tabs .nav-item:first-child a, div:not(#get_section) .tabs_container .nav-tabs .nav-item:nth-child(2) a {
+        padding-top: 18.5px;
+        padding-bottom: 18.5px;
+    }
+}
+
+@media (max-width: 408px) {
+
+    .tabs_container .nav-tabs > .nav-item > .nav-link {
+        max-width: none;
+    }
+
+    div:not(#get_section) .tabs_container .nav-tabs .nav-item:first-child a, div:not(#get_section) .tabs_container .nav-tabs .nav-item:nth-child(2) a {
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+}
 @media (max-width: 400px) {
 
     .narrow_table_container table {
