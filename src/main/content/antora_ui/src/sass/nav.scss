@@ -140,7 +140,7 @@ html.is-clipped--nav {
     letter-spacing: 0.2px;
     line-height: 26px;
     border-bottom: 1px solid #D6D9E4;
-    padding-left: var(--TOC-indention);
+    padding-left: var(--TOC-indention-first-level);
 
     & > .nav-text {
       font-family: BunueloBold;
@@ -157,7 +157,7 @@ html.is-clipped--nav {
   list-style: none;
   color: #5D6A8E;
   line-height: 18px;
-  margin-top: .5em;
+  margin: .25em 0;
 
   & > a, & > span {
     padding-top: 3px;
@@ -220,59 +220,33 @@ html.is-clipped--nav {
     display: block;
     border-left: var(--TOC-orange-border-width) solid #f4914d;
     background: #fdf2ea;
-    margin-left: calc(-1 * var(--TOC-indention));
-    padding-left: calc(var(--TOC-indention) - var(--TOC-orange-border-width));    
+    margin-left: calc(-1 * var(--TOC-indention-first-level));
+    padding-left: calc(var(--TOC-indention-first-level) - var(--TOC-orange-border-width));    
   }
   &[data-depth="1"] {
     & > span, & > a {
-      margin-left: calc(-2 * var(--TOC-indention));
-      padding-left: calc(2 * var(--TOC-indention) - var(--TOC-orange-border-width));
+      margin-left: calc(-1 * (var(--TOC-indention-first-level) + var(--TOC-indention)));
+      padding-left: calc(var(--TOC-indention-first-level) + var(--TOC-indention) - var(--TOC-orange-border-width));
     }    
   }
   &[data-depth="2"] {
     & > span, & > a {
-      margin-left: calc(-3 * var(--TOC-indention));
-      padding-left: calc(3 * var(--TOC-indention) - var(--TOC-orange-border-width));
+      margin-left: calc(-1 * (var(--TOC-indention-first-level) + 2 * var(--TOC-indention)));
+      padding-left: calc(var(--TOC-indention-first-level) + 2 * var(--TOC-indention) - var(--TOC-orange-border-width));
     } 
   }
   &[data-depth="3"] {
     & > span, & > a {
-      margin-left: calc(-4 * var(--TOC-indention));
-      padding-left: calc(4 * var(--TOC-indention) - var(--TOC-orange-border-width));
+      margin-left: calc(-1 * (var(--TOC-indention-first-level) + 3 * var(--TOC-indention)));
+      padding-left: calc(var(--TOC-indention-first-level) + 3 * var(--TOC-indention) - var(--TOC-orange-border-width));
     } 
   }
   &[data-depth="4"] {
     & > span, & > a {
-      margin-left: calc(-5 * var(--TOC-indention));
-      padding-left: calc(5 * var(--TOC-indention) - var(--TOC-orange-border-width));
+      margin-left: calc(-1 * (var(--TOC-indention-first-level) + 4 * var(--TOC-indention)));
+      padding-left: calc(var(--TOC-indention-first-level) + 4 * var(--TOC-indention) - var(--TOC-orange-border-width));
     } 
   }
-  // &.toc_sub_selected {
-  //   &[data-depth="1"] {
-  //     & > span, & > a {
-  //       margin-left: calc(-2 * var(--TOC-indention));
-  //       padding-left: calc(2 * var(--TOC-indention) - var(--TOC-orange-border-width));
-  //     }    
-  //   }
-  //   &[data-depth="2"] {
-  //     & > span, & > a {
-  //       margin-left: calc(-3 * var(--TOC-indention));
-  //       padding-left: calc(3 * var(--TOC-indention) - var(--TOC-orange-border-width));
-  //     } 
-  //   }
-  //   &[data-depth="3"] {
-  //     & > span, & > a {
-  //       margin-left: calc(-4 * var(--TOC-indention));
-  //       padding-left: calc(4 * var(--TOC-indention) - var(--TOC-orange-border-width));
-  //     } 
-  //   }
-  //   &[data-depth="4"] {
-  //     & > span, & > a {
-  //       margin-left: calc(-4 * var(--TOC-indention));
-  //       padding-left: calc(5 * var(--TOC-indention) - var(--TOC-orange-border-width));
-  //     } 
-  //   }
-  // }
 }
 
 .is-current-page > .nav-link,
