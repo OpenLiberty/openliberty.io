@@ -7,8 +7,6 @@ var navigation = (function(){
     if (!navContainer) return;
 
     navToggle.addEventListener('click', showNav);
-    // NOTE don't let click events propagate outside of nav container
-    navContainer.addEventListener('click', concealEvent);
 
     var menuPanel = navContainer.querySelector('[data-panel=menu]');
     if (!menuPanel) return;
@@ -36,6 +34,19 @@ var navigation = (function(){
       var activatePanel = currentPanel.dataset.panel === 'menu' ? 'explore' : 'menu';	
       currentPanel.classList.toggle('is-active');
       document.querySelector('.nav [data-panel=' + activatePanel + ']').classList.toggle('is-active');
+    });
+
+    // Detect if the version switcher is open to close it when clicking somewhere else.
+    document.addEventListener('click', function(e){
+      if($('.context')[0].contains(e.target)){
+        return;
+      }
+      if($('.components:visible').length > 0){
+        if(!$('.components')[0].contains(e.target)){
+          $('.nav-panel-explore').toggleClass('is-active');
+          $('.nav-panel-menu').toggleClass('is-active'); // Change active panel to the nav menu
+        }
+      }
     });
 
     // NOTE prevent text from being selected by double click
