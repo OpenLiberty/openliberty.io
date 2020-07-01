@@ -39,6 +39,19 @@ function render_builds(builds, parent) {
         }
     }
 
+    var builds = [{build_log: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/gradle.log", date_time: "2020-05-28_0414", driver_location: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-20.0.0.6.zip", package_locations: ["javaee8.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-javaee8-20.0.0.6.zip", "webProfile8.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-webProfile8-20.0.0.6.zip", "microProfile3.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-microProfile3-20.0.0.6.zip", "openliberty.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-20.0.0.6.zip", "kernel.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-javaee8-20.0.0.6.zip"], size_in_bytes: 0, test_passed: 13143, tests_log: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/open-liberty.unitTest.results.zip", total_tests: 13143, version: "20.0.0.7"}, {build_log: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/gradle.log", date_time: "2020-05-28_0414", driver_location: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-20.0.0.6.zip", package_locations: ["javaee8.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-javaee8-20.0.0.6.zip", "webProfile8.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-webProfile8-20.0.0.6.zip", "microProfile3.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-microProfile3-20.0.0.6.zip", "openliberty.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-20.0.0.6.zip"], size_in_bytes: 0, test_passed: 13143, tests_log: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/open-liberty.unitTest.results.zip", total_tests: 13143, version: "20.0.0.6"}, {build_log: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/gradle.log", date_time: "2020-05-28_0414", driver_location: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-20.0.0.6.zip", package_locations: ["javaee8.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-javaee8-20.0.0.6.zip", "webProfile8.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-webProfile8-20.0.0.6.zip", "openliberty.zip=https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/openliberty-20.0.0.6.zip"], size_in_bytes: 0, test_passed: 13143, tests_log: "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/2020-05-28_0414/open-liberty.unitTest.results.zip", total_tests: 13143, version: "20.0.0.5"}];
+    console.log("Builds after changing: ", builds);
+
+    // get the max number of package locations to determine number of rows
+    var max = 1;
+    builds.forEach(function(build) {
+        if (parent.parent().data('builds-id') == "runtime_releases") {
+            if (build.package_locations.length > max) {
+                max = build.package_locations.length;
+            }
+        }
+    });
+
     builds.forEach(function(build) {
         if (parent.hasClass('release_table_body')) {
             if (build.version.indexOf('-RC') > -1){
@@ -50,15 +63,12 @@ function render_builds(builds, parent) {
                 var package_locations = build.package_locations;
                 if (package_locations !== null && package_locations !== undefined){
                     var num_packages = package_locations.length;
-                    // Add enough empty rows so that each release has 4 rows even when there are < 4 packages. These empty rows will be hidden, but this ensures that the table highlighting is correct.
-                    if (num_packages == 3) {
-                        parent.append('<tr></tr>');
-                    }
-                    if (num_packages == 2) {
-                        parent.append('<tr></tr><tr></tr>');
-                    }
-                    if (num_packages == 1) {
-                        parent.append('<tr></tr><tr></tr><tr></tr>');
+                    // Add enough empty rows so that each release has the max number of rows even when there are < max number packages. These empty rows will be hidden, but this ensures that the table highlighting is correct.
+                    // difference = max - num_packages;
+                    if (num_packages < max) {
+                        for (var i = 0; i < (max - num_packages); i++) {
+                            parent.append('<tr></tr>');
+                        }
                     }
 
                     var version_column = $('<td headers="' + tableID + '_version" rowspan="' + num_packages + '">' + build.version + '</td>');
@@ -87,6 +97,9 @@ function render_builds(builds, parent) {
                         }
                         else if (package_name.indexOf("microprofile") > -1) {
                             var package_column = '<td headers="' + tableID + '_package">MicroProfile 3</td>';
+                        }
+                        else if (package_name.indexOf("kernel") > -1) {
+                            var package_column = '<td headers="' + tableID + '_package">Kernel</td>';
                         }
                         else {
                             var package_column = '<td headers="' + tableID + '_package">All GA Features</td>';
