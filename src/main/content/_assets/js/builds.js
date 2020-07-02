@@ -39,6 +39,16 @@ function render_builds(builds, parent) {
         }
     }
 
+    // get the max number of package locations to determine number of rows
+    var max = 1;
+    builds.forEach(function(build) {
+        if (parent.parent().data('builds-id') == "runtime_releases") {
+            if (build.package_locations.length > max) {
+                max = build.package_locations.length;
+            }
+        }
+    });
+
     builds.forEach(function(build) {
         if (parent.hasClass('release_table_body')) {
             if (build.version.indexOf('-RC') > -1){
@@ -50,15 +60,11 @@ function render_builds(builds, parent) {
                 var package_locations = build.package_locations;
                 if (package_locations !== null && package_locations !== undefined){
                     var num_packages = package_locations.length;
-                    // Add enough empty rows so that each release has 4 rows even when there are < 4 packages. These empty rows will be hidden, but this ensures that the table highlighting is correct.
-                    if (num_packages == 3) {
-                        parent.append('<tr></tr>');
-                    }
-                    if (num_packages == 2) {
-                        parent.append('<tr></tr><tr></tr>');
-                    }
-                    if (num_packages == 1) {
-                        parent.append('<tr></tr><tr></tr><tr></tr>');
+                    // Add enough empty rows so that each release has the max number of rows even when there are < max number packages. These empty rows will be hidden, but this ensures that the table highlighting is correct.
+                    if (num_packages < max) {
+                        for (var i = 0; i < (max - num_packages); i++) {
+                            parent.append('<tr></tr>');
+                        }
                     }
 
                     var version_column = $('<td headers="' + tableID + '_version" rowspan="' + num_packages + '">' + build.version + '</td>');
@@ -87,6 +93,9 @@ function render_builds(builds, parent) {
                         }
                         else if (package_name.indexOf("microprofile") > -1) {
                             var package_column = '<td headers="' + tableID + '_package">MicroProfile 3</td>';
+                        }
+                        else if (package_name.indexOf("kernel") > -1) {
+                            var package_column = '<td headers="' + tableID + '_package">Kernel</td>';
                         }
                         else {
                             var package_column = '<td headers="' + tableID + '_package">All GA Features</td>';
