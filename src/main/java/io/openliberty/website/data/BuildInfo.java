@@ -40,7 +40,7 @@ import io.openliberty.website.Constants;
  *     "tests_log": "open-liberty.unitTest.results.zip",
  *     "build_log": "gradle.log",
  *     "driver_location": "openliberty-20.0.0.4.zip",
- *     "package_locations": ["openliberty-javaee8-20.0.0.4.zip","openliberty-webProfile8-20.0.0.4.zip","openliberty-microProfile3-20.0.0.4.zip"],
+ *     "package_locations": ["openliberty-javaee8-20.0.0.4.zip","openliberty-webProfile8-20.0.0.4.zip","openliberty-microProfile3-20.0.0.4.zip", "openliberty-kernel-20.0.0.4.zip"],
  *     "version": "20.0.0.4",
  *     "date_time": "2017-09-27_1951",
  *     "size_in_bytes": 12345
