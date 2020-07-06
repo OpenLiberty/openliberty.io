@@ -82,8 +82,13 @@
         target_position = current_target_object.position();	
         target_width = current_target_object.outerWidth();
         target_height = current_target_object.outerHeight();
-        var right_position = inSingleColumnView() ? 1 : 46;
-         $('#copy_to_clipboard').css({	
+        if (window.location.href.indexOf("cloud-ibm") > -1) {
+            var right_position = ($(window).outerWidth() < 1170) ? 1 : 46;
+        }
+        else {
+            var right_position = inSingleColumnView() ? 1 : 46;
+        }
+        $('#copy_to_clipboard').css({	
             top: target_position.top + 1,	
             right: parseInt($('#guide_column').css('padding-right')) + right_position	
         });
