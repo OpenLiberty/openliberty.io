@@ -7,6 +7,7 @@ var navigation = (function(){
     if (!navContainer) return;
 
     navToggle.addEventListener('click', showNav);
+    navContainer.addEventListener('click', closeVersionPicker);
 
     var menuPanel = navContainer.querySelector('[data-panel=menu]');
     if (!menuPanel) return;
@@ -36,18 +37,7 @@ var navigation = (function(){
       document.querySelector('.nav [data-panel=' + activatePanel + ']').classList.toggle('is-active');
     });
 
-    // Detect if the version switcher is open to close it when clicking somewhere else.
-    document.addEventListener('click', function(e){
-      if($('.context')[0].contains(e.target)){
-        return;
-      }
-      if($('.components:visible').length > 0){
-        if(!$('.components')[0].contains(e.target)){
-          $('.nav-panel-explore').toggleClass('is-active');
-          $('.nav-panel-menu').toggleClass('is-active'); // Change active panel to the nav menu
-        }
-      }
-    });
+    document.addEventListener('click', closeVersionPicker);
 
     // NOTE prevent text from being selected by double click
     menuPanel.addEventListener('mousedown', function (e) {
@@ -96,6 +86,20 @@ var navigation = (function(){
 
   function toggleActive () {
     this.classList.toggle('is-active');
+  }
+  
+  // Detect if the version switcher is open to close it when clicking somewhere else.
+  function closeVersionPicker (e) {
+    concealEvent(e);
+    if($('.context')[0].contains(e.target)){
+      return;
+    }
+    if($('.components:visible').length > 0){
+      if(!$('.components')[0].contains(e.target)){
+        $('.nav-panel-explore').toggleClass('is-active');
+        $('.nav-panel-menu').toggleClass('is-active'); // Change active panel to the nav menu
+      }
+    }    
   }
 
   function showNav (e) {
