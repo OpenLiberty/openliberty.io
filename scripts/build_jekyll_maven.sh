@@ -35,15 +35,11 @@ if [ "$JEKYLL_ENV" != "production" ]; then
         ./scripts/build_clone_docs.sh "draft" # Argument is branch name of OpenLiberty/docs
     else
         ./scripts/build_clone_docs.sh "develop" # Argument is branch name of OpenLiberty/docs
-        ./scripts/build_clone_certifications.sh "dev" # Argument is branch name of OpenLiberty/certifications
     fi
 else
     # Production!
     echo "Clone published docs!"
     ./scripts/build_clone_docs.sh "master" # Argument is branch name of OpenLiberty/docs
-
-    echo "Clone published certifications!"
-    ./scripts/build_clone_certifications.sh "master" # Argument is branch name of OpenLiberty/certifications
 fi
 
 # Special handling for javadocs
@@ -79,6 +75,9 @@ echo "Moving any js and css files published interactive guides..."
 # Assumption: There is _always_ iguide* folders
 find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
 find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
+
+# Build and clone certifications
+./scripts/build_clone_certifications.sh
 
 # Build draft and published blogs
 ./scripts/build_clone_blogs.sh
