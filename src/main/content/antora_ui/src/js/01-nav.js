@@ -7,7 +7,7 @@ var navigation = (function(){
     if (!navContainer) return;
 
     navToggle.addEventListener('click', showNav);
-    navContainer.addEventListener('click', closeVersionPicker);
+    navContainer.addEventListener('click', handlePageClick);
 
     var menuPanel = navContainer.querySelector('[data-panel=menu]');
     if (!menuPanel) return;
@@ -37,7 +37,7 @@ var navigation = (function(){
       document.querySelector('.nav [data-panel=' + activatePanel + ']').classList.toggle('is-active');
     });
 
-    document.addEventListener('click', closeVersionPicker);
+    document.addEventListener('click', handlePageClick);
 
     // NOTE prevent text from being selected by double click
     menuPanel.addEventListener('mousedown', function (e) {
@@ -48,6 +48,7 @@ var navigation = (function(){
   $('.components .versions li a').on('click', function(e){
     e.stopPropagation();
     location.href = $(this)[0].href;
+    closeVersionPicker();
   });
 
   $('.components .versions li').on('click', function(e) {
@@ -87,19 +88,24 @@ var navigation = (function(){
   function toggleActive () {
     this.classList.toggle('is-active');
   }
-  
+
   // Detect if the version switcher is open to close it when clicking somewhere else.
-  function closeVersionPicker (e) {
+  function handlePageClick (e) {
     concealEvent(e);
     if($('.context')[0].contains(e.target)){
       return;
     }
     if($('.components:visible').length > 0){
       if(!$('.components')[0].contains(e.target)){
-        $('.nav-panel-explore').toggleClass('is-active');
-        $('.nav-panel-menu').toggleClass('is-active'); // Change active panel to the nav menu
+        closeVersionPicker();
       }
-    }    
+    }
+  }
+  
+  
+  function closeVersionPicker (e) {
+    $('.nav-panel-explore').toggleClass('is-active');
+    $('.nav-panel-menu').toggleClass('is-active'); // Change active panel to the nav menu
   }
 
   function showNav (e) {

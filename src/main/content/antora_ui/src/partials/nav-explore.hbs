@@ -18,8 +18,10 @@
               {{#each ../../page.versions }}
                 {{#if (eq ./version ../version)}}
                     <a href="{{{relativize ./url}}}">{{./displayVersion}}</a>
-                {{/if}}                
+                {{/if}}
               {{/each}}
+            {{else}}
+              <a href="#">{{./displayVersion}}</a>
             {{/if}}
           </li>
         {{/each}}
