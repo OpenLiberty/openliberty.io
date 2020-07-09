@@ -9,10 +9,10 @@ echo "Start cloning blogs repository..."
 
 BRANCH_NAME="prod"
 # Development environments with draft docs/guides
-if [ "$JEKYLL_STAGING_BLOGS" == "true" ]; then
+if [ "$JEKYLL_STAGING_SITE" == "true" ]; then
     echo "Cloning the staging branch of blogs"
     BRANCH_NAME="staging"
-elif [ "$JEKYLL_DRAFT_BLOGS" == "true" ]; then
+elif [ "$JEKYLL_DRAFT_SITE" == "true" ]; then
     echo "Cloning the draft branch of blogs"
     BRANCH_NAME="draft"
 else
