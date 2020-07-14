@@ -39,6 +39,16 @@ var navigation = (function(){
 
     document.addEventListener('click', handlePageClick);
 
+    $('.nav-menu > .nav-list').on('scroll', function(e){
+      concealEvent(e);
+    });
+
+    document.addEventListener('keydown', function(e){
+        if(e.which === 27){
+          closeVersionPicker();
+        }
+    });
+
     // NOTE prevent text from being selected by double click
     menuPanel.addEventListener('mousedown', function (e) {
       if (e.detail > 1) e.preventDefault();
@@ -104,8 +114,10 @@ var navigation = (function(){
   
   
   function closeVersionPicker (e) {
-    $('.nav-panel-explore').toggleClass('is-active');
-    $('.nav-panel-menu').toggleClass('is-active'); // Change active panel to the nav menu
+    if($('.nav-panel-explore').hasClass('is-active')){
+      $('.nav-panel-explore').toggleClass('is-active');
+      $('.nav-panel-menu').toggleClass('is-active'); // Change active panel to the nav menu
+    }    
   }
 
   function showNav (e) {
