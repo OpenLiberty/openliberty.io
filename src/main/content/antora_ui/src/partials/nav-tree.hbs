@@ -7,11 +7,11 @@
     <button class="nav-item-toggle" aria-label="Expand or collapse the pages under this topic"></button>
     {{/if}}
     {{#if ./url}}
-    <a class="nav-link" href="
+    <a class="nav-link" tabindex="0" href="
       {{~#if (eq ./urlType 'internal')}}{{{relativize ./url}}}
       {{~else}}{{{./url}}}{{~/if}}">{{{./content}}}</a>
     {{else}}
-    <span class="nav-text">{{{./content}}}</span>
+    <span class="nav-text" tabindex="0">{{{./content}}}</span>
     {{/if}}
     {{/if}}
 {{> nav-tree navigation=./items level=(increment ../level)}}
