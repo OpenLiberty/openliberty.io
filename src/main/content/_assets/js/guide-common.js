@@ -450,6 +450,8 @@ $(document).ready(function() {
         handleFloatingTOCAccordion();
         resizeGuideSections();
         handleFloatingCodeColumn();
+        $('#copy_to_clipboard').hide();
+        $('#guide_section_copied_confirmation').hide();
     });
 
     $(window).on('scroll', function() {        
