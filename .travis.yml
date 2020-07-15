@@ -18,6 +18,8 @@ jobs:
       if: branch = demo1
     - env: ROUTE=$SITE_DEMO2_DOMAIN
       if: branch = demo2
+    - env: ROUTE=$SITE_ANTORA_DOMAIN
+      if: branch = antora
 
 script: >
     if [ $JEKYLL_ENV == "production" ]; then
@@ -68,4 +70,9 @@ deploy:
     on:
       branch: demo2
     script: env ROUTE=$SITE_DEMO2_DOMAIN ./.travis/cf-push-2.sh
+  - provider: script
+    skip_cleanup: true
+    on:
+      branch: antora
+    script: env ROUTE=$SITE_ANTORA_DOMAIN ./.travis/cf-push-2.sh
 
