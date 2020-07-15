@@ -128,7 +128,7 @@ $(document).ready(function() {
     }
 
     function fixTOCHeight() {
-        var headerVisibleHeight = getVisibleHeightPx($('nav.navbar.navbar-default')) + getVisibleHeightPx($('#guides_information_container'));
+        var headerVisibleHeight = getVisibleHeightPx($('#guides_information_container'));
         var tocHeight = $('#toc_container ul').height();
         var footerVisibleHeight = getVisibleHeightPx($('footer'));
         var totalHeight = headerVisibleHeight + tocHeight + footerVisibleHeight;
@@ -163,7 +163,7 @@ $(document).ready(function() {
         }
 
         addPadding();
-        var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
+        var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('#nav_bar').outerHeight(true);
 
         // fix TOC height to account for footer and make it scrollable if necessary
         if (isDesktopView()) {
@@ -268,7 +268,7 @@ $(document).ready(function() {
         var isTOCPositionFixed = ($('#toc_column').css('position') == 'fixed');
         var isAccordionPositionFixed = ($('#tablet_toc_accordion_container').css('position') == 'fixed');
         var accordionHeight = $('#tablet_toc_accordion_container').outerHeight();
-        var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('nav.navbar.navbar-default').outerHeight(true);
+        var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('#nav_bar').outerHeight(true);
         
         // fix TOC height to account for footer and make it scrollable if necessary
         if (isDesktopView()) {
@@ -649,9 +649,31 @@ $(document).ready(function() {
         processSearch(inputValue);
     });
 
+    // Update url with user's search query when they navigate to another page
+    $(window).on('beforeunload', function(){
+        var searchInput = $('#guide_search_input').val();
+        updateSearchUrl(searchInput);
+    });
+
     $(window).on('popstate', function(){
-        var inputValue = location.search;
-        queryString = inputValue.substring(8);
+        var queryString = location.search;
+        // Process the url parameters for searching
+        if (queryString.length > 0) {
+            var parameters = decodeURI(queryString.substring(1)).split('&');
+            var search_value = false;
+            var search_key = false;
+            for(var i = 0; i < parameters.length; i++) {
+                if(parameters[i].indexOf('search=') === 0) {
+                    search_value = parameters[i].substring(7);
+                } else if (parameters[i].indexOf('key=') === 0) {
+                    search_key = parameters[i].substring(4);
+                }
+            }
+            if(search_value) {
+                var input_text = search_key? search_key + ': ' + search_value : search_value;
+                $('#guide_search_input').val(input_text).keyup();
+            }
+        }
         document.getElementById("guide_search_input").value = queryString;
         processSearch(queryString);
     });
@@ -691,13 +713,17 @@ $(document).ready(function() {
         if (value.startsWith('tag:')) {
             var searchTextWithoutTag = value.substring(value.indexOf(':') + 1);
             searchTextWithoutTag = searchTextWithoutTag.trim();
-            search_value = '?search=' + encodeURIComponent(searchTextWithoutTag) + '&key=tag';
-            history.pushState(null, "", search_value);
+            search_value = '?search=' + encodeURIComponent(searchTextWithoutTag) + '&key=tag';            
+            if (location.search != search_value) {
+                history.pushState(null, "", search_value);
+            }
             document.activeElement.blur()
         } else {
             value = value.trim();
             search_value = '?search=' + encodeURIComponent(value);
-            history.pushState(null, "", search_value);
+            if (location.search != search_value) {
+                history.pushState(null, "", search_value);
+            }
             document.activeElement.blur()
         }
     }
@@ -761,13 +787,14 @@ $(document).ready(function() {
     });
 
     // Click buttons to fill search bar
-    $('#guides_search_container').on('click', '.tag_button', function() {
+    $('#guides_search_container').on('click focus', '.tag_button', function() {
         var inputValue = 'tag: ' + $(this).html();
         $('#guide_search_input').val(inputValue);
         $('.tag_button').removeClass('hidden');
         $(this).addClass('hidden');
         $('#guide_search_input').trigger('focus');
         processSearch(inputValue);
+        updateSearchUrl(inputValue);
     });
 
     // Handle click on caret button on mobile view

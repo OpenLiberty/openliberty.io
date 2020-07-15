@@ -659,12 +659,39 @@ footer {
             width: 30px;
             &:before {
                 /* Add parenthesis before the number of each row */
-                content: "(";
+                content: "( ";
             }  
             &:after {
                 /* Add parenthesis after the number of each row */
-                content: ")";
+                content: " )";
             }            
         }
     }
 }
+
+/* Code copy button */
+#copied_confirmation {
+    position: absolute;
+    display: none;
+    font-size: 11px;
+    color: #5e6b8d;
+    line-height: 11px;
+}
+
+#copy_to_clipboard {	
+    position: absolute;	
+    display: none;	
+    background-color: #eeeff3;	
+    width: 38px;	
+    height: 38px;	
+    padding: 8.5px 10px;
+
+    &:hover {	
+        border: solid 1px #b2bbd1;
+        padding: 7.5px 9px;
+        cursor: pointer;
+    }	
+    &:active {	
+        border: solid 1px #5e6b8d;	
+    }
+}	

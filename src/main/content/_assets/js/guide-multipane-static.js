@@ -12,6 +12,8 @@
 var code_sections = {}; // Map guide sections to code blocks to show on the right column. Each guide section maps to its tab and code block.
 var recent_sections = {}; // Store the most recently viewed code_section for each guide section
 
+var twoColumnBreakpoint = 900; // This overrides the twoColumnBreakpoint set in guide-common.js
+
 // Map the hotspots for a given file to what index the file is in that section.
 // Input: Code_block: the code file
 //        Header: the section header for this code file
@@ -348,7 +350,8 @@ function restoreCodeColumn(){
         $("body").removeClass("unscrollable");
         $("#code_column").css({
             "top": "60px",
-            "left": "calc(100% - 780px)"
+            "left": "calc(100% - 780px)",
+            "height": "auto"
         });
         $("#code_column").removeClass("modal");
         remove_highlighting(); // Remove previously highlighted hotspots from mobile view
@@ -765,7 +768,7 @@ $(document).ready(function() {
     });
 
     $('#code_column').on('mouseenter', function() {
-        if(!inSingleColumnView()){
+        if(window.innerWidth > 1170){
             var page_width = window.innerWidth; // Page width with scrollbar
             var document_width = document.documentElement.clientWidth; // Page width without scrollbar  
             var scrollbar_width = page_width - document_width;
@@ -782,7 +785,7 @@ $(document).ready(function() {
             $("#code_column").css("left", "calc(100% - " + (780 + scrollbar_width) + "px)");
         }        
     }).on('mouseleave', function() {
-        if(!inSingleColumnView()){
+        if(window.innerWidth > 1170){
             $("html").removeClass("unscrollable");
             $("html").css("padding-right", 0);
             $('#nav_bar').css("padding-right", "calc(10vw)");

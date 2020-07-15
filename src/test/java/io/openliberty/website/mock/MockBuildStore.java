@@ -25,7 +25,10 @@ public class MockBuildStore implements BuildStore {
         if (Constants.RUNTIME.equals(downloadType)) {
             if (Constants.DHE_RELEASE_PATH_SEGMENT.equals(buildType)) {
                 result.versions.addAll(Arrays.asList("2020-01-08_0300","2020-02-04_1746","2020-03-05_1433"));
-            } else {
+            } else if (Constants.DHE_BETA_PATH_SEGMENT.equals(buildType)) {
+                result.versions.addAll(Arrays.asList("2020-06-09_1652"));
+            }
+            else {
                 result.versions.addAll(Arrays.asList("2020-04-01_1714","2020-04-01_1739","2020-04-01_1900"));
             }
         } else if (Constants.TOOLS.equals(downloadType)) {
@@ -43,11 +46,13 @@ public class MockBuildStore implements BuildStore {
     public BuildInfo getBuildInfo(String downloadType, String buildType, String version) {
         switch (version) {
             case "2020-01-08_0300":
-                return new BuildInfo("gradle.log", "openliberty-20.0.0.1.zip", 12503, 12503, "open-liberty.unitTest.results.zip", "20.0.0.1", "openliberty-javaee8-20.0.0.1.zip", "openliberty-webProfile8-20.0.0.1.zip","openliberty-microProfile3-20.0.0.1.zip");
+                return new BuildInfo("gradle.log", "openliberty-20.0.0.1.zip", 12503, 12503, "open-liberty.unitTest.results.zip", "20.0.0.1", "openliberty-javaee8-20.0.0.1.zip", "openliberty-webProfile8-20.0.0.1.zip","openliberty-microProfile3-20.0.0.1.zip", "openliberty-kernel-20.0.0.1.zip");
             case "2020-02-04_1746":
-                return new BuildInfo("gradle.log", "openliberty-20.0.0.2.zip", 12480, 12480, "open-liberty.unitTest.results.zip", "20.0.0.2", "openliberty-javaee8-20.0.0.2.zip", "openliberty-webProfile8-20.0.0.2.zip","openliberty-microProfile3-20.0.0.2.zip");
+                return new BuildInfo("gradle.log", "openliberty-20.0.0.2.zip", 12480, 12480, "open-liberty.unitTest.results.zip", "20.0.0.2", "openliberty-javaee8-20.0.0.2.zip", "openliberty-webProfile8-20.0.0.2.zip","openliberty-microProfile3-20.0.0.2.zip", "openliberty-kernel-20.0.0.2.zip");
             case "2020-03-05_1433":
-                return new BuildInfo("gradle.log", "openliberty-20.0.0.3.zip", 12976, 12976, "open-liberty.unitTest.results.zip", "20.0.0.3", "openliberty-javaee8-20.0.0.3.zip", "openliberty-webProfile8-20.0.0.3.zip","openliberty-microProfile3-20.0.0.3.zip");
+                return new BuildInfo("gradle.log", "openliberty-20.0.0.3.zip", 12976, 12976, "open-liberty.unitTest.results.zip", "20.0.0.3", "openliberty-javaee8-20.0.0.3.zip", "openliberty-webProfile8-20.0.0.3.zip","openliberty-microProfile3-20.0.0.3.zip", "openliberty-kernel-20.0.0.3.zip");
+            case "2020-06-09_1652":
+                return new BuildInfo("gradle.log", "openliberty-20.0.0.7-beta.zip", 13143, 13143, "open-liberty.unitTest.results.zip", "20.0.0.7", "openliberty-jakartaee9-20.0.0.7-beta.zip");
             case "2020-04-01_1714":
                 return new BuildInfo("gradle.log", "openliberty-all-20.0.0.4-cl200420200401-1714.zip", 13051, 13051, "open-liberty.unitTest.results.zip", "20.0.0.4-202004011949");
             case "2020-04-01_1739":

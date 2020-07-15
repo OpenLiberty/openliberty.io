@@ -13,18 +13,13 @@ var backgroundSizeAdjustment = 200;
 var twoColumnBreakpoint = 1170;
 var threeColumnBreakpoint = 1440;
 
-function inSingleColumnView(){
-    return(window.innerWidth <= twoColumnBreakpoint);
+// update twoColumnBreakpoint for the only single pane guide
+if (window.location.href.indexOf("cloud-ibm") > -1) {
+    var twoColumnBreakpoint = 1440;
 }
 
-function inMobile(){
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
-}
-function onAppleDevice(){
-    return (/(Mac|iPhone|iPod|iPad)/i.test(navigator.userAgent));
-}
-function onIE(){
-    return (/(MSIE|Trident\/|Edge\/)/i.test(navigator.userAgent));
+function inSingleColumnView(){
+    return(window.innerWidth <= twoColumnBreakpoint);
 }
 
 // Returns a function, that, as long as it continues to be invoked, will not
@@ -141,15 +136,13 @@ function isBackgroundBottomVisible() {
 function resizeGuideSections() {
         // Two column view or three column view.
     if (window.innerWidth > twoColumnBreakpoint) {
-        if(!onAppleDevice() && !onIE()){
-            var viewportHeight = window.innerHeight;
-            var headerHeight = $('header').height();
-            var sectionTitleHeight = $("#guide_content h2").first().height();
-            var newSectionHeight = viewportHeight - headerHeight - sectionTitleHeight;
-            $('.sect1:not(#guide_meta):not(#related-guides)').css({
-                    'min-height': newSectionHeight + 'px'
-            });
-        }        
+        var viewportHeight = window.innerHeight;
+        var headerHeight = $('header').height();
+        var sectionTitleHeight = $("#guide_content h2").first().height();
+        var newSectionHeight = viewportHeight - headerHeight - sectionTitleHeight;
+        $('.sect1:not(#guide_meta):not(#related-guides)').css({
+                'min-height': newSectionHeight + 'px'
+        });
         if(window.innerWidth >= threeColumnBreakpoint){
             // In three column view set the width of the #guide_column appropriately.
             if ($("#toc_column").hasClass('in') || $("#toc_column").hasClass('inline')) {
@@ -373,7 +366,7 @@ function accessContentsFromHash(hash, callback) {
         } else {
             // Multi-column View
             // Account for the sticky header. Display the targeted section below it.
-            var stickyHeaderAdjustment = $('.container-fluid').height() || 0;
+            var stickyHeaderAdjustment = $('#nav_bar').outerHeight() || 0;
             scrollSpot -= stickyHeaderAdjustment;
         }
         $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
@@ -421,7 +414,7 @@ function defaultToFirstPage() {
 }
 
 // Read tags from json file and add link to guides page with tag search
-function getTags() {
+function getTags(callback) {
     $.getJSON( "../../guides/guides-common/guide_tags.json", function(data) {
         $.each(data.guide_tags, function(i, tag) {
             // Check if tag is visible before adding it
@@ -434,6 +427,7 @@ function getTags() {
                 }
             }
         });
+        callback()
     });
 }
 
@@ -441,7 +435,10 @@ function getTags() {
 
 $(document).ready(function() {
 
-    getTags();
+    getTags(function() {
+        // If there are no tags for the guide, hide the tags title
+        $("#tags_container:empty").prev().hide();
+    });
 
     $("#feedback_ratings img").on('mouseenter', function(event) {
       $("#feedback_ratings img").not($(this)).css('opacity', '.50');
@@ -453,6 +450,8 @@ $(document).ready(function() {
         handleFloatingTOCAccordion();
         resizeGuideSections();
         handleFloatingCodeColumn();
+        $('#copy_to_clipboard').hide();
+        $('#guide_section_copied_confirmation').hide();
     });
 
     $(window).on('scroll', function() {        
@@ -682,8 +681,5 @@ $(window).on("load", function(){
         if(location.hash){
             handleFloatingTableOfContent();
         }
-
-        // If there are no tags for the guide, hide the tag title
-        $("#tags_container:empty").prev().hide();
     });
  })
