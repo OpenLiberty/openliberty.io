@@ -123,6 +123,7 @@ public class BuildInfo {
         if (driverLocation != null) {
             driverLocation = prefix + driverLocation;
         }
+
         if (buildLog != null) {
             buildLog = prefix + buildLog;
         }
@@ -130,6 +131,7 @@ public class BuildInfo {
         if (testLog != null) {
             testLog = prefix + testLog;
         }
+
         // This is historic and not ideal. Ideally the package Locations would be an Object
         // but at some point it was an array of name = value and this requires rework on the front
         // end, it isn't a compatible change so for now stick with it. DHE stores a simple list
