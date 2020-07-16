@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020 IBM Corporation and others.
+ * Copyright (c) 2018 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,8 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-
-@font-face {
+ @font-face {
     font-family: BunueloLight;
     src: url("../font/BunueloCleanPro-Light.woff");
 }
@@ -25,6 +24,7 @@ body {
     font-family:  "Asap", Trebuchet MS, Helvetica, Arial;
     color: #24243B;
 }
+
 
 /* HEADERS */
 
@@ -53,9 +53,8 @@ h4 {
 /* PARAGRAPHS */
 
 p {
-    font-size: 14px;
+    font-size: 16px;
 }
-
 
 
 /* BOLD */
@@ -64,6 +63,15 @@ b {
     font-weight: 500;
 }
 
+/* BORDERS */
+
+.imageblock.img_border_light img {
+    border: 1px solid #f3f3f3; 
+}
+
+.imageblock.img_border_dark img {
+    border: 1px solid #dcdcdc;
+}
 
 /* LISTS */
 
@@ -217,13 +225,13 @@ a {
 
 .link_blue_right_arrow {
     padding-right: 100px;
-    background-image: url('/img/arrow_medblue.svg');
+    background-image: url('../../_/img/arrow_medblue.svg');
     background-repeat: no-repeat;
     background-position: right 55px center;
 }
 
 .link_blue_right_arrow:hover {
-    background-image: url('/img/arrow_yellowgreen.svg');
+    background-image: url('../../_/img/arrow_yellowgreen.svg');
     background-position: right 35px center;
 }
 
@@ -257,7 +265,7 @@ a {
 }
 
 .link_green_download_arrow .arrow {
-    background-image: url('/img/about_download_arrow_only.svg');
+    background-image: url('../../_/img/about_download_arrow_only.svg');
     background-repeat: no-repeat;
     width: 16px;
     height: 28px;
@@ -268,12 +276,12 @@ a {
 }
 
 .link_green_download_arrow:hover .arrow {
-    background-image: url('/img/about_download_arrow_only_hover.svg');
+    background-image: url('../../_/img/about_download_arrow_only_hover.svg');
     transform: translateY(6px);
 }
 
 .link_green_download_arrow .line {
-    background-image: url('/img/about_download_line.svg');
+    background-image: url('../../_/img/about_download_line.svg');
     background-repeat: no-repeat;
     width: 27px;
     height: 4px;
@@ -284,20 +292,20 @@ a {
 }
 
 .link_green_download_arrow:hover .line {
-    background-image: url('/img/about_download_line_hover.svg');
+    background-image: url('../../_/img/about_download_line_hover.svg');
     transform: translateY(-1px);
 }
 
 
 .link_green_right_arrow {
     padding-right: 100px;
-    background-image: url('/img/arrow_lightgreen.svg');
+    background-image: url('../../_/img/arrow_lightgreen.svg');
     background-repeat: no-repeat;
     background-position: right 50px center;
 }
 
 .link_green_right_arrow:hover {
-    background-image: url('/img/arrow_darkgreen.svg');
+    background-image: url('../../_/img/arrow_darkgreen.svg');
     background-position: right 30px center;
 }
 
@@ -369,14 +377,17 @@ a {
 
 }
 
+
+
 /* FOOTER */
+
 footer {
     clear: both;
     margin-top: 50px;
 }
 
 #footer_gray_background {
-    background: #F7F8F8;
+    color: #6A7070;
 }
 
 .footer_container {
@@ -388,7 +399,7 @@ footer {
     #footer_open_liberty {
         width: 150px;
         padding: 25px 25px 10px 25px;
-        background-image: url(/img/small_logo_dark_gray.svg);
+        background-image: url(../../_/img/small_logo_dark_gray.svg);
         background-repeat: no-repeat;
         transition: background-image .2s;
         float: left;
@@ -404,7 +415,7 @@ footer {
     #footer_project {
         font-weight: 500;
         font-size: 11px;
-        color: darken(#6F7878, 5%); // Darkened to pass DAP
+        color: #6A7070;
         letter-spacing: 0;
         float: left;
         clear: left;
@@ -424,17 +435,10 @@ footer {
         background-size: cover;
     }
 
-    #footer_groupsio_link {
-        background-image: url("../../_/img/Footer_GroupsIO.svg");
+    #footer_github_link {
+        background-image: url("../../_/img/Footer_GitCat.svg");
         &:hover {
-            background-image: url("../../_/img/Footer_GroupsIO_Hover.svg");
-        }
-    }
-
-    #footer_stackoverflow_link {
-        background-image: url("../../_/img/Footer_StackO.svg");
-        &:hover {
-            background-image: url("../../_/img/Footer_StackO_Hover.svg");
+            background-image: url("../../_/img/Footer_GitCat_Hover.svg");
         }
     }
 
@@ -445,10 +449,17 @@ footer {
         }
     }
 
-    #footer_github_link {
-        background-image: url("../../_/img/Footer_GitCat.svg");
+    #footer_stackoverflow_link {
+        background-image: url("../../_/img/Footer_StackO.svg");
         &:hover {
-            background-image: url("../../_/img/Footer_GitCat_Hover.svg");
+            background-image: url("../../_/img/Footer_StackO_Hover.svg");
+        }
+    }
+
+    #footer_groupsio_link {
+        background-image: url("../../_/img/Footer_GroupsIO.svg");
+        &:hover {
+            background-image: url("../../_/img/Footer_GroupsIO_Hover.svg");
         }
     }
 
@@ -604,3 +615,82 @@ footer {
 .position_relative {
     position: relative;
 }
+
+/* TABLE CLASSES */
+.valign-top {
+    vertical-align: top;
+}
+.valign-middle {
+    vertical-align: middle;
+}
+.valign-bottom {
+    vertical-align: bottom;
+}
+
+.halign-left {
+    text-align: left;
+}
+.halign-center {
+    text-align: center;
+}
+.halign-right {
+    text-align: right;
+}
+
+/* Callouts */
+.colist.arabic {
+    padding-left: 5px;
+
+    & table, & caption, & tbody, & tfoot, & thead, & tr, & th, & td {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font-size: 100%;
+        vertical-align: baseline;
+        text-align: left;
+        background: transparent;
+        box-shadow: none;
+    }
+    & tr {
+        padding: 13px 0;
+        & td:first-child {
+            width: 30px;
+            &:before {
+                /* Add parenthesis before the number of each row */
+                content: "( ";
+            }  
+            &:after {
+                /* Add parenthesis after the number of each row */
+                content: " )";
+            }            
+        }
+    }
+}
+
+/* Code copy button */
+#copied_confirmation {
+    position: absolute;
+    display: none;
+    font-size: 11px;
+    color: #5e6b8d;
+    line-height: 11px;
+}
+
+#copy_to_clipboard {	
+    position: absolute;	
+    display: none;	
+    background-color: #eeeff3;	
+    width: 38px;	
+    height: 38px;	
+    padding: 8.5px 10px;
+
+    &:hover {	
+        border: solid 1px #b2bbd1;
+        padding: 7.5px 9px;
+        cursor: pointer;
+    }	
+    &:active {	
+        border: solid 1px #5e6b8d;	
+    }
+}	
