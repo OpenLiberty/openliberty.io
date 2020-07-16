@@ -268,7 +268,7 @@ $(document).ready(function() {
         var isTOCPositionFixed = ($('#toc_column').css('position') == 'fixed');
         var isAccordionPositionFixed = ($('#tablet_toc_accordion_container').css('position') == 'fixed');
         var accordionHeight = $('#tablet_toc_accordion_container').outerHeight();
-        var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('#nav_bar').outerHeight(true);
+        var navBannerBottom = $('#guides_information_container').outerHeight(true);
         
         // fix TOC height to account for footer and make it scrollable if necessary
         if (isDesktopView()) {
@@ -277,6 +277,16 @@ $(document).ready(function() {
 
         // make TOC fixed once you scroll past header
         if ($(this).scrollTop() > navBannerBottom){
+            console.log("scrolled past nav banner bottom");
+
+            if ($('#nav_bar').hasClass("fixed_top")) {
+                console.log("nav has class fixed_top");
+                $("#toc_column").css("padding-top", "60px");
+            }
+            else {
+                console.log("nav doesn't have class");
+                // $("#toc_column").css("padding-top", "0px");
+            }
             if (isDesktopView()) {
                 if (!isTOCPositionFixed) {
                     $('#toc_column').css({'position': 'fixed', 'top': '0px'});
@@ -296,6 +306,8 @@ $(document).ready(function() {
 
         // make TOC static once you scroll above header
         if ($(this).scrollTop() <= navBannerBottom){
+            $("#toc_column").css("padding-top", "0px");
+
             if (isDesktopView()) {
                 if (isTOCPositionFixed){
                     $('#toc_column').css({'position': 'static', 'top': '0px'});
