@@ -835,7 +835,7 @@ $(document).ready(function() {
 $(window).on("load", function(){
     $.ready.then(function(){
        // Both ready and loaded
-        resizeGuideSections();
+        resizeGuideSections(accessContentsFromHash);
 
         if (location.hash){
             var hash = location.hash;
