@@ -106,11 +106,10 @@ html.is-clipped--nav {
   font-size: 14px;
   font-family: BunueloBold;
   padding: 20px 19px 10px 19px;
-  margin-right: 10px;
+  margin: 0;
   color: #313653;
   letter-spacing: 0.2px;
   line-height: 26px;
-  border-bottom: 1px solid #D6D9E4;
 }
 
 .nav-menu a {
@@ -123,12 +122,12 @@ html.is-clipped--nav {
 
 /* Styling for the first level nav list */
 .nav-menu > .nav-list {
-  margin-bottom: 0.5rem;
-  height: calc(100vh - 184.6px);
+  height: calc(100vh - 187.6px);
   overflow: auto;
   padding-bottom: 50px;
   padding-left: 0;
   padding-right: 10px;
+  margin: 0 0 0.5rem 0;
 
   @media screen and (min-width: 1024px) {
     padding-bottom: 20px;
@@ -140,8 +139,12 @@ html.is-clipped--nav {
     color: #313653;
     letter-spacing: 0.2px;
     line-height: 26px;
-    border-bottom: 1px solid #D6D9E4;
+    border-bottom: 2px solid #d4d7e3;
     padding-left: var(--TOC-indention-first-level);
+
+    &:first-of-type {
+      border-top: 2px solid #d4d7e3;
+    }
 
     & > .nav-text {
       font-family: BunueloBold;
@@ -157,25 +160,18 @@ html.is-clipped--nav {
 .nav-item {
   list-style: none;
   color: #5D6A8E;
-  line-height: 18px;
-  margin: .25em 0;
+  line-height: 26px;
 
   & > a, & > span {
-    padding-top: 3px;
-    padding-bottom: 3px;
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
-}
-
-/* adds some breathing room below a nested list */
-.nav-item-toggle ~ .nav-list {
-  padding-bottom: 0.125rem;
 }
 
 /* matches list without a title */
 .nav-item[data-depth="0"] > .nav-list:first-child {
   display: block;
   margin: 0;
-  padding-bottom: 39px;
 }
 
 .nav-item:not(.is-active) > .nav-list {
@@ -268,7 +264,6 @@ html.is-clipped--nav {
   left: 0;
   max-height: calc(50% + var(--drawer-height));
   padding-top: 20px;
-  margin-bottom: 10px;
 }
 
 .nav-panel-explore .context {
@@ -295,7 +290,8 @@ html.is-clipped--nav {
   }
 
   & .version {
-    font-family: Asap-Medium;
+    font-family: Asap;
+    font-weight: 500;
     font-size: 11px;
     color: #5D6A8E;
     letter-spacing: 0;
@@ -396,7 +392,8 @@ html.is-clipped--nav {
 
 .nav-panel-explore .component .version a {
   font-size: 11px;
-  font-family: Asap-Medium;
+  font-family: Asap;
+  font-weight: 500;
   color: darken(#5d6a8e, 5%); // Darkened to pass DAP
   white-space: nowrap;
   display: inline-block;
