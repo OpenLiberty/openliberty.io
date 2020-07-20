@@ -133,7 +133,7 @@ function isBackgroundBottomVisible() {
 // Resize the guide sections so that there is clear separation between each
 // section and the code column transitions better by making the section height
 // in two and three column view at least as tall as the viewport.
-function resizeGuideSections() {
+function resizeGuideSections(callback) {
         // Two column view or three column view.
     if (window.innerWidth > twoColumnBreakpoint) {
         var viewportHeight = window.innerHeight;
@@ -159,6 +159,12 @@ function resizeGuideSections() {
             $('.sect1:not(#guide_meta):not(#related-guides)').css({
                 'min-height': 'initial'
         });
+    }
+
+    if (callback) {
+        if (location.hash){
+            callback(location.hash);
+        }
     }
 }
 
