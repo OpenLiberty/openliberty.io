@@ -1,0 +1,406 @@
+/*******************************************************************************
+ * Copyright (c) 2020 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+ 
+ .nav-container {
+  position: fixed;
+  top: calc(var(--navbar-height) + var(--toolbar-height));
+  left: 0;
+  width: 100%;
+  font-size: calc(17 / var(--rem-base) * 1rem);
+  z-index: var(--z-index-nav);
+  visibility: hidden;
+}
+
+@media screen and (min-width: 769px) {
+  .nav-container {
+    width: var(--nav-width);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .nav-container {
+    padding-top: 20px;
+    font-size: calc(15.5 / var(--rem-base) * 1rem);
+    flex: none;
+    position: relative;
+    top: calc(var(--navbar-height));
+    visibility: visible;
+  }
+}
+
+.nav-container.is-active {
+  visibility: visible;
+}
+
+.nav {
+  background: var(--nav-background);
+  position: relative;
+}
+
+@media screen and (min-width: 769px) {
+  .nav {
+    top: 0;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .nav {
+    box-shadow: none;
+    position: sticky;
+    top: 62px;
+  }
+}
+
+.nav .panels {
+  display: flex;
+  flex-direction: column;
+  height: inherit;
+}
+
+html.is-clipped--nav {
+  overflow-y: hidden;
+}
+
+.nav-panel-menu {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  height: var(--nav-panel-height);
+  top: var(--drawer-height);
+}
+
+@media screen and (min-width: 1024px) {
+  .nav-panel-menu {
+    height: calc(var(--nav-panel-height--desktop));
+  }
+}
+
+.nav-panel-menu::-webkit-scrollbar {
+  width: 0.25rem;
+}
+
+.nav-panel-menu::-webkit-scrollbar-thumb {
+  background-color: var(--nav-border-color);
+}
+
+.nav-menu {
+  flex-grow: 1;
+  min-height: 0;
+  width: 100%;
+  line-height: var(--nav-line-height);
+  position: relative;
+  overflow: hidden;
+  padding: 0; // Needs to be 0 so the orange active background is full width.
+}
+
+.nav-panel-menu h3.title {
+  color: var(--nav-heading-font-color);
+  font-size: 14px;
+  font-family: BunueloBold;
+  text-transform: uppercase;
+  padding: 20px 19px 10px 19px;
+  margin: 0;
+  color: #313653;
+  letter-spacing: 0.2px;
+  line-height: 26px;
+
+  &:hover {
+    color: #f4914d;
+  }
+}
+
+.nav-menu a {
+  color: inherit;
+}
+
+.nav-list {
+  padding-left: var(--TOC-indention);
+}
+
+/* Styling for the first level nav list */
+.nav-menu > .nav-list {
+  height: calc(100vh - 187.6px);
+  overflow: auto;
+  padding-bottom: 50px;
+  padding-left: 0;
+  padding-right: 10px;
+  margin: 0 0 0.5rem 0;
+
+  @media screen and (min-width: 1024px) {
+    padding-bottom: 20px;
+  }
+
+  /* First level TOC rows */
+  & > .nav-item {
+    font-size: 14px;
+    color: #313653;
+    letter-spacing: 0.2px;
+    line-height: 26px;
+    border-bottom: 2px solid #d4d7e3;
+    padding-left: var(--TOC-indention-first-level);
+
+    &:first-of-type {
+      border-top: 2px solid #d4d7e3;
+    }
+
+    & > .nav-text {
+      font-family: BunueloBold;
+      text-transform: uppercase;
+    }
+
+    /* sub TOC rows */
+    & .nav-item {
+      list-style: none;
+    }
+  }
+}
+
+.nav-item {
+  list-style: none;
+  color: #5D6A8E;
+  line-height: 26px;
+
+  & > a, & > span {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+}
+
+/* matches list without a title */
+.nav-item[data-depth="0"] > .nav-list:first-child {
+  display: block;
+  margin: 0;
+}
+
+.nav-item:not(.is-active) > .nav-list {
+  display: none;
+}
+
+.nav-item {
+  & > .nav-item-toggle {
+    vertical-align: middle;
+    background: transparent url(../img/chevron.svg) no-repeat center / 50%;
+    transform: rotate(270deg);
+    border: none;
+    outline: none;
+    line-height: inherit;    
+    height: var(--TOC-toggle-icon-size);
+    width: var(--TOC-toggle-icon-size);
+    margin-left: -23px;
+    margin-top: -3px;
+  }
+  & > span, & > a {
+    &:hover{
+      color: #f4914d;
+      cursor: pointer;
+    }
+  }
+}
+
+.nav-item.is-active {  
+  & > .nav-item-toggle {
+    background: transparent url(../img/chevron.svg) no-repeat center / 50%;
+    transform: rotate(0deg); // Return to normal
+  }
+  & > span, & > a {
+    color: #313653;
+    &:hover{
+      color: #f4914d;
+    }
+  }
+}
+
+.is-current-page {
+  & > span, & > a {
+    display: block;
+    border-left: var(--TOC-orange-border-width) solid #f4914d;
+    background: #fdf2ea;
+    margin-left: calc(-1 * var(--TOC-indention-first-level));
+    padding-left: calc(var(--TOC-indention-first-level) - var(--TOC-orange-border-width));    
+  }
+  &[data-depth="1"] {
+    & > span, & > a {
+      margin-left: calc(-1 * (var(--TOC-indention-first-level) + var(--TOC-indention)));
+      padding-left: calc(var(--TOC-indention-first-level) + var(--TOC-indention) - var(--TOC-orange-border-width));
+    }    
+  }
+  &[data-depth="2"] {
+    & > span, & > a {
+      margin-left: calc(-1 * (var(--TOC-indention-first-level) + 2 * var(--TOC-indention)));
+      padding-left: calc(var(--TOC-indention-first-level) + 2 * var(--TOC-indention) - var(--TOC-orange-border-width));
+    } 
+  }
+  &[data-depth="3"] {
+    & > span, & > a {
+      margin-left: calc(-1 * (var(--TOC-indention-first-level) + 3 * var(--TOC-indention)));
+      padding-left: calc(var(--TOC-indention-first-level) + 3 * var(--TOC-indention) - var(--TOC-orange-border-width));
+    } 
+  }
+  &[data-depth="4"] {
+    & > span, & > a {
+      margin-left: calc(-1 * (var(--TOC-indention-first-level) + 4 * var(--TOC-indention)));
+      padding-left: calc(var(--TOC-indention-first-level) + 4 * var(--TOC-indention) - var(--TOC-orange-border-width));
+    } 
+  }
+}
+
+.is-current-page > .nav-link,
+.is-current-page > .nav-text {
+  font-weight: var(--body-font-weight-bold);
+}
+
+.nav-link:focus, .nav-text:focus {
+  outline: none;
+}
+
+.nav-panel-explore {
+  background: var(--nav-background);
+  display: flex;
+  flex-direction: column;
+  right: 0;
+  top: 0;
+  left: 0;
+  max-height: calc(50% + var(--drawer-height));
+  padding-top: 20px;
+}
+
+.nav-panel-explore .context {
+  height: 32px;
+  width: 148px;
+  font-size: 11px;
+  line-height: 11px;
+  flex-shrink: 0;
+  color: var(--nav-muted-color);
+  box-shadow: 0 -1px 0 var(--nav-panel-divider-color);
+  padding:  8px .25rem 0px .5rem;
+  margin-left: 19px;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  color: #1A1B31;
+  border: 2px solid rgba(170, 211, 75, .56);
+  border-radius: 7px;
+
+  & .title {
+    font-size: 14px;
+    font-family: BunueloBold;
+    margin-right: .25rem;
+  }
+
+  & .version {
+    font-family: Asap;
+    font-weight: 500;
+    font-size: 11px;
+    color: #5D6A8E;
+    letter-spacing: 0;
+
+    &:after {
+      content: "";
+      float: right;
+      width: 20px;
+      height: 20px;
+      background-image: url(../img/chevron.svg);
+      background-repeat: no-repeat;
+      background-position: right .5rem top 0;
+      background-size: 12px;
+    }        
+  }
+}
+
+.nav-panel-explore .components {
+  line-height: 11px;
+  flex-grow: 1;
+  box-shadow: inset 0 1px 5px var(--nav-panel-divider-color);
+  background: var(--nav-secondary-background);
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  display: block;
+
+  position: absolute;
+  width: 148px;
+  margin-left: 19px;
+  border: 2px solid rgba(170,211,75,.56);
+  border-radius: 7px;
+  border-top: none;
+  z-index: 2;
+}
+
+.nav-panel-explore:not(.is-active) .components {
+  display: none;
+}
+
+.nav-panel-explore .component {
+  display: block;
+}
+
+.nav-panel-explore .component + .component {
+  margin-top: 0.5rem;
+}
+
+.nav-panel-explore .versions {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding-left: 0;
+}
+
+.nav-panel-explore .component {
+  & .title {
+    font-family: BunueloBold;
+    font-size: 14px;
+    margin-right: .25rem;
+  }
+
+  & .version {
+    display: block;
+    line-height: 11px;
+    padding: 8px .25rem 8px .5rem;
+    margin: 0;
+    height: 32px;
+    width: 100%;
+
+    &.is-current {
+      background-color: rgba(170,211,75,.56)
+    }
+
+    &:first-child{
+      /* Dropdown caret */
+      &:after {
+        content: "";
+        float: right;
+        width: 20px;
+        height: 20px;
+        background-image: url(../img/chevron.svg);
+        background-repeat: no-repeat;
+        background-position: right .5rem top 100%;
+        background-size: 12px;
+        transform: scaleY(-1);
+        -moz-transform: scaleY(-1);
+        -o-transform: scaleY(-1);
+        -webkit-transform: scaleY(-1);
+      }      
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.nav-panel-explore .component .version a {
+  font-size: 11px;
+  font-family: Asap;
+  font-weight: 500;
+  color: darken(#5d6a8e, 5%); // Darkened to pass DAP
+  white-space: nowrap;
+  display: inline-block;
+}

@@ -1,0 +1,29 @@
+{{!-- Add additional meta tags here --}}
+<meta name="robots" content="noindex">
+
+{{#if page.attributes.seo-description }} 
+<meta name="description" content="{{page.attributes.seo-description}}">
+{{else if page.attributes.description }}
+<meta name="description" content="{{page.attributes.description}}">
+{{ else }}
+<meta name="description" content="{{site.description}}">
+{{/if}}
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@OpenLibertyIO" />
+
+{{#if page.attributes.seo-title }} 
+<meta name="twitter:title" content="{{ page.attributes.seo-title }}" />
+{{ else }}
+<meta name="twitter:title" content="{{ site.title }}" />
+{{/if}}
+
+{{#if page.attributes.seo-description }} 
+<meta name="twitter:description" content="{{ page.attributes.seo-description }}" />
+{{else if page.attributes.description }}
+<meta name="twitter:description" content="{{ page.attributes.description }}" />
+{{ else }}
+<meta name="twitter:description" content="{{ site.description }}" />
+{{/if}}
+
+<meta name="twitter:image" content="https://openliberty.io/img/twitter_card.jpg" />

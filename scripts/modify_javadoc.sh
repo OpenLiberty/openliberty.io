@@ -1,6 +1,6 @@
 modifyStylesheet () {
     # Append extra javadoc styling located in the css direcctory to the stylesheet.css located in the javadoc subdirectories
-    cat src/main/content/_assets/css/javadoc-extended-stylesheet.css >> "$1"
+    cat src/main/content/antora_ui/src/css/javadoc-extended-stylesheet.css >> "$1"
 
     # insert extra import to the beginning of the file
     sed '1 i\
@@ -18,5 +18,5 @@ modifySearch () {
 export -f modifyStylesheet
 export -f modifySearch
 
-find src/main/content/docs/ref/javadocs -name stylesheet.css -exec bash -c 'modifyStylesheet {}' \;
-find src/main/content/docs/ref/javadocs -name search.js  -exec bash -c 'modifySearch {}' \;
+find target/jekyll-webapp/docs -name stylesheet.css -exec bash -c 'modifyStylesheet {}' \;
+find target/jekyll-webapp/docs -name search.js  -exec bash -c 'modifySearch {}' \;

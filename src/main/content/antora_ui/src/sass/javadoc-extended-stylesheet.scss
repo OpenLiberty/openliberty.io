@@ -1,0 +1,398 @@
+/*******************************************************************************
+ * Copyright (c) 2020 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+/* 
+ * Since this is a separate section to override the existing or adding new stylings to javadoc, it is sometimes
+ * necessary to put in existing styling again here so that the intended styling would not be overriden by the ones 
+ * provided in this section.
+ *
+ * A combined css file will be created using the original stylesheet.css + this css with the extended styling
+ * appended to the end of the combined file.
+ */
+
+body {
+    background-color:white;
+    font-family: Asap, 'DejaVu Sans', Arial, Helvetica, sans-serif;
+}
+
+#javadoc_container {
+    height: 100%;
+}
+
+a[target="packageFrame"],
+a[target="classFrame"] {
+    font-size:14px;
+    color:#5d6a8e;
+    letter-spacing:0;
+    line-height:24px;
+}
+
+h1 {
+    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
+}
+
+h2 {
+    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+}
+
+th[scope='col'] {
+    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+    font-size: 11px; 
+}
+
+th > a {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.bar a, .bar a:link, .bar a:visited, .bar a:active {
+    color:black;
+    text-transform: none;    
+}
+
+.bar {    
+    border-top: 1px solid #D4D7E3;
+    padding: 20px 0px 0px 8px;
+	margin: 20px 10px 5px 0px;
+    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+    font-size: 14px;
+    color:#313653;
+    text-transform: uppercase;
+	background-color: white; 
+}
+
+.topNav {
+    background-color:#f1f4fe;
+    color:#5E6B8D;
+    height: 52px;
+    font-size:16px;
+	padding-top: 0px;
+}
+
+/* open a standalone with no frame to check the top and bottom: All Classes is displayed but nothing else */
+.bottomNav {
+    display:none;
+}
+
+.subNav {
+    background-color: unset;
+    float: unset;
+    overflow: unset;
+    width: unset;
+    font-size: unset;
+}
+
+/* this is used in the header of the right frame too - Start of Top navbar */
+.subNav .navList {
+    display: none;
+}
+
+.subNav .navList:nth-of-type(2) {
+    display: none;
+}
+
+.subNav div {
+    display: none; /* Hide the Summary subnav filters from javadoc */
+}
+
+/* used in Start of Top NavBar with display: none */
+ul.navList, ul.subNavList {
+    display: table;
+    height: 100%;
+}
+
+/* All Classes at the top in a standalone with no frame */
+ul.navList li{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0px 22px;
+    font-size: 16px;    
+    font-weight: 500;
+    float: none;
+}
+
+/* doesn't seem to pick up this on focus */
+.clickableNavListTab, ul.navList li:focus{
+    background-color: #D6D9E4;
+    color: #253441;
+}
+
+.clickableNavListTab:hover{
+    cursor: pointer;
+}
+
+ul.navList li > a:hover {
+    color: inherit;
+}
+
+ul.navListSearch {
+    margin: 5px 14px 0 0;
+}
+
+ul.navListSearch li span {
+    display: none;
+}
+
+.topNav a:link, .topNav a:active, .topNav a:visited, .bottomNav a:link, .bottomNav a:active, .bottomNav a:visited {
+    color:#5E6B8D;
+    font-weight: 500;
+}
+
+.navBarCell1Rev {
+    background-color:#D6D9E4;
+}
+
+.indexNav {
+    display:none;
+}
+
+ul.blockList ul.blockList ul.blockList li.blockList h3 {
+    background-color:#C8CCD8;
+}
+
+.contentContainer, .sourceContainer, .classUseContainer, .serializedFormContainer, .constantValuesContainer {
+    padding:10px 0px;
+}
+
+.indexContainer {
+    margin: 0px;
+}
+
+.indexContainer h2,
+.indexContainer h2[title="Packages"] {
+    padding: 0 0 0 8px;
+    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+    text-transform: uppercase;
+    font-size: 14px;
+    color:#313653;
+}
+
+.indexContainer h2[title="Packages"] {
+    padding-top: 30px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+
+.indexContainer ul li {
+    font-weight: 300;
+    color: #5D6A8E;
+    font-size: 14px;
+    min-height: 30px;
+    border-left: 8px solid transparent;
+    padding-left: 19px;
+	padding-top: 0px;
+    word-wrap: break-word;
+
+    &.selected, &:hover, &:focus {
+        background:#fdf2ea;
+        border-left: 8px solid #f4914d; 
+        font-weight: 500;
+    }
+}
+
+.overviewSummary tr:nth-child(1):not(.altColor) {
+    font-family:BunueloBold, Arial Narrow, Helvetica, Arial;
+}
+
+.overviewSummary caption span, .memberSummary caption span, .typeSummary caption span,
+.useSummary caption span, .constantsSummary caption span, .deprecatedSummary caption span,
+.requiresSummary caption span, .packagesSummary caption span, .providesSummary caption span,
+.usesSummary caption span {
+    background-color:#D6D9E4;
+    font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
+    font-size: 35px;
+	height: auto;
+}
+
+.memberSummary caption span.activeTableTab span, .packagesSummary caption span.activeTableTab span {
+    background-color:#D6D9E4;
+	height: auto;
+}
+
+.memberSummary caption span.tableTab span, .packagesSummary caption span.tableTab span {
+	height: auto;
+}
+
+.overviewSummary .tabEnd, .memberSummary .tabEnd, .typeSummary .tabEnd,
+.useSummary .tabEnd, .constantsSummary .tabEnd, .deprecatedSummary .tabEnd,
+.requiresSummary .tabEnd, .packagesSummary .tabEnd, .providesSummary .tabEnd, .usesSummary .tabEnd,
+.memberSummary .activeTableTab .tabEnd, .packagesSummary .activeTableTab .tabEnd {
+    background-color:#D6D9E4;
+}
+
+th.colFirst, th.colSecond, th.colLast, th.colConstructorName, .useSummary th, .constantsSummary th, .packagesSummary th,
+td.colFirst, td.colSecond, td.colLast, .useSummary td, .constantsSummary td {
+	vertical-align: middle;  /* override top in the original css */
+}
+
+th.colFirst, th.colSecond, th.colLast, th.colConstructorName, .constantsSummary th, .packagesSummary th {
+    background:#C8CCD8;
+    padding: 0px 3px 0px 7px;
+} 
+td.colFirst, th.colFirst {
+    font-size: 14px;
+}
+
+/* Has to provide the same font-size here as the original otherwise th[scope='col'] will override the font-size */
+td.colSecond, th.colSecond, td.colLast, th.colConstructorName, th.colLast {
+    font-size:13px;
+}
+
+.constantsSummary th, .packagesSummary th {
+    font-size:13px;
+}
+
+.providesSummary th.colFirst, .providesSummary th.colLast, .providesSummary td.colFirst,
+.providesSummary td.colLast {
+    font-size:13px;
+}
+
+.overviewSummary td.colFirst, .overviewSummary th.colFirst,
+.requiresSummary td.colFirst, .requiresSummary th.colFirst,
+.packagesSummary td.colFirst, .packagesSummary td.colSecond, .packagesSummary th.colFirst, .packagesSummary th,
+.usesSummary td.colFirst, .usesSummary th.colFirst,
+.providesSummary td.colFirst, .providesSummary th.colFirst,
+.memberSummary td.colFirst, .memberSummary th.colFirst,
+.memberSummary td.colSecond, .memberSummary th.colSecond, .memberSummary th.colConstructorName,
+.typeSummary td.colFirst {
+    height: 45px;
+    padding-left: 49px;
+	vertical-align: middle;
+}
+
+/* has to copy over this styling from the original css, otherwise th.colFIrst background is picked up */
+.altColor, .altColor th {
+    background-color:#FFFFFF;
+}
+.rowColor, .rowColor th {
+    background-color:#EEEFF3;
+}
+
+div.block {
+    font-family: Asap, 'DejaVu Serif', Georgia, "Times New Roman", Times, serif;
+}
+
+.leftTop {
+    height:45%;
+    transition: height 0.5s;
+	border-right: none;
+    border-bottom: none;
+}
+
+.leftBottom {
+    height:55%;
+    transition: height 0.5s;
+	border-right: none;
+    border-top: none;
+}
+
+.rightContainer {
+    border-left: none;
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(255,255,255,1);
+    z-index: 1;
+    margin-top: 0px;  /* get rid of the user agent stylesheet margin temporarily */
+}
+
+.sticky::before {
+    content: ' ';
+    position: absolute;
+    top: 20px;  /* This value will be replaced with a calculated value during scrolling */
+    left: 0px;
+    right: 00px;
+    bottom: 0px;
+    border-top: 0px solid transparent; /* This value will be replaced with the same border-top from the frame during scrolling */
+    z-index: -1;
+}
+
+/*
+  Mobile styles for the 3 frames
+*/
+/* @media only screen and (max-device-width: 767px) {    */
+@media (max-width: 767.98px) { 
+    .overviewSummary td.colFirst, .overviewSummary th.colFirst, .requiresSummary td.colFirst, .requiresSummary th.colFirst, .packagesSummary td.colFirst, .packagesSummary td.colSecond, .packagesSummary th.colFirst, .packagesSummary th, .usesSummary td.colFirst, .usesSummary th.colFirst, .providesSummary td.colFirst, .providesSummary th.colFirst, .memberSummary td.colFirst, .memberSummary th.colFirst, .memberSummary td.colSecond, .memberSummary th.colSecond, .memberSummary th.colConstructorName, .typeSummary td.colFirst{
+        padding-left: 7px;
+    }
+
+    .leftContainer, .leftTop, .leftBottom {
+        display: none;
+    }
+
+   .rightContainer {
+        position: relative;      
+        left: 0;  
+   } 
+
+   .topNav {
+        overflow-x: auto;
+   } 
+   #navbar\.top, #navbar\.top\.firstrow {
+    display: none;
+    }
+}
+
+/* Allow scrolling in mobile view */
+@media only screen and (max-device-width: 767.98px){
+    .rightContainer{
+        overflow: auto;
+    }    
+    
+}
+
+ul.ui-autocomplete {
+    font-family: Asap;
+}
+
+#search {
+    background-position:2px 5px;
+    padding: 5px 5px 5px 20px;
+}
+
+#reset {
+    left:-5px;
+}
+
+.leftFrameHeaderStyling {
+    border-top: 3px solid rgb(217, 217, 217);
+    padding-top: 30px;
+}
+
+/* Custom expand/collapse button */
+div.toggle {
+    width: 11px;
+    margin-right: 10px;
+    margin-top: -1px;
+    float: left;
+}
+
+/* Minus toggle svg */
+div.toggle[collapsed='false'] {
+    margin-top: -5px;    
+}
+
+div.toggle:hover {
+    cursor: pointer;
+}
+
+input[type='checkbox'] {
+    display: none;    
+}
+
+label {
+    cursor: pointer;
+    float: left !important; /* Overrides the inline float left */
+}

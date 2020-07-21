@@ -1,0 +1,21 @@
+<div class="toolbar" role="navigation" aria-label="Toolbar for this doc">
+{{> nav-toggle}}
+  {{#if site.homeUrl}}
+  <a href="{{relativize site.homeUrl}}" class="home-link{{#if page.home}} is-current{{/if}}"></a>
+  {{/if}}
+{{> breadcrumbs}}
+{{#if (and page.editUrl (not page.origin.private))}}
+  {{#unless (eq page.layout 'javadoc') }}
+  {{#unless (eq page.layout 'feature') }}
+  {{#unless (eq page.layout 'config') }}
+    <div id="github_link">
+      <img id="docs_github_logo" src="/img/docs_github_logo.svg" alt="GitHub logo">
+      <a id="open_issue_link" href="https://github.com/OpenLiberty/docs/issues/new" target="_blank">Open Issue</a> 
+      | 
+      <a id="edit_topic_link" href="{{page.editUrl}}" target="_blank" rel="noopener">Edit Topic</a>
+    </div>
+  {{/unless}}
+  {{/unless}}
+  {{/unless}}
+{{/if}}
+</div>
