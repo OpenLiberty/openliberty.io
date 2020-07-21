@@ -20,7 +20,7 @@ echo "Cloning repositories with name starting with guide or iguide..."
 ruby ./scripts/build_clone_guides.rb
 
 # Development environment only actions
-if [ "$JEKYLL_ENV" != "production" ]; then 
+if [ "$JEKYLL_ENV" != "production" ]; then
     echo "Not in production environment..."
     echo "Adding robots.txt"
     cp robots.txt src/main/content/robots.txt
@@ -38,10 +38,6 @@ if [ "$JEKYLL_ENV" != "production" ]; then
             find src/main/content/guides/draft-iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
         fi
     fi
-else
-    # Production!
-    echo "Clone published certifications!"
-    ./scripts/build_clone_certifications.sh "master" # Argument is branch name of OpenLiberty/certifications
 fi
 
 # Clone docs repo
