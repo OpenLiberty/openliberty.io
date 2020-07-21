@@ -135,9 +135,12 @@ $(window).on("load", function(){
        createEndOfGuideContent();
    
        if (location.hash){
-           handleFloatingTableOfContent();
-           var hash = location.hash;
-           accessContentsFromHash(hash);
+            handleFloatingTableOfContent();
+            var hash = location.hash;
+            // if in single pane guide, get hash and scroll to correct section 
+            if (twoColumnBreakpoint == 1440) {
+                accessContentsFromHash(hash);
+            }
        }
     });
  })
