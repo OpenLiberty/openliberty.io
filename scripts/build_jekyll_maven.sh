@@ -45,7 +45,7 @@ else
 fi
 
 # Clone docs repo
-./scripts/build_clone_docs.sh "antora"
+./scripts/build_clone_docs.sh "v20.0.0.7"
 
 pushd gems/ol-asciidoc
 gem build ol-asciidoc.gemspec
