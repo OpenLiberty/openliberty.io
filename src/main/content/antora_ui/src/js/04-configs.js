@@ -767,13 +767,14 @@ function addConfigContentFocusListener() {
 
 // Handle content loading based on the url
 function handleInitialContent() {
-    // if hash is included in the url, load the content document and replace the
-    // history state. Otherwise, load the first document.
-    if (window.location.hash !== "" && window.location.hash !== undefined) {
-        updateTitle(window.location.hash.replace("#", "").replace(".html", ""));
-    } else {
+    var url = window.location.href;
+    var index = url.indexOf('/reference/config/');
+    var configName = url.substring(index + 18).replace(".html", "");
+    if(configName === "serverConfiguration") {
         updateTitle("OVERVIEW");
-    }
+    } else {
+        updateTitle(configName);
+    }    
 }
 
 function handlePopstate() {
