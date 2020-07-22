@@ -35,11 +35,7 @@ var navigation = (function(){
       $('.nav-panel-explore .context').css('pointer-events', 'none');
     }
 
-    document.querySelector('.nav-container .nav .context').addEventListener('click', function () {	
-      if($('.components .version').length == 1){
-        // Prevent opening the version seletor while there is only one version.
-        return;
-      }
+    document.querySelector('.nav-container .nav .context').addEventListener('click', function () {
       var currentPanel = document.querySelector('.nav .is-active[data-panel]');
       var activatePanel = currentPanel.dataset.panel === 'menu' ? 'explore' : 'menu';	
       currentPanel.classList.toggle('is-active');
