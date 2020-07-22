@@ -1,0 +1,101 @@
+/*******************************************************************************
+ * Copyright (c) 2020 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+ 
+ .toolbar {
+  color: var(--toolbar-font-color);
+  align-items: center;
+  background-color: var(--toolbar-background);
+  box-shadow: 0 1px 0 var(--toolbar-border-color);
+  display: flex;
+  font-size: calc(15 / var(--rem-base) * 1rem);
+  height: var(--toolbar-height);
+  justify-content: flex-start;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-toolbar);
+}
+
+@media screen and (min-width: 767px){
+  .toolbar {
+    top: var(--navbar-height);
+  }
+}
+
+@media screen and (min-width: 992px){
+  .toolbar {
+    top: 60px;
+  }
+}
+
+.toolbar a {
+  color: inherit;
+}
+
+.nav-toggle {
+  display: none;
+  background: url(../img/menu.svg) no-repeat 50% 47.5%;
+  background-size: 49%;
+  border: none;
+  outline: none;
+  line-height: inherit;
+  height: 2.5rem;
+  padding: 0;
+  width: 2.5rem;
+  margin-right: -0.25rem;
+}
+
+@media screen and (max-width: 1023.98px) {
+  .nav-toggle {
+    display: block;
+  }
+}
+
+.nav-toggle.is-active {
+  background-image: url(../img/back.svg);
+  background-size: 41.5%;
+}
+
+.home-link {
+  background: url(../img/home-o.svg) no-repeat 50% 45%;
+  background-size: 50%;
+  display: block;
+  height: 2.5rem;
+  padding: 0;
+  width: 2.5rem;
+}
+
+.home-link:hover,
+.home-link.is-current {
+  background-image: url(../img/home.svg);
+}
+
+#github_link {
+  font-family: "Asap", Trebuchet MS, Helvetica, Arial;
+  font-size: 14px;
+  color: #24243B;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+#docs_github_logo {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  top: -2px;
+  margin-right: 4px;
+}
+
+#open_issue_link, #edit_topic_link {
+  color: darken(#337AC8, 5%); // Darkened to pass DAP
+  &:hover, &:focus {
+    color: #23527c;
+  }
+}

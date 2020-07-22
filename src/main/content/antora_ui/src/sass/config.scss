@@ -1,0 +1,156 @@
+/*******************************************************************************
+ * Copyright (c) 2020 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+
+.subHeading {
+    font-size: 20px;
+}
+
+.subsection {
+    margin-left: 69px;
+}
+
+div.paragraph p.subsection {
+    margin-top: 20px;
+}
+
+.collapseMargin {
+    margin-bottom: 54px;
+}
+
+/* position the subheading below the sticky nav header when the url contains hash using forward and backward
+   arrow navigate thru the history */
+p.subHeading > a, p.subHeading > div.toogle > a {
+    position: relative;
+}
+
+/* TABLE STYLING */
+table {
+    margin-top: 30px;
+    margin-bottom: 54px;
+    margin-left: -20px;
+    box-shadow: 0 4px #D6D9E4;
+    width: calc(100% + 20px);
+}
+
+table.subsection {
+    margin-left: 59px;
+}
+
+th {
+    background: #D6D9E4;
+    line-height: 26px;
+    font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+    font-size: 11px;
+    color: #24243B;
+    padding-left: 14px;
+    text-transform: uppercase;
+    border-right: 1px solid rgba(93, 106, 142, 0.3);
+}
+
+th:first-child, td:first-child {
+    padding-left: 18px;
+}
+
+td:first-child {
+    color: #5D6A8E;
+    font-weight: 500;
+}
+
+td {
+    font-size: 14px;
+    color: #24243B;
+    letter-spacing: 0;
+    line-height: 26px;
+    padding: 10px 31px 10px 14px;
+    border-right: 1px solid rgba(93, 106, 142, 0.3);
+    vertical-align: top;
+}
+
+td p {
+    margin: 0;
+    font-size: 14px;
+}
+
+tr {
+    border-bottom: 1px solid rgba(93, 106, 142, 0.3);
+}
+
+tr:last-child {
+    border-bottom: none;
+}
+
+tr:nth-child(even) {
+    background: #EEEFF3;
+}
+
+tr:nth-child(odd) {
+    background: #FFFFFF;
+}
+
+tableblock {
+    min-width: 100px;
+}
+
+/* Custom expand/collapse button */
+div.toggle {
+    margin-right: 10px;
+    margin-left: -20px;
+    display: inline;
+}
+
+div.toggle:hover {
+    cursor: pointer;
+}
+
+/* sticky header on top of the content */
+.contentStickyBreadcrumbHeader {
+    position: fixed;
+    top: 101px;
+    height: 75px;
+    width: 100%;
+    background: #FFFFFF;
+    box-shadow: 5px -2px 9px -1px rgba(63,70,89,0.37);
+    font-family: BunueloLight, Arial Narrow, Helvetica, Arial; /* BunueloCleanPro-Light; */
+    font-size: 35px;
+    color: #5D6A8E;
+    letter-spacing: 0;
+    padding: 17px 30px 12.5px 20px;
+    transition: top .5s;
+}
+
+.contentStickyBreadcrumbHeader a.lastParentItem {
+    color: #F4914D;
+}
+
+.stickyBreadcrumb a:hover {
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.stickyBreadcrumb a.lastParentItem:hover {
+    opacity: 1;
+    cursor: default;
+}
+
+@media (max-width: 1023.98px) {
+    .contentStickyBreadcrumbHeader {
+        position: static;
+        display: none;
+    }
+}
+
+@media (max-width: 767.98px) {
+
+    html, body, main {
+        height: unset;
+    }
+}
