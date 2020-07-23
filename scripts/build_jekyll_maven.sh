@@ -11,9 +11,9 @@ echo "npm version:"
 echo `npm -v`
 
 # Install Antora on the machine
-npm i -g @antora/cli@2.3
+npm i -g @antora/cli@2.3.3
 
-npm i @antora/site-generator-default@2.3
+npm i @antora/site-generator-default@2.3.3
 
 # Guides that are ready to be published to openliberty.io
 echo "Cloning repositories with name starting with guide or iguide..."
