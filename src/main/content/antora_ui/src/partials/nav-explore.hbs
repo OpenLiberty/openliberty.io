@@ -17,7 +17,11 @@
             {{#if ../../page.versions }}
               {{#each ../../page.versions }}
                 {{#if (eq ./version ../version)}}
-                    <a href="{{{relativize ./url}}}" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>
+                    {{#if missing }}
+                      <a href="/docs/{{./version}}/noversion.html" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>
+                    {{else}}
+                      <a href="{{{ relativize ./url }}}" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>
+                    {{/if}}
                 {{/if}}
               {{/each}}
             {{else}}
