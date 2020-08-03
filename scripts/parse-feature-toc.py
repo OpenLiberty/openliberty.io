@@ -46,7 +46,7 @@ for version in os.listdir(featurePath):
 for version in versions:
     # Read in front version/feature but write to all of the antora version later for changing the toc
     antora_path = featurePath + version + "/reference/"
-    featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-configuration-overview.html'), "html.parser")
+    featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "html.parser")
 
     # Keep track of new href with updated versions to update the TOCs later
     commonTOCs = {};
@@ -122,12 +122,12 @@ for version in versions:
     for toc in tocs:
         toc['class'] = 'nav-item'
 
-    # Write the new TOC to the feature-configuration-overview.html with version control in it
-    with open(antora_path + 'feature/feature-configuration-overview.html', "w") as file:     
+    # Write the new TOC to the feature-overview.html with version control in it
+    with open(antora_path + 'feature/feature-overview.html', "w") as file:     
         file.write(str(featureIndex))
 
     # Record the toc in the featureIndex to write over the other pages
-    featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-configuration-overview.html'), "html.parser")
+    featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "html.parser")
     toc = featureIndex.find_all('ul', {'class': 'nav-list'})[0]
     featureTOC = toc.find('span', text='Features').parent
 
