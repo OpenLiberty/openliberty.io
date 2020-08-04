@@ -23,7 +23,7 @@ $(document).ready(function(){
                     page = "feature-overview.html";
                     break;
                 case "config":
-                    page = "serverConfiguration.html";
+                    page = "server-configuration-overview.html";
                     break;
                 case "command":
                     page = "server-create.html";
