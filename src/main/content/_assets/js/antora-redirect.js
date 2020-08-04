@@ -20,10 +20,10 @@ $(document).ready(function(){
             // Redirect to a certain page for features, config, and commands if no page is supplied in the url.
             switch(resource_type){
                 case "feature":
-                    page = "featureOverview.html";
+                    page = "feature-overview.html";
                     break;
                 case "config":
-                    page = "serverConfiguration.html";
+                    page = "server-configuration-overview.html";
                     break;
                 case "command":
                     page = "server-create.html";
