@@ -1,6 +1,5 @@
 'use strict'
 
-const log = require('fancy-log')
 const { obj: map } = require('through2')
 const PluginError = require('plugin-error')
 const prettierEslint = require('prettier-eslint')
@@ -18,9 +17,9 @@ module.exports = () => {
         .concat(' file')
         .concat(report.unchanged === 1 ? '' : 's')
         .concat(' unchanged')
-      log(`prettier-eslint: ${changed}; ${unchanged}`)
+      console.log(`prettier-eslint: ${changed}; ${unchanged}`)
     } else {
-      log(`prettier-eslint: left ${report.unchanged} file${report.unchanged === 1 ? '' : 's'} unchanged`)
+      console.log(`prettier-eslint: left ${report.unchanged} file${report.unchanged === 1 ? '' : 's'} unchanged`)
     }
   })
 

@@ -1,11 +1,5 @@
 'use strict'
 
-// NOTE remove patch after upgrading from asciidoctor.js to @asciidoctor/core
-Error.call = (self, ...args) => {
-  const err = new Error(...args)
-  return Object.assign(self, { message: err.message, stack: err.stack })
-}
-
 const asciidoctor = require('asciidoctor.js')()
 const fs = require('fs-extra')
 const handlebars = require('handlebars')
@@ -17,17 +11,27 @@ const requireFromString = require('require-from-string')
 const vfs = require('vinyl-fs')
 const yaml = require('js-yaml')
 
-const ASCIIDOC_ATTRIBUTES = { experimental: '', icons: 'font', sectanchors: '', 'source-highlighter': 'highlight.js' }
+const ASCIIDOC_ATTRIBUTES = {
+  experimental: '',
+  icons: 'font',
+  sectanchors: '',
+  'source-highlighter': 'highlight.js',
+}
 
-module.exports = (src, previewSrc, previewDest, sink = () => map()) => (done) =>
+module.exports = (src, previewSrc, previewDest, sink = () => map(), layouts = {}) => () =>
   Promise.all([
     loadSampleUiModel(previewSrc),
     toPromise(
-      merge(compileLayouts(src), registerPartials(src), registerHelpers(src), copyImages(previewSrc, previewDest))
+      merge(
+        compileLayouts(src, layouts),
+        registerPartials(src),
+        registerHelpers(src),
+        copyImages(previewSrc, previewDest)
+      )
     ),
   ])
-    .then(([baseUiModel, { layouts }]) => [{ ...baseUiModel, env: process.env }, layouts])
-    .then(([baseUiModel, layouts]) =>
+    .then(([baseUiModel]) => ({ ...baseUiModel, env: process.env }))
+    .then((baseUiModel) =>
       vfs
         .src('**/*.adoc', { base: previewSrc, cwd: previewSrc })
         .pipe(
@@ -53,16 +57,11 @@ module.exports = (src, previewSrc, previewDest, sink = () => map()) => (done) =>
               uiModel.page.contents = Buffer.from(doc.convert())
             }
             file.extname = '.html'
-            try {
-              file.contents = Buffer.from(layouts.get(uiModel.page.layout)(uiModel))
-              next(null, file)
-            } catch (e) {
-              next(transformHandlebarsError(e, uiModel.page.layout))
-            }
+            file.contents = Buffer.from(layouts[uiModel.page.layout](uiModel))
+            next(null, file)
           })
         )
         .pipe(vfs.dest(previewDest))
-        .on('error', (e) => done)
         .pipe(sink())
     )
 
@@ -80,8 +79,6 @@ function registerPartials (src) {
 }
 
 function registerHelpers (src) {
-  handlebars.registerHelper('resolvePage', resolvePage)
-  handlebars.registerHelper('resolvePageURL', resolvePageURL)
   return vfs.src('helpers/*.js', { base: src, cwd: src }).pipe(
     map((file, enc, next) => {
       handlebars.registerHelper(file.stem, requireFromString(file.contents.toString()))
@@ -90,51 +87,19 @@ function registerHelpers (src) {
   )
 }
 
-function compileLayouts (src) {
-  const layouts = new Map()
+function compileLayouts (src, layouts) {
   return vfs.src('layouts/*.hbs', { base: src, cwd: src }).pipe(
-    map(
-      (file, enc, next) => {
-        const srcName = path.join(src, file.relative)
-        layouts.set(file.stem, handlebars.compile(file.contents.toString(), { preventIndent: true, srcName }))
-        next()
-      },
-      function (done) {
-        this.push({ layouts })
-        done()
-      }
-    )
+    map((file, enc, next) => {
+      layouts[file.stem] = handlebars.compile(file.contents.toString(), { preventIndent: true })
+      next()
+    })
   )
 }
 
 function copyImages (src, dest) {
-  return vfs
-    .src('**/*.{png,svg}', { base: src, cwd: src })
-    .pipe(vfs.dest(dest))
-    .pipe(map((file, enc, next) => next()))
-}
-
-function resolvePage (spec, context = {}) {
-  if (spec) return { pub: { url: resolvePageURL(spec) } }
-}
-
-function resolvePageURL (spec, context = {}) {
-  if (spec) return '/' + (spec = spec.split(':').pop()).slice(0, spec.lastIndexOf('.')) + '.html'
-}
-
-function transformHandlebarsError ({ message, stack }, layout) {
-  const m = stack.match(/^ *at Object\.ret \[as (.+?)\]/m)
-  const templatePath = `src/${m ? 'partials/' + m[1] : 'layouts/' + layout}.hbs`
-  const err = new Error(`${message}${~message.indexOf('\n') ? '\n^ ' : ' '}in UI template ${templatePath}`)
-  err.stack = [err.toString()].concat(stack.substr(message.length + 8)).join('\n')
-  return err
+  return vfs.src('**/*.{png,svg}', { base: src, cwd: src }).pipe(vfs.dest(dest))
 }
 
 function toPromise (stream) {
-  return new Promise((resolve, reject, data = {}) =>
-    stream
-      .on('error', reject)
-      .on('data', (chunk) => chunk.constructor === Object && Object.assign(data, chunk))
-      .on('finish', () => resolve(data))
-  )
+  return new Promise((resolve, reject) => stream.on('error', reject).on('finish', resolve))
 }
