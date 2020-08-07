@@ -24,6 +24,7 @@ if [ "$JEKYLL_ENV" != "production" ]; then
     echo "Not in production environment..."
     echo "Adding robots.txt"
     cp robots.txt src/main/content/robots.txt
+    cp src/main/content/_includes/noindex.html src/main/content/antora_ui/src/partials/noindex.hbs
 
     # Development environments with draft docs/guides
     if [ "$JEKYLL_DRAFT_GUIDES" == "true" ]; then
