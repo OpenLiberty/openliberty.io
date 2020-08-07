@@ -10,3 +10,5 @@
 - [ ] https://validator.w3.org/checklink
 - [ ] https://validator.w3.org
 - [ ] Dymanic Accessability Plugin (DAP)
+- [ ] Lighthouse (in Chrome dev tools)
+
