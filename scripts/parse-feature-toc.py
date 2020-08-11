@@ -7,12 +7,10 @@ def getTOCVersion(tocString):
     versionPattern = re.compile('^([\s\D]*)(?P<version>\d+[.]?\d*)([\s\D]*)')
     versionMatches = versionPattern.match(tocString)
     if versionMatches is not None:
-       version = versionMatches.group('version')
-       if version == "7" and tocString.startswith("Java EE 7"):
-           version = "EE 7"
-       return version
+        version = versionMatches.group('version')
+        return version
     else:
-       return None
+        return None
 
 def createVersionHref(parent, tocHref, tocString, firstElement):
     hrefTag = parent.new_tag('div', href=tocHref)
@@ -23,7 +21,10 @@ def createVersionHref(parent, tocHref, tocString, firstElement):
     hrefTag['tabindex'] = '0'
     docVersion = getTOCVersion(tocString)
     if docVersion is not None:
-        hrefTag.string = docVersion
+        if firstElement:
+            hrefTag.string = tocString
+        else:
+            hrefTag.string = docVersion
     else:
         if firstElement:
             hrefTag.string = tocString + " " + getTOCVersion(tocHref)
