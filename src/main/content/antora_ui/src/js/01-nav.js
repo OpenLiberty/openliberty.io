@@ -58,6 +58,10 @@ var navigation = (function(){
     menuPanel.addEventListener('mousedown', function (e) {
       if (e.detail > 1) e.preventDefault();
     });
+
+    // Expand all first level doc categories
+    $(".nav-menu > .nav-list > .nav-item").addClass('is-active')
+
   };  
 
   $('.components .versions li a').on('click', function(e){
