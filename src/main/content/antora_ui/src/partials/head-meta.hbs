@@ -9,16 +9,17 @@
 {{ else }}
 <meta name="description" content="Open Liberty is the most flexible server runtime available to Earth’s Java developers.">
 {{/if}}
+{{#if page.url }} 
+<link rel="canonical" href="https://openliberty.io{{ page.url }}">
+{{/if}}
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@OpenLibertyIO" />
-
 {{#if page.attributes.seo-title }} 
 <meta name="twitter:title" content="{{ page.attributes.seo-title }}" />
 {{ else }}
 <meta name="twitter:title" content="{{ site.title }}" />
 {{/if}}
-
 {{#if page.attributes.seo-description }} 
 <meta name="twitter:description" content="{{ page.attributes.seo-description }}" />
 {{else if page.attributes.description }}
@@ -26,5 +27,29 @@
 {{ else }}
 <meta name="twitter:description" content="Open Liberty is the most flexible server runtime available to Earth’s Java developers." />
 {{/if}}
-
 <meta name="twitter:image" content="https://openliberty.io/img/twitter_card.jpg" />
+
+
+{{!-- OpenGraph Tags --}}
+{{#if page.attributes.seo-title }} 
+<meta property="og:title" content="{{ page.attributes.seo-title }}" />
+{{ else }}
+<meta property="og:title" content="{{ site.title }}" />
+{{/if}}
+{{#if page.attributes.seo-description }} 
+<meta property="og:description" content="{{ page.attributes.seo-description }}" />
+{{else if page.attributes.description }}
+<meta property="og:description" content="{{ page.attributes.description }}" />
+{{ else }}
+<meta property="og:description" content="Open Liberty is the most flexible server runtime available to Earth’s Java developers." />
+{{/if}}
+{{#if page.open-graph-image }} 
+<meta property="og:image" content="{{ page.open-graph-image }}" />
+{{ else }}
+<meta property="og:image" content="https://openliberty.io/img/twitter_card.jpg" />
+{{/if}}
+<meta property='og:type' content="website" />
+{{#if page.url }} 
+<meta property='og:url' content="https://openliberty.io{{ page.url }}" />
+{{/if}}
+
