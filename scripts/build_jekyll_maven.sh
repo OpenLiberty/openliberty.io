@@ -42,7 +42,7 @@ if [ "$JEKYLL_ENV" != "production" ]; then
 fi
 
 # Clone docs repo
-./scripts/build_clone_docs.sh "v20.0.0.7"
+./scripts/build_clone_docs.sh "v20.0.0.8"
 
 pushd gems/ol-asciidoc
 gem build ol-asciidoc.gemspec

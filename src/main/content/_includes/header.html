@@ -35,46 +35,4 @@
             </div>
         </div>
     </nav>
-    {% if page.type == 'config' or page.type == 'feature' or page.type == 'command' or page.type == 'general' %}	
-        <div class="breadcrumb_hamburger_nav" role="button" data-toggle="collapse" data-target="#toc_column" aria-expanded="true" aria-controls="toc_column">	
-            <!-- Hamburger icon for showing the table of contents -->	
-            <button id="breadcrumb_hamburger" class="collapsed" type="button">	
-                <span class="sr-only">Toggle navigation</span>	
-                <span class="icon-bar"></span>	
-                <span class="icon-bar"></span>	
-                <span class="icon-bar"></span>	
-            </button>	
-            <span id="breadcrumb_hamburger_title">Table of Contents</span>	
-        </div>	
-    {% endif %} 
-
-    <!-- Javadocs -->
-    {% if page.type == 'Javadoc' %}
-    <div id="breadcrumb_row">
-        <ol class="breadcrumb fluid-container">   
-            <li>
-                <a href="/docs">Docs</a>
-            </li>
-            <li>
-                <a class="inactive_link">Reference</a>
-            </li>
-            <li class="active"> {{ page.doc-type }} </li>
-            {% assign versions = site.pages | where: 'doc-type', page.doc-type | sort: 'version' | reverse %}
-            {% if versions | size > 1 %}
-                <span id="breadcrumb_line">|</span>
-                <li id="breadcrumb_version">VERSION:</li>
-
-                {% for javadoc in versions %}
-                <li class="javadoc_version">
-                    {% if page.version == javadoc.version %}
-                        <a class="selected_javadoc__version">{{ javadoc.version }}</a>
-                    {% else %}
-                        <a href="{{ javadoc.url }}" onclick="versionClick(event)">{{ javadoc.version }}</a>
-                    {% endif %}
-                </li>
-                {% endfor %} 
-            {% endif %}
-        </ol>
-    </div>
-    {% endif %}
 </header>
