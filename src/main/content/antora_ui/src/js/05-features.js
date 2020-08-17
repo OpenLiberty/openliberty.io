@@ -35,6 +35,20 @@ function highlightSelectedVersion(){
     }
 }
 
+// Versioned features have a non-versioned page to support linking to the latest version of a feature without having to supply the version. E.g. link:docs/ref/feature/appSecurity.adoc will create appSecurity.html which redirects to the highest version of that feature (at the time), appSecurity-3.0.html. If there are versions for the current page but the current href doesn't match any of them, then we're on a versionless page that should be versioned, so we should redirect to the highest version of this feature.
+function checkForNonVersionedPage(){
+    if($('.feature_version').length > 0){
+        var url = window.location.href;
+        var version = url.substring(url.lastIndexOf('/') + 1);
+        if($('.feature_version[href="' + version + '"]').length === 0){
+            // Redirect to the highest version
+            var href = $('.feature_version').first().attr('href');
+            var newUrl = url.substring(0,url.lastIndexOf('/')) + '/' + href;
+            window.location.href = newUrl;
+        }
+    }
+}
+
 // When loading the page, if the page from the url isn't selected in the TOC we need to look for its version in the TOC and highlight it since the multiple feature versions only have one TOC entry.
 function selectTOC(){
     var first_version = $('.feature_version').first();
@@ -59,6 +73,7 @@ function selectTOC(){
 }
 
 $(document).ready(function () {  
+    checkForNonVersionedPage();
     addVersionClick();
     acivateNavMenu();
     highlightSelectedVersion();
