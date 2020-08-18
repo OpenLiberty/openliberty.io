@@ -47,7 +47,7 @@ for version in os.listdir(featurePath):
 for version in versions:
     # Read in front version/feature but write to all of the antora version later for changing the toc
     antora_path = featurePath + version + "/reference/"
-    featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "html.parser")        
+    featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "lxml")        
 
     # Keep track of new href with updated versions to update the TOCs later
     commonTOCs = {};
@@ -83,7 +83,7 @@ for version in versions:
         if len(matchingTitleTOCs) > 1:
             # multiple versions of the same title found, put the versions at the top of the page
             firstHref = matchingTitleTOCs[0].get('href')
-            featurePage  = BeautifulSoup(open(antora_path + '/feature/' + firstHref), "html.parser")
+            featurePage  = BeautifulSoup(open(antora_path + '/feature/' + firstHref), "lxml")
             versionHrefs = featurePage.find('h1', {'class': 'page'})
             versionHrefs.string = ''
             newTOCHref = ''
@@ -117,7 +117,7 @@ for version in versions:
             for matchingTOC in matchingTOCs:
                 # Open page and rewrite the version part
                 versionHref = antora_path + 'feature/' + matchingTOC.get('href')
-                versionPage = BeautifulSoup(open(versionHref), "html.parser")
+                versionPage = BeautifulSoup(open(versionHref), "lxml")
                 versionTitle = versionPage.find('h1', {'class': 'page'})
                 versionTitle.replace_with(versionHrefs)
                 with open(versionHref, "w") as file:
@@ -136,7 +136,7 @@ for version in versions:
         file.write(str(featureIndex))
 
     # Record the toc in the featureIndex to write over the other pages
-    featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "html.parser")
+    featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "lxml")
     toc = featureIndex.find_all('ul', {'class': 'nav-list'})[0]
     featureTOC = toc.find('span', text='Features').parent
 
@@ -153,12 +153,12 @@ for version in versions:
             if fnmatch.fnmatch(basename, "*.html"):
                 if(basename != "index.html"):
                     href = os.path.join(root, basename)
-                    page = BeautifulSoup(open(href), "html.parser")
+                    page = BeautifulSoup(open(href), "lxml")
 
                     # Find the toc and replace it with the modified toc
                     page_toc = page.find_all('ul', {'class': 'nav-list'})[0]
                     toc_to_replace = page_toc.find('span', text='Features').parent
                     toc_to_replace.clear()
                     toc_to_replace.append(featureTOC)
-                    with open(href, "w") as file:            
+                    with open(href, "w") as file:           
                         file.write(str(page))
