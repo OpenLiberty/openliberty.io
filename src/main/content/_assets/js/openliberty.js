@@ -73,5 +73,4 @@ function showNav() {
     // $("#toc_column").css("padding-top", "60px");
     $("#code_column").css({"position":"fixed", "top":"60px"})
     $("#toc_inner").css("top", "60px");
-
 }

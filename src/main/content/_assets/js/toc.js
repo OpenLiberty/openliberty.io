@@ -19,7 +19,9 @@ function handleFloatingTableOfContent() {
         } else {
             // The entire viewport is filled with the background, so
             // do not need to worry about the TOC flowing out of the background.
-            enableFloatingTOC();
+            if ($(window).scrollTop() > 60) {
+                enableFloatingTOC();
+            }
             expandTOCIndicator();
         }
     } else {
@@ -34,19 +36,18 @@ function disableFloatingTOC() {
 }
 
 function enableFloatingTOC() {
-    $('#toc_inner').css({"position":"fixed", "top":"60px"});    
+    $('#toc_inner').css({"position":"fixed", "top":"0px"});    
 }
 
 function calculateTOCHeight(){
     var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
-    var headerHeight = $('header').height();
-    return endOfGuidePosition - headerHeight;
+    return endOfGuidePosition;
 }
 
 function shrinkTOCIndicator() {
     $('#toc_line').css({
         "position": "", 
-        "top": "",
+        "top": "0px",
         "height": calculateTOCHeight()
     });
 }
