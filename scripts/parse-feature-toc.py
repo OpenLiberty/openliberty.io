@@ -12,24 +12,24 @@ def getTOCVersion(tocString):
     else:
         return None
 
-def createVersionHref(parent, tocHref, tocString, firstElement):
+def createTitle(parent, tocHref, tocString):
+    TitleDiv = parent.new_tag('div', id="feature_name_string")
+    TitleDiv['full_title'] = "{}".format(tocString)
+    TitleDiv['aria-label'] = "{}".format(tocString)
+    TitleDiv['tabindex'] = '0'
+    TitleDiv.string = tocString
+    return TitleDiv
+
+def createVersionHref(parent, tocHref, tocString):
     hrefTag = parent.new_tag('div', href=tocHref)
     hrefTag['role'] = 'button'
     hrefTag['class'] = 'feature_version'
-    hrefTag['full_title'] = "{}".format(tocString)
-    hrefTag['aria-label'] = "{}".format(tocString)
     hrefTag['tabindex'] = '0'
     docVersion = getTOCVersion(tocString)
-    if docVersion is not None:
-        if firstElement:
-            hrefTag.string = tocString
-        else:
-            hrefTag.string = docVersion
-    else:
-        if firstElement:
-            hrefTag.string = tocString + " " + getTOCVersion(tocHref)
-        else:
-            hrefTag.string = getTOCVersion(tocHref)
+    if docVersion is None:        
+        docVersion = getTOCVersion(tocHref)
+    hrefTag['aria-label'] = 'Version ' + docVersion
+    hrefTag.string = docVersion
     return hrefTag
 
 # Get all of the Antora versions
@@ -84,8 +84,10 @@ for version in versions:
             # multiple versions of the same title found, put the versions at the top of the page
             firstHref = matchingTitleTOCs[0].get('href')
             featurePage  = BeautifulSoup(open(antora_path + '/feature/' + firstHref), "lxml")
-            versionHrefs = featurePage.find('h1', {'class': 'page'})
-            versionHrefs.string = ''
+            pageTitle = featurePage.find('h1', {'class': 'page'})
+            titleDiv = featurePage.new_tag('div', id='feature_name')
+            versionDiv = featurePage.new_tag('div', id='feature_versions')
+            pageTitle.string = ''
             newTOCHref = ''
             # in reverse descending order
             matchingTOCs = matchingTitleTOCs[::-1]
@@ -102,12 +104,17 @@ for version in versions:
                         combineHtml = "-".join(htmlSplits) + '.html'
                         del hrefSplits[-1]
                         newTOCHref = '/'.join(hrefSplits) + '/' + combineHtml
-                        hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string, True)
-                        versionHrefs.append(hrefTag)
+                        title = createTitle(featurePage, tocHref, matchingTOC.string)
+                        titleDiv.append(title)
+                        hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string)
+                        versionDiv.append(hrefTag)
                 else:
-                    hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string, False)
-                    versionHrefs.append(hrefTag)
+                    hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string)
+                    versionDiv.append(hrefTag)
                     TOCToDecompose.append(matchingTOC.parent)
+            # Write the feature title and the versions to the page div
+            pageTitle.append(titleDiv)
+            pageTitle.append(versionDiv)
 
             # write to the common version doc with the highest versioned content
             with open(antora_path + 'feature' +  newTOCHref, "w") as file:
@@ -119,7 +126,7 @@ for version in versions:
                 versionHref = antora_path + 'feature/' + matchingTOC.get('href')
                 versionPage = BeautifulSoup(open(versionHref), "lxml")
                 versionTitle = versionPage.find('h1', {'class': 'page'})
-                versionTitle.replace_with(versionHrefs)
+                versionTitle.replace_with(pageTitle)
                 with open(versionHref, "w") as file:
                     file.write(str(versionPage))
 
