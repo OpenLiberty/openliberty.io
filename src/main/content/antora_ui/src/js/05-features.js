@@ -33,7 +33,7 @@ function highlightSelectedVersion(){
     if(versionHref.length === 1){
         versionHref.addClass('feature_version_selected');
         var ariaLabel = versionHref.attr('aria-label');
-        versionHref.attr('aria-label', aria-label + ' selected');
+        versionHref.attr('aria-label', ariaLabel + ' selected');
     }
 }
 
