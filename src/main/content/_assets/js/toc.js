@@ -77,7 +77,7 @@ function handleTOCScrolling() {
         // The TOC cannot fit in the dark background, allow the TOC to scroll out of viewport
         // to avoid the TOC overflowing out of the dark background
         var negativeNumber = visible_background_height - toc_height + 100;
-        $('#toc_inner').css({"position":"fixed", "top":negativeNumber});
+        $('#toc_inner').css({"position": "fixed", "top": negativeNumber});
     }
 }
 

@@ -13,19 +13,14 @@ $(document).ready(function() {
 	var prevScrollTop = 0;
 	$(window).scroll(function () {
         var currScrollTop = $(this).scrollTop();
-        // console.log("currScrollTop:", currScrollTop);
         if (currScrollTop > 60) {
-            // $("#nav_bar").css("display", "none");
-            // console.log("scrolled past 60px");
             // if scrolling down, hide nav bar
             if (currScrollTop > prevScrollTop) {
-                // console.log("scrolling down");
                 hideNav();
                 $("#toc_column").css("padding-top", "0px");
             } 
             // if scrolling up, show nav bar
             else {
-                // console.log("scrolling up");
                 $("#nav_bar").css("top", "0px");
                 showNav();
             }
@@ -63,12 +58,13 @@ $(document).ready(function() {
 
 function hideNav() {
     $("#nav_bar").removeClass("fixed_top");
+    $("#nav_bar").css({"top": "-60px"});
     $('body').css("margin-top", "0px");
     // $("#toc_column").css("padding-top", "0px");
-    $("#guide_column").css("top", "");
+    $("#guide_column").css("top", "0px");
     $("#guides_container").css({"position":"", "top":""});
     $("#code_column").css({"position":"fixed", "top":"0px"})
-    $("#toc_inner").css("top", "0px");
+    $("#toc_inner").css("margin-top", "0px");
 }
 
 function showNav() {
@@ -78,5 +74,26 @@ function showNav() {
     $("#guide_column").css("top", "60px");
     $("#guides_container").css({"position":"relative", "top":"60px"});
     $("#code_column").css({"position":"fixed", "top":"60px"})
-    $("#toc_inner").css("top", "60px");
+    $("#toc_inner").css("margin-top", "60px");
 }
+
+// function hideNav() {
+//     $("#nav_bar").removeClass("fixed_top");
+//     $("#nav_bar").css({"top": "-60px"});
+//     $('body').css("margin-top", "0px");
+//     // $("#toc_column").css("padding-top", "0px");
+//     $("#guide_column").css("top", "0px");
+//     // $("#guides_container").css({"position":"", "top":""});
+//     $("#code_column").css({"position":"fixed", "top":"0px"})
+//     $("#toc_inner").css({"margin-top": "0px"});
+// }
+
+// function showNav() {
+//     $("#nav_bar").addClass("fixed_top");
+//     $('body').css("margin-top", "60px");
+//     // $("#toc_column").css("padding-top", "60px");
+//     $("#guide_column").css("top", "60px");
+//     // $("#guides_container").css({"position":"relative", "top":"60px"});
+//     $("#code_column").css({"position":"fixed", "top":"60px"})
+//     $("#toc_inner").css({"margin-top": "60px"});
+// }
