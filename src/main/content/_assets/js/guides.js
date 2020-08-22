@@ -277,16 +277,6 @@ $(document).ready(function() {
 
         // make TOC fixed once you scroll past header
         if ($(this).scrollTop() > navBannerBottom){
-            console.log("scrolled past nav banner bottom");
-
-            if ($('#nav_bar').hasClass("fixed_top")) {
-                console.log("nav has class fixed_top");
-                $("#toc_column").css("padding-top", "60px");
-            }
-            else {
-                console.log("nav doesn't have class");
-                // $("#toc_column").css("padding-top", "0px");
-            }
             if (isDesktopView()) {
                 if (!isTOCPositionFixed) {
                     $('#toc_column').css({'position': 'fixed', 'top': '0px'});
@@ -306,7 +296,6 @@ $(document).ready(function() {
 
         // make TOC static once you scroll above header
         if ($(this).scrollTop() <= navBannerBottom){
-            $("#toc_column").css("padding-top", "0px");
 
             if (isDesktopView()) {
                 if (isTOCPositionFixed){
