@@ -14,6 +14,9 @@ $(document).ready(function() {
 	$(window).scroll(function () {
         var currScrollTop = $(this).scrollTop();
         if (currScrollTop > 60) {
+            // make docs toolbar position sticky once you scroll past 60px
+            $(".toolbar").css("position", "sticky");
+
             // if scrolling down, hide nav bar
             if (currScrollTop > prevScrollTop) {
                 hideNav();
@@ -25,12 +28,10 @@ $(document).ready(function() {
                 showNav();
             }
         }
-        // else {
-        //     $("#code_column").css({"position": "fixed", "top": bottom + "px"})
-        // }
-
         else {
             $("#code_column").css({"position": "absolute", "top": ""});
+            $(".toolbar").css({"position": "static", "top": ""});
+            $(".nav").css("top", "");
         }
 
 
@@ -63,6 +64,9 @@ function showNav() {
     // $("#guides_container").css({"position":"relative", "top":"60px"});
     $("#code_column").css({"position":"fixed", "top":"60px"})
     $("#toc_inner").css("margin-top", "60px");
+
+    $(".toolbar").css("top", "60px");
+    $(".nav").css("top", "60px");
 }
 
 function hideNav() {
@@ -73,4 +77,9 @@ function hideNav() {
     // $("#guides_container").css({"position":"", "top":""});
     $("#code_column").css({"position":"fixed", "top":"0px"})
     $("#toc_inner").css("margin-top", "0px");
+
+    $(".toolbar").css("top", "0px");
+    $(".nav").css("top", "0px");
+    
 }
+
