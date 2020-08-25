@@ -59,6 +59,7 @@ $(document).ready(function() {
 function showNav() {
     $("#nav_bar").addClass("fixed_top");
     $("#toc_column").css("top", "60px");
+    $('body').css("margin-top", "60px");
     // $("#guide_column").css("top", "120px");
     // $("#guides_container").css({"position":"relative", "top":"60px"});
     $("#code_column").css({"position":"fixed", "top":"60px"})
@@ -68,6 +69,7 @@ function showNav() {
 function hideNav() {
     $("#nav_bar").removeClass("fixed_top");
     $("#nav_bar").css({"top": "-60px"});
+    $('body').css("margin-top", "0px");
     $("#toc_column").css("top", "0px");
     // $("#guide_column").css("top", "0px");
     // $("#guides_container").css({"position":"", "top":""});
