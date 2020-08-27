@@ -666,14 +666,25 @@ footer {
         }
     }
 }
+    
+code .conum[data-value]:after {
+    content: attr(data-value);
+    border: 1px solid;
+    border-radius: 100%;
+    display: inline-block;
+    font-family: Roboto,sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    height: 1.25em;
+    line-height: 1.2;
+    text-align: center;
+    width: 1.25em;
+    letter-spacing: -.25ex;
+    text-indent: -.25ex;
+}
 
-code b {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+code .conum[data-value]+b {
+    display: none;
 }
 
 /* Code copy button */
