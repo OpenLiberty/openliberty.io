@@ -640,33 +640,66 @@ footer {
 
 /* Callouts */
 .colist.arabic {
-    padding-left: 5px;
-
     & table, & caption, & tbody, & tfoot, & thead, & tr, & th, & td {
         margin: 0;
         padding: 0;
         border: 0;
         outline: 0;
-        font-size: 100%;
         vertical-align: baseline;
         text-align: left;
         background: transparent;
         box-shadow: none;
     }
     & tr {
-        padding: 13px 0;
-        & td:first-child {
-            width: 30px;
-            &:before {
-                /* Add parenthesis before the number of each row */
-                content: "( ";
-            }  
-            &:after {
-                /* Add parenthesis after the number of each row */
-                content: " )";
-            }            
+        & td:first-child{
+            width: 25px;
+            & .conum[data-value] {
+                border: 1px solid;
+                border-radius: 100%;
+                display: inline-block;
+                font-family: Roboto,sans-serif;
+                font-size: 14px;
+                font-style: normal;
+                height: 1.25em;
+                line-height: 1.2;
+                text-align: center;
+                width: 1.25em;
+                letter-spacing: -.25ex;
+                text-indent: -.25ex;
+                
+                &:after {
+                    content: attr(data-value);
+                }
+            }
+
+            & .conum[data-value]+b {
+                display: none;
+            }
         }
     }
+}
+
+code .conum[data-value] {
+    border: 1px solid;
+    border-radius: 100%;
+    display: inline-block;
+    font-family: Roboto,sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    height: 1.25em;
+    line-height: 1.2;
+    text-align: center;
+    width: 1.25em;
+    letter-spacing: -.25ex;
+    text-indent: -.25ex;
+}
+
+code .conum[data-value]:after {
+    content: attr(data-value);
+}
+
+code .conum[data-value]+b {
+    display: none;
 }
 
 /* Code copy button */
