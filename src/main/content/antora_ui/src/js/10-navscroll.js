@@ -10,10 +10,13 @@
  *******************************************************************************/
 
 $(document).ready(function() {
-	var prevScrollTop = 0;
+    var prevScrollTop = 0;
+    
+    nav_height = $("#nav_bar").outerHeight();
+    console.log("nav_height: ", nav_height);
 	$(window).scroll(function () {
         var currScrollTop = $(this).scrollTop();
-        if (currScrollTop > 60) {
+        if (currScrollTop > nav_height) {
             // make docs toolbar position sticky once you scroll past 60px
             $(".toolbar").css("position", "sticky");
 
@@ -58,6 +61,9 @@ $(document).ready(function() {
 });
 
 function showNav() {
+    var nav_height = $("#nav_bar").outerHeight();
+    console.log("nav_height: ", nav_height);
+
     $("#nav_bar").addClass("fixed_top");
     $("#toc_column").css("top", "60px");
     // $("#guide_column").css("top", "120px");
@@ -65,7 +71,7 @@ function showNav() {
     $("#code_column").css({"position":"fixed", "top":"60px"})
     $("#toc_inner").css("margin-top", "60px");
 
-    $(".toolbar").css("top", "60px");
+    $(".toolbar").css("top", nav_height + "px");
     $(".nav").css("top", "60px");
 }
 
