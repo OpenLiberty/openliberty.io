@@ -145,6 +145,7 @@ $(document).ready(function() {
 
     var width = window.outerWidth;
     $(window).on('resize', function() {
+        var accordionHeight = $('#tablet_toc_accordion_container').outerHeight();
 
         // fix positioning of filter box popover when page resized
         if ($('#guide_search_input').is(':focus')) {
@@ -245,6 +246,11 @@ $(document).ready(function() {
 
             // override toc_container height set on desktop view
             $('#toc_container').css('height', '100vh');
+
+            // move tablet toc accordion down if nav bar is fixed to top of screen
+            if ($("#tablet_toc_accordion_container").css("position") === "fixed" && $("#nav_bar").css("position") === "fixed") {
+                $("#tablet_toc_accordion_container").css("top", accordionHeight);
+            }
         }
 
         // going from tablet to desktop view

@@ -10,19 +10,6 @@
  *******************************************************************************/
 
 $(document).ready(function() {
-    // if (typeof inSingleColumnView === "function") {
-    //     console.log("isSingleColView is a function");
-    //     if(inSingleColumnView()) {
-    //         console.log("SingleColView");
-    //     }
-    //     else {
-    //         console.log('too big');
-    //     }
-    // }
-    // else {
-    //     console.log("isSingleColView is NOT a function");
-
-    // }
 
 	var prevScrollTop = 0;
 	$(window).scroll(function () {
@@ -39,10 +26,6 @@ $(document).ready(function() {
                 showNav();
             }
         }
-        // else {
-        //     $("#code_column").css({"position": "fixed", "top": bottom + "px"})
-        // }
-
         else {
             $("#code_column").css({"position": "absolute", "top": ""});
         }
@@ -82,17 +65,17 @@ function showNav() {
     $("#code_column").css({"position": "fixed", "top": nav_height + "px"})
     $("#toc_inner").css("margin-top", nav_height + "px");
 
+    // on /guides, if tablet toc accordion is fixed, move toc accordiom below fixed nav bar
+    if ($("#tablet_toc_accordion_container").css("position") === "fixed") {
+        var accordion_height = $("#tablet_toc_accordion_container").outerHeight();
+        $("#tablet_toc_accordion_container").css("top", accordion_height + "px");
+    }
 
+    // in guides, if mobile toc accodion is fixed, move toc accordion below fixed nav bar
     if ($("#mobile_toc_accordion_container").hasClass("fixed_toc_accordion")) {
-        console.log("accordion has fixed class");
         var accordion_height = $("#mobile_toc_accordion_container").outerHeight();
-        
-        $("#nav_bar").css("top", "0px");
         $("#mobile_toc_accordion_container").css("top", accordion_height + "px");
 
-    }
-    else {
-        console.log("no class");
     }
 
 }
@@ -109,5 +92,6 @@ function hideNav() {
     $("#toc_inner").css("margin-top", "0px");
 
     $("#mobile_toc_accordion_container").css("top", "0px");
+    $("#tablet_toc_accordion_container").css("top", "0px");
 
 }
