@@ -68,7 +68,7 @@ function showNav() {
     $("#toc_column").css("top", nav_height + "px");
     $("#toc_inner").css("margin-top", nav_height + "px");
     $("#toc_indicator").css("margin-top", nav_height + "px");
-    $("#code_column").css({"position":"fixed", "top":nav_height + "px"});
+    $("#code_column").css({"position": "fixed", "top": nav_height + "px"});
 
     // add margin-top to body so page doesn't jump when nav slides into view
     $('body').css("margin-top", nav_height + "px");
@@ -83,6 +83,7 @@ function showNav() {
         $("#tablet_toc_accordion_container").css("top", nav_height + "px");
     }
 
+    // adjust docs toolbar and nav position
     $(".toolbar").css("top", nav_height + "px");
     if (window.outerWidth < 1024) {
         $(".nav-container").css("top", nav_height + $(".toolbar").outerHeight() + "px");
@@ -93,6 +94,7 @@ function showNav() {
     }
 }
 
+// slide nav bar back out of view, reset elements that were pushed down
 function hideNav() {
     // reset nav bar and move off screen
     $("#nav_bar").removeClass("fixed_top");
@@ -111,8 +113,8 @@ function hideNav() {
     $("#mobile_toc_accordion_container").css("top", "0px");
     $("#tablet_toc_accordion_container").css("top", "0px");
 
+    // adjust docs toolbar and nav position
     $(".toolbar").css("top", "0px");
-
     if (window.outerWidth < 1024) {
         $(".nav-container").css("top", $(".toolbar").outerHeight() + "px");
         $(".nav").css("top", "");

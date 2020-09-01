@@ -145,8 +145,6 @@ $(document).ready(function() {
 
     var width = window.outerWidth;
     $(window).on('resize', function() {
-        var accordionHeight = $('#tablet_toc_accordion_container').outerHeight();
-
         // fix positioning of filter box popover when page resized
         if ($('#guide_search_input').is(':focus')) {
             var popover_left_position = $("#guide_search_input").position().left;
@@ -249,7 +247,7 @@ $(document).ready(function() {
 
             // move tablet toc accordion down if nav bar is fixed to top of screen
             if ($("#tablet_toc_accordion_container").css("position") === "fixed" && $("#nav_bar").css("position") === "fixed") {
-                $("#tablet_toc_accordion_container").css("top", accordionHeight);
+                $("#tablet_toc_accordion_container").css("top", $('#tablet_toc_accordion_container').outerHeight());
             }
         }
 
@@ -302,7 +300,6 @@ $(document).ready(function() {
 
         // make TOC static once you scroll above header
         if ($(this).scrollTop() <= navBannerBottom){
-
             if (isDesktopView()) {
                 if (isTOCPositionFixed){
                     $('#toc_column').css({'position': 'static', 'top': '0px'});

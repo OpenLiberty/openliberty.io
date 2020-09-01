@@ -15,6 +15,9 @@ $(document).ready(function() {
         var currScrollTop = $(this).scrollTop();
         // if scrolled past nav bar, determine whether to hide or show nav bar
         if (currScrollTop > $("#nav_bar").outerHeight()) {
+            // make docs toolbar position sticky once you scroll past nav bar
+            $(".toolbar").css("position", "sticky");
+
             // if scrolling down, hide nav bar
             if (currScrollTop > prevScrollTop) {
                 hideNav();
@@ -26,6 +29,8 @@ $(document).ready(function() {
         }
         else {
             $("#code_column").css({"position": "absolute", "top": ""});
+            $(".toolbar").css({"position": "static", "top": ""});
+            $(".nav").css("top", "");
         }
 
         // When page scrolled back to top: Make nav bar no longer fixed, reset body margin-top
@@ -42,6 +47,12 @@ $(document).ready(function() {
         }
 
         prevScrollTop = currScrollTop;
+    });
+
+    $(window).on('resize', function() {
+        if ($(".toolbar").css("position") == "sticky" && $("#nav_bar").hasClass("fixed_top")) {
+            $(".toolbar").css("top", $("#nav_bar").outerHeight() + "px");
+        }
     });
 });
 
@@ -71,6 +82,16 @@ function showNav() {
     if ($("#tablet_toc_accordion_container").css("position") === "fixed") {
         $("#tablet_toc_accordion_container").css("top", nav_height + "px");
     }
+
+    // adjust docs toolbar and nav position
+    $(".toolbar").css("top", nav_height + "px");
+    if (window.outerWidth < 1024) {
+        $(".nav-container").css("top", nav_height + $(".toolbar").outerHeight() + "px");
+        $(".nav").css("top", "");
+    }
+    else {
+        $(".nav").css("top",  nav_height + "px");
+    }
 }
 
 // slide nav bar back out of view, reset elements that were pushed down
@@ -91,4 +112,15 @@ function hideNav() {
     // fix mobile and tablet toc accordion to top of screen again
     $("#mobile_toc_accordion_container").css("top", "0px");
     $("#tablet_toc_accordion_container").css("top", "0px");
+
+    // adjust docs toolbar and nav position
+    $(".toolbar").css("top", "0px");
+    if (window.outerWidth < 1024) {
+        $(".nav-container").css("top", $(".toolbar").outerHeight() + "px");
+        $(".nav").css("top", "");
+    }
+    else {
+        $(".nav-container").css("top", "");
+        $(".nav").css("top", "");
+    }
 }
