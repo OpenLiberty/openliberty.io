@@ -8,6 +8,17 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+
+// make TOC indicator fixed once nav bar scrolls off screen
+$(window).on('scroll', function(event) {
+    var nav_bottom = $('#nav_bar').outerHeight(true);
+    if ($("#toc_indicator:visible")) {
+        if ($(this).scrollTop() > nav_bottom){
+            $('#toc_indicator').css({'position': 'fixed', 'top': '0px'});
+        }
+    }
+});
+
 // Keep the table of contents (TOC) in view while scrolling (Desktop only)
 function handleFloatingTableOfContent() {
     if (window.innerWidth >= threeColumnBreakpoint) {
@@ -384,6 +395,15 @@ $(document).ready(function() {
             TocIndicatorBounce();
         }
 
+        // if toc indicator visible and nav bar fixed to top of page, position toc indiciator below nav bar
+        if ($("#toc_indicator").css("display") == "block" && $("#nav_bar").hasClass("fixed_top")) {
+            $("#toc_indicator").css("margin-top", $("#nav_bar").outerHeight());
+        }
+
+        // in guides, if mobile toc accodion is fixed to top of screen, move toc accordion below fixed nav bar
+        if ($("#mobile_toc_accordion_container").hasClass("fixed_toc_accordion")  && $("#nav_bar").hasClass("fixed_top")) {
+            $("#mobile_toc_accordion_container").css("top", $("#nav_bar").outerHeight() + "px");
+        }
 
         // update width with new width after resizing
         if ($(this).outerWidth() != width) {

@@ -101,10 +101,6 @@
         width: 280px;
     }
 
-    @media (min-width: 1170px) {
-        top: 61px;
-    }
-
     @media (min-width: 1170px) and (max-width: 1439.98px) {
         height: auto !important;
     }
@@ -145,13 +141,13 @@
 
 #toc_indicator {
     z-index: 5;
-    top: 60px;
     left: 0;
     width: 5px;
     height: 30px;
-    position: fixed;
+    position: absolute;
     background-color: #f4914d;
-    padding: 7px 0;  
+    padding: 7px 0;
+    transition: margin-top .3s ease-out;
 
     &:hover {
         cursor: pointer;
@@ -197,6 +193,7 @@
 #mobile_toc_accordion_container {
     display: none;
     background-color: white;
+    transition: top .3s ease-out;
 
     &:hover {
         cursor: pointer;
