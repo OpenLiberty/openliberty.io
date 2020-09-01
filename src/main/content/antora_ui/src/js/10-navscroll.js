@@ -84,7 +84,13 @@ function showNav() {
     }
 
     $(".toolbar").css("top", nav_height + "px");
-    $(".nav").css("top", nav_height + "px");
+    if (window.outerWidth < 1024) {
+        $(".nav-container").css("top", nav_height + $(".toolbar").outerHeight() + "px");
+        $(".nav").css("top", "");
+    }
+    else {
+        $(".nav").css("top",  nav_height + "px");
+    }
 }
 
 function hideNav() {
@@ -106,5 +112,13 @@ function hideNav() {
     $("#tablet_toc_accordion_container").css("top", "0px");
 
     $(".toolbar").css("top", "0px");
-    // $(".nav").css("top", "0px");
+
+    if (window.outerWidth < 1024) {
+        $(".nav-container").css("top", $(".toolbar").outerHeight() + "px");
+        $(".nav").css("top", "");
+    }
+    else {
+        $(".nav-container").css("top", "");
+        $(".nav").css("top", "");
+    }
 }
