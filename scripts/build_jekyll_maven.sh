@@ -48,11 +48,6 @@ fi
 # Clone docs repo
 ./scripts/build_clone_docs.sh "v20.0.0.9"
 
-pushd gems/ol-asciidoc
-gem build ol-asciidoc.gemspec
-gem install ol-asciidoc-0.0.1.gem
-popd
-
 # Special external link handling
 pushd gems/ol-target-blank
 gem build ol-target-blank.gemspec
