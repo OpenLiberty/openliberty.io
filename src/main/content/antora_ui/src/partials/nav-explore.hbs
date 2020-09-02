@@ -9,7 +9,7 @@
     {{#each site.components}}
     <li class="component{{#if (eq this @root.page.component)}} is-current{{/if}}">
       <ul class="versions">
-        {{#each ./versions}}
+        {{#each (reverse_array ./versions) }}
           <li class="version
             {{~#if (and (eq ../this @root.page.component) (eq this @root.page.componentVersion))}} is-current{{/if~}}
             {{~#if (eq this ../latestVersion)}} is-latest{{/if}}">
