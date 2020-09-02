@@ -9,17 +9,13 @@ before_install:
 jobs:
   include:
     - env: ROUTE=$SITE_STAGING_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_QA_BRANCH JEKYLL_STAGING_SITE=true JEKYLL_ENV=production
-      if: branch = master
+      if: branch = staging
     - env: ROUTE=$SITE_DRAFT_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH JEKYLL_DRAFT_GUIDES=true JEKYLL_DRAFT_SITE=true
-      if: branch = master
-    - env: ROUTE=$SITE_DEV_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH JEKYLL_DRAFT_GUIDES=true
-      if: branch = development
+      if: branch = draft
     - env: ROUTE=$SITE_DEMO1_DOMAIN
       if: branch = demo1
     - env: ROUTE=$SITE_DEMO2_DOMAIN
       if: branch = demo2
-    - env: ROUTE=$SITE_ANTORA_DOMAIN
-      if: branch = antora
 
 script: >
     if [ $JEKYLL_ENV == "production" ]; then
@@ -33,11 +29,10 @@ script: >
 # branch whitelist
 branches:
   only:
-    - master
-    - development
+    - staging
+    - draft
     - demo1
     - demo2
-    - antora
 
 sudo: false # route your build to the container-based infrastructure for a faster build
 
@@ -46,21 +41,15 @@ deploy:
   - provider: script
     skip_cleanup: true
     on:
-      branch: master
+      branch: staging
       condition: $ROUTE = $SITE_STAGING_DOMAIN
     script: ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
-      branch: master
+      branch: draft
       condition: $ROUTE = $SITE_DRAFT_DOMAIN
     script: ./.travis/cf-push.sh
-  - provider: script
-    skip_cleanup: true
-    on:
-      branch: development
-      condition: $ROUTE = $SITE_DEV_DOMAIN
-    script: env ROUTE=$SITE_DEV_DOMAIN ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
@@ -71,9 +60,4 @@ deploy:
     on:
       branch: demo2
     script: env ROUTE=$SITE_DEMO2_DOMAIN ./.travis/cf-push-2.sh
-  - provider: script
-    skip_cleanup: true
-    on:
-      branch: antora
-    script: env ROUTE=$SITE_ANTORA_DOMAIN ./.travis/cf-push-2.sh
 
