@@ -369,11 +369,6 @@ function accessContentsFromHash(hash, callback) {
             // Bring the section requested right up underneath this floating TOC.
             var $accordion = $('#mobile_toc_accordion_container');
             scrollSpot -= $accordion.height();
-        } else {
-            // Multi-column View
-            // Account for the sticky header. Display the targeted section below it.
-            var stickyHeaderAdjustment = $('#nav_bar').outerHeight() || 0;
-            scrollSpot -= stickyHeaderAdjustment;
         }
         $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
         $("html, body").animate({scrollTop: scrollSpot}, 400, function() {

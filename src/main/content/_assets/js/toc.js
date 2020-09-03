@@ -12,9 +12,11 @@
 // make TOC indicator fixed once nav bar scrolls off screen
 $(window).on('scroll', function(event) {
     var nav_bottom = $('#nav_bar').outerHeight(true);
-    if ($("#toc_indicator:visible")) {
-        if ($(this).scrollTop() > nav_bottom){
-            $('#toc_indicator').css({'position': 'fixed', 'top': '0px'});
+    if ($(this).scrollTop() > nav_bottom){
+        $('#toc_indicator').css({'position': 'fixed', 'top': '0px'});
+
+        if (window.outerWidth < 1440) {
+            $('#toc_column').css({'position': 'fixed', 'top': '0px'});
         }
     }
 });
@@ -387,12 +389,19 @@ $(document).ready(function() {
             if (!$('#guide_column').hasClass('expanded')) {
                 TocIndicatorBounce();
             }
+            $("#toc_inner").css("margin-top", "");
         }
 
         // going from single column to 2 column view
         if (width < twoColumnBreakpoint && $(this).outerWidth() >= twoColumnBreakpoint) {
             // close_TOC();
             TocIndicatorBounce();
+        }
+
+        // going from 2 column to 3 column view
+        if (width < threeColumnBreakpoint && $(this).outerWidth() >= threeColumnBreakpoint) {
+            console.log("going from 2 col to 3 col view");
+            $('#toc_column').css({'position': '', 'top': ''});
         }
 
         // if toc indicator visible and nav bar fixed to top of page, position toc indiciator below nav bar

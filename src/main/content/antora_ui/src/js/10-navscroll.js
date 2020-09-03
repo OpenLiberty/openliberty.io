@@ -37,6 +37,7 @@ $(document).ready(function() {
         if (currScrollTop == 0) {
             $("#nav_bar").removeClass("fixed_top");
             $('body').css("margin-top", "0px");
+            $('#toc_column').css({'position': '', 'top': ''});
         }
 
         // make toc scroll off of screen at Nice Work section in guides
@@ -66,7 +67,9 @@ function showNav() {
 
     // push toc column, toc indicator and code column down below nav bar
     $("#toc_column").css("top", nav_height + "px");
-    $("#toc_inner").css("margin-top", nav_height + "px");
+    if (window.outerWidth > 1440) {
+        $("#toc_inner").css("margin-top", nav_height + "px");
+    }
     $("#toc_indicator").css("margin-top", nav_height + "px");
     $("#code_column").css({"position": "fixed", "top": nav_height + "px"});
 
@@ -92,6 +95,9 @@ function showNav() {
     else {
         $(".nav").css("top",  nav_height + "px");
     }
+
+    // move config breadcrumb down when nav bar in view
+    $(".contentStickyBreadcrumbHeader").css("top", nav_height + $(".toolbar").outerHeight() + "px");
 }
 
 // slide nav bar back out of view, reset elements that were pushed down
@@ -102,7 +108,9 @@ function hideNav() {
 
     // reset toc column, toc indicator and code column position
     $("#toc_column").css("top", "0px");
-    $("#toc_inner").css("margin-top", "0px");
+    if (window.outerWidth > 1440) {
+        $("#toc_inner").css("margin-top", "0px");
+    }
     $("#toc_indicator").css("margin-top", "0px");
     $("#code_column").css({"position":"fixed", "top":"0px"})
 
@@ -123,4 +131,7 @@ function hideNav() {
         $(".nav-container").css("top", "");
         $(".nav").css("top", "");
     }
+
+    // move config breadcrumb back up when nav bar slides out of view
+    $(".contentStickyBreadcrumbHeader").css("top", $(".toolbar").outerHeight() + "px");
 }
