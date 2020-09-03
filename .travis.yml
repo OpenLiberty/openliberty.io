@@ -42,13 +42,11 @@ deploy:
     skip_cleanup: true
     on:
       branch: staging
-      condition: $ROUTE = $SITE_STAGING_DOMAIN
     script: ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
     on:
       branch: draft
-      condition: $ROUTE = $SITE_DRAFT_DOMAIN
     script: ./.travis/cf-push.sh
   - provider: script
     skip_cleanup: true
