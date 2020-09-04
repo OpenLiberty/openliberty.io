@@ -8,6 +8,19 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+
+// make TOC indicator fixed once nav bar scrolls off screen
+$(window).on('scroll', function(event) {
+    var nav_bottom = $('#nav_bar').outerHeight(true);
+    if ($(this).scrollTop() > nav_bottom){
+        $('#toc_indicator').css({'position': 'fixed', 'top': '0px'});
+
+        if (window.outerWidth < 1440) {
+            $('#toc_column').css({'position': 'fixed', 'top': '0px'});
+        }
+    }
+});
+
 // Keep the table of contents (TOC) in view while scrolling (Desktop only)
 function handleFloatingTableOfContent() {
     if (window.innerWidth >= threeColumnBreakpoint) {
@@ -19,7 +32,9 @@ function handleFloatingTableOfContent() {
         } else {
             // The entire viewport is filled with the background, so
             // do not need to worry about the TOC flowing out of the background.
-            enableFloatingTOC();
+            if ($(window).scrollTop() > 60) {
+                enableFloatingTOC();
+            }
             expandTOCIndicator();
         }
     } else {
@@ -34,19 +49,18 @@ function disableFloatingTOC() {
 }
 
 function enableFloatingTOC() {
-    $('#toc_inner').css({"position":"fixed", "top":"60px"});    
+    $('#toc_inner').css({"position":"fixed", "top":"0px"});    
 }
 
 function calculateTOCHeight(){
     var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
-    var headerHeight = $('header').height();
-    return endOfGuidePosition - headerHeight;
+    return endOfGuidePosition;
 }
 
 function shrinkTOCIndicator() {
     $('#toc_line').css({
         "position": "", 
-        "top": "",
+        "top": "0px",
         "height": calculateTOCHeight()
     });
 }
@@ -54,7 +68,7 @@ function shrinkTOCIndicator() {
 function expandTOCIndicator() {
     $('#toc_line').css({
         "position":"fixed",
-        "top":"60px",
+        "top":"0px",
         "height": calculateTOCHeight()
     });
 }
@@ -76,7 +90,7 @@ function handleTOCScrolling() {
         // The TOC cannot fit in the dark background, allow the TOC to scroll out of viewport
         // to avoid the TOC overflowing out of the dark background
         var negativeNumber = visible_background_height - toc_height + 100;
-        $('#toc_inner').css({"position":"fixed", "top":negativeNumber});
+        $('#toc_inner').css({"position": "fixed", "top": negativeNumber});
     }
 }
 
@@ -375,6 +389,7 @@ $(document).ready(function() {
             if (!$('#guide_column').hasClass('expanded')) {
                 TocIndicatorBounce();
             }
+            $("#toc_inner").css("margin-top", "");
         }
 
         // going from single column to 2 column view
@@ -383,6 +398,21 @@ $(document).ready(function() {
             TocIndicatorBounce();
         }
 
+        // going from 2 column to 3 column view
+        if (width < threeColumnBreakpoint && $(this).outerWidth() >= threeColumnBreakpoint) {
+            console.log("going from 2 col to 3 col view");
+            $('#toc_column').css({'position': '', 'top': ''});
+        }
+
+        // if toc indicator visible and nav bar fixed to top of page, position toc indiciator below nav bar
+        if ($("#toc_indicator").css("display") == "block" && $("#nav_bar").hasClass("fixed_top")) {
+            $("#toc_indicator").css("margin-top", $("#nav_bar").outerHeight());
+        }
+
+        // in guides, if mobile toc accodion is fixed to top of screen, move toc accordion below fixed nav bar
+        if ($("#mobile_toc_accordion_container").hasClass("fixed_toc_accordion")  && $("#nav_bar").hasClass("fixed_top")) {
+            $("#mobile_toc_accordion_container").css("top", $("#nav_bar").outerHeight() + "px");
+        }
 
         // update width with new width after resizing
         if ($(this).outerWidth() != width) {
