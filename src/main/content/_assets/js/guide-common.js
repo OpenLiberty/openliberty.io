@@ -354,6 +354,7 @@ function shiftWindow() {
  * @param callback      Optional callback to execute after the window has animated to the new section. This can be used to focus a specific element on the new section.
  */
 function accessContentsFromHash(hash, callback) {
+    var currentScrollTop = $(document).scrollTop();
     var $focusSection = $(hash);
 
     // If section is found, scroll to it
@@ -369,6 +370,10 @@ function accessContentsFromHash(hash, callback) {
             // Bring the section requested right up underneath this floating TOC.
             var $accordion = $('#mobile_toc_accordion_container');
             scrollSpot -= $accordion.height();
+        }
+        // if new scroll spot is above current scroll position, subtract nav bar height from scroll spot
+        if (scrollSpot < currentScrollTop) {
+            scrollSpot -= $("#nav_bar").outerHeight();
         }
         $("body").data('scrolling', true); // Prevent the default window scroll from triggering until the animation is done.
         $("html, body").animate({scrollTop: scrollSpot}, 400, function() {
