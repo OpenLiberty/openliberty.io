@@ -145,7 +145,6 @@ $(document).ready(function() {
 
     var width = window.outerWidth;
     $(window).on('resize', function() {
-
         // fix positioning of filter box popover when page resized
         if ($('#guide_search_input').is(':focus')) {
             var popover_left_position = $("#guide_search_input").position().left;
@@ -245,6 +244,11 @@ $(document).ready(function() {
 
             // override toc_container height set on desktop view
             $('#toc_container').css('height', '100vh');
+
+            // move tablet toc accordion down if nav bar is fixed to top of screen
+            if ($("#tablet_toc_accordion_container").css("position") === "fixed" && $("#nav_bar").css("position") === "fixed") {
+                $("#tablet_toc_accordion_container").css("top", $('#tablet_toc_accordion_container').outerHeight());
+            }
         }
 
         // going from tablet to desktop view
@@ -268,7 +272,7 @@ $(document).ready(function() {
         var isTOCPositionFixed = ($('#toc_column').css('position') == 'fixed');
         var isAccordionPositionFixed = ($('#tablet_toc_accordion_container').css('position') == 'fixed');
         var accordionHeight = $('#tablet_toc_accordion_container').outerHeight();
-        var navBannerBottom = $('#guides_information_container').outerHeight(true) + $('#nav_bar').outerHeight(true);
+        var navBannerBottom = $('#guides_information_container').outerHeight(true);
         
         // fix TOC height to account for footer and make it scrollable if necessary
         if (isDesktopView()) {

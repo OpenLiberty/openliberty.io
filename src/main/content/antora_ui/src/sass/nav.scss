@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
  
- .nav-container {
+.nav-container {
   position: fixed;
   top: calc(var(--navbar-height) + var(--toolbar-height));
   left: 0;
@@ -27,11 +27,11 @@
 
 @media screen and (min-width: 1024px) {
   .nav-container {
-    padding-top: 20px;
+    padding-top: 6px;
     font-size: calc(15.5 / var(--rem-base) * 1rem);
     flex: none;
     position: relative;
-    top: calc(var(--navbar-height));
+    top: 0;
     visibility: visible;
   }
 }
@@ -43,19 +43,15 @@
 .nav {
   background: var(--nav-background);
   position: relative;
-}
+  top: 0;
+  transition: top .3s ease-out;
 
-@media screen and (min-width: 769px) {
-  .nav {
-    top: 0;
-  }
 }
 
 @media screen and (min-width: 1024px) {
   .nav {
     box-shadow: none;
     position: sticky;
-    top: 62px;
     height: calc(var(--nav-panel-height--desktop));
   }
 }
