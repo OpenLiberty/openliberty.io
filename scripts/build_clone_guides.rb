@@ -30,7 +30,7 @@ if ENV['TRAVIS'] && ENV['GUIDE_CLONE_BRANCH']
     guide_branch = ENV['GUIDE_CLONE_BRANCH']
 end
 
-puts "Looking for draft interactive guides with branch: #{guide_branch}..."
+puts "Looking for guides with branch: #{guide_branch}..."
 
 # Function to check if the guide directory exists after a git clone command
 def directory_exists?(repo_name)
