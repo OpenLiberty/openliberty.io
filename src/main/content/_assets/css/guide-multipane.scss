@@ -17,20 +17,6 @@ body {
     overflow: hidden;
 }
 
-@media (min-width: 1170px) {
-    #nav_bar {
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: 0;
-        z-index: 1030;
-    }
-
-    #guide_column {
-        padding-top: 60px;
-    }
-}
-
 #background_container {
     background-color: inherit;
 }
@@ -100,13 +86,14 @@ body {
 #code_column {
     padding: 0;
     background-color: #f1f4fe;
-    position: fixed;
+    position: absolute;
     width: 780px;
     left: calc(100% - 780px); /* Adjust for the width and padding */
     top: 60px;
     bottom: 0; /* Initially extend the code column the full height */
     overflow: hidden;
     box-shadow: -2px 0px 2px rgba(0,0,0,0.12);
+    transition: top .3s ease-out;
 
     #dismiss_button {
         display: none;
@@ -323,6 +310,12 @@ body {
     padding-left: 22px;
     height: 42px;
     background-color: #f1f4fe;
+}
+
+@media (max-width: 991.98px) {
+    #code_column {
+        top: 46px;
+    }
 }
 
 @media (max-width: 1199.98px) {

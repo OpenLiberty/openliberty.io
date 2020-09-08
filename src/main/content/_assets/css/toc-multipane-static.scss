@@ -88,25 +88,17 @@
 }
 
 #toc_column {
-    position: fixed;
+    position: absolute;
     left: 0;
-    top: 0;
     padding-bottom: 22px;
     vertical-align: top;
     background-color: white;
     z-index: 7;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.21);
+    transition: top .3s ease-out;
 
     &.open {
         width: 280px;
-    }
-
-    @media (min-width: 900px) {
-        top: 45px;
-    }
-
-    @media (min-width: 992px) {
-        top: 60px;
     }
 
     @media (min-width: 900px) and (max-width: 1439.98px) {
@@ -149,13 +141,13 @@
 
 #toc_indicator {
     z-index: 5;
-    top: 60px;
     left: 0;
     width: 5px;
     height: 30px;
-    position: fixed;
+    position: absolute;
     background-color: #f4914d;
     padding: 7px 0;  
+    transition: margin-top .3s ease-out;
 
     &:hover {
         cursor: pointer;
@@ -176,7 +168,7 @@
     }
 
     @media (max-width: 991.98px) {
-        top: 45px;
+        top: 46px;
     }
 }
 
@@ -206,6 +198,7 @@
 #mobile_toc_accordion_container {
     display: none;
     background-color: white;
+    transition: top .3s ease-out;
 
     &:hover {
         cursor: pointer;
@@ -387,7 +380,6 @@
         height: 41px;
         text-align: center;
         border: 1px solid #d4d7e3;
-        z-index: 7; /* to override the z-index values of 4 and 6 for code mirror in interactive guide */
     }
 
     #mobile_toc_accordion_container .breadcrumb_hamburger {

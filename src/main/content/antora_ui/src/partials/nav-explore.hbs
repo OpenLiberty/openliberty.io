@@ -9,13 +9,13 @@
     {{#each site.components}}
     <li class="component{{#if (eq this @root.page.component)}} is-current{{/if}}">
       <ul class="versions">
-        {{#each ./versions}}
+        {{#each ( sort_component_versions ./versions )}}
           <li class="version
             {{~#if (and (eq ../this @root.page.component) (eq this @root.page.componentVersion))}} is-current{{/if~}}
             {{~#if (eq this ../latestVersion)}} is-latest{{/if}}">
             <span class="title">Version</span>
             {{#if ../../page.versions }}
-              {{#each ../../page.versions }}
+              {{#each ( sort_component_versions ../../page.versions) }}
                 {{#if (eq ./version ../version)}}
                     {{#if missing }}
                       <a href="/docs/{{./version}}/noversion.html" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>

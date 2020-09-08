@@ -96,13 +96,10 @@
     background-color: white;
     z-index: 7; /* to override the z-index valued of 4 and 6 for code mirror in interactive guide */
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.21);
+    transition: top .3s ease-out;
 
     &.open {
         width: 280px;
-    }
-
-    @media (min-width: 1170px) {
-        top: 61px;
     }
 
     @media (min-width: 1170px) and (max-width: 1439.98px) {
@@ -145,13 +142,13 @@
 
 #toc_indicator {
     z-index: 5;
-    top: 60px;
     left: 0;
     width: 5px;
     height: 30px;
-    position: fixed;
+    position: absolute;
     background-color: #f4914d;
-    padding: 7px 0;  
+    padding: 7px 0;
+    transition: margin-top .3s ease-out;
 
     &:hover {
         cursor: pointer;
@@ -197,6 +194,7 @@
 #mobile_toc_accordion_container {
     display: none;
     background-color: white;
+    transition: top .3s ease-out;
 
     &:hover {
         cursor: pointer;
