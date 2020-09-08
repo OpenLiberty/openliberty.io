@@ -42,20 +42,20 @@ deploy:
     skip_cleanup: true
     on:
       branch: staging
-    script: ./.travis/cf-push.sh
+    script: ./.travis/cf-push.sh $BLUEMIX_ORGANIZATION $BLUEMIX_USER $BLUEMIX_PASSWORD
   - provider: script
     skip_cleanup: true
     on:
       branch: draft
-    script: ./.travis/cf-push.sh
+    script: ./.travis/cf-push.sh $BLUEMIX_ORGANIZATION $BLUEMIX_USER $BLUEMIX_PASSWORD
   - provider: script
     skip_cleanup: true
     on:
       branch: demo1
-    script: ./.travis/cf-push-2.sh
+    script: ./.travis/cf-push.sh $BLUEMIX_ORGANIZATION_2 $BLUEMIX_USER_2 $BLUEMIX_PASSWORD_2
   - provider: script
     skip_cleanup: true
     on:
       branch: demo2
-    script: ./.travis/cf-push-2.sh
+    script: ./.travis/cf-push.sh $BLUEMIX_ORGANIZATION_2 $BLUEMIX_USER_2 $BLUEMIX_PASSWORD_2
 
