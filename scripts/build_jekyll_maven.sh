@@ -115,6 +115,10 @@ echo "Moving the Antora docs to the jekyll webapp"
 mkdir -p target/jekyll-webapp/docs/
 cp -r src/main/content/docs/build/site/. target/jekyll-webapp/
 
+# Move the javadocs into the web app
+echo "Moving javadocs to the jekyll webapp"
+cp -r src/main/content/docs/modules target/jekyll-webapp/docs
+
 # Special handling for javadocs
 ./scripts/modify_javadoc.sh
 
