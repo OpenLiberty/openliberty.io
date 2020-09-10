@@ -83,4 +83,9 @@ $(document).ready(function () {
             temp.remove(); // Remove temporary element.
         }
     }
+
+    $(window).on('resize', function(){
+        $('#copy_to_clipboard').hide();
+        $('#copied_confirmation').hide();
+    });
 });
