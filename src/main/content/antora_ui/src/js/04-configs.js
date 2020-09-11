@@ -919,40 +919,6 @@ function addOverviewPageClickAndScroll() {
     });
 }
 
-/* Copy the target element to the clipboard
-target: element to copy
-callback: function to run if the copy is successful
-*/
-function copy_element_to_clipboard(target, callback){
-    // IE
-    if(window.clipboardData){
-        window.clipboardData.setData("Text", target.innerText);
-    } 
-    else{
-        var temp = $('<textarea>');
-        temp.css({
-            position: "absolute",
-            left:     "-1000px",
-            top:      "-1000px",
-        });       
-        
-        // Create a temporary element for copying the text.
-        // Prepend <br> with newlines because jQuery .text() strips the <br>'s and we use .text() because we don't want all of the html tags copied to the clipboard.
-        var text = $(target).clone().find('br').prepend('\r\n').end().text().trim();
-        temp.text(text);
-        $("body").append(temp);
-        temp.trigger('select');
-        
-        // Try to copy the selection and if it fails display a popup to copy manually.
-        if(document.execCommand('copy')) { 
-            callback();
-        } else {
-            alert('Copy failed. Copy the command manually: ' + target.innerText);
-        }
-        temp.remove(); // Remove temporary element.
-    }
-}
-
 $(document).ready(function () {
     addTOCClick();
     addConfigContentFocusListener();
