@@ -69,7 +69,15 @@ public class RedirectFilter implements Filter {
                 if (newURL.equals(uri)) {
                     newURL = null;
                 }
-            } 
+            }
+
+            String header = new String("Sec-Fetch-Dest");
+            String sec_fetch_dest = ((HttpServletRequest)req).getHeader(header);
+            // Do not redirect if iframe if url contains /docs/modules/reference
+            if (sec_fetch_dest.equals("iframe") && uri.contains("/docs/modules/reference")) {
+                newURL = null;
+            }
+
         } else {
             newURL = to;
         }
