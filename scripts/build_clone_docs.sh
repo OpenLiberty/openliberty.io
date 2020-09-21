@@ -19,5 +19,10 @@ cd docs
 # This is how you clone a repo without autocreating a parent folder with the name of the repo
 # The clone is picky about cloning into a folder that is not empty (src/main/content)
 git clone https://github.com/OpenLiberty/docs.git --branch $branch_name .
+
+# Clone generated docs into docs folder
+git clone https://github.com/OpenLiberty/docs-generated.git --branch $branch_name
+git clone https://github.com/OpenLiberty/docs-javadoc.git --branch $branch_name
+
 popd
 echo "Done cloning docs repository!"
