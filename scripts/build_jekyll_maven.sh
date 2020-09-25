@@ -46,7 +46,7 @@ if [ "$JEKYLL_ENV" != "production" ]; then
 fi
 
 # Clone docs repo
-./scripts/build_clone_docs.sh "v20.0.0.9"
+./scripts/build_clone_docs.sh "v20.0.0.10"
 
 # Special external link handling
 pushd gems/ol-target-blank
