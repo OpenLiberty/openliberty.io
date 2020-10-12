@@ -69,7 +69,8 @@ $(document).ready(function () {
             
             // Create a temporary element for copying the text.
             // Prepend <br> with newlines because jQuery .text() strips the <br>'s and we use .text() because we don't want all of the html tags copied to the clipboard.
-            var text = $(target).clone().find('br').prepend('\r\n').end().text().trim();
+            // Remove <b> tags that contain callouts
+            var text = $(target).clone().find('br').prepend('\r\n').end().find("b").remove().end().text().trim();
             temp.text(text);
             $("body").append(temp);
             temp.trigger('select');
