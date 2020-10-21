@@ -75,8 +75,7 @@ body {
 }
 
 #shiplight_top, #shiplight_mid, #shiplight_bot {
-    -webkit-animation: shiplight_blink 10s infinite;
-            animation: shiplight_blink 10s infinite;
+    animation: shiplight_blink 5s;
 }
 
 #shiplight_top {
@@ -87,22 +86,19 @@ body {
 #shiplight_mid {
     top: 72px;
     left: 318px;
-    -webkit-animation-delay: -9.5s;
-            animation-delay: -9.5s;
+    animation-delay: .75s;
 }
 
 #shiplight_bot {
     top: 119px;
     left: 377px;
     width: 13px;
-    -webkit-animation-delay: -9s;
-            animation-delay: -9s;
+    animation-delay: 1.5s;
 }
 
 #smoke1, #smoke2, #smoke3,
 #smoke4, #smoke5, #smoke6 {
-    -webkit-animation: smoke_blink 3s infinite;
-            animation: smoke_blink 3s infinite;
+    animation: smoke_blink 3s 1;
 }
 
 #smoke1 {
@@ -113,36 +109,31 @@ body {
 #smoke2 {
     top: 107px;
     left: 521px;
-    -webkit-animation-delay: -2.5s;
-            animation-delay: -2.5s;
+    animation-delay: -2.5s;
 }
 
 #smoke3 {
     top: 73px;
     left: 530px;
-    -webkit-animation-delay: -2s;
-            animation-delay: -2s;
+    animation-delay: -2s;
 }
 
 #smoke4 {
     top: 23px;
     left: 533px;
-    -webkit-animation-delay: -1.5s;
-            animation-delay: -1.5s;
+    animation-delay: -1.5s;
 }
 
 #smoke5 {
     bottom: 395px;
     left: 523px;
-    -webkit-animation-delay: -1s;
-            animation-delay: -1s;
+    animation-delay: -1s;
 }
 
 #smoke6 {
     bottom: 445px;
     left: 475px;
-    -webkit-animation-delay: -0.5s;
-            animation-delay: -0.5s;
+    animation-delay: -0.5s;
 }
 
 #right_planet {
@@ -173,26 +164,21 @@ body {
 #medstar_l {
     top: 24%;
     left: 14.6%;
-    -webkit-animation: blink 4s infinite;
-            animation: blink 4s infinite;
+    -moz-animation: blink 4s infinite;
 }
 
 #medstar_r {
     top: 8.6%;
     right: 32%;
-    -webkit-animation: blink 4s infinite;
-            animation: blink 4s infinite;
-    -webkit-animation-delay: -2s;
-            animation-delay: -2s;
+    -moz-animation: blink 4s infinite;
+    animation-delay: -2s;
 }
 
 #bigstar {
     bottom: 30.4%;
     right: 7.6%;
-    -webkit-animation: blink 4s infinite;
-            animation: blink 4s infinite;
-    -webkit-animation-delay: -3s;
-            animation-delay: -3s;
+    -moz-animation: blink 4s infinite;
+    animation-delay: -3s;
 }
 
 #star_cluster1 {
@@ -212,24 +198,11 @@ body {
 #star_cluster3 {
     top: 61.3%;
     left: 9.7%;
-    -webkit-animation: blink 4s infinite;
-            animation: blink 4s infinite;
-    -webkit-animation-delay: -1s;
-            animation-delay: -1s;
+    -moz-animation: blink 4s infinite;
+    animation-delay: -1s;
 }
 
 /* Blinking stars animation*/
-@-webkit-keyframes blink {
-    0% {
-        opacity: 0;
-    }
-    10%, 40% {
-        opacity: 1;
-    }
-    60%, 100% {
-        opacity: 0;
-    }
-}
 @keyframes blink {
     0% {
         opacity: 0;
@@ -243,17 +216,6 @@ body {
 }
 
 /* Blinking smoke animation */
-@-webkit-keyframes smoke_blink {
-    0% {
-        opacity: 0;
-    }
-    10% {
-        opacity: 1;
-    }
-    60%, 100% {
-        opacity: 0;
-    }
-}
 @keyframes smoke_blink {
     0% {
         opacity: 0;
@@ -267,19 +229,11 @@ body {
 }
 
 /* Blinking ship lights animation */
-@-webkit-keyframes shiplight_blink {
-    0%, 20%, 60%, 80%, 100% {
-        opacity: 0;
-    }
-    10%, 30%, 45%, 70% {
-        opacity: 1;
-    }
-}
 @keyframes shiplight_blink {
-    0%, 20%, 60%, 80%, 100% {
+    0% {
         opacity: 0;
     }
-    10%, 30%, 45%, 70% {
+    45% {
         opacity: 1;
     }
 }
