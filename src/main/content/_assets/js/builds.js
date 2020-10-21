@@ -20,6 +20,26 @@ var developer_tools_development_builds = [];
 
 var builds_url = '/api/builds/data';
 
+
+// Determine if an element is in the viewport
+$.fn.isInViewport = function() {
+    var elementTop = $(this).offset().top;
+    var elementBottom = elementTop + $(this).outerHeight();
+
+    var viewportTop = $(window).scrollTop();
+    var viewportBottom = viewportTop + $(window).height();
+
+    return elementBottom > viewportTop && elementTop < viewportBottom;
+};
+
+// start hovering cow animation
+function startAnimation() {
+    $('#ufo').css("animation", "ufo_hovering 4.5s 3");
+    $('#ufobeam').css("animation", "ufo_hovering 4.5s 3");
+    $('#cow').css("animation", "cow_hovering 4.5s 3");
+    $('#cowshadow').css("animation", "shadow_resizing 4.5s 3");
+}
+
 function render_builds(builds, parent) {
 
     parent.empty();
@@ -441,15 +461,29 @@ $(document).ready(function() {
             }).stop().fadeIn().delay(3500).fadeOut();
         });	
     });
+
+    $(window).on('scroll', function(event) {
+        // start animation if images are in viewport
+        if ($('#bottom_images_container').isInViewport()) {
+            startAnimation();
+        }
+    });
 });
 
 $(window).on("load", function(){
     $.ready.then(function(){
-       var hash = window.location.hash;
-       hash && $('ul.nav a[href="' + hash + '"]').click();
+        var hash = window.location.hash;
+        hash && $('ul.nav a[href="' + hash + '"]').click();
        
-       // scroll to tabs that contain section in hash
-       var nav_tabs = $('ul.nav a[href="' + hash + '"]').parent().parent();
-       $("html, body").animate({ scrollTop: nav_tabs.offset().top }, 500);
+        // scroll to tabs that contain section in hash
+        if (hash) {
+            var nav_tabs = $('ul.nav a[href="' + hash + '"]').parent().parent();
+            $("html, body").animate({ scrollTop: nav_tabs.offset().top }, 500);
+        }
+
+        // start animation if images are in viewport
+        if ($('#bottom_images_container').isInViewport()) {
+            startAnimation();
+        }
     })
 });
