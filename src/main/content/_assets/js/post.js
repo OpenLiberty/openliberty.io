@@ -17,7 +17,7 @@ $.getJSON( "../../../../blog_tags.json", function(data) {
     var tags_html = "";
     $.each(data.blog_tags, function(j, tag) {
         if (tag.posts.indexOf(post_name) > -1) {
-            tags_html = '<a href="/blog/?search=' + tag.name + '" class="post_tag">' + tag.name + '</a>' + '<span>, </span>';
+            tags_html = '<a href="/blog/?search=' + tag.name.replace(" ", "_") + '" class="post_tag">' + tag.name + '</a>' + '<span>, </span>';
             $(".post_tags_container").append(tags_html);
         }
     });
