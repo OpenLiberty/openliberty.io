@@ -14,8 +14,6 @@ if [ "$ROUTE" ]; then
     fi
 fi
 
-BRANCH_NAME="staging"
-
 echo "Cloning the $BRANCH_NAME Antora playbook branch"
 
 git clone https://github.com/OpenLiberty/docs-playbook.git --branch $BRANCH_NAME
