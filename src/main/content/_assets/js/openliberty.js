@@ -8,10 +8,14 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-
-$(document).ready(function() {
+var openliberty = (function() {
+    $(document).ready(function() {
+    var scrollAllowed = true;
     var prevScrollTop = 0;
 	$(window).scroll(function() {
+        if(!scrollAllowed){
+            return;
+        }
         var currScrollTop = $(this).scrollTop();
         // if scrolled past nav bar, determine whether to hide or show nav bar
         if (currScrollTop > $("#nav_bar").outerHeight()) {
@@ -170,3 +174,18 @@ function copy_element_to_clipboard(target, callback){
         temp.remove(); // Remove temporary element.
     }
 }
+
+function preventScrolling(){
+    scrollAllowed = false;
+}
+
+function allowScrolling(){
+    scrollAllowed = true;
+}
+
+return {
+    preventScrolling: preventScrolling,
+    allowScrolling: allowScrolling
+};
+})();
+

@@ -8,10 +8,14 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-
-$(document).ready(function() {
+var navScroll = (function(){
+    $(document).ready(function() {
+    var scrollAllowed = true;
     var prevScrollTop = 0;
 	$(window).scroll(function() {
+        if(!scrollAllowed){
+            return;
+        }
         var currScrollTop = $(this).scrollTop();
         // if scrolled past nav bar, determine whether to hide or show nav bar
         if (currScrollTop > $("#nav_bar").outerHeight()) {
@@ -135,3 +139,19 @@ function hideNav() {
     // move config breadcrumb back up when nav bar slides out of view
     $(".contentStickyBreadcrumbHeader").css("top", $(".toolbar").outerHeight() + "px");
 }
+
+function preventScrolling(){
+    scrollAllowed = false;
+}
+
+function allowScrolling(){
+    scrollAllowed = true;
+}
+
+return {
+    showNav: showNav,
+    hideNav: hideNav,
+    preventScrolling: preventScrolling,
+    allowScrolling: allowScrolling
+}
+})();
