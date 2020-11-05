@@ -45,22 +45,6 @@ if [ "$JEKYLL_ENV" != "production" ]; then
     fi
 fi
 
-# Determine which branch of docs-javadoc repo to clone
-BRANCH_NAME="prod"
-if [ "$JEKYLL_STAGING_SITE" == "true" ]; then
-    echo "Cloning the staging branch of javadocs"
-    BRANCH_NAME="staging"
-elif [ "$JEKYLL_DRAFT_SITE" == "true" ]; then
-    echo "Cloning the draft branch of javadocs"
-    BRANCH_NAME="draft"
-else
-    echo "Cloning the prod branch of javadocs"
-fi
-# Clone docs-javadoc repo
-pushd src/main/content
-git clone https://github.com/OpenLiberty/docs-javadoc.git --branch $BRANCH_NAME
-popd
-
 # Special external link handling
 pushd gems/ol-target-blank
 gem build ol-target-blank.gemspec
@@ -107,6 +91,22 @@ if [ "$ga" = true ]
     # Set the --future flag to show blogs with date timestamps in the future
     jekyll build --future --source src/main/content --destination target/jekyll-webapp 
 fi
+
+# Determine which branch of docs-javadoc repo to clone
+BRANCH_NAME="prod"
+if [ "$JEKYLL_STAGING_SITE" == "true" ]; then
+    echo "Cloning the staging branch of javadocs"
+    BRANCH_NAME="staging"
+elif [ "$JEKYLL_DRAFT_SITE" == "true" ]; then
+    echo "Cloning the draft branch of javadocs"
+    BRANCH_NAME="draft"
+else
+    echo "Cloning the prod branch of javadocs"
+fi
+# Clone docs-javadoc repo
+pushd src/main/content
+git clone https://github.com/OpenLiberty/docs-javadoc.git --branch $BRANCH_NAME
+popd
 
 # Install Antora packages and build the Antora UI bundle
 ./scripts/build_antora_ui.sh
