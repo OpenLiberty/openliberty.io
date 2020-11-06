@@ -41,8 +41,12 @@ function highlightSelectedVersion(){
 function checkForNonVersionedPage(){
     if($('.feature_version').length > 0){
         var url = window.location.href;
-        var version = url.substring(url.lastIndexOf('/') + 1);
-        if($('.feature_version[href="' + version + '"]').length === 0){
+        var urlWithoutHash = url;
+        if(url.indexOf('#') > -1){
+            urlWithoutHash = url.substring(0, url.indexOf('#'));
+        }        
+        var href = urlWithoutHash.substring(urlWithoutHash.indexOf('/reference/feature/') + 19);
+        if($('.feature_version[href="' + href + '"]').length === 0){
             // Redirect to the highest version
             var href = $('.feature_version').first().attr('href');
             var newUrl = url.substring(0,url.lastIndexOf('/')) + '/' + href;
