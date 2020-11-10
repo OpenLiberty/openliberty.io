@@ -185,7 +185,8 @@ function allowScrolling(){
 
 return {
     preventScrolling: preventScrolling,
-    allowScrolling: allowScrolling
+    allowScrolling: allowScrolling,
+    copy_element_to_clipboard: copy_element_to_clipboard
 };
 })();
 
