@@ -804,7 +804,7 @@ $(document).ready(function() {
         var target_copy = $("#code_column .code_column:visible .content code").clone();
         target_copy.find('.line-numbers').remove();
         target = target_copy[0];
-        copy_element_to_clipboard(target, function(){
+        openliberty.copy_element_to_clipboard(target, function(){
             var current_target_object = $(event.currentTarget);
             var position = current_target_object.position();	
             $('#code_section_copied_confirmation').css({	
