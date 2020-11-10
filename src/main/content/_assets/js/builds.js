@@ -454,7 +454,7 @@ $(document).ready(function() {
     $(document).on("click", "#copy_to_clipboard", function(event) {
         event.preventDefault();
         // Target was assigned while hovering over the element to copy.
-        copy_element_to_clipboard(target, function(){
+        openliberty.copy_element_to_clipboard(target, function(){
             $('#copied_confirmation').css({	
                 top: target.offset().top - 15,
                 right: $(window).width() - (target.offset().left + target.outerWidth()) + 1
