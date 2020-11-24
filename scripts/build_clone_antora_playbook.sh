@@ -5,11 +5,9 @@ rm -rf docs-playbook
 
 BRANCH_NAME="prod"
 if [ "$ROUTE" ]; then
-    if [ "$ROUTE" == "$SITE_STAGING_DOMAIN" ]; then
+    if [ "$STAGING_SITE" == "true" ]; then
         BRANCH_NAME="staging"
-    elif [ "$ROUTE" == "$SITE_DRAFT_DOMAIN" ]; then
-        BRANCH_NAME="draft"
-    elif [ "$ROUTE" == "$SITE_ANTORA_DOMAIN" ]; then
+    elif [ "$DRAFT_SITE" == "true" ]; then
         BRANCH_NAME="draft"
     fi
 fi
