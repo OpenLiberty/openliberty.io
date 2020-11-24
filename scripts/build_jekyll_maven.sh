@@ -31,7 +31,7 @@ if [ "$JEKYLL_ENV" != "production" ]; then
     cp src/main/content/_includes/noindex.html src/main/content/antora_ui/src/partials/noindex.hbs
 
     # Development environments with draft docs/guides
-    if [ "$JEKYLL_DRAFT_GUIDES" == "true" ]; then
+    if [ "$DRAFT_GUIDES" == "true" ]; then
         echo "Clone draft guides for test environments..."
         ruby ./scripts/build_clone_guides.rb "draft-guide"    
 
@@ -94,10 +94,10 @@ fi
 
 # Determine which branch of docs-javadoc repo to clone
 BRANCH_NAME="prod"
-if [ "$JEKYLL_STAGING_SITE" == "true" ]; then
+if [ "$STAGING_SITE" == "true" ]; then
     echo "Cloning the staging branch of javadocs"
     BRANCH_NAME="staging"
-elif [ "$JEKYLL_DRAFT_SITE" == "true" ]; then
+elif [ "$DRAFT_SITE" == "true" ]; then
     echo "Cloning the draft branch of javadocs"
     BRANCH_NAME="draft"
 else
