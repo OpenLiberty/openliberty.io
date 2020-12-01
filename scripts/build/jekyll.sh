@@ -3,7 +3,7 @@
 set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
 
-$BUILD_SCRIPTS_DIR/ruby_install.sh
+source $BUILD_SCRIPTS_DIR/ruby_install.sh
 
 # Guides that are ready to be published to openliberty.io
 echo "Cloning repositories with name starting with guide or iguide..."
