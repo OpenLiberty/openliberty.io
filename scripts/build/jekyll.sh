@@ -2,6 +2,7 @@
 # Exit immediately if a simple command exits with a non-zero status.
 set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
+echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 
 source $BUILD_SCRIPTS_DIR/ruby_install.sh
 

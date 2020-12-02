@@ -1,5 +1,6 @@
 set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
+echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 
 echo "Begin building all doc content"
 
