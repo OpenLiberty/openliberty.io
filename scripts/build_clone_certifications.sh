@@ -12,10 +12,10 @@ rm -rf certifications
 
 BRANCH_NAME="prod"
 # Development environments with draft content
-if [ "$JEKYLL_STAGING_SITE" == "true" ]; then
+if [ "$STAGING_SITE" == "true" ]; then
     echo "Cloning the staging branch of certifications"
     BRANCH_NAME="staging"
-elif [ "$JEKYLL_DRAFT_SITE" == "true" ]; then
+elif [ "$DRAFT_SITE" == "true" ]; then
     echo "Cloning the draft branch of certifications"
     BRANCH_NAME="draft"
 else
