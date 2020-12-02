@@ -9,10 +9,7 @@
 # but need to be on the test website have a GitHub repository name starting with:
 #       draft-guide*
 require 'octokit'
-
-# This variable is to determine if we want to clone the "still in progress"
-# guides that are not ready to be on openliberty.io
-cloneDraftGuides = ARGV[0]
+puts "Using Ruby to get all guide repos"
 
 # --------------------------------------------
 # Get all the Open Liberty repositories
