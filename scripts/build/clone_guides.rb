@@ -31,7 +31,7 @@ elsif ENV['DRAFT_SITE']
     guide_branch = 'dev'
 elsif ENV['NOT_PROD_SITE'] == 'true'
     puts "Skipping cloning any guides"
-    exit!
+    exit
 end
 
 puts "Looking for guides with branch: #{guide_branch}..."
