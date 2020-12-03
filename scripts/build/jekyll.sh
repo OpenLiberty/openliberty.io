@@ -46,10 +46,11 @@ find src/main/content/guides/guide*/assets/* | while read line; do
 done
 
 # Move any js/css files from guides to the _assets folder for jekyll-assets minification.
-echo "Moving any js and css files published interactive guides..."
-# Assumption: There is _always_ iguide* folders
-find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
-find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
+if [ $(find src/main/content/guides -type d -name "iguide*" | wc -l ) != "0" ] ; then
+    echo "Moving any js and css files published interactive guides..."
+    find src/main/content/guides/iguide* -d -name js -exec cp -R '{}' src/main/content/_assets \;
+    find src/main/content/guides/iguide* -d -name css -exec cp -R '{}' src/main/content/_assets \;
+fi
 
 # Clone certifications
 $BUILD_SCRIPTS_DIR/clone_certifications.sh

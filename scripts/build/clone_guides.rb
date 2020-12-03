@@ -25,9 +25,9 @@ repos = client.org_repos('OpenLiberty')
 guide_branch = 'master'
 if ENV['GUIDE_CLONE_BRANCH']
     guide_branch = ENV['GUIDE_CLONE_BRANCH']
-elsif ENV['STAGING_SITE']
+elsif ENV['STAGING_SITE'] || ENV['GUIDES_STAGING_SITE']
     guide_branch = 'qa'
-elsif ENV['DRAFT_SITE']
+elsif ENV['DRAFT_SITE'] || ENV['GUIDES_DRAFT_SITE']
     guide_branch = 'dev'
 elsif ENV['NOT_PROD_SITE'] == 'true'
     puts "Skipping cloning any guides"
@@ -59,7 +59,7 @@ repos.each do |element|
             `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
         end
     end
-    if ENV['DRAFT_SITE']
+    if ENV['DRAFT_SITE'] || ENV['GUIDES_DRAFT_SITE']
         ##################
         # DRAFT GUIDES  
         # Clone guides that are still being drafted (draft sites)
