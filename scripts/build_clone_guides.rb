@@ -25,9 +25,19 @@ repos = client.org_repos('OpenLiberty')
 # Travis CI related steps
 # --------------------------------------------
 # For the interactive guides, only build the dev branch for the TravisCI environments
-guide_branch = 'master'
+guide_branch = 'prod'
+fallback_guide_branch = 'master'
 if ENV['GUIDE_CLONE_BRANCH']
     guide_branch = ENV['GUIDE_CLONE_BRANCH']
+elsif ENV['STAGING_SITE'] || ENV['GUIDES_STAGING_SITE']
+    guide_branch = 'staging'
+    fallback_guide_branch = 'qa'
+elsif ENV['DRAFT_SITE'] || ENV['GUIDES_DRAFT_SITE']
+    guide_branch = 'draft'
+    fallback_guide_branch = 'dev'
+elsif ENV['NOT_PROD_SITE'] == 'true'
+    puts "Skipping cloning any guides"
+    exit
 end
 
 puts "Looking for guides with branch: #{guide_branch}..."
@@ -51,7 +61,12 @@ repos.each do |element|
             # Clone the draft guides, using the dev branch for travis and master for all other environments.
             `git clone https://github.com/OpenLiberty/#{repo_name}.git -b #{guide_branch} src/main/content/guides/#{repo_name}`
 
-            # Clone the default branch if the guide_branch does not exist for this guide repo.
+            # # Clone the fallback branch if the guide_branch does not exist for this guide repo.
+            if !(directory_exists?(repo_name))
+                `git clone https://github.com/OpenLiberty/#{repo_name}.git -b #{fallback_guide_branch} src/main/content/guides/#{repo_name}`
+            end
+
+            # Clone the default branch if the fallback_guide_branch does not exist for this guide repo.
             if !(directory_exists?(repo_name))
                 `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
             end
@@ -64,7 +79,12 @@ repos.each do |element|
             # Clone the  guides, using the dev branch for travis and master for all other environments.
             `git clone https://github.com/OpenLiberty/#{repo_name}.git -b #{guide_branch} src/main/content/guides/#{repo_name}`
 
-            # Clone the default branch if the guide_branch does not exist for this guide repo.
+            # Clone the fallback branch if the guide_branch does not exist for this guide repo.
+            if !(directory_exists?(repo_name))
+                `git clone https://github.com/OpenLiberty/#{repo_name}.git -b #{fallback_guide_branch} src/main/content/guides/#{repo_name}`
+            end
+
+            # Clone the default branch if the fallback_guide_branch does not exist for this guide repo.
             if !(directory_exists?(repo_name))
                 `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
             end
