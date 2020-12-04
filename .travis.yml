@@ -8,9 +8,9 @@ before_install:
 # Trigger a build for each environment; QA == STAGING
 jobs:
   include:
-    - env: ROUTE=$SITE_STAGING_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_QA_BRANCH JEKYLL_STAGING_SITE=true JEKYLL_ENV=production
+    - env: ROUTE=$SITE_STAGING_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_QA_BRANCH STAGING_SITE=true JEKYLL_ENV=production
       if: branch = staging
-    - env: ROUTE=$SITE_DRAFT_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH JEKYLL_DRAFT_GUIDES=true JEKYLL_DRAFT_SITE=true
+    - env: ROUTE=$SITE_DRAFT_DOMAIN GUIDE_CLONE_BRANCH=$GUIDE_DEV_BRANCH DRAFT_GUIDES=true DRAFT_SITE=true
       if: branch = draft
     - env: ROUTE=$SITE_DEMO1_DOMAIN
       if: branch = demo1

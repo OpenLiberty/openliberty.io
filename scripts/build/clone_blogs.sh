@@ -9,15 +9,18 @@ echo "Start cloning blogs repository..."
 
 BRANCH_NAME="prod"
 # Development environments with draft docs/guides
-if [ "$STAGING_SITE" == "true" ]; then
+if [[ "$STAGING_SITE" == "true" || "$BLOGS_STAGING_SITE" == "true" ]]; then
     echo "Cloning the staging branch of blogs"
     BRANCH_NAME="staging"
-elif [ "$DRAFT_SITE" == "true" ]; then
+elif [[ "$DRAFT_SITE" == "true" || "$BLOGS_DRAFT_SITE" == "true" ]]; then
     echo "Cloning the draft branch of blogs"
     BRANCH_NAME="draft"
-else
-    echo "Cloning the prod branch of blogs"
+elif [ "$NOT_PROD_SITE" == "true" ]; then
+    echo "Not cloning any branch from blogs (aka, skipping building blogs)"
+    exit 0
 fi
+
+echo "Cloning the $BRANCH_NAME branch of blogs repository..."
 
 git clone https://github.com/OpenLiberty/blogs.git --branch $BRANCH_NAME blogs_temp
 

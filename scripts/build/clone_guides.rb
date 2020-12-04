@@ -9,10 +9,7 @@
 # but need to be on the test website have a GitHub repository name starting with:
 #       draft-guide*
 require 'octokit'
-
-# This variable is to determine if we want to clone the "still in progress"
-# guides that are not ready to be on openliberty.io
-cloneDraftGuides = ARGV[0]
+puts "Using Ruby to get all guide repos"
 
 # --------------------------------------------
 # Get all the Open Liberty repositories
@@ -22,12 +19,19 @@ client.auto_paginate = true
 repos = client.org_repos('OpenLiberty')
 
 # --------------------------------------------
-# Travis CI related steps
+# For non-production sites, select the correct branch of the guide
 # --------------------------------------------
-# For the interactive guides, only build the dev branch for the TravisCI environments
+# For the interactive guides, only build the dev branch for non-prod sites
 guide_branch = 'master'
 if ENV['GUIDE_CLONE_BRANCH']
     guide_branch = ENV['GUIDE_CLONE_BRANCH']
+elsif ENV['STAGING_SITE'] || ENV['GUIDES_STAGING_SITE']
+    guide_branch = 'qa'
+elsif ENV['DRAFT_SITE'] || ENV['GUIDES_DRAFT_SITE']
+    guide_branch = 'dev'
+elsif ENV['NOT_PROD_SITE'] == 'true'
+    puts "Skipping cloning any guides"
+    exit
 end
 
 puts "Looking for guides with branch: #{guide_branch}..."
@@ -43,25 +47,24 @@ end
 guides = []
 repos.each do |element|
     repo_name = element['name']
-    if cloneDraftGuides == "draft-guide"
+    ##################
+    # PUBLISHED GUIDES
+    # Clone static & interactive guides that are ready to be published to openliberty.io
+    if repo_name.start_with?('iguide') || repo_name.start_with?('guide')
+        # Clone the guides, using the dev branch for travis and master for all other environments.
+        `git clone https://github.com/OpenLiberty/#{repo_name}.git -b #{guide_branch} src/main/content/guides/#{repo_name}`
+
+        # Clone the default branch if the guide_branch does not exist for this guide repo.
+        if !(directory_exists?(repo_name))
+            `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
+        end
+    end
+    if ENV['DRAFT_SITE'] || ENV['GUIDES_DRAFT_SITE']
         ##################
         # DRAFT GUIDES  
-        # Clone guides that are still being drafted and are only for the staging website
+        # Clone guides that are still being drafted (draft sites)
         if repo_name.start_with?('draft-iguide') || repo_name.start_with?('draft-guide')
             # Clone the draft guides, using the dev branch for travis and master for all other environments.
-            `git clone https://github.com/OpenLiberty/#{repo_name}.git -b #{guide_branch} src/main/content/guides/#{repo_name}`
-
-            # Clone the default branch if the guide_branch does not exist for this guide repo.
-            if !(directory_exists?(repo_name))
-                `git clone https://github.com/OpenLiberty/#{repo_name}.git src/main/content/guides/#{repo_name}`
-            end
-        end
-    else
-        ##################
-        # PUBLISHED GUIDES
-        # Clone interactive guides that are ready to be published to openliberty.io
-        if repo_name.start_with?('iguide') || repo_name.start_with?('guide')
-            # Clone the  guides, using the dev branch for travis and master for all other environments.
             `git clone https://github.com/OpenLiberty/#{repo_name}.git -b #{guide_branch} src/main/content/guides/#{repo_name}`
 
             # Clone the default branch if the guide_branch does not exist for this guide repo.
