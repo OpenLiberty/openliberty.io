@@ -75,7 +75,7 @@ repos.each do |element|
             # Clone the draft guides, using the dev branch for travis and master for all other environments.
             `git clone https://github.com/OpenLiberty/#{repo_name}.git -b #{guide_branch} src/main/content/guides/#{repo_name}`
 
-            # # Clone the fallback branch if the guide_branch does not exist for this guide repo.
+            # Clone the fallback branch if the guide_branch does not exist for this guide repo.
             if !(directory_exists?(repo_name))
                 `git clone https://github.com/OpenLiberty/#{repo_name}.git -b #{fallback_guide_branch} src/main/content/guides/#{repo_name}`
             end
