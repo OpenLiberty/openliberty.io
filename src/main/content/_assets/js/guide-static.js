@@ -33,12 +33,12 @@
                 if (prereq.exclude) {
                     // if guide not in prereq exclude list, add it to the html
                     if (prereq.exclude.indexOf(guide_name) <= -1) {
-                        prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank">' + prereq.name + '</a></div>'; 
+                        prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank" rel="noopener noreferrer">' + prereq.name + '</a></div>'; 
                     }
                 }
                 // guides has * but no exclude, add all to html
                 else {
-                    prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank">' + prereq.name + '</a></div>'; 
+                    prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank" rel="noopener noreferrer">' + prereq.name + '</a></div>'; 
                 }
             }
         });
@@ -54,7 +54,7 @@
         skills_network_url = skills_network_url.replace('{projectid}', guide_name);
         if(data.guides.indexOf(guide_name) > -1){
             $('.skills_network_description').text(data.tooltipText);
-            var skills_network_button = $('<a class="skills_network_button" target="_blank"></a>');
+            var skills_network_button = $('<a class="skills_network_button" target="_blank" rel="noopener noreferrer"></a>');
             skills_network_button.attr('href', skills_network_url);
 
             var skills_network_button_text = $('<div class="skills_network_button_text"></div>');
