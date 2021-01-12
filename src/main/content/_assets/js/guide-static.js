@@ -54,7 +54,7 @@
         skills_network_url = skills_network_url.replace('{projectid}', guide_name);
         if(data.guides.indexOf(guide_name) > -1){
             $('.skills_network_description').text(data.tooltipText);
-            var skills_network_button = $('<a class="skills_network_button" target="_blank" rel="noopener noreferrer"></a>');
+            var skills_network_button = $('<a class="skills_network_button" target="_blank" rel="noopener"></a>');
             skills_network_button.attr('href', skills_network_url);
 
             var skills_network_button_text = $('<div class="skills_network_button_text"></div>');
