@@ -33,17 +33,39 @@
                 if (prereq.exclude) {
                     // if guide not in prereq exclude list, add it to the html
                     if (prereq.exclude.indexOf(guide_name) <= -1) {
-                        prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank">' + prereq.name + '</a></div>'; 
+                        prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank" rel="noopener noreferrer">' + prereq.name + '</a></div>'; 
                     }
                 }
                 // guides has * but no exclude, add all to html
                 else {
-                    prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank">' + prereq.name + '</a></div>'; 
+                    prereq_html += '<div class="prereq_div"><a href=' + '"' + prereq.link + '"' + ' class="prereq notranslate" target="_blank" rel="noopener noreferrer">' + prereq.name + '</a></div>'; 
                 }
             }
         });
 
         $(".prereqs_list").html(prereq_html);
+    });
+
+    // Read skills network json to see if we need to link to a cloud hosted guide equivalent.
+    $.getJSON( "../../guides/guides-common/cloud-hosted-guides.json", function(data) {
+        var guide_name = window.location.pathname.replace('.html','').replace('/guides/', '');
+        var host = window.location.hostname;
+        var skills_network_url = host === "openliberty.io" ? data.skillNetworkUrl : data.stagingSkillNetworkUrl;
+        skills_network_url = skills_network_url.replace('{projectid}', guide_name);
+        if(data.guides.indexOf(guide_name) > -1){
+            $('.skills_network_description').text(data.tooltipText);
+            var skills_network_button = $('<a class="skills_network_button" target="_blank" rel="noopener"></a>');
+            skills_network_button.attr('href', skills_network_url);
+
+            var skills_network_button_text = $('<div class="skills_network_button_text"></div>');
+            skills_network_button_text.text(data.buttonText);
+            var skills_network_img = $('<img class="skills_network_button_img" src="/img/launch.svg" alt="Launch icon"></img>');
+
+            skills_network_button.append(skills_network_button_text);
+            skills_network_button.append(skills_network_img);
+            $('.skills_network_description').append(skills_network_button);
+            $('.skills_network_container').show();
+        }
     });
 
     function handleSectionChanging(event){
