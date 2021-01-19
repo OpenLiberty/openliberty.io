@@ -213,6 +213,7 @@ public class DHEBuildParser {
                 }
             } catch (ProcessingException | WebApplicationException e) {
                 System.err.println("Failure accessing builds: " + type + " error was: " + e.getMessage());
+                e.printStackTrace();
             }
         }
 
@@ -229,8 +230,9 @@ public class DHEBuildParser {
                     BuildInfo info = store.getBuildInfo(type, version);
 
                     add(type, version, info);
-                } catch (ProcessingException | WebApplicationException e) {
+                } catch (RuntimeException e) {
                     System.err.println("Failure accessing build: " + type + " at " + version + " error was: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }
