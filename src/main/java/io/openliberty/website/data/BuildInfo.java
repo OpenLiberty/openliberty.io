@@ -114,13 +114,13 @@ public class BuildInfo {
 
         // Setup the url prefix for the build logs and driver location
         String prefix = url + type.getURISegment() + '/' + dateTime + '/';
-        
-        if (packageLocations != null) {
-            // add driver location to arraylist of package locations
-            packageLocations.add(driverLocation);
-        }
 
         if (driverLocation != null) {
+            if (packageLocations != null) {
+                // add driver location to arraylist of package locations
+                packageLocations.add(driverLocation);
+            }
+
             driverLocation = prefix + driverLocation;
         }
 
