@@ -2,7 +2,7 @@
 SCRIPT_DIR=$(dirname $0)
 source $SCRIPT_DIR/deploy_function.sh
 
-APPS="$(cf apps | grep "openliberty-blue\|openliberty-green" || true)"
+APPS="$(cf apps | grep "^openliberty-blue\|^openliberty-green" || true)"
 echo "$APPS"
 STARTEDCOUNT=$(echo "$APPS" | (grep started || true) | wc -l)
 echo "$STARTEDCOUNT"
