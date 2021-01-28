@@ -23,3 +23,9 @@ git clone https://github.com/OpenLiberty/docs-playbook.git --branch $BRANCH_NAME
 # Move the docs playbook over to the docs dir so it can generate the doc pages
 mkdir -p src/main/content/docs/
 cp -f docs-playbook/antora-playbook.yml src/main/content/docs/
+
+# Move the docs redirect file to the WEB-INF directory
+if [ -f docs-playbook/doc-redirects.properties ]; then
+   echo "Moving the docs redirects file"
+   mv docs-playbook/doc-redirects.properties /WEB-INF/doc-redirects.properties
+fi
