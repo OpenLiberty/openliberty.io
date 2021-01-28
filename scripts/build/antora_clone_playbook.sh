@@ -27,5 +27,5 @@ cp -f docs-playbook/antora-playbook.yml src/main/content/docs/
 # Move the docs redirect file to the WEB-INF directory
 if [ -f docs-playbook/doc-redirects.properties ]; then
    echo "Moving the docs redirects file"
-   mv docs-playbook/doc-redirects.properties /WEB-INF/doc-redirects.properties
+   mv docs-playbook/doc-redirects.properties src/main/webapp/WEB-INF/doc-redirects.properties
 fi

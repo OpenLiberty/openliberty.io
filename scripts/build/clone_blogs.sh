@@ -34,7 +34,7 @@ mv blogs_temp/blog_tags.json .
 # Move the blog redirect file to the WEB-INF directory
 if [ -f blogs_temp/blog-redirects.properties ]; then
    echo "Moving the blog redirects file"
-   mv blogs_temp/blog-redirects.properties /WEB-INF/blog-redirects.properties
+   mv blogs_temp/blog-redirects.properties src/main/webapp/WEB-INF/blog-redirects.properties
 fi
 
 rm -rf blogs_temp
