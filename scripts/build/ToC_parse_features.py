@@ -100,32 +100,34 @@ for version in versions:
             matchingTOCs = matchingTitleTOCs[::-1]
             for matchingTOC in matchingTOCs:
                 tocHref = matchingTOC.get('href')
-                if firstElement:
-                    firstElement = False
-                    hrefSplits = tocHref.split('/')
-                    lastHrefSplit = hrefSplits[-1]
-                    htmlSplits = lastHrefSplit.split('-')
-                    lastMatch = re.search(r'\d*.html$', htmlSplits[-1])
-                    if lastMatch:
-                        del htmlSplits[-1]
-                        combineHtml = "-".join(htmlSplits) + '.html'
-                        del hrefSplits[-1]
-                        newTOCHref = '/'.join(hrefSplits) + '/' + combineHtml
-                        title = createTitle(featurePage, tocHref, matchingTOC.string)
-                        titleDiv.append(title)
+                if not str.startswith(tocHref, ".."):
+                    if firstElement:
+                        firstElement = False
+                        hrefSplits = tocHref.split('/')
+                        lastHrefSplit = hrefSplits[-1]
+                        htmlSplits = lastHrefSplit.split('-')
+                        lastMatch = re.search(r'\d*.html$', htmlSplits[-1])
+                        if lastMatch:
+                            del htmlSplits[-1]
+                            combineHtml = "-".join(htmlSplits) + '.html'
+                            del hrefSplits[-1]
+                            newTOCHref = '/'.join(hrefSplits) + '/' + combineHtml
+                            title = createTitle(featurePage, tocHref, matchingTOC.string)
+                            titleDiv.append(title)
+                            hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string)
+                            versionDiv.append(hrefTag)
+                    else:
                         hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string)
                         versionDiv.append(hrefTag)
-                else:
-                    hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string)
-                    versionDiv.append(hrefTag)
-                    TOCToDecompose.append(matchingTOC.parent)
+                        TOCToDecompose.append(matchingTOC.parent)
             # Write the feature title and the versions to the page div
             pageTitle.append(titleDiv)
             pageTitle.append(versionDiv)
 
             # write to the common version doc with the highest versioned content
-            with open(antora_path + 'feature' +  newTOCHref, "w") as file:
-                file.write(str(featurePage))
+            if newTOCHref is not "":
+                with open(antora_path + 'feature' +  newTOCHref, "w") as file:
+                    file.write(str(featurePage))
             
             # Go through the matching TOC pages and write the version switcher to the top of the page
             for matchingTOC in matchingTOCs:
