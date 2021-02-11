@@ -88,20 +88,19 @@ for version in versions:
             commonTOCMatchString = commonTOCs[commonTOC]
             matchingTitleTOCs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(commonTOCMatchString))
             firstElement = True;
-            # determine whether there are multiple versions
-            if len(matchingTitleTOCs) > 1:
-                # multiple versions of the same title found, put the versions at the top of the page
-                firstHref = matchingTitleTOCs[0].get('href')
-                featurePage  = BeautifulSoup(open(antora_path + '/feature/' + firstHref), "lxml")
-                pageTitle = featurePage.find('h1', {'class': 'page'})
-                titleDiv = featurePage.new_tag('div', id='feature_name')
-                versionDiv = featurePage.new_tag('div', id='feature_versions')
-                pageTitle.string = ''
-                newTOCHref = ''
-                # in reverse descending order
-                matchingTOCs = matchingTitleTOCs[::-1]
-                for matchingTOC in matchingTOCs:
-                    tocHref = matchingTOC.get('href')
+            # determine whether there are multiple versions            
+            firstHref = matchingTitleTOCs[0].get('href')
+            featurePage  = BeautifulSoup(open(antora_path + '/feature/' + firstHref), "lxml")
+            pageTitle = featurePage.find('h1', {'class': 'page'})
+            titleDiv = featurePage.new_tag('div', id='feature_name')
+            versionDiv = featurePage.new_tag('div', id='feature_versions')
+            pageTitle.string = ''
+            newTOCHref = ''
+            # in reverse descending order
+            matchingTOCs = matchingTitleTOCs[::-1]
+            for matchingTOC in matchingTOCs:
+                tocHref = matchingTOC.get('href')
+                if not str.startswith(tocHref, ".."):
                     if firstElement:
                         firstElement = False
                         hrefSplits = tocHref.split('/')
@@ -121,23 +120,24 @@ for version in versions:
                         hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string)
                         versionDiv.append(hrefTag)
                         TOCToDecompose.append(matchingTOC.parent)
-                # Write the feature title and the versions to the page div
-                pageTitle.append(titleDiv)
-                pageTitle.append(versionDiv)
+            # Write the feature title and the versions to the page div
+            pageTitle.append(titleDiv)
+            pageTitle.append(versionDiv)
 
-                # write to the common version doc with the highest versioned content
+            # write to the common version doc with the highest versioned content
+            if newTOCHref is not "":
                 with open(antora_path + 'feature' +  newTOCHref, "w") as file:
                     file.write(str(featurePage))
-                
-                # Go through the matching TOC pages and write the version switcher to the top of the page
-                for matchingTOC in matchingTOCs:
-                    # Open page and rewrite the version part
-                    versionHref = antora_path + 'feature/' + matchingTOC.get('href')
-                    versionPage = BeautifulSoup(open(versionHref), "lxml")
-                    versionTitle = versionPage.find('h1', {'class': 'page'})
-                    versionTitle.replace_with(pageTitle)
-                    with open(versionHref, "w") as file:
-                        file.write(str(versionPage))
+            
+            # Go through the matching TOC pages and write the version switcher to the top of the page
+            for matchingTOC in matchingTOCs:
+                # Open page and rewrite the version part
+                versionHref = antora_path + 'feature/' + matchingTOC.get('href')
+                versionPage = BeautifulSoup(open(versionHref), "lxml")
+                versionTitle = versionPage.find('h1', {'class': 'page'})
+                versionTitle.replace_with(pageTitle)
+                with open(versionHref, "w") as file:
+                    file.write(str(versionPage))
 
         for TOC in TOCToDecompose:
             TOC.decompose()
