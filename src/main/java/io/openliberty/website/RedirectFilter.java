@@ -110,10 +110,17 @@ public class RedirectFilter implements Filter {
      * @throws IOException
      */
     public static void init(ServletContext ctx) throws IOException {
-        InputStream in = ctx.getResourceAsStream("/WEB-INF/redirects.properties");
-        if (in != null) {
+        String[] files = { "/WEB-INF/ui-redirects.properties", "/WEB-INF/doc-redirects.properties", "/WEB-INF/blog-redirects.properties" };   
+        try {
             Properties props = new Properties();
-            props.load(in);
+            for(String file : files){
+                InputStream in = ctx.getResourceAsStream(file);
+                if (in != null) {
+                    Properties temp = new Properties();
+                    temp.load(in);
+                    props.putAll(temp);
+                }
+            } 
             for (Map.Entry<?, ?> entry : props.entrySet()) {
                 String key = (String) entry.getKey();
                 String value = (String) entry.getValue();
@@ -122,6 +129,8 @@ public class RedirectFilter implements Filter {
                 // add the url mapping to be as specific as possible.
                 reg.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, toUrlPattern(key));
             }
+        }
+        catch(IOException ioe) {            
         }
     }
 

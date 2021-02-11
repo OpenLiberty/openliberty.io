@@ -9,8 +9,13 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-// Setup and listen to version clicks
+// Setup and listen to version clicks if there is more than one version of a feature on the version picker.
 function addVersionClick(){
+    if($('.feature_version').length ===  1){
+        // If there's just one version, then disable the hover/click behavior for the version.
+        $('.feature_version').css('cursor', 'default');
+        return;
+    }
     var onclick = function(event) {
         var resource = $(event.currentTarget);
         var href = resource.attr("href");
@@ -18,7 +23,7 @@ function addVersionClick(){
         var newUrl = url.substring(0,url.lastIndexOf('/')) + '/' + href;
         window.location.href = newUrl;
     };
-    $(".feature_version").on("click", onclick);
+    $(".feature_version").on("click", onclick);       
 }
 
 function acivateNavMenu(){
