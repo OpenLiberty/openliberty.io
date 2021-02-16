@@ -26,7 +26,7 @@ js:
 <!-- Remove any documents deemed private (archived, templates, etc) -->
 {% for guide in all-markdown-files %}
     {% unless guide.archived or guide.path contains "guides/guides-template" or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
-        {% assign all-guides = all-guides | push: guide %} 
+        {% assign all-guides = all-guides | push: guide %}
     {% endunless %}
 {% endfor %}
 
@@ -48,7 +48,7 @@ js:
 
 <div id="background_container">
     <div class="toc_hotspot">
-        <!-- Guide's table of contents section -->            
+        <!-- Guide's table of contents section -->
         <div id="toc_column" class="collapse inline open">
             <div id="toc_inner">
                 {% assign toc = page.document | tocify_asciidoc %}
@@ -64,8 +64,8 @@ js:
                 {% endif %}
                 <h3 id="tag_title">Tags</h3>
                 <div id="tags_container"></div>
-            </div>                                
-        </div> 
+            </div>
+        </div>
         <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
             <img src="/img/arrow_white.svg" alt="arrow">
         </div>
@@ -83,7 +83,7 @@ js:
                         <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
                         <!-- If new posts count is less than 4, use 4 most recent posts -->
                         {% if new_guide_count < 4 %}
-                            {% if page.title ==  all_guides_by_date[0].title or page.title ==  all_guides_by_date[1].title 
+                            {% if page.title ==  all_guides_by_date[0].title or page.title ==  all_guides_by_date[1].title
                             or page.title ==  all_guides_by_date[2].title or page.title ==  all_guides_by_date[3].title %}
                                 <div class="new_guide_container">
                                     <span class="guide_new">New</span>
@@ -109,7 +109,7 @@ js:
                 </div>
 
                 <div class="scroller_anchor"></div>
-                <div role="menu" id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
+                <div role="menu" id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
                     <div role="menuitem" id="mobile_toc_accordion">
                         <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
                                 <span class="sr-only">Toggle navigation</span>
@@ -124,20 +124,20 @@ js:
 
                 <!-- Guide content section -->
                 {{ content }}
-            
+
             </div>
             <div id="guide_section_copied_confirmation">Copied to clipboard</div>
             <img id="copy_to_clipboard" src='/img/guides_copy_button.svg' alt='Copy code block' title='Copy code block'>
-        </div> 
-        
-    </div>    
+        </div>
+
+    </div>
 </div>
 
 <div id="end_of_guide_background">
     <div class="centered_content">
-        {% include end-of-guide.html %} 
-    </div>         
-</div>    
+        {% include end-of-guide.html %}
+    </div>
+</div>
 
 
 
