@@ -15,7 +15,7 @@ $(window).on('scroll', function(event) {
     if ($(this).scrollTop() > nav_bottom){
         $('#toc_indicator').css({'position': 'fixed', 'top': '0px'});
 
-        if (window.outerWidth < 1440) {
+        if (window.innerWidth < 1440) {
             $('#toc_column').css({'position': 'fixed', 'top': '0px'});
         }
     }
