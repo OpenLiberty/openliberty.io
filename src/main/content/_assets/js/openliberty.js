@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 IBM Corporation and others.
+ * Copyright (c) 2019, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ var openliberty = (function() {
             // if scrolling down, hide nav bar
             if (currScrollTop > prevScrollTop) {
                 hideNav();
-            } 
+            }
             // if scrolling up, show nav bar
             else {
                 showNav();
@@ -71,7 +71,7 @@ function showNav() {
 
     // push toc column, toc indicator and code column down below nav bar
     $("#toc_column").css("top", nav_height + "px");
-    if (window.outerWidth > 1440) {
+    if (window.innerWidth > 1440) {
         $("#toc_inner").css("margin-top", nav_height + "px");
     }
     $("#toc_indicator").css("margin-top", nav_height + "px");
@@ -92,7 +92,7 @@ function showNav() {
 
     // adjust docs toolbar and nav position
     $(".toolbar").css("top", nav_height + "px");
-    if (window.outerWidth < 1024) {
+    if (window.innerWidth < 1024) {
         $(".nav-container").css("top", nav_height + $(".toolbar").outerHeight() + "px");
         $(".nav").css("top", "");
     }
@@ -112,7 +112,7 @@ function hideNav() {
 
     // reset toc column, toc indicator and code column position
     $("#toc_column").css("top", "0px");
-    if (window.outerWidth > 1440) {
+    if (window.innerWidth > 1440) {
         $("#toc_inner").css("margin-top", "0px");
     }
     $("#toc_indicator").css("margin-top", "0px");
@@ -127,7 +127,7 @@ function hideNav() {
 
     // adjust docs toolbar and nav position
     $(".toolbar").css("top", "0px");
-    if (window.outerWidth < 1024) {
+    if (window.innerWidth < 1024) {
         $(".nav-container").css("top", $(".toolbar").outerHeight() + "px");
         $(".nav").css("top", "");
     }
@@ -148,15 +148,15 @@ function copy_element_to_clipboard(target, callback){
     // IE
     if(window.clipboardData){
         window.clipboardData.setData("Text", target.innerText);
-    } 
+    }
     else{
         var temp = $('<textarea>');
         temp.css({
             position: "absolute",
             left:     "-1000px",
             top:      "-1000px",
-        });       
-        
+        });
+
         // Create a temporary element for copying the text.
         // Prepend <br> with newlines because jQuery .text() strips the <br>'s and we use .text() because we don't want all of the html tags copied to the clipboard.
         // Remove <b> tags that contain callouts
@@ -164,9 +164,9 @@ function copy_element_to_clipboard(target, callback){
         temp.text(text);
         $("body").append(temp);
         temp.trigger('select');
-        
+
         // Try to copy the selection and if it fails display a popup to copy manually.
-        if(document.execCommand('copy')) { 
+        if(document.execCommand('copy')) {
             callback();
         } else {
             alert('Copy failed. Copy the command manually: ' + target.innerText);
