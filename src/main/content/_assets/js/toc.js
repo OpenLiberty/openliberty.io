@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 IBM Corporation and others.
+ * Copyright (c) 2018, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,7 @@ $(window).on('scroll', function(event) {
     if ($(this).scrollTop() > nav_bottom){
         $('#toc_indicator').css({'position': 'fixed', 'top': '0px'});
 
-        if (window.outerWidth < 1440) {
+        if (window.innerWidth < 1440) {
             $('#toc_column').css({'position': 'fixed', 'top': '0px'});
         }
     }
@@ -49,7 +49,7 @@ function disableFloatingTOC() {
 }
 
 function enableFloatingTOC() {
-    $('#toc_inner').css({"position":"fixed", "top":"0px"});    
+    $('#toc_inner').css({"position":"fixed", "top":"0px"});
 }
 
 function calculateTOCHeight(){
@@ -59,7 +59,7 @@ function calculateTOCHeight(){
 
 function shrinkTOCIndicator() {
     $('#toc_line').css({
-        "position": "", 
+        "position": "",
         "top": "0px",
         "height": calculateTOCHeight()
     });
@@ -86,7 +86,7 @@ function updateTOCHighlighting(id) {
 function handleTOCScrolling() {
     var visible_background_height = heightOfVisibleBackground();
     var toc_height = $('#toc_inner').height();
-    if (toc_height > visible_background_height && window.outerWidth > threeColumnBreakpoint) {
+    if (toc_height > visible_background_height && window.innerWidth > threeColumnBreakpoint) {
         // The TOC cannot fit in the dark background, allow the TOC to scroll out of viewport
         // to avoid the TOC overflowing out of the dark background
         var negativeNumber = visible_background_height - toc_height + 100;
@@ -113,7 +113,7 @@ function handleFloatingTOCAccordion() {
         // which causes a bounce in the page.
         $('.scroller_anchor').css('height', accordion.height());
         // Fix the TOC accordion to the top of the page.
-        accordion.addClass('fixed_toc_accordion');        
+        accordion.addClass('fixed_toc_accordion');
     };
 
     if(inSingleColumnView()){
@@ -205,7 +205,7 @@ function open_TOC(){
         }
         $("#guide_column").removeClass('expanded');
 
-        $("#toc_line").addClass("open");            
+        $("#toc_line").addClass("open");
         $("#toc_column").addClass("open");
         $("#guide_column").addClass("open");
 
@@ -235,7 +235,7 @@ function close_TOC(){
     $("#guide_column").removeClass("open");
 
     // if in 3 column view and user closes TOC, show bounce animation
-    if (window.outerWidth >= threeColumnBreakpoint) {
+    if (window.innerWidth >= threeColumnBreakpoint) {
         $("#toc_indicator").removeClass('hidden');
         TocIndicatorBounce();
     }
@@ -246,7 +246,7 @@ function close_TOC(){
     restoreCurrentStep();
 }
 
-function setInitialTOCLineHeight(){  
+function setInitialTOCLineHeight(){
     $("#toc_line").css(
         {'height': calculateTOCHeight()}
     );
@@ -270,14 +270,14 @@ $(document).ready(function() {
         TocIndicatorBounce();
     }
     reorganizeTOCElements();
-    setInitialTOCLineHeight();    
+    setInitialTOCLineHeight();
 
     // Add listener for clicking on the
     $("#toc_hotspot, #toc_indicator").on('mouseenter', function(){
         // Animate out the arrow and highlight the left side of the screen orange to indicate there is a TOC
         if(!$("#toc_indicator").hasClass('open')){
-            $("#toc_indicator").addClass('open');            
-        }        
+            $("#toc_indicator").addClass('open');
+        }
     });
 
     $("#toc_hotspot").on('mouseleave', function(){
@@ -286,7 +286,7 @@ $(document).ready(function() {
             var y = event.y;
             var headerHeight = $('header').height();
             var indicatorHeight = $("#toc_indicator").outerHeight();
-            
+
             y = y - headerHeight;
             if(x >= 0 && x <= this.offsetWidth && y >= 0 && y <= indicatorHeight){
                 // Still hovering over the TOC indicator arrow, so don't remove the orange line and arrow.
@@ -294,7 +294,7 @@ $(document).ready(function() {
             }
 
             $("#toc_indicator").removeClass('open');
-        }        
+        }
     });
 
     $("#toc_indicator").on('click', function(){
@@ -306,7 +306,7 @@ $(document).ready(function() {
             open_TOC();
         }
     });
-    
+
     $("#breadcrumb_hamburger").on('click', function(){
         // Handle resizing of the guide column when collapsing/expanding the TOC in 3 column view.
         if(window.innerWidth >= threeColumnBreakpoint){
@@ -321,7 +321,7 @@ $(document).ready(function() {
             restoreCurrentStep();
         }
         // Handle table of content floating if in the middle of the guide.
-        handleFloatingTableOfContent();        
+        handleFloatingTableOfContent();
     });
 
     //In single column view, set focus on 'X' initially when TOC is expanded
@@ -381,11 +381,11 @@ $(document).ready(function() {
         }
     });
 
-    var width = window.outerWidth;
+    var width = window.innerWidth;
     $(window).on('resize', function() {
 
         // going from 3 column to 2 column view
-        if (width >= threeColumnBreakpoint && $(this).outerWidth() < threeColumnBreakpoint) {
+        if (width >= threeColumnBreakpoint && $(this).innerWidth() < threeColumnBreakpoint) {
             if (!$('#guide_column').hasClass('expanded')) {
                 TocIndicatorBounce();
             }
@@ -393,13 +393,13 @@ $(document).ready(function() {
         }
 
         // going from single column to 2 column view
-        if (width < twoColumnBreakpoint && $(this).outerWidth() >= twoColumnBreakpoint) {
+        if (width < twoColumnBreakpoint && $(this).innerWidth() >= twoColumnBreakpoint) {
             // close_TOC();
             TocIndicatorBounce();
         }
 
         // going from 2 column to 3 column view
-        if (width < threeColumnBreakpoint && $(this).outerWidth() >= threeColumnBreakpoint) {
+        if (width < threeColumnBreakpoint && $(this).innerWidth() >= threeColumnBreakpoint) {
             console.log("going from 2 col to 3 col view");
             $('#toc_column').css({'position': '', 'top': ''});
         }
@@ -415,8 +415,8 @@ $(document).ready(function() {
         }
 
         // update width with new width after resizing
-        if ($(this).outerWidth() != width) {
-            width = $(this).outerWidth();
+        if ($(this).innerWidth() != width) {
+            width = $(this).innerWidth();
         }
 
     });
