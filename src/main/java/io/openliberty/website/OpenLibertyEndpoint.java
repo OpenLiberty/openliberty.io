@@ -33,6 +33,7 @@ public class OpenLibertyEndpoint extends Application {
 
     @Inject private BuildsManager buildsManager;
     @Inject private GitHubManager githubManager;
+    @Inject private StarterManager starterManager;
     
     @GET
     @Path("builds")
@@ -60,6 +61,13 @@ public class OpenLibertyEndpoint extends Application {
     @Produces({ "application/json" })
     public String githubIssues() {
         return githubManager.getIssues();
+    }
+
+    @GET
+    @Path("/starter/info")
+    @Produces({ "application/json "})
+    public StartInfo startInfo() {
+        return starterManager.getInfo();
     }
 
 }

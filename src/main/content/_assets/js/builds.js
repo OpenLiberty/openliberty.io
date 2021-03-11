@@ -223,6 +223,12 @@ function sort_builds(builds, key, descending) {
 
 $(document).ready(function() {
 
+    $.ajax({
+        url: "https://openliberty-starter.us-east.mybluemix.net/api/start/info"
+    }).done(function(data){
+        console.log(data);
+    });
+
     $('.builds_expand_link').click(function(event) {
         event.preventDefault();
         var table_container = $('#' + event.currentTarget.getAttribute('data-table-container-id'));

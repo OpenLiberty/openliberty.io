@@ -21,6 +21,9 @@ public interface Constants {
     String DHE_BETA_PATH_SEGMENT = "beta";
     String DHE_INFO_JSON_FILE_NAME = "info.json";
 
+    // Starter
+    String STARTER_URL = "https://openliberty-starter.us-east.mybluemix.net/api/start/info";
+
     // JSON
     String LAST_UPDATE_ATTEMPT = "last_update_attempt";
     String LAST_SUCCESSFULL_UPDATE = "last_successful_update";
@@ -57,5 +60,10 @@ public interface Constants {
     // BLUEMIX
     String OPEN_LIBERTY_GREEN_APP_HOST = "openliberty-green.mybluemix.net";
     String OPEN_LIBERTY_BLUE_APP_HOST = "openliberty-blue.mybluemix.net";
+
+    // STARTER
+    String OPEN_LIBERTY_STARTER_HOST = "openliberty-starter.us-east.mybluemix.net";
+    String STARTER_INFO_PATH = "/api/start/info";
+    String STARTER_REQUEST_PATH = "/api/start";
 
 }
