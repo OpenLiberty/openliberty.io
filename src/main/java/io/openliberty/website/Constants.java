@@ -62,7 +62,7 @@ public interface Constants {
     String OPEN_LIBERTY_BLUE_APP_HOST = "openliberty-blue.mybluemix.net";
 
     // STARTER
-    String OPEN_LIBERTY_STARTER_HOST = "openliberty-starter.us-east.mybluemix.net";
+    String OPEN_LIBERTY_STARTER_HOST = "https://openliberty-starter.us-east.mybluemix.net";
     String STARTER_INFO_PATH = "/api/start/info";
     String STARTER_REQUEST_PATH = "/api/start";
 

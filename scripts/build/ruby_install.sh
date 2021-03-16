@@ -6,7 +6,10 @@ cat $BUILD_SCRIPTS_DIR/../gpg/mpapis.asc | gpg --import -
 cat $BUILD_SCRIPTS_DIR/../gpg/pkuczynski.asc | gpg --import -
 
 curl -sSL https://get.rvm.io | bash -s stable
-source /usr/local/rvm/scripts/rvm
+set +e
+source /usr/local/rvm/scripts/rvm || true
+set -e
+
 rvm requirements
 rvm install 2.5.7
 rvm use 2.5.7 --default

@@ -66,7 +66,7 @@ public class OpenLibertyEndpoint extends Application {
     @GET
     @Path("/starter/info")
     @Produces({ "application/json "})
-    public StartInfo startInfo() {
+    public String startInfo() {
         return starterManager.getInfo();
     }
 

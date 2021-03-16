@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 var builds = [];
+var starter_info = [];
 
 var latest_releases = [];
 var runtime_releases = [];
@@ -19,6 +20,7 @@ var developer_tools_releases = [];
 var developer_tools_development_builds = [];
 
 var builds_url = '/api/builds/data';
+var starter_info_url = '/api/starter/info';
 
 
 // Determine if an element is in the viewport
@@ -219,14 +221,27 @@ function sort_builds(builds, key, descending) {
     });
 }
 
+function get_starter_info() {
+    var deferred = new $.Deferred();
+    $.ajax({
+        url: starter_info_url
+    }).done(function(data) {
+        starter_info = data;        
+        deferred.resolve();
+    }).fail(function() {
+        deferred.reject();
+    });
+    return deferred;
+}
+
 
 
 $(document).ready(function() {
 
-    $.ajax({
-        url: "https://openliberty-starter.us-east.mybluemix.net/api/start/info"
-    }).done(function(data){
-        console.log(data);
+    get_starter_info().done(function(data){
+        console.error(JSON.parse(data));
+    }).fail(function(){
+        console.error('Failed to pull from the starter api');
     });
 
     $('.builds_expand_link').click(function(event) {
