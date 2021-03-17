@@ -7,8 +7,6 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import io.openliberty.website.data.StarterInfo;
-
 @ApplicationScoped
 public class StarterManager {
 

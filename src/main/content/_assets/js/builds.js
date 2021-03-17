@@ -238,11 +238,37 @@ function get_starter_info() {
 
 $(document).ready(function() {
 
-    get_starter_info().done(function(data){
-        console.error(JSON.parse(data));
-    }).fail(function(){
-        console.error('Failed to pull from the starter api');
-    });
+    // get_starter_info().done(function(data){
+    //     for(var i in starter_info){
+    //         var info = starter_info[i];
+    //         console.log(info);
+    //         var id = info.name.replace(' ', '_');
+    //         var field = $("<div class='starter_field col-md-4' />");
+    //         var label = $("<label class='starter_field_label' for='Starter_" + id + "'>" + info.name + "</label>");
+    //         var input;
+    //         // switch(i){
+    //         //     // Application name
+    //         //     case a:                   
+
+    //         // }
+    //         if(info.options){
+    //             // Create a select field for it
+    //             input = $("<select class='starter_field_input starter_field_selector' id='Starter_" + id + "' />");
+    //             for(var j=0; j<info.options.length; j++){
+    //                 var value = info.options[j];
+    //                 input.append($("<option />").text(value).val(value));
+    //             }
+    //         } else {
+    //             // Just create a text field to input data.
+    //             input = $("<input type='text' class='starter_field_input' id='Starter_" + id + "' />");
+    //         }
+    //         field.append(label);
+    //         field.append(input);
+    //         field.appendTo($("#starter_form"));            
+    //     }
+    // }).fail(function(){
+    //     console.error('Failed to pull from the starter api');
+    // });
 
     $('.builds_expand_link').click(function(event) {
         event.preventDefault();
