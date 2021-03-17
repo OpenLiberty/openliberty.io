@@ -12,6 +12,9 @@ var navigation = (function(){
     var menuPanel = navContainer.querySelector('[data-panel=menu]');
     if (!menuPanel) return;
 
+    // Expand all first level doc categories
+    $(".nav-menu > .nav-list > .nav-item").addClass('is-active');
+
     var currentPageItem = menuPanel.querySelector('.is-current-page');
     if (currentPageItem) {
       activateCurrentPath(currentPageItem);
@@ -37,7 +40,7 @@ var navigation = (function(){
 
     document.querySelector('.nav-container .nav .context').addEventListener('click', function () {
       var currentPanel = document.querySelector('.nav .is-active[data-panel]');
-      var activatePanel = currentPanel.dataset.panel === 'menu' ? 'explore' : 'menu';	
+      var activatePanel = currentPanel.dataset.panel === 'menu' ? 'explore' : 'menu';
       currentPanel.classList.toggle('is-active');
       document.querySelector('.nav [data-panel=' + activatePanel + ']').classList.toggle('is-active');
     });
@@ -59,10 +62,7 @@ var navigation = (function(){
       if (e.detail > 1) e.preventDefault();
     });
 
-    // Expand all first level doc categories
-    $(".nav-menu > .nav-list > .nav-item").addClass('is-active')
-
-  };  
+  };
 
   $('.components .versions li a').on('click', function(e){
     e.stopPropagation();
@@ -120,13 +120,13 @@ var navigation = (function(){
       }
     }
   }
-  
-  
+
+
   function closeVersionPicker (e) {
     if($('.nav-panel-explore').hasClass('is-active')){
       $('.nav-panel-explore').toggleClass('is-active');
       $('.nav-panel-menu').toggleClass('is-active'); // Change active panel to the nav menu
-    }    
+    }
   }
 
   function showNav (e) {
@@ -164,7 +164,16 @@ var navigation = (function(){
     var effectiveHeight = rect.height;
     var navStyle = window.getComputedStyle(nav);
     if (navStyle.position === 'sticky') effectiveHeight -= rect.top - parseFloat(navStyle.top);
-    panel.scrollTop = Math.max(0, (el.getBoundingClientRect().height - effectiveHeight) * 0.5 + el.offsetTop);
+
+    var elementHeight = el.getBoundingClientRect().height;
+    if ((el.offsetTop + elementHeight) > effectiveHeight) {
+      // If you must scroll to see the TOC element, then move TOC so that the element
+      // is displayed about the middle of the TOC.
+      panel.scrollTop = Math.max(0, (elementHeight - effectiveHeight) * 0.5 + el.offsetTop);
+    } else {
+      // Else, just leave the user on the initial TOC (at the top) with the element highlighted.
+      panel.scrollTop = 0;
+    }
   }
 
   return {
