@@ -234,41 +234,57 @@ function get_starter_info() {
     return deferred;
 }
 
-
+function uppercase_first_letter(s){
+    if (typeof s !== 'string') return '';
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}
 
 $(document).ready(function() {
 
-    // get_starter_info().done(function(data){
-    //     for(var i in starter_info){
-    //         var info = starter_info[i];
-    //         console.log(info);
-    //         var id = info.name.replace(' ', '_');
-    //         var field = $("<div class='starter_field col-md-4' />");
-    //         var label = $("<label class='starter_field_label' for='Starter_" + id + "'>" + info.name + "</label>");
-    //         var input;
-    //         // switch(i){
-    //         //     // Application name
-    //         //     case a:                   
-
-    //         // }
-    //         if(info.options){
-    //             // Create a select field for it
-    //             input = $("<select class='starter_field_input starter_field_selector' id='Starter_" + id + "' />");
-    //             for(var j=0; j<info.options.length; j++){
-    //                 var value = info.options[j];
-    //                 input.append($("<option />").text(value).val(value));
-    //             }
-    //         } else {
-    //             // Just create a text field to input data.
-    //             input = $("<input type='text' class='starter_field_input' id='Starter_" + id + "' />");
-    //         }
-    //         field.append(label);
-    //         field.append(input);
-    //         field.appendTo($("#starter_form"));            
-    //     }
-    // }).fail(function(){
-    //     console.error('Failed to pull from the starter api');
-    // });
+    get_starter_info().done(function(data){
+        for(var starter_field in starter_info){
+            var info = starter_info[starter_field];
+            console.log(info);
+            var id = info.name.replace(' ', '_');
+            var input;
+            if(info.options){
+                var options = info.options;
+                switch(starter_field){
+                    // Build System
+                    case 'b':
+                        for(var j=0; j<options.length; j++){
+                            var value = options[j];
+                            var radio_button = $("<input type='radio' id='build_system_" + value + "' name='build_system' value='" + value + "'></radio>");
+                            if(value === info.default){
+                                radio_button.prop("checked", true);
+                            }
+                            var option_label = $("<label for='build_system_" + value + "'>" + uppercase_first_letter(value) + "</label>");
+                            $("#build_system_section div[role='radiogroup'").append(radio_button).append(option_label);
+                        }
+                        break;
+                    case 'e': // Java EE / Jakarta EE Version  
+                    case 'j': // Java SE Version
+                    case 'm': // MicroProfile Version
+                        for(var j=0; j<options.length; j++){
+                            var value = options[j];
+                            var option_tag = $("<option value='" + value + "'>" + value + "</option>");
+                            if(value === info.default){
+                                option_tag.prop("selected", true);
+                            }
+                            $(".starter_field[data-starter-field='" + starter_field + "'] select").append(option_tag);
+                        }
+                        break;
+                    case 'a': // Application name
+                    case 'g': // Base Package
+                    // No special fields
+                    default:
+                        break;
+                }
+            }        
+        }
+    }).fail(function(){
+        console.error('Failed to pull from the starter api');
+    });
 
     $('.builds_expand_link').click(function(event) {
         event.preventDefault();
