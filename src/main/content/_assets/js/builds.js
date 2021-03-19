@@ -111,8 +111,11 @@ function render_builds(builds, parent) {
                         else if (package_name.indexOf("web") > -1) {
                             var package_column = "<td headers='" + tableID + "_package'>Web Profile 8</td>";
                         }
-                        else if (package_name.indexOf("microprofile") > -1) {
+                        else if (package_name.indexOf("microprofile3") > -1) {
                             var package_column = '<td headers="' + tableID + '_package">MicroProfile 3</td>';
+                        }
+                        else if (package_name.indexOf("microprofile4") > -1) {
+                            var package_column = '<td headers="' + tableID + '_package">MicroProfile 4</td>';
                         }
                         else if (package_name.indexOf("kernel") > -1) {
                             var package_column = '<td headers="' + tableID + '_package">Kernel</td>';
