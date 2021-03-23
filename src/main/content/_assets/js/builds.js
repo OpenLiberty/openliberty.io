@@ -221,6 +221,8 @@ function sort_builds(builds, key, descending) {
     });
 }
 
+
+
 function get_starter_info() {
     var deferred = new $.Deferred();
     $.ajax({
@@ -267,7 +269,7 @@ $(document).ready(function() {
                     case 'm': // MicroProfile Version
                         for(var j=0; j<options.length; j++){
                             var value = options[j];
-                            var option_tag = $("<option value='" + value + "'>" + value + "</option>");
+                            var option_tag = $("<option value='" + value + "'>" + info.name + " " + value + "</option>");
                             if(value === info.default){
                                 option_tag.prop("selected", true);
                             }
@@ -284,6 +286,10 @@ $(document).ready(function() {
         }
     }).fail(function(){
         console.error('Failed to pull from the starter api');
+    });
+
+    $("#starter_submit").click(function(event){
+        
     });
 
     $('.builds_expand_link').click(function(event) {
