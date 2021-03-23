@@ -7,7 +7,7 @@
   hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'))
   hljs.registerLanguage('clojure', require('highlight.js/lib/languages/clojure'))
   hljs.registerLanguage('cpp', require('highlight.js/lib/languages/cpp'))
-  hljs.registerLanguage('cs', require('highlight.js/lib/languages/cs'))
+  hljs.registerLanguage('csharp', require('highlight.js/lib/languages/csharp'))
   hljs.registerLanguage('css', require('highlight.js/lib/languages/css'))
   hljs.registerLanguage('diff', require('highlight.js/lib/languages/diff'))
   hljs.registerLanguage('dockerfile', require('highlight.js/lib/languages/dockerfile'))
