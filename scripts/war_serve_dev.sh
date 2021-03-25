@@ -12,7 +12,7 @@ KEY_JKS=$SERVER_DIR/resources/security/key.jks
 source $SCRIPT_DIR/get_dhe_signer.sh
 
 if [[ ! -f $SCRIPT_DIR/../target/openliberty.war ]]; then
-  echo "The openliberty.war file does not exist in target/ - did you run scripts/build_jekyll_maven.sh ?"
+  echo "The openliberty.war file does not exist in target/ - did you run scripts/build/build.sh ?"
   exit 1
 fi
 
