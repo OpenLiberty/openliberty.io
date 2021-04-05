@@ -25,14 +25,9 @@ fi
 
 echo "Cloning the $BRANCH_NAME branch of certifications repository..."
 
-mkdir certifications
-cd certifications
+git clone https://github.com/OpenLiberty/certifications.git --branch $BRANCH_NAME
 
-# This is how you clone a repo without autocreating a parent folder with the name of the repo
-# The clone is picky about cloning into a folder that is not empty (src/main/content)
-git clone https://github.com/OpenLiberty/certifications.git --branch $BRANCH_NAME .
-
-# Move the blog redirect file to the WEB-INF directory
+# Move the certifications redirect file to the WEB-INF directory
 if [ -f certifications/cert-redirects.properties ]; then
    echo "Moving the certifications redirects file"
    mv certifications/cert-redirects.properties src/main/webapp/WEB-INF/cert-redirects.properties
