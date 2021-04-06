@@ -20,8 +20,8 @@ var developer_tools_releases = [];
 var developer_tools_development_builds = [];
 
 var builds_url = '/api/builds/data';
-var starter_info_url = '/api/starter/info';
-
+var starter_info_url = 'https://openliberty-starter.us-east.mybluemix.net/api/start/info';
+var starter_submit_url = 'https://openliberty-starter.us-east.mybluemix.net/api/start';
 
 // Determine if an element is in the viewport
 $.fn.isInViewport = function() {
@@ -289,7 +289,43 @@ $(document).ready(function() {
     });
 
     $("#starter_submit").click(function(event){
-        
+        var app_name = $("#Starter_App_Name").val();
+        var base_package = $("#Starter_Base_Package").val();
+        var build_type = $("input[name='build_system']:checked").val();
+        var java_version = $("#Starter_Java_Version").val();
+        var jakarta_ee_version = $("#Starter_Jakarta_Version").val();
+        var microprofile_version = $("#Starter_MicroProfile_Version").val();
+        var data = {
+            a: app_name,
+            b: build_type,
+            e: jakarta_ee_version,
+            g: base_package,                
+            j: java_version,                
+            m: microprofile_version
+        };
+        $.ajax({
+            url: starter_submit_url,
+            type: "get",
+            data: data,
+            xhrFields:{
+                responseType: 'blob'
+            }
+        }).done(function(data){
+            if(data){
+                var anchor = document.createElement('a');
+                var url = window.URL || window.webkitURL;
+                anchor.href = url.createObjectURL(data);
+                anchor.download = app_name + ".zip";
+                document.body.append(anchor);
+                anchor.click();
+                setTimeout(function(){  
+                    document.body.removeChild(anchor);
+                    url.revokeObjectURL(anchor.href);
+                }, 1);
+            }
+        }).fail(function(response){
+            console.error("Failed to download the starter project.");
+        });
     });
 
     $('.builds_expand_link').click(function(event) {
