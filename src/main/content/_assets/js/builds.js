@@ -246,8 +246,8 @@ $(document).ready(function() {
     get_starter_info().done(function(data){
         for(var starter_field in starter_info){
             var info = starter_info[starter_field];
-            console.log(info);
             var id = info.name.replace(' ', '_');
+            var default_value = info.default;
             var input;
             if(info.options){
                 var options = info.options;
@@ -257,7 +257,7 @@ $(document).ready(function() {
                         for(var j=0; j<options.length; j++){
                             var value = options[j];
                             var radio_button = $("<input type='radio' id='build_system_" + value + "' name='build_system' value='" + value + "'></radio>");
-                            if(value === info.default){
+                            if(value === default_value){
                                 radio_button.prop("checked", true);
                             }
                             var option_label = $("<label for='build_system_" + value + "'>" + uppercase_first_letter(value) + "</label>");
@@ -269,7 +269,7 @@ $(document).ready(function() {
                     case 'm': // MicroProfile Version
                         for(var j=0; j<options.length; j++){
                             var value = options[j];
-                            var option_tag = $("<option value='" + value + "'>" + info.name + " " + value + "</option>");
+                            var option_tag = $("<option value='" + value + "'>" + value + "</option>");
                             if(value === info.default){
                                 option_tag.prop("selected", true);
                             }
@@ -278,7 +278,9 @@ $(document).ready(function() {
                         break;
                     case 'a': // Application name
                     case 'g': // Base Package
-                    // No special fields
+                        console.log("app name and base package. " + starter_field);
+                        $(".starter_field[data-starter-field='" + starter_field + "'] input").val(default_value);
+                        break;
                     default:
                         break;
                 }
