@@ -86,7 +86,7 @@ function updateTOCHighlighting(id) {
 function handleTOCScrolling() {
     var visible_background_height = heightOfVisibleBackground();
     var toc_height = $('#toc_inner').height();
-    if (toc_height > visible_background_height && window.innerWidth > threeColumnBreakpoint) {
+    if (toc_height > visible_background_height && window.innerWidth >= threeColumnBreakpoint) {
         // The TOC cannot fit in the dark background, allow the TOC to scroll out of viewport
         // to avoid the TOC overflowing out of the dark background
         var negativeNumber = visible_background_height - toc_height + 100;
