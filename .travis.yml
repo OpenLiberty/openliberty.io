@@ -21,9 +21,9 @@ script: >
     if [ $JEKYLL_ENV == "production" ]; then
       cp robots.txt src/main/content/robots.txt
       cp src/main/content/_includes/noindex.html src/main/content/antora_ui/src/partials/noindex.hbs      
-      ./scripts/build_jekyll_maven.sh
+      ./scripts/build/build.sh
     else
-      ./scripts/build_jekyll_maven.sh
+      ./scripts/build/build.sh
     fi
 
 # branch whitelist
