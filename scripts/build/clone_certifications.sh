@@ -30,7 +30,7 @@ git clone https://github.com/OpenLiberty/certifications.git --branch $BRANCH_NAM
 # Move the certifications redirect file to the WEB-INF directory
 if [ -f certifications/cert-redirects.properties ]; then
    echo "Moving the certifications redirects file"
-   mv certifications/cert-redirects.properties src/main/webapp/WEB-INF/cert-redirects.properties
+   mv certifications/cert-redirects.properties ../webapp/WEB-INF/cert-redirects.properties
 fi
 
 popd
