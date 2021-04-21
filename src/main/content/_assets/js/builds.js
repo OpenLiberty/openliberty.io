@@ -273,7 +273,7 @@ $(document).ready(function() {
                             if(value === info.default){
                                 option_tag.prop("selected", true);
                             }
-                            $(".starter_field[data-starter-field='" + starter_field + "'] select").append(option_tag);
+                            $(".starter_field[data-starter-field='" + starter_field + "'] select").prepend(option_tag);
                         }
                         break;
                     case 'a': // Application name
