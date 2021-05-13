@@ -18,7 +18,7 @@ echo `ruby -v`
 
 gem install jekyll -v 3.8.6
 gem install jekyll-assets -v 2.4.0
-gem install bundler jekyll-feed jekyll-asciidoc jekyll-include-cache coderay uglifier octokit
+gem install bundler jekyll-feed jekyll-asciidoc jekyll-include-cache coderay octokit
 
 timer_end=$(date +%s)
 echo "Total execution time for installing Ruby and required packages/gems: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
