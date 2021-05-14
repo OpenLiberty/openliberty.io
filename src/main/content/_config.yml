@@ -29,9 +29,10 @@ assets:
     css: true
     js: true
 
+environment: production
+
 jekyll-minifier:
-  exclude: "*.css"
-  exclude: "*.js"
+  exclude: ["*.css", "*.js"]
   uglifier_args:  
     harmony: true
 
@@ -41,7 +42,6 @@ plugins:
   - jekyll-assets
   - jekyll-include-cache
   - jekyll-minifier
-  - ol-asciidoc
   - ol-target-blank  
 exclude:
   - vendor # TravisCI bundles all gems in the vendor directory on its build servers, which Jekyll will mistakenly read and explode on.
