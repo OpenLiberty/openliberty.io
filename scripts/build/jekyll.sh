@@ -69,5 +69,5 @@ if [ "$PROD_SITE" = true ]
     jekyll build --source src/main/content --config src/main/content/_config.yml,src/main/content/_google_analytics.yml --destination target/jekyll-webapp 
   else
     # Set the --future flag to show blogs with date timestamps in the future
-    jekyll build --future --source src/main/content --destination target/jekyll-webapp 
+    jekyll build --future --source src/main/content --destination target/jekyll-webapp --verbose
 fi
