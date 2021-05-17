@@ -1,10 +1,10 @@
 # Serve the antora docs locally for testing
 
-./scripts/build_antora_ui.sh
+./scripts/build/antora_install.sh
 
 # Run with the --update flag to fetch the latest doc changes
 if [[ $* == *--update* ]]; then
-    ./scripts/build_clone_antora_playbook.sh
+    ./scripts/build/antora_clone_playbook.sh
     antora --stacktrace --fetch src/main/content/docs/antora-playbook.yml
 else
     antora --stacktrace src/main/content/docs/antora-playbook.yml

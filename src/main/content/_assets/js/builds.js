@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 IBM Corporation and others.
+ * Copyright (c) 2017, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -95,7 +95,7 @@ function render_builds(builds, parent) {
                         var row = $('<tr></tr>'); // create a new row for each item in package_locations
                         var package_name = package_locations[i].split("=")[0].toLowerCase();
                         var href = package_locations[i].split("=")[1];
-                        var download_column = $('<td headers="' + tableID + '_download"><a href="' +  href +'" class="' + analytics_class_name + '">' + download_arrow + 'ZIP</a></td>');
+                        var download_column = $('<td headers="' + tableID + '_download"><a href="' +  href +'" class="' + analytics_class_name + '" rel="noopener">' + download_arrow + 'ZIP</a></td>');
 
                         if (i == 0) {
                             row.append(version_column); // add version column for first item in package_locations
@@ -113,8 +113,11 @@ function render_builds(builds, parent) {
                         else if (package_name.indexOf("web") > -1) {
                             var package_column = "<td headers='" + tableID + "_package'>Web Profile 8</td>";
                         }
-                        else if (package_name.indexOf("microprofile") > -1) {
+                        else if (package_name.indexOf("microprofile3") > -1) {
                             var package_column = '<td headers="' + tableID + '_package">MicroProfile 3</td>';
+                        }
+                        else if (package_name.indexOf("microprofile4") > -1) {
+                            var package_column = '<td headers="' + tableID + '_package">MicroProfile 4</td>';
                         }
                         else if (package_name.indexOf("kernel") > -1) {
                             var package_column = '<td headers="' + tableID + '_package">Kernel</td>';
@@ -141,7 +144,7 @@ function render_builds(builds, parent) {
                         var row = $('<tr></tr>'); // create a new row for each item in package_locations
                         var package_name = package_locations[i].split("=")[0].toLowerCase();
                         var href = package_locations[i].split("=")[1];
-                        var download_column = $('<td headers="' + tableID + '_download"><a href="' +  href +'" class="' + analytics_class_name + '">' + download_arrow + 'ZIP</a></td>');
+                        var download_column = $('<td headers="' + tableID + '_download"><a href="' +  href +'" class="' + analytics_class_name + '" rel="noopener">' + download_arrow + 'ZIP</a></td>');
 
                         if (i == 0) {
                             row.append(version_column); // add version column for first item in package_locations
@@ -165,7 +168,7 @@ function render_builds(builds, parent) {
             else {
                 var row = $('<tr></tr>');
                 var version_column = $('<td headers="' + tableID + '_version">' + build.version + '</td>');
-                var download_column = $('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + '">' + download_arrow + 'ZIP</a></td>');
+                var download_column = $('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + '" rel="noopener">' + download_arrow + 'ZIP</a></td>');
                 row.append(version_column);
                 row.append(download_column);
                 parent.append(row);
@@ -181,15 +184,15 @@ function render_builds(builds, parent) {
             var day = date.getDate();
             var hour = date.getHours();
             var minute = date.getMinutes();
-            
-            var date_column = $('<td headers="' + tableID + '_date">' + year + '-' + add_lead_zero(month) + '-' + add_lead_zero(day) + ', ' + add_lead_zero(hour) + ':' + add_lead_zero(minute) + '</td>');
-            
-            var tests_column = $('<td headers="' + tableID + '_tests"><a href="' +  build.tests_log +'" class="'+ analytics_class_name + ' tests_passed_link">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
-            
-            var log_column = $('<td headers="' + tableID + '_logs"><a href="' + build.build_log + '" class="' + analytics_class_name + ' view_logs_link" target="_blank" rel="noopener">View logs</a></td>');            
 
-            var download_column = $('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + '">' + download_arrow + 'ZIP</a></td>');
-            
+            var date_column = $('<td headers="' + tableID + '_date">' + year + '-' + add_lead_zero(month) + '-' + add_lead_zero(day) + ', ' + add_lead_zero(hour) + ':' + add_lead_zero(minute) + '</td>');
+
+            var tests_column = $('<td headers="' + tableID + '_tests"><a href="' +  build.tests_log +'" class="'+ analytics_class_name + ' tests_passed_link" rel="noopener">' + build.test_passed + ' / ' + build.total_tests + '</a></td>');
+
+            var log_column = $('<td headers="' + tableID + '_logs"><a href="' + build.build_log + '" class="' + analytics_class_name + ' view_logs_link" target="_blank" rel="noopener">View logs</a></td>');
+
+            var download_column = $('<td headers="' + tableID + '_download"><a href="' + build.driver_location + '" class="' + analytics_class_name + '" rel="noopener">' + download_arrow + 'ZIP</a></td>');
+
             row.append(date_column);
             row.append(tests_column);
             row.append(log_column);
@@ -350,7 +353,7 @@ $(document).ready(function() {
                 $('.collapse_link_text', event.currentTarget).text('collapse');
             });
         }
-       
+
     });
 
 
@@ -364,7 +367,7 @@ $(document).ready(function() {
         var descending = !(event.currentTarget.getAttribute('data-descending') == 'true');
 
         event.currentTarget.setAttribute('data-descending', descending);
-        
+
         sort_builds(builds[builds_id], key, descending);
         render_builds(builds[builds_id], $('tbody', table));
 
@@ -392,8 +395,8 @@ $(document).ready(function() {
                     $('#eclipse_developer_tools_download_link').attr('href', latest_releases.tools.driver_location);
                 }
             }
-        }      
-        
+        }
+
 
         function formatBuilds(builds_from_response) {
             for(var i = 0; i < builds_from_response.length; i++) {
@@ -410,12 +413,12 @@ $(document).ready(function() {
                 builds['runtime_releases'] = runtime_releases;
                 sort_builds(runtime_releases, 'date', true);
                 render_builds(runtime_releases, $('table[data-builds-id="runtime_releases"] tbody'));
-            }    
+            }
             if(data.builds.tools_releases){
                 developer_tools_releases = formatBuilds(data.builds.tools_releases);
                 builds['developer_tools_releases'] = developer_tools_releases;
                 sort_builds(developer_tools_releases, 'date', true);
-                render_builds(developer_tools_releases, $('table[data-builds-id="developer_tools_releases"] tbody'));       
+                render_builds(developer_tools_releases, $('table[data-builds-id="developer_tools_releases"] tbody'));
             }
             if(data.builds.runtime_betas){
                 // if betas info is empty (the betas are not on DHE yet), hide beta tab and content
@@ -465,7 +468,7 @@ $(document).ready(function() {
                     $tabContent.find('.tab-content .active').attr({"tabindex": "-1"});
 
                     // Select the given tab and show its associated pane. The tab
-                    // that was previously selected becomes unselected and its associated 
+                    // that was previously selected becomes unselected and its associated
                     // pane is hidden.
                     $tab.tab('show');
 
@@ -517,7 +520,7 @@ $(document).ready(function() {
                             if (currentTab.next().length > 0) {
                                 currentTab.nextAll().last().find("a").click();
                             }
-                            break;                      
+                            break;
                     }
                 }
             );
@@ -546,27 +549,27 @@ $(document).ready(function() {
         var copy_button_left = $('#copy_to_clipboard').offset().left;
         var copy_button_bottom = copy_button_top + $('#copy_to_clipboard').outerHeight();
         var copy_button_right = $('#copy_to_clipboard').offset().left + $('#copy_to_clipboard').outerWidth();
-        
+
         if(!(x > copy_button_left
-            && x < copy_button_right	
-            && y > copy_button_top	
+            && x < copy_button_right
+            && y > copy_button_top
             && y < copy_button_bottom)) {
             $('#copied_confirmation').remove();
             $('#copy_to_clipboard').remove();
             $('#copy_to_clipboard').stop().fadeOut();
         }
     });
-    
+
     // Copy target element and show copied confirmation when copy to clipboard button clicked
     $(document).on("click", "#copy_to_clipboard", function(event) {
         event.preventDefault();
         // Target was assigned while hovering over the element to copy.
         openliberty.copy_element_to_clipboard(target, function(){
-            $('#copied_confirmation').css({	
+            $('#copied_confirmation').css({
                 top: target.offset().top - 15,
                 right: $(window).width() - (target.offset().left + target.outerWidth()) + 1
             }).stop().fadeIn().delay(3500).fadeOut();
-        });	
+        });
     });
 
     $(window).on('scroll', function(event) {
@@ -581,7 +584,7 @@ $(window).on("load", function(){
     $.ready.then(function(){
         var hash = window.location.hash;
         hash && $('ul.nav a[href="' + hash + '"]').click();
-       
+
         // scroll to tabs that contain section in hash
         if (hash) {
             var nav_tabs = $('ul.nav a[href="' + hash + '"]').parent().parent();
