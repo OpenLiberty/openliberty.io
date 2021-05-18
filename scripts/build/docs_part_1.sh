@@ -2,8 +2,6 @@ set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
 echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 
-echo "Begin building all doc content"
-
 #Antora Portion of Docs
 echo "Begin building of Antora portion of docs"
 
@@ -27,3 +25,4 @@ cp -r src/main/content/docs/build/site/. target/jekyll-webapp/
 timer_end=$(date +%s)
 echo "Total execution time for copying Antora docs to webapp: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
+echo "Finished building and prepping all Antora content"
