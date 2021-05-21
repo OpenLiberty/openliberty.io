@@ -20,8 +20,8 @@ var developer_tools_releases = [];
 var developer_tools_development_builds = [];
 
 var builds_url = '/api/builds/data';
-var starter_info_url = 'https://openliberty-starter.us-east.mybluemix.net/api/start/info';
-var starter_submit_url = 'https://openliberty-starter.us-east.mybluemix.net/api/start';
+var starter_info_url = 'https://start.openliberty.io/api/start/info';
+var starter_submit_url = 'https://start.openliberty.io/api/start';
 
 // Determine if an element is in the viewport
 $.fn.isInViewport = function() {
