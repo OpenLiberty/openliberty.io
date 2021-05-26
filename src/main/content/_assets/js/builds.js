@@ -11,6 +11,7 @@
 
 var builds = [];
 var starter_info = [];
+var starter_dependencies = {};
 
 var latest_releases = [];
 var runtime_releases = [];
@@ -20,8 +21,9 @@ var developer_tools_releases = [];
 var developer_tools_development_builds = [];
 
 var builds_url = '/api/builds/data';
-var starter_info_url = 'https://start.openliberty.io/api/start/info';
-var starter_submit_url = 'https://start.openliberty.io/api/start';
+var starter_info_url = "https://start.openliberty.io/api/start/info";
+var starter_submit_url = "https://start.openliberty.io/api/start";
+
 
 // Determine if an element is in the viewport
 $.fn.isInViewport = function() {
@@ -224,76 +226,150 @@ function sort_builds(builds, key, descending) {
     });
 }
 
-
-
 function get_starter_info() {
     var deferred = new $.Deferred();
     $.ajax({
-        url: starter_info_url
-    }).done(function(data) {
-        starter_info = data;        
-        deferred.resolve();
-    }).fail(function() {
-        deferred.reject();
-    });
+        url: starter_info_url,
+    })
+        .done(function (data) {
+            starter_info = data;
+            deferred.resolve();
+        })
+        .fail(function () {
+            deferred.reject();
+        });
     return deferred;
 }
 
-function uppercase_first_letter(s){
+function uppercase_first_letter(s) {
     if (typeof s !== 'string') return '';
     return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+function validate_starter_inputs() {
+    // Look through each of starter_dependencies and verify that the value of its dependency is valid for that input.
+    for (var starter_key in starter_dependencies) {
+        var versions = starter_dependencies[starter_key].versions;
+        // Get the value for this starter field
+        switch(starter_key){
+            case "e": // Java EE / Jakarta EE Version
+            case "j": // Java SE Version
+            case "m": // MicroProfile Version
+                var value = $(".starter_field[data-starter-field='" + starter_key + "'] select").find(":selected").text();
+                console.log(value);
+                // Get the other fields dependent on this one
+                var dependencies = versions[value];
+                for(var d in dependencies){
+                    var dependency_value = $(".starter_field[data-starter-field='" + d + "'] select").find(":selected").text();
+                    // Check that it's in the list of supported values
+                    if(dependencies[d].indexOf(dependency_value) === -1){
+                        console.log("Not valid");
+                    }
+                }
+                break;
+            default: break;
+        }        
+        
+    }
+}
+
 $(document).ready(function() {
 
-    get_starter_info().done(function(data){
-        for(var starter_field in starter_info){
-            var info = starter_info[starter_field];
-            var id = info.name.replace(' ', '_');
-            var default_value = info.default;
-            var input;
-            if(info.options){
-                var options = info.options;
-                switch(starter_field){
-                    // Build System
-                    case 'b':
-                        for(var j=0; j<options.length; j++){
-                            var value = options[j];
-                            var radio_button = $("<input type='radio' id='build_system_" + value + "' name='build_system' value='" + value + "'></radio>");
-                            if(value === default_value){
-                                radio_button.prop("checked", true);
-                            }
-                            var option_label = $("<label for='build_system_" + value + "'>" + uppercase_first_letter(value) + "</label>");
-                            $("#build_system_section div[role='radiogroup'").append(radio_button).append(option_label);
+    get_starter_info()
+        .done(function (data) {
+            for (var starter_field in starter_info) {
+                var info = starter_info[starter_field];
+                var constraints = info.constraints;
+                var id = info.name.replace(" ", "_");
+                var default_value = info.default;
+                var input;
+                if (constraints) {
+                    // Put this starter field in the list of dependencies that another field depends on.
+                    for (var version in constraints) {
+                        var dependencies = constraints[version];
+                        if(!starter_dependencies[starter_field]){
+                            starter_dependencies[starter_field] = {};
+                            starter_dependencies[starter_field].versions = {};
                         }
-                        break;
-                    case 'e': // Java EE / Jakarta EE Version  
-                    case 'j': // Java SE Version
-                    case 'm': // MicroProfile Version
-                        for(var j=0; j<options.length; j++){
-                            var value = options[j];
-                            var option_tag = $("<option value='" + value + "'>" + value + "</option>");
-                            if(value === info.default){
-                                option_tag.prop("selected", true);
-                            }
-                            $(".starter_field[data-starter-field='" + starter_field + "'] select").prepend(option_tag);
-                        }
-                        break;
-                    case 'a': // Application name
-                    case 'g': // Base Package
-                        console.log("app name and base package. " + starter_field);
-                        $(".starter_field[data-starter-field='" + starter_field + "'] input").val(default_value);
-                        break;
-                    default:
-                        break;
+                        starter_dependencies[starter_field].versions[version] = dependencies;
+                    }
                 }
-            }        
-        }
-    }).fail(function(){
-        console.error('Failed to pull from the starter api');
-    });
+                if (info.options) {
+                    var options = info.options;
+                    switch (starter_field) {
+                        // Build System
+                        case "b":
+                            for (var j = 0; j < options.length; j++) {
+                                var value = options[j];
+                                var radio_button = $(
+                                    "<input type='radio' id='build_system_" +
+                                        value +
+                                        "' name='build_system' value='" +
+                                        value +
+                                        "'></radio>"
+                                );
+                                if (value === default_value) {
+                                    radio_button.prop("checked", true);
+                                }
+                                var option_label = $(
+                                    "<label for='build_system_" +
+                                        value +
+                                        "'>" +
+                                        uppercase_first_letter(value) +
+                                        "</label>"
+                                );
+                                $("#build_system_section div[role='radiogroup'")
+                                    .append(radio_button)
+                                    .append(option_label);
+                            }
+                            break;
+                        case "e": // Java EE / Jakarta EE Version
+                        case "j": // Java SE Version
+                        case "m": // MicroProfile Version
+                            for (var j = 0; j < options.length; j++) {
+                                var value = options[j];
+                                var option_tag = $(
+                                    "<option value='" +
+                                        value +
+                                        "'>" +
+                                        value +
+                                        "</option>"
+                                );
+                                if (value === info.default) {
+                                    option_tag.prop("selected", true);
+                                }
+                                $(
+                                    ".starter_field[data-starter-field='" +
+                                        starter_field +
+                                        "'] select"
+                                ).prepend(option_tag);
+                            }
+                            break;
+                        case "a": // Application name
+                        case "g": // Base Package
+                            console.log(
+                                "app name and base package. " + starter_field
+                            );
+                            $(
+                                ".starter_field[data-starter-field='" +
+                                    starter_field +
+                                    "'] input"
+                            ).val(default_value);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            $(".starter_field select").on('change', function(){
+                validate_starter_inputs();
+            });
+        })
+        .fail(function () {
+            console.error("Failed to pull from the starter api");
+        });
 
-    $("#starter_submit").click(function(event){
+    $("#starter_submit").click(function (event) {
         var app_name = $("#Starter_App_Name").val();
         var base_package = $("#Starter_Base_Package").val();
         var build_type = $("input[name='build_system']:checked").val();
@@ -304,33 +380,35 @@ $(document).ready(function() {
             a: app_name,
             b: build_type,
             e: jakarta_ee_version,
-            g: base_package,                
-            j: java_version,                
-            m: microprofile_version
+            g: base_package,
+            j: java_version,
+            m: microprofile_version,
         };
         $.ajax({
             url: starter_submit_url,
             type: "get",
             data: data,
-            xhrFields:{
-                responseType: 'blob'
-            }
-        }).done(function(data){
-            if(data){
-                var anchor = document.createElement('a');
-                var url = window.URL || window.webkitURL;
-                anchor.href = url.createObjectURL(data);
-                anchor.download = app_name + ".zip";
-                document.body.append(anchor);
-                anchor.click();
-                setTimeout(function(){  
-                    document.body.removeChild(anchor);
-                    url.revokeObjectURL(anchor.href);
-                }, 1);
-            }
-        }).fail(function(response){
-            console.error("Failed to download the starter project.");
-        });
+            xhrFields: {
+                responseType: "blob",
+            },
+        })
+            .done(function (data) {
+                if (data) {
+                    var anchor = document.createElement("a");
+                    var url = window.URL || window.webkitURL;
+                    anchor.href = url.createObjectURL(data);
+                    anchor.download = app_name + ".zip";
+                    document.body.append(anchor);
+                    anchor.click();
+                    setTimeout(function () {
+                        document.body.removeChild(anchor);
+                        url.revokeObjectURL(anchor.href);
+                    }, 1);
+                }
+            })
+            .fail(function (response) {
+                console.error("Failed to download the starter project.");
+            });
     });
 
     $('.builds_expand_link').click(function(event) {
