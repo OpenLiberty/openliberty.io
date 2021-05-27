@@ -247,6 +247,9 @@ function uppercase_first_letter(s) {
 }
 
 function validate_starter_inputs() {
+    var valid = true;
+    $('#starter_warnings').empty();
+    $('#starter_submit').attr('disabled', 'disabled');
     // Look through each of starter_dependencies and verify that the value of its dependency is valid for that input.
     for (var starter_key in starter_dependencies) {
         var versions = starter_dependencies[starter_key].versions;
@@ -256,20 +259,36 @@ function validate_starter_inputs() {
             case "j": // Java SE Version
             case "m": // MicroProfile Version
                 var value = $(".starter_field[data-starter-field='" + starter_key + "'] select").find(":selected").text();
-                console.log(value);
                 // Get the other fields dependent on this one
                 var dependencies = versions[value];
                 for(var d in dependencies){
                     var dependency_value = $(".starter_field[data-starter-field='" + d + "'] select").find(":selected").text();
                     // Check that it's in the list of supported values
                     if(dependencies[d].indexOf(dependency_value) === -1){
-                        console.log("Not valid");
+                        valid = false;
                     }
+                    // Disable all invalid values in the dependent select dropdown
+                    var options = $(".starter_field[data-starter-field='" + d + "'] select option");
+                    options.removeAttr('disabled');
+                    options.each(function(){
+                        if(dependencies[d].indexOf(this.text) === -1){
+                            $(this).attr('disabled','disabled');
+                        } 
+                        else {
+                            // Add a tooltip that explains that these are disabled because of the other field.
+                            this.title = 'This is disabled because of field: ' + starter_key;
+                        }
+                    });
                 }
                 break;
             default: break;
-        }        
-        
+        }
+    }
+    if(!valid){
+        $('#starter_warnings').append('<p>Please correct the invalid choices before submitting.</p>');
+    }
+    else {
+        $('#starter_submit').removeAttr('disabled');
     }
 }
 
@@ -364,6 +383,7 @@ $(document).ready(function() {
             $(".starter_field select").on('change', function(){
                 validate_starter_inputs();
             });
+            validate_starter_inputs(); // Run once to disable invalid inputs.
         })
         .fail(function () {
             console.error("Failed to pull from the starter api");
