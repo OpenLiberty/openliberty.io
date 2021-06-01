@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
- 
+
 .nav-container {
   position: fixed;
   top: calc(var(--navbar-height) + var(--toolbar-height));
@@ -44,15 +44,14 @@
   background: var(--nav-background);
   position: relative;
   top: 0;
-  transition: top .3s ease-out;
-
+  transition: top 0.3s ease-out;
 }
 
 @media screen and (min-width: 1024px) {
   .nav {
     box-shadow: none;
     position: sticky;
-    height: calc(var(--nav-panel-height--desktop));
+    height: calc(var(--nav-panel-height--desktop) * 0.79);
   }
 }
 
@@ -148,7 +147,8 @@ html.is-clipped--nav {
       list-style: none;
     }
 
-    & > a, & > span {
+    & > a,
+    & > span {
       padding-top: 5px;
       padding-bottom: 3px;
     }
@@ -157,9 +157,10 @@ html.is-clipped--nav {
 
 .nav-item {
   list-style: none;
-  color: #5D6A8E;
+  color: #5d6a8e;
 
-  & > a, & > span {
+  & > a,
+  & > span {
     padding-top: 5px;
     padding-bottom: 5px;
   }
@@ -181,65 +182,94 @@ html.is-clipped--nav {
     background: transparent url(../img/chevron.svg) no-repeat center / 50%;
     transform: rotate(270deg);
     border: none;
-    outline: none;  
+    outline: none;
     height: var(--TOC-toggle-icon-size);
     width: var(--TOC-toggle-icon-size);
     margin-left: -23px;
     margin-top: -3px;
   }
-  & > span, & > a {
+  & > span,
+  & > a {
     display: inline-block;
-    &:hover{
+    &:hover {
       color: #f4914d;
       cursor: pointer;
     }
   }
 }
 
-.nav-item.is-active {  
+.nav-item.is-active {
   & > .nav-item-toggle {
     background: transparent url(../img/chevron.svg) no-repeat center / 50%;
     transform: rotate(0deg); // Return to normal
   }
-  & > span, & > a {
+  & > span,
+  & > a {
     color: #313653;
-    &:hover{
+    &:hover {
       color: #f4914d;
     }
   }
 }
 
 .is-current-page {
-  & > span, & > a {
+  & > span,
+  & > a {
     display: block;
     border-left: var(--TOC-orange-border-width) solid #f4914d;
     background: #fdf2ea;
     margin-left: calc(-1 * var(--TOC-indention-first-level));
-    padding-left: calc(var(--TOC-indention-first-level) - var(--TOC-orange-border-width));    
+    padding-left: calc(
+      var(--TOC-indention-first-level) - var(--TOC-orange-border-width)
+    );
   }
   &[data-depth="1"] {
-    & > span, & > a {
-      margin-left: calc(-1 * (var(--TOC-indention-first-level) + var(--TOC-indention)));
-      padding-left: calc(var(--TOC-indention-first-level) + var(--TOC-indention) - var(--TOC-orange-border-width));
-    }    
+    & > span,
+    & > a {
+      margin-left: calc(
+        -1 * (var(--TOC-indention-first-level) + var(--TOC-indention))
+      );
+      padding-left: calc(
+        var(--TOC-indention-first-level) + var(--TOC-indention) -
+          var(--TOC-orange-border-width)
+      );
+    }
   }
   &[data-depth="2"] {
-    & > span, & > a {
-      margin-left: calc(-1 * (var(--TOC-indention-first-level) + 2 * var(--TOC-indention)));
-      padding-left: calc(var(--TOC-indention-first-level) + 2 * var(--TOC-indention) - var(--TOC-orange-border-width));
-    } 
+    & > span,
+    & > a {
+      margin-left: calc(
+        -1 * (var(--TOC-indention-first-level) + 2 * var(--TOC-indention))
+      );
+      padding-left: calc(
+        var(--TOC-indention-first-level) + 2 * var(--TOC-indention) -
+          var(--TOC-orange-border-width)
+      );
+    }
   }
   &[data-depth="3"] {
-    & > span, & > a {
-      margin-left: calc(-1 * (var(--TOC-indention-first-level) + 3 * var(--TOC-indention)));
-      padding-left: calc(var(--TOC-indention-first-level) + 3 * var(--TOC-indention) - var(--TOC-orange-border-width));
-    } 
+    & > span,
+    & > a {
+      margin-left: calc(
+        -1 * (var(--TOC-indention-first-level) + 3 * var(--TOC-indention))
+      );
+      padding-left: calc(
+        var(--TOC-indention-first-level) + 3 * var(--TOC-indention) -
+          var(--TOC-orange-border-width)
+      );
+    }
   }
   &[data-depth="4"] {
-    & > span, & > a {
-      margin-left: calc(-1 * (var(--TOC-indention-first-level) + 4 * var(--TOC-indention)));
-      padding-left: calc(var(--TOC-indention-first-level) + 4 * var(--TOC-indention) - var(--TOC-orange-border-width));
-    } 
+    & > span,
+    & > a {
+      margin-left: calc(
+        -1 * (var(--TOC-indention-first-level) + 4 * var(--TOC-indention))
+      );
+      padding-left: calc(
+        var(--TOC-indention-first-level) + 4 * var(--TOC-indention) -
+          var(--TOC-orange-border-width)
+      );
+    }
   }
 }
 
@@ -248,7 +278,8 @@ html.is-clipped--nav {
   font-weight: var(--body-font-weight-bold);
 }
 
-.nav-link:focus, .nav-text:focus {
+.nav-link:focus,
+.nav-text:focus {
   outline: none;
 }
 
@@ -265,7 +296,8 @@ html.is-clipped--nav {
 }
 
 .hide-after:after {
-  display: none; }
+  display: none;
+}
 
 .nav-panel-explore .context {
   height: 32px;
@@ -275,26 +307,26 @@ html.is-clipped--nav {
   flex-shrink: 0;
   color: var(--nav-muted-color);
   box-shadow: 0 -1px 0 var(--nav-panel-divider-color);
-  padding:  8px .25rem 0px .5rem;
+  padding: 8px 0.25rem 0px 0.5rem;
   margin-left: 19px;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  color: #1A1B31;
-  border: 2px solid rgba(170, 211, 75, .56);
+  color: #1a1b31;
+  border: 2px solid rgba(170, 211, 75, 0.56);
   border-radius: 7px;
 
   & .title {
     font-size: 14px;
     font-family: BunueloBold;
-    margin-right: .25rem;
+    margin-right: 0.25rem;
   }
 
   & .version {
     font-family: Asap;
     font-weight: 500;
     font-size: 11px;
-    color: #5D6A8E;
+    color: #5d6a8e;
     letter-spacing: 0;
 
     &:after {
@@ -304,9 +336,9 @@ html.is-clipped--nav {
       height: 20px;
       background-image: url(../img/chevron.svg);
       background-repeat: no-repeat;
-      background-position: right .5rem top 0;
+      background-position: right 0.5rem top 0;
       background-size: 12px;
-    }        
+    }
   }
 }
 
@@ -323,7 +355,7 @@ html.is-clipped--nav {
   position: absolute;
   width: 148px;
   margin-left: 19px;
-  border: 2px solid rgba(170,211,75,.56);
+  border: 2px solid rgba(170, 211, 75, 0.56);
   border-radius: 7px;
   border-top: none;
   z-index: 2;
@@ -352,22 +384,22 @@ html.is-clipped--nav {
   & .title {
     font-family: BunueloBold;
     font-size: 14px;
-    margin-right: .25rem;
+    margin-right: 0.25rem;
   }
 
   & .version {
     display: block;
     line-height: 11px;
-    padding: 8px .25rem 8px .5rem;
+    padding: 8px 0.25rem 8px 0.5rem;
     margin: 0;
     height: 32px;
     width: 100%;
 
     &.is-current {
-      background-color: rgba(170,211,75,.56)
+      background-color: rgba(170, 211, 75, 0.56);
     }
 
-    &:first-child{
+    &:first-child {
       /* Dropdown caret */
       &:after {
         content: "";
@@ -376,22 +408,22 @@ html.is-clipped--nav {
         height: 20px;
         background-image: url(../img/chevron.svg);
         background-repeat: no-repeat;
-        background-position: right .5rem top 100%;
+        background-position: right 0.5rem top 100%;
         background-size: 12px;
         transform: scaleY(-1);
         -moz-transform: scaleY(-1);
         -o-transform: scaleY(-1);
         -webkit-transform: scaleY(-1);
-      }      
+      }
     }
 
     &:hover {
       cursor: pointer;
-      & .title{
+      & .title {
         color: #f4914d;
       }
-      & a{
-        color:#f4914d
+      & a {
+        color: #f4914d;
       }
     }
   }
