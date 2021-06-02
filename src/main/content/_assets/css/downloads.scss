@@ -158,20 +158,6 @@ html, body {
 
     #build_system_section label {
         margin-right: 10px;
-        position: relative;
-
-        &:before {
-            content: " ";
-            display: inline-block;
-            position: relative;
-            top: 5px;
-            margin: 0 5px 0 0;
-            width: 20px;
-            height: 20px;
-            border-radius: 11px;
-            border: 2px solid black;
-            background-color: transparent;
-        }
     }
 
     .radio_group {
@@ -179,22 +165,16 @@ html, body {
     }
 
     input[type=radio] {
-        display: none;
+        -webkit-appearance: none;
         margin-right: 7px;        
         width: 20px;
         height: 20px;
         vertical-align: middle;
-        
-        &:checked + label:after {
-            border-radius: 11px;
-            width: 8px;
-            height: 8px;
-            position: absolute;
-            top: 11px;
-            left: 6px;
-            content: " ";
-            display: block;
-            background: black;
+        background: url('/img/radio-button.svg') left center no-repeat;    
+        background-size: 20px; 
+
+        &:checked {
+            background: url('/img/radio-button--checked.svg') left center no-repeat;
         }
     }
 
