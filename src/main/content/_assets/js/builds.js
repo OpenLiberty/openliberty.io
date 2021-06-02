@@ -389,6 +389,12 @@ $(document).ready(function() {
             console.error("Failed to pull from the starter api");
         });
 
+    $("#starter_submit").on('keydown', function(event){
+        if (event.which === 13 || event.which === 32) {   // Spacebar or Enter
+            $(this).click();
+        }
+    });
+
     $("#starter_submit").click(function (event) {
         var app_name = $("#Starter_App_Name").val();
         var base_package = $("#Starter_Base_Package").val();
