@@ -692,7 +692,7 @@ function createClickableBreadcrumb(breadcrumbText, highlightLastItem) {
                 breadcrumbWidth = $(".contentStickyBreadcrumbHeader .stickyBreadcrumb").width() + paddingWidth;
                 fontSize = fontSize - 2;
             }
-            if(window.location.href.includes("#server-env") && window.location.href.includes("20.0.0.9")){
+            if(window.location.href.includes("server-configuration-overview.html")){
                 $(".contentStickyBreadcrumbHeader").hide();
             }
             else{
