@@ -113,8 +113,8 @@
         }
         $('#copy_to_clipboard').css({	
             top: target_position.top + 1,	
-            right: parseInt($('#guide_column').css('padding-right')) + right_position	
-        });
+            right: parseInt($('#guide_column').css('padding-right')) + right_position,	            
+        }).addClass('copy_to_clipboard_git_clone');
         $('#copy_to_clipboard').stop().fadeIn();	
      }).on('mouseleave', function(event) {	
         if(offset){
@@ -123,8 +123,9 @@
             if(!(x > target_position.left	
             && x < target_position.left + target_width	
             && y > target_position.top	
-            && y < target_position.top + target_height)) {	
+            && y < target_position.top + target_height)) {
                 $('#copy_to_clipboard').stop().fadeOut();	
+                $('#copy_to_clipboard').removeClass('copy_to_clipboard_git_clone');
                 $('#guide_section_copied_confirmation').stop().fadeOut();	
             }
         }          	
