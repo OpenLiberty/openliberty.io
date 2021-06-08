@@ -1,6 +1,9 @@
 $(window).on("load", function() {
   $.ready.then(function() {
     //get info about doc that was attempted to be reached
+    if ($(".doc .paragraph ul").length) {
+      $(".doc .paragraph ul").empty();
+    }
     var attempted = document.referrer;
     var doc = attempted.substring(attempted.lastIndexOf("/") + 1);
     doc = doc.substring(0, doc.indexOf(".html"));
