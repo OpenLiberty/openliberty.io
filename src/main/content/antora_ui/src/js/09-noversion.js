@@ -3,6 +3,7 @@ $(window).on("load", function() {
     //get info about doc that was attempted to be reached
     if ($(".doc .paragraph ul").length) {
       $(".doc .paragraph ul").empty();
+      $(".doc .paragraph ul").remove();
     }
     var attempted = document.referrer;
     var doc = attempted.substring(attempted.lastIndexOf("/") + 1);
