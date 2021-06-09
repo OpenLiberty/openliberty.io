@@ -97,27 +97,27 @@ $(window).on("load", function() {
         "<div><p>Below are links to the requested document in other versions of the documentation.</p></div><ul></ul>"
       );
 
-      $(document).ready(function() {
-        $(".components .versions .version").click(function(e) {
-          var selected = $(e.target)
-            .find("a")
-            .text()
-            .trim();
-          if (matches.includes(selected)) {
-            window.location.href =
-              window.location.origin +
-              "/docs/" +
-              selected +
-              "/" +
-              (folder === "reference" ? "reference/" : "") +
-              (dir !== "" ? dir + "/" : "") +
-              doc +
-              ".html";
-          } else {
-            window.location.href =
-              window.location.origin + "/docs/" + selected + "/overview.html";
-          }
-        });
+      $(".components .versions .version").click(function(e) {
+        e.preventDefault();
+        var selected = $(e.target)
+          .find("a")
+          .text()
+          .trim();
+        console.log(selected);
+        console.log(matches);
+        if (matches.includes(selected)) {
+          window.location.href =
+            window.location.origin +
+            "/docs/" +
+            selected +
+            "/" +
+            (folder === "reference" ? "reference/" : "") +
+            (dir !== "" ? dir + "/" : "") +
+            doc +
+            ".html";
+        } else {
+          window.location.href = "/docs/" + selected + "/overview.html";
+        }
       });
     } else {
       $(".doc .paragraph div p").remove();
