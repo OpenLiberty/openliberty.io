@@ -74,7 +74,7 @@ $(window).on("load", function() {
               m +
               "/" +
               (folder === "reference" ? "reference/" : "") +
-              (dir !== "" ? dir + "/" : "") +
+              (dir !== "" ? preceed1 + "/" : "") +
               doc +
               ".html>v" +
               m +
@@ -112,7 +112,7 @@ $(window).on("load", function() {
             selected +
             "/" +
             (folder === "reference" ? "reference/" : "") +
-            (dir !== "" ? dir + "/" : "") +
+            (dir !== "" ? preceed1 + "/" : "") +
             doc +
             ".html";
         } else {
