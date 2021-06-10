@@ -1,136 +1,208 @@
 ---
-layout: doc
+layout: default
 title: Guides
 css:
-- header-dark
-- guide-card
-- guides
+  - header-dark
+  - guide-card
+  - guides
 js: guides
 permalink: /guides/
 seo-description: Guides, tutorials, examples on developing cloud-native Java microservices and applications with Open Liberty, Eclipse MicroProfile, Jakarta EE, containers, Kubernetes, REST, Reactive and cloud deployments and more.
 ---
+
 <!-- Build a list of all the documents in the guides code base -->
-{% assign static-guides = site.pages | where: 'layout', 'guide' %}
-{% assign multipane-static-guides = site.pages | where: 'layout', 'guide-multipane' %}
-{% assign multipane-iguides = site.pages | where: 'layout', 'iguide-multipane' %}
-{% assign all-markdown-files = static-guides | concat: multipane-static-guides | concat: multipane-iguides | sort: 'releasedate' | reverse %}
-{% assign all-guides = '' | split: '' %}
+{% assign static-guides = site.pages | where: 'layout', 'guide' %} {% assign
+multipane-static-guides = site.pages | where: 'layout', 'guide-multipane' %} {%
+assign multipane-iguides = site.pages | where: 'layout', 'iguide-multipane' %}
+{% assign all-markdown-files = static-guides | concat: multipane-static-guides |
+concat: multipane-iguides | sort: 'releasedate' | reverse %} {% assign
+all-guides = '' | split: '' %}
 
 <!-- Remove any documents deemed private (archived, templates, etc) -->
-{% for guide in all-markdown-files %}
-    {% unless guide.archived or guide.path contains "guides/guides-template" or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
-        {% assign all-guides = all-guides | push: guide %} 
-    {% endunless %}
-{% endfor %}
+{% for guide in all-markdown-files %} {% unless guide.archived or guide.path
+contains "guides/guides-template" or guide.path contains "guides/guides-common"
+or guide.path contains "guides/iguides-common" %} {% assign all-guides =
+all-guides | push: guide %} {% endunless %} {% endfor %}
 
 <!-- Count number of guides from past 30 days-->
 <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
-{% assign new_guide_count = 0 %}
-{% for guide in all-guides %}
-    {% assign date_published = guide.releasedate | date:'%s' %}
-    {% assign date_now = 'now' | date:'%s' %}
-    {% assign date_difference = date_now | minus: date_published %}
-
-    {% if date_difference < 2592000 %}
-        {% assign new_guide_count = new_guide_count | plus: 1 %}
-    {% endif %}
-{% endfor %}
+{% assign new_guide_count = 0 %} {% for guide in all-guides %} {% assign
+date_published = guide.releasedate | date:'%s' %} {% assign date_now = 'now' |
+date:'%s' %} {% assign date_difference = date_now | minus: date_published %} {%
+if date_difference < 2592000 %} {% assign new_guide_count = new_guide_count |
+plus: 1 %} {% endif %} {% endfor %}
 
 <!-- Sort list of guides by date with most recent first -->
 {% assign all_guides_by_date = all-guides | sort: "releasedate" | reverse %}
 
 <!-- INTRODUCTION AND SEARCH BAR -->
 <div id="guides_information_container" class="container">
-    <div id="guides_border"></div>
-    <div class="row">
-        <div id="guide_search_information" class="col-xs-12 col-sm-7 col-md-6">
-            <h2 id="guides_title">Guides</h2>
-            <p id="guides_description">The quickest way to learn all things Open Liberty, and beyond!</p>
-        </div>
-        <img id="clouds" src="{{ "/img/guides_clouds.png" | relative }}" alt='clouds'>
-        <div id="guides_search_container" class="col-xs-12 col-sm-5 col-md-6">
-            <input id="guide_search_input" class="search-box" placeholder="Filter guides" autocomplete="off"
-            data-toggle="popover" data-placement="bottom" data-html="true" aria-label="Search">
-            <button class="clear_btn" type="reset" tabindex=0 aria-label="Clear search bar"></button>
-            <div id="popover_content" class="hide">
-                <p class="tags_title">Suggested tags</p>
-                <button type="button" class="tag_button">new</button>
-                <button type="button" class="tag_button">microprofile</button>
-                <button type="button" class="tag_button">jakarta ee</button>
-                <button type="button" class="tag_button">interactive</button>
-            </div>
-        </div>
+  <div id="guides_border"></div>
+  <div class="row">
+    <div id="guide_search_information" class="col-xs-12 col-sm-7 col-md-6">
+      <h2 id="guides_title">Guides</h2>
+      <p id="guides_description">
+        The quickest way to learn all things Open Liberty, and beyond!
+      </p>
     </div>
+    <img id="clouds" src="{{ "/img/guides_clouds.png" | relative }}"
+    alt='clouds'>
+    <div id="guides_search_container" class="col-xs-12 col-sm-5 col-md-6">
+      <input
+        id="guide_search_input"
+        class="search-box"
+        placeholder="Filter guides"
+        autocomplete="off"
+        data-toggle="popover"
+        data-placement="bottom"
+        data-html="true"
+        aria-label="Search"
+      />
+      <button
+        class="clear_btn"
+        type="reset"
+        tabindex="0"
+        aria-label="Clear search bar"
+      ></button>
+      <div id="popover_content" class="hide" style="display: none">
+        <p class="tags_title">Suggested tags</p>
+        <button type="button" class="tag_button">new</button>
+        <button type="button" class="tag_button">microprofile</button>
+        <button type="button" class="tag_button">jakarta ee</button>
+        <button type="button" class="tag_button">interactive</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div role="menu" id="tablet_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column"><div role="menuitem" id="tablet_toc_accordion"> <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button"> </button> <span>Table of contents</span></div></div>
+<div
+  role="menu"
+  id="tablet_toc_accordion_container"
+  data-toggle="collapse"
+  data-target="#toc_column"
+  aria-expanded="false"
+  aria-controls="toc_column"
+>
+  <div role="menuitem" id="tablet_toc_accordion">
+    <button
+      class="breadcrumb_hamburger toc-toggle collapsed"
+      type="button"
+      tabindex="0"
+    >
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span> <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <img
+        src="/img/toc_close_green.svg"
+        class="TOC_Close_SVG hidden img-responsive"
+        alt="Table of contents close button"
+      />
+    </button>
+    <span>Table of contents</span>
+  </div>
+</div>
 
 <!-- TOC -->
 <div id="toc_column" class="collapse inline open">
-    <div id="toc_container">
-        <button id="tablet_toc_close" data-toggle="collapse" data-target="#toc_column" aria-expanded="true" aria-controls="toc_column">
-            <img src="/img/toc_close_navy.svg" alt="Table of contents close button">
-        </button>
-        <ul>
-        </ul>
-    </div>
+  <div id="toc_container">
+    <button
+      id="tablet_toc_close"
+      data-toggle="collapse"
+      data-target="#toc_column"
+      aria-expanded="true"
+      aria-controls="toc_column"
+    >
+      <img src="/img/toc_close_navy.svg" alt="Table of contents close button" />
+    </button>
+    <ul></ul>
+  </div>
 </div>
 
 <div id="guides_container">
-    <div class="row">
-        {% for guide in all-guides %}
-        <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
-            <a href="{{ guide.url }}.html" class="guide_item" data-title="{{ guide.title | downcase }}" data-description="{{ guide.description | downcase }}" data-tags="" data-search-keywords="{{ guide.search-keywords | join: ' ' | downcase }}">
-                <div class="guide_title_and_description_container">
-                    <h3 class="guide_title">{{guide.title}}</h3>
-                    <p class="guide_description" title="{{guide.description}}">{{guide.description}}</p>
-                </div>
-                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
-                <span class="guide_duration">{{guide.duration}}</span>
-                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
-                <!-- If new posts count is less than 4, use 4 most recent posts -->
-                {% if new_guide_count < 4 %}
-                {% if guide ==  all_guides_by_date[0] or guide ==  all_guides_by_date[1] 
-                or guide ==  all_guides_by_date[2] or guide ==  all_guides_by_date[3] %}
-                    <div class="new_guide_container">
-                        <span class="guide_new">New</span>
-                    </div>
-                {% endif %}
-
-                <!-- If new posts count is >= 4, use posts from last 30 days-->
-                {% else %}
-                    {% assign date_published = guide.releasedate | date:'%s' %}
-                    {% assign date_now = 'now' | date:'%s' %}
-                    {% assign date_difference = date_now | minus: date_published %}
-
-                    {% if date_difference < 2592000 %}
-                        <div class="new_guide_container">
-                            <span class="guide_new">New</span>
-                        </div>
-                    {% endif %}
-                {% endif %}
-
-                {% if guide.layout == 'iguide-multipane' %}
-                    <div class="guide_interactive_container">
-                        <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
-                        <span class="guide_interactive">Interactive</span>
-                    </div>                    
-                {% endif %}
-            </a>
+  <div class="row">
+    {% for guide in all-guides %}
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a
+        href="{{ guide.url }}.html"
+        class="guide_item"
+        data-title="{{ guide.title | downcase }}"
+        data-description="{{ guide.description | downcase }}"
+        data-tags=""
+        data-search-keywords="{{ guide.search-keywords | join: ' ' | downcase }}"
+      >
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">{{guide.title}}</h3>
+          <p class="guide_description" title="{{guide.description}}">
+            {{guide.description}}
+          </p>
         </div>
-        {% endfor %}
-    </div>
+        <img
+          class="duration_clock_icon"
+          src="/img/guide_duration_clock_icon_small.svg"
+          alt="Duration"
+        />
+        <span class="guide_duration">{{guide.duration}}</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+        {% if new_guide_count < 4 %} {% if guide == all_guides_by_date[0] or
+        guide == all_guides_by_date[1] or guide == all_guides_by_date[2] or
+        guide == all_guides_by_date[3] %}
+        <div class="new_guide_container">
+          <span class="guide_new">New</span>
+        </div>
+        {% endif %}
 
-
-    <!-- Zero Search Results -->
-    <div class="no_results_section row">
-            <h2 id="no_results_title"><b class="search_term"></b> - No results found</h2>
-            <div id="no_search_results_container" class="container">
-                <div class="subtitle">
-                    <p><b>Sorry, we couldn't find any guides matching <span class="search_term"></span></b></p>
-                    <p>Want to see a guide on this topic? <b><a href="https://github.com/OpenLiberty/guides-common/projects/1" class="orange_link_light_background">Check out our project board and raise an issue.</a></b></p>
-                </div>
-                <button id="back_to_guides_button" class="btn"><img class="arrow" src="/img/guides_arrow_left.svg" alt=""><b>Back to all Open Liberty guides</b></button>
-            </div>
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+        {% else %} {% assign date_published = guide.releasedate | date:'%s' %}
+        {% assign date_now = 'now' | date:'%s' %} {% assign date_difference =
+        date_now | minus: date_published %} {% if date_difference < 2592000 %}
+        <div class="new_guide_container">
+          <span class="guide_new">New</span>
+        </div>
+        {% endif %} {% endif %} {% if guide.layout == 'iguide-multipane' %}
+        <div class="guide_interactive_container">
+          <img
+            class="interactive_bolt_icon"
+            src="/img/guide_lightning_bolt.svg"
+            alt="Interactive"
+          />
+          <span class="guide_interactive">Interactive</span>
+        </div>
+        {% endif %}
+      </a>
     </div>
+    {% endfor %}
+  </div>
+
+  <!-- Zero Search Results -->
+  <div class="no_results_section row">
+    <h2 id="no_results_title">
+      <b class="search_term"></b> - No results found
+    </h2>
+    <div id="no_search_results_container" class="container">
+      <div class="subtitle">
+        <p>
+          <b
+            >Sorry, we couldn't find any guides matching
+            <span class="search_term"></span
+          ></b>
+        </p>
+        <p>
+          Want to see a guide on this topic?
+          <b
+            ><a
+              href="https://github.com/OpenLiberty/guides-common/projects/1"
+              class="orange_link_light_background"
+              >Check out our project board and raise an issue.</a
+            ></b
+          >
+        </p>
+      </div>
+      <button id="back_to_guides_button" class="btn">
+        <img class="arrow" src="/img/guides_arrow_left.svg" alt="" /><b
+          >Back to all Open Liberty guides</b
+        >
+      </button>
+    </div>
+  </div>
 </div>
