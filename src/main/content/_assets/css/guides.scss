@@ -46,14 +46,46 @@ $blue-grey-color: #5d6a8e;
 @media (min-width: 1150px) and (max-width: 1400px) {
   .guide_column.col-lg-3 {
     width: 33.33333333%;
+    max-width: 33.333333%;
+    flex: 0 0 33.333333%;
   }
 }
 
 @media (min-width: 991px) and (max-width: 1150px) {
+  .guide_column.col-md-4 {
+    width: 50%;
+    max-width: 33.333333%;
+    flex: 0 0 33.333333%;
+  }
   .guide_column.col-lg-3 {
     width: 50%;
+    max-width: 50%;
+    flex: 0 0 50%;
   }
 }
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .guide_column.col-lg-3 {
+    max-width: 50%;
+    flex: 0 0 50%;
+  }
+  .col-sm-7 {
+    width: 58.33333333%;
+    // max-width: 58.33333333%;
+  }
+  .col-md-6 {
+    flex: 0 0 58.33333333%;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .col-sm-7,
+  .col-sm-5 {
+    flex: none;
+    max-width: none;
+  }
+}
+
 // -----------
 
 %transition_guide_search_input {
@@ -68,7 +100,7 @@ $blue-grey-color: #5d6a8e;
   position: relative;
   min-width: 100%;
   padding-top: 104px;
-  padding-bottom: 29px;
+  padding-bottom: 22px;
   padding-left: 120px;
   padding-right: 120px;
   background-image: radial-gradient(circle at top right, #5e6b8d, #2c2e50);
@@ -102,7 +134,7 @@ $blue-grey-color: #5d6a8e;
 
 #guides_title {
   margin-top: 0;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
   font-size: 50px;
   color: white;
