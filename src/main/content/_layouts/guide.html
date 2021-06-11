@@ -1,143 +1,161 @@
 ---
-layout: doc
+layout: default
 css:
-- header
-- header-dark
-- toc
-- toc-singlepane
-- end-of-guide
-- guide-card
-- tabs
-- guide-common
+  - header
+  - header-dark
+  - toc
+  - toc-singlepane
+  - end-of-guide
+  - guide-card
+  - tabs
+  - guide-common
 js:
-- guide-common
-- toc
-- tabs
-- guide-static
+  - guide-common
+  - toc
+  - tabs
+  - guide-static
 ---
 
 <!-- Build a list of all the documents in the guides code base -->
-{% assign static-guides = site.pages | where: 'layout', 'guide' %}
-{% assign multipane-static-guides = site.pages | where: 'layout', 'guide-multipane' %}
-{% assign multipane-iguides = site.pages | where: 'layout', 'iguide-multipane' %}
-{% assign all-markdown-files = static-guides | concat: multipane-static-guides | concat: multipane-iguides | sort: 'releasedate' | reverse %}
-{% assign all-guides = '' | split: '' %}
+{% assign static-guides = site.pages | where: 'layout', 'guide' %} {% assign
+multipane-static-guides = site.pages | where: 'layout', 'guide-multipane' %} {%
+assign multipane-iguides = site.pages | where: 'layout', 'iguide-multipane' %}
+{% assign all-markdown-files = static-guides | concat: multipane-static-guides |
+concat: multipane-iguides | sort: 'releasedate' | reverse %} {% assign
+all-guides = '' | split: '' %}
 
 <!-- Remove any documents deemed private (archived, templates, etc) -->
-{% for guide in all-markdown-files %}
-    {% unless guide.archived or guide.path contains "guides/guides-template" or guide.path contains "guides/guides-common" or guide.path contains "guides/iguides-common" %}
-        {% assign all-guides = all-guides | push: guide %}
-    {% endunless %}
-{% endfor %}
+{% for guide in all-markdown-files %} {% unless guide.archived or guide.path
+contains "guides/guides-template" or guide.path contains "guides/guides-common"
+or guide.path contains "guides/iguides-common" %} {% assign all-guides =
+all-guides | push: guide %} {% endunless %} {% endfor %}
 
 <!-- Count number of guides from past 30 days-->
 <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
-{% assign new_guide_count = 0 %}
-{% for guide in all-guides %}
-    {% assign date_published = guide.releasedate | date:'%s' %}
-    {% assign date_now = 'now' | date:'%s' %}
-    {% assign date_difference = date_now | minus: date_published %}
-
-    {% if date_difference < 2592000 %}
-        {% assign new_guide_count = new_guide_count | plus: 1 %}
-    {% endif %}
-{% endfor %}
+{% assign new_guide_count = 0 %} {% for guide in all-guides %} {% assign
+date_published = guide.releasedate | date:'%s' %} {% assign date_now = 'now' |
+date:'%s' %} {% assign date_difference = date_now | minus: date_published %} {%
+if date_difference < 2592000 %} {% assign new_guide_count = new_guide_count |
+plus: 1 %} {% endif %} {% endfor %}
 
 <!-- Sort list of guides by date with most recent first -->
 {% assign all_guides_by_date = all-guides | sort: "releasedate" | reverse %}
 
 <div id="background_container">
-    <div class="toc_hotspot">
-        <!-- Guide's table of contents section -->
-        <div id="toc_column" class="collapse inline open">
-            <div id="toc_inner">
-                {% assign toc = page.document | tocify_asciidoc %}
-                {% if toc %}
-                <div id="close_container">
-                    <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0"/>
-                </div>
-                <h3 id="toc_title">Contents</h3>
-                <div id="toc_container">
-                    {{ toc }}
-                </div>
-                <div id="toc_separator"></div>
-                {% endif %}
-                <h3 id="tag_title">Tags</h3>
-                <div id="tags_container"></div>
-            </div>
+  <div class="toc_hotspot">
+    <!-- Guide's table of contents section -->
+    <div id="toc_column" class="collapse inline open">
+      <div id="toc_inner">
+        {% assign toc = page.document | tocify_asciidoc %} {% if toc %}
+        <div id="close_container">
+          <img
+            id="toc_close_white"
+            src="/img/toc_close_white.svg"
+            alt="Close the table of contents"
+            tabindex="0"
+          />
         </div>
-        <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
-            <img src="/img/arrow_white.svg" alt="arrow">
-        </div>
-        <div id="toc_line" class="open"></div>
-        <!-- Entire guide section -->
-        <div id="guide_column" class="position_relative open">
-            <div id="guide_content">
-                <!-- Guide header section -->
-                <div id="guide_meta" class="sect1" tabindex="0">
-                    <h1 id="guide_title">{{ page.title }}</h1>
-                    <div id="duration_container">
-                        <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
-                        <span id="guide_duration">{{ page.duration }}</span>
-
-                        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
-                        <!-- If new posts count is less than 4, use 4 most recent posts -->
-                        {% if new_guide_count < 4 %}
-                            {% if page.title ==  all_guides_by_date[0].title or page.title ==  all_guides_by_date[1].title
-                            or page.title ==  all_guides_by_date[2].title or page.title ==  all_guides_by_date[3].title %}
-                                <div class="new_guide_container">
-                                    <span class="guide_new">New</span>
-                                </div>
-                            {% endif %}
-                        <!-- If new posts count is >= 4, use posts from last 30 days-->
-                        {% else %}
-                            {% assign date_published = guide.releasedate | date:'%s' %}
-                            {% assign date_now = 'now' | date:'%s' %}
-                            {% assign date_difference = date_now | minus: date_published %}
-                            <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
-                            {% if date_difference < 2592000 %}
-                                <div class="new_guide_container">
-                                    <span class="guide_new">New</span>
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                    <div id="mobile_prereqs_section">
-                        <p id="mobile_prereqs_title">Prerequisites:</p>
-                        <div class="prereqs_list"></div>
-                    </div>
-                </div>
-
-                <div class="scroller_anchor"></div>
-                <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
-                    <div role="menuitem" id="mobile_toc_accordion">
-                        <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <img src="/img/toc_close_green.svg" class="hidden img-responsive" alt="Table of contents close button"/>
-                        </button>
-                        <span>Table of contents</span>
-                    </div>
-                </div>
-
-                <!-- Guide content section -->
-                {{ content }}
-
-            </div>
-            <div id="guide_section_copied_confirmation">Copied to clipboard</div>
-            <img id="copy_to_clipboard" src='/img/guides_copy_button.svg' alt='Copy code block' title='Copy code block'>
-        </div>
-
+        <h3 id="toc_title">Contents</h3>
+        <div id="toc_container">{{ toc }}</div>
+        <div id="toc_separator"></div>
+        {% endif %}
+        <h3 id="tag_title">Tags</h3>
+        <div id="tags_container"></div>
+      </div>
     </div>
+    <div
+      id="toc_indicator"
+      tabindex="0"
+      aria-label="Open the table of contents"
+      class="hidden"
+    >
+      <img src="/img/arrow_white.svg" alt="arrow" />
+    </div>
+    <div id="toc_line" class="open"></div>
+    <!-- Entire guide section -->
+    <div id="guide_column" class="position_relative open">
+      <div id="guide_content">
+        <!-- Guide header section -->
+        <div id="guide_meta" class="sect1" tabindex="0">
+          <h1 id="guide_title">{{ page.title }}</h1>
+          <div id="duration_container">
+            <img
+              src="/img/guide_duration_clock_icon_large.svg"
+              alt="duration"
+            />
+            <span id="guide_duration">{{ page.duration }}</span>
+
+            <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+            <!-- If new posts count is less than 4, use 4 most recent posts -->
+            {% if new_guide_count < 4 %} {% if page.title ==
+            all_guides_by_date[0].title or page.title ==
+            all_guides_by_date[1].title or page.title ==
+            all_guides_by_date[2].title or page.title ==
+            all_guides_by_date[3].title %}
+            <div class="new_guide_container">
+              <span class="guide_new">New</span>
+            </div>
+            {% endif %}
+            <!-- If new posts count is >= 4, use posts from last 30 days-->
+            {% else %} {% assign date_published = guide.releasedate | date:'%s'
+            %} {% assign date_now = 'now' | date:'%s' %} {% assign
+            date_difference = date_now | minus: date_published %}
+            <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+            {% if date_difference < 2592000 %}
+            <div class="new_guide_container">
+              <span class="guide_new">New</span>
+            </div>
+            {% endif %} {% endif %}
+          </div>
+          <div id="mobile_prereqs_section">
+            <p id="mobile_prereqs_title">Prerequisites:</p>
+            <div class="prereqs_list"></div>
+          </div>
+        </div>
+
+        <div class="scroller_anchor"></div>
+        <div
+          id="mobile_toc_accordion_container"
+          data-toggle="collapse"
+          data-target="#toc_column"
+          aria-expanded="false"
+          aria-controls="toc_column"
+          role="button"
+        >
+          <div role="menuitem" id="mobile_toc_accordion">
+            <button
+              class="breadcrumb_hamburger toc-toggle collapsed"
+              type="button"
+              tabindex="0"
+            >
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <img
+                src="/img/toc_close_green.svg"
+                class="hidden img-responsive"
+                alt="Table of contents close button"
+              />
+            </button>
+            <span>Table of contents</span>
+          </div>
+        </div>
+
+        <!-- Guide content section -->
+        {{ content }}
+      </div>
+      <div id="guide_section_copied_confirmation">Copied to clipboard</div>
+      <img
+        id="copy_to_clipboard"
+        src="/img/guides_copy_button.svg"
+        alt="Copy code block"
+        title="Copy code block"
+      />
+    </div>
+  </div>
 </div>
 
 <div id="end_of_guide_background">
-    <div class="centered_content">
-        {% include end-of-guide.html %}
-    </div>
+  <div class="centered_content">{% include end-of-guide.html %}</div>
 </div>
-
-
-
