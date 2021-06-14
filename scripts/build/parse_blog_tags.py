@@ -9,7 +9,7 @@ for tag in tags:
     posts = tag['posts']
     for post in posts:
         for file_name in os.listdir("src/main/content/_posts/"):            
-            if os.path.isfile("src/main/content/_posts/" + file_name) and post in file_name:
+            if os.path.isfile("src/main/content/_posts/" + file_name) and file_name.endswith(post + '.adoc'):
                 f_post = open("src/main/content/_posts/" + file_name)
                 data = f_post.readlines()
                 
