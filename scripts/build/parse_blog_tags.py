@@ -22,11 +22,11 @@ for tag in tags:
                         break
                     line_num += 1
                 if tags_line != -1:
-                    data[tags_line] = data[tags_line].rstrip('\n') # Remove initial newline
-                    data[tags_line] = data[tags_line] + ' ' + tag_name + '\n'
+                    data[tags_line] = data[tags_line].replace(']', '').rstrip('\n') # Remove end bracket and initial newline
+                    data[tags_line] = data[tags_line] + ', "' + tag_name + '"]\n'
                 else:
                     # Otherwise, add the tags after the first line of front-matter
-                    data[2] = 'tags: ' + tag_name + '\n' + data[2]
+                    data[2] = 'tags: ["' + tag_name + '"]\n' + data[2] 
 
                 with open("src/main/content/_posts/" + file_name, 'w') as f_write:
                     f_write.writelines(data)
