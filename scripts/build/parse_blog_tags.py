@@ -7,9 +7,9 @@ tags = content['blog_tags']
 for tag in tags:
     tag_name = tag['name']
     posts = tag['posts']
-    for post in posts:
+    for post_name in posts:
         for file_name in os.listdir("src/main/content/_posts/"):            
-            if os.path.isfile("src/main/content/_posts/" + file_name) and file_name.endswith(post + '.adoc'):
+            if os.path.isfile("src/main/content/_posts/" + file_name) and file_name.endswith(post_name + '.adoc'):
                 f_post = open("src/main/content/_posts/" + file_name)
                 data = f_post.readlines()
                 
@@ -31,4 +31,4 @@ for tag in tags:
                 with open("src/main/content/_posts/" + file_name, 'w') as f_write:
                     f_write.writelines(data)
                     f_write.close()
-        
+f.close()
