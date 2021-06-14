@@ -707,13 +707,11 @@ function addGuideRatingsListener() {
 }
 
 $(window).on("load", function () {
-  $(".code_command .content")
+  $(".code_command .content pre")
     .find("mark")
     .each(function () {
-      //var item = $(this);
-      var locate = $(this).parent(".code_command");
-      $(this).insertBefore(locate);
-      //   $(this).remove();
+      var newPlacement = $(this).parent().parent().parent();
+      newPlacement.prepend($(this));
     });
   $.ready.then(function () {
     // Both ready and loaded
