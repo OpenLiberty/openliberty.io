@@ -59,7 +59,7 @@ $BUILD_SCRIPTS_DIR/clone_certifications.sh
 $BUILD_SCRIPTS_DIR/clone_blogs.sh
 
 # Read in the blog tags file and add the tag to each blog so jekyll knows how to process them.
-python3 ./script/build/parse_blog_tags.py
+python3 $BUILD_SCRIPTS_DIR/parse_blog_tags.py
 
 # Jekyll build all the cloned content
 echo "Building with jekyll..."
