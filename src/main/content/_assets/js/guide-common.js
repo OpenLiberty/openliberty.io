@@ -711,6 +711,7 @@ $(window).on("load", function () {
     .find("mark")
     .each(function () {
       var newPlacement = $(this).parent().parent().parent();
+      $(this).find("code").contents().unwrap();
       newPlacement.prepend($(this));
     });
   $.ready.then(function () {
