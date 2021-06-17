@@ -32,6 +32,8 @@ $(window).on("load", function() {
           versions.push($(this).text());
         });
 
+      console.log(versions);
+
       var calls = [];
       var matches = [];
       //make api calls for content of each version to see if doc exists
@@ -97,8 +99,9 @@ $(window).on("load", function() {
         "<div><p>Below are links to the requested document in other versions of the documentation.</p></div><ul></ul>"
       );
 
-      $(".components .versions .version").click(function(e) {
+      $(".components .versions .version").on("click", function(e) {
         e.preventDefault();
+        e.stopPropagation();
         var selected = $(e.target)
           .find("a")
           .text()
