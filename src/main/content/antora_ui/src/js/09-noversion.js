@@ -99,11 +99,10 @@ $(window).on("load", function() {
         "<div><p>Below are links to the requested document in other versions of the documentation.</p></div><ul></ul>"
       );
 
-      $(".components .versions .version").on("click", function(e) {
+      //change around selectors to get accurate selection, test
+      $(".components .versions .version a").on("click", function(e) {
         e.preventDefault();
-        e.stopPropagation();
         var selected = $(e.target)
-          .find("a")
           .text()
           .trim();
         console.log(selected);
@@ -121,9 +120,8 @@ $(window).on("load", function() {
         } else {
           window.location.href = "/docs/" + selected + "/overview.html";
         }
+        return;
       });
-    } else {
-      $(".doc .paragraph div p").remove();
     }
   });
 });
