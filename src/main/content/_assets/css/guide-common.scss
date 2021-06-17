@@ -37,10 +37,33 @@
   margin-right: 10px;
   border-radius: 3px;
 
-  &:hover {
-    color: #ffffff;
-    background-color: #4f660a;
-  }
+    &:hover {
+        color: darken(#4F660A, 5%); // Darkened to pass color contrast rules.
+        background-color: #ABD155;
+    }
+
+    &.left_prereq {
+        margin-right: 0;
+        border-right: none;
+        border-radius: 3px 0 0 3px;
+
+        &:after {
+            content: "";
+            position: absolute;
+            border-right: 2px solid #abd155;
+            background-color:#abd155;
+            width: 1px;
+            height: 60%;
+            right: 0;
+            top: 20%;
+        }
+    }
+
+    &.right_prereq {
+        margin-left: 0;
+        border-left: none;
+        border-radius: 0 3px 3px 0;
+    }
 }
 
 #mobile_prereqs_section .prereq {

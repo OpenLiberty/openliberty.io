@@ -18,54 +18,51 @@ $(document).ready(function () {
 
     $("#preamble").detach().insertAfter("#duration_container");
 
+    function add_prereq(prereq) {
+        var prereq_html = "";
+        var position_class = "";
+        if (prereq.name == "Maven") {
+            position_class = "left_prereq";
+        } else if (prereq.name == "Gradle") {
+            position_class = "right_prereq";
+        }
+        prereq_html +=
+            '<div class="prereq_div"><a href=' +
+            '"' +
+            prereq.link +
+            '"' +
+            ' class="prereq notranslate ' +
+            position_class +
+            '" target="_blank">' +
+            prereq.name +
+            "</a></div>";
+        $(".prereqs_list").append(prereq_html);
+    }
+
     // Read prereqs from json file and add to html
     $.getJSON("../../guides/guides-common/guide_prereqs.json", function (data) {
         var guide_name = window.location.pathname
             .replace(".html", "")
             .replace("/guides/", "");
-        var prereq_html = "";
         $.each(data.prereqs, function (i, prereq) {
             // if guide found in prereqs list, add it to the html
             if (prereq.guides.indexOf(guide_name) > -1) {
-                prereq_html +=
-                    '<div class="prereq_div"><a href=' +
-                    '"' +
-                    prereq.link +
-                    '"' +
-                    ' class="prereq notranslate" target="_blank">' +
-                    prereq.name +
-                    "</a></div>";
+                add_prereq(prereq);
             }
             // if prereqs list contains * add prereq to all guides except for excluded guides (if they exist)
             else if (prereq.guides.indexOf("*") > -1) {
                 if (prereq.exclude) {
                     // if guide not in prereq exclude list, add it to the html
                     if (prereq.exclude.indexOf(guide_name) <= -1) {
-                        prereq_html +=
-                            '<div class="prereq_div"><a href=' +
-                            '"' +
-                            prereq.link +
-                            '"' +
-                            ' class="prereq notranslate" target="_blank" rel="noopener noreferrer">' +
-                            prereq.name +
-                            "</a></div>";
+                        add_prereq(prereq);
                     }
                 }
                 // guides has * but no exclude, add all to html
                 else {
-                    prereq_html +=
-                        '<div class="prereq_div"><a href=' +
-                        '"' +
-                        prereq.link +
-                        '"' +
-                        ' class="prereq notranslate" target="_blank" rel="noopener noreferrer">' +
-                        prereq.name +
-                        "</a></div>";
+                    add_prereq(prereq);
                 }
             }
         });
-
-        $(".prereqs_list").html(prereq_html);
     });
 
     // Read skills network json to see if we need to link to a cloud hosted guide equivalent.
@@ -140,7 +137,7 @@ $(document).ready(function () {
     }
 
     $(
-        "#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre):not(.code_column pre), #guide_content .code_command .content"
+        "#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre):not(.code_column pre)"
     )
         .on("mouseenter", function (event) {
             offset = $("#guide_column").position();
