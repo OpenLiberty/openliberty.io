@@ -12,7 +12,7 @@ ruby $BUILD_SCRIPTS_DIR/clone_guides.rb
 
 # Move the blog redirect file to the WEB-INF directory
 if [ -f src/main/content/guides/guides-common/guide-redirects.properties ]; then
-   echo "Moving the blog redirects file"
+   echo "Moving the guide redirects file"
    mv src/main/content/guides/guides-common/guide-redirects.properties src/main/webapp/WEB-INF/guide-redirects.properties
 fi
 
