@@ -10,6 +10,12 @@ source $BUILD_SCRIPTS_DIR/ruby_install.sh
 echo "Cloning repositories with name starting with guide or iguide..."
 ruby $BUILD_SCRIPTS_DIR/clone_guides.rb
 
+# Move the blog redirect file to the WEB-INF directory
+if [ -f src/main/content/guides/guides-common/guide-redirects.properties ]; then
+   echo "Moving the guide redirects file"
+   mv src/main/content/guides/guides-common/guide-redirects.properties src/main/webapp/WEB-INF/guide-redirects.properties
+fi
+
 # Need to make sure there are draft-iguide* folders before using the find command
 # If we don't, the find command will fail because the path does not exist
 if [ $(find src/main/content/guides -type d -name "draft-iguide*" | wc -l ) != "0" ] ; then
