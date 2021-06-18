@@ -89,15 +89,13 @@ $(window).on("load", function() {
       $(".doc .paragraph").text(
         "The requested document does not exist in the " +
           version +
-          " version of the documentation."
+          " version of the documentation, but it is available in the following versions."
       );
       if ($(".doc .paragraph ul").length) {
         $(".doc .paragraph ul").empty();
         $(".doc .paragraph ul").remove();
       }
-      $(".doc .paragraph").append(
-        "<div><p>Below are links to the requested document in other versions of the documentation.</p></div><ul></ul>"
-      );
+      $(".doc .paragraph").append("<ul></ul>");
 
       //change around selectors to get accurate selection, test
       $(".components .versions .version a").on("click", function(e) {
