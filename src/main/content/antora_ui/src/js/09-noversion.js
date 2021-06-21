@@ -32,8 +32,6 @@ $(window).on("load", function() {
           versions.push($(this).text());
         });
 
-      console.log(versions);
-
       var calls = [];
       var matches = [];
       //make api calls for content of each version to see if doc exists
@@ -103,8 +101,6 @@ $(window).on("load", function() {
         var selected = $(e.target)
           .text()
           .trim();
-        console.log(selected);
-        console.log(matches);
         if (matches.includes(selected)) {
           window.location.href =
             window.location.origin +
