@@ -213,11 +213,15 @@ html, body {
 
     #app_name_section, #base_package_section {
         display: inline-block;
-        vertical-align: top;
+        vertical-align: top;        
     }
 
     #microprofile_version_section {
         margin-bottom: 42px;
+    }
+
+    #starter_warnings {
+        position: relative;
     }
 
     #starter_warnings p {
@@ -226,15 +230,28 @@ html, body {
         padding: 10px 20px;
         margin-bottom: 40px;
     }
+
+    #invalid_message_close_icon {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        top: calc(50% - 12px);
+        right: 20px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
     
     .invalid_field_div {
         margin-top: 15px;
+        margin-bottom: -20px;
         & .invalid_icon {
             margin-right: 8px;
         }
         & .invalid_icon, .invalid_field_message {
             display: inline-block;
-        }
+        }        
     }
 
     #starter_submit {
@@ -251,7 +268,7 @@ html, body {
 
         &.disabled {
             background-color: #C8D2D2;
-            color: #6F7878;
+            color: darken(#6F7878, 12%); // Darkened to pass accessibility requirements.
             pointer-events: none;
         }
     }  

@@ -485,21 +485,40 @@ function validate_starter_inputs() {
                             $(this).attr("disabled", "disabled");
                             // Add a tooltip that explains that these are disabled because of the other field.
                             this.title =
-                                "This is disabled because of field: " +
-                                starter_key;
+                                "This version is disabled because of incompatibility with the version of: " +
+                                starter_info[starter_key].name;
                         } else {
+                            this.title = this.text;
                             if (!valid && first) {
                                 // Select the highest valid value for the dependency
                                 $(this).attr("selected", "selected");
                                 first = false;
+                                valid = true;
                                 // Update the message that an option was chosen for them
-                                $("#starter_warnings").append(
+                                var close_icon = $(
+                                    "<img src='/img/x_white.svg' id='invalid_message_close_icon' alt='Close' tabindex='0' />"
+                                );
+                                close_icon.on("click", function () {
+                                    $("#starter_warnings").empty();
+                                });
+                                close_icon.on("keydown", function (event) {
+                                    if (
+                                        event.which === 13 ||
+                                        event.which === 32 // Enter key or spacebar
+                                    ) {
+                                        $(this).click();
+                                    }
+                                });
+                                var message = $(
                                     "<p>" +
                                         starter_info[d].name +
                                         " has been automatically updated to the highest valid version compatible with " +
                                         starter_info[starter_key].name +
-                                        ". </p>"
+                                        ".</p>"
                                 );
+                                $("#starter_warnings")
+                                    .append(message)
+                                    .append(close_icon);
                             }
                         }
                     });
@@ -612,7 +631,7 @@ $(document).ready(function () {
 
     $("#starter_submit").on("keydown", function (event) {
         if (event.which === 13 || event.which === 32) {
-            // Spacebar or Enter
+            // Enter or Spacebar
             $(this).click();
         }
     });
