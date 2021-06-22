@@ -422,7 +422,7 @@ function add_invalid_message(field_id, valid) {
 function validate_group_name() {
     const valid_syntax = /^[a-z][a-zA-Z0-9.]*$/g;
     var value = $(".starter_field[data-starter-field='g'] input").val();
-    var valid = valid_syntax.test(value);
+    var valid = value == "" ? false : valid_syntax.test(value);
     add_invalid_message("g", valid);
     return valid;
 }
@@ -431,7 +431,7 @@ function validate_group_name() {
 function validate_application_name() {
     var valid_syntax = /^[a-zA-Z0-9\_\.\-]*$/g;
     var value = $(".starter_field[data-starter-field='a'] input").val();
-    var valid = valid_syntax.test(value);
+    var valid = value == "" ? false : valid_syntax.test(value);
     add_invalid_message("a", valid);
     return valid;
 }
@@ -440,11 +440,9 @@ function validate_starter_inputs() {
     var valid = true;
     $("#starter_warnings").empty();
     $("#starter_submit").addClass("disabled");
-    // $("#starter_submit").attr("disabled", "disabled");
 
     var group_name_valid = validate_group_name();
     var app_name_valid = validate_application_name();
-    valid = valid && group_name_valid && app_name_valid;
 
     // Look through each of starter_dependencies and verify that the value of its dependency is valid for that input.
     for (var starter_key in starter_dependencies) {
@@ -479,15 +477,30 @@ function validate_starter_inputs() {
                             d +
                             "'] select option"
                     );
+                    var first = true;
                     options.removeAttr("disabled");
+                    options.filter(":selected").removeAttr("selected");
                     options.each(function () {
                         if (dependencies[d].indexOf(this.text) === -1) {
                             $(this).attr("disabled", "disabled");
-                        } else {
                             // Add a tooltip that explains that these are disabled because of the other field.
                             this.title =
                                 "This is disabled because of field: " +
                                 starter_key;
+                        } else {
+                            if (!valid && first) {
+                                // Select the highest valid value for the dependency
+                                $(this).attr("selected", "selected");
+                                first = false;
+                                // Update the message that an option was chosen for them
+                                $("#starter_warnings").append(
+                                    "<p>" +
+                                        starter_info[d].name +
+                                        " has been automatically updated to the highest valid version compatible with " +
+                                        starter_info[starter_key].name +
+                                        ". </p>"
+                                );
+                            }
                         }
                     });
                 }
@@ -496,12 +509,8 @@ function validate_starter_inputs() {
                 break;
         }
     }
-    if (!valid) {
-        // $("#starter_warnings").append(
-        //     "<p>Please correct the invalid choices before submitting.</p>"
-        // );
-    } else {
-        // $("#starter_submit").removeAttr("disabled");
+    valid = valid && group_name_valid && app_name_valid;
+    if (valid) {
         $("#starter_submit").removeClass("disabled");
     }
 }
