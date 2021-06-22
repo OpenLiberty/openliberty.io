@@ -213,6 +213,7 @@ html, body {
 
     #app_name_section, #base_package_section {
         display: inline-block;
+        vertical-align: top;
     }
 
     #microprofile_version_section {
@@ -220,8 +221,21 @@ html, body {
     }
 
     #starter_warnings p {
-        color: red;
+        color: white;
+        background-color: #313653;
+        height: 75px;
+        padding: 10px 20px;
         margin-bottom: 40px;
+    }
+    
+    .invalid_field_div {
+        margin-top: 15px;
+        & .invalid_icon {
+            margin-right: 8px;
+        }
+        & .invalid_icon, .invalid_field_message {
+            display: inline-block;
+        }
     }
 
     #starter_submit {
@@ -235,7 +249,14 @@ html, body {
             cursor: pointer;
             background-color: #C7EE63;
         }
-    }
+
+        &.disabled {
+            background-color: #C8D2D2;
+            color: #6F7878;
+            pointer-events: none;
+        }
+    }  
+    
 }
 
 #quick_start_section {
