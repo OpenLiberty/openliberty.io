@@ -629,7 +629,6 @@ $(document).ready(function () {
           .each(function (ind, element) {
             count += $(element).children().not(".hidden_guide").length;
           });
-        console.log(id);
         $(this)
           .find("#" + id)
           .text("(" + count + "/" + total + " guides)");
