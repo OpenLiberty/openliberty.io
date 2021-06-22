@@ -615,6 +615,26 @@ $(document).ready(function () {
 
   // Update number of guides count for each category
   function updateTotals(showTotal) {
+    if (isMobileView() && showTotal) {
+      $(".toc_title_container").each(function () {
+        var count = 0;
+        var total = $(this).find("p").text();
+        total = total.substring(1, total.indexOf(" "));
+        if (total.includes("/")) {
+          total = total.substring(total.indexOf("/") + 1);
+        }
+        var id = $(this).find("p").attr("id");
+        $(this)
+          .nextUntil(".toc_separator", ".guide_subcategory_row")
+          .each(function (ind, element) {
+            count += $(element).children().not(".hidden_guide").length;
+          });
+        $(this)
+          .find("#" + id)
+          .text("(" + count + "/" + total + " guides)");
+      });
+      return;
+    }
     $(".category_section").each(function (index, category) {
       // count number of guide cards visible in each category
       var count = $(this).find(".guide_column").not(".hidden_guide").length;
