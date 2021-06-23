@@ -525,7 +525,11 @@ function validate_starter_inputs() {
                                     var message = $(
                                         "<p>" +
                                             starter_info[d].name +
-                                            " has been automatically updated to the highest valid version compatible with " +
+                                            " has been automatically updated from " +
+                                            selected_version +
+                                            " to " +
+                                            this.text +
+                                            " for compatibility with " +
                                             starter_info[starter_key].name +
                                             ".</p>"
                                     );
