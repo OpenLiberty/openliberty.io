@@ -503,9 +503,9 @@ function validate_starter_inputs() {
                                 if (selected_version != this.text) {
                                     options
                                         .filter(":selected")
-                                        .removeAttr("selected");
+                                        .prop("selected", "false");
                                     // Select the highest valid value for the dependency if it wasn't already selected
-                                    $(this).attr("selected", "selected");
+                                    $(this).prop("selected", "true");
 
                                     // Update the message that an option was chosen for them
                                     var close_icon = $(
