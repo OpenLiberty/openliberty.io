@@ -3,6 +3,12 @@ $(window).on("load", function() {
     if (!document.referrer.includes("noversion.html")) {
       var folder = "ROOT";
       var dir = "";
+
+      //accomodations for draft and staging sites
+      var useNext =
+        document.referrer.includes("mybluemix.net") ||
+        document.referrer.includes("localhost");
+
       //get info about doc that was attempted to be reached
       var attempted = document.referrer;
       var doc = attempted.substring(attempted.lastIndexOf("/") + 1);
@@ -32,12 +38,18 @@ $(window).on("load", function() {
           versions.push($(this).text());
         });
 
+      versions.sort(orderVersions);
+
       var calls = [];
       var matches = [];
       //make api calls for content of each version to see if doc exists
       //add case for reference docs
       //consider adding logic to order versions from newest to oldest
-      versions.forEach(function(v) {
+      versions.forEach(function(v, ind) {
+        var ver = v;
+        if (ind == 0 && useNext) {
+          ver = "Next";
+        }
         calls.push(
           $.ajax({
             headers: {
@@ -49,7 +61,7 @@ $(window).on("load", function() {
               "/pages" +
               dir +
               "?ref=v" +
-              v,
+              ver,
             type: "GET",
             success: function(response) {
               response.forEach(function(file) {
