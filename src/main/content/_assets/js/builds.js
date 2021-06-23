@@ -403,7 +403,7 @@ function add_invalid_message(field_id, valid) {
                 );
             } else if (field_id == "g") {
                 message = $(
-                    "<p class='invalid_field_message'>Valid characters include A-z, 0-9, and (. _ -).</p>"
+                    "<p class='invalid_field_message'>Valid characters include a-z, A-Z, and 0-9 separated by '.'</p>"
                 );
             }
             div.append(warning_icon).append(message);
@@ -420,14 +420,16 @@ function add_invalid_message(field_id, valid) {
 
 // Base package name
 function validate_group_name() {
-    const valid_syntax = /^[a-z][a-zA-Z0-9.]*[a-zA-Z0-9]$/g; // Starts with a lowercase char and ends with a character.
+    const valid_syntax = /^[a-z][a-zA-Z0-9.]*$/g; // Starts with a lowercase char and ends with a character.
+    const ends_with_period = /.*[.]$/g;
     const contains_consecutive_periods = /\.\./g; // Ensure there are not two periods in a row.
     var value = $(".starter_field[data-starter-field='g'] input").val();
     var valid =
         value == ""
             ? false
             : valid_syntax.test(value) &&
-              !contains_consecutive_periods.test(value);
+              !contains_consecutive_periods.test(value) &&
+              !ends_with_period.test(value);
     add_invalid_message("g", valid);
     return valid;
 }
