@@ -421,8 +421,12 @@ function add_invalid_message(field_id, valid) {
 // Base package name
 function validate_group_name() {
     const valid_syntax = /^[a-z][a-zA-Z0-9.]*$/g;
+    const double_period_check = /\.\./g; // Ensure there are not two periods in a row.
     var value = $(".starter_field[data-starter-field='g'] input").val();
-    var valid = value == "" ? false : valid_syntax.test(value);
+    var valid =
+        value == ""
+            ? false
+            : valid_syntax.test(value) && !double_period_check.test(value);
     add_invalid_message("g", valid);
     return valid;
 }
