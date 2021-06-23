@@ -420,13 +420,14 @@ function add_invalid_message(field_id, valid) {
 
 // Base package name
 function validate_group_name() {
-    const valid_syntax = /^[a-z][a-zA-Z0-9.]*$/g;
-    const double_period_check = /\.\./g; // Ensure there are not two periods in a row.
+    const valid_syntax = /^[a-z][a-zA-Z0-9.]*[a-zA-Z0-9]$/g; // Starts with a lowercase char and ends with a character.
+    const contains_consecutive_periods = /\.\./g; // Ensure there are not two periods in a row.
     var value = $(".starter_field[data-starter-field='g'] input").val();
     var valid =
         value == ""
             ? false
-            : valid_syntax.test(value) && !double_period_check.test(value);
+            : valid_syntax.test(value) &&
+              !contains_consecutive_periods.test(value);
     add_invalid_message("g", valid);
     return valid;
 }
@@ -483,7 +484,6 @@ function validate_starter_inputs() {
                     );
                     var first = true;
                     options.removeAttr("disabled");
-                    options.filter(":selected").removeAttr("selected");
                     options.each(function () {
                         if (dependencies[d].indexOf(this.text) === -1) {
                             $(this).attr("disabled", "disabled");
@@ -494,35 +494,46 @@ function validate_starter_inputs() {
                         } else {
                             this.title = this.text;
                             if (!valid && first) {
-                                // Select the highest valid value for the dependency
-                                $(this).attr("selected", "selected");
-                                first = false;
-                                valid = true;
-                                // Update the message that an option was chosen for them
-                                var close_icon = $(
-                                    "<img src='/img/x_white.svg' id='invalid_message_close_icon' alt='Close' tabindex='0' />"
-                                );
-                                close_icon.on("click", function () {
-                                    $("#starter_warnings").empty();
-                                });
-                                close_icon.on("keydown", function (event) {
-                                    if (
-                                        event.which === 13 ||
-                                        event.which === 32 // Enter key or spacebar
-                                    ) {
-                                        $(this).click();
-                                    }
-                                });
-                                var message = $(
-                                    "<p>" +
-                                        starter_info[d].name +
-                                        " has been automatically updated to the highest valid version compatible with " +
-                                        starter_info[starter_key].name +
-                                        ".</p>"
-                                );
-                                $("#starter_warnings")
-                                    .append(message)
-                                    .append(close_icon);
+                                var selected_version = options
+                                    .filter(":selected")
+                                    .text();
+
+                                if (selected_version != this.text) {
+                                    options
+                                        .filter(":selected")
+                                        .removeAttr("selected");
+                                    // Select the highest valid value for the dependency if it wasn't already selected
+                                    $(this).attr("selected", "selected");
+
+                                    // Update the message that an option was chosen for them
+                                    var close_icon = $(
+                                        "<img src='/img/x_white.svg' id='invalid_message_close_icon' alt='Close' tabindex='0' />"
+                                    );
+                                    close_icon.on("click", function () {
+                                        $("#starter_warnings").empty();
+                                    });
+                                    close_icon.on("keydown", function (event) {
+                                        if (
+                                            event.which === 13 ||
+                                            event.which === 32 // Enter key or spacebar
+                                        ) {
+                                            $(this).click();
+                                        }
+                                    });
+                                    var message = $(
+                                        "<p>" +
+                                            starter_info[d].name +
+                                            " has been automatically updated to the highest valid version compatible with " +
+                                            starter_info[starter_key].name +
+                                            ".</p>"
+                                    );
+                                    $("#starter_warnings")
+                                        .append(message)
+                                        .append(close_icon);
+
+                                    first = false;
+                                    valid = true;
+                                }
                             }
                         }
                     });
