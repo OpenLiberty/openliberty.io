@@ -399,7 +399,7 @@ function add_invalid_message(field_id, valid) {
             var message;
             if (field_id == "a") {
                 message = $(
-                    "<p class='invalid_field_message'>Enter a valid application name.</p>"
+                    "<p class='invalid_field_message'>Valid characters include a-z separated by '-'.</p>"
                 );
             } else if (field_id == "g") {
                 message = $(
@@ -428,17 +428,24 @@ function validate_group_name() {
         value == ""
             ? false
             : valid_syntax.test(value) &&
-              !contains_consecutive_periods.test(value) &&
-              !ends_with_period.test(value);
+              !ends_with_period.test(value) &&
+              !contains_consecutive_periods.test(value);
     add_invalid_message("g", valid);
     return valid;
 }
 
 // Application name
 function validate_application_name() {
-    var valid_syntax = /^[a-zA-Z0-9\_\.\-]*$/g;
+    var valid_syntax = /^[a-z-]*$/g;
     var value = $(".starter_field[data-starter-field='a'] input").val();
-    var valid = value == "" ? false : valid_syntax.test(value);
+    const ends_with_dash = /.*[-]$/g;
+    var contains_consecutive_dashes = /\-\-/g;
+    var valid =
+        value == ""
+            ? false
+            : valid_syntax.test(value) &&
+              !ends_with_dash.test(value) &&
+              !contains_consecutive_dashes.test(value);
     add_invalid_message("a", valid);
     return valid;
 }
