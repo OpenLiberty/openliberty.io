@@ -399,7 +399,7 @@ function add_invalid_message(field_id, valid) {
             var message;
             if (field_id == "a") {
                 message = $(
-                    "<p class='invalid_field_message'>Valid characters include a-z separated by '-'.</p>"
+                    "<p class='invalid_field_message'>Valid characters include a-z separated by '-'</p>"
                 );
             } else if (field_id == "g") {
                 message = $(
