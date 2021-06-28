@@ -420,7 +420,7 @@ function add_invalid_message(field_id, valid) {
 
 // Base package name
 function validate_group_name() {
-    const valid_syntax = /^[a-z][a-zA-Z0-9.]*$/g; // Starts with a lowercase char and ends with a character.
+    const valid_syntax = /^[a-z][a-zA-Z0-9.]*$/g; // Starts with a lowercase char and only contains letters and periods.
     const ends_with_period = /.*[.]$/g;
     const contains_consecutive_periods = /\.\./g; // Ensure there are not two periods in a row.
     var value = $(".starter_field[data-starter-field='g'] input").val();
@@ -436,7 +436,7 @@ function validate_group_name() {
 
 // Application name
 function validate_application_name() {
-    var valid_syntax = /^[a-z-]*$/g;
+    var valid_syntax = /^[a-z-]*$/g; // Only contains lowercase letters and dashes.
     var value = $(".starter_field[data-starter-field='a'] input").val();
     const ends_with_dash = /.*[-]$/g;
     var contains_consecutive_dashes = /\-\-/g;
@@ -508,13 +508,13 @@ function validate_starter_inputs() {
                                     .text();
 
                                 if (selected_version != this.text) {
+                                    // Automatically correct the value to the first (highest) valid value.
                                     options
                                         .filter(":selected")
                                         .prop("selected", "false");
-                                    // Select the highest valid value for the dependency if it wasn't already selected
                                     $(this).prop("selected", "true");
 
-                                    // Update the message that an option was chosen for them
+                                    // Display a message that the value was changed for them.
                                     var close_icon = $(
                                         "<img src='/img/x_white.svg' id='invalid_message_close_icon' alt='Close' tabindex='0' />"
                                     );
