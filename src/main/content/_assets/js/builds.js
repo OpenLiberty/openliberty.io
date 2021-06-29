@@ -403,7 +403,7 @@ function add_invalid_message(field_id, valid) {
                 );
             } else if (field_id == "g") {
                 message = $(
-                    "<p class='invalid_field_message'>Valid characters include a-z, A-Z, and 0-9 separated by '.'</p>"
+                    "<p class='invalid_field_message'>Valid characters include a-z separated by '.'</p>"
                 );
             }
             div.append(warning_icon).append(message);
@@ -420,32 +420,18 @@ function add_invalid_message(field_id, valid) {
 
 // Base package name
 function validate_group_name() {
-    const valid_syntax = /^[a-z][a-zA-Z0-9.]*$/g; // Starts with a lowercase char and only contains letters and periods.
-    const ends_with_period = /.*[.]$/g;
-    const contains_consecutive_periods = /\.\./g; // Ensure there are not two periods in a row.
+    var valid_syntax = /^([a-z]+\.)*[a-z]+$/g; // Starts with a lowercase char and only contains letters and periods.
     var value = $(".starter_field[data-starter-field='g'] input").val();
-    var valid =
-        value == ""
-            ? false
-            : valid_syntax.test(value) &&
-              !ends_with_period.test(value) &&
-              !contains_consecutive_periods.test(value);
+    var valid = value == "" ? false : valid_syntax.test(value);
     add_invalid_message("g", valid);
     return valid;
 }
 
 // Application name
 function validate_application_name() {
-    var valid_syntax = /^[a-z-]*$/g; // Only contains lowercase letters and dashes.
+    var valid_syntax = /^([a-z]+\-)*[a-z]+$/g; // Only contains lowercase letters and dashes.
     var value = $(".starter_field[data-starter-field='a'] input").val();
-    const ends_with_dash = /.*[-]$/g;
-    var contains_consecutive_dashes = /\-\-/g;
-    var valid =
-        value == ""
-            ? false
-            : valid_syntax.test(value) &&
-              !ends_with_dash.test(value) &&
-              !contains_consecutive_dashes.test(value);
+    var valid = value == "" ? false : valid_syntax.test(value);
     add_invalid_message("a", valid);
     return valid;
 }
