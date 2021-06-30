@@ -675,10 +675,63 @@ function highlightTOC(iframeName) {
   }
 }
 
+function modifyLinks() {
+  var jdSrc = $("#javadoc_container").attr("src");
+  if (jdSrc.includes("microprofile")) {
+    var iframeContent = $("#javadoc_container")
+      .contents()
+      .find(CLASS_FRAME)
+      .contents();
+    var version = jdSrc.substring(
+      jdSrc.indexOf("microprofile") + 13,
+      jdSrc.indexOf("microprofile") + 16
+    );
+    iframeContent.find(".overviewSummary tbody tr th a").each(function() {
+      var port = window.location.port !== "" ? ":" + window.location.port : "";
+      var package = $(this).attr("href");
+
+      //look into implementing existing methods and ajax waiting
+      if (!package.includes(window.location.hostname)) {
+        $(this).attr(
+          "href",
+          "https://" +
+            window.location.hostname +
+            port +
+            "/docs/ref/microprofile/" +
+            version +
+            "/#package=allclasses-frame.html&class=" +
+            package
+        );
+        console.log(package);
+        //find out how to load specific package to iframe
+        $(this).on("click", function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + package);
+        });
+      }
+      // $(this).attr(
+      //   "onClick",
+      //   `(function() {
+      //   var h = $(this).attr("href");
+      //   setIFrameContent(CLASS_FRAME, h.substring(h.indexOf("class=") + 5));
+      // })`
+      // );
+    });
+  }
+}
+
 $(document).ready(function() {
   $(window).on("resize", function() {
     resizeJavaDocWindow();
   });
+
+  $("#javadoc_container")
+    .contents()
+    .find(CLASS_FRAME)
+    .on("ready", function() {
+      console.log("here");
+    });
 
   $("#javadoc_container").on("load", function() {
     resizeJavaDocWindow();
@@ -706,48 +759,24 @@ $(document).ready(function() {
         );
         addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
         highlightTOC(PACKAGE_FRAME);
-
-        //modify links to be correct
-        var jdSrc = $("#javadoc_container").attr("src");
-        if (jdSrc.includes("microprofile")) {
-          var iframeContent = $(this).contents();
-          var version = jdSrc.substring(
-            jdSrc.indexOf("microprofile") + 13,
-            jdSrc.indexOf("microprofile") + 16
-          );
-          iframeContent.find(".overviewSummary tbody tr th a").each(function() {
-            var port =
-              window.location.port !== "" ? ":" + window.location.port : "";
-            var pack = $(this).attr("href");
-            // $(this).on("click", function(e) {
-            //   e.preventDefault();
-            //   console.log(pack);
-            //   $(CLASS_FRAME).load(pack);
-            // });
-            $(this).attr(
-              "href",
-              "https://" +
-                window.location.hostname +
-                port +
-                "/docs/ref/microprofile/" +
-                version +
-                "/#package=" +
-                pack +
-                "&class=allclasses-frame.html"
-            );
-            console.log($(this).attr("href"));
-          });
-        }
       });
 
     $("#javadoc_container")
       .contents()
       .find(CLASS_FRAME)
       .on("load", function() {
+        modifyLinks();
         addAccessibility();
         addNavHoverListener();
         addScrollListener();
         addClickListener($(this).contents());
+      });
+
+    $("#javadoc_container")
+      .contents()
+      .find(CLASS_FRAME)
+      .ready(function() {
+        modifyLinks();
       });
 
     setDynamicIframeContent();
