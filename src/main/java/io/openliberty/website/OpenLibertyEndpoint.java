@@ -61,5 +61,4 @@ public class OpenLibertyEndpoint extends Application {
     public String githubIssues() {
         return githubManager.getIssues();
     }
-
 }
