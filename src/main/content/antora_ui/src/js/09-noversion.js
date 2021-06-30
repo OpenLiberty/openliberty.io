@@ -1,16 +1,18 @@
 $(window).on("load", function() {
   $.ready.then(function() {
-    if (!document.referrer.includes("noversion.html")) {
+    var params = new URLSearchParams(window.location.search);
+    var ref = params.get("ref");
+    if (!ref.includes("noversion.html")) {
       var folder = "ROOT";
       var dir = "";
 
       //accomodations for draft and staging sites
       var useNext =
-        document.referrer.includes("mybluemix.net") ||
-        document.referrer.includes("localhost");
+        window.location.href.includes("mybluemix.net") ||
+        window.location.href.includes("localhost");
 
       //get info about doc that was attempted to be reached
-      var attempted = document.referrer;
+      var attempted = ref;
       var doc = attempted.substring(attempted.lastIndexOf("/") + 1);
       doc = doc.substring(0, doc.indexOf(".html"));
 
