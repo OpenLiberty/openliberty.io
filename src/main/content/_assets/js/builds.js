@@ -410,11 +410,15 @@ function add_invalid_message(field_id, valid) {
             $(".starter_field[data-starter-field='" + field_id + "']").append(
                 div
             );
+        } else {
+            $(".starter_field[data-starter-field='" + field_id + "']")
+                .find(".invalid_field_div")
+                .show();
         }
     } else {
         $(".starter_field[data-starter-field='" + field_id + "']")
             .find(".invalid_field_div")
-            .remove();
+            .hide();
     }
 }
 
