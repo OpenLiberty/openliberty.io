@@ -675,7 +675,7 @@ function highlightTOC(iframeName) {
   }
 }
 
-function modifyLinks() {
+function modifyClassLinks() {
   var jdSrc = $("#javadoc_container").attr("src");
   if (jdSrc.includes("microprofile")) {
     var iframeContent = $("#javadoc_container")
@@ -702,21 +702,147 @@ function modifyLinks() {
             "/#package=allclasses-frame.html&class=" +
             package
         );
-        console.log(package);
         //find out how to load specific package to iframe
         $(this).on("click", function(event) {
           event.preventDefault();
           event.stopPropagation();
           setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + package);
+          window.history.pushState(
+            {
+              iframeName: CLASS_FRAME,
+              otherStateKey: defaultHtmlRootPath + package
+            },
+            "",
+            $(this).attr("href")
+          );
         });
       }
-      // $(this).attr(
-      //   "onClick",
-      //   `(function() {
-      //   var h = $(this).attr("href");
-      //   setIFrameContent(CLASS_FRAME, h.substring(h.indexOf("class=") + 5));
-      // })`
-      // );
+    });
+  }
+}
+
+function modifyPackageTopLinks() {
+  var jdSrc = $("#javadoc_container").attr("src");
+  if (jdSrc.includes("microprofile")) {
+    var iframeContent = $("#javadoc_container")
+      .contents()
+      .find(".leftTop iframe")
+      .contents();
+    var version = jdSrc.substring(
+      jdSrc.indexOf("microprofile") + 13,
+      jdSrc.indexOf("microprofile") + 16
+    );
+    iframeContent.find('ul[title="Packages"] li a').each(function() {
+      var port = window.location.port !== "" ? ":" + window.location.port : "";
+      var package = $(this).attr("href");
+
+      //look into implementing existing methods and ajax waiting
+      if (!package.includes(window.location.hostname)) {
+        $(this).attr(
+          "href",
+          "https://" +
+            window.location.hostname +
+            port +
+            "/docs/ref/microprofile/" +
+            version +
+            "/#class=overview-summary.html&package=" +
+            package
+        );
+        //find out how to load specific package to iframe
+        $(this).on("click", function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + package);
+          window.history.pushState(
+            {
+              iframeName: ".leftTop iframe",
+              otherStateKey: defaultHtmlRootPath + package
+            },
+            "",
+            $(this).attr("href")
+          );
+        });
+      }
+    });
+  }
+}
+
+function modifyPackageBottomLinks() {
+  var jdSrc = $("#javadoc_container").attr("src");
+  if (jdSrc.includes("microprofile")) {
+    var iframeContent = $("#javadoc_container")
+      .contents()
+      .find(PACKAGE_FRAME)
+      .contents();
+    var version = jdSrc.substring(
+      jdSrc.indexOf("microprofile") + 13,
+      jdSrc.indexOf("microprofile") + 16
+    );
+    iframeContent.find(".indexContainer ul li a").each(function() {
+      var port = window.location.port !== "" ? ":" + window.location.port : "";
+      var c = $(this).attr("href");
+
+      if (!c.includes(window.location.hostname)) {
+        if (iframeContent.find(".bar").text() === "All Classes") {
+          $(this).attr(
+            "href",
+            "https://" +
+              window.location.hostname +
+              port +
+              "/docs/ref/microprofile/" +
+              version +
+              "/#package=allclasses-frame.html&class=" +
+              c
+          );
+          //find out how to load specific package to iframe
+          $(this).on("click", function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + c);
+            window.history.pushState(
+              {
+                iframeName: PACKAGE_FRAME,
+                otherStateKey: defaultHtmlRootPath + c
+              },
+              "",
+              $(this).attr("href")
+            );
+          });
+        } else {
+          var package = iframeContent.find(".bar").text();
+          package = package.replace(/\./g, "/");
+          $(this).attr(
+            "href",
+            "https://" +
+              window.location.hostname +
+              port +
+              "/docs/ref/microprofile/" +
+              version +
+              "/#package=" +
+              package +
+              "/package-frame.html&class=" +
+              package +
+              "/" +
+              c
+          );
+
+          //fix this iframe rendering, link currently having issues
+          $(this).on("click", function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            setIFrameContent(CLASS_FRAME, c);
+            window.history.pushState(
+              {
+                iframeName: PACKAGE_FRAME,
+                otherStateKey: defaultHtmlRootPath + c
+              },
+              "",
+              $(this).attr("href")
+            );
+          });
+        }
+      }
     });
   }
 }
@@ -749,6 +875,7 @@ $(document).ready(function() {
       .contents()
       .find(PACKAGE_FRAME)
       .on("load", function() {
+        modifyPackageBottomLinks();
         addClickListener($(this).contents());
         // add back the toggle expand/collapse button
         addExpandAndCollapseToggleButtonForPackageFrame(
@@ -765,7 +892,7 @@ $(document).ready(function() {
       .contents()
       .find(CLASS_FRAME)
       .on("load", function() {
-        modifyLinks();
+        modifyClassLinks();
         addAccessibility();
         addNavHoverListener();
         addScrollListener();
@@ -774,11 +901,31 @@ $(document).ready(function() {
 
     $("#javadoc_container")
       .contents()
-      .find(CLASS_FRAME)
-      .ready(function() {
-        modifyLinks();
+      .find(".leftTop iframe")
+      .on("load", function() {
+        modifyPackageTopLinks();
       });
 
+    $("#javadoc_container")
+      .contents()
+      .find(CLASS_FRAME)
+      .ready(function() {
+        modifyClassLinks();
+      });
+
+    $("#javadoc_container")
+      .contents()
+      .find(".leftTop iframe")
+      .ready(function() {
+        modifyPackageTopLinks();
+      });
+
+    $("#javadoc_container")
+      .contents()
+      .find(PACKAGE_FRAME)
+      .ready(function() {
+        modifyPackageBottomLinks();
+      });
     setDynamicIframeContent();
 
     window.onpopstate = function(event) {
