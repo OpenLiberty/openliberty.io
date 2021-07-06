@@ -557,6 +557,7 @@ function setIFrameContent(iframeName, href) {
       }
     }
   };
+  console.log(href);
   http.open("HEAD", href);
   http.send();
 }
@@ -810,6 +811,7 @@ function modifyPackageBottomLinks() {
           });
         } else {
           var package = iframeContent.find(".bar").text();
+          var dv = $(".context .version").text();
           package = package.replace(/\./g, "/");
           $(this).attr(
             "href",
@@ -825,20 +827,33 @@ function modifyPackageBottomLinks() {
               "/" +
               c
           );
-
           //fix this iframe rendering, link currently having issues
           $(this).on("click", function(event) {
             event.preventDefault();
             event.stopPropagation();
-
-            setIFrameContent(CLASS_FRAME, c);
+            setIFrameContent(
+              CLASS_FRAME,
+              defaultHtmlRootPath + package + "/" + c
+            );
             window.history.pushState(
               {
                 iframeName: PACKAGE_FRAME,
                 otherStateKey: defaultHtmlRootPath + c
               },
               "",
-              $(this).attr("href")
+              "https://" +
+                window.location.hostname +
+                port +
+                "/docs/" +
+                dv +
+                "/reference/javadoc/microprofile-" +
+                version +
+                "-javadoc.html#package=" +
+                package +
+                "/package-frame.html&class=" +
+                package +
+                "/" +
+                c
             );
           });
         }
