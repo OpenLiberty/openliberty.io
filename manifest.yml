@@ -1,88 +1,107 @@
-memory: 384M
-instances: 1
-disk_quota: 1512M
-path: target/openliberty.war
-timeout: 180
+---
+defaults: &defaults
+  instances: 1
+  disk_quota: 1512M
+  path: target/openliberty.war
+  timeout: 180
 
 applications:
 # US South
 - name: openliberty-blue
+  <<: *defaults
   memory: 256M
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
     - route: us-south.openliberty.io
 - name: openliberty-green
+  <<: *defaults
   memory: 384M
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
     - route: us-south.openliberty.io
 - name: openlibertydev
+  <<: *defaults
   memory: 256M
   routes:
     - route: openlibertydev.mybluemix.net
 - name: staging-openlibertyio
+  <<: *defaults
   memory: 256M
   routes:
     - route: staging-openlibertyio.mybluemix.net
 - name: ui-staging-openlibertyio
+  <<: *defaults
   memory: 192M
   routes:
     - route: ui-staging-openlibertyio.mybluemix.net
 - name: docs-staging-openlibertyio
+  <<: *defaults
   memory: 256M
   routes:
     - route: docs-staging-openlibertyio.mybluemix.net
 - name: blogs-staging-openlibertyio
+  <<: *defaults
   memory: 192M
   routes:
     - route: blogs-staging-openlibertyio.mybluemix.net
 - name: guides-staging-openlibertyio
+  <<: *defaults
   memory: 192M
   routes:
     - route: guides-staging-openlibertyio.mybluemix.net
 - name: certifications-staging-openlibertyio
+  <<: *defaults
   memory: 192M
   routes:
     - route: certifications-staging-openlibertyio.mybluemix.net
 - name: draft-openlibertyio
+  <<: *defaults
   memory: 256M
   routes:
     - route: draft-openlibertyio.mybluemix.net
 - name: ui-draft-openlibertyio
+  <<: *defaults
   memory: 192M
   routes:
     - route: ui-draft-openlibertyio.mybluemix.net
 - name: docs-draft-openlibertyio
+  <<: *defaults
   memory: 256M
   routes:
     - route: docs-draft-openlibertyio.mybluemix.net
 - name: blogs-draft-openlibertyio
+  <<: *defaults
   memory: 192M
   routes:
     - route: blogs-draft-openlibertyio.mybluemix.net
 - name: guides-draft-openlibertyio
+  <<: *defaults
   memory: 192M
   routes:
     - route: guides-draft-openlibertyio.mybluemix.net
 - name: certifications-draft-openlibertyio
+  <<: *defaults
   memory: 192M
   routes:
     - route: certifications-draft-openlibertyio.mybluemix.net
 - name: demo1-openlibertyio
+  <<: *defaults
   memory: 192M
   routes:
     - route: demo1-openlibertyio.mybluemix.net
 
 # US East
 - name: openliberty-blue-east
+  <<: *defaults
   memory: 256M
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
     - route: us-east.openliberty.io
 - name: openliberty-green-east
+  <<: *defaults
   memory: 384M
   routes:
     - route: www.openliberty.io
@@ -90,12 +109,14 @@ applications:
     - route: us-east.openliberty.io
 # United Kingdom
 - name: openliberty-blue-uk
+  <<: *defaults
   memory: 256M
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
     - route: eu-gb.openliberty.io
 - name: openliberty-green-uk
+  <<: *defaults
   memory: 384M
   routes:
     - route: www.openliberty.io
@@ -103,12 +124,14 @@ applications:
     - route: eu-gb.openliberty.io
 # Germany
 - name: openliberty-blue-germany
+  <<: *defaults
   memory: 256M
   routes:
     - route: www.openliberty.io
     - route: openliberty.io
     - route: eu-de.openliberty.io
 - name: openliberty-green-germany
+  <<: *defaults
   memory: 384M
   routes:
     - route: www.openliberty.io
@@ -122,6 +145,7 @@ applications:
     - route: openliberty.io
     - route: au-syd.openliberty.io
 - name: openliberty-green-sydney
+  <<: *defaults
   memory: 384M
   routes:
     - route: www.openliberty.io
