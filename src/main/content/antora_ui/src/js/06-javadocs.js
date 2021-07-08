@@ -954,13 +954,6 @@ $(document).ready(function() {
     resizeJavaDocWindow();
   });
 
-  $("#javadoc_container")
-    .contents()
-    .find(CLASS_FRAME)
-    .on("ready", function() {
-      console.log("here");
-    });
-
   $("#javadoc_container").on("load", function() {
     resizeJavaDocWindow();
     addAccessibility();
