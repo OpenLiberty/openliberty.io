@@ -557,7 +557,7 @@ function setIFrameContent(iframeName, href) {
       }
     }
   };
-  console.log(href);
+
   http.open("HEAD", href);
   http.send();
 }
@@ -677,6 +677,7 @@ function highlightTOC(iframeName) {
 }
 
 function modifyClassLinks() {
+  //fix class frame links in overview panel
   var jdSrc = $("#javadoc_container").attr("src");
   if (jdSrc.includes("microprofile")) {
     var iframeContent = $("#javadoc_container")
@@ -691,7 +692,6 @@ function modifyClassLinks() {
       var port = window.location.port !== "" ? ":" + window.location.port : "";
       var package = $(this).attr("href");
 
-      //look into implementing existing methods and ajax waiting
       if (!package.includes(window.location.hostname)) {
         $(this).attr(
           "href",
@@ -703,7 +703,85 @@ function modifyClassLinks() {
             "/#package=allclasses-frame.html&class=" +
             package
         );
-        //find out how to load specific package to iframe
+        //fix history links
+        $(this).on("click", function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + package);
+          window.history.pushState(
+            {
+              iframeName: CLASS_FRAME,
+              otherStateKey: defaultHtmlRootPath + package
+            },
+            "",
+            "https://" +
+              window.location.hostname +
+              port +
+              "/docs/ref/microprofile/" +
+              version +
+              "/#class=overview-summary.html&package=" +
+              package +
+              "/package-frame.html"
+          );
+        });
+      }
+    });
+
+    //fix links for class frame in package panel
+    iframeContent.find(".contentContainer .blockList ul a").each(function() {
+      var port = window.location.port !== "" ? ":" + window.location.port : "";
+      var package = $(this).attr("href");
+      if (package.includes("../")) {
+        package = package.substring(package.lastIndexOf("../") + 3);
+      }
+
+      if (!package.includes(window.location.hostname)) {
+        $(this).attr(
+          "href",
+          "https://" +
+            window.location.hostname +
+            port +
+            "/docs/ref/microprofile/" +
+            version +
+            "/#package=allclasses-frame.html&class=" +
+            package
+        );
+
+        $(this).on("click", function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + package);
+          window.history.pushState(
+            {
+              iframeName: CLASS_FRAME,
+              otherStateKey: defaultHtmlRootPath + package
+            },
+            "",
+            $(this).attr("href")
+          );
+        });
+      }
+    });
+
+    //fix links for class frame nav buttons
+    iframeContent.find(".topNav .navList li a").each(function() {
+      var port = window.location.port !== "" ? ":" + window.location.port : "";
+      var package = $(this).attr("href");
+      if (package.includes("../")) {
+        package = package.substring(package.lastIndexOf("../") + 3);
+      }
+      if (!package.includes(window.location.hostname)) {
+        $(this).attr(
+          "href",
+          "https://" +
+            window.location.hostname +
+            port +
+            "/docs/ref/microprofile/" +
+            version +
+            "/#package=allclasses-frame.html&class=" +
+            package
+        );
+
         $(this).on("click", function(event) {
           event.preventDefault();
           event.stopPropagation();
@@ -736,6 +814,9 @@ function modifyPackageTopLinks() {
     iframeContent.find('ul[title="Packages"] li a').each(function() {
       var port = window.location.port !== "" ? ":" + window.location.port : "";
       var package = $(this).attr("href");
+      if (package.includes("../")) {
+        package = package.substring(package.lastIndexOf("../") + 3);
+      }
 
       //look into implementing existing methods and ajax waiting
       if (!package.includes(window.location.hostname)) {
@@ -782,9 +863,18 @@ function modifyPackageBottomLinks() {
     iframeContent.find(".indexContainer ul li a").each(function() {
       var port = window.location.port !== "" ? ":" + window.location.port : "";
       var c = $(this).attr("href");
+      if (c.includes("../")) {
+        c = c.substring(c.lastIndexOf("../") + 3);
+      }
 
       if (!c.includes(window.location.hostname)) {
-        if (iframeContent.find(".bar").text() === "All Classes") {
+        if (
+          iframeContent
+            .find(".bar")
+            .text()
+            .trim()
+            .replace(String.fromCharCode(160), " ") === "All Classes"
+        ) {
           $(this).attr(
             "href",
             "https://" +
@@ -811,7 +901,9 @@ function modifyPackageBottomLinks() {
           });
         } else {
           var package = iframeContent.find(".bar").text();
-          var dv = $(".context .version").text();
+          if (package.includes("../")) {
+            package = package.substring(package.lastIndexOf("../") + 3);
+          }
           package = package.replace(/\./g, "/");
           $(this).attr(
             "href",
@@ -827,7 +919,6 @@ function modifyPackageBottomLinks() {
               "/" +
               c
           );
-          //fix this iframe rendering, link currently having issues
           $(this).on("click", function(event) {
             event.preventDefault();
             event.stopPropagation();
@@ -844,16 +935,12 @@ function modifyPackageBottomLinks() {
               "https://" +
                 window.location.hostname +
                 port +
-                "/docs/" +
-                dv +
-                "/reference/javadoc/microprofile-" +
+                "/docs/ref/microprofile/" +
                 version +
-                "-javadoc.html#package=" +
+                "/#package=" +
                 package +
                 "/package-frame.html&class=" +
-                package +
-                "/" +
-                c
+                package
             );
           });
         }
