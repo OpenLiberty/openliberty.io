@@ -35,6 +35,12 @@ plugins:
   - jekyll-assets
   - jekyll-include-cache
   - ol-target-blank
+  - jekyll-multiple-languages-plugin
+
+languages: ["en", "sv"]
+exclude_from_localizations: ["javascript", "img", "css"]
+default_locale_in_subfolder: true
+
 exclude:
   - vendor # TravisCI bundles all gems in the vendor directory on its build servers, which Jekyll will mistakenly read and explode on.
   - docs
