@@ -1,6 +1,10 @@
 #!/bin/bash
 function pushApp {
-  cf push "${CF_APP}" --no-start
+  mkdir -p server_directory/apps/
+  cp target/openliberty.war server_directory/apps/
+
+  cp target/openliberty.war server_directory/apps/
+  cf push "${CF_APP}" --no-start -p server_directory
   cf set-env "${CF_APP}" PAT "${PAT}"
   if [[ -z $CURRENT_STATE ]]
   then
