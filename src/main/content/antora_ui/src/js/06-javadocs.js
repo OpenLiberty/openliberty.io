@@ -954,17 +954,6 @@ $(document).ready(function() {
     resizeJavaDocWindow();
   });
 
-  //modify how many times links back into parent directories
-  // $(".nav-container .nav-panel-menu .nav-menu .nav-item ul li a").each(
-  //   function() {
-  //     var ver = $(
-  //       ".nav-container .panels .nav-panel-explore .context .version"
-  //     ).text();
-  //     var temp = $(this).attr("href");
-  //     $(this).attr("href", "/" + temp);
-  //   }
-  // );
-
   $("#javadoc_container").on("load", function() {
     resizeJavaDocWindow();
     addAccessibility();
