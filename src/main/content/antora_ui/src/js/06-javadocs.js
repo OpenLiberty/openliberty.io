@@ -520,6 +520,7 @@ function setPackageContainerHeight() {
 }
 
 function setIFrameContent(iframeName, href) {
+  console.log("in function, iframeName=" + iframeName + ", href=" + href);
   var iframeContent = $("#javadoc_container")
     .contents()
     .find(iframeName)
@@ -528,11 +529,13 @@ function setIFrameContent(iframeName, href) {
   // get current version to create path to all classes frame
   var path = window.top.location.pathname;
   if (path.includes("microprofile")) {
+    console.log("in microprofile case");
     var currentVersion = path.slice(-4, -1);
+    console.log(currentVersion);
     var allClassesHref =
-      "/javadocs/microprofile-" +
+      "docs/ref/microprofile/" +
       currentVersion +
-      "-javadoc/allclasses-frame.html";
+      "/package=allclasses-frame.html&class=overview-summary.html";
   } else {
     var currentVersion = path.slice(-2, -1);
     var allClassesHref =
@@ -950,6 +953,24 @@ function modifyPackageBottomLinks() {
 }
 
 $(document).ready(function() {
+  $(window).on("load", function() {
+    console.log("here");
+    if (window.location.href.includes("microprofile-")) {
+      console.log("there");
+      var url = window.location.href;
+      var mpVersion = url.substring(
+        url.indexOf("microprofile-") + 13,
+        url.indexOf("microprofile-") + 16
+      );
+      var package = url.substring(url.lastIndexOf("javadoc/") + 8);
+      window.location.replace(
+        "http://localhost:9443/docs/ref/microprofile/" +
+          mpVersion +
+          "/#package=allclasses-frame.html&class=overview-summary.html"
+      );
+    }
+    return;
+  });
   $(window).on("resize", function() {
     resizeJavaDocWindow();
   });
