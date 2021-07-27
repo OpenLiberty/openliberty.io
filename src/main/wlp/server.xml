@@ -20,10 +20,23 @@ Contributors:
         <feature>transportSecurity-1.0</feature>
         <feature>webCache-1.0</feature>
     </featureManager>
-<!--
-    <webApplication contextRoot="/" location="${appLocation}"/>
--->
+
+    <webApplication contextRoot="/" type="war" location="openliberty.war"/>
+
     <cdi12 enableImplicitBeanArchives='false'/>
+
+    <!-- Automatically expand WAR files and EAR files -->
+    <applicationManager autoExpand="true"/>
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  httpPort="9080"
+                  httpsPort="9443">
+                  
+        <compression id="compression" serverPreferredAlgorithm="gzip">
+          <types>application/*</types>
+          <types>-text/plain</types>
+        </compression> 
+    </httpEndpoint>
 
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
 

@@ -1,8 +1,7 @@
 #!/bin/bash
 function pushApp {
   mkdir -p server_directory/apps/
-  cp target/openliberty.war server_directory/apps/
-
+  cp src/main/wlp/server.xml server_directory/
   cp target/openliberty.war server_directory/apps/
   cf push "${CF_APP}" --no-start -p server_directory
   cf set-env "${CF_APP}" PAT "${PAT}"
