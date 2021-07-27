@@ -520,7 +520,6 @@ function setPackageContainerHeight() {
 }
 
 function setIFrameContent(iframeName, href) {
-  console.log("in function, iframeName=" + iframeName + ", href=" + href);
   var iframeContent = $("#javadoc_container")
     .contents()
     .find(iframeName)
@@ -529,9 +528,7 @@ function setIFrameContent(iframeName, href) {
   // get current version to create path to all classes frame
   var path = window.top.location.pathname;
   if (path.includes("microprofile")) {
-    console.log("in microprofile case");
     var currentVersion = path.slice(-4, -1);
-    console.log(currentVersion);
     var allClassesHref =
       "docs/ref/microprofile/" +
       currentVersion +
@@ -546,6 +543,7 @@ function setIFrameContent(iframeName, href) {
 
   // check if href results in 404 and redirect to doc-404.html if it does
   var http = new XMLHttpRequest();
+  console.log(href);
   http.onreadystatechange = function() {
     if (this.readyState === 4 && this.status === 200) {
       // replace the content only if the current content is from a different href
@@ -953,23 +951,16 @@ function modifyPackageBottomLinks() {
 }
 
 $(document).ready(function() {
+  //possibly move this to a different timing to allow for iframe loading
+  //or load defaults first, then destination
   $(window).on("load", function() {
-    console.log("here");
-    if (window.location.href.includes("microprofile-")) {
-      console.log("there");
-      var url = window.location.href;
-      var mpVersion = url.substring(
-        url.indexOf("microprofile-") + 13,
-        url.indexOf("microprofile-") + 16
-      );
-      var package = url.substring(url.lastIndexOf("javadoc/") + 8);
-      window.location.replace(
-        "http://localhost:9443/docs/ref/microprofile/" +
-          mpVersion +
-          "/#package=allclasses-frame.html&class=overview-summary.html"
-      );
+    var params = new URLSearchParams(window.location.search);
+    var page = params.get("page");
+    if (!page.includes("index.html")) {
+      page = page.replace(/\./g, "/");
+      setIFrameContent(PACKAGE_FRAME, defaultPackageHtml);
+      console.log("here");
     }
-    return;
   });
   $(window).on("resize", function() {
     resizeJavaDocWindow();
