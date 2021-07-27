@@ -103,7 +103,7 @@ public class TLSFilter implements Filter {
             if (uri.startsWith("/img/")) {
                 response.setHeader("Cache-Control", "max-age=604800");
                 // if requesting the JAX-RS api set cache control to not cache
-            } else if (uri.contains("/docs") && uri.endsWith(".html")) {
+            } else if (uri.contains("/docs") && !uri.contains("/docs/latest") && uri.endsWith(".html")) {
                 System.out.println("Gzipping html");
                 response.setHeader("Content-Type", "text/html");
                 response.setHeader("Content-Encoding", "gzip");
