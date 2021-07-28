@@ -11,6 +11,7 @@
 package io.openliberty.website;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterConfig;
@@ -31,10 +32,13 @@ import javax.servlet.http.HttpServletRequest;
  * </p>
  */
 public class TLSFilter implements Filter {
+    FilterConfig cfg;
+
     public void destroy() {
     }
 
     public void init(FilterConfig cfg) {
+        this.cfg = cfg;
     }
 
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
@@ -99,16 +103,31 @@ public class TLSFilter implements Filter {
             // but not
             // for everything else.
             String uri = ((HttpServletRequest) req).getRequestURI();
-            System.out.println(uri);
             if (uri.startsWith("/img/")) {
                 response.setHeader("Cache-Control", "max-age=604800");
                 // if requesting the JAX-RS api set cache control to not cache
-            } else if (uri.contains("/docs") && !uri.contains("/docs/latest") && uri.endsWith(".html")) {
-                System.out.println("Gzipping html");
-                response.setHeader("Content-Type", "text/html");
-                response.setHeader("Content-Encoding", "gzip");
-                doFilter = false;
-                req.getRequestDispatcher(uri.concat(".gz")).include(req, response);
+            } else if (uri.contains("/docs") && uri.endsWith(".html")) {
+                boolean doGzip = true;
+                // Check if the servlet context contains a redirect rule for this url
+                Map<String, ?> map = cfg.getServletContext().getContext(uri).getFilterRegistrations();
+                for (String key : map.keySet()) {
+                    String redirectRule = key.replace("redirect_", "");
+                    if (redirectRule.endsWith("*")) {
+                        redirectRule = redirectRule.substring(0, redirectRule.indexOf("*"));
+                        if (uri.startsWith(redirectRule) && !uri.equals(redirectRule)) {
+                            doGzip = false;
+                        }
+                    } else if (uri.equals(redirectRule)) {
+                        // Do not prevent the redirect from happening.
+                        doGzip = false;
+                    }
+                }
+                if (doGzip) {
+                    response.setHeader("Content-Type", "text/html");
+                    response.setHeader("Content-Encoding", "gzip");
+                    doFilter = false;
+                    req.getRequestDispatcher(uri.concat(".gz")).include(req, response);
+                }
             } else if (uri.startsWith("/api/builds/") || uri.startsWith("/api/github/")) {
                 response.setHeader("Cache-Control", "no-store");
                 response.setHeader("Pragma", "no-cache");
