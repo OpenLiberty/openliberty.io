@@ -1,5 +1,6 @@
 $(window).on("load", function() {
   $.ready.then(function() {
+    var error = false;
     var params = new URLSearchParams(window.location.search);
     var ref = params.get("ref");
     if (!ref.includes("noversion.html")) {
@@ -73,28 +74,40 @@ $(window).on("load", function() {
                   matches.push(v);
                 }
               });
+            },
+            statusCode: {
+              403: function() {
+                $(".doc .paragraph").text(
+                  "The requested document does not exist in the " +
+                    version +
+                    " version of the documentation. Please refer to a different version of the documentation to see this page."
+                );
+                error = true;
+              }
             }
           })
         );
       });
 
       $.when.apply(null, calls).then(function() {
-        matches.sort(orderVersions);
-        matches.forEach(function(m) {
-          $(".doc .paragraph ul").append(
-            "<li><a href=" +
-              window.location.origin +
-              "/docs/" +
-              m +
-              "/" +
-              (folder === "reference" ? "reference/" : "") +
-              (dir !== "" ? preceed1 + "/" : "") +
-              doc +
-              ".html>v" +
-              m +
-              "</a></li>"
-          );
-        });
+        if (!error) {
+          matches.sort(orderVersions);
+          matches.forEach(function(m) {
+            $(".doc .paragraph ul").append(
+              "<li><a href=" +
+                window.location.origin +
+                "/docs/" +
+                m +
+                "/" +
+                (folder === "reference" ? "reference/" : "") +
+                (dir !== "" ? preceed1 + "/" : "") +
+                doc +
+                ".html>v" +
+                m +
+                "</a></li>"
+            );
+          });
+        }
       });
 
       var version = $(".context .version").text();
