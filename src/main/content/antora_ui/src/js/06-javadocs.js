@@ -951,17 +951,10 @@ function modifyPackageBottomLinks() {
 }
 
 $(document).ready(function() {
-  //possibly move this to a different timing to allow for iframe loading
-  //or load defaults first, then destination
-  $(window).on("load", function() {
-    var params = new URLSearchParams(window.location.search);
-    var page = params.get("page");
-    if (!page.includes("index.html")) {
-      page = page.replace(/\./g, "/");
-      setIFrameContent(PACKAGE_FRAME, defaultPackageHtml);
-      console.log("here");
-    }
-  });
+  if (window.top.location.href.includes("?page=")) {
+    console.log("here");
+    setDynamicIframeContent();
+  }
   $(window).on("resize", function() {
     resizeJavaDocWindow();
   });
@@ -977,6 +970,8 @@ $(document).ready(function() {
     addClickListeners();
     addiPadScrolling();
     highlightTOC(".leftTop iframe");
+    var params = new URLSearchParams(window.location.search);
+    var page = params.get("page");
 
     $("#javadoc_container")
       .contents()
@@ -1034,6 +1029,12 @@ $(document).ready(function() {
         modifyPackageBottomLinks();
       });
     setDynamicIframeContent();
+    // if (!page.includes("index.html")) {
+    //   //page = page.replace(/\./g, "/");
+    //   setIFrameContent(PACKAGE_FRAME, defaultPackageHtml);
+    //   console.log("here");
+    // }
+    //if this placement does not work, try to move the setDynamic into an else statement
 
     window.onpopstate = function(event) {
       if (event.state) {
