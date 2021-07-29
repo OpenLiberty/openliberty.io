@@ -951,84 +951,93 @@ function modifyPackageBottomLinks() {
 }
 
 $(document).ready(function() {
-  if (window.top.location.href.includes("?page=")) {
-    console.log("here");
-    setDynamicIframeContent();
-  }
   $(window).on("resize", function() {
     resizeJavaDocWindow();
   });
 
   $("#javadoc_container").on("load", function() {
-    resizeJavaDocWindow();
-    addAccessibility();
-    addExpandAndCollapseToggleButtons();
-    addNavHoverListener();
-    addLeftFrameScrollListener(".leftTop iframe", 'h2[title="Packages"]');
-    addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
-    addScrollListener();
-    addClickListeners();
-    addiPadScrolling();
-    highlightTOC(".leftTop iframe");
-    var params = new URLSearchParams(window.location.search);
-    var page = params.get("page");
+    if (window.top.location.href.includes("?page=")) {
+      var port = window.location.port !== "" ? ":" + window.location.port : "";
+      var q = new URLSearchParams(window.location.search);
+      var page = q.get("page");
+      page = page.replace(/\./g, "/");
+      window.location.href =
+        "https://" +
+        window.location.hostname +
+        port +
+        "/docs/ref/microprofile/3.3/#package=" +
+        page +
+        "&class=" +
+        page;
+    } else {
+      resizeJavaDocWindow();
+      addAccessibility();
+      addExpandAndCollapseToggleButtons();
+      addNavHoverListener();
+      addLeftFrameScrollListener(".leftTop iframe", 'h2[title="Packages"]');
+      addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
+      addScrollListener();
+      addClickListeners();
+      addiPadScrolling();
+      highlightTOC(".leftTop iframe");
 
-    $("#javadoc_container")
-      .contents()
-      .find(PACKAGE_FRAME)
-      .on("load", function() {
-        modifyPackageBottomLinks();
-        addClickListener($(this).contents());
-        // add back the toggle expand/collapse button
-        addExpandAndCollapseToggleButtonForPackageFrame(
-          $(this).contents(),
-          $("#javadoc_container")
-            .contents()
-            .find(".leftBottom")
-        );
-        addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
-        highlightTOC(PACKAGE_FRAME);
-      });
+      $("#javadoc_container")
+        .contents()
+        .find(PACKAGE_FRAME)
+        .on("load", function() {
+          modifyPackageBottomLinks();
+          addClickListener($(this).contents());
+          // add back the toggle expand/collapse button
+          addExpandAndCollapseToggleButtonForPackageFrame(
+            $(this).contents(),
+            $("#javadoc_container")
+              .contents()
+              .find(".leftBottom")
+          );
+          addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
+          highlightTOC(PACKAGE_FRAME);
+        });
 
-    $("#javadoc_container")
-      .contents()
-      .find(CLASS_FRAME)
-      .on("load", function() {
-        modifyClassLinks();
-        addAccessibility();
-        addNavHoverListener();
-        addScrollListener();
-        addClickListener($(this).contents());
-      });
+      $("#javadoc_container")
+        .contents()
+        .find(CLASS_FRAME)
+        .on("load", function() {
+          modifyClassLinks();
+          addAccessibility();
+          addNavHoverListener();
+          addScrollListener();
+          addClickListener($(this).contents());
+        });
 
-    $("#javadoc_container")
-      .contents()
-      .find(".leftTop iframe")
-      .on("load", function() {
-        modifyPackageTopLinks();
-      });
+      $("#javadoc_container")
+        .contents()
+        .find(".leftTop iframe")
+        .on("load", function() {
+          modifyPackageTopLinks();
+        });
 
-    $("#javadoc_container")
-      .contents()
-      .find(CLASS_FRAME)
-      .ready(function() {
-        modifyClassLinks();
-      });
+      $("#javadoc_container")
+        .contents()
+        .find(CLASS_FRAME)
+        .ready(function() {
+          modifyClassLinks();
+        });
 
-    $("#javadoc_container")
-      .contents()
-      .find(".leftTop iframe")
-      .ready(function() {
-        modifyPackageTopLinks();
-      });
+      $("#javadoc_container")
+        .contents()
+        .find(".leftTop iframe")
+        .ready(function() {
+          modifyPackageTopLinks();
+        });
 
-    $("#javadoc_container")
-      .contents()
-      .find(PACKAGE_FRAME)
-      .ready(function() {
-        modifyPackageBottomLinks();
-      });
-    setDynamicIframeContent();
+      $("#javadoc_container")
+        .contents()
+        .find(PACKAGE_FRAME)
+        .ready(function() {
+          modifyPackageBottomLinks();
+        });
+      setDynamicIframeContent();
+    }
     // if (!page.includes("index.html")) {
     //   //page = page.replace(/\./g, "/");
     //   setIFrameContent(PACKAGE_FRAME, defaultPackageHtml);
