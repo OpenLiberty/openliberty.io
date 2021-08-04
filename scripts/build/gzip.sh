@@ -2,7 +2,7 @@ timer_start=$(date +%s)
 
 pushd target/jekyll-webapp/docs/
 echo "Runing gzip on all of the docs html."
-find . \( -name '*.html' \) -exec gzip "{}" \;
+find . \( -name '*.html' -not -name "*index.html" \) -exec gzip "{}" \;
 popd
 
 timer_end=$(date +%s)
