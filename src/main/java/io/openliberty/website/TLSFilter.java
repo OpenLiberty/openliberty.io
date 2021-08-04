@@ -106,7 +106,7 @@ public class TLSFilter implements Filter {
             if (uri.startsWith("/img/")) {
                 response.setHeader("Cache-Control", "max-age=604800");
                 // if requesting the JAX-RS api set cache control to not cache
-            } else if (uri.startsWith("/docs") && uri.endsWith(".html")) {
+            } else if (uri.startsWith("/docs") && uri.endsWith(".html") && !uri.endsWith("index.html")) {
                 boolean doGzip = true;
                 // Check if the servlet context contains a redirect rule for this url
                 Map<String, ?> map = cfg.getServletContext().getContext(uri).getFilterRegistrations();
