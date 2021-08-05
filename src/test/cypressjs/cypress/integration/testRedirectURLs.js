@@ -1,5 +1,9 @@
 describe('Test Redirect URLs', () => {
   let redirects = "";
+  // Allow users to specify URL via cypress environment variable
+  // For example:
+  //    npx cypress open --env website_url=https://openliberty.io
+  const target_url = Cypress.env('website_url') || Cypress.env('default_website_url');
 
   before(() => {
     cy.request(Cypress.env('redirects_url')).then((res) => {
