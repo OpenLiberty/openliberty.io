@@ -530,9 +530,9 @@ function setIFrameContent(iframeName, href) {
   if (path.includes("microprofile")) {
     var currentVersion = path.slice(-4, -1);
     var allClassesHref =
-      "docs/ref/microprofile/" +
+      "/javadocs/microprofile-" +
       currentVersion +
-      "/package=allclasses-frame.html&class=overview-summary.html";
+      "-javadoc/allclasses-frame.html";
   } else {
     var currentVersion = path.slice(-2, -1);
     var allClassesHref =
@@ -543,7 +543,6 @@ function setIFrameContent(iframeName, href) {
 
   // check if href results in 404 and redirect to doc-404.html if it does
   var http = new XMLHttpRequest();
-  console.log(href);
   http.onreadystatechange = function() {
     if (this.readyState === 4 && this.status === 200) {
       // replace the content only if the current content is from a different href
@@ -950,100 +949,101 @@ function modifyPackageBottomLinks() {
   }
 }
 
+if (window.self === window.top) {
+  var params = new URLSearchParams(window.top.location.search);
+  var dest = params.get("p");
+  console.log(dest);
+  if (dest && dest !== "" && dest !== "index.html") {
+    console.log("entered");
+    var port =
+      window.top.location.port !== "" ? ":" + window.top.location.port : "";
+    var pack = dest.substring(0, dest.lastIndexOf("/"));
+    window.top.location.replace(
+      "https://" +
+        window.location.hostname +
+        port +
+        "/docs/ref/microprofile/3.3/#package=" +
+        pack +
+        "/package-frame.html&class=" +
+        dest
+    );
+    return;
+  }
+}
+
 $(document).ready(function() {
   $(window).on("resize", function() {
     resizeJavaDocWindow();
   });
 
   $("#javadoc_container").on("load", function() {
-    if (window.top.location.href.includes("?page=")) {
-      var port = window.location.port !== "" ? ":" + window.location.port : "";
-      var q = new URLSearchParams(window.location.search);
-      var page = q.get("page");
-      page = page.replace(/\./g, "/");
-      window.location.href =
-        "https://" +
-        window.location.hostname +
-        port +
-        "/docs/ref/microprofile/3.3/#package=" +
-        page +
-        "&class=" +
-        page;
-    } else {
-      resizeJavaDocWindow();
-      addAccessibility();
-      addExpandAndCollapseToggleButtons();
-      addNavHoverListener();
-      addLeftFrameScrollListener(".leftTop iframe", 'h2[title="Packages"]');
-      addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
-      addScrollListener();
-      addClickListeners();
-      addiPadScrolling();
-      highlightTOC(".leftTop iframe");
+    resizeJavaDocWindow();
+    addAccessibility();
+    addExpandAndCollapseToggleButtons();
+    addNavHoverListener();
+    addLeftFrameScrollListener(".leftTop iframe", 'h2[title="Packages"]');
+    addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
+    addScrollListener();
+    addClickListeners();
+    addiPadScrolling();
+    highlightTOC(".leftTop iframe");
 
-      $("#javadoc_container")
-        .contents()
-        .find(PACKAGE_FRAME)
-        .on("load", function() {
-          modifyPackageBottomLinks();
-          addClickListener($(this).contents());
-          // add back the toggle expand/collapse button
-          addExpandAndCollapseToggleButtonForPackageFrame(
-            $(this).contents(),
-            $("#javadoc_container")
-              .contents()
-              .find(".leftBottom")
-          );
-          addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
-          highlightTOC(PACKAGE_FRAME);
-        });
+    $("#javadoc_container")
+      .contents()
+      .find(PACKAGE_FRAME)
+      .on("load", function() {
+        modifyPackageBottomLinks();
+        addClickListener($(this).contents());
+        // add back the toggle expand/collapse button
+        addExpandAndCollapseToggleButtonForPackageFrame(
+          $(this).contents(),
+          $("#javadoc_container")
+            .contents()
+            .find(".leftBottom")
+        );
+        addLeftFrameScrollListener(PACKAGE_FRAME, ".bar");
+        highlightTOC(PACKAGE_FRAME);
+      });
 
-      $("#javadoc_container")
-        .contents()
-        .find(CLASS_FRAME)
-        .on("load", function() {
-          modifyClassLinks();
-          addAccessibility();
-          addNavHoverListener();
-          addScrollListener();
-          addClickListener($(this).contents());
-        });
+    $("#javadoc_container")
+      .contents()
+      .find(CLASS_FRAME)
+      .on("load", function() {
+        modifyClassLinks();
+        addAccessibility();
+        addNavHoverListener();
+        addScrollListener();
+        addClickListener($(this).contents());
+      });
 
-      $("#javadoc_container")
-        .contents()
-        .find(".leftTop iframe")
-        .on("load", function() {
-          modifyPackageTopLinks();
-        });
+    $("#javadoc_container")
+      .contents()
+      .find(".leftTop iframe")
+      .on("load", function() {
+        modifyPackageTopLinks();
+      });
 
-      $("#javadoc_container")
-        .contents()
-        .find(CLASS_FRAME)
-        .ready(function() {
-          modifyClassLinks();
-        });
+    $("#javadoc_container")
+      .contents()
+      .find(CLASS_FRAME)
+      .ready(function() {
+        modifyClassLinks();
+      });
 
-      $("#javadoc_container")
-        .contents()
-        .find(".leftTop iframe")
-        .ready(function() {
-          modifyPackageTopLinks();
-        });
+    $("#javadoc_container")
+      .contents()
+      .find(".leftTop iframe")
+      .ready(function() {
+        modifyPackageTopLinks();
+      });
 
-      $("#javadoc_container")
-        .contents()
-        .find(PACKAGE_FRAME)
-        .ready(function() {
-          modifyPackageBottomLinks();
-        });
-      setDynamicIframeContent();
-    }
-    // if (!page.includes("index.html")) {
-    //   //page = page.replace(/\./g, "/");
-    //   setIFrameContent(PACKAGE_FRAME, defaultPackageHtml);
-    //   console.log("here");
-    // }
-    //if this placement does not work, try to move the setDynamic into an else statement
+    $("#javadoc_container")
+      .contents()
+      .find(PACKAGE_FRAME)
+      .ready(function() {
+        modifyPackageBottomLinks();
+      });
+    setDynamicIframeContent();
 
     window.onpopstate = function(event) {
       if (event.state) {
