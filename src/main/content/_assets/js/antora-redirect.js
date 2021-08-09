@@ -15,7 +15,6 @@ $(document).ready(function () {
   var hash = window.location.hash;
   var page = "";
   if (path.indexOf("/docs/ref/general/") > -1) {
-    console.log("here");
     // General reference redirects to the ROOT Antora module with no page type in the url
     if (hash.indexOf("#") === 0) {
       hash = hash.substring(1); // Remove hash
@@ -26,7 +25,6 @@ $(document).ready(function () {
     path.indexOf("/docs/ref/config/") > -1 ||
     path.indexOf("/docs/ref/command/") > -1
   ) {
-    console.log("there");
     // Features, config, and command redirect to the reference module which has the doc type in the url
     var resource_path = href.substring(href.indexOf("/docs/ref/") + 10);
     var resource_type = resource_path.substring(
@@ -58,7 +56,5 @@ $(document).ready(function () {
         page +
         hash
     );
-  } else {
-    console.log("other");
   }
 });
