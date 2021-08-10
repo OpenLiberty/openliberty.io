@@ -17,8 +17,8 @@ modifySearch () {
 }
 
 modifyRedirect () {
-    echo "called modify redirect"
-    cp src/main/content/_assets/js/javadoc-redirect.js redirect.js
+    a=$1
+    cp src/main/content/_assets/js/javadoc-redirect.js "${a/script.js/redirect.js}"
     sed '39 i\
     createElem(doc, tag, "redirect.js");' "$1" > newscript.js
     mv newscript.js "$1"

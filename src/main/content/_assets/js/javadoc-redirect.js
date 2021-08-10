@@ -4,8 +4,8 @@ $(function () {
   ) {
     var jd = window.top.location.href;
     var version = jd.substring(
-      jd.indexOf("microprofile-") + 14,
-      jd.indexOf("microprofile-") + 17
+      jd.indexOf("microprofile-") + 13,
+      jd.indexOf("microprofile-") + 16
     );
     jd = jd.substring(jd.indexOf("microprofile-") + 25);
     var pack = jd.substring(0, jd.lastIndexOf("/"));
@@ -15,7 +15,7 @@ $(function () {
       "https://" +
       window.top.location.hostname +
       port +
-      "/docs/ref/microprofile/4" +
+      "/docs/ref/microprofile/" +
       version +
       "/#package=" +
       pack +
