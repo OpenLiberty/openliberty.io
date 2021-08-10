@@ -66,13 +66,16 @@ for version in versions:
     if toc.find('span', text='Features') is not None:
         featureDropdown = toc.find('span', text='Features').parent
         for featureTOC in featureDropdown.find_all('a', {'class': 'nav-link'}, href=True):
-            toc = featureTOC.get('href')
+            href = featureTOC.get('href')
+            # Extrapolate featureName-version.html from the full href
+            href = href.split('/docs/' + version + '/reference/feature/')[1]
+            featureTOC['href'] = href
             pattern = re.compile('^(?P<preString>[\s\D]*)-(?P<version>\d+[.]?\d*)(?P<postString>[\s\D]*)')
-            matches = pattern.match(toc)
+            matches = pattern.match(href)
             if matches is None:
                 # take care of title with J2EE ...
                 pattern = re.compile('^(?P<preString>J2EE[\s\D]+)-(?P<version>\d+[.]?\d*)(?P<postString>[\s\D]*)')
-                matches = pattern.match(toc)
+                matches = pattern.match(href)
             if matches is not None and matches.group('version') is not None:
                 tocCompileString = '^' + matches.group('preString') + '-\d+[.]?\d*' + matches.group('postString') + "$"
                 tocCommonString = matches.group('preString') + matches.group('postString')
@@ -83,7 +86,7 @@ for version in versions:
         commonTOCKeys = commonTOCs.keys()
         commonTOCKeys = list(commonTOCKeys)
 
-        TOCToDecompose = []
+        featuresToDecompose = []
         for commonTOC in commonTOCKeys:
             commonTOCMatchString = commonTOCs[commonTOC]
             matchingTitleTOCs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(commonTOCMatchString))
@@ -119,7 +122,7 @@ for version in versions:
                     else:
                         hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string)
                         versionDiv.append(hrefTag)
-                        TOCToDecompose.append(matchingTOC.parent)
+                        featuresToDecompose.append(matchingTOC.parent)
             # Write the feature title and the versions to the page div
             pageTitle.append(titleDiv)
             pageTitle.append(versionDiv)
@@ -139,8 +142,8 @@ for version in versions:
                 with open(versionHref, "w") as file:
                     file.write(str(versionPage))
 
-        for TOC in TOCToDecompose:
-            TOC.decompose()
+        for feature in featuresToDecompose:
+            feature.decompose()
         
         # Remove .is-current-page so they don't show up as highlighted in other types of docs
         tocs = featureIndex.find_all('li', {'class':'is-current-page'})
@@ -156,7 +159,7 @@ for version in versions:
         toc = featureIndex.find_all('ul', {'class': 'nav-list'})[0]
         featureTOC = toc.find('span', text='Features').parent
 
-        # Change hrefs to full path so the links work from other doc pages
+        # Change hrefs back to full path so the links work from other doc pages
         for feature in featureTOC.find_all('a', {'class': 'nav-link'}, href=True):
             fullHref = '/docs/' + version + '/reference/feature/' + feature.get('href')
             feature['href'] = fullHref
