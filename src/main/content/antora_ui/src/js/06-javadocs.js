@@ -677,276 +677,315 @@ function highlightTOC(iframeName) {
 }
 
 function modifyClassLinks() {
-  //fix class frame links in overview panel
+  // Fix class frame links in overview panel
   var jdSrc = $("#javadoc_container").attr("src");
+  var jdType;
+  var version;
+  var baseUrl;
+  var port = window.location.port !== "" ? ":" + window.location.port : "";
   if (jdSrc.includes("microprofile")) {
-    var iframeContent = $("#javadoc_container")
-      .contents()
-      .find(CLASS_FRAME)
-      .contents();
+    jdType = "microprofile";
     var version = jdSrc.substring(
-      jdSrc.indexOf("microprofile") + 13,
-      jdSrc.indexOf("microprofile") + 16
+      jdSrc.indexOf(jdType) + 13,
+      jdSrc.indexOf(jdType) + 16
     );
-    iframeContent.find(".overviewSummary tbody tr th a").each(function() {
-      var port = window.location.port !== "" ? ":" + window.location.port : "";
-      var package = $(this).attr("href");
-
-      if (!package.includes(window.location.hostname)) {
-        $(this).attr(
-          "href",
-          "https://" +
-            window.location.hostname +
-            port +
-            "/docs/ref/microprofile/" +
-            version +
-            "/#package=allclasses-frame.html&class=" +
-            package
-        );
-        //fix history links
-        $(this).on("click", function(event) {
-          event.preventDefault();
-          event.stopPropagation();
-          setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + package);
-          window.history.pushState(
-            {
-              iframeName: CLASS_FRAME,
-              otherStateKey: defaultHtmlRootPath + package
-            },
-            "",
-            "https://" +
-              window.location.hostname +
-              port +
-              "/docs/ref/microprofile/" +
-              version +
-              "/#class=overview-summary.html&package=" +
-              package +
-              "/package-frame.html"
-          );
-        });
-      }
-    });
-
-    //fix links for class frame in package panel
-    iframeContent.find(".contentContainer .blockList ul a").each(function() {
-      var port = window.location.port !== "" ? ":" + window.location.port : "";
-      var package = $(this).attr("href");
-      if (package.includes("../")) {
-        package = package.substring(package.lastIndexOf("../") + 3);
-      }
-
-      if (!package.includes(window.location.hostname)) {
-        $(this).attr(
-          "href",
-          "https://" +
-            window.location.hostname +
-            port +
-            "/docs/ref/microprofile/" +
-            version +
-            "/#package=allclasses-frame.html&class=" +
-            package
-        );
-
-        $(this).on("click", function(event) {
-          event.preventDefault();
-          event.stopPropagation();
-          setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + package);
-          window.history.pushState(
-            {
-              iframeName: CLASS_FRAME,
-              otherStateKey: defaultHtmlRootPath + package
-            },
-            "",
-            $(this).attr("href")
-          );
-        });
-      }
-    });
-
-    //fix links for class frame nav buttons
-    iframeContent.find(".topNav .navList li a").each(function() {
-      var port = window.location.port !== "" ? ":" + window.location.port : "";
-      var package = $(this).attr("href");
-      if (package.includes("../")) {
-        package = package.substring(package.lastIndexOf("../") + 3);
-      }
-      if (!package.includes(window.location.hostname)) {
-        $(this).attr(
-          "href",
-          "https://" +
-            window.location.hostname +
-            port +
-            "/docs/ref/microprofile/" +
-            version +
-            "/#package=allclasses-frame.html&class=" +
-            package
-        );
-
-        $(this).on("click", function(event) {
-          event.preventDefault();
-          event.stopPropagation();
-          setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + package);
-          window.history.pushState(
-            {
-              iframeName: CLASS_FRAME,
-              otherStateKey: defaultHtmlRootPath + package
-            },
-            "",
-            $(this).attr("href")
-          );
-        });
-      }
-    });
+    baseUrl =
+      "https://" +
+      window.location.hostname +
+      port +
+      "/docs/latest/reference/javadoc/" +
+      jdType +
+      "-" +
+      version +
+      "-javadoc.html";
+  } else if (jdSrc.includes("liberty-javaee")) {
+    jdType = "liberty-javaee";
+    var version = jdSrc.substring(
+      jdSrc.indexOf(jdType) + 14,
+      jdSrc.indexOf(jdType) + 15
+    );
+    baseUrl =
+      "https://" +
+      window.location.hostname +
+      port +
+      "/docs/latest/reference/javadoc/" +
+      jdType +
+      version +
+      "-javadoc.html";
   }
+
+  var iframeContent = $("#javadoc_container")
+    .contents()
+    .find(CLASS_FRAME)
+    .contents();
+  iframeContent.find(".overviewSummary tbody tr th a").each(function() {
+    var package = $(this).attr("href");
+    if (!package.includes(window.location.hostname)) {
+      $(this).attr(baseUrl + "#package=allclasses-frame.html&class=" + package);
+      //fix history links
+      $(this).on("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + package);
+        window.history.pushState(
+          {
+            iframeName: CLASS_FRAME,
+            otherStateKey: defaultHtmlRootPath + package
+          },
+          "",
+          baseUrl +
+            "#class=overview-summary.html&package=" +
+            package +
+            "/package-frame.html"
+        );
+      });
+    }
+  });
+
+  //fix links for class frame in package panel
+  iframeContent.find(".contentContainer .blockList ul a").each(function() {
+    var port = window.location.port !== "" ? ":" + window.location.port : "";
+    var package = $(this).attr("href");
+    if (package.includes("../")) {
+      package = package.substring(package.lastIndexOf("../") + 3);
+    }
+
+    if (!package.includes(window.location.hostname)) {
+      $(this).attr(
+        "href",
+        baseUrl + "#package=allclasses-frame.html&class=" + package
+      );
+
+      $(this).on("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + package);
+        window.history.pushState(
+          {
+            iframeName: CLASS_FRAME,
+            otherStateKey: defaultHtmlRootPath + package
+          },
+          "",
+          $(this).attr("href")
+        );
+      });
+    }
+  });
+
+  //fix links for class frame nav buttons
+  iframeContent.find(".topNav .navList li a").each(function() {
+    var port = window.location.port !== "" ? ":" + window.location.port : "";
+    var package = $(this).attr("href");
+    if (package.includes("../")) {
+      package = package.substring(package.lastIndexOf("../") + 3);
+    }
+    if (!package.includes(window.location.hostname)) {
+      $(this).attr(
+        "href",
+        baseUrl + "#package=allclasses-frame.html&class=" + package
+      );
+
+      $(this).on("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + package);
+        window.history.pushState(
+          {
+            iframeName: CLASS_FRAME,
+            otherStateKey: defaultHtmlRootPath + package
+          },
+          "",
+          $(this).attr("href")
+        );
+      });
+    }
+  });
 }
 
 function modifyPackageTopLinks() {
   var jdSrc = $("#javadoc_container").attr("src");
+  var jdType;
+  var version;
+  var baseUrl;
+  var port = window.location.port !== "" ? ":" + window.location.port : "";
   if (jdSrc.includes("microprofile")) {
-    var iframeContent = $("#javadoc_container")
-      .contents()
-      .find(".leftTop iframe")
-      .contents();
+    jdType = "microprofile";
     var version = jdSrc.substring(
-      jdSrc.indexOf("microprofile") + 13,
-      jdSrc.indexOf("microprofile") + 16
+      jdSrc.indexOf(jdType) + 13,
+      jdSrc.indexOf(jdType) + 16
     );
-    iframeContent.find('ul[title="Packages"] li a').each(function() {
-      var port = window.location.port !== "" ? ":" + window.location.port : "";
-      var package = $(this).attr("href");
-      if (package.includes("../")) {
-        package = package.substring(package.lastIndexOf("../") + 3);
-      }
+    baseUrl =
+      "https://" +
+      window.location.hostname +
+      port +
+      "/docs/latest/reference/javadoc/" +
+      jdType +
+      "-" +
+      version +
+      "-javadoc.html";
+  } else if (jdSrc.includes("liberty-javaee")) {
+    jdType = "liberty-javaee";
+    var version = jdSrc.substring(
+      jdSrc.indexOf(jdType) + 14,
+      jdSrc.indexOf(jdType) + 15
+    );
+    baseUrl =
+      "https://" +
+      window.location.hostname +
+      port +
+      "/docs/latest/reference/javadoc/" +
+      jdType +
+      version +
+      "-javadoc.html";
+  }
 
-      //look into implementing existing methods and ajax waiting
-      if (!package.includes(window.location.hostname)) {
+  var iframeContent = $("#javadoc_container")
+    .contents()
+    .find(".leftTop iframe")
+    .contents();
+  iframeContent.find('ul[title="Packages"] li a').each(function() {
+    var package = $(this).attr("href");
+    if (package.includes("../")) {
+      package = package.substring(package.lastIndexOf("../") + 3);
+    }
+
+    //look into implementing existing methods and ajax waiting
+    if (!package.includes(window.location.hostname)) {
+      $(this).attr(
+        "href",
+        baseUrl + "#class=overview-summary.html&package=" + package
+      );
+      //find out how to load specific package to iframe
+      $(this).on("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + package);
+        window.history.pushState(
+          {
+            iframeName: ".leftTop iframe",
+            otherStateKey: defaultHtmlRootPath + package
+          },
+          "",
+          $(this).attr("href")
+        );
+      });
+    }
+  });
+}
+
+function modifyPackageBottomLinks() {
+  var jdSrc = $("#javadoc_container").attr("src");
+  var jdType;
+  var version;
+  var baseUrl;
+  var port = window.location.port !== "" ? ":" + window.location.port : "";
+  if (jdSrc.includes("microprofile")) {
+    jdType = "microprofile";
+    var version = jdSrc.substring(
+      jdSrc.indexOf(jdType) + 13,
+      jdSrc.indexOf(jdType) + 16
+    );
+    baseUrl =
+      "https://" +
+      window.location.hostname +
+      port +
+      "/docs/latest/reference/javadoc/" +
+      jdType +
+      "-" +
+      version +
+      "-javadoc.html";
+  } else if (jdSrc.includes("liberty-javaee")) {
+    jdType = "liberty-javaee";
+    var version = jdSrc.substring(
+      jdSrc.indexOf(jdType) + 14,
+      jdSrc.indexOf(jdType) + 15
+    );
+    baseUrl =
+      "https://" +
+      window.location.hostname +
+      port +
+      "/docs/latest/reference/javadoc/" +
+      jdType +
+      version +
+      "-javadoc.html";
+  }
+
+  var iframeContent = $("#javadoc_container")
+    .contents()
+    .find(PACKAGE_FRAME)
+    .contents();
+
+  iframeContent.find(".indexContainer ul li a").each(function() {
+    var c = $(this).attr("href");
+    if (c.includes("../")) {
+      c = c.substring(c.lastIndexOf("../") + 3);
+    }
+
+    if (!c.includes(window.location.hostname)) {
+      if (
+        iframeContent
+          .find(".bar")
+          .text()
+          .trim()
+          .replace(String.fromCharCode(160), " ") === "All Classes"
+      ) {
         $(this).attr(
           "href",
-          "https://" +
-            window.location.hostname +
-            port +
-            "/docs/ref/microprofile/" +
-            version +
-            "/#class=overview-summary.html&package=" +
-            package
+          baseUrl + "#package=allclasses-frame.html&class=" + c
         );
         //find out how to load specific package to iframe
         $(this).on("click", function(event) {
           event.preventDefault();
           event.stopPropagation();
-          setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + package);
+          setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + c);
           window.history.pushState(
             {
-              iframeName: ".leftTop iframe",
-              otherStateKey: defaultHtmlRootPath + package
+              iframeName: PACKAGE_FRAME,
+              otherStateKey: defaultHtmlRootPath + c
             },
             "",
             $(this).attr("href")
           );
         });
-      }
-    });
-  }
-}
-
-function modifyPackageBottomLinks() {
-  var jdSrc = $("#javadoc_container").attr("src");
-  if (jdSrc.includes("microprofile")) {
-    var iframeContent = $("#javadoc_container")
-      .contents()
-      .find(PACKAGE_FRAME)
-      .contents();
-    var version = jdSrc.substring(
-      jdSrc.indexOf("microprofile") + 13,
-      jdSrc.indexOf("microprofile") + 16
-    );
-    iframeContent.find(".indexContainer ul li a").each(function() {
-      var port = window.location.port !== "" ? ":" + window.location.port : "";
-      var c = $(this).attr("href");
-      if (c.includes("../")) {
-        c = c.substring(c.lastIndexOf("../") + 3);
-      }
-
-      if (!c.includes(window.location.hostname)) {
-        if (
-          iframeContent
-            .find(".bar")
-            .text()
-            .trim()
-            .replace(String.fromCharCode(160), " ") === "All Classes"
-        ) {
-          $(this).attr(
-            "href",
-            "https://" +
-              window.location.hostname +
-              port +
-              "/docs/ref/microprofile/" +
-              version +
-              "/#package=allclasses-frame.html&class=" +
-              c
+      } else {
+        var package = iframeContent.find(".bar").text();
+        if (package.includes("../")) {
+          package = package.substring(package.lastIndexOf("../") + 3);
+        }
+        package = package.replace(/\./g, "/");
+        $(this).attr(
+          "href",
+          baseUrl +
+            "#package=" +
+            package +
+            "/package-frame.html&class=" +
+            package +
+            "/" +
+            c
+        );
+        $(this).on("click", function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          setIFrameContent(
+            CLASS_FRAME,
+            defaultHtmlRootPath + package + "/" + c
           );
-          //find out how to load specific package to iframe
-          $(this).on("click", function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            setIFrameContent(CLASS_FRAME, defaultHtmlRootPath + c);
-            window.history.pushState(
-              {
-                iframeName: PACKAGE_FRAME,
-                otherStateKey: defaultHtmlRootPath + c
-              },
-              "",
-              $(this).attr("href")
-            );
-          });
-        } else {
-          var package = iframeContent.find(".bar").text();
-          if (package.includes("../")) {
-            package = package.substring(package.lastIndexOf("../") + 3);
-          }
-          package = package.replace(/\./g, "/");
-          $(this).attr(
-            "href",
-            "https://" +
-              window.location.hostname +
-              port +
-              "/docs/ref/microprofile/" +
-              version +
-              "/#package=" +
+          window.history.pushState(
+            {
+              iframeName: PACKAGE_FRAME,
+              otherStateKey: defaultHtmlRootPath + c
+            },
+            "",
+            baseUrl +
+              "#package=" +
               package +
               "/package-frame.html&class=" +
-              package +
-              "/" +
-              c
+              package
           );
-          $(this).on("click", function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            setIFrameContent(
-              CLASS_FRAME,
-              defaultHtmlRootPath + package + "/" + c
-            );
-            window.history.pushState(
-              {
-                iframeName: PACKAGE_FRAME,
-                otherStateKey: defaultHtmlRootPath + c
-              },
-              "",
-              "https://" +
-                window.location.hostname +
-                port +
-                "/docs/ref/microprofile/" +
-                version +
-                "/#package=" +
-                package +
-                "/package-frame.html&class=" +
-                package
-            );
-          });
-        }
+        });
       }
-    });
-  }
+    }
+  });
 }
 
 $(document).ready(function() {
