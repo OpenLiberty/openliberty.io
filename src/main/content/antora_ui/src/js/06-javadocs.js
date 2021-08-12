@@ -675,6 +675,98 @@ function highlightTOC(iframeName) {
   }
 }
 
+function modifyPackageTopLinks() {
+  var jdSrc = $("#javadoc_container").attr("src");
+  if (jdSrc.includes("microprofile")) {
+    var iframeContent = $("#javadoc_container")
+      .contents()
+      .find(".leftTop iframe")
+      .contents();
+    var version = jdSrc.substring(
+      jdSrc.indexOf("microprofile") + 13,
+      jdSrc.indexOf("microprofile") + 16
+    );
+    iframeContent.find('ul[title="Packages"] li a').each(function() {
+      var port = window.location.port !== "" ? ":" + window.location.port : "";
+      var package = $(this).attr("href");
+      if (package.includes("../")) {
+        package = package.substring(package.lastIndexOf("../") + 3);
+      }
+      if (!package.includes(window.location.hostname)) {
+        $(this).attr(
+          "href",
+          "https://" +
+            window.location.hostname +
+            port +
+            "/docs/ref/microprofile/" +
+            version +
+            "/#class=overview-summary.html&package=" +
+            package
+        );
+        //find out how to load specific package to iframe
+        $(this).on("click", function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + package);
+          window.history.pushState(
+            {
+              iframeName: ".leftTop iframe",
+              otherStateKey: defaultHtmlRootPath + package
+            },
+            "",
+            $(this).attr("href")
+          );
+        });
+      }
+    });
+  }
+
+  if (jdSrc.includes("liberty-javaee")) {
+    var iframeContent = $("#javadoc_container")
+      .contents()
+      .find(".leftTop iframe")
+      .contents();
+    var version = jdSrc.substring(
+      jdSrc.indexOf("liberty-javaee") + 14,
+      jdSrc.indexOf("liberty-javaee") + 15
+    );
+    iframeContent.find('ul[title="Packages"] li a').each(function() {
+      var port = window.location.port !== "" ? ":" + window.location.port : "";
+      var package = $(this).attr("href");
+      if (package.includes("../")) {
+        package = package.substring(package.lastIndexOf("../") + 3);
+      }
+      if (!package.includes(window.location.hostname)) {
+        $(this).attr(
+          "href",
+          "https://" +
+            window.location.hostname +
+            port +
+            "/docs/latest/reference/javadoc/liberty-javaee" +
+            version +
+            "-javadoc.html#package=" +
+            package +
+            "&class=overview-summary.html"
+        );
+        //find out how to load specific package to iframe
+        $(this).on("click", function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + package);
+          window.history.pushState(
+            {
+              iframeName: ".leftTop iframe",
+              otherStateKey: defaultHtmlRootPath + package
+            },
+            "",
+            $(this).attr("href")
+          );
+        });
+      }
+    });
+  }
+}
+
 $(document).ready(function() {
   $(window).on("resize", function() {
     resizeJavaDocWindow();
@@ -716,6 +808,20 @@ $(document).ready(function() {
         addNavHoverListener();
         addScrollListener();
         addClickListener($(this).contents());
+      });
+
+    $("#javadoc_container")
+      .contents()
+      .find(".leftTop iframe")
+      .on("load", function() {
+        modifyPackageTopLinks();
+      });
+
+    $("#javadoc_container")
+      .contents()
+      .find(".leftTop iframe")
+      .ready(function() {
+        modifyPackageTopLinks();
       });
 
     setDynamicIframeContent();
