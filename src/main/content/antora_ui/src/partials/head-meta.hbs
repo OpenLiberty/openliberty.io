@@ -1,7 +1,12 @@
 {{!-- Add additional meta tags here --}}
+{{#unless (contains page.url 'openliberty.io')}}
+{{> noindex}}
+{{else}}
 {{#if (eq page.layout 'noversion')}}
 {{> noindex}}
 {{/if}}
+{{/unless}}
+
 
 {{#if page.attributes.seo-description }} 
 <meta name="description" content="{{page.attributes.seo-description}}">
