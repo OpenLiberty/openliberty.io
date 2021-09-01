@@ -38,11 +38,12 @@
   border-radius: 3px;
 
     &:hover {
+      cursor: pointer;
         color: darken(#4F660A, 5%); // Darkened to pass color contrast rules.
         background-color: #ABD155;
     }
 
-    &.left_prereq {
+    &.maven_prereq {
         margin-right: 0;
         border-right: none;
         border-radius: 3px 0 0 3px;
@@ -59,10 +60,15 @@
         }
     }
 
-    &.right_prereq {
+    &.gradle_prereq {
         margin-left: 0;
         border-left: none;
         border-radius: 0 3px 3px 0;
+    }
+
+    &.selected {
+      color: darken(#4F660A, 5%); // Darkened to pass color contrast rules.
+      background-color: #ABD155;
     }
 }
 
@@ -452,6 +458,18 @@
   }
   &:active {
     border: solid 1px #5e6b8d;
+  }
+}
+
+.maven_section_tab, .gradle_section_tab {
+  display: inline-block;
+  top: 0;
+  left: 0;
+  margin-right: 10px;
+  font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+
+  &:hover{
+    cursor: pointer;
   }
 }
 

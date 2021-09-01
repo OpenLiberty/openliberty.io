@@ -19,24 +19,32 @@ $(document).ready(function () {
     $("#preamble").detach().insertAfter("#duration_container");
 
     function add_prereq(prereq) {
-        var prereq_html = "";
-        var position_class = "";
+        // var prereq_html = "";
+        var build_class = "";
         if (prereq.name == "Maven") {
-            position_class = "left_prereq";
+            build_class = "maven_prereq selected";
         } else if (prereq.name == "Gradle") {
-            position_class = "right_prereq";
+            build_class = "gradle_prereq";
         }
-        prereq_html +=
-            '<div class="prereq_div"><a href=' +
-            '"' +
-            prereq.link +
-            '"' +
-            ' class="prereq notranslate ' +
-            position_class +
-            '" target="_blank">' +
-            prereq.name +
-            "</a></div>";
+        var prereq_html = $("<div class='prereq_div'>");
+        var prereq_link = $(
+            "<a class='prereq notranslate' target='_blank'>" +
+                prereq.name +
+                "</a>"
+        );
+        if (!build_class) {
+            prereq_link.attr("href", prereq.link);
+        } else {
+            prereq_link.addClass(build_class);
+        }
+        prereq_html.append(prereq_link);
+
         $(".prereqs_list").append(prereq_html);
+
+        $(".maven_prereq, .gradle_prereq").on("click", function () {
+            $(".maven_prereq, .gradle_prereq").removeClass("selected");
+            $(this).addClass("selected");
+        });
     }
 
     // Read prereqs from json file and add to html
