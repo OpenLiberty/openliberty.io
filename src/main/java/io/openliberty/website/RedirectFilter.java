@@ -115,7 +115,8 @@ public class RedirectFilter implements Filter {
      */
     public static void init(ServletContext ctx) throws IOException {
         String[] files = { "/WEB-INF/ui-redirects.properties", "/WEB-INF/doc-redirects.properties",
-                "/WEB-INF/blog-redirects.properties", "/WEB-INF/guide-redirects.properties" };
+                "/WEB-INF/blog-redirects.properties", "/WEB-INF/guide-redirects.properties",
+                "/WEB-INF/cert-redirects.properties" };
         try {
             Properties props = new Properties();
             for (String file : files) {
