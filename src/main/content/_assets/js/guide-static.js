@@ -19,27 +19,30 @@ $(document).ready(function () {
     $("#preamble").detach().insertAfter("#duration_container");
 
     function add_prereq(prereq) {
-        // var prereq_html = "";
-        var build_class = "";
-        if (prereq.name == "Maven") {
-            build_class = "maven_prereq selected";
-        } else if (prereq.name == "Gradle") {
-            build_class = "gradle_prereq";
-        }
         var prereq_html = $("<div class='prereq_div'>");
         var prereq_link = $(
             "<a class='prereq notranslate' target='_blank'>" +
                 prereq.name +
                 "</a>"
         );
-        if (!build_class) {
-            prereq_link.attr("href", prereq.link);
-        } else {
-            prereq_link.addClass(build_class);
-        }
+        prereq_link.attr("href", prereq.link);
         prereq_html.append(prereq_link);
-
         $(".prereqs_list").append(prereq_html);
+    }
+
+    // Create a build tool prereq toggle if Maven and Gradle are both prereqs for the guide. Mvnw and Gradlew wrappers will be present in the guide when this happens and the reader will switch between Maven and Gradle content using either the toggle in the prereq section or using the tabs on any of the Maven or Gradle specific content.
+    function handleBuildToolPrereqs() {
+        var maven_prereq = $(".prereq").filter(function () {
+            return this.text === "Maven";
+        });
+        var gradle_prereq = $(".prereq").filter(function () {
+            return this.text === "Gradle";
+        });
+        if (maven_prereq.length === 0 || gradle_prereq.length === 0) {
+            return;
+        }
+        maven_prereq.addClass("maven_prereq selected").removeAttr("href");
+        gradle_prereq.addClass("gradle_prereq").removeAttr("href");
 
         $(".maven_prereq, .gradle_prereq").on("click", function () {
             $(".maven_prereq, .gradle_prereq").removeClass("selected");
@@ -71,6 +74,7 @@ $(document).ready(function () {
                 }
             }
         });
+        handleBuildToolPrereqs();
     });
 
     // Read skills network json to see if we need to link to a cloud hosted guide equivalent.
