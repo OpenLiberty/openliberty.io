@@ -62,18 +62,29 @@ function setDefaultTab() {
 function initializeBuildTabs() {
     var build_sections = $(".maven_section .content, .gradle_section .content");
     build_sections.each(function () {
+        var tab_container = $("<div class='build_tab_container'></div>");
         var maven_tab = $("<div class='maven_section_tab'>Maven</div>");
         var gradle_tab = $("<div class='gradle_section_tab'>Gradle</div>");
-        $(this).prepend(gradle_tab).prepend(maven_tab);
+        tab_container.append(maven_tab).append(gradle_tab);
+        $(this).prepend(tab_container);
     });
 
     $(".gradle_section").hide(); // Only Maven instructions shown by default
+    $(".maven_section_tab").addClass("selected");
 
-    $(".maven_prereq, .maven_section_tab").on("click", function () {
+    $(".maven_section_tab").on("click", function () {
+        $(
+            ".maven_prereq, .gradle_prereq, .maven_section_tab, .gradle_section_tab"
+        ).removeClass("selected");
+        $(".maven_prereq, .maven_section_tab").addClass("selected");
         $(".maven_section").show();
         $(".gradle_section").hide();
     });
-    $(".gradle_prereq, .gradle_section_tab").on("click", function () {
+    $(".gradle_section_tab").on("click", function () {
+        $(
+            ".maven_prereq, .gradle_prereq, .maven_section_tab, .gradle_section_tab"
+        ).removeClass("selected");
+        $(".gradle_prereq, .gradle_section_tab").addClass("selected");
         $(".gradle_section").show();
         $(".maven_section").hide();
     });

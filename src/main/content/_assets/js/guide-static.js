@@ -44,9 +44,21 @@ $(document).ready(function () {
         maven_prereq.addClass("maven_prereq selected").removeAttr("href");
         gradle_prereq.addClass("gradle_prereq").removeAttr("href");
 
-        $(".maven_prereq, .gradle_prereq").on("click", function () {
-            $(".maven_prereq, .gradle_prereq").removeClass("selected");
-            $(this).addClass("selected");
+        $(".maven_prereq").on("click", function () {
+            $(
+                ".maven_prereq, .gradle_prereq, .maven_section_tab, .gradle_section_tab"
+            ).removeClass("selected");
+            $(".maven_prereq, .maven_section_tab").addClass("selected");
+            $(".maven_section").show();
+            $(".gradle_section").hide();
+        });
+        $(".gradle_prereq").on("click", function () {
+            $(
+                ".maven_prereq, .gradle_prereq, .maven_section_tab, .gradle_section_tab"
+            ).removeClass("selected");
+            $(".gradle_prereq, .gradle_section_tab").addClass("selected");
+            $(".gradle_section").show();
+            $(".maven_section").hide();
         });
     }
 

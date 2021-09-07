@@ -235,6 +235,20 @@
   }
 }
 
+#guide_content .listingblock.command .content .build_tab_container {
+  border: 1px solid #96bc32;
+  border-left: 8px solid #96bc32;
+  border-top: none;
+  border-right: none;
+  border-radius: 3px;
+  border-bottom-left-radius: 0;
+  border-bottom: none;
+
+  & + pre {
+    border-top-left-radius: 0;
+  }
+}
+
 #guide_content .command .CodeRay code {
   background-color: transparent;
 }
@@ -465,8 +479,25 @@
   display: inline-block;
   top: 0;
   left: 0;
-  margin-right: 10px;
-  font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+  width: 55px;
+  text-align: center;
+  color: #24243b;
+  border: 1px solid #96bc32;
+  border-left: none;
+  border-bottom: none;
+
+  &.selected {
+    font-weight: 500;
+
+    &:after {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 55px;
+      border-bottom: 1px solid white;
+      background-color: white;
+    }
+  }
 
   &:hover{
     cursor: pointer;
