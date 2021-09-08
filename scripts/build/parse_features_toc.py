@@ -51,7 +51,7 @@ print(versions)
 
 # Only process the features of the highest version for the docs draft site
 if(os.getenv("DRAFT_SITE") or os.getenv("DOCS_DRAFT_SITE")):
-    max = ['-1', '-1', '-1', '-1']
+    max = ['0', '0', '0', '0']
     for version in versions:
         nums = version.split('.')
         if(int(nums[0]) > int(max[0])):
