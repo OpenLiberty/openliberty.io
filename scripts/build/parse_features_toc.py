@@ -46,12 +46,26 @@ for version in os.listdir(featurePath):
                 if version != "modules":
                     versions.append(version)
 
+print("Doc versions:")
+print(versions)
+
 # Only process the features of the highest version for the docs draft site
 if(os.getenv("DRAFT_SITE") or os.getenv("DOCS_DRAFT_SITE")):
-    print("Processing only version: " + max(versions) + " for the docs draft site.")
-    versions = [max(versions)]
+    max = ['-1', '-1', '-1', '-1']
+    for version in versions:
+        nums = version.split('.')
+        if(int(nums[0]) > int(max[0])):
+            max = nums
+        elif(int(nums[0]) == int(max[0]) and int(nums[3]) > int(max[3])):
+            max = nums
+    max = '.'.join(max)
 
-# Loop through each Antora version to fix its feature TOC and combine the pages
+    print("Processing only version: " + max + " for the docs draft site.")
+    versions = [max]
+
+
+
+#Loop through each Antora version to fix its feature TOC and combine the pages
 for version in versions:
     # Read in front version/feature but write to all of the antora version later for changing the toc
     antora_path = featurePath + version + "/reference/"
