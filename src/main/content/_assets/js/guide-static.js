@@ -84,7 +84,7 @@ $(document).ready(function () {
                     host === "openliberty.io"
                         ? data.skillNetworkDomain
                         : data.stagingSkillNetworkDomain;
-                skills_network_url += "/" + data.courses.guide_name;
+                skills_network_url += data.courses.guide_name;
             } else {
                 // This guide is not in the list of courses in the new skills network url schema yet. This is the old deprecated url structure that only exists until all guide's urls have been in the cloud-hosted-guides.json file under the courses field.
                 skills_network_url =
