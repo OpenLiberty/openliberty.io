@@ -78,7 +78,7 @@ $(document).ready(function () {
             var host = window.location.hostname;
             var skills_network_url;
 
-            if (data.courses && data.courses.guide_name) {
+            if (data.courses && data.courses[guide_name]) {
                 // The new url format supported by the skills network. The domain host is known ahead of time, and each guide's specific url path is specified in the cloud-hosted-guides.json file.
                 skills_network_url =
                     host === "openliberty.io"
