@@ -76,14 +76,27 @@ $(document).ready(function () {
                 .replace(".html", "")
                 .replace("/guides/", "");
             var host = window.location.hostname;
-            var skills_network_url =
-                host === "openliberty.io"
-                    ? data.skillNetworkUrl
-                    : data.stagingSkillNetworkUrl;
-            skills_network_url = skills_network_url.replace(
-                "{projectid}",
-                guide_name
-            );
+            var skills_network_url;
+
+            if (data.courses && data.courses.guide_name) {
+                // The new url format supported by the skills network. The domain host is known ahead of time, and each guide's specific url path is specified in the cloud-hosted-guides.json file.
+                skills_network_url =
+                    host === "openliberty.io"
+                        ? data.skillNetworkDomain
+                        : data.stagingSkillNetworkDomain;
+                skills_network_url += "/" + data.courses.guide_name;
+            } else {
+                // This guide is not in the list of courses in the new skills network url schema yet. This is the old deprecated url structure that only exists until all guide's urls have been in the cloud-hosted-guides.json file under the courses field.
+                skills_network_url =
+                    host === "openliberty.io"
+                        ? data.skillNetworkUrl
+                        : data.stagingSkillNetworkUrl;
+                skills_network_url = skills_network_url.replace(
+                    "{projectid}",
+                    guide_name
+                );
+            }
+
             if (data.guides.indexOf(guide_name) > -1) {
                 $(".skills_network_description").text(data.buttonLabel);
                 var skills_network_button = $(
