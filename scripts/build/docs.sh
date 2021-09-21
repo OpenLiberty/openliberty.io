@@ -28,9 +28,9 @@ timer_end=$(date +%s)
 echo "Total execution time for copying Antora docs to webapp: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
 timer_start=$(date +%s)
-python3 $BUILD_SCRIPTS_DIR/ToC_parse_features.py
+python3 $BUILD_SCRIPTS_DIR/parse_features_toc.py
 timer_end=$(date +%s)
-echo "Total execution time for parsing ToC Features: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
+echo "Total execution time for parsing the features toc: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
 echo "Finished building and prepping all Antora content"
 
