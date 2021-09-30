@@ -1,6 +1,8 @@
 # Import the signing keys used for rvm to gpg for verification
 timer_start=$(date +%s)
 
+apt-get install ca-certificates
+
 echo "Install Ruby & required packages/gems"
 cat $BUILD_SCRIPTS_DIR/../gpg/mpapis.asc | gpg --import -
 cat $BUILD_SCRIPTS_DIR/../gpg/pkuczynski.asc | gpg --import -
