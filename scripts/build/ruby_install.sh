@@ -7,7 +7,7 @@ echo "Install Ruby & required packages/gems"
 cat $BUILD_SCRIPTS_DIR/../gpg/mpapis.asc | gpg --import -
 cat $BUILD_SCRIPTS_DIR/../gpg/pkuczynski.asc | gpg --import -
 
-curl -sSL https://get.rvm.io -v | bash -s stable
+curl -v -sSL https://get.rvm.io | bash -s stable
 set +e
 source /usr/local/rvm/scripts/rvm || true
 set -e
