@@ -158,11 +158,17 @@ function showCorrectCodeBlock(id, index, switchTabs) {
  * @param hotspot: The snippet hovered over in the guide column.
  * @param highlightCode: boolean if the code should be highlighted
  */
-var handleHotspotHover = debounce(function (hotspot) {
+var handleHotspot = debounce(function (hotspot) {
     // Only highlight the code if the mouse is still hovered over the hotspot after the debounce.
     if (hotspot.data("hovering") == false) {
         return;
     }
+    // if (
+    //     (!isBuildTabClick && hotspot.parent().hasClass(".maven_section")) ||
+    //     hotspot.parent().hasClass(".gradle_section")
+    // ) {
+    //     return;
+    // }
     $("#prereqs_container").data("hotspot-hovered", true); // Track if a hotspot was hovered over to hide the prereqs popup
     hidePrereqsPopup();
     var header = get_header_from_element(hotspot);
@@ -787,7 +793,7 @@ $(document).ready(function () {
                 left: "0px",
                 height: height,
             });
-            handleHotspotHover($(this));
+            handleHotspot($(this));
         }
     });
 
@@ -805,16 +811,24 @@ $(document).ready(function () {
 
     // When hovering over a code hotspot, highlight the correct lines of code in the corresponding code section.
     $(".hotspot").on("hover mouseover", function () {
-        if (inSingleColumnView()) {
+        if (
+            inSingleColumnView() ||
+            $(this).hasClass("maven_section") ||
+            $(this).hasClass("gradle_section")
+        ) {
             return;
         }
         $(this).data("hovering", true);
-        handleHotspotHover($(this));
+        handleHotspot($(this));
     });
 
     // When the mouse leaves a code 'hotspot', remove all highlighting in the corresponding code section.
     $(".hotspot").on("mouseleave", function () {
-        if (inSingleColumnView()) {
+        if (
+            inSingleColumnView() ||
+            $(this).hasClass("maven_section") ||
+            $(this).hasClass("gradle_section")
+        ) {
             return;
         }
         $(this).data("hovering", false);

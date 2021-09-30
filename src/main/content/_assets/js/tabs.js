@@ -60,13 +60,25 @@ function setDefaultTab() {
 }
 
 function initializeBuildTabs() {
-    var build_sections = $(".maven_section .content, .gradle_section .content");
+    var build_sections = $(
+        ".maven_section > .content, .gradle_section > .content"
+    );
     build_sections.each(function () {
-        var tab_container = $("<div class='build_tab_container'></div>");
-        var maven_tab = $("<div class='maven_section_tab'>Maven</div>");
-        var gradle_tab = $("<div class='gradle_section_tab'>Gradle</div>");
-        tab_container.append(maven_tab).append(gradle_tab);
-        $(this).prepend(tab_container);
+        // only add tabs if they don't already exist
+        if ($(this).siblings(".build_tab_container").length === 0) {
+            var tab_container = $("<div class='build_tab_container'></div>");
+            var maven_tab = $("<div class='maven_section_tab'>Maven</div>");
+            var gradle_tab = $("<div class='gradle_section_tab'>Gradle</div>");
+            // if ($(this).parent().hasClass("hotspot")) {
+            //     if ($(this).parent().hasClass("maven_section")) {
+            //         maven_tab.on("click", handleHotspot($(this)));
+            //     } else if ($(this).parent().hasClass("gradle_section")) {
+            //         gradle_tab.on("click", handleHotspot($(this)));
+            //     }
+            // }
+            tab_container.append(maven_tab).append(gradle_tab);
+            $(this).prepend(tab_container);
+        }
     });
 
     $(".gradle_section").hide(); // Only Maven instructions shown by default
@@ -79,6 +91,10 @@ function initializeBuildTabs() {
         $(".maven_prereq, .maven_section_tab").addClass("selected");
         $(".maven_section").show();
         $(".gradle_section").hide();
+        // Check if hotspot should be handled
+        if ($(this).parents(".maven_section").hasClass("hotspot")) {
+            handleHotspot($(this).parents(".maven_section"));
+        }
     });
     $(".gradle_section_tab").on("click", function () {
         $(
@@ -87,6 +103,19 @@ function initializeBuildTabs() {
         $(".gradle_prereq, .gradle_section_tab").addClass("selected");
         $(".gradle_section").show();
         $(".maven_section").hide();
+        // Check if hotspot should be handled
+        // steven, need to check for the gradle section not necessarily a parent of this gradle click
+        var gradle_section;
+        if ($(this).parents(".gradle_section").length > 0) {
+            gradle_section = $(this).parents(".gradle_section");
+        } else if ($(this).parents(".maven_section").length > 0) {
+            gradle_section = $(this)
+                .parents(".maven_section")
+                .siblings(".gradle_section");
+        }
+        if (gradle_section.hasClass("hotspot")) {
+            handleHotspot(gradle_section);
+        }
     });
 }
 
