@@ -24,8 +24,10 @@ $.getJSON( "../../../../blog_tags.json", function(data) {
 
 });
 
-// Show copy to clipboard button when mouse enters code block
-$('pre').on('mouseenter', function(event) {
+var code_blocks_with_copy_to_clipboard = 'pre:not(.no_copy pre)'; // CSS Selector
+
+// Show copy to clipboard button when mouse enters code block lacking the .no_copy className
+$(code_blocks_with_copy_to_clipboard).on('mouseenter', function(event) {
     target = $(event.currentTarget);
     $('main').append('<div id="copied_confirmation">Copied to clipboard</div><img id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">');
     $('#copy_to_clipboard').css({
