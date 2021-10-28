@@ -75,11 +75,11 @@ function selectTOC() {
   }
   // Look for toc under the features dropdown
   var featureDropdown = $("li > span").filter(function() {
-    return this.text == "Features";
+    return this.innerText == "Features";
   });
   if (featureDropdown.length === 0) {
     featureDropdown = $("li > a.nav-link").filter(function() {
-      return this.text == "Features";
+      return this.innerText == "Features";
     });
   }
   featureDropdown = featureDropdown.parent();
