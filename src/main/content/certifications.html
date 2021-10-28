@@ -33,19 +33,185 @@ permalink: /certifications/
                 {% assign l1 = l1 | concat: partArray | uniq %}
               {% endif %}
               {% if part != filename %}
-                <li>{{ part | upcase }}</li>
+                <!-- <li>{{ part | upcase }}</li> -->
               {% endif %}
             {% endfor %}
             {% assign h2_start = cert.content | split: '<h2' %}
             {% assign h2_end = h2_start[1] | split: '>' %}
             {% assign h2_content_array = h2_end[1] | split: '</h2' %}
             {% assign h2_content = h2_content_array[0] %}
-            <li>
+            <!-- <li> 
               <a href="{{ cert.url }}">
                 {{ cert.title }} {% if h2_content != nill and h2_content != empty %} - {{ h2_content }} {% endif %}
               </a>
-          </li>
+          </li>-->
           {% endfor %}
+
+
+          <!--New attempt 3-->
+          <h1>0) Custom Hierarchal</h1>
+          {% assign previous_cert_url_parts = "" %}
+          {% assign sameParent = true %}
+          {% assign subDir = "│   " %}
+          {% for cert in certifications %}
+            {% assign cert_url_parts = cert.url | split: '/' %}
+            {% assign cert_spec = cert_url_parts[2] %}
+            {% assign counter = 1 %}
+            {% for url_dir in cert_url_parts offset:2 %}
+              {% assign counter = counter | plus: 1 %}
+              {% if url_dir == previous_cert_url_parts[counter] and sameParent %}
+                {% continue %}
+              {% endif %}
+              {% if counter == 2 %}
+                <h2>{{ url_dir | upcase }}</h2>
+                {% continue %}
+              {% endif %} 
+              {% if cert_url_parts.last != cert_url_parts[counter] %}
+                {% for i in (2..counter) %}
+                  {% assign subDir = subDir | append: "&nbsp;&nbsp;" %}
+                {% endfor %}
+                <br>
+                {% if counter == 3%}
+                  <span>├── {{url_dir}}/</span>
+                {% else %}
+                  <span style='margin-left: {{counter | minus: 1 | times:10 }}px;'>{{subDir}}├── {{url_dir}}/</span>
+                {% endif %}
+                {% assign sameParent = false %}
+                {% assign subDir = "│&nbsp;&nbsp;" %}
+                {% continue %}
+              {% endif %}    
+            {% endfor %}
+            {% assign previous_cert_url_parts = cert_url_parts %}
+            {% assign sameParent = true %}
+            
+            {% assign h2_start = cert.content | split: '<h2' %}
+            {% assign h2_end = h2_start[1] | split: '>' %}
+            {% assign h2_content_array = h2_end[1] | split: '</h2' %}
+            {% assign h2_content = h2_content_array[0] %}
+            {% for i in (0..counter) %}
+              {% assign subDir = subDir | append: "&nbsp;&nbsp;" %}
+            {% endfor %}
+              <br>
+              {{subDir}}├── <a href="{{ cert.url }}">
+                {{ cert.title }} {% if h2_content != nill and h2_content != empty %} - {{ h2_content }} {% endif %}
+              </a>
+            <!-- <li style='margin-left: {{counter | minus: 1 | times:10 }}px;'>
+              <a href="{{ cert.url }}">
+                {{ cert.title }} {% if h2_content != nill and h2_content != empty %} - {{ h2_content }} {% endif %}
+              </a>
+            </li> -->
+            {% assign subDir = "│&nbsp;&nbsp;" %}
+          {% endfor %}
+
+          <!--New attempt 2-->
+          <h1>1) Hierarchal</h1>
+          {% assign previous_cert_url_parts = "" %}
+          {% assign sameParent = true %}
+          {% for cert in certifications %}
+            {% assign cert_url_parts = cert.url | split: '/' %}
+            {% assign cert_spec = cert_url_parts[2] %}
+            {% assign counter = 1 %}
+            {% for url_dir in cert_url_parts offset:2 %}
+            {% assign counter = counter | plus: 1 %}
+              {% if url_dir == previous_cert_url_parts[counter] and sameParent %}
+                {% continue %}
+              {% endif %}
+              {% if counter == 2 %}
+                <h2>{{ url_dir | upcase }}</h2>
+                {% continue %}
+              {% endif %} 
+              {% if cert_url_parts.last != cert_url_parts[counter] %}
+                <li style='margin-left: {{counter | minus: 1 | times:10 }}px;'>{{url_dir}}</li>
+                {% assign sameParent = false %}
+                {% continue %}
+              {% endif %}    
+            {% endfor %}
+            {% assign previous_cert_url_parts = cert_url_parts %}
+            {% assign sameParent = true %}
+            {% assign h2_start = cert.content | split: '<h2' %}
+            {% assign h2_end = h2_start[1] | split: '>' %}
+            {% assign h2_content_array = h2_end[1] | split: '</h2' %}
+            {% assign h2_content = h2_content_array[0] %}
+            <li style='margin-left: {{counter | minus: 1 | times:10 }}px;'>
+              <a href="{{ cert.url }}">
+                {{ cert.title }} {% if h2_content != nill and h2_content != empty %} - {{ h2_content }} {% endif %}
+              </a>
+            </li>
+          {% endfor %}
+
+          <!--New attempt 3-->
+          <h1>1) Hierarchal with nested lists</h1>
+          {% assign previous_cert_url_parts = "" %}
+          {% assign sameParent = true %}
+          {% for cert in certifications %}
+            {% assign cert_url_parts = cert.url | split: '/' %}
+            {% assign cert_spec = cert_url_parts[2] %}
+            {% assign counter = 1 %}
+            {% for url_dir in cert_url_parts offset:2 %}
+            {% assign counter = counter | plus: 1 %}
+              {% if url_dir == previous_cert_url_parts[counter] and sameParent %}
+                {% continue %}
+              {% endif %}
+              {% if counter == 2 %}
+                <h2>{{ url_dir | upcase }}</h2>
+                {% continue %}
+              {% endif %} 
+              {% if cert_url_parts.last != cert_url_parts[counter] %}
+                <li style='margin-left: {{counter | minus: 1 | times:10 }}px;'>{{url_dir}}</li>
+                {% assign sameParent = false %}
+                {% continue %}
+              {% endif %}    
+            {% endfor %}
+            {% assign previous_cert_url_parts = cert_url_parts %}
+            {% assign sameParent = true %}
+            {% assign h2_start = cert.content | split: '<h2' %}
+            {% assign h2_end = h2_start[1] | split: '>' %}
+            {% assign h2_content_array = h2_end[1] | split: '</h2' %}
+            {% assign h2_content = h2_content_array[0] %}
+            <li style='margin-left: {{counter | minus: 1 | times:10 }}px;'>
+              <a href="{{ cert.url }}">
+                {{ cert.title }} {% if h2_content != nill and h2_content != empty %} - {{ h2_content }} {% endif %}
+              </a>
+            </li>
+          {% endfor %}
+
+          <!--New attempt-->
+          <!-- {% assign previous_li_content = "" %}
+          {% assign previous_cert_url_parts = "" %}
+          {% for cert in certifications %}
+            {% assign cert_url_parts = cert.url | split: '/' %}
+            {% assign cert_spec = cert_url_parts[2] %}
+
+            {% assign li_content = "" %}
+            {% assign counter = 1 %}
+            {% for url_dir in cert_url_parts offset:2 %}
+            {% assign counter = counter | plus: 1 %}
+              {% if url_dir == previous_cert_url_parts[counter] %}
+                {% continue %}
+              {% endif %}
+              {% if counter == 2 %}
+                <h2>{{ url_dir | upcase }}</h2>
+                {% continue %}
+              {% endif %} 
+              {% if cert_url_parts.last != cert_url_parts[counter] %}
+                <li style='margin-left: {{counter | minus: 1 | times:10 }}px;'>{{url_dir}}</li>
+                {% continue %}
+              {% endif %}    
+              {% assign li_content = li_content | append: url_dir %}
+            {% endfor %}
+            {% assign previous_cert_url_parts = cert_url_parts %}
+            {% assign h2_start = cert.content | split: '<h2' %}
+            {% assign h2_end = h2_start[1] | split: '>' %}
+            {% assign h2_content_array = h2_end[1] | split: '</h2' %}
+            {% assign h2_content = h2_content_array[0] %}
+            <li style='margin-left: {{counter | times:10 }}px;'>
+              <a href="{{ cert.url }}">
+                {{ cert.title }} {% if h2_content != nill and h2_content != empty %} - {{ h2_content }} {% endif %}
+              </a>
+            </li>
+          {% endfor %} -->
+
+          <h1>2) Filename - Description/h2_from_file)</h1>
           {% for spec in l1 %}
             <l1><h2>{{ spec | upcase }}</h2>
               {% for cert in certifications %}
@@ -66,6 +232,7 @@ permalink: /certifications/
             </l1>
           {% endfor %}
           
+          <h1>3) Full path (Description/h2_from_file)</h1>
           {% for spec in l1 %}
             <l1><h2>{{ spec | upcase }}</h2>
               {% for cert in certifications %}
@@ -86,6 +253,45 @@ permalink: /certifications/
             </l1>
           {% endfor %}
 
+          <!--New attempt 2-->
+          <h1>4.0) Full path with newlines</h1>
+          {% assign previous_cert_url_parts = "" %}
+          {% assign sameParent = true %}
+          {% for cert in certifications %}
+            {% assign cert_url_parts = cert.url | split: '/' %}
+            {% assign cert_spec = cert_url_parts[2] %}
+            {% assign counter = 1 %}
+            {% for url_dir in cert_url_parts offset:2 %}
+              {% assign counter = counter | plus: 1 %}
+              {% if url_dir == previous_cert_url_parts[counter] and sameParent %}
+                {% continue %}
+              {% endif %}
+              {% if counter == 2 %}
+                <h2 style="margin-left: -20px; margin-bottom:-20px">{{ url_dir | upcase }}</h2>
+                {% if cert_url_parts.size == 3%}
+                  <br>
+                {% endif %} 
+                {% continue %}
+              {% endif %} 
+              {% if counter == 3 %}
+                <br>
+                {% continue %}
+              {% endif %} 
+            {% endfor %}
+            {% assign previous_cert_url_parts = cert_url_parts %}
+            {% assign sameParent = true %}
+            {% assign h2_start = cert.content | split: '<h2' %}
+            {% assign h2_end = h2_start[1] | split: '>' %}
+            {% assign h2_content_array = h2_end[1] | split: '</h2' %}
+            {% assign h2_content = h2_content_array[0] %}
+            <li>
+              <a href="{{ cert.url }}" title={% if h2_content != nill and h2_content != empty %} "{{ h2_content }}" {% endif %}>
+                {{cert.url | remove_first: '/certifications/'}}
+              </a>
+            </li>
+          {% endfor %}
+
+          <h1>4) Full path</h1>
           {% for spec in l1 %}
             <l1><h2>{{ spec | upcase }}</h2>
               {% for cert in certifications %}
@@ -97,7 +303,7 @@ permalink: /certifications/
                   {% assign h2_content_array = h2_end[1] | split: '</h2' %}
                   {% assign h2_content = h2_content_array[0] %}
                   <li>
-                    <a href="{{ cert.url }}">
+                    <a href="{{ cert.url }}" title={% if h2_content != nill and h2_content != empty %} "{{ h2_content }}" {% endif %}>
                       {{cert.url | remove_first: '/certifications/'}}
                     </a>
                   </li>
@@ -106,6 +312,8 @@ permalink: /certifications/
             </l1>
           {% endfor %}
 
+          <h1>5) Full path</h1>
+          <h1> (Description/h2_from_file)</h1>
           {% for spec in l1 %}
             <l1><h2>{{ spec | upcase }}</h2>
               {% for cert in certifications %}
@@ -133,7 +341,7 @@ permalink: /certifications/
 
 
 
-{% assign url_parts = page.url | split: '/' %}
+<!-- {% assign url_parts = page.url | split: '/' %}
 {% assign url_parts_size = url_parts | size %}
 {% assign rm = url_parts | last %}
 {% assign base_url = page.url | replace: rm %}
@@ -194,4 +402,4 @@ permalink: /certifications/
   {% for item in l1 %}
     <h1>{{ item }}</h1>
   {% endfor %}
-</ul>
+</ul> -->
