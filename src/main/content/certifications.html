@@ -1,0 +1,197 @@
+---
+layout: default
+title: Certifications
+css:
+ - header
+ - certifications
+ - certification
+permalink: /certifications/
+---
+
+{% include noindex.html %}
+
+<div id="article_container" class="container-fluid">
+  <article class="post" aria-label="article">
+      <header id="post_header">
+          <div class="container">
+              <h1 id="post_title">Certifications</h1>
+              <p id="cert_description">Open Liberty, certified for warp speed development!</p>
+          </div>
+      </header>
+      <div id="article_body" class="container">
+        <h2 id="cert_description">Open Liberty, certified for warp speed development!</h2>
+        <p id="cert_description">Open Liberty, certified for warp speed development!</p>
+        <ul>
+          {% assign certifications = site.pages | where: 'layout', 'certification' | sort: "url" %}
+          {% for cert in certifications %}
+            {% assign cert_url_parts = cert.url | split: '/' %}
+            {% assign cert_url_parts_size = cert_url_parts | size %}
+            {% assign filename = cert_url_parts | last %}
+            {% for part in cert_url_parts offset:2%}
+              {% if forloop.index == 1 %}
+                {% assign partArray = part | split: "#" %}
+                {% assign l1 = l1 | concat: partArray | uniq %}
+              {% endif %}
+              {% if part != filename %}
+                <li>{{ part | upcase }}</li>
+              {% endif %}
+            {% endfor %}
+            {% assign h2_start = cert.content | split: '<h2' %}
+            {% assign h2_end = h2_start[1] | split: '>' %}
+            {% assign h2_content_array = h2_end[1] | split: '</h2' %}
+            {% assign h2_content = h2_content_array[0] %}
+            <li>
+              <a href="{{ cert.url }}">
+                {{ cert.title }} {% if h2_content != nill and h2_content != empty %} - {{ h2_content }} {% endif %}
+              </a>
+          </li>
+          {% endfor %}
+          {% for spec in l1 %}
+            <l1><h2>{{ spec | upcase }}</h2>
+              {% for cert in certifications %}
+                {% assign cert_url_parts = cert.url | split: '/' %}
+                {% assign cert_spec = cert_url_parts[2] %}
+                {% if spec == cert_spec %}
+                  {% assign h2_start = cert.content | split: '<h2' %}
+                  {% assign h2_end = h2_start[1] | split: '>' %}
+                  {% assign h2_content_array = h2_end[1] | split: '</h2' %}
+                  {% assign h2_content = h2_content_array[0] %}
+                  <li>
+                    <a href="{{ cert.url }}">
+                      {{ cert.title }} {% if h2_content != nill and h2_content != empty %} - {{ h2_content }} {% endif %}
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </l1>
+          {% endfor %}
+          
+          {% for spec in l1 %}
+            <l1><h2>{{ spec | upcase }}</h2>
+              {% for cert in certifications %}
+                {% assign cert_url_parts = cert.url | split: '/' %}
+                {% assign cert_spec = cert_url_parts[2] %}
+                {% if spec == cert_spec %}
+                  {% assign h2_start = cert.content | split: '<h2' %}
+                  {% assign h2_end = h2_start[1] | split: '>' %}
+                  {% assign h2_content_array = h2_end[1] | split: '</h2' %}
+                  {% assign h2_content = h2_content_array[0] %}
+                  <li>
+                    <a href="{{ cert.url }}">
+                      {{cert.url | remove_first: '/certifications/'}}{% if h2_content != nill and h2_content != empty %} ({{ h2_content }}) {% endif %}
+                    </a>
+                  </li>
+                {% endif %}
+            {% endfor %}
+            </l1>
+          {% endfor %}
+
+          {% for spec in l1 %}
+            <l1><h2>{{ spec | upcase }}</h2>
+              {% for cert in certifications %}
+                {% assign cert_url_parts = cert.url | split: '/' %}
+                {% assign cert_spec = cert_url_parts[2] %}
+                {% if spec == cert_spec %}
+                  {% assign h2_start = cert.content | split: '<h2' %}
+                  {% assign h2_end = h2_start[1] | split: '>' %}
+                  {% assign h2_content_array = h2_end[1] | split: '</h2' %}
+                  {% assign h2_content = h2_content_array[0] %}
+                  <li>
+                    <a href="{{ cert.url }}">
+                      {{cert.url | remove_first: '/certifications/'}}
+                    </a>
+                  </li>
+                {% endif %}
+            {% endfor %}
+            </l1>
+          {% endfor %}
+
+          {% for spec in l1 %}
+            <l1><h2>{{ spec | upcase }}</h2>
+              {% for cert in certifications %}
+                {% assign cert_url_parts = cert.url | split: '/' %}
+                {% assign cert_spec = cert_url_parts[2] %}
+                {% if spec == cert_spec %}
+                  {% assign h2_start = cert.content | split: '<h2' %}
+                  {% assign h2_end = h2_start[1] | split: '>' %}
+                  {% assign h2_content_array = h2_end[1] | split: '</h2' %}
+                  {% assign h2_content = h2_content_array[0] %}
+                  <li style="margin-bottom: 5px;">
+                    <a href="{{ cert.url }}" style="vertical-align: middle;"> <span style="display:table-cell;line-height: 120%;">
+                      {{cert.url | remove_first: '/certifications/'}}{% if h2_content != nill and h2_content != empty %} <br>  ({{ h2_content }}) {% endif %}
+                    </span></a>
+                  </li>
+                {% endif %}
+            {% endfor %}
+            </l1>
+          {% endfor %}
+        </ul>
+      </div>
+  </article>
+  <br />
+</div>
+
+
+
+{% assign url_parts = page.url | split: '/' %}
+{% assign url_parts_size = url_parts | size %}
+{% assign rm = url_parts | last %}
+{% assign base_url = page.url | replace: rm %}
+{% assign base_url = page.url %}
+
+{% assign l1 = "" | split: "" %}
+{% assign l2 = "" | split: "" %}
+{% assign l3 = "" | split: "" %}
+{% assign l4 = "" | split: "" %}
+{% assign l5 = "" | split: "" %}
+{% assign l6 = "" | split: "" %}
+
+<ul>
+{% for node in certifications %}
+  {% if node.url contains base_url %}
+    {% assign node_url_parts = node.url | split: '/' %}
+    {% assign node_url_parts_size = node_url_parts | size %}
+    {% assign filename = node_url_parts | last %}
+    {% for part in node_url_parts offset:2%}
+      {% if forloop.index == 1 %}
+        {% assign partArray = part | split: "#" %}
+        {% assign l1 = l1 | concat: partArray | uniq %}
+        <p>l1: {{l1}}</p>
+      {% endif %}
+      {% if forloop.index == 2 %}
+        {% assign partArray = part | split: "#" %}
+        {% assign l2 = l2 | concat: partArray | uniq %}
+        <p>L2: {{l2}}</p>
+      {% endif %}
+      {% if forloop.index == 3 %}
+        {% assign partArray = part | split: "#" %}
+        {% assign l3 = l3 | concat: partArray | uniq %}
+        <p>L3: {{l3}}</p>
+      {% endif %}
+      {% if forloop.index == 4 %}
+        {% assign partArray = part | split: "#" %}
+        {% assign l4 = l4 | concat: partArray | uniq %}
+        <p>L4: {{l4}}</p>
+      {% endif %}
+      {% if forloop.index == 5 %}
+        {% assign partArray = part | split: "#" %}
+        {% assign l5 = l5 | concat: partArray | uniq %}
+        <p>L5: {{l5}}</p>
+      {% endif %}
+    {% endfor %}
+    <p>{{filename}}</p>
+    <li><a href='{{node.url}}'>{{node.title}}</a></li>
+  {% endif %}
+{% endfor %}
+</ul>
+
+<h1>l1: {{ l1 | join: ", " }}</h1>
+<h1>L2: {{ l2 | join: ", " }}</h1>
+<h1>L3: {{ l3 | join: ", " }}</h1>
+<h1>L4: {{ l4 | join: ", " }}</h1>
+<h1>L5: {{ l5 | join: ", " }}</h1>
+<ul>
+  {% for item in l1 %}
+    <h1>{{ item }}</h1>
+  {% endfor %}
+</ul>
