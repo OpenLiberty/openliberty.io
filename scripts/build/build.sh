@@ -23,10 +23,13 @@ echo "Total execution time for running jekyll.sh build: '$(date -u --date @$(( $
 
 # Build Docs portion of site (uses Antora)
 timer_start=$(date +%s)
-source $BUILD_SCRIPTS_DIR/docs.sh
+source $BUILD_SCRIPTS_DIR/docs_part_1.sh
+source $BUILD_SCRIPTS_DIR/docs_part_2.sh
 timer_end=$(date +%s)
 echo "Total execution time for running antora.sh build: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
+# Run Gzip for compression of html,js,css
+source $BUILD_SCRIPTS_DIR/gzip.sh
 
 # Maven packaging
 # A Maven wrapper is used to set our own Maven version independent of the build environment and is specified in ./mvn/wrapper/maven-wrapper.properties

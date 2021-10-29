@@ -1,5 +1,13 @@
 # Serve the antora docs locally for testing
 
+./scripts/build/node_install.sh
+
+# Install http-server for local site viewing
+npm i -g http-server
+
+# add noindex metdata for non prod sites
+cp src/main/content/_includes/noindex.html src/main/content/antora_ui/src/partials/noindex.hbs
+
 ./scripts/build/antora_install.sh
 
 # Run with the --update flag to fetch the latest doc changes
@@ -9,4 +17,4 @@ if [[ $* == *--update* ]]; then
 else
     antora --stacktrace src/main/content/docs/antora-playbook.yml
 fi
-serve src/main/content/docs/build/site
+http-server src/main/content/docs/build/site

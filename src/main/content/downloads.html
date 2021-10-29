@@ -5,7 +5,7 @@ css:
 - header-dark
 - downloads
 js: builds
-permalink: /downloads/
+permalink: /start/
 ---
 
 <!-- INTRO -->
@@ -29,26 +29,69 @@ permalink: /downloads/
     </div>
 </div>
 
-
-<!-- QUICK START -->
-<div id="quick_start_section" class="container">
+<!-- STARTER PROJECT -->
+<div id="starter_section" class="container">
     <div class="row">
         <div class="col">
-            <h2 class="section_title">Launch a sample app</h2>
-            <p id="quick_start_paragraph">
-                Open Liberty is fast and composable, but don’t 
-                take our word for it - try it out!
-            </p>
-            <div class="code_container text-left d-block mx-auto">git clone https://github.com/OpenLiberty/sample-getting-started.git<br>cd sample-getting-started<br>mvn liberty:dev<br></div>
-            <span id="sample_app_browser_link">Then, go to: <a class="light_green_link_light_background" target="_blank" rel="noopener" href="http://localhost:9080">http://localhost:9080</a></span>
+            <h2 class="section_title">Create a starter application</h2> 
+        </div>               
+    </div>   
+    <div class="row">
+        <div class="col">
+            <p id="starter_description">Select the development tools that you prefer to use, then generate a package to start developing your application.</p>
+        </div>        
+    </div> 
+    <div id="starter_form">
+        <div class="row-no-gutters">
+            <div id="base_package_section" class="starter_field" data-starter-field="g">
+                <label class="starter_field_label" for="Starter_Base_Package">Group</label>
+                <input type="text" class="starter_field_input" id="Starter_Base_Package" />
+            </div>
+            <div id="app_name_section" class="starter_field" data-starter-field="a">
+                <label class="starter_field_label" for="Starter_App_Name">Artifact</label>
+                <input type="text" class="starter_field_input" id="Starter_App_Name" />
+            </div>         
         </div>
+        <div class="row">
+            <div class="col">
+                <div id="build_system_section" class="starter_field" data-starter-field="b">
+                    <span class="starter_field_label" id="build_system_section_description">Build Tool</span>
+                    <div class="radio_group" role="radiogroup" aria-labelledby="build_system_section_description"></div>
+                </div>
+            </div>            
+        </div>
+        <div class="row">
+            <div class="col">
+                <div id="java_version_section" class="starter_field" data-starter-field="j">
+                    <label class="starter_field_label" for="Starter_Java_Version">Java SE Version</label>
+                    <select class="starter_field_input starter_field_selector" id="Starter_Java_Version" aria-label="Java SE Version">
+                    </select>
+                </div>
+                <div id="jakarta_version_section" class="starter_field" data-starter-field="e">
+                    <label class="starter_field_label" for="Starter_Jakarta_Version">Java EE/Jakarta EE Version</label>
+                    <select class="starter_field_input starter_field_selector" id="Starter_Jakarta_Version" aria-label="Java EE/Jakarta EE Version">
+                    </select>
+                </div>
+                <div id="microprofile_version_section" class="starter_field" data-starter-field="m">
+                    <label class="starter_field_label" for="Starter_MicroProfile_Version">MicroProfile Version</label>
+                    <select class="starter_field_input starter_field_selector" id="Starter_MicroProfile_Version" aria-label="MicroProfile Version">
+                    </select>
+                </div>
+            </div>            
+        </div> 
+    </div>
+    <div class="row">
+        <div class="col">
+            <div id="starter_warnings"></div>
+            <a id="starter_submit" class="light_green_link_light_background disabled" tabindex="0">Generate Project</a>
+        </div>        
     </div>
 </div>
 
 
 <!-- MAVEN, GRADLE, DOCKER -->
 <div id="get_section" class="container">
-    <h2 id="getOL" class="section_title">Get Open Liberty</h2>
+    <h2 id="getOL" class="section_title">Add to an existing application</h2>
     <p>Get Open Liberty using these commands for Maven, Gradle, or Docker.</p>
     <div class="row tabs_container">
         <!-- TABS -->

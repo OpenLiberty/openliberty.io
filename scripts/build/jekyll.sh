@@ -10,6 +10,12 @@ source $BUILD_SCRIPTS_DIR/ruby_install.sh
 echo "Cloning repositories with name starting with guide or iguide..."
 ruby $BUILD_SCRIPTS_DIR/clone_guides.rb
 
+# Move the blog redirect file to the WEB-INF directory
+if [ -f src/main/content/guides/guides-common/guide-redirects.properties ]; then
+   echo "Moving the guide redirects file"
+   mv src/main/content/guides/guides-common/guide-redirects.properties src/main/webapp/WEB-INF/guide-redirects.properties
+fi
+
 # Need to make sure there are draft-iguide* folders before using the find command
 # If we don't, the find command will fail because the path does not exist
 if [ $(find src/main/content/guides -type d -name "draft-iguide*" | wc -l ) != "0" ] ; then
@@ -58,6 +64,13 @@ $BUILD_SCRIPTS_DIR/clone_certifications.sh
 # Clone draft and published blogs
 $BUILD_SCRIPTS_DIR/clone_blogs.sh
 
+# Read in the blog tags file and add the tag to each blog so jekyll knows how to process them.
+if [ -f src/main/content/blog_tags.json ]; then
+   echo "Parsing the blog tags"
+   python3 $BUILD_SCRIPTS_DIR/parse_blog_tags.py
+fi
+
+
 # Jekyll build all the cloned content
 echo "Building with jekyll..."
 echo `jekyll -version`
@@ -69,5 +82,5 @@ if [ "$PROD_SITE" = true ]
     jekyll build --source src/main/content --config src/main/content/_config.yml,src/main/content/_google_analytics.yml --destination target/jekyll-webapp 
   else
     # Set the --future flag to show blogs with date timestamps in the future
-    jekyll build --future --source src/main/content --destination target/jekyll-webapp 
+    jekyll build --future --source src/main/content --destination target/jekyll-webapp
 fi
