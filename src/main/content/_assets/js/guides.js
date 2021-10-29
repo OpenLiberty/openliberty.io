@@ -506,7 +506,7 @@ $(document).ready(function () {
             .replace("/guides/", "")
             .replace(".html", "");
           // add tag to data-tags attribute if the guide's project id is in the array for that tag
-          if (tag.guides.indexOf(project_id) > -1) {
+          if (tag.guides.indexOf(project_id) > -1) {        
             if ($(this).data("tags")) {
               $(this).data(
                 "tags",
@@ -514,6 +514,17 @@ $(document).ready(function () {
               );
             } else {
               $(this).data("tags", tag_name.toLowerCase());
+            }
+
+            //add "RUN IN CLOUD" orange pill to applicable guides
+            if (tag_name.toLowerCase() == "run in cloud") {
+              //add to last child element in .guide_item element
+              if ($(this).children().last().hasClass("new_guide_container")) {
+                //add before "NEW" orange pill so "NEW" pill shows first because float: right; reverses element order
+                $('<div class="guide_run_in_cloud_container"><span class="guide_run_in_cloud">Run in cloud</span></div>').insertBefore($(this).children().last());
+              } else {
+                $('<div class="guide_run_in_cloud_container"><span class="guide_run_in_cloud">Run in cloud</span></div>').insertAfter($(this).children().last());
+              }
             }
           }
         });
@@ -1022,4 +1033,5 @@ $(document).ready(function () {
   });
 
   createNewTag();
-});
+  //addRunInCloudPills();
+  });
