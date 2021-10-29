@@ -940,7 +940,7 @@ $(document).ready(function () {
         });
 
     // Show copy to clipboard button when mouse enters code block
-    $('.code_container')
+    $('.code_container:not(.no_copy)')
         .on('mouseenter', function (event) {
             target = $(event.currentTarget);
             $('main').append(
