@@ -506,7 +506,7 @@ $(document).ready(function () {
             .replace("/guides/", "")
             .replace(".html", "");
           // add tag to data-tags attribute if the guide's project id is in the array for that tag
-          if (tag.guides.indexOf(project_id) > -1) {        
+          if (tag.guides.indexOf(project_id) > -1) {
             if ($(this).data("tags")) {
               $(this).data(
                 "tags",
@@ -1033,5 +1033,4 @@ $(document).ready(function () {
   });
 
   createNewTag();
-  //addRunInCloudPills();
   });
