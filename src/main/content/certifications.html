@@ -1,0 +1,62 @@
+---
+layout: default
+title: Certifications
+css:
+ - header
+ - certification
+permalink: /certifications/
+---
+
+{% include noindex.html %}
+
+<div id="article_container" class="container-fluid">
+  <article class="post" aria-label="article">
+      <header id="post_header">
+          <div class="container">
+              <h1 id="post_title">Certifications</h1>
+              <p id="cert_description">Open Liberty, certified for warp speed development!</p>
+          </div>
+      </header>
+      <div id="article_body" class="container">
+        <h1 id="cert_description">List of Open Liberty TCK Results</h1>
+        <ul>
+          {% assign certifications = site.pages | where: 'layout', 'certification' | sort: "url" %}
+          {% assign previous_cert_url_parts = "" %}
+          {% assign sameParent = true %}
+          {% for cert in certifications %}
+            {% assign cert_url_parts = cert.url | split: '/' %}
+            {% assign counter = 1 %}
+            {% for cert_url_part in cert_url_parts offset:2 %}
+              {% assign counter = counter | plus: 1 %}
+              {% if cert_url_part == previous_cert_url_parts[counter] and sameParent %}
+                {% continue %}
+              {% endif %}
+              {% if counter == 2 %}
+                <h2 style="margin-left: -20px; margin-bottom:-20px">{{ cert_url_part | upcase }}</h2>
+                {% if cert_url_parts.size == 3%}
+                  <br>
+                {% endif %} 
+                {% continue %}
+              {% endif %} 
+              {% if counter == 3 %}
+                <br>
+                {% continue %}
+              {% endif %} 
+            {% endfor %}
+            {% assign previous_cert_url_parts = cert_url_parts %}
+            {% assign sameParent = true %}
+            {% assign h2_start = cert.content | split: '<h2' %}
+            {% assign h2_end = h2_start[1] | split: '>' %}
+            {% assign h2_content_array = h2_end[1] | split: '</h2' %}
+            {% assign h2_content = h2_content_array[0] %}
+            <li>
+              <a href="{{ cert.url }}" title={% if h2_content != nill and h2_content != empty %} "{{ h2_content }}" {% endif %}>
+                {{cert.url | remove_first: '/certifications/'}}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+  </article>
+  <br />
+</div>
