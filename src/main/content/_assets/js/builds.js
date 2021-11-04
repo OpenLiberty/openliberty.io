@@ -161,7 +161,7 @@ function render_builds(builds, parent) {
                                     tableID +
                                     '_package\'>Java EE 8</td>';
                             }
-                        } else if (package_name.indexOf('webProfile9') > -1) {
+                        } else if (package_name.indexOf('webprofile9') > -1) {
                             package_column =
                                 '<td headers=\'' +
                                 tableID +
