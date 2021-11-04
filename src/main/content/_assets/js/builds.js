@@ -138,20 +138,15 @@ function render_builds(builds, parent) {
                             ),
                             10
                         );              
-                        if (package_name.indexOf('java') > -1 || package_name.indexOf('jakarta') > -1) {
-                            // 21.0.0.12 and higher should be lableed "Jakarta EE 9", and anything before that should be:
-                            // 19.0.0.6 and higher should be labeled "Jakarta EE 8", and anything before should be "Java EE 8"
-                            
-                            if (
-                                buildVersionYear > 21 ||
-                                (buildVersionYear === 21 &&
-                                    buildVersionMonth > 11)
-                            ) {
-                                package_column =
+                        if (package_name.indexOf('jakartaee9') > -1) {
+                            // 21.0.0.12 and higher should be labled "Jakarta EE 9"
+                            package_column =
                                     '<td headers=\'' +
                                     tableID +
                                     '_package\'>Jakarta EE 9</td>';
-                            } else if (
+                        } else if (package_name.indexOf('java') > -1) {                            
+                            // 19.0.0.6 and higher should be labeled "Jakarta EE 8", and anything before should be "Java EE 8"                            
+                            if (
                                 buildVersionYear > 19 ||
                                 (buildVersionYear === 19 &&
                                     buildVersionMonth > 5)
@@ -166,21 +161,16 @@ function render_builds(builds, parent) {
                                     tableID +
                                     '_package\'>Java EE 8</td>';
                             }
-                        } else if (package_name.indexOf('web') > -1) {
-                            var web_profile_version;
-                            if (
-                                buildVersionYear > 21 ||
-                                (buildVersionYear === 21 &&
-                                    buildVersionMonth > 11)
-                            ) {
-                                web_profile_version = 9;
-                            } else {
-                                web_profile_version = 8;
-                            }
+                        } else if (package_name.indexOf('webProfile9') > -1) {
                             package_column =
                                 '<td headers=\'' +
                                 tableID +
-                                '_package\'>Web Profile ' + web_profile_version + '</td>';
+                                '_package\'>Web Profile 9</td>';
+                        } else if (package_name.indexOf('webprofile') > -1) {
+                            package_column =
+                                '<td headers=\'' +
+                                tableID +
+                                '_package\'>Web Profile 8</td>';
                         } else if (package_name.indexOf('microprofile3') > -1) {
                             package_column =
                                 '<td headers="' +
