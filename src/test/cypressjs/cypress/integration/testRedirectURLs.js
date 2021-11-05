@@ -20,7 +20,7 @@ describe('Test Redirect URLs', () => {
         // Do not know how to handle urls that are not /docs
         return;
       } else {
-        cy.visit(Cypress.env('website_url') + tokens[0])
+        cy.visit(target_url + tokens[0])
       }
     })
   })
