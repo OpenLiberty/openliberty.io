@@ -20,7 +20,11 @@ describe('Test Redirect URLs', () => {
         // Do not know how to handle urls that are not /docs
         return;
       } else {
-        cy.visit(target_url + tokens[0])
+        if (tokens[0].endsWith('.html')){
+          cy.visit(target_url + tokens[0])
+        } else {
+          cy.request(target_url + tokens[0])
+        }
       }
     })
   })
