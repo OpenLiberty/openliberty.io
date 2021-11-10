@@ -116,7 +116,7 @@ var openliberty = (function() {
             $("#toc_inner").css("margin-top", "0px");
         }
         $("#toc_indicator").css("margin-top", "0px");
-        $("#code_column").css({"position":"fixed", "top":"0px"})
+        $("#code_column").css({"position":"fixed"})
 
         // reset body margin-top
         $('body').css("margin-top", "0px");
