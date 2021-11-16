@@ -448,6 +448,9 @@ $(document).ready(function () {
     });
 
     $(window).on("resize", function () {
+        if (!inSingleColumnView()){
+            $("#code_column").css("top", "0px");
+        }
         handleFloatingTableOfContent(); // Handle table of content view changes.
         handleFloatingTOCAccordion();
         resizeGuideSections();
