@@ -119,10 +119,10 @@ var openliberty = (function() {
 
         //handles where the top of the code column should be
         if (!inSingleColumnView()) {
-            //below the hotspot in single column view
+            //at the top of the browser window in multi-column view
             $("#code_column").css({"position":"fixed", "top":"0px"})
         } else {
-            //at the top of the browser window in multi-column view
+            //below the hotspot in single column view
             $("#code_column").css("position", "fixed");
         }
 
