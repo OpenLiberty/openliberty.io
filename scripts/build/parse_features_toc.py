@@ -151,8 +151,15 @@ for version in versions:
             # Open page and rewrite the version part
             versionHref = antora_path + 'feature/' + matchingTOC.get('href')
             versionPage = BeautifulSoup(open(versionHref), "lxml")
-            versionTitle = versionPage.find('h1', {'class': 'page'})
-            versionTitle.replace_with(pageTitle)
+            versionTitle = versionPage.find('h1', {'class': 'page'})  
+            # Get the matchingTOC's string and write it over the shared title of this feature version            
+            if versionTitle is not None:   
+                versionTitle.replace_with(pageTitle)       
+            displayTitle = versionPage.find('div', {'id': 'feature_name_string'})
+            if displayTitle is not None and len(displayTitle) > 0:
+                displayTitle.string = matchingTOC.string
+                displayTitle['full_title'] = "{}".format(matchingTOC.string)
+                displayTitle['aria-label'] = "{}".format(matchingTOC.string)
             with open(versionHref, "w") as file:
                 file.write(str(versionPage))
 
