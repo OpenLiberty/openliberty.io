@@ -100,10 +100,57 @@ for version in versions:
     commonTOCKeys = commonTOCs.keys()
     commonTOCKeys = list(commonTOCKeys)
 
+    java_to_jakarta_feature_mapping = [("ejb","enterpriseBeans"),
+        ("ejbHome", "enterpriseBeansHome"),
+        ("ejbLite", "enterpriseBeansLite"),
+        ("ejbPersistentTimer", "enterpriseBeansPersistentTimer"),
+        ("ejbRemote", "enterpriseBeansRemote"),
+        ("el", "expressionLanguage"),
+        ("jacc", "appAuthorization"),
+        ("javaee", "jakartaee"),
+        ("javaeeClient", "jakartaeeClient"),
+        ("jaspic", "appAuthentication"),
+        ("javaMail", "mail"),
+        ("jaxb", "xmlBinding"),
+        ("jaxrs", "restfulWS"),
+        ("jaxrsClient", "restfulWSClient"),
+        ("jaxws", "xmlWS"),
+        ("jca", "connectors"),
+        ("jcaInboundSecurity", "connectorsInboundSecurity"),
+        ("jms", "messaging"),
+        ("jpa", "persistence"),
+        ("jpaContainer", "persistenceContainer"),
+        ("jsf", "faces"),
+        ("jsfContainer", "facesContainer"),
+        ("jsp", "pages"),
+        ("wasJmsClient", "messagingClient"),
+        ("wasJmsSecurity", "messagingSecurity"),
+        ("wasJmsServer", "messagingServer")]
+
+    # Make sure all Jakarta EE feature names in the mapping are in the list of commonTOC so they get combined later.
+    for mapping in java_to_jakarta_feature_mapping:
+        jakarta_feature_name = mapping[1]
+        if jakarta_feature_name + '.html' not in commonTOCKeys:
+            commonTOCs[jakarta_feature_name + '.html'] = '^' + jakarta_feature_name + '-\\d+[.]?\\d*.html$'
+
+    commonTOCKeys = commonTOCs.keys()
+    commonTOCKeys = list(commonTOCKeys)
+
     TOCToDecompose = []
     for commonTOC in commonTOCKeys:
         commonTOCMatchString = commonTOCs[commonTOC]
         matchingTitleTOCs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(commonTOCMatchString))
+        # Check for old Java features here and concat them to the list of Jakarta matches
+        for mapping in java_to_jakarta_feature_mapping:
+            jakarta_feature_name = mapping[1]            
+            if jakarta_feature_name + '.html' == commonTOC:
+                # Get the Java equivalent
+                java_name = mapping[0]
+                java_regex = '^' + java_name + '-\\d+[.]?\\d*.html$'
+                matchingJavaTOCs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(java_regex))
+                for JavaTOC in matchingJavaTOCs:
+                  matchingTitleTOCs.append(JavaTOC)
+                
         firstElement = True;
         # determine whether there are multiple versions            
         firstHref = matchingTitleTOCs[0].get('href')
