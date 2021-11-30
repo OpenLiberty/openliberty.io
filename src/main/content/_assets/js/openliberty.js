@@ -118,13 +118,15 @@ var openliberty = (function() {
         $("#toc_indicator").css("margin-top", "0px");
 
         //handles where the top of the code column should be
-        if (!inSingleColumnView()) {
+        if(typeof(inSingleColumnView) === 'function'){
+            if (!inSingleColumnView()) {
             //at the top of the browser window in multi-column view
             $("#code_column").css({"position":"fixed", "top":"0px"})
-        } else {
-            //below the hotspot in single column view
-            $("#code_column").css("position", "fixed");
-        }
+            } else {
+                //below the hotspot in single column view
+                $("#code_column").css("position", "fixed");
+            } 
+        }        
 
         // reset body margin-top
         $('body').css("margin-top", "0px");
