@@ -147,9 +147,10 @@ for version in versions:
                 # Get the Java equivalent
                 java_name = mapping[0]
                 java_regex = '^' + java_name + '-\\d+[.]?\\d*.html$'
-                matchingJavaTOCs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(java_regex))
-                for JavaTOC in matchingJavaTOCs:
-                  matchingTitleTOCs.append(JavaTOC)
+                matching_java_tocs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(java_regex))
+                for java_toc in matching_java_tocs:
+                  matchingTitleTOCs.append(java_toc)
+                  TOCToDecompose.append(java_toc.parent)
                 
         firstElement = True;
         # determine whether there are multiple versions            
@@ -163,7 +164,7 @@ for version in versions:
         # in reverse descending order
         matchingTOCs = matchingTitleTOCs[::-1]
         for matchingTOC in matchingTOCs:
-            tocHref = matchingTOC.get('href')
+            tocHref = matchingTOC.get('href')            
             if not str.startswith(tocHref, ".."):
                 if firstElement:
                     firstElement = False
