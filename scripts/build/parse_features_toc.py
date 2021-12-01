@@ -152,10 +152,8 @@ for version in versions:
                 java_regex = '^' + java_name + '-\\d+[.]?\\d*.html$'
                 matching_java_tocs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(java_regex))
                 for java_toc in matching_java_tocs:
-                  matchingTitleTOCs.append(java_toc)
-                  TOCToDecompose.append(java_toc.parent)
-
-        # print(matchingTitleTOCs)
+                    matchingTitleTOCs.insert(0, java_toc) # Prepend         
+                    TOCToDecompose.append(java_toc.parent)
                 
         firstElement = True;
         # determine whether there are multiple versions            
@@ -188,15 +186,8 @@ for version in versions:
                         versionDiv.append(hrefTag)
                 else:
                     hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string)
-                    versionDiv.append(hrefTag)    
-                    jakartaFeature = False             
-                    for mapping in java_to_jakarta_feature_mapping:
-                        jakarta_pattern = re.compile('^' + mapping[1] + '-\\d+[.]?\\d*.html$')
-                        if jakarta_pattern.match(matchingTOC.get('href')):
-                            jakartaFeature = True
-                            break
-                    if not jakartaFeature:
-                        TOCToDecompose.append(matchingTOC.parent)                        
+                    versionDiv.append(hrefTag) 
+                    TOCToDecompose.append(matchingTOC.parent)                        
         # Write the feature title and the versions to the page div
         pageTitle.append(titleDiv)
         pageTitle.append(versionDiv)
