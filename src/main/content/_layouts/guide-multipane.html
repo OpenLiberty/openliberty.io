@@ -105,6 +105,17 @@ plus: 1 %} {% endif %} {% endfor %}
             <span class="guide_new">New</span>
           </div>
           {% endif %} {% endif %}
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          {% if page.majorupdateddate %}
+          {% assign date_updated = page.majorupdateddate | date:'%s' %}
+          {% assign date_now = 'now' | date:'%s' %} {% assign date_difference =
+          date_now | minus: date_updated %} {% if date_difference < 7257600 %}
+          <div class="updated_guide_container">
+            <span class="guide_updated">Updated</span>
+          </div>
+          {% endif %}{% endif %}
         </div>
         <div id="mobile_prereqs_section">
           <p id="mobile_prereqs_title">Prerequisites:</p>

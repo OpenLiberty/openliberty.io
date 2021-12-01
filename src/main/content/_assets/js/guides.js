@@ -546,6 +546,19 @@ $(document).ready(function () {
     });
   }
 
+  // Turn the "Updated" flag into an actual searchable tag
+  function createUpdatedTag() {
+    $(".updated_guide_container").each(function (i, j) {
+      if ($(this).parent().data("tags")) {
+        $(this)
+          .parent()
+          .data("tags", $(this).data("tags") + " updated");
+      } else {
+        $(this).parent().data("tags", "updated");
+      }
+    });
+  }
+
   // Move guide cards to correct subcategories
   function sortGuides(subcategory, guideList) {
     // iterate over array of guides from JSON file
@@ -1033,4 +1046,5 @@ $(document).ready(function () {
   });
 
   createNewTag();
+  createUpdatedTag();
   });
