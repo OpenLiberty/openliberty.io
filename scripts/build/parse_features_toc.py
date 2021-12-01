@@ -219,6 +219,13 @@ for version in versions:
     for toc in tocs:
         toc['class'] = 'nav-item'
 
+    # Sort features list alphabetically ignoring case
+    ul = featureDropdown.find(attrs={"class": "nav-list"})
+    features = [li.extract() for li in ul.find_all('li', {'class': 'nav-item'})]
+    features.sort(key=lambda e: e.find(attrs={"class": "nav-link"}).string.lower())
+    for linebreak, li in reversed(list(zip(ul.contents, features))):
+     linebreak.insert_after(li)
+
     # Write the new TOC to the feature-overview.html with version control in it
     with open(antora_path + 'feature/feature-overview.html', "w") as file:     
         file.write(str(featureIndex))
