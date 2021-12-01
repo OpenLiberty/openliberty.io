@@ -163,9 +163,7 @@ for version in versions:
                     for java_toc in matching_java_tocs[::-1]:
                         if(java_toc.get('href') != "javaee-8.0.html"):
                             matchingTitleTOCs.insert(0, java_toc) # Prepend     
-                            TOCToDecompose.append(java_toc.parent)
-                        else:
-                            TOCToDecompose.append(java_toc.parent)
+                        TOCToDecompose.append(java_toc.parent)
                 
         firstElement = True;
         # determine whether there are multiple versions            
