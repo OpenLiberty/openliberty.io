@@ -71,6 +71,11 @@ for version in versions:
     antora_path = featurePath + version + "/reference/"
     featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "lxml")        
 
+    version_split = version.split('.')
+    year = int(version_split[0])
+    month = int(version_split[3])
+    process_jakarta_features =  year > 21 or (year == 21 and month == 12)
+
     # Keep track of new href with updated versions to update the TOCs later
     commonTOCs = {};
 
@@ -128,13 +133,14 @@ for version in versions:
         ("wasJmsServer", "messagingServer")]
 
     # Make sure all Jakarta EE feature names in the mapping are in the list of commonTOC so they get combined later.
-    for mapping in java_to_jakarta_feature_mapping:
-        java_feature_name = mapping[0]
-        jakarta_feature_name = mapping[1]
-        if java_feature_name + '.html' in commonTOCKeys:
-            del commonTOCs[java_feature_name + '.html']
-        if jakarta_feature_name + '.html' not in commonTOCKeys:
-            commonTOCs[jakarta_feature_name + '.html'] = '^' + jakarta_feature_name + '-\\d+[.]?\\d*.html$'
+    if process_jakarta_features:
+        for mapping in java_to_jakarta_feature_mapping:
+            java_feature_name = mapping[0]
+            jakarta_feature_name = mapping[1]
+            if java_feature_name + '.html' in commonTOCKeys:
+                del commonTOCs[java_feature_name + '.html']
+            if jakarta_feature_name + '.html' not in commonTOCKeys:
+                commonTOCs[jakarta_feature_name + '.html'] = '^' + jakarta_feature_name + '-\\d+[.]?\\d*.html$'
 
     commonTOCKeys = commonTOCs.keys()
     commonTOCKeys = list(commonTOCKeys)
@@ -143,17 +149,23 @@ for version in versions:
     for commonTOC in commonTOCKeys:
         commonTOCMatchString = commonTOCs[commonTOC]
         matchingTitleTOCs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(commonTOCMatchString))
-        # Check for old Java features here and concat them to the list of Jakarta matches
-        for mapping in java_to_jakarta_feature_mapping:
-            jakarta_feature_name = mapping[1]            
-            if jakarta_feature_name + '.html' == commonTOC:
-                # Get the Java equivalent
-                java_name = mapping[0]
-                java_regex = '^' + java_name + '-\\d+[.]?\\d*.html$'
-                matching_java_tocs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(java_regex))
-                for java_toc in matching_java_tocs:
-                    matchingTitleTOCs.insert(0, java_toc) # Prepend         
-                    TOCToDecompose.append(java_toc.parent)
+
+        if process_jakarta_features:
+            # Check for old Java features here and concat them to the list of Jakarta matches
+            for mapping in java_to_jakarta_feature_mapping:
+                jakarta_feature_name = mapping[1]            
+                if jakarta_feature_name + '.html' == commonTOC:
+                    # Get the Java equivalent
+                    java_name = mapping[0]
+                    java_regex = '^' + java_name + '-\\d+[.]?\\d*.html$'
+                    matching_java_tocs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(java_regex))
+                    # Add in reversed order to the list of Jakarta feature versions
+                    for java_toc in matching_java_tocs[::-1]:
+                        if(java_toc.get('href') != "javaee-8.0.html"):
+                            matchingTitleTOCs.insert(0, java_toc) # Prepend     
+                            TOCToDecompose.append(java_toc.parent)
+                        else:
+                            TOCToDecompose.append(java_toc.parent)
                 
         firstElement = True;
         # determine whether there are multiple versions            
@@ -165,7 +177,7 @@ for version in versions:
         pageTitle.string = ''
         newTOCHref = ''
         # in reverse descending order
-        matchingTOCs = matchingTitleTOCs[::-1]
+        matchingTOCs = matchingTitleTOCs[::-1] # Reverse list        
         for matchingTOC in matchingTOCs:
             tocHref = matchingTOC.get('href')            
             if not str.startswith(tocHref, ".."):
