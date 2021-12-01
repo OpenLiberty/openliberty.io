@@ -129,7 +129,10 @@ for version in versions:
 
     # Make sure all Jakarta EE feature names in the mapping are in the list of commonTOC so they get combined later.
     for mapping in java_to_jakarta_feature_mapping:
+        java_feature_name = mapping[0]
         jakarta_feature_name = mapping[1]
+        if java_feature_name + '.html' in commonTOCKeys:
+            del commonTOCs[java_feature_name + '.html']
         if jakarta_feature_name + '.html' not in commonTOCKeys:
             commonTOCs[jakarta_feature_name + '.html'] = '^' + jakarta_feature_name + '-\\d+[.]?\\d*.html$'
 
@@ -151,6 +154,8 @@ for version in versions:
                 for java_toc in matching_java_tocs:
                   matchingTitleTOCs.append(java_toc)
                   TOCToDecompose.append(java_toc.parent)
+
+        # print(matchingTitleTOCs)
                 
         firstElement = True;
         # determine whether there are multiple versions            
@@ -183,8 +188,15 @@ for version in versions:
                         versionDiv.append(hrefTag)
                 else:
                     hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string)
-                    versionDiv.append(hrefTag)
-                    TOCToDecompose.append(matchingTOC.parent)
+                    versionDiv.append(hrefTag)    
+                    jakartaFeature = False             
+                    for mapping in java_to_jakarta_feature_mapping:
+                        jakarta_pattern = re.compile('^' + mapping[1] + '-\\d+[.]?\\d*.html$')
+                        if jakarta_pattern.match(matchingTOC.get('href')):
+                            jakartaFeature = True
+                            break
+                    if not jakartaFeature:
+                        TOCToDecompose.append(matchingTOC.parent)                        
         # Write the feature title and the versions to the page div
         pageTitle.append(titleDiv)
         pageTitle.append(versionDiv)
