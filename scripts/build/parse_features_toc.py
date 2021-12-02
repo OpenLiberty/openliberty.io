@@ -112,7 +112,6 @@ for version in versions:
         ("ejbRemote", "enterpriseBeansRemote"),
         ("el", "expressionLanguage"),
         ("jacc", "appAuthorization"),
-        ("javaee", "jakartaee"),
         ("javaeeClient", "jakartaeeClient"),
         ("jaspic", "appAuthentication"),
         ("javaMail", "mail"),
@@ -161,8 +160,7 @@ for version in versions:
                     matching_java_tocs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(java_regex))
                     # Add in reversed order to the list of Jakarta feature versions
                     for java_toc in matching_java_tocs[::-1]:
-                        if(java_toc.get('href') != "javaee-8.0.html"):
-                            matchingTitleTOCs.insert(0, java_toc) # Prepend     
+                        matchingTitleTOCs.insert(0, java_toc) # Prepend     
                         TOCToDecompose.append(java_toc.parent)
                 
         firstElement = True;
