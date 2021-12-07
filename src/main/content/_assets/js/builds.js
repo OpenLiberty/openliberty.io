@@ -355,6 +355,21 @@ function render_builds(builds, parent) {
             parent.append(row);
         }
     });
+    highlightAlternateRows();
+}
+
+function highlightAlternateRows() {
+    $("#runtime_releases_table_container .release_table_body tr").filter(function() { 
+        return $(this).children().length == document.getElementById('runtime_releases_table').rows[0].cells.length;
+    }).filter(':even').addClass('highlight_alternate_rows');
+
+    $("#runtime_betas_table_container .release_table_body tr").filter(function() { 
+        return $(this).children().length == document.getElementById('runtime_betas_table').rows[0].cells.length;
+    }).filter(':even').addClass('highlight_alternate_rows');
+      
+    $("tr.highlight_alternate_rows td[rowspan]").each(function() {
+        $(this).parent().nextAll().slice(0, this.rowSpan - 1).addClass('highlight_alternate_rows');
+    });
 }
 
 function add_lead_zero(number) {
