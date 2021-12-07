@@ -203,10 +203,15 @@ function render_builds(builds, parent) {
             // beta releases table only
             else if (parent.parent().data('builds-id') == 'runtime_betas') {
                 var package_locations = build.package_locations;
-                if (
-                    package_locations !== null &&
-                    package_locations !== undefined
-                ) {
+                if (package_locations !== null && package_locations !== undefined) {
+                    package_locations = package_locations.filter(function (x) {
+                        // The assumption is there is only one zip for the beta build.  If 
+                        // there are any other zips returned from DHE, ignore them.
+                        var url = x.split('=')[1];
+                        if(url === build.driver_location) {
+                            return x;
+                        }
+                    });
                     var num_packages = package_locations.length;
                     var version_column = $(
                         '<td headers="' +
