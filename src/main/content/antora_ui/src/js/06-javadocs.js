@@ -365,9 +365,9 @@ function addNavHoverListener() {
 function parseQueryParams() {
   var targetPage = {};
   // var queryParams = new URLSearchParams(window.location.search); // steven
-  var queryParams = window.location.search;
+  var queryParams = window.location.search;  
   if (queryParams && queryParams != undefined) {
-    // hashPage = hashPage.substring(1); // take out the #
+    queryParams = queryParams.substring(1); // Remove the '?'
     var splitQueryParams = queryParams.split("&");
     for (i = 0; i < splitQueryParams.length; i++) {
       var queryParam = splitQueryParams[i].trim();
@@ -437,7 +437,7 @@ function addClickListeners() {
 }
 
 function addClickListener(contents) {
-  contents.on("click", function(e) { // Steven
+  contents.on("click", function(e) {
     var handlingClick = true;
     var iframeName = CLASS_FRAME;
     var paramKey = CLASS_PARAM;
@@ -474,7 +474,15 @@ function addClickListener(contents) {
       e.stopPropagation();
 
       var queryParams = setQueryParams(href, paramKey);
+      // Steven
+      // var targetPage = parseQueryParams();
+      // if (paramKey === PACKAGE_PARAM) {
+      //   setIFrameContent(iframeName, href);
+      // } else if (paramKey === CLASS_PARAM){
+      //   setIFrameContent(iframeName, href);
+      // }
       setIFrameContent(iframeName, href);
+      // setIFrameContent(iframeName, defaultHtmlRootPath + queryParams.get(paramKey)); 
       setPackageContainerHeight();
 
       // provide state data to be used by the popstate event to render the frame contents
@@ -486,7 +494,7 @@ function addClickListener(contents) {
         if (key === PACKAGE_PARAM) {
           otherStateKey = PACKAGE_FRAME;
         }
-        state[otherStateKey] = defaultHtmlRootPath + value;
+        state[otherStateKey] = defaultHtmlRootPath + decodeURIComponent(value);
       });
       // $.each(otherQueryParamsContent, function(key, value) {
       //   var otherStateKey = CLASS_FRAME;
@@ -497,8 +505,7 @@ function addClickListener(contents) {
       // });
       window.history.pushState(state, null, queryParams);
 
-      // Steven remove package from query params
-      console.error(queryParams.toString());
+      console.error(decodeURIComponent(queryParams.toString()));
       // console.error(" ");
       // console.error(queryParams.keys().toString());
       var package;
@@ -506,7 +513,7 @@ function addClickListener(contents) {
         // package = queryParams.get(PACKAGE_PARAM);
         // package = package.replace("package=", ""); // might replace with get(package) and set to none, or just remove it if it exists
         // queryParams.set(PACKAGE_PARAM, package);
-        queryParams.delete("package");
+        queryParams.delete(PACKAGE_PARAM);
       }
 
       // queryParams.set(PACKAGE_PARAM, package);
@@ -585,21 +592,23 @@ function setIFrameContent(iframeName, href) {
 }
 
 // If package is provided as hashName, then return the class hash. Otherwise return the package hash.
-function getRemainingQueryParam(queryParams, paramName) { // steven
-  var lookForHash = PACKAGE_PARAM;
-  var returnQueryParams = new URLSearchParams();
+function getRemainingQueryParam(queryParams, paramName) {
+  var lookForParam = PACKAGE_PARAM;
+  var url = new URL(location.href);
+  var returnQueryParams = new URLSearchParams(window.location.search);
   if (paramName === PACKAGE_PARAM) {
-    lookForHash = CLASS_PARAM;
+    lookForParam = CLASS_PARAM;
   }
-  if (queryParams.has(lookForHash)) {
+  if (queryParams.has(lookForParam)) {
     try {
-      returnQueryParams.set(lookForHash, queryParams.get(lookForHash));
-      // var searchHashToMatch = ".*" + lookForHash + "(.*?.html).*";
+      returnQueryParams.set(lookForParam, queryParams.get(lookForParam));  // steven, check that this is adding the correct thing.
+      // var searchHashToMatch = ".*" + lookForParam + "(.*?.html).*";
       // var regExpToMatch = new RegExp(searchHashToMatch, "g");
       // var groups = regExpToMatch.exec(queryParams);
-      // returnHash[lookForHash] = groups[1];
+      // returnHash[lookForParam] = groups[1];
     } catch (ex) {}
   }
+  url.search = decodeURIComponent(returnQueryParams.toString());
   return returnQueryParams;
 }
 
@@ -611,6 +620,7 @@ function getRemainingQueryParam(queryParams, paramName) { // steven
 // The package hash is used to render the content in the left bottom iframe. The class hash
 // is used to render the content in the right iframe.
 function setQueryParams(url, paramName) {
+  var url = new URL(location.href);
   var queryParams = new URLSearchParams(window.location.search) // steven
   if (url !== undefined && url != "") {
     var htmlPath = getJavaDocHtmlPath(url);
@@ -659,6 +669,8 @@ function setQueryParams(url, paramName) {
     queryParams.set(CLASS_PARAM, getJavaDocHtmlPath(defaultClassHtml));
     // hash += "&" + CLASS_PARAM + getJavaDocHtmlPath(defaultClassHtml);
   }
+
+  url.search = decodeURIComponent(queryParams.toString());
   return queryParams;
 }
 
@@ -864,7 +876,7 @@ $(document).ready(function() {
 
     window.onpopstate = function(event) {
       if (event.state) {
-        $.each(event.state, function(key, value) {
+        $.each(event.state, function(key, value) { // Steven need to check the query params of the event.state
           setIFrameContent(key, value);
         });
         // restore the height in case it is collapsed
