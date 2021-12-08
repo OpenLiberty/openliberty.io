@@ -675,96 +675,75 @@ function highlightTOC(iframeName) {
   }
 }
 
+function getLibertyVersionFromUrl() {
+  var currentPath = window.location.pathname;
+  return currentPath.split('/')[2];
+}
+
 function modifyPackageTopLinks() {
-  var jdSrc = $("#javadoc_container").attr("src");
-  if (jdSrc.includes("microprofile")) {
-    var iframeContent = $("#javadoc_container")
-      .contents()
-      .find(".leftTop iframe")
-      .contents();
-    var version = jdSrc.substring(
-      jdSrc.indexOf("microprofile") + 13,
-      jdSrc.indexOf("microprofile") + 16
+
+  var iframe_src = $("#javadoc_container").attr("src").toLowerCase();
+  var liberty_version = getLibertyVersionFromUrl(); // e.g. 21.0.0.12
+  var doc_type = "";
+  var doc_version = "";
+
+  if (iframe_src.includes("microprofile")) {
+    doc_type = "microprofile";
+    doc_version = iframe_src.substring(
+      iframe_src.indexOf("microprofile") + 13,
+      iframe_src.indexOf("microprofile") + 16
     );
-    iframeContent.find('ul[title="Packages"] li a').each(function() {
-      var port = window.location.port !== "" ? ":" + window.location.port : "";
-      var package = $(this).attr("href");
-      if (package.includes("../")) {
-        package = package.substring(package.lastIndexOf("../") + 3);
-      }
-      if (!package.includes(window.location.hostname)) {
-        $(this).attr(
-          "href",
-          "https://" +
-            window.location.hostname +
-            port +
-            "/docs/ref/microprofile/" +
-            version +
-            "/#class=overview-summary.html&package=" +
-            package
-        );
-        //find out how to load specific package to iframe
-        $(this).on("click", function(event) {
-          event.preventDefault();
-          event.stopPropagation();
-          setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + package);
-          window.history.pushState(
-            {
-              iframeName: ".leftTop iframe",
-              otherStateKey: defaultHtmlRootPath + package
-            },
-            "",
-            $(this).attr("href")
-          );
-        });
-      }
-    });
+  } else if (iframe_src.includes("liberty-javaee")) {
+    doc_type = "liberty-javaee";
+    doc_version = iframe_src.substring(
+      iframe_src.indexOf("liberty-javaee") + 14,
+      iframe_src.indexOf("liberty-javaee") + 15
+    );
+  } else {
+    // Should never happen
+    doc_version = 0;
   }
 
-  if (jdSrc.includes("liberty-javaee")) {
-    var iframeContent = $("#javadoc_container")
-      .contents()
-      .find(".leftTop iframe")
-      .contents();
-    var version = jdSrc.substring(
-      jdSrc.indexOf("liberty-javaee") + 14,
-      jdSrc.indexOf("liberty-javaee") + 15
-    );
-    iframeContent.find('ul[title="Packages"] li a').each(function() {
-      var port = window.location.port !== "" ? ":" + window.location.port : "";
-      var package = $(this).attr("href");
-      if (package.includes("../")) {
-        package = package.substring(package.lastIndexOf("../") + 3);
-      }
-      if (!package.includes(window.location.hostname)) {
-        $(this).attr(
-          "href",
-          "https://" +
-            window.location.hostname +
-            port +
-            "/docs/latest/reference/javadoc/liberty-javaee" +
-            version +
-            "-javadoc.html#package=" +
-            package +
-            "&class=overview-summary.html"
+  var iframeContent = $("#javadoc_container")
+    .contents()
+    .find(".leftTop iframe")
+    .contents();
+
+  iframeContent.find('ul[title="Packages"] li a').each(function() {
+    var port = window.location.port !== "" ? ":" + window.location.port : "";
+    var package = $(this).attr("href");
+    if (package.includes("../")) {
+      package = package.substring(package.lastIndexOf("../") + 3);
+    }
+    if (!package.includes(window.location.hostname)) {
+      $(this).attr(
+        "href",
+        "https://" +
+          window.location.hostname +
+          port +
+          "/docs/" +
+          liberty_version +
+          "/reference/javadoc/" +
+          doc_type + "-" + doc_version + "-javadoc.html" +
+          "#package=" + package +
+          "&class=overview-summary.html"
+      );
+      //find out how to load specific package to iframe
+      $(this).on("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + package);
+        window.history.pushState(
+          {
+            iframeName: ".leftTop iframe",
+            otherStateKey: defaultHtmlRootPath + package
+          },
+          "",
+          $(this).attr("href")
         );
-        //find out how to load specific package to iframe
-        $(this).on("click", function(event) {
-          event.preventDefault();
-          event.stopPropagation();
-          setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + package);
-          window.history.pushState(
-            {
-              iframeName: ".leftTop iframe",
-              otherStateKey: defaultHtmlRootPath + package
-            },
-            "",
-            $(this).attr("href")
-          );
-        });
-      }
-    });
-  }
+      });
+    }
+  });
 }
 
 $(document).ready(function() {

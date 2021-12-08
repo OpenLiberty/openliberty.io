@@ -416,7 +416,7 @@ function getTags(callback) {
     $.getJSON("../../guides/guides-common/guide_tags.json", function (data) {
         $.each(data.guide_tags, function (i, tag) {
             // Check if tag is visible before adding it
-            if (tag.visible) {
+            if (tag.visible == "true") {
                 project_id = window.location.pathname
                     .replace("/guides/", "")
                     .replace(".html", "");
