@@ -24,6 +24,70 @@ var builds_url = '/api/builds/data';
 var starter_info_url = 'https://start.openliberty.io/api/start/info';
 var starter_submit_url = 'https://start.openliberty.io/api/start';
 
+// Controls what build zips are exposed on openliberty.io.  This will need to be updated
+// if there is a new zip version published on DHE.  The intent of this allow_builds list is to
+// prevent the situation where unintential zips on DHE get shown on the website.
+var allowed_builds = {
+    // allow_builds list based on keys found in `package_locations` 
+    // from the https://openliberty.io/api/builds/data.  The keys (i.e. kernel.zip) are defined by
+    // by BuildInfo.java, method resolveLocations(String url, BuildType type, String dateTime)
+    //
+    // For example:
+    // {
+    //     "builds": {
+    //         "runtime_releases": [
+    //             {
+    //                 "package_locations": [
+    //                     "javaee8.zip=...openliberty-javaee8-21.0.0.12.zip",
+    //                     "jakartaee9.zip=...openliberty-jakartaee9-21.0.0.12.zip",
+    //                     "webProfile8.zip=...openliberty-webProfile8-21.0.0.12.zip",
+    //                     "webProfile9.zip=...openliberty-webProfile9-21.0.0.12.zip",
+    //                     "microProfile4.zip=...openliberty-microProfile4-21.0.0.12.zip",
+    //                     "kernel.zip=...openliberty-kernel-21.0.0.12.zip",
+    //                     "openliberty.zip=...openliberty-21.0.0.12.zip"
+    //                 ]
+    //             }
+    //         ]
+    //     }
+    // }
+    runtime_releases: [
+        'jakartaee9.zip',
+        'javaee8.zip',
+        'kernel.zip',
+        'microProfile3.zip',
+        'microProfile4.zip',
+        'openliberty.zip',
+        'webProfile8.zip',
+        'webProfile9.zip'
+    ],
+    runtime_betas: function(version) { return ['jakartaee9.zip', version+'.zip']; },
+    // runtime_nightly_builds not intended for used, here for completeness
+    runtime_nightly_builds: undefined,
+    // tools_releases not intended for used, here for completeness
+    tools_releases: undefined,
+    // tools_nightly_builds not intended for used, here for completeness
+    tools_nightly_builds: undefined, // based on "driver_location" /api/builds/data
+};
+
+/**
+ * Filter the package_locations fields from https://openliberty.io/api/builds/data and remove
+ * any zips that do not have a key from the allowed_builds list.
+ * @param {String} build_type - the type of build (e.g. runtime_releases)
+ * @param {Array} package_locations - array of Strings that look like key-value pairs
+ * @param {String} liberty_version - optional - Liberty version (e.g. 21.0.0.12)
+ * @returns Array of Strings that look like key-value pairs
+ */
+function getAllowedBuilds(build_type, package_locations, liberty_version) {
+    return package_locations.filter(function(x) {
+        var zipKey = x.split('=')[0];
+        var allowList =  liberty_version ? allowed_builds[build_type](liberty_version) 
+            : allowed_builds[build_type];
+        if(allowList.indexOf(zipKey) > 0) {
+            return x;
+        }
+    });
+}
+
 // Determine if an element is in the viewport
 $.fn.isInViewport = function () {
     var elementTop = $(this).offset().top;
@@ -81,12 +145,12 @@ function render_builds(builds, parent) {
             // ol releases table only
             if (parent.parent().data('builds-id') == 'runtime_releases') {
                 var package_locations = build.package_locations;
-                if (
-                    package_locations !== null &&
-                    package_locations !== undefined
-                ) {
+                if (package_locations !== null && package_locations !== undefined) {
+                    package_locations = getAllowedBuilds('runtime_releases', package_locations);
                     var num_packages = package_locations.length;
-                    // Add enough empty rows so that each release has the max number of rows even when there are < max number packages. These empty rows will be hidden, but this ensures that the table highlighting is correct.
+                    // Add enough empty rows so that each release has the max number of rows
+                    // even when there are < max number packages. These empty rows will be hidden,
+                    // but this ensures that the table highlighting is correct.
                     if (num_packages < max) {
                         for (var i = 0; i < max - num_packages; i++) {
                             parent.append('<tr></tr>');
@@ -204,14 +268,8 @@ function render_builds(builds, parent) {
             else if (parent.parent().data('builds-id') == 'runtime_betas') {
                 var package_locations = build.package_locations;
                 if (package_locations !== null && package_locations !== undefined) {
-                    package_locations = package_locations.filter(function (x) {
-                        // The assumption is there is only one zip for the beta build.  If 
-                        // there are any other zips returned from DHE, ignore them.
-                        var url = x.split('=')[1];
-                        if(url === build.driver_location) {
-                            return x;
-                        }
-                    });
+                    var version = build.version.split('-')[0]; // Remove the -beta from the version
+                    package_locations = getAllowedBuilds('runtime_betas', package_locations, version);
                     var num_packages = package_locations.length;
                     var version_column = $(
                         '<td headers="' +
