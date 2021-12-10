@@ -82,7 +82,7 @@ function getAllowedBuilds(build_type, package_locations, liberty_version) {
         var zipKey = x.split('=')[0];
         var allowList =  liberty_version ? allowed_builds[build_type](liberty_version) 
             : allowed_builds[build_type];
-        if(allowList.indexOf(zipKey) > 0) {
+        if(allowList.indexOf(zipKey) > -1) {
             return x;
         }
     });
