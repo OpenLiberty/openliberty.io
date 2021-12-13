@@ -2,6 +2,8 @@
 timer_start=$(date +%s)
 
 echo "Install Ruby & required packages/gems"
+sudo apt-get install gnupg build-essential
+
 cat $BUILD_SCRIPTS_DIR/../gpg/mpapis.asc | gpg --import -
 cat $BUILD_SCRIPTS_DIR/../gpg/pkuczynski.asc | gpg --import -
 
