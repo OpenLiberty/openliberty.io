@@ -530,22 +530,22 @@ $(document).ready(function () {
             }
           }
         });
-        
+
         if (tag.visible == "false") {
           // hiding suggested tags in search field when visible attr is false
           var tagButtons = document.getElementsByClassName('tag_button');
           var tagButtonHtml;
           var suggestedTagsToHide;
-          var tag_name;
+          var tagName;
           for(var i in tagButtons) {
             if(tagButtons[i].innerHTML) {
               tagButtonHtml = tagButtons[i];
               suggestedTagsToHide = tagButtons[i].innerHTML;
               suggestedTagsToHide = suggestedTagsToHide.replace(/\s+/g,'').toLowerCase();
             }
-            tag_name = tag.name;
-            tag_name = tag_name.replace(/\s+/g,'').toLowerCase();
-            if(suggestedTagsToHide == tag_name) {
+            tagName = tag.name;
+            tagName = tagName.replace(/\s+/g,'').toLowerCase();
+            if(suggestedTagsToHide == tagName) {
               tagButtonHtml.style.display = "none";
             }
           }
