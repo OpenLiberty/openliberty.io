@@ -366,6 +366,7 @@ function parseQueryParams() {
   var targetPage = {};
   // var queryParams = new URLSearchParams(window.location.search); // steven
   var queryParams = window.location.search;  
+  console.error(window.location.search);
   if (queryParams && queryParams != undefined) {
     queryParams = queryParams.substring(1); // Remove the '?'
     var splitQueryParams = queryParams.split("&");
@@ -386,6 +387,7 @@ function parseQueryParams() {
       }
     }
   }
+  console.error(targetPage);
   return targetPage;
 }
 
@@ -609,6 +611,7 @@ function getRemainingQueryParam(queryParams, paramName) {
     } catch (ex) {}
   }
   url.search = decodeURIComponent(returnQueryParams.toString());
+  console.error(window.location.search);
   return returnQueryParams;
 }
 
@@ -645,18 +648,8 @@ function setQueryParams(url, paramName) {
           // }
         } catch (ex) {}
       }
-      //  else {
-      //   if (window.location.hash.indexOf("#") === -1) {
-      //     paramString = "#" + paramString; // no hash yet
-      //   } else {
-      //     paramString = "&" + paramString; // already has existing hash
-      //   }
-      //   hash = window.location.hash + hashString;
-      // }
     }
   }
-  // TODO: Update current query params window.location.search
-
   // The hash approach is to always include both package and class hash. If default content is
   // displayed for package/class frame content, provide the hash to point to the default html too.
   if (!queryParams.has(PACKAGE_PARAM)) {
@@ -671,6 +664,7 @@ function setQueryParams(url, paramName) {
   }
 
   url.search = decodeURIComponent(queryParams.toString());
+  console.error(window.location.search);
   return queryParams;
 }
 
