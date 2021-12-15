@@ -26,7 +26,7 @@ echo "Installing Antora dependencies"
 # npm install -g @antora/site-generator-default@2.3.3 # add back this line when upgrading antora to 3.0
 npm install gulp -g
 npm install node-sass gulp-sass --save-dev
-npm install
+npm install --production
 gulp sass:convert
 SOURCEMAPS=true gulp build
 gulp bundle:pack

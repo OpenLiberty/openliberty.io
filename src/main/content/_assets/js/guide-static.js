@@ -119,7 +119,14 @@ $(document).ready(function () {
                 skills_network_button.append(skills_network_button_text);
                 skills_network_button.append(skills_network_img);
                 $(".skills_network_description").append(skills_network_button);
-                $(".skills_network_container").show();
+                var buttonText = data.buttonText;
+                buttonText = buttonText.replace(/\s+/g,'').toLowerCase();
+                if(hiddenTags.indexOf(buttonText) > -1) {
+                    $(".skills_network_container").hide();
+                }
+                else {
+                    $(".skills_network_container").show();
+                }
             }
         }
     );
