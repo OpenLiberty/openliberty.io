@@ -460,6 +460,14 @@ $(document).ready(function () {
     });
 
     $(window).on("scroll", function () {
+        //handles where the top of the code column should be
+        if (!inSingleColumnView()) {
+            //at the top of the browser window in multi-column view
+            $("#code_column").css({"position":"fixed", "top":"0px"})
+        } else {
+            //below the hotspot in single column view
+            $("#code_column").css("position", "fixed");
+        } 
         handleFloatingTOCAccordion();
         handleStickyHeader();
         handleFloatingTableOfContent();
