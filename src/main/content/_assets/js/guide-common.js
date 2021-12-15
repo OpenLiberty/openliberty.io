@@ -411,6 +411,7 @@ function defaultToFirstPage() {
     history.replaceState(null, null, newPath);
 }
 
+var hiddenTags = [];
 // Read tags from json file and add link to guides page with tag search
 function getTags(callback) {
     $.getJSON("../../guides/guides-common/guide_tags.json", function (data) {
@@ -429,6 +430,11 @@ function getTags(callback) {
                         tag.name +
                         "</a>";
                     $("#tags_container").append(tag_html);
+                }
+            }
+            else {
+                if (tag.visible == "false") {
+                    hiddenTags.push(tag.name.replace(/\s+/g,'').toLowerCase());
                 }
             }
         });

@@ -502,9 +502,10 @@ $(document).ready(function () {
 
         $(".guide_item").each(function (j, guide_item) {
           project_id = $(this)
-            .attr("href")
-            .replace("/guides/", "")
-            .replace(".html", "");
+          .attr("href")
+          .replace("/guides/", "")
+          .replace(".html", "");
+            
           // add tag to data-tags attribute if the guide's project id is in the array for that tag
           if (tag.guides.indexOf(project_id) > -1) {
             if ($(this).data("tags")) {
@@ -515,19 +516,40 @@ $(document).ready(function () {
             } else {
               $(this).data("tags", tag_name.toLowerCase());
             }
-
-            //add "RUN IN CLOUD" orange pill to applicable guides
-            if (tag_name.toLowerCase() == "run in cloud") {
-              //add to last child element in .guide_item element
-              if ($(this).children().last().hasClass("new_guide_container")) {
-                //add before "NEW" orange pill so "NEW" pill shows first because float: right; reverses element order
-                $('<div class="guide_run_in_cloud_container"><span class="guide_run_in_cloud">Run in cloud</span></div>').insertBefore($(this).children().last());
-              } else {
-                $('<div class="guide_run_in_cloud_container"><span class="guide_run_in_cloud">Run in cloud</span></div>').insertAfter($(this).children().last());
+            if (tag.visible == "true") {
+              //add "RUN IN CLOUD" orange pill to applicable guides
+              if (tag_name.toLowerCase() == "run in cloud") {
+                //add to last child element in .guide_item element
+                if ($(this).children().last().hasClass("new_guide_container")) {
+                  //add before "NEW" orange pill so "NEW" pill shows first because float: right; reverses element order
+                  $('<div class="guide_run_in_cloud_container"><span class="guide_run_in_cloud">Run in cloud</span></div>').insertBefore($(this).children().last());
+                } else {
+                  $('<div class="guide_run_in_cloud_container"><span class="guide_run_in_cloud">Run in cloud</span></div>').insertAfter($(this).children().last());
+                }
               }
             }
           }
         });
+
+        if (tag.visible == "false") {
+          // hiding suggested tags in search field when visible attr is false
+          var tagButtons = document.getElementsByClassName('tag_button');
+          var tagButtonHtml;
+          var suggestedTagsToHide;
+          var tagName;
+          for(var i in tagButtons) {
+            if(tagButtons[i].innerHTML) {
+              tagButtonHtml = tagButtons[i];
+              suggestedTagsToHide = tagButtons[i].innerHTML;
+              suggestedTagsToHide = suggestedTagsToHide.replace(/\s+/g,'').toLowerCase();
+            }
+            tagName = tag.name;
+            tagName = tagName.replace(/\s+/g,'').toLowerCase();
+            if(suggestedTagsToHide == tagName) {
+              tagButtonHtml.style.display = "none";
+            }
+          }
+        }
       });
       callback();
     });
