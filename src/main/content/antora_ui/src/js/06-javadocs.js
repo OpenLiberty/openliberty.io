@@ -675,7 +675,7 @@ function getDocInfo(iframe_src) {
     // Should never happen
     doc_version = 0;
   }
-  return {verison: doc_version, type: doc_type};
+  return {version: doc_version, type: doc_type};
 }
 
 // Highlight the iframe's TOC according to the query param in the URL
