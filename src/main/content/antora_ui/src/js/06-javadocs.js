@@ -651,6 +651,33 @@ function versionClick(event) {
   event.target.href += window.location.hash;
 }
 
+function getDocInfo(iframe_src) {
+  if (iframe_src.includes("microprofile")) {
+    // Historical reason for having a trailing '-' to separate the version from doc_type
+    doc_type = "microprofile-";
+    doc_version = iframe_src.substring(
+      iframe_src.indexOf(doc_type) + doc_type.length,
+      iframe_src.indexOf("-javadoc")
+    );
+  } else if (iframe_src.includes("liberty-javaee")) {
+    doc_type = "liberty-javaee";
+    doc_version = iframe_src.substring(
+      iframe_src.indexOf(doc_type) + doc_type.length,
+      iframe_src.indexOf("-javadoc")
+    );
+  } else if (iframe_src.includes("liberty-jakartaee")) {
+    doc_type = "liberty-jakartaee";
+    doc_version = iframe_src.substring(
+      iframe_src.indexOf(doc_type) + doc_type.length,
+      iframe_src.indexOf("-javadoc")
+    );
+  } else {
+    // Should never happen
+    doc_version = 0;
+  }
+  return {verison: doc_version, type: doc_type};
+}
+
 // Highlight the iframe's TOC according to the query param in the URL
 function highlightTOC(iframeName) {
   var toc, href;
@@ -684,25 +711,9 @@ function modifyPackageTopLinks() {
 
   var iframe_src = $("#javadoc_container").attr("src").toLowerCase();
   var liberty_version = getLibertyVersionFromUrl(); // e.g. 21.0.0.12
-  var doc_type = "";
-  var doc_version = "";
-
-  if (iframe_src.includes("microprofile")) {
-    doc_type = "microprofile";
-    doc_version = iframe_src.substring(
-      iframe_src.indexOf("microprofile") + 13,
-      iframe_src.indexOf("microprofile") + 16
-    );
-  } else if (iframe_src.includes("liberty-javaee")) {
-    doc_type = "liberty-javaee";
-    doc_version = iframe_src.substring(
-      iframe_src.indexOf("liberty-javaee") + 14,
-      iframe_src.indexOf("liberty-javaee") + 15
-    );
-  } else {
-    // Should never happen
-    doc_version = 0;
-  }
+  var doc = getDocInfo(iframe_src);
+  var doc_type = doc.type;
+  var doc_version = doc.version;
 
   var iframeContent = $("#javadoc_container")
     .contents()
@@ -724,7 +735,7 @@ function modifyPackageTopLinks() {
           "/docs/" +
           liberty_version +
           "/reference/javadoc/" +
-          doc_type + "-" + doc_version + "-javadoc.html" +
+          doc_type + doc_version + "-javadoc.html" +
           "#package=" + package +
           "&class=overview-summary.html"
       );
