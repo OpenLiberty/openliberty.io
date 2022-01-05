@@ -372,11 +372,11 @@ function parseQueryParams() {
     for (i = 0; i < splitQueryParams.length; i++) {
       var queryParam = splitQueryParams[i].trim();
       if (queryParam.indexOf(PACKAGE_PARAM) === 0) {
-        targetPage.package = queryParam.substring(PACKAGE_PARAM.length);
+        targetPage.package = queryParam.substring(PACKAGE_PARAM.length + 1);
       } else {
         var tmpClassPage = queryParam;
         if (queryParam.indexOf(CLASS_PARAM) === 0) {
-          tmpClassPage = queryParam.substring(CLASS_PARAM.length);
+          tmpClassPage = queryParam.substring(CLASS_PARAM.length + 1);
         } else if (queryParam.indexOf("=") !== -1) {
           tmpClassPage = "";
         }
@@ -615,8 +615,8 @@ function setQueryParams(url, paramName) {
   var queryParams = new URLSearchParams(window.location.search) // steven
   if (url !== undefined && url != "") {
     var htmlPath = getJavaDocHtmlPath(url);
-    var paramString = paramName + htmlPath;
-    queryParams.set(paramName, paramString);
+    // var paramString = paramName + htmlPath;
+    queryParams.set(paramName, htmlPath);
     // if (!queryParams.has(paramName)) {
     //     queryParams.set(paramName, paramString);
     // } else {
