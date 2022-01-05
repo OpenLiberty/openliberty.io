@@ -13,8 +13,8 @@ var PACKAGE_FRAME = ".leftBottom iframe";
 var CLASS_FRAME = "iframe.rightIframe";
 var DEFAULT_PACKAGE_HTML = "allclasses-frame.html";
 var DEFAULT_CLASS_HTML = "overview-summary.html";
-var PACKAGE_PARAM = "package=";
-var CLASS_PARAM = "class=";
+var PACKAGE_PARAM = "package";
+var CLASS_PARAM = "class";
 
 var defaultHtmlRootPath = "";
 var defaultPackageHtml = "";
@@ -364,7 +364,6 @@ function addNavHoverListener() {
 // Returns a json object with the package and class from the url
 function parseQueryParams() {
   var targetPage = {};
-  // var queryParams = new URLSearchParams(window.location.search); // steven
   var queryParams = window.location.search;  
   console.error(window.location.search);
   if (queryParams && queryParams != undefined) {
@@ -373,11 +372,11 @@ function parseQueryParams() {
     for (i = 0; i < splitQueryParams.length; i++) {
       var queryParam = splitQueryParams[i].trim();
       if (queryParam.indexOf(PACKAGE_PARAM) === 0) {
-        targetPage.package = queryParam.substring(8);
+        targetPage.package = queryParam.substring(PACKAGE_PARAM.length);
       } else {
         var tmpClassPage = queryParam;
         if (queryParam.indexOf(CLASS_PARAM) === 0) {
-          tmpClassPage = queryParam.substring(6);
+          tmpClassPage = queryParam.substring(CLASS_PARAM.length);
         } else if (queryParam.indexOf("=") !== -1) {
           tmpClassPage = "";
         }
@@ -476,41 +475,33 @@ function addClickListener(contents) {
       e.stopPropagation();
 
       var queryParams = setQueryParams(href, paramKey);
-      // Steven
-      // var targetPage = parseQueryParams();
-      // if (paramKey === PACKAGE_PARAM) {
-      //   setIFrameContent(iframeName, href);
-      // } else if (paramKey === CLASS_PARAM){
-      //   setIFrameContent(iframeName, href);
-      // }
       setIFrameContent(iframeName, href);
-      // setIFrameContent(iframeName, defaultHtmlRootPath + queryParams.get(paramKey)); 
       setPackageContainerHeight();
 
       // provide state data to be used by the popstate event to render the frame contents
       var state = {};
       state[iframeName] = href;
-      var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey);
-      otherQueryParamsContent.entries(function(key,value){
+      var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey); // steven make sure this returns correct
+      testObject = otherQueryParamsContent;
+      console.error(otherQueryParamsContent);
+      for (key in otherQueryParamsContent) {
         var otherStateKey = CLASS_FRAME;
-        if (key === PACKAGE_PARAM) {
-          otherStateKey = PACKAGE_FRAME;
+        if (otherQueryParamsContent.hasOwnProperty(key)){
+          if (key === PACKAGE_PARAM) {
+            otherStateKey = PACKAGE_FRAME;
+          }
+          var value = otherQueryParamsContent[key];
+          state[otherStateKey] = defaultHtmlRootPath + decodeURIComponent(value);
         }
-        state[otherStateKey] = defaultHtmlRootPath + decodeURIComponent(value);
-      });
-      // $.each(otherQueryParamsContent, function(key, value) {
-      //   var otherStateKey = CLASS_FRAME;
-      //   if (key === PACKAGE_PARAM) {
-      //     otherStateKey = PACKAGE_FRAME;
-      //   }
-      //   state[otherStateKey] = defaultHtmlRootPath + value;
-      // });
-      window.history.pushState(state, null, queryParams);
+      }
 
       console.error(decodeURIComponent(queryParams.toString()));
+      window.history.pushState(state, null, decodeURIComponent(queryParams.toString()));
+      
       // console.error(" ");
       // console.error(queryParams.keys().toString());
       var package;
+      console.error(queryParams.get(PACKAGE_PARAM));
       if(queryParams.has(PACKAGE_PARAM)){
         // package = queryParams.get(PACKAGE_PARAM);
         // package = package.replace("package=", ""); // might replace with get(package) and set to none, or just remove it if it exists
@@ -596,23 +587,20 @@ function setIFrameContent(iframeName, href) {
 // If package is provided as hashName, then return the class hash. Otherwise return the package hash.
 function getRemainingQueryParam(queryParams, paramName) {
   var lookForParam = PACKAGE_PARAM;
-  var url = new URL(location.href);
-  var returnQueryParams = new URLSearchParams(window.location.search);
+  var returnParams = {};
+  // var url = new URL(location.href);
+  // var returnQueryParams = new URLSearchParams(window.location.search);
   if (paramName === PACKAGE_PARAM) {
     lookForParam = CLASS_PARAM;
   }
   if (queryParams.has(lookForParam)) {
     try {
-      returnQueryParams.set(lookForParam, queryParams.get(lookForParam));  // steven, check that this is adding the correct thing.
-      // var searchHashToMatch = ".*" + lookForParam + "(.*?.html).*";
-      // var regExpToMatch = new RegExp(searchHashToMatch, "g");
-      // var groups = regExpToMatch.exec(queryParams);
-      // returnHash[lookForParam] = groups[1];
+      returnParams[lookForParam] = queryParams.get(lookForParam);
     } catch (ex) {}
   }
-  url.search = decodeURIComponent(returnQueryParams.toString());
-  console.error(window.location.search);
-  return returnQueryParams;
+  // url.search = decodeURIComponent(returnQueryParams.toString());
+  // console.error(window.location.search);
+  return returnParams;
 }
 
 // To mark the javadoc bookmarkable, query params are used to contain two pieces of information.
@@ -623,52 +611,36 @@ function getRemainingQueryParam(queryParams, paramName) {
 // The package hash is used to render the content in the left bottom iframe. The class hash
 // is used to render the content in the right iframe.
 function setQueryParams(url, paramName) {
-  var url = new URL(location.href);
+  var newURL = new URL(window.location.href);
   var queryParams = new URLSearchParams(window.location.search) // steven
   if (url !== undefined && url != "") {
     var htmlPath = getJavaDocHtmlPath(url);
     var paramString = paramName + htmlPath;
-    if (!queryParams.has(paramString)) {
-      if (queryParams.has(paramName) !== -1) {
-        try {
-          // take out existing query parameter with same name first
-          // Steven remove query param
-          if(queryParams.has(paramName)){
-            queryParams.set(paramName, paramString);
-          } else {
-            queryParam.append(paramName, paramString);
-          }
-          // var paramNameToMatch = "(.*)" + hashName + ".*?.html(.*)";
-          // var regExpToMatch = new RegExp(paramNameToMatch, "g");
-          // var groups = regExpToMatch.exec(window.location.search);
-          // if (groups) {
-          //   hash = groups[1] + paramString + groups[2];
-          // } else {
-          //   hash = "#" + paramString;
-          // }
-        } catch (ex) {}
-      }
-    }
+    queryParams.set(paramName, paramString);
+    // if (!queryParams.has(paramName)) {
+    //     queryParams.set(paramName, paramString);
+    // } else {
+    //   queryParam.append(paramName, paramString);
+    // }
   }
   // The hash approach is to always include both package and class hash. If default content is
   // displayed for package/class frame content, provide the hash to point to the default html too.
   if (!queryParams.has(PACKAGE_PARAM)) {
+    // add default package
     queryParams.set(PACKAGE_PARAM, getJavaDocHtmlPath(defaultPackageHtml));
-    // add default package to hash
-    // hash += "&" + PACKAGE_PARAM + getJavaDocHtmlPath(defaultPackageHtml);
   }
   if (!queryParams.has(CLASS_PARAM)) {
-    // add default class to hash
+    // add default class
     queryParams.set(CLASS_PARAM, getJavaDocHtmlPath(defaultClassHtml));
-    // hash += "&" + CLASS_PARAM + getJavaDocHtmlPath(defaultClassHtml);
   }
 
-  url.search = decodeURIComponent(queryParams.toString());
+  console.error("setQueryParams to string: " + queryParams.toString());
+  newURL.search = decodeURIComponent(queryParams.toString());
   console.error(window.location.search);
   return queryParams;
 }
 
-// Eg of href is http://localhost:4000/docs/modules/reference/microprofile-1.3-javadoc/javax/enterprise/context/package-frame.html
+// Eg if href is http://localhost:4000/docs/modules/reference/microprofile-1.3-javadoc/javax/enterprise/context/package-frame.html
 // if returnBase is true, return http://localhost:4000/docs/modules/reference/microprofile-1.3-javadoc/
 // otherwise return javax/enterprise/context/package-frame.html
 
@@ -708,7 +680,7 @@ function highlightTOC(iframeName) {
     href = href.substring(href.lastIndexOf("/") + 1);
     toc = iframeContent.find('li a[href="' + href + '"]');
   }
-  console.error(toc);
+  // console.error(toc);
   if (toc) {
     toc
       .parents("li")
