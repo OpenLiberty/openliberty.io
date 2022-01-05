@@ -783,7 +783,7 @@ $(document).ready(function () {
             var bottom = scrollTo + window.innerHeight - hotspot_height - 5;
             var height = bottom - scrollTo;
             $("#code_column").css({
-                top: scrollTo + mobile_toc_height + hotspot_height + 5 + "px",
+                top: mobile_toc_height + hotspot_height + 5 + "px",
                 left: "0px",
                 height: height,
             });

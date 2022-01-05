@@ -71,6 +71,11 @@ for version in versions:
     antora_path = featurePath + version + "/reference/"
     featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "lxml")        
 
+    version_split = version.split('.')
+    year = int(version_split[0])
+    month = int(version_split[3])
+    process_jakarta_features =  year > 21 or (year == 21 and month == 12)
+
     # Keep track of new href with updated versions to update the TOCs later
     commonTOCs = {};
 
@@ -100,10 +105,64 @@ for version in versions:
     commonTOCKeys = commonTOCs.keys()
     commonTOCKeys = list(commonTOCKeys)
 
+    java_to_jakarta_feature_mapping = [("ejb","enterpriseBeans"),
+        ("ejbHome", "enterpriseBeansHome"),
+        ("ejbLite", "enterpriseBeansLite"),
+        ("ejbPersistentTimer", "enterpriseBeansPersistentTimer"),
+        ("ejbRemote", "enterpriseBeansRemote"),
+        ("el", "expressionLanguage"),
+        ("jacc", "appAuthorization"),
+        ("javaeeClient", "jakartaeeClient"),
+        ("jaspic", "appAuthentication"),
+        ("javaMail", "mail"),
+        ("jaxb", "xmlBinding"),
+        ("jaxrs", "restfulWS"),
+        ("jaxrsClient", "restfulWSClient"),
+        ("jaxws", "xmlWS"),
+        ("jca", "connectors"),
+        ("jcaInboundSecurity", "connectorsInboundSecurity"),
+        ("jms", "messaging"),
+        ("jpa", "persistence"),
+        ("jpaContainer", "persistenceContainer"),
+        ("jsf", "faces"),
+        ("jsfContainer", "facesContainer"),
+        ("jsp", "pages"),
+        ("wasJmsClient", "messagingClient"),
+        ("wasJmsSecurity", "messagingSecurity"),
+        ("wasJmsServer", "messagingServer")]
+
+    # Make sure all Jakarta EE feature names in the mapping are in the list of commonTOC so they get combined later.
+    if process_jakarta_features:
+        for mapping in java_to_jakarta_feature_mapping:
+            java_feature_name = mapping[0]
+            jakarta_feature_name = mapping[1]
+            if java_feature_name + '.html' in commonTOCKeys:
+                del commonTOCs[java_feature_name + '.html']
+            if jakarta_feature_name + '.html' not in commonTOCKeys:
+                commonTOCs[jakarta_feature_name + '.html'] = '^' + jakarta_feature_name + '-\\d+[.]?\\d*.html$'
+
+    commonTOCKeys = commonTOCs.keys()
+    commonTOCKeys = list(commonTOCKeys)
+
     TOCToDecompose = []
     for commonTOC in commonTOCKeys:
         commonTOCMatchString = commonTOCs[commonTOC]
         matchingTitleTOCs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(commonTOCMatchString))
+
+        if process_jakarta_features:
+            # Check for old Java features here and concat them to the list of Jakarta matches
+            for mapping in java_to_jakarta_feature_mapping:
+                jakarta_feature_name = mapping[1]            
+                if jakarta_feature_name + '.html' == commonTOC:
+                    # Get the Java equivalent
+                    java_name = mapping[0]
+                    java_regex = '^' + java_name + '-\\d+[.]?\\d*.html$'
+                    matching_java_tocs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(java_regex))
+                    # Add in reversed order to the list of Jakarta feature versions
+                    for java_toc in matching_java_tocs[::-1]:
+                        matchingTitleTOCs.insert(0, java_toc) # Prepend     
+                        TOCToDecompose.append(java_toc.parent)
+                
         firstElement = True;
         # determine whether there are multiple versions            
         firstHref = matchingTitleTOCs[0].get('href')
@@ -114,9 +173,9 @@ for version in versions:
         pageTitle.string = ''
         newTOCHref = ''
         # in reverse descending order
-        matchingTOCs = matchingTitleTOCs[::-1]
+        matchingTOCs = matchingTitleTOCs[::-1] # Reverse list        
         for matchingTOC in matchingTOCs:
-            tocHref = matchingTOC.get('href')
+            tocHref = matchingTOC.get('href')            
             if not str.startswith(tocHref, ".."):
                 if firstElement:
                     firstElement = False
@@ -135,8 +194,8 @@ for version in versions:
                         versionDiv.append(hrefTag)
                 else:
                     hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string)
-                    versionDiv.append(hrefTag)
-                    TOCToDecompose.append(matchingTOC.parent)
+                    versionDiv.append(hrefTag) 
+                    TOCToDecompose.append(matchingTOC.parent)                        
         # Write the feature title and the versions to the page div
         pageTitle.append(titleDiv)
         pageTitle.append(versionDiv)
@@ -151,8 +210,15 @@ for version in versions:
             # Open page and rewrite the version part
             versionHref = antora_path + 'feature/' + matchingTOC.get('href')
             versionPage = BeautifulSoup(open(versionHref), "lxml")
-            versionTitle = versionPage.find('h1', {'class': 'page'})
-            versionTitle.replace_with(pageTitle)
+            versionTitle = versionPage.find('h1', {'class': 'page'})  
+            # Get the matchingTOC's string and write it over the shared title of this feature version            
+            if versionTitle is not None:   
+                versionTitle.replace_with(pageTitle)       
+            displayTitle = versionPage.find('div', {'id': 'feature_name_string'})
+            if displayTitle is not None and len(displayTitle) > 0:
+                displayTitle.string = matchingTOC.string
+                displayTitle['full_title'] = "{}".format(matchingTOC.string)
+                displayTitle['aria-label'] = "{}".format(matchingTOC.string)
             with open(versionHref, "w") as file:
                 file.write(str(versionPage))
 
@@ -163,6 +229,13 @@ for version in versions:
     tocs = featureIndex.find_all('li', {'class':'is-current-page'})
     for toc in tocs:
         toc['class'] = 'nav-item'
+
+    # Sort features list alphabetically ignoring case
+    ul = featureDropdown.find(attrs={"class": "nav-list"})
+    features = [li.extract() for li in ul.find_all('li', {'class': 'nav-item'})]
+    features.sort(key=lambda e: e.find(attrs={"class": "nav-link"}).string.lower())
+    for linebreak, li in reversed(list(zip(ul.contents, features))):
+     linebreak.insert_after(li)
 
     # Write the new TOC to the feature-overview.html with version control in it
     with open(antora_path + 'feature/feature-overview.html', "w") as file:     
