@@ -475,13 +475,14 @@ function addClickListener(contents) {
       e.stopPropagation();
 
       var queryParams = setQueryParams(href, paramKey);
+      console.error(queryParams.toString());
       setIFrameContent(iframeName, href);
       setPackageContainerHeight();
 
       // provide state data to be used by the popstate event to render the frame contents
       var state = {};
       state[iframeName] = href;
-      var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey); // steven make sure this returns correct
+      var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey);
       testObject = otherQueryParamsContent;
       console.error(otherQueryParamsContent);
       for (key in otherQueryParamsContent) {
@@ -496,7 +497,8 @@ function addClickListener(contents) {
       }
 
       console.error(decodeURIComponent(queryParams.toString()));
-      window.history.pushState(state, null, decodeURIComponent(queryParams.toString()));
+      var newURL = window.location.href.replace(window.location.search, '') + '?' + decodeURIComponent(queryParams.toString());
+      window.history.pushState(state, null, newURL);
       
       // console.error(" ");
       // console.error(queryParams.keys().toString());
@@ -567,7 +569,7 @@ function setIFrameContent(iframeName, href) {
   // check if href results in 404 and redirect to doc-404.html if it does
   var http = new XMLHttpRequest();
   http.onreadystatechange = function() {
-    if (this.readyState === 4 && this.status === 200) { // steven
+    if (this.readyState === 4 && this.status === 200) {
       // replace the content only if the current content is from a different href
       if (iframeContent.attr("location").href !== href) {
         iframeContent.attr("location").replace(href);
@@ -588,8 +590,6 @@ function setIFrameContent(iframeName, href) {
 function getRemainingQueryParam(queryParams, paramName) {
   var lookForParam = PACKAGE_PARAM;
   var returnParams = {};
-  // var url = new URL(location.href);
-  // var returnQueryParams = new URLSearchParams(window.location.search);
   if (paramName === PACKAGE_PARAM) {
     lookForParam = CLASS_PARAM;
   }
@@ -598,8 +598,6 @@ function getRemainingQueryParam(queryParams, paramName) {
       returnParams[lookForParam] = queryParams.get(lookForParam);
     } catch (ex) {}
   }
-  // url.search = decodeURIComponent(returnQueryParams.toString());
-  // console.error(window.location.search);
   return returnParams;
 }
 
@@ -612,16 +610,10 @@ function getRemainingQueryParam(queryParams, paramName) {
 // is used to render the content in the right iframe.
 function setQueryParams(url, paramName) {
   var newURL = new URL(window.location.href);
-  var queryParams = new URLSearchParams(window.location.search) // steven
+  var queryParams = newURL.searchParams;
   if (url !== undefined && url != "") {
     var htmlPath = getJavaDocHtmlPath(url);
-    // var paramString = paramName + htmlPath;
     queryParams.set(paramName, htmlPath);
-    // if (!queryParams.has(paramName)) {
-    //     queryParams.set(paramName, paramString);
-    // } else {
-    //   queryParam.append(paramName, paramString);
-    // }
   }
   // The hash approach is to always include both package and class hash. If default content is
   // displayed for package/class frame content, provide the hash to point to the default html too.
@@ -634,9 +626,11 @@ function setQueryParams(url, paramName) {
     queryParams.set(CLASS_PARAM, getJavaDocHtmlPath(defaultClassHtml));
   }
 
-  console.error("setQueryParams to string: " + queryParams.toString());
-  newURL.search = decodeURIComponent(queryParams.toString());
-  console.error(window.location.search);
+  console.error("setQueryParams to string: " + decodeURIComponent(queryParams.toString()));
+  // window.location.search = decodeURIComponent(queryParams.toString());
+  // console.error(window.location.search);
+  console.error(window.location.href);
+  // window.location.search = '?' + decodeURIComponent(queryParams.toString()); // Maybe just change the .search to not refresh the page
   return queryParams;
 }
 
@@ -661,7 +655,7 @@ function getJavaDocHtmlPath(href, returnBase) {
 
 // add current hash to url when version button clicked
 function versionClick(event) {
-  event.target.href += window.location.hash; // steven change to convert whole query params into a string
+  event.target.href += window.location.hash;
 }
 
 function getDocInfo(iframe_src) {
@@ -750,7 +744,7 @@ function modifyPackageTopLinks() {
           liberty_version +
           "/reference/javadoc/" +
           doc_type + doc_version + "-javadoc.html" +
-          "#package=" + package +
+          "?package=" + package +
           "&class=overview-summary.html"
       );
       //find out how to load specific package to iframe
@@ -832,7 +826,7 @@ $(document).ready(function() {
 
     window.onpopstate = function(event) {
       if (event.state) {
-        $.each(event.state, function(key, value) { // Steven need to check the query params of the event.state
+        $.each(event.state, function(key, value) {
           setIFrameContent(key, value);
         });
         // restore the height in case it is collapsed
