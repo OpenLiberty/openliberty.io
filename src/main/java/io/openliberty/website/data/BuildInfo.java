@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 IBM Corporation and others.
+ * Copyright (c) 2018, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,6 +54,8 @@ public class BuildInfo {
     public String dateTime;
     @JsonbProperty(Constants.DRIVER_LOCATION)
     public String driverLocation;
+    @JsonbProperty(Constants.DRIVER_SIGNATURE_LOCATION)
+    public String driverSignatureLocation;
     @JsonbProperty(Constants.SIZE_IN_BYTES)
     public int sizeInBytes;
     @JsonbProperty(Constants.TESTS_PASSED)
@@ -66,8 +68,10 @@ public class BuildInfo {
     public String testLog;
     @JsonbProperty(Constants.PACKAGE_LOCATIONS)
     public List<String> packageLocations = new ArrayList<>();
+    @JsonbProperty(Constants.PACKAGE_SIGNATURE_LOCATIONS)
+    public List<String> packageSignatureLocations = new ArrayList<>();
 
-
+    // For unit testing
     public BuildInfo(String buildLog, String driverLocation, int testPassed, int totalTests, String testLog) {
         this.buildLog = buildLog;
         this.driverLocation = driverLocation;
@@ -76,11 +80,13 @@ public class BuildInfo {
         this.testLog = testLog;
     }
 
+    // For unit testing
     public BuildInfo(String driverLocation, String version) {
         this.driverLocation = driverLocation;
         this.version = version;
     }
 
+    // For unit testing
     public BuildInfo(String buildLog, String driverLocation, int testPassed, int totalTests, String testLog, String version, String ... driverLocations) {
         this.buildLog = buildLog;
         this.driverLocation = driverLocation;
@@ -119,6 +125,10 @@ public class BuildInfo {
             if (packageLocations != null) {
                 // add driver location to arraylist of package locations
                 packageLocations.add(driverLocation);
+                if(driverSignatureLocation != null) {
+                    // Also process the driver signature location
+                    packageSignatureLocations.add(driverSignatureLocation);
+                }
             }
 
             driverLocation = prefix + driverLocation;
@@ -132,6 +142,16 @@ public class BuildInfo {
             testLog = prefix + testLog;
         }
 
+        if (packageLocations != null && !packageLocations.isEmpty()) {
+            packageLocations = fixLocations(prefix, packageLocations);
+        }
+
+        if(packageSignatureLocations != null && !packageSignatureLocations.isEmpty()) {
+            packageSignatureLocations = fixLocations(prefix, packageSignatureLocations);
+        }
+    }
+
+    private List<String> fixLocations(String prefix, List<String> packagesInformation) {
         // This is historic and not ideal. Ideally the package Locations would be an Object
         // but at some point it was an array of name = value and this requires rework on the front
         // end, it isn't a compatible change so for now stick with it. DHE stores a simple list
@@ -139,22 +159,20 @@ public class BuildInfo {
         // from the package name, so this code extracts the key from the package name and 
         // resolves the url for each entry. Package Locations may be null so in that case we
         // need to cope.
-        if (packageLocations != null && !packageLocations.isEmpty()) {
-            List<String> fixedPackageLocations = new ArrayList<>();
-            for (String packageLoc : packageLocations) {
-                int index = packageLoc.indexOf("-") + 1;
-                int endIndex = packageLoc.indexOf("-", index);
-                if (endIndex == -1) {
-                    endIndex = index - 1;
-                    index = 0;
-                }
-                String name = packageLoc.substring(index, endIndex);
-                index = packageLoc.lastIndexOf(".");
-                String extension = packageLoc.substring(index);
-                fixedPackageLocations.add(name + extension + '=' + prefix + packageLoc);
+        List<String> fixedLocations = new ArrayList<String>();
+        for (String packageSigLoc : packagesInformation) {
+            int index = packageSigLoc.indexOf("-") + 1;
+            int endIndex = packageSigLoc.indexOf("-", index);
+            if (endIndex == -1) {
+                endIndex = index - 1;
+                index = 0;
             }
-            packageLocations = fixedPackageLocations;
+            String name = packageSigLoc.substring(index, endIndex);
+            index = packageSigLoc.lastIndexOf(".");
+            String extension = packageSigLoc.substring(index);
+            fixedLocations.add(name + extension + '=' + prefix + packageSigLoc);
         }
+        return fixedLocations;
     }
 
     public String getDateTime() {

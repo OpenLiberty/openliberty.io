@@ -35,6 +35,7 @@ public final class Constants {
     public static final String BUILD_LOG = "build_log";
     public static final String TESTS_LOG = "tests_log";
     public static final String DRIVER_LOCATION = "driver_location";
+    public static final String DRIVER_SIGNATURE_LOCATION = "driver_signature_location";
     public static final String PACKAGE_LOCATIONS = "package_locations";
     public static final String PACKAGE_SIGNATURE_LOCATIONS = "package_signature_locations";
     public static final String RUNTIME_RELEASES = "runtime_releases";
