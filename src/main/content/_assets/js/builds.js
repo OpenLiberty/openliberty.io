@@ -301,9 +301,16 @@ function render_builds(builds, parent) {
             // beta releases table only
             else if (parent.parent().data('builds-id') == 'runtime_betas') {
                 var beta_package_locations = build.package_locations;
+                var beta_package_sig_locs= build.package_signature_locations || [];
                 if (beta_package_locations !== null && beta_package_locations !== undefined) {
                     var version = build.version.split('-')[0]; // Remove the -beta from the version
-                    beta_package_locations = getAllowedBuilds('runtime_betas', beta_package_locations, version);
+
+                    beta_package_locations = 
+                        getAllowedBuilds('runtime_betas', beta_package_locations, version);
+
+                    beta_package_sig_locs =
+                        getAllowedBuildSignatures('runtime_betas', beta_package_sig_locs, version);
+                    
                     var num_beta_packages = beta_package_locations.length;
                     var beta_version_column = $(
                         '<td headers="' +
@@ -316,21 +323,33 @@ function render_builds(builds, parent) {
                     );
             
                     for (var d = 0; d < beta_package_locations.length; d++) {
-                        var beta_row = $('<tr></tr>'); // create a new row for each item in package_locations
+                        // create a new row for each item in package_locations
+                        var beta_row = $('<tr></tr>');
+                        //========== Get URL for the .zip file
                         var beta_package_name = beta_package_locations[d]
                             .split('=')[0]
                             .toLowerCase();
-                        var beta_href = beta_package_locations[d].split('=')[1];
+                        var beta_zip_href = beta_package_locations[d].split('=')[1];
+                        //========== Get URL for the .sig file
+                        var betaSigFilename = beta_package_name+'.sig';
+                        var beta_sig_index = beta_package_sig_locs.indexOf(betaSigFilename);
+                        var beta_sig_href = '';
+                        if(beta_sig_index !== -1) {
+                            var temp = package_signature_locations[beta_sig_index];
+                            beta_sig_href = temp.split('=')[1];
+                        }
+                        //========== Get URL for the .sha2 file
+                        var beta_sha2_href = ''; // TODO: Surface the href when DHE API has this data
+
+                        //========== Build the HTML for the download column containing file links
                         var beta_download_column = $(
-                            '<td headers="' +
-                                tableID +
-                                '_download"><a href="' +
-                                beta_href +
-                                '" class="' +
-                                analytics_class_name +
-                                '" rel="noopener">' +
-                                download_arrow +
-                                'ZIP</a></td>'
+                            '<td headers="'+tableID+'_download">' +
+                            '<a href="'+beta_zip_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'ZIP</a>' +
+                            // Optional sig file download button
+                            (beta_sig_href ? '<a href="'+beta_sig_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SIG</a>' : '' ) +
+                            // Optional sha2 file download button
+                            (beta_sha2_href ? '<a href="'+beta_sha2_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SHA2</a>' : '' ) +
+                            '</td>'
                         );
             
                         if (d == 0) {
