@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2021 IBM Corporation and others.
+ * Copyright (c) 2017, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -88,6 +88,19 @@ function getAllowedBuilds(build_type, package_locations, liberty_version) {
     });
 }
 
+/**
+ * Filter the package_signature_locations fields from https://openliberty.io/api/builds/data 
+ * and remove any zips that do not have a key from the allowed_builds list.
+ * @param {String} build_type - the type of build (e.g. runtime_releases)
+ * @param {Array} package_signature_locations - array of Strings that look like key-value pairs
+ * @param {String} liberty_version - optional - Liberty version (e.g. 21.0.0.12)
+ * @returns Array of Strings that look like key-value pairs
+ */
+function getAllowedBuildSignatures(build_type, package_signature_locations, liberty_version) {
+    // Reuse the logic for the package_locations filter
+    return getAllowedBuilds(build_type, package_signature_locations, liberty_version);
+}
+
 // Determine if an element is in the viewport
 $.fn.isInViewport = function () {
     var elementTop = $(this).offset().top;
@@ -145,8 +158,13 @@ function render_builds(builds, parent) {
             // ol releases table only
             if (parent.parent().data('builds-id') == 'runtime_releases') {
                 var package_locations = build.package_locations;
+                var package_signature_locations = build.package_signature_locations || [];
                 if (package_locations !== null && package_locations !== undefined) {
                     package_locations = getAllowedBuilds('runtime_releases', package_locations);
+
+                    package_signature_locations = 
+                        getAllowedBuildSignatures('runtime_releases', package_signature_locations);
+                    
                     var num_packages = package_locations.length;
                     // Add enough empty rows so that each release has the max number of rows
                     // even when there are < max number packages. These empty rows will be hidden,
@@ -167,25 +185,36 @@ function render_builds(builds, parent) {
                             '</td>'
                     );
 
-                    for (var i = 0; i < package_locations.length; i++) {
-                        var row = $('<tr></tr>'); // create a new row for each item in package_locations
-                        var package_name = package_locations[i]
+
+                    for (var k = 0; k < package_locations.length; k++) {
+                        // create a new row for each item in package_locations
+                        var row = $('<tr></tr>');
+                        //========== Get URL for the .zip file
+                        var package_name = package_locations[k]
                             .split('=')[0]
                             .toLowerCase();
-                        var href = package_locations[i].split('=')[1];
+                        var href = package_locations[k].split('=')[1];
+                        //========== Get URL for the .sig file
+                        var sig_index = package_signature_locations.indexOf(package_name+'.sig');
+                        var sig_href = '';
+                        if(sig_index !== -1) {
+                            sig_href = package_signature_locations[sig_index].split('=')[1];
+                        }
+                        //========== Get URL for the .sha2 file
+                        var sha2_href = ''; // TODO: Surface the href when DHE API has this data
+
+                        //========== Build the HTML for the download column containing file links
                         var download_column = $(
-                            '<td headers="' +
-                                tableID +
-                                '_download"><a href="' +
-                                href +
-                                '" class="' +
-                                analytics_class_name +
-                                '" rel="noopener">' +
-                                download_arrow +
-                                'ZIP</a></td>'
+                            '<td headers="'+tableID+'_download">' +
+                            '<a href="'+href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'ZIP</a>' +
+                            // Optional sig file download button
+                            (sig_href ? '<a href="'+sig_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SIG</a>' : '' ) +
+                            // Optional sha2 file download button
+                            (sha2_href ? '<a href="'+sha2_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SHA2</a>' : '' ) +
+                            '</td>'
                         );
 
-                        if (i == 0) {
+                        if (k == 0) {
                             row.append(version_column); // add version column for first item in package_locations
                         }      
                         var package_column;   
@@ -256,7 +285,7 @@ function render_builds(builds, parent) {
                                 tableID +
                                 '_package">All GA Features</td>';
                         }
-
+                    
                         row.append(package_column);
                         row.append(download_column);
                         parent.append(row);
