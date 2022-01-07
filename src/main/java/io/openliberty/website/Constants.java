@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 IBM Corporation and others.
+ * Copyright (c) 2017, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,51 +10,55 @@
  *******************************************************************************/
 package io.openliberty.website;
 
-public interface Constants {
+public final class Constants {
+
+    private Constants() {
+        // no one should be instantiating this class
+    }
 
     // URL
-    String DHE_URL = "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/";
-    String DHE_RUNTIME_PATH_SEGMENT = "runtime";
-    String DHE_TOOLS_PATH_SEGMENT = "tools";
-    String DHE_RELEASE_PATH_SEGMENT = "release";
-    String DHE_NIGHTLY_PATH_SEGMENT = "nightly";
-    String DHE_BETA_PATH_SEGMENT = "beta";
-    String DHE_INFO_JSON_FILE_NAME = "info.json";
+    public static final String DHE_URL = "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/";
+    public static final String DHE_RUNTIME_PATH_SEGMENT = "runtime";
+    public static final String DHE_TOOLS_PATH_SEGMENT = "tools";
+    public static final String DHE_RELEASE_PATH_SEGMENT = "release";
+    public static final String DHE_NIGHTLY_PATH_SEGMENT = "nightly";
+    public static final String DHE_BETA_PATH_SEGMENT = "beta";
+    public static final String DHE_INFO_JSON_FILE_NAME = "info.json";
 
     // JSON
-    String LAST_UPDATE_ATTEMPT = "last_update_attempt";
-    String LAST_SUCCESSFULL_UPDATE = "last_successful_update";
-    String NEVER_ATTEMPTED = "never_attempted";
-    String NEVER_UPDATED = "never_updated";
-    String TESTS_PASSED = "test_passed";
-    String TOTAL_TESTS = "total_tests";
-    String BUILD_LOG = "build_log";
-    String TESTS_LOG = "tests_log";
-    String DRIVER_LOCATION = "driver_location";
-    String PACKAGE_LOCATIONS = "package_locations";
-    String RUNTIME_RELEASES = "runtime_releases";
-    String RUNTIME_NIGHTLY_BUILDS = "runtime_nightly_builds";
-    String RUNTIME_BETAS = "runtime_betas";
-    String TOOLS_RELEASES = "tools_releases";
-    String TOOLS_NIGHTLY_BUILDS = "tools_nightly_builds";
-    String DATE = "date_time";
-    String VERSION = "version";
-    String VERSIONS = "versions";
-    String SIZE_IN_BYTES = "size_in_bytes";
-    String RUNTIME = "runtime";
-    String TOOLS = "tools";
-    String BUILDS = "builds";
-    String LATEST_RELEASES = "latest_releases";
+    public static final String LAST_UPDATE_ATTEMPT = "last_update_attempt";
+    public static final String LAST_SUCCESSFULL_UPDATE = "last_successful_update";
+    public static final String NEVER_ATTEMPTED = "never_attempted";
+    public static final String NEVER_UPDATED = "never_updated";
+    public static final String TESTS_PASSED = "test_passed";
+    public static final String TOTAL_TESTS = "total_tests";
+    public static final String BUILD_LOG = "build_log";
+    public static final String TESTS_LOG = "tests_log";
+    public static final String DRIVER_LOCATION = "driver_location";
+    public static final String PACKAGE_LOCATIONS = "package_locations";
+    public static final String RUNTIME_RELEASES = "runtime_releases";
+    public static final String RUNTIME_NIGHTLY_BUILDS = "runtime_nightly_builds";
+    public static final String RUNTIME_BETAS = "runtime_betas";
+    public static final String TOOLS_RELEASES = "tools_releases";
+    public static final String TOOLS_NIGHTLY_BUILDS = "tools_nightly_builds";
+    public static final String DATE = "date_time";
+    public static final String VERSION = "version";
+    public static final String VERSIONS = "versions";
+    public static final String SIZE_IN_BYTES = "size_in_bytes";
+    public static final String RUNTIME = "runtime";
+    public static final String TOOLS = "tools";
+    public static final String BUILDS = "builds";
+    public static final String LATEST_RELEASES = "latest_releases";
 
     // HTTP
-    String CONTENT_LENGTH = "Content-Length";
-    String API_SERVLET_PATH = "/api";
+    public static final String CONTENT_LENGTH = "Content-Length";
+    public static final String API_SERVLET_PATH = "/api";
 
     // GITHUB
-    String GITHUB_ISSUES_URL = "https://api.github.com/repos/OpenLiberty/open-liberty/issues?sort=update";
-    String PAT_ENV_VARIABLE_NAME = "PAT";
-    
+    public static final String GITHUB_ISSUES_URL = "https://api.github.com/repos/OpenLiberty/open-liberty/issues?sort=update";
+    public static final String PAT_ENV_VARIABLE_NAME = "PAT";
+
     // BLUEMIX
-    String OPEN_LIBERTY_GREEN_APP_HOST = "openliberty-green.mybluemix.net";
-    String OPEN_LIBERTY_BLUE_APP_HOST = "openliberty-blue.mybluemix.net";
+    public static final String OPEN_LIBERTY_GREEN_APP_HOST = "openliberty-green.mybluemix.net";
+    public static final String OPEN_LIBERTY_BLUE_APP_HOST = "openliberty-blue.mybluemix.net";
 }
