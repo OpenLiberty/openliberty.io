@@ -60,7 +60,12 @@ var allowed_builds = {
         'webProfile8.zip',
         'webProfile9.zip'
     ],
-    runtime_betas: function(version) { return ['jakartaee9.zip', version+'.zip']; },
+    runtime_betas: function(version) { 
+        return [
+            'jakartaee9.zip', 
+            version+'.zip'
+        ]; 
+    },
     // runtime_nightly_builds not intended for used, here for completeness
     runtime_nightly_builds: undefined,
     // tools_releases not intended for used, here for completeness
@@ -295,58 +300,58 @@ function render_builds(builds, parent) {
 
             // beta releases table only
             else if (parent.parent().data('builds-id') == 'runtime_betas') {
-                var package_locations = build.package_locations;
-                if (package_locations !== null && package_locations !== undefined) {
+                var beta_package_locations = build.package_locations;
+                if (beta_package_locations !== null && beta_package_locations !== undefined) {
                     var version = build.version.split('-')[0]; // Remove the -beta from the version
-                    package_locations = getAllowedBuilds('runtime_betas', package_locations, version);
-                    var num_packages = package_locations.length;
-                    var version_column = $(
+                    beta_package_locations = getAllowedBuilds('runtime_betas', beta_package_locations, version);
+                    var num_beta_packages = beta_package_locations.length;
+                    var beta_version_column = $(
                         '<td headers="' +
                             tableID +
                             '_version" rowspan="' +
-                            num_packages +
+                            num_beta_packages +
                             '">' +
                             build.version +
                             '</td>'
                     );
-
-                    for (var i = 0; i < package_locations.length; i++) {
-                        var row = $('<tr></tr>'); // create a new row for each item in package_locations
-                        var package_name = package_locations[i]
+            
+                    for (var d = 0; d < beta_package_locations.length; d++) {
+                        var beta_row = $('<tr></tr>'); // create a new row for each item in package_locations
+                        var beta_package_name = beta_package_locations[d]
                             .split('=')[0]
                             .toLowerCase();
-                        var href = package_locations[i].split('=')[1];
-                        var download_column = $(
+                        var beta_href = beta_package_locations[d].split('=')[1];
+                        var beta_download_column = $(
                             '<td headers="' +
                                 tableID +
                                 '_download"><a href="' +
-                                href +
+                                beta_href +
                                 '" class="' +
                                 analytics_class_name +
                                 '" rel="noopener">' +
                                 download_arrow +
                                 'ZIP</a></td>'
                         );
-
-                        if (i == 0) {
-                            row.append(version_column); // add version column for first item in package_locations
+            
+                        if (d == 0) {
+                            beta_row.append(beta_version_column); // add version column for first item in package_locations
                         }
-
-                        if (package_name.indexOf('jakarta') > -1) {
-                            var package_column =
+            
+                        if (beta_package_name.indexOf('jakarta') > -1) {
+                            package_column =
                                 '<td headers=\'' +
                                 tableID +
                                 '_package\'>Jakarta EE 9 Beta Features</td>';
                         } else {
-                            var package_column =
+                            package_column =
                                 '<td headers=\'' +
                                 tableID +
                                 '_package\'>All Beta Features</td>';
                         }
-
-                        row.append(package_column);
-                        row.append(download_column);
-                        parent.append(row);
+            
+                        beta_row.append(package_column);
+                        beta_row.append(beta_download_column);
+                        parent.append(beta_row);
                     }
                 }
             }
