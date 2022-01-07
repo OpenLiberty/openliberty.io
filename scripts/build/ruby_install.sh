@@ -19,8 +19,8 @@ source /usr/local/rvm/scripts/rvm || true
 set -e
 
 rvm requirements
-rvm install 2.5.7
-rvm use 2.5.7 --default
+rvm install 2.6.6
+rvm use 2.6.6 --default
 echo "Ruby version:"
 echo `ruby -v`
 
