@@ -365,7 +365,6 @@ function addNavHoverListener() {
 function parseQueryParams() {
   var targetPage = {};
   var queryParams = window.location.search;  
-  console.error(window.location.search);
   if (queryParams && queryParams != undefined) {
     queryParams = queryParams.substring(1); // Remove the '?'
     var splitQueryParams = queryParams.split("&");
@@ -386,7 +385,6 @@ function parseQueryParams() {
       }
     }
   }
-  console.error(targetPage);
   return targetPage;
 }
 
@@ -475,7 +473,6 @@ function addClickListener(contents) {
       e.stopPropagation();
 
       var queryParams = setQueryParams(href, paramKey);
-      console.error(queryParams.toString());
       setIFrameContent(iframeName, href);
       setPackageContainerHeight();
 
@@ -484,7 +481,6 @@ function addClickListener(contents) {
       state[iframeName] = href;
       var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey);
       testObject = otherQueryParamsContent;
-      console.error(otherQueryParamsContent);
       for (key in otherQueryParamsContent) {
         var otherStateKey = CLASS_FRAME;
         if (otherQueryParamsContent.hasOwnProperty(key)){
@@ -496,28 +492,15 @@ function addClickListener(contents) {
         }
       }
 
-      console.error(decodeURIComponent(queryParams.toString()));
-      var newURL = window.location.href.replace(window.location.search, '') + '?' + decodeURIComponent(queryParams.toString());
+      var search = window.location.search;
+      var hash = window.location.hash;      
+      var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
       window.history.pushState(state, null, newURL);
       
-      // console.error(" ");
-      // console.error(queryParams.keys().toString());
       var package;
-      console.error(queryParams.get(PACKAGE_PARAM));
       if(queryParams.has(PACKAGE_PARAM)){
-        // package = queryParams.get(PACKAGE_PARAM);
-        // package = package.replace("package=", ""); // might replace with get(package) and set to none, or just remove it if it exists
-        // queryParams.set(PACKAGE_PARAM, package);
         queryParams.delete(PACKAGE_PARAM);
       }
-
-      // queryParams.set(PACKAGE_PARAM, package);
-
-      // var package = queryParams
-      //   .substring(1)
-      //   .split("&")
-      //   .sort()[1]
-      //   .replace("package=", "");
 
       updateTitle(package);
 
@@ -586,7 +569,7 @@ function setIFrameContent(iframeName, href) {
   http.send();
 }
 
-// If package is provided as hashName, then return the class hash. Otherwise return the package hash.
+// If package is provided as paramName, then return the class param. Otherwise return the package param.
 function getRemainingQueryParam(queryParams, paramName) {
   var lookForParam = PACKAGE_PARAM;
   var returnParams = {};
@@ -606,7 +589,7 @@ function getRemainingQueryParam(queryParams, paramName) {
 //   class=xxx.html
 // eg. ?package=javax/enterprise/util/package-frame.html&class=javax/interceptor/InterceptorBinding.html
 //
-// The package hash is used to render the content in the left bottom iframe. The class hash
+// The package param is used to render the content in the left bottom iframe. The class param
 // is used to render the content in the right iframe.
 function setQueryParams(url, paramName) {
   var newURL = new URL(window.location.href);
@@ -615,8 +598,8 @@ function setQueryParams(url, paramName) {
     var htmlPath = getJavaDocHtmlPath(url);
     queryParams.set(paramName, htmlPath);
   }
-  // The hash approach is to always include both package and class hash. If default content is
-  // displayed for package/class frame content, provide the hash to point to the default html too.
+  // The param approach is to always include both package and class param. If default content is
+  // displayed for package/class frame content, provide the param to point to the default html too.
   if (!queryParams.has(PACKAGE_PARAM)) {
     // add default package
     queryParams.set(PACKAGE_PARAM, getJavaDocHtmlPath(defaultPackageHtml));
@@ -626,11 +609,6 @@ function setQueryParams(url, paramName) {
     queryParams.set(CLASS_PARAM, getJavaDocHtmlPath(defaultClassHtml));
   }
 
-  console.error("setQueryParams to string: " + decodeURIComponent(queryParams.toString()));
-  // window.location.search = decodeURIComponent(queryParams.toString());
-  // console.error(window.location.search);
-  console.error(window.location.href);
-  // window.location.search = '?' + decodeURIComponent(queryParams.toString()); // Maybe just change the .search to not refresh the page
   return queryParams;
 }
 
@@ -701,7 +679,6 @@ function highlightTOC(iframeName) {
     href = href.substring(href.lastIndexOf("/") + 1);
     toc = iframeContent.find('li a[href="' + href + '"]');
   }
-  // console.error(toc);
   if (toc) {
     toc
       .parents("li")
