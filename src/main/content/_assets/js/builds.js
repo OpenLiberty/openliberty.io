@@ -21,8 +21,10 @@ var developer_tools_releases = [];
 var developer_tools_development_builds = [];
 
 var builds_url = '/api/builds/data';
-var starter_info_url = 'https://start.openliberty.io/api/start/info';
-var starter_submit_url = 'https://start.openliberty.io/api/start';
+var starter_domain = 
+    isStagingSite() ? 'https://start-beta.openliberty.io' : 'https://start.openliberty.io';
+var starter_info_url = starter_domain + '/api/start/info';
+var starter_submit_url = starter_domain + '/api/start';
 
 // Controls what build zips are exposed on openliberty.io.  This will need to be updated
 // if there is a new zip version published on DHE.  The intent of this allow_builds list is to
@@ -73,6 +75,11 @@ var allowed_builds = {
     // tools_nightly_builds not intended for used, here for completeness
     tools_nightly_builds: undefined, // based on "driver_location" /api/builds/data
 };
+
+function isStagingSite() {
+    var host = window.location.hostname;
+    return host.indexOf('staging') > -1;
+}
 
 /**
  * Filter the package_locations fields from https://openliberty.io/api/builds/data and remove
