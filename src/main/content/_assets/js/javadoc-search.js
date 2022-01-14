@@ -382,7 +382,10 @@ $(function() {
                     }
                     var state = {};
                     state['iframe.rightIframe'] = href;
-                    top.window.history.pushState(state, null, decodeURIComponent(newURL)); // Create a history entry
+                    var search = top.window.location.search;
+                    var hash = top.window.location.hash;
+                    var newURL = top.window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
+                    top.window.history.pushState(state, null, newURL); // Create a history entry
                     // if (hash !== top.window.location.hash) {
                     //     var state = {};
                     //     state['iframe.rightIframe'] = href;
