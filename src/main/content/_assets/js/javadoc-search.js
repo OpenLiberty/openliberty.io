@@ -382,7 +382,7 @@ $(function() {
                     }
                     var state = {};
                     state['iframe.rightIframe'] = href;
-                    top.window.history.pushState(state, null, newURL); // Create a history entry
+                    top.window.history.pushState(state, null, decodeURIComponent(newURL)); // Create a history entry
                     // if (hash !== top.window.location.hash) {
                     //     var state = {};
                     //     state['iframe.rightIframe'] = href;
