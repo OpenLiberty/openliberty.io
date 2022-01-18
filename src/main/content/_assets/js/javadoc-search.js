@@ -361,24 +361,18 @@ $(function() {
                     parent.classFrame.location.replace(pathtoroot + url);
 
                     // building the query parameters
-                    // var hash = top.window.location.hash;
                     var newURL = new URL(top.window.location.href);
                     var queryParams = newURL.searchParams;
                     
                     if (queryParams.has('class')) {
                         try {
                             queryParams.set('class', url);
-                            // var hashNameToMatch = '(.*)class=.*?.html(.*)';
-                            // var regExpToMatch = new RegExp(hashNameToMatch, 'g');
-                            // var groups = regExpToMatch.exec(hash);
-                            // hash = groups[1] + 'class=' + url + groups[2];
                         } catch (ex) {
 
                         }
                     } else {
                         queryParams.set('class', url);
                         queryParams.set('package', 'allclasses-frame.html');
-                        // hash = '?class=' + url + '&package=allclasses-frame.html'; // putting in default html for package iframe
                     }
                     var state = {};
                     state['iframe.rightIframe'] = href;
@@ -386,12 +380,6 @@ $(function() {
                     var hash = top.window.location.hash;
                     var newURL = top.window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
                     top.window.history.pushState(state, null, newURL); // Create a history entry
-                    // if (hash !== top.window.location.hash) {
-                    //     var state = {};
-                    //     state['iframe.rightIframe'] = href;
-                    //     // create a history entry
-                    //     top.window.history.pushState(state, null, hash);
-                    // }
                 } else {
                     window.location.href = pathtoroot + url;
                 }
