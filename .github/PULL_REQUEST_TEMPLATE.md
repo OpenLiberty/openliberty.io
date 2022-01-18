@@ -9,6 +9,6 @@
 #### Running validation tools
 - [ ] https://validator.w3.org/checklink
 - [ ] https://validator.w3.org
-- [ ] Dymanic Accessability Plugin (DAP)
+- [ ] IBM Equal Access Accessibility Checker (https://www.ibm.com/able/toolkit/verify/automated)
 - [ ] Lighthouse (in Chrome dev tools)
 
