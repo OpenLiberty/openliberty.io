@@ -160,17 +160,17 @@ public class BuildInfo {
         // resolves the url for each entry. Package Locations may be null so in that case we
         // need to cope.
         List<String> fixedLocations = new ArrayList<String>();
-        for (String packageSigLoc : packagesInformation) {
-            int index = packageSigLoc.indexOf("-") + 1;
-            int endIndex = packageSigLoc.indexOf("-", index);
+        for (String location : packagesInformation) {
+            int index = location.indexOf("-") + 1;
+            int endIndex = location.indexOf("-", index);
             if (endIndex == -1) {
                 endIndex = index - 1;
                 index = 0;
             }
-            String name = packageSigLoc.substring(index, endIndex);
-            index = packageSigLoc.lastIndexOf(".");
-            String extension = packageSigLoc.substring(index);
-            fixedLocations.add(name + extension + '=' + prefix + packageSigLoc);
+            String name = location.substring(index, endIndex);
+            index = location.lastIndexOf(".");
+            String extension = location.substring(index);
+            fixedLocations.add(name + extension + '=' + prefix + location);
         }
         return fixedLocations;
     }

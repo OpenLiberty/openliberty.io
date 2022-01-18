@@ -58,6 +58,7 @@ var allowed_builds = {
         'kernel.zip',
         'microProfile3.zip',
         'microProfile4.zip',
+        'microProfile5.zip',
         'openliberty.zip',
         'webProfile8.zip',
         'webProfile9.zip'
@@ -101,16 +102,20 @@ function getAllowedBuilds(build_type, package_locations, liberty_version) {
 }
 
 /**
- * Filter the package_signature_locations fields from https://openliberty.io/api/builds/data 
- * and remove any zips that do not have a key from the allowed_builds list.
- * @param {String} build_type - the type of build (e.g. runtime_releases)
- * @param {Array} package_signature_locations - array of Strings that look like key-value pairs
- * @param {String} liberty_version - optional - Liberty version (e.g. 21.0.0.12)
- * @returns Array of Strings that look like key-value pairs
+ * Return URL corresponding to the key
+ * @param {String} sig_key - e.g. "kernal.sig"
  */
-function getAllowedBuildSignatures(build_type, package_signature_locations, liberty_version) {
-    // Reuse the logic for the package_locations filter
-    return getAllowedBuilds(build_type, package_signature_locations, liberty_version);
+function getURLForSig(list, sig_key) {
+    if(!list) {
+        return list;
+    }
+    for(var e = 0; e < list.length; e++) {
+        var keyAndValue = list[e].split('=');
+        if(keyAndValue[0].toLowerCase() === sig_key.toLowerCase()) {
+            return keyAndValue[1];
+        }
+    }
+    return undefined;
 }
 
 // Determine if an element is in the viewport
@@ -172,10 +177,10 @@ function render_builds(builds, parent) {
                 var package_locations = build.package_locations;
                 var package_signature_locations = build.package_signature_locations || [];
                 if (package_locations !== null && package_locations !== undefined) {
-                    package_locations = getAllowedBuilds('runtime_releases', package_locations);
 
-                    package_signature_locations = 
-                        getAllowedBuildSignatures('runtime_releases', package_signature_locations);
+                    // Assume the .sig files from the allowed builds are also allowed
+                    // without checking the .sig files.
+                    package_locations = getAllowedBuilds('runtime_releases', package_locations);
                     
                     var num_packages = package_locations.length;
                     // Add enough empty rows so that each release has the max number of rows
@@ -206,12 +211,11 @@ function render_builds(builds, parent) {
                             .split('=')[0]
                             .toLowerCase();
                         var href = package_locations[k].split('=')[1];
-                        //========== Get URL for the .sig file
-                        var sig_index = package_signature_locations.indexOf(package_name+'.sig');
-                        var sig_href = '';
-                        if(sig_index !== -1) {
-                            sig_href = package_signature_locations[sig_index].split('=')[1];
-                        }
+                        //========== Get URL for the .sig file corresponding to the .zip file
+                        // Assume package_name will always end with .zip and the filename 
+                        // has _no_ dots
+                        var sig_name = package_name.split('.')[0];
+                        var sig_href = getURLForSig(package_signature_locations, sig_name+'.sig');
                         //========== Get URL for the .sha2 file
                         var sha2_href = ''; // TODO: Surface the href when DHE API has this data
 
@@ -286,6 +290,11 @@ function render_builds(builds, parent) {
                                 '<td headers="' +
                                 tableID +
                                 '_package">MicroProfile 4</td>';
+                        } else if (package_name.indexOf('microprofile5') > -1) {
+                            package_column =
+                                '<td headers="' +
+                                tableID +
+                                '_package">MicroProfile 5</td>';
                         } else if (package_name.indexOf('kernel') > -1) {
                             package_column =
                                 '<td headers="' +
@@ -312,11 +321,10 @@ function render_builds(builds, parent) {
                 if (beta_package_locations !== null && beta_package_locations !== undefined) {
                     var version = build.version.split('-')[0]; // Remove the -beta from the version
 
+                    // Assume the .sig files from the allowed builds are also allowed
+                    // without checking the .sig files.
                     beta_package_locations = 
                         getAllowedBuilds('runtime_betas', beta_package_locations, version);
-
-                    beta_package_sig_locs =
-                        getAllowedBuildSignatures('runtime_betas', beta_package_sig_locs, version);
                     
                     var num_beta_packages = beta_package_locations.length;
                     var beta_version_column = $(
@@ -337,14 +345,12 @@ function render_builds(builds, parent) {
                             .split('=')[0]
                             .toLowerCase();
                         var beta_zip_href = beta_package_locations[d].split('=')[1];
-                        //========== Get URL for the .sig file
-                        var betaSigFilename = beta_package_name+'.sig';
-                        var beta_sig_index = beta_package_sig_locs.indexOf(betaSigFilename);
-                        var beta_sig_href = '';
-                        if(beta_sig_index !== -1) {
-                            var temp = package_signature_locations[beta_sig_index];
-                            beta_sig_href = temp.split('=')[1];
-                        }
+                        //========== Get URL for the .sig file corresponding to the .zip file
+                        // The name has a lot of dots, so have to use lastIndexOf to separate
+                        // filename from file extension
+                        var beta_sig_name = beta_package_name.substring(0, beta_package_name.lastIndexOf('.'));
+                        var beta_sig_href = 
+                            getURLForSig(beta_package_sig_locs, beta_sig_name+'.sig');
                         //========== Get URL for the .sha2 file
                         var beta_sha2_href = ''; // TODO: Surface the href when DHE API has this data
 
