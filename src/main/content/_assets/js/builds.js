@@ -56,6 +56,7 @@ var allowed_builds = {
         'kernel.zip',
         'microProfile3.zip',
         'microProfile4.zip',
+        'microProfile5.zip',
         'openliberty.zip',
         'webProfile8.zip',
         'webProfile9.zip'
