@@ -95,12 +95,18 @@ function getAllowedBuilds(build_type, package_locations, liberty_version) {
 }
 
 /**
- * Return URL corresponding to the key
- * @param {String} sig_key - e.g. "kernal.sig"
+ * Return URL for a DHE signature file
+ * 
+ * @param {Array} list - array of Strings that look like key-value pairs
+ * @param {String} sig_key - a specific key in the list, e.g. "kernal.sig"
+ * @returns returns a URL if key is found, else empty string
  */
 function getURLForSig(list, sig_key) {
     if(!list) {
-        return list;
+        // Builds prior to 2022 did not have signature files,
+        // so those builds will have not have a list.  If list is empty
+        // return an empty string as the result of the URL.
+        return '';
     }
     for(var e = 0; e < list.length; e++) {
         var keyAndValue = list[e].split('=');
@@ -108,7 +114,8 @@ function getURLForSig(list, sig_key) {
             return keyAndValue[1];
         }
     }
-    return undefined;
+    // Could not a key in the list that matches
+    return '';
 }
 
 // Determine if an element is in the viewport
@@ -210,7 +217,9 @@ function render_builds(builds, parent) {
                         var sig_name = package_name.split('.')[0];
                         var sig_href = getURLForSig(package_signature_locations, sig_name+'.sig');
                         //========== Get URL for the .sha2 file
-                        var sha2_href = ''; // TODO: Surface the href when DHE API has this data
+                        // TODO: Surface the href when DHE API has this data
+                        // See https://github.com/OpenLiberty/openliberty.io/issues/1734
+                        var sha2_href = '';
 
                         //========== Build the HTML for the download column containing file links
                         var download_column = $(
