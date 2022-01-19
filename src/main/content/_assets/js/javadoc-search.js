@@ -364,20 +364,21 @@ $(function() {
                     var newURL = new URL(top.window.location.href);
                     var queryParams = newURL.searchParams;
                     
-                    if (queryParams.has('class')) {
-                        try {
-                            queryParams.set('class', url);
-                        } catch (ex) {
-
-                        }
-                    } else {
+                    // Replace existing class query parameter.
+                    try {
                         queryParams.set('class', url);
+                    } catch (ex) {
+
+                    }
+                    if (!queryParams.has('class')){
+                        // Set the package frame to the default html if there was not an existing class chosen.
                         queryParams.set('package', 'allclasses-frame.html');
                     }
                     var state = {};
                     state['iframe.rightIframe'] = href;
                     var search = top.window.location.search;
                     var hash = top.window.location.hash;
+                    // Removing old search and hash, otherwise it adds duplicate query parameters and hashes.
                     var newURL = top.window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
                     top.window.history.pushState(state, null, newURL); // Create a history entry
                 } else {

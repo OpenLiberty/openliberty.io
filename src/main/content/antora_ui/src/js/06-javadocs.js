@@ -365,7 +365,7 @@ function addNavHoverListener() {
 function parseQueryParams() {
   var targetPage = {};
   var queryParams = window.location.search;  
-  if (queryParams && queryParams != undefined) {
+  if (queryParams && queryParams !== undefined) {
     queryParams = queryParams.substring(1); // Remove the '?'
     var splitQueryParams = queryParams.split("&");
     for (i = 0; i < splitQueryParams.length; i++) {
@@ -494,6 +494,7 @@ function addClickListener(contents) {
 
       var search = window.location.search;
       var hash = window.location.hash;      
+      // Removing old search and hash, otherwise it adds duplicate query parameters and hashes.
       var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
       window.history.pushState(state, null, newURL);
       
@@ -594,7 +595,7 @@ function getRemainingQueryParam(queryParams, paramName) {
 function setQueryParams(url, paramName) {
   var newURL = new URL(window.location.href);
   var queryParams = newURL.searchParams;
-  if (url !== undefined && url != "") {
+  if (url !== undefined && url !== "") {
     var htmlPath = getJavaDocHtmlPath(url);
     queryParams.set(paramName, htmlPath);
   }
