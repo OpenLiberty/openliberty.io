@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2021 IBM Corporation and others.
+ * Copyright (c) 2017, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,8 +21,10 @@ var developer_tools_releases = [];
 var developer_tools_development_builds = [];
 
 var builds_url = '/api/builds/data';
-var starter_info_url = 'https://start.openliberty.io/api/start/info';
-var starter_submit_url = 'https://start.openliberty.io/api/start';
+var starter_domain = 
+    isStagingSite() ? 'https://start-beta.openliberty.io' : 'https://start.openliberty.io';
+var starter_info_url = starter_domain + '/api/start/info';
+var starter_submit_url = starter_domain + '/api/start';
 
 // Controls what build zips are exposed on openliberty.io.  This will need to be updated
 // if there is a new zip version published on DHE.  The intent of this allow_builds list is to
@@ -56,11 +58,17 @@ var allowed_builds = {
         'kernel.zip',
         'microProfile3.zip',
         'microProfile4.zip',
+        'microProfile5.zip',
         'openliberty.zip',
         'webProfile8.zip',
         'webProfile9.zip'
     ],
-    runtime_betas: function(version) { return ['jakartaee9.zip', version+'.zip']; },
+    runtime_betas: function(version) { 
+        return [
+            'jakartaee9.zip', 
+            version+'.zip'
+        ]; 
+    },
     // runtime_nightly_builds not intended for used, here for completeness
     runtime_nightly_builds: undefined,
     // tools_releases not intended for used, here for completeness
@@ -68,6 +76,11 @@ var allowed_builds = {
     // tools_nightly_builds not intended for used, here for completeness
     tools_nightly_builds: undefined, // based on "driver_location" /api/builds/data
 };
+
+function isStagingSite() {
+    var host = window.location.hostname;
+    return host.indexOf('staging') > -1;
+}
 
 /**
  * Filter the package_locations fields from https://openliberty.io/api/builds/data and remove
@@ -86,6 +99,30 @@ function getAllowedBuilds(build_type, package_locations, liberty_version) {
             return x;
         }
     });
+}
+
+/**
+ * Return URL for a DHE signature file
+ * 
+ * @param {Array} list - array of Strings that look like key-value pairs
+ * @param {String} sig_key - a specific key in the list, e.g. "kernal.sig"
+ * @returns returns a URL if key is found, else empty string
+ */
+function getURLForSig(list, sig_key) {
+    if(!list) {
+        // Builds prior to 2022 did not have signature files,
+        // so those builds will have not have a list.  If list is empty
+        // return an empty string as the result of the URL.
+        return '';
+    }
+    for(var e = 0; e < list.length; e++) {
+        var keyAndValue = list[e].split('=');
+        if(keyAndValue[0].toLowerCase() === sig_key.toLowerCase()) {
+            return keyAndValue[1];
+        }
+    }
+    // Could not a key in the list that matches
+    return '';
 }
 
 // Determine if an element is in the viewport
@@ -145,8 +182,13 @@ function render_builds(builds, parent) {
             // ol releases table only
             if (parent.parent().data('builds-id') == 'runtime_releases') {
                 var package_locations = build.package_locations;
+                var package_signature_locations = build.package_signature_locations || [];
                 if (package_locations !== null && package_locations !== undefined) {
+
+                    // Assume the .sig files from the allowed builds are also allowed
+                    // without checking the .sig files.
                     package_locations = getAllowedBuilds('runtime_releases', package_locations);
+                    
                     var num_packages = package_locations.length;
                     // Add enough empty rows so that each release has the max number of rows
                     // even when there are < max number packages. These empty rows will be hidden,
@@ -167,25 +209,37 @@ function render_builds(builds, parent) {
                             '</td>'
                     );
 
-                    for (var i = 0; i < package_locations.length; i++) {
-                        var row = $('<tr></tr>'); // create a new row for each item in package_locations
-                        var package_name = package_locations[i]
+
+                    for (var k = 0; k < package_locations.length; k++) {
+                        // create a new row for each item in package_locations
+                        var row = $('<tr></tr>');
+                        //========== Get URL for the .zip file
+                        var package_name = package_locations[k]
                             .split('=')[0]
                             .toLowerCase();
-                        var href = package_locations[i].split('=')[1];
+                        var href = package_locations[k].split('=')[1];
+                        //========== Get URL for the .sig file corresponding to the .zip file
+                        // Assume package_name will always end with .zip and the filename 
+                        // has _no_ dots
+                        var sig_name = package_name.split('.')[0];
+                        var sig_href = getURLForSig(package_signature_locations, sig_name+'.sig');
+                        //========== Get URL for the .sha2 file
+                        // TODO: Surface the href when DHE API has this data
+                        // See https://github.com/OpenLiberty/openliberty.io/issues/1734
+                        var sha2_href = '';
+
+                        //========== Build the HTML for the download column containing file links
                         var download_column = $(
-                            '<td headers="' +
-                                tableID +
-                                '_download"><a href="' +
-                                href +
-                                '" class="' +
-                                analytics_class_name +
-                                '" rel="noopener">' +
-                                download_arrow +
-                                'ZIP</a></td>'
+                            '<td headers="'+tableID+'_download">' +
+                            '<a href="'+href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'ZIP</a>' +
+                            // Optional sig file download button
+                            (sig_href ? '<a href="'+sig_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SIG</a>' : '' ) +
+                            // Optional sha2 file download button
+                            (sha2_href ? '<a href="'+sha2_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SHA2</a>' : '' ) +
+                            '</td>'
                         );
 
-                        if (i == 0) {
+                        if (k == 0) {
                             row.append(version_column); // add version column for first item in package_locations
                         }      
                         var package_column;   
@@ -245,6 +299,11 @@ function render_builds(builds, parent) {
                                 '<td headers="' +
                                 tableID +
                                 '_package">MicroProfile 4</td>';
+                        } else if (package_name.indexOf('microprofile5') > -1) {
+                            package_column =
+                                '<td headers="' +
+                                tableID +
+                                '_package">MicroProfile 5</td>';
                         } else if (package_name.indexOf('kernel') > -1) {
                             package_column =
                                 '<td headers="' +
@@ -256,7 +315,7 @@ function render_builds(builds, parent) {
                                 tableID +
                                 '_package">All GA Features</td>';
                         }
-
+                    
                         row.append(package_column);
                         row.append(download_column);
                         parent.append(row);
@@ -266,58 +325,74 @@ function render_builds(builds, parent) {
 
             // beta releases table only
             else if (parent.parent().data('builds-id') == 'runtime_betas') {
-                var package_locations = build.package_locations;
-                if (package_locations !== null && package_locations !== undefined) {
+                var beta_package_locations = build.package_locations;
+                var beta_package_sig_locs= build.package_signature_locations || [];
+                if (beta_package_locations !== null && beta_package_locations !== undefined) {
                     var version = build.version.split('-')[0]; // Remove the -beta from the version
-                    package_locations = getAllowedBuilds('runtime_betas', package_locations, version);
-                    var num_packages = package_locations.length;
-                    var version_column = $(
+
+                    // Assume the .sig files from the allowed builds are also allowed
+                    // without checking the .sig files.
+                    beta_package_locations = 
+                        getAllowedBuilds('runtime_betas', beta_package_locations, version);
+                    
+                    var num_beta_packages = beta_package_locations.length;
+                    var beta_version_column = $(
                         '<td headers="' +
                             tableID +
                             '_version" rowspan="' +
-                            num_packages +
+                            num_beta_packages +
                             '">' +
                             build.version +
                             '</td>'
                     );
-
-                    for (var i = 0; i < package_locations.length; i++) {
-                        var row = $('<tr></tr>'); // create a new row for each item in package_locations
-                        var package_name = package_locations[i]
+            
+                    for (var d = 0; d < beta_package_locations.length; d++) {
+                        // create a new row for each item in package_locations
+                        var beta_row = $('<tr></tr>');
+                        //========== Get URL for the .zip file
+                        var beta_package_name = beta_package_locations[d]
                             .split('=')[0]
                             .toLowerCase();
-                        var href = package_locations[i].split('=')[1];
-                        var download_column = $(
-                            '<td headers="' +
-                                tableID +
-                                '_download"><a href="' +
-                                href +
-                                '" class="' +
-                                analytics_class_name +
-                                '" rel="noopener">' +
-                                download_arrow +
-                                'ZIP</a></td>'
+                        var beta_zip_href = beta_package_locations[d].split('=')[1];
+                        //========== Get URL for the .sig file corresponding to the .zip file
+                        // The name has a lot of dots, so have to use lastIndexOf to separate
+                        // filename from file extension
+                        var beta_sig_name = beta_package_name.substring(0, beta_package_name.lastIndexOf('.'));
+                        var beta_sig_href = 
+                            getURLForSig(beta_package_sig_locs, beta_sig_name+'.sig');
+                        //========== Get URL for the .sha2 file
+                        var beta_sha2_href = ''; // TODO: Surface the href when DHE API has this data
+
+                        //========== Build the HTML for the download column containing file links
+                        var beta_download_column = $(
+                            '<td headers="'+tableID+'_download">' +
+                            '<a href="'+beta_zip_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'ZIP</a>' +
+                            // Optional sig file download button
+                            (beta_sig_href ? '<a href="'+beta_sig_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SIG</a>' : '' ) +
+                            // Optional sha2 file download button
+                            (beta_sha2_href ? '<a href="'+beta_sha2_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SHA2</a>' : '' ) +
+                            '</td>'
                         );
-
-                        if (i == 0) {
-                            row.append(version_column); // add version column for first item in package_locations
+            
+                        if (d == 0) {
+                            beta_row.append(beta_version_column); // add version column for first item in package_locations
                         }
-
-                        if (package_name.indexOf('jakarta') > -1) {
-                            var package_column =
+            
+                        if (beta_package_name.indexOf('jakarta') > -1) {
+                            package_column =
                                 '<td headers=\'' +
                                 tableID +
                                 '_package\'>Jakarta EE 9 Beta Features</td>';
                         } else {
-                            var package_column =
+                            package_column =
                                 '<td headers=\'' +
                                 tableID +
                                 '_package\'>All Beta Features</td>';
                         }
-
-                        row.append(package_column);
-                        row.append(download_column);
-                        parent.append(row);
+            
+                        beta_row.append(package_column);
+                        beta_row.append(beta_download_column);
+                        parent.append(beta_row);
                     }
                 }
             }
