@@ -1,3 +1,4 @@
+#!/bin/bash
 # Install the latest node version using nvm (Node Version Manager)
 timer_start=$(date +%s)
 

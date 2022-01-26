@@ -1,8 +1,9 @@
+#!/bin/bash
 # Import the signing keys used for rvm to gpg for verification
 timer_start=$(date +%s)
 
-echo "Install Ruby & required packages/gems"
-sudo apt-get -y install gnupg build-essential
+# echo "Install Ruby & required packages/gems"
+# apt-get -qq -y install gnupg build-essential ruby-full
 
 cat $BUILD_SCRIPTS_DIR/../gpg/mpapis.asc | gpg --import -
 cat $BUILD_SCRIPTS_DIR/../gpg/pkuczynski.asc | gpg --import -
