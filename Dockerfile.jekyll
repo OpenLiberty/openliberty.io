@@ -1,0 +1,13 @@
+FROM myruby:latest
+
+COPY gems /gems
+COPY robots.txt /
+COPY src /src
+COPY scripts /scripts
+
+ENV BUILD_SCRIPTS_DIR /scripts/build
+
+RUN ./scripts/build/jekyll.sh
+
+# This is for running this image for development
+CMD ["./scripts/jekyll_serve_dev.sh"]

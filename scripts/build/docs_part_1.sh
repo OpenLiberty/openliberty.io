@@ -18,10 +18,10 @@ export BUILD_SCRIPTS_DIR=$(dirname $0)
 echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 
 #Antora Portion of Docs
-echo "Begin building of Antora portion of docs"
+# echo "Begin building of Antora portion of docs"
 
 
-$BUILD_SCRIPTS_DIR/antora_install.sh
+# $BUILD_SCRIPTS_DIR/antora_install.sh
 
 # Use the Antora playbook to download the docs and build the doc pages
 timer_start=$(date +%s)

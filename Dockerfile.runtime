@@ -1,0 +1,13 @@
+FROM mydocs3:latest as build
+
+COPY mvnw /
+
+RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 package
+
+FROM icr.io/appcafe/open-liberty:22.0.0.1-full-java8-openj9-ubi
+
+ENV SEC_TLS_TRUSTDEFAULTCERTS true
+
+COPY src/main/wlp/server.xml /config/server.xml
+
+COPY target/openliberty.war /config/dropins/openliberty.war

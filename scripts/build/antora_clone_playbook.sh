@@ -1,3 +1,4 @@
+#!/bin/bash
 # Clone the Antora playbook used for building the docs pages
 
 # Remove the docs playbook repository
