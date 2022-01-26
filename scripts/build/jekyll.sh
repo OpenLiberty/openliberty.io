@@ -1,10 +1,21 @@
+#!/bin/bash
 # This script contains the end-to-end steps for building the website with Jekyll and using Maven to package
 # Exit immediately if a simple command exits with a non-zero status.
 set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
 echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 
-source $BUILD_SCRIPTS_DIR/ruby_install.sh
+# source $BUILD_SCRIPTS_DIR/ruby_install.sh
+
+set +e
+source /usr/local/rvm/scripts/rvm || true
+set -e
+
+rvm requirements
+rvm install 2.6.6
+rvm use 2.6.6 --default
+echo "Ruby version:"
+echo `ruby -v`
 
 # Guides that are ready to be published to openliberty.io
 echo "Cloning repositories with name starting with guide or iguide..."

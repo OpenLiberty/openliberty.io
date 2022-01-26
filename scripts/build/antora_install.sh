@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Building the Docs with Antora"
 timer_start=$(date +%s)
 
