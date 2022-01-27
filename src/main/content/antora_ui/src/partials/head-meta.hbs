@@ -1,6 +1,8 @@
 {{!-- Add additional meta tags here --}}
-{{#if (or (not (isprod site)) (and (isprod site) (eq page.layout 'noversion')) )}}
-{{> noindex}}
+{{#if site.homeUrl}}
+  {{#if (or (not (isprod site.homeUrl)) (and (isprod site.homeUrl) (eq page.layout 'noversion')) )}}
+  {{> noindex}}
+  {{/if}}
 {{/if}}
 
 {{#if page.attributes.seo-description }} 
