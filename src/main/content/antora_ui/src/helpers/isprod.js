@@ -1,13 +1,13 @@
 'use strict'
 
-function isprod(site) {
-  console.log('site', site);
-  if (site) {
-    let host = site.homeUrl;
-    console.log('site.homeUrl', host);
-    console.log('site.url', site.url);
-    console.log('site.ui.url', site.ui.url);
-    //console.log('prod env var', process.env.PROD_SITE);
+function isprod(page) {
+  console.log('page', page);
+  if (page) {
+    let host = page.url;
+    console.log('page.url', host);
+    console.log('page.parent', page.parent);
+    console.log('page.canonicalUrl', page.canonicalUrl);
+    console.log('prod env var ', $PROD_SITE);
     if (host.indexOf('openliberty.io') !== -1) {
       console.log('isProduction', true);
       return true;
