@@ -1,19 +1,18 @@
 'use strict'
 
-function isprod(page) {
-  console.log('page', page);
-  if (page) {
-    let host = page.url;
-    console.log('page.url', host);
-    console.log('page.parent', page.parent);
-    console.log('page.canonicalUrl', page.canonicalUrl);
-    console.log('prod env var ', $PROD_SITE);
-    if (host.indexOf('openliberty.io') !== -1) {
-      console.log('isProduction', true);
-      return true;
-    }
-  }
-  return false;
+const Handlebars = require('handlebars')
+
+Handlebars.registerHelper('prod', () => {
+  console.log('prod', process.env.PROD_SITE);
+  return process.env.PROD_SITE === 'production';
+})
+
+function isprod(prod) {
+  console.log('env var ', (prod));
+  //if (prod == true) {
+  //    return true;
+  //}
+  //return false;
 };
 
 module.exports = isprod
