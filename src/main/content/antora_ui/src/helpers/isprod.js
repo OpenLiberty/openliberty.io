@@ -1,17 +1,16 @@
 'use strict'
 
-function isprod(siteUrl) {
-  console.log('site', siteUrl);
-  //console.log('prod env var', process.env.PROD_SITE);
-  if (siteUrl) {
-    let host = siteUrl;
-    //console.log('site.homeUrl', host);
-    if (host.indexOf('openliberty.io') !== -1) {
-      console.log('isProduction', true);
+function isprod(env) {
+  console.log('env', env);
+  if (env) {
+    let isProd = env.get(PROD_SITE);
+    console.log('isProduction', isProd);
+    if (isProd) {
       return true;
     }
   }
   return false;
 };
+//The map of environment variables
 
 module.exports = isprod
