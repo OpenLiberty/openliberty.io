@@ -3,7 +3,7 @@
 function isprod(env) {
   console.log('env', env);
   if (env) {
-    let isProd = env.get(PROD_SITE);
+    let isProd = env.get("PROD_SITE");
     console.log('isProduction', isProd);
     if (isProd) {
       return true;
