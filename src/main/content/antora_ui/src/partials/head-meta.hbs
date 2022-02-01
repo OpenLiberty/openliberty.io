@@ -1,8 +1,11 @@
 {{!-- Add additional meta tags here --}}
-{{#if page}}
-  {{#if (or (not isprod (prod)) (and isprod (prod) (eq page.layout 'noversion')) )}}
-  {{> noindex}}
-  {{/if}}
+{{#if (prod) }} 
+<meta name="description" content="Production">
+{{ else }}
+<meta name="description" content="Non production">
+{{/if}}
+{{#if (or (not isprod (prod)) (and isprod (prod) (eq page.layout 'noversion')) )}}
+{{> noindex}}
 {{/if}}
 
 {{#if page.attributes.seo-description }} 
