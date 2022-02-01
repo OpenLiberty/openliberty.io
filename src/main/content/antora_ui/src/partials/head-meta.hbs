@@ -1,9 +1,4 @@
 {{!-- Add additional meta tags here --}}
-{{#if (prod) }} 
-<meta name="description" content="Production">
-{{ else }}
-<meta name="description" content="Non production">
-{{/if}}
 {{#if (or (not (prod)) (and (prod) (eq page.layout 'noversion')) )}}
 {{> noindex}}
 {{/if}}
