@@ -1,6 +1,6 @@
 {{!-- Add additional meta tags here --}}
 {{#if page}}
-  {{#if (or (not (prod)) (and (prod) (eq page.layout 'noversion')) )}}
+  {{#if (or (not isprod (prod)) (and isprod (prod) (eq page.layout 'noversion')) )}}
   {{> noindex}}
   {{/if}}
 {{/if}}
