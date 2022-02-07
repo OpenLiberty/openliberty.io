@@ -1,7 +1,5 @@
 'use strict'
 
-const { posix: path } = require('path')
-
 function isProd() {
   console.error('checking if prod', (prod));
   //console.error('process.env', process.env);
