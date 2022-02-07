@@ -1,0 +1,17 @@
+'use strict'
+
+const { posix: path } = require('path')
+
+function isProd(prod) {
+  console.error('checking if prod', (prod));
+  console.error('prod.env', prod.data.root.env);
+  let prodSite = prod.data.root.env.PROD_SITE;
+  console.error('prod.env', prodSite);
+  if (prodSite === true) {
+    console.error('isProd', true);
+    return true;
+  }
+  return false;
+};
+
+module.exports = isProd
