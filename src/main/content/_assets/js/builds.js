@@ -232,10 +232,15 @@ function render_builds(builds, parent) {
                         var download_column = $(
                             '<td headers="'+tableID+'_download">' +
                             '<a href="'+href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'ZIP</a>' +
-                            // Optional sig file download button
-                            (sig_href ? '<a href="'+sig_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SIG</a>' : '' ) +
                             // Optional sha2 file download button
                             (sha2_href ? '<a href="'+sha2_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SHA2</a>' : '' ) +
+                            '</td>'
+                        );
+                        
+                        var verification_column = $(
+                            '<td headers="'+tableID+'_verification">' +
+                            // Optional sig file download button
+                            (sig_href ? '<a href="'+sig_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SIG</a>' : '' ) +
                             '</td>'
                         );
 
@@ -318,6 +323,7 @@ function render_builds(builds, parent) {
                     
                         row.append(package_column);
                         row.append(download_column);
+                        row.append(verification_column);
                         parent.append(row);
                     }
                 }
@@ -367,13 +373,18 @@ function render_builds(builds, parent) {
                         var beta_download_column = $(
                             '<td headers="'+tableID+'_download">' +
                             '<a href="'+beta_zip_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'ZIP</a>' +
-                            // Optional sig file download button
-                            (beta_sig_href ? '<a href="'+beta_sig_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SIG</a>' : '' ) +
                             // Optional sha2 file download button
                             (beta_sha2_href ? '<a href="'+beta_sha2_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SHA2</a>' : '' ) +
                             '</td>'
                         );
-            
+                        
+                        var beta_verification_column = $(
+                            '<td headers="'+tableID+'_verification">' +
+                            // Optional sig file download button
+                            (beta_sig_href ? '<a href="'+beta_sig_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SIG</a>' : '' ) +
+                            '</td>'
+                        );
+
                         if (d == 0) {
                             beta_row.append(beta_version_column); // add version column for first item in package_locations
                         }
@@ -392,6 +403,7 @@ function render_builds(builds, parent) {
             
                         beta_row.append(package_column);
                         beta_row.append(beta_download_column);
+                        beta_row.append(beta_verification_column);
                         parent.append(beta_row);
                     }
                 }
@@ -605,110 +617,171 @@ function validate_application_name() {
     return valid;
 }
 
-function validate_starter_inputs() {
+function validate_starter_inputs(event) {
     var valid = true;
     $('#starter_warnings').empty();
     $('#starter_submit').addClass('disabled');
 
     var group_name_valid = validate_group_name();
     var app_name_valid = validate_application_name();
-
-    // Look through each of starter_dependencies and verify that the value of its dependency is valid for that input.
-    for (var starter_key in starter_dependencies) {
-        var versions = starter_dependencies[starter_key].versions;
-        // Get the value for this starter field
-        switch (starter_key) {
-        case 'e': // Java EE / Jakarta EE Version
-        case 'j': // Java SE Version
-        case 'm': // MicroProfile Version
-            var value = $(
+    if((event)&&(event.target.id == "Starter_Jakarta_Version")){
+        for (var starter_key in starter_dependencies) {
+            var versions = starter_dependencies[starter_key].versions;
+            var EEVersionValue = $(
                 '.starter_field[data-starter-field=\'' +
-                        starter_key +
-                        '\'] select'
+                    starter_key +
+                    '\'] select'
             )
-                .find(':selected')
-                .text();
-                // Get the other fields dependent on this one
-            var dependencies = versions[value];
+            .find(':selected')
+            .text();
+            var dependencies = versions[EEVersionValue];
             for (var d in dependencies) {
                 var dependency_value = $(
                     '.starter_field[data-starter-field=\'' + d + '\'] select'
                 )
-                    .find(':selected')
-                    .text();
-                    // Check that it's in the list of supported values
+                .find(':selected')
+                .text();
                 if (dependencies[d].indexOf(dependency_value) === -1) {
                     valid = false;
                 }
-                // Disable all invalid values in the dependent select dropdown
                 var options = $(
                     '.starter_field[data-starter-field=\'' +
-                            d +
-                            '\'] select option'
+                    d +
+                    '\'] select option'
                 );
-                var first = true;
-                options.removeAttr('disabled');
-                options.each(function () {
-                    if (dependencies[d].indexOf(this.text) === -1) {
-                        $(this).attr('disabled', 'disabled');
-                        // Add a tooltip that explains that these are disabled because of the other field.
-                        this.title =
-                                'This version is disabled because of incompatibility with the version of: ' +
-                                starter_info[starter_key].name;
-                    } else {
-                        this.title = this.text;
-                        if (!valid && first) {
-                            var selected_version = options
-                                .filter(':selected')
-                                .text();
-
-                            if (selected_version != this.text) {
-                                // Automatically correct the value to the first (highest) valid value.
-                                options
-                                    .filter(':selected')
-                                    .prop('selected', 'false');
-                                $(this).prop('selected', 'true');
-
-                                // Display a message that the value was changed for them.
-                                var close_icon = $(
-                                    '<img src=\'/img/x_white.svg\' id=\'invalid_message_close_icon\' alt=\'Close\' tabindex=\'0\' />'
-                                );
-                                close_icon.on('click', function () {
-                                    $('#starter_warnings').empty();
-                                });
-                                close_icon.on('keydown', function (event) {
-                                    if (
-                                        event.which === 13 ||
-                                            event.which === 32 // Enter key or spacebar
-                                    ) {
-                                        $(this).click();
-                                    }
-                                });
-                                var message = $(
-                                    '<p>' +
-                                            starter_info[d].name +
-                                            ' has been automatically updated from ' +
-                                            selected_version +
-                                            ' to ' +
-                                            this.text +
-                                            ' for compatibility with ' +
-                                            starter_info[starter_key].name +
-                                            '.</p>'
-                                );
-                                $('#starter_warnings')
-                                    .append(message)
-                                    .append(close_icon);
-
-                                first = false;
-                                valid = true;
-                            }
+                var curr_selected_mp_version;
+                var valuetoSelect;
+                if(EEVersionValue !== "None") {
+                    curr_selected_mp_version = valuetoSelect = dependencies[d][dependencies[d].length - 1];
+                }
+                else{
+                    curr_selected_mp_version = valuetoSelect = starter_info[d].default;
+                }
+                var prev_selected_mp_version = options
+                .filter(':selected')
+                .text();
+                for(var i=0; i<options.length; i++) {
+                    var value = options[i].value;
+                    if(value === valuetoSelect) {
+                        $(options[i]).prop('selected', true);
+                        if((prev_selected_mp_version !== "None")&&(EEVersionValue !== "None")&&(prev_selected_mp_version!==curr_selected_mp_version)) {
+                            var message = $(
+                                '<p>' +
+                                starter_info[d].name +
+                                ' has been automatically updated from ' +
+                                prev_selected_mp_version +
+                                ' to ' +
+                                curr_selected_mp_version +
+                                ' for compatibility with ' +
+                                starter_info[starter_key].name +
+                                '.</p>'
+                            );
                         }
+                        else if((prev_selected_mp_version == "None")&&(EEVersionValue !== "None")) {
+                            var message = $(
+                                '<p>' +
+                                starter_info[d].name +
+                                ' has been automatically updated to ' +
+                                curr_selected_mp_version +
+                                ' for compatibility with ' +
+                                starter_info[starter_key].name +
+                                '.</p>'
+                            );
+                        }
+                        else if(EEVersionValue == "None") {
+                            var message = $(
+                                '<p>' +
+                                starter_info[d].name +
+                                ' has been automatically updated to default Version ' +
+                                curr_selected_mp_version +
+                                ' since ' +
+                                starter_info[starter_key].name + ' has been selected as None ' +
+                                '.</p>'
+                            );
+                        }
+                        displayMessage(message);
+                        valid = true;
                     }
-                });
+                }
             }
-            break;
-        default:
-            break;
+        }
+    }
+    else if((event)&&(event.target.id == "Starter_MicroProfile_Version")){
+        var versions;
+        var keys;
+        var EEVersion;
+        var mpVersionValue = $(
+            '.starter_field[data-starter-field=\'m\'] select'
+        )
+        .find(':selected')
+        .text();
+        for (var starter_key in starter_dependencies) {
+            versions = starter_dependencies[starter_key].versions;
+            keys = Object.keys(versions);
+        }
+        for(var i=0; i<keys.length; i++) {
+            if(keys[i] !== "None"){
+                var dependencies = versions[keys[i]];
+                for (var d in dependencies) {
+                    if (dependencies[d].indexOf(mpVersionValue) !== -1) {
+                        EEVersion = keys[i];
+                        valid = false;
+                    }
+                }
+            }
+        }
+        if(mpVersionValue == "None") {
+            EEVersion = starter_info['e'].default;
+        }
+        var options = $(
+            '.starter_field[data-starter-field=\'e\'] select option'
+        );
+        if(!valid){
+            var prev_selected_ee_version = options
+            .filter(':selected')
+            .text();
+            for(var i=0; i<options.length; i++) {
+                if(options[i].value === EEVersion) {
+                    $(options[i]).prop('selected', true);
+                }
+            }
+            if((mpVersionValue !== "None")&&(prev_selected_ee_version !== "None")&&(EEVersion!==prev_selected_ee_version)) {
+                var message = $(
+                '<p>' +
+                starter_info['e'].name +
+                ' has been automatically updated from ' +
+                prev_selected_ee_version +
+                ' to ' +
+                EEVersion +
+                ' for compatibility with ' +
+                starter_info['m'].name +
+                '.</p>'
+                );
+            }
+            else if((prev_selected_ee_version == "None")&&(mpVersionValue !== "None")) {
+                var message = $(
+                '<p>' +
+                starter_info['e'].name +
+                ' has been automatically updated to ' +
+                EEVersion +
+                ' for compatibility with ' +
+                starter_info['m'].name +
+                '.</p>'
+                );
+            }
+            else if(mpVersionValue == "None") {
+                var message = $(
+                    '<p>' +
+                    starter_info['e'].name +
+                    ' has been automatically updated to default Version ' +
+                    EEVersion +
+                    ' since ' +
+                    starter_info['m'].name + ' has been selected as None ' +
+                    '.</p>'
+                );
+            }
+            displayMessage(message);
+            valid = true;
         }
     }
     valid = valid && group_name_valid && app_name_valid;
@@ -716,6 +789,25 @@ function validate_starter_inputs() {
         $('#starter_submit').removeClass('disabled');
     }
 }
+
+function displayMessage(message) {
+    // Display a message when MP/Jakarta EE Version get changed.
+    var close_icon = $(
+        '<img src=\'/img/x_white.svg\' id=\'invalid_message_close_icon\' alt=\'Close\' tabindex=\'0\' />'
+    );
+    close_icon.on('click', function () {
+        $('#starter_warnings').empty();
+    });
+    close_icon.on('keydown', function (event) {
+        if ( event.which === 13 || event.which === 32 ) { // Enter key or spacebar
+            $(this).click();
+        }
+    });
+    $('#starter_warnings')
+    .append(message)
+    .append(close_icon);                                  
+}
+
 
 $(document).ready(function () {
     get_starter_info()
@@ -800,8 +892,8 @@ $(document).ready(function () {
                     break;
                 }
             }
-            $('.starter_field select').on('change', function () {
-                validate_starter_inputs();
+            $('.starter_field select').on('change', function (event) {
+                validate_starter_inputs(event);
             });
             $('.starter_field input').on('keyup', function () {
                 validate_starter_inputs();

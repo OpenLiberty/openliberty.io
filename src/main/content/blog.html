@@ -96,16 +96,32 @@ permalink: /blog/
                                     <div class="row">
                                         <div class="blog_post_author_data_container">
                                             <div class="author_images_container">
-                                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                                {% if post.author_picture %}
+                                                    <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="image of author">
+                                                {% else %}
+                                                    <img src="https://avatars3.githubusercontent.com/u/28316667" class="blog_post_author_image" alt="Open Liberty logo">
+                                                {% endif %}
                                                 {% for author in post.additional_authors %}
+                                                    {% if author.image %}
                                                     <img src="{{ author.image }}" class="blog_post_author_image" alt="image of author">
+                                                    {% else %}
+                                                        <img src="https://avatars3.githubusercontent.com/u/28316667" class="blog_post_author_image" alt="Open Liberty logo">
+                                                    {% endif %}
                                                 {% endfor %}
                                             </div>
-                                            <a class="blog_post_author_name" href="{{ post.author_github }}" target="_blank" rel="noopener">{{ post.author }}</a>
+                                            {% if post.author_github %}
+                                                <a class="blog_post_author_name" href="{{ post.author_github }}" target="_blank" rel="noopener">{{ post.author }}</a>
+                                            {% else %}
+                                                <span class="blog_post_author_name">{{ post.author }}</span>
+                                            {% endif %}
                                             {% for author in post.additional_authors %}
                                                 {% if additional_author_count == 1 %}
                                                     <span>and </span>
-                                                    <a class="blog_post_author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }}</a>
+                                                    {% if author.github %}
+                                                        <a class="blog_post_author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }}</a>
+                                                    {% else %}
+                                                        <span class="blog_post_author_name">{{ author.name }}</span>
+                                                    {% endif %}
                                                 {% else %}
                                                     <span>and {{ additional_author_count }} others</span>
                                                     {% break %}
@@ -146,18 +162,33 @@ permalink: /blog/
                                     <div class="row">
                                         <div class="blog_post_author_data_container">
                                             <div class="author_images_container">
-                                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                                {% if post.author_picture %}
+                                                    <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="image of author">
+                                                {% else %}
+                                                    <img src="https://avatars3.githubusercontent.com/u/28316667" class="blog_post_author_image" alt="Open Liberty logo">
+                                                {% endif %}
                                                 {% for author in post.additional_authors %}
+                                                {% if author.image %}
                                                     <img src="{{ author.image }}" class="blog_post_author_image" alt="image of author">
+                                                {% else %}
+                                                    <img src="https://avatars3.githubusercontent.com/u/28316667" class="blog_post_author_image" alt="Open Liberty logo">
+                                                {% endif %}
                                                 {% endfor %}
                                             </div>
-                                            <a class="blog_post_author_name" href="{{ post.author_github }}" target="_blank" rel="noopener">{{ post.author }}</a>
-
+                                            {% if post.author_github %}
+                                                <a class="blog_post_author_name" href="{{ post.author_github }}" target="_blank" rel="noopener">{{ post.author }}</a>
+                                            {% else %}
+                                                <span class="blog_post_author_name">{{ post.author }}</span>
+                                            {% endif %}
 
                                             {% for author in post.additional_authors %}
                                                 {% if additional_author_count == 1 %}
                                                     <span>and </span>
-                                                    <a class="blog_post_author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }}</a>
+                                                    {% if author.github %}
+                                                        <a class="blog_post_author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }}</a>
+                                                    {% else %}
+                                                        <span class="blog_post_author_name">{{ author.name }}</span>
+                                                    {% endif %}
                                                 {% else %}
                                                     <span>and {{ additional_author_count }} others</span>
                                                     {% break %}
