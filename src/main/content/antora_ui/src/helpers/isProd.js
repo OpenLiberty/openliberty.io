@@ -2,8 +2,9 @@
 
 const { posix: path } = require('path')
 
-function isProd(prod) {
+function isProd() {
   console.error('checking if prod', (prod));
+  //console.error('process.env', process.env);
   console.error('prod.env', prod.data.root.env);
   let prodSite = prod.data.root.env.PROD_SITE;
   console.error('prod.env', prodSite);
