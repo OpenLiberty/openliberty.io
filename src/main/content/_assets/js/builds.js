@@ -182,7 +182,17 @@ function render_builds(builds, parent) {
             // ol releases table only
             if (parent.parent().data('builds-id') == 'runtime_releases') {
                 var package_locations = build.package_locations;
+                var sorted_package_locations;
+                if (package_locations !== null && package_locations !== undefined) {
+                    sorted_package_locations = sortPackageLocations(package_locations);
+                    package_locations = sorted_package_locations;
+                }
                 var package_signature_locations = build.package_signature_locations || [];
+                var sorted_package_signature_locations;
+                if (package_signature_locations !== null && package_signature_locations !== undefined) {
+                    sorted_package_signature_locations = sortPackageLocations(package_signature_locations);
+                    package_signature_locations = sorted_package_signature_locations;
+                }
                 if (package_locations !== null && package_locations !== undefined) {
 
                     // Assume the .sig files from the allowed builds are also allowed
@@ -326,7 +336,17 @@ function render_builds(builds, parent) {
             // beta releases table only
             else if (parent.parent().data('builds-id') == 'runtime_betas') {
                 var beta_package_locations = build.package_locations;
+                var sorted_beta_package_locations;
+                if (beta_package_locations !== null && beta_package_locations !== undefined) {
+                    sorted_beta_package_locations = sortPackageLocations(beta_package_locations);
+                    beta_package_locations = sorted_beta_package_locations;
+                }
                 var beta_package_sig_locs= build.package_signature_locations || [];
+                var sorted_beta_package_sig_locs;
+                if (beta_package_sig_locs !== null && beta_package_sig_locs !== undefined) {
+                    sorted_beta_package_sig_locs = sortPackageLocations(beta_package_sig_locs);
+                    beta_package_sig_locs = sorted_beta_package_sig_locs;
+                }
                 if (beta_package_locations !== null && beta_package_locations !== undefined) {
                     var version = build.version.split('-')[0]; // Remove the -beta from the version
 
@@ -508,6 +528,42 @@ function highlightAlternateRows() {
     $("tr.highlight_alternate_rows td[rowspan]").each(function() {
         $(this).parent().nextAll().slice(0, this.rowSpan - 1).addClass('highlight_alternate_rows');
     });
+}
+
+function sortPackageLocations(package_locations_param) {
+    for (var k = 0; k < package_locations_param.length; k++) {
+        var package_name = package_locations_param[k].split('=')[0].toLowerCase();
+        var packageName;
+        if (package_name.indexOf("java") > -1) {
+            packageName = "java";
+        }
+        else if (package_name.indexOf("jakarta") > -1) {
+            packageName = "jakarta";
+        }
+        else if (package_name.indexOf("webprofile") > -1) {
+            packageName = "webProfile";
+        }
+        else if (package_name.indexOf("microprofile") > -1) {
+            packageName = "microProfile";
+        }
+        var clonePackageLocationArray = package_locations_param.slice(0);
+        package_locations_param = package_locations_param.filter(function(element) {
+            if (element.split('.')[0].indexOf(packageName) > -1) {
+                return true;
+            }
+        });
+        package_locations_param.sort(function(a, b) {
+            if(a < b) { return -1; }
+            if(a > b) { return 1; }
+            return 0;
+        });
+        clonePackageLocationArray.forEach(function(element, index) {
+            if (element.split('.')[0].indexOf(packageName) == -1) {
+                package_locations_param.splice(index, 0, element);
+            }
+        });
+    }
+    return package_locations_param;
 }
 
 function add_lead_zero(number) {
