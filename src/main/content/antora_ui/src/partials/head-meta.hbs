@@ -1,9 +1,6 @@
 {{!-- Add additional meta tags here --}}
-{{#if (prod)}}
-<meta name=“description” content=“prod available”>
-{{#if (or (not (isProd prod)) (eq page.layout 'noversion') )}}
+{{#if (or (not (isProd env)) (eq page.layout 'noversion') )}}
 {{> noindex}}
-{{/if}}
 {{/if}}
 
 {{#if page.attributes.seo-description }} 
