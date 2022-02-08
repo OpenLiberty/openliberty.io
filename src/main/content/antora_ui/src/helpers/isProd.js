@@ -1,13 +1,5 @@
 'use strict'
 
-const Handlebars = require('handlebars')
-
-Handlebars.registerHelper('prod', () => {
-  console.error('env', process.env);
-  console.error('prod', process.env.PROD_SITE);
-  return process.env.PROD_SITE === true;
-})
-
 function isProd(env) {
   console.error('env', env);
   isProd = env.PROD_SITE;
