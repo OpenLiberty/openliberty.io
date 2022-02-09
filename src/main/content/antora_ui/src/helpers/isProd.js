@@ -1,14 +1,10 @@
 'use strict'
 
 function isProd(env) {
-  console.error('env', env);
-  var isProduction = env.PROD_SITE;
-  console.error('env PROD_SITE', isProduction);
-  if (isProduction) {
-    console.error('isProd', true);
+  var isProdSite = env.PROD_SITE;
+  if (isProdSite) {
     return true;
   }
-  console.error('isProd', false);
   return false;
 };
 

@@ -16,10 +16,8 @@ cd ..
 mv -f src/main/content/_assets/js/custom-include-processor.js antora/node_modules/@antora/asciidoc-loader/lib/include/include-processor.js 
 # Remove the section above when upgrading antora to 3.0
 
-if [ "$PROD_SITE" != "true" ]; then
-    # add noindex metdata for non prod sites
-    cp src/main/content/_includes/noindex.html src/main/content/antora_ui/src/partials/noindex.hbs
-fi
+# add noindex metdata for non-prod/prod sites
+cp src/main/content/_includes/noindex.html src/main/content/antora_ui/src/partials/noindex.hbs
 
 pushd src/main/content/antora_ui
 echo "Installing Antora dependencies"
