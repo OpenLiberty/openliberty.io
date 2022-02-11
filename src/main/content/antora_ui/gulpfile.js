@@ -1,8 +1,7 @@
 'use strict'
 
 const { src, dest, parallel, series, watch } = require('gulp')
-const sass = require('gulp-sass')
-sass.compiler = require('node-sass')
+const sass = require('gulp-sass')(require('node-sass'));
 
 const createTask = require('./gulp.d/lib/create-task')
 const exportTasks = require('./gulp.d/lib/export-tasks')
