@@ -20,6 +20,7 @@ var defaultHtmlRootPath = "";
 var defaultPackageHtml = "";
 var defaultClassHtml = "";
 
+var iFrameClicked = false;
 // Make sure the footer and header of the documentation page is always in the
 // browser viewport.
 function resizeJavaDocWindow() {
@@ -498,6 +499,10 @@ function addClickListener(contents) {
       var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
       window.history.pushState(state, null, newURL);
       
+      //updating canonical url when right container iframe clicked
+      iFrameClicked = true;
+      replaceCanonicalUrl(newURL);
+
       var package;
       if(queryParams.has(PACKAGE_PARAM)){
         queryParams.delete(PACKAGE_PARAM);
@@ -529,6 +534,13 @@ function setPackageContainerHeight() {
 }
 
 function setIFrameContent(iframeName, href) {
+  window.onpopstate = (e) => {
+    popStateOrPageRefresh();
+
+  };
+  if(iFrameClicked == false) {
+    popStateOrPageRefresh();
+  }
   var iframeContent = $("#javadoc_container")
     .contents()
     .find(iframeName)
@@ -568,6 +580,12 @@ function setIFrameContent(iframeName, href) {
   };
   http.open("HEAD", href);
   http.send();
+}
+
+//when back button pressed or page refresh
+function popStateOrPageRefresh() {
+  var url = window.top.location.href;
+  replaceCanonicalUrl(url);
 }
 
 // If package is provided as paramName, then return the class param. Otherwise return the package param.
@@ -729,6 +747,10 @@ function modifyPackageTopLinks() {
       $(this).on("click", function(event) {
         event.preventDefault();
         event.stopPropagation();
+        iFrameClicked = true;
+        var url = $(this).attr("href");
+        //updating canonical url when left container iframe clicked
+        replaceCanonicalUrl(url);
         setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + package);
         window.history.pushState(
           {
@@ -743,7 +765,15 @@ function modifyPackageTopLinks() {
   });
 }
 
+function replaceCanonicalUrl(url) {
+  var canonicalTag = document.querySelector('link[rel="canonical"]');
+  var canonicalUrl = canonicalTag.href;
+  var newCanonicalUrl = canonicalUrl.replace(canonicalUrl.substring(canonicalUrl.indexOf('reference')), '')+url.substring(url.indexOf('reference'));
+  canonicalTag.href = newCanonicalUrl;
+}
+
 $(document).ready(function() {
+  iFrameClicked = false;
   $(window).on("resize", function() {
     resizeJavaDocWindow();
   });
