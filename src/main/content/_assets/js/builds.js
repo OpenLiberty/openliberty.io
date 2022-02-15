@@ -1101,20 +1101,14 @@ $(document).ready(function () {
 
         if (data.builds) {
             if (data.builds.runtime_releases) {
-                // $.ajax({
-                //     url: 'src/main/content/test.json',
-                // }).done(function (data) {
-                //     runtime_releases = data;
-                // });
                 runtime_releases = formatBuilds(data.builds.runtime_releases);
                 builds['runtime_releases'] = runtime_releases;
-                sort_builds(runtime_releases, 'date', true);
                 render_builds(
                     runtime_releases,
                     $('table[data-builds-id="runtime_releases"] tbody')
                 );
             }
-            if (data.builds.tools_releases) {                
+            if (data.builds.tools_releases) {
                 developer_tools_releases = formatBuilds(
                     data.builds.tools_releases
                 );
