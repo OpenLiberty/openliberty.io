@@ -21,6 +21,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileNotFoundException;
 
 /**
  * Originally this filter was used simply to force the use of TLS, however it
@@ -126,7 +127,13 @@ public class TLSFilter implements Filter {
                     response.setHeader("Content-Type", "text/html");
                     response.setHeader("Content-Encoding", "gzip");
                     doFilter = false;
-                    req.getRequestDispatcher(uri.concat(".gz")).include(req, response);
+                    try {
+                        req.getRequestDispatcher(uri.concat(".gz")).include(req, response);
+                    }
+                    catch(FileNotFoundException e) {
+                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                        response.sendRedirect("/404.html");
+                    }
                 }
             } else if (uri.startsWith("/api/builds/") || uri.startsWith("/api/github/")) {
                 response.setHeader("Cache-Control", "no-store");
