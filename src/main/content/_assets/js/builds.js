@@ -1003,7 +1003,7 @@ $(document).ready(function () {
                         url.revokeObjectURL(anchor.href);
                     }, 1);
                     var genProjModal = document.getElementById("generate-project-modal");
-                    genProjModal.style.display = "block";
+                    genProjModal.classList.add("show-modal-popup");
                     var build_tool = $('input[name=\'build_system\']:checked').val();
                     if(build_tool == "maven") {
                         $('#cmd_to_run span').text("mvnw liberty:run");
@@ -1014,10 +1014,10 @@ $(document).ready(function () {
                     // generate project modal popup close
                     var genProjCloseModal = document.getElementsByClassName("generate-project-modal-close")[0];
                     genProjCloseModal.onclick = function() {
-                        genProjModal.style.display = "none";
+                        genProjModal.classList.remove("show-modal-popup");
                     }
                     $('#gen_proj_popup_button').click(function (event) {
-                        genProjModal.style.display = "none";
+                        genProjModal.classList.remove("show-modal-popup");
                     });
                 }
             })
