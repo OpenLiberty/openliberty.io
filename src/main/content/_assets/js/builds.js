@@ -1002,28 +1002,67 @@ $(document).ready(function () {
                         document.body.removeChild(anchor);
                         url.revokeObjectURL(anchor.href);
                     }, 1);
-                    var genProjModal = document.getElementById("generate-project-modal");
-                    genProjModal.classList.add("show-modal-popup");
+                    $('#generate-project-modal').modal('show');
+                    setFocusOnModalPopupElement();
                     var build_tool = $('input[name=\'build_system\']:checked').val();
                     if(build_tool == "maven") {
-                        $('#cmd_to_run span').text("mvnw liberty:run");
+                        $('#cmd_to_run').text("mvnw liberty:run");
                     }
                     else {
-                        $('#cmd_to_run span').text("gradlew libertyStart");
+                        $('#cmd_to_run').text("gradlew libertyStart");
                     }
-                    // generate project modal popup close
-                    var genProjCloseModal = document.getElementsByClassName("generate-project-modal-close")[0];
-                    genProjCloseModal.onclick = function() {
-                        genProjModal.classList.remove("show-modal-popup");
-                    }
-                    $('#gen_proj_popup_button').click(function (event) {
-                        genProjModal.classList.remove("show-modal-popup");
-                    });
                 }
             })
             .fail(function (response) {
                 console.error('Failed to download the starter project.');
             });
+    });
+
+    function setFocusOnModalPopupElement() {
+        $('#generate-project-modal').on('shown.bs.modal', function () {
+            var modal = $(this);
+            var focusableChildren = modal.find('button, a[href]');
+            var numElements = focusableChildren.length;
+            var currentIndex = 2;
+            var focusableElement = focusableChildren[currentIndex];
+            focusableElement.focus();
+            var focus = function() {
+                var focusableElement = focusableChildren[currentIndex];
+                if (focusableElement)
+                    focusableElement.focus();
+            };
+        
+            var focusPrevious = function () {
+                currentIndex--;
+                if (currentIndex < 0)
+                    currentIndex = numElements - 1;
+                focus();
+                return false;
+            };
+        
+            var focusNext = function () {
+                currentIndex++;
+                if (currentIndex >= numElements)
+                    currentIndex = 0;
+                focus();
+                return false;
+            };
+        
+            $(document).on('keydown', function (e) {
+                if (e.keyCode == 9 && e.shiftKey) {
+                    e.preventDefault();
+                    focusPrevious();
+                }
+                else if (e.keyCode == 9) {
+                    e.preventDefault();
+                    focusNext();
+                }
+            });
+        });
+    }
+
+    $('#generate-project-modal').on('hidden.bs.modal', function() {
+        $(document).unbind('keydown');
     });
 
     $('.builds_expand_link').click(function (event) {
