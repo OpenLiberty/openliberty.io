@@ -1063,6 +1063,7 @@ $(document).ready(function () {
 
     $('#generate-project-modal').on('hidden.bs.modal', function() {
         $(document).unbind('keydown');
+        $('#copy_to_clipboard').remove();
     });
 
     $('.builds_expand_link').click(function (event) {
