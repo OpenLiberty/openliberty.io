@@ -13,13 +13,14 @@ var PACKAGE_FRAME = ".leftBottom iframe";
 var CLASS_FRAME = "iframe.rightIframe";
 var DEFAULT_PACKAGE_HTML = "allclasses-frame.html";
 var DEFAULT_CLASS_HTML = "overview-summary.html";
-var PACKAGE_HASH = "package=";
-var CLASS_HASH = "class=";
+var PACKAGE_PARAM = "package";
+var CLASS_PARAM = "class";
 
 var defaultHtmlRootPath = "";
 var defaultPackageHtml = "";
 var defaultClassHtml = "";
 
+var iFrameClicked = false;
 // Make sure the footer and header of the documentation page is always in the
 // browser viewport.
 function resizeJavaDocWindow() {
@@ -364,19 +365,19 @@ function addNavHoverListener() {
 // Returns a json object with the package and class from the url
 function parseQueryParams() {
   var targetPage = {};
-  var hashPage = parent.window.location.hash;
-  if (hashPage != "" && hashPage != undefined) {
-    hashPage = hashPage.substring(1); // take out the #
-    var splitHashPage = hashPage.split("&");
-    for (i = 0; i < splitHashPage.length; i++) {
-      var hashString = splitHashPage[i].trim();
-      if (hashString.indexOf(PACKAGE_HASH) === 0) {
-        targetPage.package = hashString.substring(8);
+  var queryParams = window.location.search;  
+  if (queryParams && queryParams !== undefined) {
+    queryParams = queryParams.substring(1); // Remove the '?'
+    var splitQueryParams = queryParams.split("&");
+    for (i = 0; i < splitQueryParams.length; i++) {
+      var queryParam = splitQueryParams[i].trim();
+      if (queryParam.indexOf(PACKAGE_PARAM) === 0) {
+        targetPage.package = queryParam.substring(PACKAGE_PARAM.length + 1);
       } else {
-        var tmpClassPage = hashString;
-        if (hashString.indexOf(CLASS_HASH) === 0) {
-          tmpClassPage = hashString.substring(6);
-        } else if (hashString.indexOf("=") !== -1) {
+        var tmpClassPage = queryParam;
+        if (queryParam.indexOf(CLASS_PARAM) === 0) {
+          tmpClassPage = queryParam.substring(CLASS_PARAM.length + 1);
+        } else if (queryParam.indexOf("=") !== -1) {
           tmpClassPage = "";
         }
         if (tmpClassPage !== "") {
@@ -439,7 +440,7 @@ function addClickListener(contents) {
   contents.on("click", function(e) {
     var handlingClick = true;
     var iframeName = CLASS_FRAME;
-    var hashKey = CLASS_HASH;
+    var paramKey = CLASS_PARAM;
     var href = e.target.href;
     if (e.target.target === undefined) {
       // handling
@@ -454,14 +455,14 @@ function addClickListener(contents) {
         href = e.target.parentNode.href;
         if (e.target.parentNode.target === "packageFrame") {
           iframeName = PACKAGE_FRAME;
-          hashKey = PACKAGE_HASH;
+          paramKey = PACKAGE_PARAM;
         }
       } else {
         handlingClick = false;
       }
     } else if (e.target.target === "packageFrame") {
       iframeName = PACKAGE_FRAME;
-      hashKey = PACKAGE_HASH;
+      paramKey = PACKAGE_PARAM;
     } else if (e.target.href && e.target.href.indexOf("javascript:") === 0) {
       // let javadoc handles the click for "All/Instance/Abstract" methods in
       // the Method Summary section
@@ -472,28 +473,41 @@ function addClickListener(contents) {
       e.preventDefault();
       e.stopPropagation();
 
-      var hashParams = setHashParams(href, hashKey);
+      var queryParams = setQueryParams(href, paramKey);
       setIFrameContent(iframeName, href);
       setPackageContainerHeight();
 
       // provide state data to be used by the popstate event to render the frame contents
       var state = {};
       state[iframeName] = href;
-      var otherHashContent = getRemainingHashParam(hashParams, hashKey);
-      $.each(otherHashContent, function(key, value) {
+      var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey);
+      testObject = otherQueryParamsContent;
+      for (key in otherQueryParamsContent) {
         var otherStateKey = CLASS_FRAME;
-        if (key === PACKAGE_HASH) {
-          otherStateKey = PACKAGE_FRAME;
+        if (otherQueryParamsContent.hasOwnProperty(key)){
+          if (key === PACKAGE_PARAM) {
+            otherStateKey = PACKAGE_FRAME;
+          }
+          var value = otherQueryParamsContent[key];
+          state[otherStateKey] = defaultHtmlRootPath + decodeURIComponent(value);
         }
-        state[otherStateKey] = defaultHtmlRootPath + value;
-      });
-      window.history.pushState(state, null, hashParams);
+      }
 
-      var package = hashParams
-        .substring(1)
-        .split("&")
-        .sort()[1]
-        .replace("package=", "");
+      var search = window.location.search;
+      var hash = window.location.hash;      
+      // Removing old search and hash, otherwise it adds duplicate query parameters and hashes.
+      var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
+      window.history.pushState(state, null, newURL);
+      
+      //updating canonical url when right container iframe clicked
+      iFrameClicked = true;
+      replaceCanonicalUrl(newURL);
+
+      var package;
+      if(queryParams.has(PACKAGE_PARAM)){
+        queryParams.delete(PACKAGE_PARAM);
+      }
+
       updateTitle(package);
 
       // Remove all selected li in this list and add active class to parent li
@@ -520,6 +534,13 @@ function setPackageContainerHeight() {
 }
 
 function setIFrameContent(iframeName, href) {
+  window.onpopstate = (e) => {
+    popStateOrPageRefresh();
+
+  };
+  if(iFrameClicked == false) {
+    popStateOrPageRefresh();
+  }
   var iframeContent = $("#javadoc_container")
     .contents()
     .find(iframeName)
@@ -561,73 +582,56 @@ function setIFrameContent(iframeName, href) {
   http.send();
 }
 
-// If package is provided as hashName, then return the class hash. Otherwise return the package hash.
-function getRemainingHashParam(hash, hashName) {
-  var lookForHash = PACKAGE_HASH;
-  var returnHash = {};
-  if (hashName === PACKAGE_HASH) {
-    lookForHash = CLASS_HASH;
+//when back button pressed or page refresh
+function popStateOrPageRefresh() {
+  var url = window.top.location.href;
+  replaceCanonicalUrl(url);
+}
+
+// If package is provided as paramName, then return the class param. Otherwise return the package param.
+function getRemainingQueryParam(queryParams, paramName) {
+  var lookForParam = PACKAGE_PARAM;
+  var returnParams = {};
+  if (paramName === PACKAGE_PARAM) {
+    lookForParam = CLASS_PARAM;
   }
-  if (hash.indexOf(lookForHash) !== -1) {
+  if (queryParams.has(lookForParam)) {
     try {
-      var searchHashToMatch = ".*" + lookForHash + "(.*?.html).*";
-      var regExpToMatch = new RegExp(searchHashToMatch, "g");
-      var groups = regExpToMatch.exec(hash);
-      returnHash[lookForHash] = groups[1];
+      returnParams[lookForParam] = queryParams.get(lookForParam);
     } catch (ex) {}
   }
-  return returnHash;
+  return returnParams;
 }
 
-// To mark the javadoc bookmarkable, a hash is used to contain two pieces of information.
+// To mark the javadoc bookmarkable, query params are used to contain two pieces of information.
 //   package=xxx.html
 //   class=xxx.html
-// eg. #package=javax/enterprise/util/package-frame.html&class=javax/interceptor/InterceptorBinding.html
+// eg. ?package=javax/enterprise/util/package-frame.html&class=javax/interceptor/InterceptorBinding.html
 //
-// The package hash is used to render the content in the left bottom iframe. The class hash
+// The package param is used to render the content in the left bottom iframe. The class param
 // is used to render the content in the right iframe.
-function setHashParams(url, hashName) {
-  var hash = window.location.hash;
-  if (url !== undefined && url != "") {
+function setQueryParams(url, paramName) {
+  var newURL = new URL(window.location.href);
+  var queryParams = newURL.searchParams;
+  if (url !== undefined && url !== "") {
     var htmlPath = getJavaDocHtmlPath(url);
-    var hashString = hashName + htmlPath;
-    if (window.location.hash.indexOf(hashString) === -1) {
-      if (window.location.hash.indexOf(hashName) !== -1) {
-        try {
-          // take out existing hash string with same name first
-          var hashNameToMatch = "(.*)" + hashName + ".*?.html(.*)";
-          var regExpToMatch = new RegExp(hashNameToMatch, "g");
-          var groups = regExpToMatch.exec(window.location.hash);
-          if (groups) {
-            hash = groups[1] + hashString + groups[2];
-          } else {
-            hash = "#" + hashString;
-          }
-        } catch (ex) {}
-      } else {
-        if (window.location.hash.indexOf("#") === -1) {
-          hashString = "#" + hashString; // no hash yet
-        } else {
-          hashString = "&" + hashString; // already has existing hash
-        }
-        hash = window.location.hash + hashString;
-      }
-    }
+    queryParams.set(paramName, htmlPath);
   }
-  // The hash approach is to always include both package and class hash. If default content is
-  // displayed for package/class frame content, provide the hash to point to the default html too.
-  if (hash.indexOf(PACKAGE_HASH) === -1) {
-    // add default package to hash
-    hash += "&" + PACKAGE_HASH + getJavaDocHtmlPath(defaultPackageHtml);
+  // The param approach is to always include both package and class param. If default content is
+  // displayed for package/class frame content, provide the param to point to the default html too.
+  if (!queryParams.has(PACKAGE_PARAM)) {
+    // add default package
+    queryParams.set(PACKAGE_PARAM, getJavaDocHtmlPath(defaultPackageHtml));
   }
-  if (hash.indexOf(CLASS_HASH) === -1) {
-    // add default class to hash
-    hash += "&" + CLASS_HASH + getJavaDocHtmlPath(defaultClassHtml);
+  if (!queryParams.has(CLASS_PARAM)) {
+    // add default class
+    queryParams.set(CLASS_PARAM, getJavaDocHtmlPath(defaultClassHtml));
   }
-  return hash;
+
+  return queryParams;
 }
 
-// Eg of href is http://localhost:4000/docs/modules/reference/microprofile-1.3-javadoc/javax/enterprise/context/package-frame.html
+// Eg if href is http://localhost:4000/docs/modules/reference/microprofile-1.3-javadoc/javax/enterprise/context/package-frame.html
 // if returnBase is true, return http://localhost:4000/docs/modules/reference/microprofile-1.3-javadoc/
 // otherwise return javax/enterprise/context/package-frame.html
 
@@ -649,6 +653,33 @@ function getJavaDocHtmlPath(href, returnBase) {
 // add current hash to url when version button clicked
 function versionClick(event) {
   event.target.href += window.location.hash;
+}
+
+function getDocInfo(iframe_src) {
+  if (iframe_src.includes("microprofile")) {
+    // Historical reason for having a trailing '-' to separate the version from doc_type
+    doc_type = "microprofile-";
+    doc_version = iframe_src.substring(
+      iframe_src.indexOf(doc_type) + doc_type.length,
+      iframe_src.indexOf("-javadoc")
+    );
+  } else if (iframe_src.includes("liberty-javaee")) {
+    doc_type = "liberty-javaee";
+    doc_version = iframe_src.substring(
+      iframe_src.indexOf(doc_type) + doc_type.length,
+      iframe_src.indexOf("-javadoc")
+    );
+  } else if (iframe_src.includes("liberty-jakartaee")) {
+    doc_type = "liberty-jakartaee";
+    doc_version = iframe_src.substring(
+      iframe_src.indexOf(doc_type) + doc_type.length,
+      iframe_src.indexOf("-javadoc")
+    );
+  } else {
+    // Should never happen
+    doc_version = 0;
+  }
+  return {version: doc_version, type: doc_type};
 }
 
 // Highlight the iframe's TOC according to the query param in the URL
@@ -675,99 +706,74 @@ function highlightTOC(iframeName) {
   }
 }
 
-function modifyPackageTopLinks() {
-  var jdSrc = $("#javadoc_container").attr("src");
-  if (jdSrc.includes("microprofile")) {
-    var iframeContent = $("#javadoc_container")
-      .contents()
-      .find(".leftTop iframe")
-      .contents();
-    var version = jdSrc.substring(
-      jdSrc.indexOf("microprofile") + 13,
-      jdSrc.indexOf("microprofile") + 16
-    );
-    iframeContent.find('ul[title="Packages"] li a').each(function() {
-      var port = window.location.port !== "" ? ":" + window.location.port : "";
-      var package = $(this).attr("href");
-      if (package.includes("../")) {
-        package = package.substring(package.lastIndexOf("../") + 3);
-      }
-      if (!package.includes(window.location.hostname)) {
-        $(this).attr(
-          "href",
-          "https://" +
-            window.location.hostname +
-            port +
-            "/docs/ref/microprofile/" +
-            version +
-            "/#class=overview-summary.html&package=" +
-            package
-        );
-        //find out how to load specific package to iframe
-        $(this).on("click", function(event) {
-          event.preventDefault();
-          event.stopPropagation();
-          setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + package);
-          window.history.pushState(
-            {
-              iframeName: ".leftTop iframe",
-              otherStateKey: defaultHtmlRootPath + package
-            },
-            "",
-            $(this).attr("href")
-          );
-        });
-      }
-    });
-  }
+function getLibertyVersionFromUrl() {
+  var currentPath = window.location.pathname;
+  return currentPath.split('/')[2];
+}
 
-  if (jdSrc.includes("liberty-javaee")) {
-    var iframeContent = $("#javadoc_container")
-      .contents()
-      .find(".leftTop iframe")
-      .contents();
-    var version = jdSrc.substring(
-      jdSrc.indexOf("liberty-javaee") + 14,
-      jdSrc.indexOf("liberty-javaee") + 15
-    );
-    iframeContent.find('ul[title="Packages"] li a').each(function() {
-      var port = window.location.port !== "" ? ":" + window.location.port : "";
-      var package = $(this).attr("href");
-      if (package.includes("../")) {
-        package = package.substring(package.lastIndexOf("../") + 3);
-      }
-      if (!package.includes(window.location.hostname)) {
-        $(this).attr(
-          "href",
-          "https://" +
-            window.location.hostname +
-            port +
-            "/docs/latest/reference/javadoc/liberty-javaee" +
-            version +
-            "-javadoc.html#package=" +
-            package +
-            "&class=overview-summary.html"
+function modifyPackageTopLinks() {
+
+  var iframe_src = $("#javadoc_container").attr("src").toLowerCase();
+  var liberty_version = getLibertyVersionFromUrl(); // e.g. 21.0.0.12
+  var doc = getDocInfo(iframe_src);
+  var doc_type = doc.type;
+  var doc_version = doc.version;
+
+  var iframeContent = $("#javadoc_container")
+    .contents()
+    .find(".leftTop iframe")
+    .contents();
+
+  iframeContent.find('ul[title="Packages"] li a').each(function() {
+    var port = window.location.port !== "" ? ":" + window.location.port : "";
+    var package = $(this).attr("href");
+    if (package.includes("../")) {
+      package = package.substring(package.lastIndexOf("../") + 3);
+    }
+    if (!package.includes(window.location.hostname)) {
+      $(this).attr(
+        "href",
+        "https://" +
+          window.location.hostname +
+          port +
+          "/docs/" +
+          liberty_version +
+          "/reference/javadoc/" +
+          doc_type + doc_version + "-javadoc.html" +
+          "?package=" + package +
+          "&class=overview-summary.html"
+      );
+      //find out how to load specific package to iframe
+      $(this).on("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        iFrameClicked = true;
+        var url = $(this).attr("href");
+        //updating canonical url when left container iframe clicked
+        replaceCanonicalUrl(url);
+        setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + package);
+        window.history.pushState(
+          {
+            iframeName: ".leftTop iframe",
+            otherStateKey: defaultHtmlRootPath + package
+          },
+          "",
+          $(this).attr("href")
         );
-        //find out how to load specific package to iframe
-        $(this).on("click", function(event) {
-          event.preventDefault();
-          event.stopPropagation();
-          setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + package);
-          window.history.pushState(
-            {
-              iframeName: ".leftTop iframe",
-              otherStateKey: defaultHtmlRootPath + package
-            },
-            "",
-            $(this).attr("href")
-          );
-        });
-      }
-    });
-  }
+      });
+    }
+  });
+}
+
+function replaceCanonicalUrl(url) {
+  var canonicalTag = document.querySelector('link[rel="canonical"]');
+  var canonicalUrl = canonicalTag.href;
+  var newCanonicalUrl = canonicalUrl.replace(canonicalUrl.substring(canonicalUrl.indexOf('reference')), '')+url.substring(url.indexOf('reference'));
+  canonicalTag.href = newCanonicalUrl;
 }
 
 $(document).ready(function() {
+  iFrameClicked = false;
   $(window).on("resize", function() {
     resizeJavaDocWindow();
   });

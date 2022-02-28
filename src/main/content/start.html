@@ -3,9 +3,9 @@ layout: default
 title: Get Started
 css: 
 - header-dark
-- downloads
+- start
 js: builds
-permalink: /downloads/
+permalink: /start/
 ---
 
 <!-- INTRO -->
@@ -38,7 +38,14 @@ permalink: /downloads/
     </div>   
     <div class="row">
         <div class="col">
-            <p id="starter_description">Select the development tools that you prefer to use, then generate a package to start developing your application.</p>
+            <p id="starter_description">
+                Select the development tools that you prefer to use, then generate a package to 
+                start developing your application.
+                <br />
+                Find a bug? Need an enhancement?
+                <a href="https://github.com/OpenLiberty/start.openliberty.io/issues/new/choose" 
+                    class="orange_link_light_background">Raise an issue</a>.
+            </p>
         </div>        
     </div> 
     <div id="starter_form">
@@ -164,15 +171,27 @@ permalink: /downloads/
                     <div class="col-sm-12">
                         <p class="download_sentence">
                             New releases will be announced on the Open Liberty <a href="/blog/?search=release&key=tag" class="orange_link_light_background">blog</a>
-                            and <a href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener" class="orange_link_light_background">Twitter</a>. 
+                            and <a href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener" class="orange_link_light_background">Twitter</a>.
+                            <br/>
+                            <br/>
+                            Starting with version 22.0.0.1, signature files are produced for every package of an Open Liberty release. You can use these signature files
+                            and the corresponding public key to verify the authenticity and integrity of an Open Liberty release package. For more information, see
+                            <a href="/docs/22.0.0.1/verifying-package-signatures.html"
+                            class="orange_link_light_background">Verifying Open Liberty release packages</a>.
+                            <br/>
+                            <br/>
+                            <a href="https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_06-02-2021.pem" class="orange_link_light_background">Obtain the public key
+                            from this link</a>.
+                            Save the file from your browser as a <code>.pem</code> file.
                         </p>
                         <div id="runtime_releases_table_container" class="narrow_table_container">
-                            <table class="build_table releases_table white_table" data-builds-id="runtime_releases">
+                            <table class="build_table releases_table white_table" data-builds-id="runtime_releases" id="runtime_releases_table">
                                 <thead>
                                     <tr>
                                         <th id="runtime_releases_version" class="version_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">Version</a></th>
                                         <th id="runtime_releases_package" class="package_name_column">Package</th>
                                         <th id="runtime_releases_download" class="download_button_column">Download</th>
+                                        <th id="runtime_releases_verification" class="download_button_column">Verification</th>
                                     </tr>
                                 </thead>
                                 <tbody class="release_table_body">
@@ -188,14 +207,26 @@ permalink: /downloads/
                     <div class="col-sm-12">
                         <p class="download_sentence">
                             Try out new features in our betas and let us know <a href="/contribute" class="orange_link_light_background">your feedback</a>. Beta content may change from <a href="/blog/?search=beta&key=tag" class="orange_link_light_background">release to release</a>.
+                            <br/>
+                            <br/>
+                            Starting with version 22.0.0.1, signature files are produced for every package of an Open Liberty release. You can use these signature files
+                            and the corresponding public key to verify the authenticity and integrity of an Open Liberty release package. For more information, see
+                            <a href="/docs/22.0.0.1/verifying-package-signatures.html"
+                            class="orange_link_light_background">Verifying Open Liberty release packages</a>.
+                            <br/>
+                            <br/>
+                            <a href="https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_06-02-2021.pem" class="orange_link_light_background">Obtain the public key
+                            from this link</a>.
+                            Save the file from your browser as a <code>.pem</code> file.
                         </p>
                         <div id="runtime_betas_table_container" class="narrow_table_container">
-                            <table class="build_table releases_table white_table" data-builds-id="runtime_betas">
+                            <table class="build_table releases_table white_table" data-builds-id="runtime_betas" id="runtime_betas_table">
                                 <thead>
                                     <tr>
                                         <th id="runtime_betas_version" class="version_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">Version</a></th>
                                         <th id="runtime_betas_package" class="package_name_column">Package</th>
                                         <th id="runtime_betas_download" class="download_button_column">Download</th>
+                                        <th id="runtime_betas_verification" class="download_button_column">Verification</th>
                                     </tr>
                                 </thead>
                                 <tbody class="release_table_body">

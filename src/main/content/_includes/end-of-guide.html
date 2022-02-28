@@ -126,7 +126,17 @@
                                         </div>
                                     {% endif %}
                                 {% endif %}
-
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                {% if related-guide-metadata.majorupdateddate %}
+                                {% assign date_updated = related-guide-metadata.majorupdateddate | date:'%s' %}
+                                {% assign date_now = 'now' | date:'%s' %} {% assign date_difference =
+                                date_now | minus: date_updated %} {% if date_difference < 7257600 %}
+                                <div class="updated_guide_container">
+                                    <span class="guide_updated">Updated</span>
+                                </div>
+                                {% endif %}{% endif %}
                                 {% if related-guide-metadata.layout == 'iguide-multipane' %}
                                     <div class="guide_interactive_container">
                                         <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">

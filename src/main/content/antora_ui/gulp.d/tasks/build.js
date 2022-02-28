@@ -74,7 +74,10 @@ module.exports = (src, dest, preview) => () => {
       .src('img/**/*.{jpg,ico,png,svg}', opts)
       .pipe(
         imagemin([
-          imagemin.gifsicle(),
+          // Do not have gif files
+          // Comment out to mitigate 
+          // https://github.com/OpenLiberty/openliberty.io/security/dependabot/37
+          // imagemin.gifsicle(), 
           imagemin.jpegtran(),
           imagemin.optipng(),
           imagemin.svgo({ plugins: [{ removeViewBox: false }] }),

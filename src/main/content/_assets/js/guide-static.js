@@ -97,15 +97,31 @@ $(document).ready(function () {
                 .replace(".html", "")
                 .replace("/guides/", "");
             var host = window.location.hostname;
-            var skills_network_url =
-                host === "openliberty.io"
-                    ? data.skillNetworkUrl
-                    : data.stagingSkillNetworkUrl;
-            skills_network_url = skills_network_url.replace(
-                "{projectid}",
-                guide_name
-            );
-            if (data.guides.indexOf(guide_name) > -1) {
+            var skills_network_url;
+
+            if (data.courses && data.courses[guide_name]) {
+                // The new url format supported by the skills network. The domain host is known ahead of time, and each guide's specific url path is specified in the cloud-hosted-guides.json file.
+                skills_network_url =
+                    host === "openliberty.io"
+                        ? data.skillNetworkDomain
+                        : data.stagingSkillNetworkDomain;
+                skills_network_url += data.courses[guide_name];
+            } else {
+                // This guide is not in the list of courses in the new skills network url schema yet. This is the old deprecated url structure that only exists until all guide's urls have been in the cloud-hosted-guides.json file under the courses field.
+                skills_network_url =
+                    host === "openliberty.io"
+                        ? data.skillNetworkUrl
+                        : data.stagingSkillNetworkUrl;
+                skills_network_url = skills_network_url.replace(
+                    "{projectid}",
+                    guide_name
+                );
+            }
+
+            if (
+                data.guides.indexOf(guide_name) > -1 ||
+                (data.courses && data.courses[guide_name])
+            ) {
                 $(".skills_network_description").text(data.buttonLabel);
                 var skills_network_button = $(
                     '<a class="skills_network_button" target="_blank" rel="noopener"></a>'
@@ -124,7 +140,14 @@ $(document).ready(function () {
                 skills_network_button.append(skills_network_button_text);
                 skills_network_button.append(skills_network_img);
                 $(".skills_network_description").append(skills_network_button);
-                $(".skills_network_container").show();
+                var buttonText = data.buttonText;
+                buttonText = buttonText.replace(/\s+/g,'').toLowerCase();
+                if(hiddenTags.indexOf(buttonText) > -1) {
+                    $(".skills_network_container").hide();
+                }
+                else {
+                    $(".skills_network_container").show();
+                }
             }
         }
     );

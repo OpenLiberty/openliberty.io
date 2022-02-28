@@ -23,3 +23,9 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+var websiteUrl = Cypress.env('website_url') || Cypress.env('default_website_url');
+
+Cypress.Commands.add('goToBlogs', () => { 
+    cy.visit(websiteUrl + '/blog/');
+})

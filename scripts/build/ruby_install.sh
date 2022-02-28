@@ -2,17 +2,25 @@
 timer_start=$(date +%s)
 
 echo "Install Ruby & required packages/gems"
+sudo apt-get -y install gnupg build-essential
+
 cat $BUILD_SCRIPTS_DIR/../gpg/mpapis.asc | gpg --import -
 cat $BUILD_SCRIPTS_DIR/../gpg/pkuczynski.asc | gpg --import -
 
-curl -sSL https://get.rvm.io | bash -s stable
+# calls to https://get.rvm.io via curl started causing CA errors, but that call would just redirect to github, 
+# which uses different CA (digicert vs let's encrypt).  This will work for as long as rvm doesn't move from 
+# github to another host for this file.  If that happens, try going back to rvm.io or directly to 
+# w/e new thing they choose to redirect to instead
+
+curl -v -sSL https://raw.githubusercontent.com/rvm/rvm/master/binscripts/rvm-installer | bash -s stable
+
 set +e
 source /usr/local/rvm/scripts/rvm || true
 set -e
 
 rvm requirements
-rvm install 2.5.7
-rvm use 2.5.7 --default
+rvm install 2.6.6
+rvm use 2.6.6 --default
 echo "Ruby version:"
 echo `ruby -v`
 
