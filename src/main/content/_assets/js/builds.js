@@ -1309,7 +1309,7 @@ $(document).ready(function () {
         });
 
     // Show copy to clipboard button when mouse enters code block
-    $('.code_container, .cmd_to_run_class')
+    $('.code_container, .cmd_to_run')
         .on('mouseenter', function (event) {
             target = $(event.currentTarget);
             $('main').append(
