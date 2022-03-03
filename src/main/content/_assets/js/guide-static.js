@@ -16,64 +16,64 @@ $(document).ready(function () {
     var target_width;
     var target_height;
 
-    $("#preamble").detach().insertAfter("#duration_container");
+    $('#preamble').detach().insertAfter('#duration_container');
 
     function add_prereq(prereq) {
-        var prereq_html = $("<div class='prereq_div'>");
+        var prereq_html = $('<div class=\'prereq_div\'>');
         var prereq_link = $(
-            "<a class='prereq notranslate' target='_blank'>" +
+            '<a class=\'prereq notranslate\' target=\'_blank\'>' +
                 prereq.name +
-                "</a>"
+                '</a>'
         );
-        prereq_link.attr("href", prereq.link);
+        prereq_link.attr('href', prereq.link);
         prereq_html.append(prereq_link);
-        $(".prereqs_list").append(prereq_html);
+        $('.prereqs_list').append(prereq_html);
     }
 
-    // Create a build tool prereq toggle if Maven and Gradle are both prereqs for the guide. Mvnw and Gradlew wrappers will be present in the guide when this happens and the reader will switch between Maven and Gradle content using either the toggle in the prereq section or using the tabs on any of the Maven or Gradle specific content.
+    // Create a build tool prereq toggle if Maven and Gradle are both prereqs for the guide. Mvnw and Gradlew wrappers will be present in the guide when this happens and the reader will switch between Maven and Gradle content using either the pills in the prereq section or using the tabs on any of the Maven or Gradle specific content.
     function handleBuildToolPrereqs() {
-        var maven_prereq = $(".prereq").filter(function () {
-            return this.text === "Maven";
+        var maven_prereq = $('.prereq').filter(function () {
+            return this.text === 'Maven';
         });
-        var gradle_prereq = $(".prereq").filter(function () {
-            return this.text === "Gradle";
+        var gradle_prereq = $('.prereq').filter(function () {
+            return this.text === 'Gradle';
         });
         if (maven_prereq.length === 0 || gradle_prereq.length === 0) {
             return;
         }
-        maven_prereq.addClass("maven_prereq selected").removeAttr("href");
-        gradle_prereq.addClass("gradle_prereq").removeAttr("href");
+        maven_prereq.addClass('maven_prereq selected').removeAttr('href');
+        gradle_prereq.addClass('gradle_prereq').removeAttr('href');
 
-        $(".maven_prereq").on("click", function () {
+        $('.maven_prereq').on('click', function () {
             $(
-                ".maven_prereq, .gradle_prereq, .maven_section_tab, .gradle_section_tab"
-            ).removeClass("selected");
-            $(".maven_prereq, .maven_section_tab").addClass("selected");
-            $(".maven_section").show();
-            $(".gradle_section").hide();
+                '.gradle_prereq, .gradle_section_tab'
+            ).removeClass('selected');
+            $('.maven_prereq, .maven_section_tab').addClass('selected');
+            $('.maven_section').show();
+            $('.gradle_section').hide();
         });
-        $(".gradle_prereq").on("click", function () {
+        $('.gradle_prereq').on('click', function () {
             $(
-                ".maven_prereq, .gradle_prereq, .maven_section_tab, .gradle_section_tab"
-            ).removeClass("selected");
-            $(".gradle_prereq, .gradle_section_tab").addClass("selected");
-            $(".gradle_section").show();
-            $(".maven_section").hide();
+                '.maven_prereq, .maven_section_tab'
+            ).removeClass('selected');
+            $('.gradle_prereq, .gradle_section_tab').addClass('selected');
+            $('.gradle_section').show();
+            $('.maven_section').hide();
         });
     }
 
     // Read prereqs from json file and add to html
-    $.getJSON("../../guides/guides-common/guide_prereqs.json", function (data) {
+    $.getJSON('../../guides/guides-common/guide_prereqs.json', function (data) {
         var guide_name = window.location.pathname
-            .replace(".html", "")
-            .replace("/guides/", "");
+            .replace('.html', '')
+            .replace('/guides/', '');
         $.each(data.prereqs, function (i, prereq) {
             // if guide found in prereqs list, add it to the html
             if (prereq.guides.indexOf(guide_name) > -1) {
                 add_prereq(prereq);
             }
             // if prereqs list contains * add prereq to all guides except for excluded guides (if they exist)
-            else if (prereq.guides.indexOf("*") > -1) {
+            else if (prereq.guides.indexOf('*') > -1) {
                 if (prereq.exclude) {
                     // if guide not in prereq exclude list, add it to the html
                     if (prereq.exclude.indexOf(guide_name) <= -1) {
@@ -91,29 +91,29 @@ $(document).ready(function () {
 
     // Read skills network json to see if we need to link to a cloud hosted guide equivalent.
     $.getJSON(
-        "../../guides/guides-common/cloud-hosted-guides.json",
+        '../../guides/guides-common/cloud-hosted-guides.json',
         function (data) {
             var guide_name = window.location.pathname
-                .replace(".html", "")
-                .replace("/guides/", "");
+                .replace('.html', '')
+                .replace('/guides/', '');
             var host = window.location.hostname;
             var skills_network_url;
 
             if (data.courses && data.courses[guide_name]) {
                 // The new url format supported by the skills network. The domain host is known ahead of time, and each guide's specific url path is specified in the cloud-hosted-guides.json file.
                 skills_network_url =
-                    host === "openliberty.io"
+                    host === 'openliberty.io'
                         ? data.skillNetworkDomain
                         : data.stagingSkillNetworkDomain;
                 skills_network_url += data.courses[guide_name];
             } else {
                 // This guide is not in the list of courses in the new skills network url schema yet. This is the old deprecated url structure that only exists until all guide's urls have been in the cloud-hosted-guides.json file under the courses field.
                 skills_network_url =
-                    host === "openliberty.io"
+                    host === 'openliberty.io'
                         ? data.skillNetworkUrl
                         : data.stagingSkillNetworkUrl;
                 skills_network_url = skills_network_url.replace(
-                    "{projectid}",
+                    '{projectid}',
                     guide_name
                 );
             }
@@ -122,12 +122,12 @@ $(document).ready(function () {
                 data.guides.indexOf(guide_name) > -1 ||
                 (data.courses && data.courses[guide_name])
             ) {
-                $(".skills_network_description").text(data.buttonLabel);
+                $('.skills_network_description').text(data.buttonLabel);
                 var skills_network_button = $(
                     '<a class="skills_network_button" target="_blank" rel="noopener"></a>'
                 );
-                skills_network_button.attr("href", skills_network_url);
-                skills_network_button.attr("title", data.tooltipText);
+                skills_network_button.attr('href', skills_network_url);
+                skills_network_button.attr('title', data.tooltipText);
 
                 var skills_network_button_text = $(
                     '<div class="skills_network_button_text"></div>'
@@ -139,14 +139,14 @@ $(document).ready(function () {
 
                 skills_network_button.append(skills_network_button_text);
                 skills_network_button.append(skills_network_img);
-                $(".skills_network_description").append(skills_network_button);
+                $('.skills_network_description').append(skills_network_button);
                 var buttonText = data.buttonText;
                 buttonText = buttonText.replace(/\s+/g,'').toLowerCase();
                 if(hiddenTags.indexOf(buttonText) > -1) {
-                    $(".skills_network_container").hide();
+                    $('.skills_network_container').hide();
                 }
                 else {
-                    $(".skills_network_container").show();
+                    $('.skills_network_container').show();
                 }
             }
         }
@@ -157,12 +157,12 @@ $(document).ready(function () {
         var id = getScrolledVisibleSectionID();
         if (id !== null) {
             var windowHash = window.location.hash;
-            var scrolledToHash = id === "" ? id : "#" + id;
+            var scrolledToHash = id === '' ? id : '#' + id;
             if (windowHash !== scrolledToHash) {
                 // Update the URL hash with new section we scrolled into....
                 var currentPath = window.location.pathname;
                 var newPath =
-                    currentPath.substring(currentPath.lastIndexOf("/") + 1) +
+                    currentPath.substring(currentPath.lastIndexOf('/') + 1) +
                     scrolledToHash;
                 // Not setting window.location.hash here because that causes an
                 // onHashChange event to fire which will scroll to the top of the
@@ -176,7 +176,7 @@ $(document).ready(function () {
             if (window.innerWidth > twoColumnBreakpoint) {
                 // multipane view
                 // Match the code block on the right to the new id
-                if (typeof showCorrectCodeBlock === "function") {
+                if (typeof showCorrectCodeBlock === 'function') {
                     showCorrectCodeBlock(id, null, true);
                 }
             }
@@ -184,31 +184,31 @@ $(document).ready(function () {
     }
 
     $(
-        "#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre):not(.code_column pre)"
+        '#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre):not(.code_column pre)'
     )
-        .on("mouseenter", function (event) {
-            offset = $("#guide_column").position();
+        .on('mouseenter', function (event) {
+            offset = $('#guide_column').position();
             target = event.currentTarget;
             var current_target_object = $(event.currentTarget);
             target_position = current_target_object.position();
             target_width = current_target_object.outerWidth();
             target_height = current_target_object.outerHeight();
-            if (window.location.href.indexOf("cloud-ibm") > -1) {
+            if (window.location.href.indexOf('cloud-ibm') > -1) {
                 var right_position = $(window).outerWidth() < 1170 ? 1 : 46;
             } else {
                 var right_position = inSingleColumnView() ? 1 : 46;
             }
-            $("#copy_to_clipboard")
+            $('#copy_to_clipboard')
                 .css({
                     top: target_position.top + 1,
                     right:
-                        parseInt($("#guide_column").css("padding-right")) +
+                        parseInt($('#guide_column').css('padding-right')) +
                         right_position,
                 })
-                .addClass("copy_to_clipboard_git_clone");
-            $("#copy_to_clipboard").stop().fadeIn();
+                .addClass('copy_to_clipboard_git_clone');
+            $('#copy_to_clipboard').stop().fadeIn();
         })
-        .on("mouseleave", function (event) {
+        .on('mouseleave', function (event) {
             if (offset) {
                 var x = event.clientX - offset.left;
                 var y = event.clientY - offset.top + $(window).scrollTop();
@@ -220,22 +220,22 @@ $(document).ready(function () {
                         y < target_position.top + target_height
                     )
                 ) {
-                    $("#copy_to_clipboard").stop().fadeOut();
-                    $("#copy_to_clipboard").removeClass(
-                        "copy_to_clipboard_git_clone"
+                    $('#copy_to_clipboard').stop().fadeOut();
+                    $('#copy_to_clipboard').removeClass(
+                        'copy_to_clipboard_git_clone'
                     );
-                    $("#guide_section_copied_confirmation").stop().fadeOut();
+                    $('#guide_section_copied_confirmation').stop().fadeOut();
                 }
             }
         });
 
-    $("#copy_to_clipboard").on("click", function (event) {
+    $('#copy_to_clipboard').on('click', function (event) {
         event.preventDefault();
         // Target was assigned while hovering over the element to copy.
         openliberty.copy_element_to_clipboard(target, function () {
             var current_target_object = $(event.currentTarget);
             var position = current_target_object.position();
-            $("#guide_section_copied_confirmation")
+            $('#guide_section_copied_confirmation')
                 .css({
                     top: position.top - 18,
                     right: inSingleColumnView() ? 20 : 50,
@@ -247,15 +247,15 @@ $(document).ready(function () {
         });
     });
 
-    $(window).on("scroll", function (event) {
+    $(window).on('scroll', function (event) {
         // Check if a scroll animation from another piece of code is taking place and prevent normal behavior.
-        if ($("body").data("scrolling") === true) {
+        if ($('body').data('scrolling') === true) {
             return;
         }
         handleSectionChanging(event);
     });
 });
-$(window).on("load", function () {
+$(window).on('load', function () {
     $.ready.then(function () {
         // Both ready and loaded
         createEndOfGuideContent();
