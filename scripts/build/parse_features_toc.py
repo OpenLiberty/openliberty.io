@@ -53,8 +53,7 @@ print(versions)
 if(os.getenv("DRAFT_SITE") or os.getenv("DOCS_DRAFT_SITE")):
     max = ['0', '0', '0', '0']
     for version in versions:
-        if version != 'latest':
-            nums = version.split('.')
+        nums = version.split('.')
         if(int(nums[0]) > int(max[0])):
             max = nums
         elif(int(nums[0]) == int(max[0]) and int(nums[3]) > int(max[3])):
@@ -72,11 +71,10 @@ for version in versions:
     antora_path = featurePath + version + "/reference/"
     featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "lxml")        
 
-    if version != 'latest':
-        version_split = version.split('.')
-        year = int(version_split[0])
-        month = int(version_split[3])
-        process_jakarta_features =  year > 21 or (year == 21 and month == 12)
+    version_split = version.split('.')
+    year = int(version_split[0])
+    month = int(version_split[3])
+    process_jakarta_features =  year > 21 or (year == 21 and month == 12)
 
     # Keep track of new href with updated versions to update the TOCs later
     commonTOCs = {};
