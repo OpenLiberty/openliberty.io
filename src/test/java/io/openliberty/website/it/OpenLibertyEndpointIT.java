@@ -33,10 +33,13 @@ import io.openliberty.website.data.BuildData;
 import io.openliberty.website.data.BuildType;
 import io.openliberty.website.dheclient.BuildStore;
 
+import java.net.URLConnection;
+import java.net.HttpURLConnection;
+import java.io.InputStream;
+
 @MicroShedTest
 @SharedContainerConfig(MockDHEContainer.class)
 public class OpenLibertyEndpointIT {
-
     @Container
     public static ApplicationContainer app = new ApplicationContainer().withReadinessPath("/api/builds")
             .withEnv("build_sync_period_unit", TimeUnit.SECONDS.toString()).withEnv("build_sync_period", "1")
@@ -46,6 +49,7 @@ public class OpenLibertyEndpointIT {
     public static OpenLibertyEndpoint endpoint;
 
     private static URL latestVersionURL;
+    private static HttpURLConnection httpURLConnection;
 
     @BeforeAll
     public static void init() {
@@ -81,6 +85,23 @@ public class OpenLibertyEndpointIT {
         assertTrue(latestVersions.contains("20.0.0.5"), "The latestVersions.js should contain 20.0.0.5 as the version. Contains: " + latestVersions);
     }
 
+    @Test
+    public void testDocsVersionNeverExists() throws IOException {
+        httpURLConnection = getInvalidDocVersionResponse("https://openliberty.io/docs/22.0.0.15/overview.html");
+        int responseCode = httpURLConnection.getResponseCode();
+        BufferedReader in = new BufferedReader(new InputStreamReader(
+        httpURLConnection.getErrorStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        String responseBody = response.toString();
+        assertEquals(500,responseCode);
+        assertTrue(responseBody.contains("com.ibm.ws.webcontainer.exception.IncludeFileNotFoundException") && responseBody.contains("SRVE0190E") && responseBody.contains("/docs/22.0.0.15/overview.html.gz"));
+    }
+
     private static String readFromURL(URL url) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
         StringBuilder builder = new StringBuilder();
@@ -93,5 +114,13 @@ public class OpenLibertyEndpointIT {
         }
 
         return builder.toString();
+    }
+
+    private static HttpURLConnection getInvalidDocVersionResponse(String strUrl) throws IOException {
+        URL url = new URL(strUrl);
+        httpURLConnection = (HttpURLConnection) url.openConnection();
+        httpURLConnection.setRequestMethod("GET");
+        httpURLConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+        return httpURLConnection;
     }
 }
