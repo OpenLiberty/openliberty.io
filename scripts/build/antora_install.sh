@@ -13,7 +13,7 @@ cp src/main/content/_includes/noindex.html src/main/content/antora_ui/src/partia
 pushd src/main/content/antora_ui
 echo "Installing Antora dependencies"
 npm install -g @antora/site-generator@3.0.1
-npm install gulp -g
+npm install gulp -g --ignore-scripts
 npm install node-sass gulp-sass --save-dev
 npm install --production
 gulp sass:convert
