@@ -22,15 +22,16 @@ repos = client.org_repos('OpenLiberty')
 # For non-production sites, select the correct branch of the guide
 # --------------------------------------------
 # For the interactive guides, only build the dev branch for non-prod sites
-guide_branch = 'prod'
-fallback_guide_branch = 'master'
+# Note:  temporarily changing the guide_branch to gradle on demo1 for testing purposes.
+guide_branch = 'gradle'
+fallback_guide_branch = 'prod'
 if ENV['GUIDE_CLONE_BRANCH']
     guide_branch = ENV['GUIDE_CLONE_BRANCH']
 elsif ENV['STAGING_SITE'] || ENV['GUIDES_STAGING_SITE']
     guide_branch = 'staging'
     fallback_guide_branch = 'qa'
 elsif ENV['DRAFT_SITE'] || ENV['GUIDES_DRAFT_SITE']
-    guide_branch = 'draft'
+    guide_branch = 'gradle'
     fallback_guide_branch = 'dev'
 elsif ENV['NOT_PROD_SITE'] == 'true'
     puts "Skipping cloning any guides"
