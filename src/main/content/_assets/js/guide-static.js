@@ -60,6 +60,9 @@ $(document).ready(function () {
             $('.gradle_section').show();
             $('.maven_section').hide();
         });
+
+        $('#prereqs_container .gradle_prereq').parent().detach().prependTo($('#prereqs_container .prereqs_list'));
+        $('#prereqs_container .maven_prereq').parent().detach().prependTo($('#prereqs_container .prereqs_list'));
     }
 
     // Read prereqs from json file and add to html

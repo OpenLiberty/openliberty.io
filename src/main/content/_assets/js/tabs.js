@@ -69,13 +69,6 @@ function initializeBuildTabs() {
             var tab_container = $('<div class=\'build_tab_container\'></div>');
             var maven_tab = $('<div class=\'maven_section_tab\'>Maven</div>');
             var gradle_tab = $('<div class=\'gradle_section_tab\'>Gradle</div>');
-            // if ($(this).parent().hasClass("hotspot")) {
-            //     if ($(this).parent().hasClass("maven_section")) {
-            //         maven_tab.on("click", handleHotspot($(this)));
-            //     } else if ($(this).parent().hasClass("gradle_section")) {
-            //         gradle_tab.on("click", handleHotspot($(this)));
-            //     }
-            // }
             tab_container.append(maven_tab).append(gradle_tab);
             $(this).prepend(tab_container);
         }
