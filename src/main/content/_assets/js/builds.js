@@ -1009,7 +1009,7 @@ $(document).ready(function () {
                         $('#cmd_to_run').text("mvnw liberty:dev");
                     }
                     else {
-                        $('#cmd_to_run').text("gradlew libertyStart");
+                        $('#cmd_to_run').text("gradlew libertyDev");
                     }
                 }
             })
