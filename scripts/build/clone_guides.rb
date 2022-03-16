@@ -23,7 +23,7 @@ repos = client.org_repos('OpenLiberty')
 # --------------------------------------------
 # For the interactive guides, only build the dev branch for non-prod sites
 guide_branch = 'prod'
-fallback_guide_branch = 'master'
+fallback_guide_branch = 'prod'
 if ENV['GUIDE_CLONE_BRANCH']
     guide_branch = ENV['GUIDE_CLONE_BRANCH']
 elsif ENV['STAGING_SITE'] || ENV['GUIDES_STAGING_SITE']
@@ -54,7 +54,7 @@ repos.each do |element|
     # PUBLISHED GUIDES
     # Clone static & interactive guides that are ready to be published to openliberty.io
     if repo_name.start_with?('iguide') || repo_name.start_with?('guide')
-        # Clone the guides, using the dev branch for travis and master for all other environments.
+        # Clone the guides, using the dev branch for travis and prod for all other environments.
         `git clone https://github.com/OpenLiberty/#{repo_name}.git -b #{guide_branch} src/main/content/guides/#{repo_name}`
 
         # # Clone the fallback branch if the guide_branch does not exist for this guide repo.
@@ -72,7 +72,7 @@ repos.each do |element|
         # DRAFT GUIDES  
         # Clone guides that are still being drafted (draft sites)
         if repo_name.start_with?('draft-iguide') || repo_name.start_with?('draft-guide')
-            # Clone the draft guides, using the dev branch for travis and master for all other environments.
+            # Clone the draft guides, using the dev branch for travis and draft for all other environments.
             `git clone https://github.com/OpenLiberty/#{repo_name}.git -b #{guide_branch} src/main/content/guides/#{repo_name}`
 
             # Clone the fallback branch if the guide_branch does not exist for this guide repo.
