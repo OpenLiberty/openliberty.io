@@ -22,7 +22,7 @@ var developer_tools_development_builds = [];
 
 var builds_url = '/api/builds/data';
 var starter_domain = 
-    isStagingSite() ? 'https://start-beta.openliberty.io' : 'https://start.openliberty.io';
+    isStagingSite() ? 'https://staging-starter.mybluemix.net' : 'https://start.openliberty.io';
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 
