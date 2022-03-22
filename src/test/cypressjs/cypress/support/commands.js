@@ -29,3 +29,7 @@ var websiteUrl = Cypress.env('website_url') || Cypress.env('default_website_url'
 Cypress.Commands.add('goToBlogs', () => { 
     cy.visit(websiteUrl + '/blog/');
 })
+
+Cypress.Commands.add('goToOpenLibertyStarter', () => { 
+    cy.visit(websiteUrl + '/start/');
+})
