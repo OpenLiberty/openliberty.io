@@ -1,0 +1,29 @@
+name: Run PR checker
+
+on:
+  pull_request:
+    branches: [prod, staging, draft]
+
+jobs:
+  check-files:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    outputs:
+      canSkip: ${{ steps.Checker.outputs.canSkip }}
+    steps:
+      - name: Get files
+        uses: actions/checkout@v2
+      - name: Get tools
+        uses: actions/checkout@v2
+        with:
+          path: tools/
+          repository: openliberty/guides-common
+      - id: Checker
+        shell: bash
+        run: bash ./tools/pr-checker/checker.sh ${{ github.repository }} ${{ github.event.pull_request.number }} | tee checker.log
+      - name: Summary
+        if: always()
+        run: |
+          cat ./checker.log |  tail -n +2;
+          echo "====== Examine logs in Checker ======"
+          if [ '${{ steps.Checker.outcome }}' != 'success' ]; then exit 1; fi
