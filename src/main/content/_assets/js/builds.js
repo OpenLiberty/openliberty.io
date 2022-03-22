@@ -1006,10 +1006,10 @@ $(document).ready(function () {
                     setFocusOnModalPopupElement();
                     var build_tool = $('input[name=\'build_system\']:checked').val();
                     if(build_tool == "maven") {
-                        $('#cmd_to_run').text("mvnw liberty:run");
+                        $('#cmd_to_run').text("mvnw liberty:dev");
                     }
                     else {
-                        $('#cmd_to_run').text("gradlew libertyStart");
+                        $('#cmd_to_run').text("gradlew libertyDev");
                     }
                 }
             })
