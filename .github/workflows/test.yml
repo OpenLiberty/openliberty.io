@@ -1,8 +1,11 @@
-name: Run PR checker
+name: Run Prohibited terms PR checker
 
 on:
   pull_request:
-    branches: [prod, staging, draft]
+    branches:
+      - draft
+      - staging
+      - prod
 
 jobs:
   check-files:
