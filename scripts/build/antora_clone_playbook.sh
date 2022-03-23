@@ -7,10 +7,10 @@ BRANCH_NAME="prod-test"
 # Development environments with draft content
 if [[ "$STAGING_SITE" == "true" || "$DOCS_STAGING_SITE" == "true" ]]; then
     echo "Cloning the staging branch of docs-playbook"
-    BRANCH_NAME="staging"
+    BRANCH_NAME="staging-test"
 elif [[ "$DRAFT_SITE" == "true" || "$DOCS_DRAFT_SITE" == "true" ]]; then
     echo "Cloning the draft branch of docs-playbook"
-    BRANCH_NAME="draft"
+    BRANCH_NAME="draft-test"
 elif [ "$NOT_PROD_SITE" == "true" ]; then
     echo "Not cloning any branch from docs-playbook (aka, skipping building docs-playbook, and therefore all docs)"
     exit 0
