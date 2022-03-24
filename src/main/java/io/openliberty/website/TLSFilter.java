@@ -127,13 +127,13 @@ public class TLSFilter implements Filter {
                     response.setHeader("Content-Type", "text/html");
                     response.setHeader("Content-Encoding", "gzip");
                     doFilter = false;
-                    try {
+                    //try {
                         req.getRequestDispatcher(uri.concat(".gz")).include(req, response);
-                    }
-                    catch(FileNotFoundException e) {
-                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                        response.sendRedirect("/404.html");
-                    }
+                    // }
+                    // catch(FileNotFoundException e) {
+                    //     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    //     response.sendRedirect("/404.html");
+                    // }
                 }
             } else if (uri.startsWith("/api/builds/") || uri.startsWith("/api/github/")) {
                 response.setHeader("Cache-Control", "no-store");
