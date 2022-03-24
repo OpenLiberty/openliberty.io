@@ -15,7 +15,6 @@ $(window).on("load", function() {
       //get info about doc that was attempted to be reached
       var attempted = ref;
       var doc = attempted.substring(attempted.lastIndexOf("/") + 1);
-      doc = doc.substring(0, doc.indexOf(".html"));
 
       var preceed1 = attempted.substring(0, attempted.lastIndexOf("/"));
       preceed1 = preceed1.substring(preceed1.lastIndexOf("/") + 1);
@@ -43,70 +42,15 @@ $(window).on("load", function() {
 
       versions.sort(orderVersions);
 
-      var calls = [];
       var matches = [];
       //make api calls for content of each version to see if doc exists
       //add case for reference docs
       //consider adding logic to order versions from newest to oldest
       versions.forEach(function(v, ind) {
         var ver = v;
-        if (ind == 0 && useNext) {
-          ver = "Next";
-        }
-        calls.push(
-          $.ajax({
-            headers: {
-              Accept: "application/vnd.github.v3.raw"
-            },
-            url:
-              "https://api.github.com/repos/OpenLiberty/docs/contents/modules/" +
-              folder +
-              "/pages" +
-              dir +
-              "?ref=v" +
-              ver,
-            type: "GET",
-            success: function(response) {
-              response.forEach(function(file) {
-                if (
-                  file.name.substring(0, file.name.indexOf(".adoc")) === doc
-                ) {
-                  matches.push(v);
-                }
-              });
-            },
-            statusCode: {
-              403: function() {
-                $(".doc .paragraph").text(
-                  "The requested document does not exist in the " +
-                    version +
-                    " version of the documentation. Please refer to a different version of the documentation to see this page."
-                );
-                error = true;
-              }
-            }
-          })
-        );
-      });
-
-      $.when.apply(null, calls).then(function() {
-        if (!error) {
-          matches.sort(orderVersions);
-          matches.forEach(function(m) {
-            $(".doc .paragraph ul").append(
-              "<li><a href=" +
-                window.location.origin +
-                "/docs/" +
-                m +
-                "/" +
-                (folder === "reference" ? "reference/" : "") +
-                (dir !== "" ? preceed1 + "/" : "") +
-                doc +
-                ".html>v" +
-                m +
-                "</a></li>"
-            );
-          });
+        var matchingVersion = doesFileExist(window.location.origin+"/docs/"+ver+"/"+folder+dir +"/"+doc,ver)
+        if(matchingVersion) {
+          matches.push(matchingVersion);
         }
       });
 
@@ -122,6 +66,23 @@ $(window).on("load", function() {
       }
       $(".doc .paragraph").append("<ul></ul>");
 
+      matches.sort(orderVersions);
+      matches.forEach(function(m) {
+        $(".doc .paragraph ul").append(
+          "<li><a href=" +
+            window.location.origin +
+            "/docs/" +
+            m +
+            "/" +
+            (folder === "reference" ? "reference/" : "") +
+            (dir !== "" ? preceed1 + "/" : "") +
+            doc +
+            ">v" +
+            m +
+            "</a></li>"
+        );
+      });
+
       //change around selectors to get accurate selection, test
       $(".components .versions .version a").on("click", function(e) {
         e.preventDefault();
@@ -136,13 +97,13 @@ $(window).on("load", function() {
             "/" +
             (folder === "reference" ? "reference/" : "") +
             (dir !== "" ? preceed1 + "/" : "") +
-            doc +
-            ".html";
+            doc;
         } else {
           window.location.href = "/docs/" + selected + "/overview.html";
         }
         return;
       });
+
     }
   });
 });
@@ -158,4 +119,17 @@ function orderVersions(a, b) {
     }
   }
   return 0;
+}
+
+function doesFileExist(urlToFile,version) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('HEAD', urlToFile, false);
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    xhr.send();
+    // return attempted doc file available in which versions
+    // with the intro of latest symbolic version, sees the requested doc file exists in latest version
+    if (((xhr.status >=200)&&(xhr.status < 300)&&(xhr.responseURL === urlToFile)) || 
+       ((xhr.status >=200)&&(xhr.status < 300)&&(xhr.responseURL.indexOf("latest") > -1))) { // Successful responses
+        return version;
+    } 
 }
