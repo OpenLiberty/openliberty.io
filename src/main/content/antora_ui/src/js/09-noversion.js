@@ -1,3 +1,4 @@
+var nextRequest = true;
 $(window).on("load", function() {
   $.ready.then(function() {
     var error = false;
@@ -122,6 +123,7 @@ function orderVersions(a, b) {
 }
 
 function doesFileExist(urlToFile,version) {
+  if(nextRequest){ // if requested doc file not found, stop sending request for older versions
     var xhr = new XMLHttpRequest();
     xhr.open('HEAD', urlToFile, false);
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
@@ -130,6 +132,10 @@ function doesFileExist(urlToFile,version) {
     // with the intro of latest symbolic version, sees the requested doc file exists in latest version
     if (((xhr.status >=200)&&(xhr.status < 300)&&(xhr.responseURL === urlToFile)) || 
        ((xhr.status >=200)&&(xhr.status < 300)&&(xhr.responseURL.indexOf("latest") > -1))) { // Successful responses
+        nextRequest = true;
         return version;
+    } else {
+      nextRequest = false;
     } 
+  }
 }
