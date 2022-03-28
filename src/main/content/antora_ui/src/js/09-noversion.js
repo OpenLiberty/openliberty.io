@@ -43,6 +43,13 @@ $(window).on("load", function() {
 
       versions.sort(orderVersions);
 
+      var version = $(".context .version").text();
+      $(".doc .paragraph").text(
+        "The requested document does not exist in the " +
+          version +
+          " version of the documentation, but it is available in the following versions."
+      );
+      
       var matches = [];
       //make api calls for content of each version to see if doc exists
       //add case for reference docs
@@ -55,12 +62,6 @@ $(window).on("load", function() {
         }
       });
 
-      var version = $(".context .version").text();
-      $(".doc .paragraph").text(
-        "The requested document does not exist in the " +
-          version +
-          " version of the documentation, but it is available in the following versions."
-      );
       if ($(".doc .paragraph ul").length) {
         $(".doc .paragraph ul").empty();
         $(".doc .paragraph ul").remove();
