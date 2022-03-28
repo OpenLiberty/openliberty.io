@@ -9,9 +9,9 @@ $(window).on("load", function() {
       var dir = "";
 
       //accomodations for draft and staging sites
-      var useNext =
+      /*var useNext =
         window.location.href.includes("mybluemix.net") ||
-        window.location.href.includes("localhost");
+        window.location.href.includes("localhost");*/
 
       //get info about doc that was attempted to be reached
       var attempted = ref;
