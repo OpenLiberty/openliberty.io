@@ -62,7 +62,8 @@ $(window).on("load", function() {
           matches.push(matchingVersion);
         }
       });
-
+      
+      $(".loader").remove();
       if ($(".doc .paragraph ul").length) {
         $(".doc .paragraph ul").empty();
         $(".doc .paragraph ul").remove();
