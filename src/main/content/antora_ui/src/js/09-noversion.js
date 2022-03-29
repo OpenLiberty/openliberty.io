@@ -49,7 +49,7 @@ $(window).on("load", function() {
           version +
           " version of the documentation, but it is available in the following versions."
       );
-      
+      $('.doc .paragraph').append('<div class="loader"></div>');
       var matches = [];
       //make api calls for content of each version to see if doc exists
       //add case for reference docs
