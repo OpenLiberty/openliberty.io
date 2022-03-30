@@ -1,9 +1,11 @@
 var nextRequest = true;
 $('.doc .paragraph').append('<div class="loader"></div>');
 var version = $(".context .version").text();
-$(".doc .paragraph p").text("The requested document does not exist in the " +
-version +
-" version of the documentation, but it is available in the following versions.");
+$(".doc .paragraph").text(
+  "The requested document does not exist in the " +
+    version +
+    " version of the documentation, but it is available in the following versions."
+);
 $(window).on("load", function() {
   $.ready.then(function() {
     var error = false;
@@ -68,7 +70,7 @@ $(window).on("load", function() {
       });
 
       $(".loader").remove();
-      $(".doc .paragraph p").remove();
+      //$(".doc .paragraph p").remove();
       if ($(".doc .paragraph ul").length) {
         $(".doc .paragraph ul").empty();
         $(".doc .paragraph ul").remove();
