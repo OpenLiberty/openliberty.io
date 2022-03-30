@@ -2,9 +2,9 @@ var nextRequest = true;
 $('.doc .paragraph').append('<div class="loader"></div>');
 var contentText = addContentText();
 $(".doc .paragraph p").text(contentText);
-$(window).on("load", function() {
-  $.ready.then(function() {
-    var error = false;
+//$(window).on("load", function() {
+  //$.ready.then(function() {
+    //var error = false;
     var params = new URLSearchParams(window.location.search);
     var ref = params.get("ref");
     if (!ref.includes("noversion.html")) {
@@ -109,8 +109,8 @@ $(window).on("load", function() {
       });
 
     }
-  });
-});
+  //});
+//});
 
 function orderVersions(a, b) {
   var arrA = a.split(".");
