@@ -1,11 +1,7 @@
 var nextRequest = true;
 $('.doc .paragraph').append('<div class="loader"></div>');
-var version = $(".context .version").text();
-$(".doc .paragraph").text(
-  "The requested document does not exist in the " +
-    version +
-    " version of the documentation, but it is available in the following versions."
-);
+var contentText = addContentText();
+$(".doc .paragraph p").text(contentText);
 $(window).on("load", function() {
   $.ready.then(function() {
     var error = false;
@@ -50,12 +46,8 @@ $(window).on("load", function() {
 
       versions.sort(orderVersions);
 
-      var version = $(".context .version").text();
-      $(".doc .paragraph").text(
-        "The requested document does not exist in the " +
-          version +
-          " version of the documentation, but it is available in the following versions."
-      );
+      //var contentText = addContentText();
+      
       
       var matches = [];
       //make api calls for content of each version to see if doc exists
@@ -70,7 +62,8 @@ $(window).on("load", function() {
       });
 
       $(".loader").remove();
-      //$(".doc .paragraph p").remove();
+      $(".doc .paragraph p").remove();
+      $(".doc .paragraph").text(contentText);
       if ($(".doc .paragraph ul").length) {
         $(".doc .paragraph ul").empty();
         $(".doc .paragraph ul").remove();
@@ -150,3 +143,10 @@ function doesFileExist(urlToFile,version) {
   }
 }
 
+function addContentText() {
+  var version = $(".context .version").text();
+  var displayText = "The requested document does not exist in the " +
+  version +
+  " version of the documentation, but it is available in the following versions."
+  return displayText;
+}
