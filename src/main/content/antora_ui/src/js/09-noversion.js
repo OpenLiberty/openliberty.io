@@ -148,4 +148,3 @@ function addContentText() {
   " version of the documentation, but it is available in the following versions."
   return displayText;
 }
-
