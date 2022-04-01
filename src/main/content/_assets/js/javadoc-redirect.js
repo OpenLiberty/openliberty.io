@@ -15,9 +15,9 @@ $(function () {
       'https://' +
       window.top.location.hostname +
       port +
-      '/docs/ref/microprofile/' +
+      '/docs/latest/reference/javadoc/microprofile-' +
       version +
-      '/?package=' +
+      '-javadoc.html?package=' +
       pack +
       '/package-frame.html&class=' +
       jd;
