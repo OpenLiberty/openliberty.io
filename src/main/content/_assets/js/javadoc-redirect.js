@@ -15,9 +15,9 @@ $(function () {
       'https://' +
       window.top.location.hostname +
       port +
-      '/docs/ref/microprofile/' +
+      '/docs/latest/reference/javadoc/microprofile-' +
       version +
-      '/#package=' +
+      '-javadoc.html?package=' +
       pack +
       '/package-frame.html&class=' +
       jd;
@@ -39,7 +39,7 @@ $(function () {
       port +
       '/docs/latest/reference/javadoc/liberty-javaee' +
       version +
-      '-javadoc.html#package=' +
+      '-javadoc.html?package=' +
       pack +
       '/package-frame.html&class=' +
       jd;
@@ -60,7 +60,7 @@ $(function () {
       port +
       '/docs/latest/reference/javadoc/liberty-jakartaee' +
       version +
-      '-javadoc.html#package=' +
+      '-javadoc.html?package=' +
       pack +
       '/package-frame.html&class=' +
       jd;
