@@ -1,4 +1,5 @@
 $(function () {
+  demoFunc();
   if (
       window.top.location.href.includes('/docs/modules/reference/microprofile-')
   ) {
@@ -66,3 +67,12 @@ $(function () {
     jd;
   }
 });
+function demoFunc() {
+  if((window.top.location.href.includes('/reference/javadoc/liberty-jakartaee'))||
+  (window.top.location.href.includes('/reference/javadoc/liberty-javaee'))||
+  (window.top.location.href.includes('/reference/javadoc/microprofile'))) {
+    var canonicalTag = document.querySelector('link[rel="canonical"]');
+    canonicalTag.href = window.top.location.href;
+    console.log("----------------------->")
+  }
+}
