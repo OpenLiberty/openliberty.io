@@ -1,4 +1,4 @@
-from bs4 import BeautifulSoup
+ofrom bs4 import BeautifulSoup
 from pkg_resources import parse_version
 import os, fnmatch
 import re
@@ -53,15 +53,15 @@ print(versions)
 if(os.getenv("DRAFT_SITE") or os.getenv("DOCS_DRAFT_SITE")):
     # Here the below code is commented out with the older version of antora we need to find the highest version and setting as max
     # With update of antora adding latest_version_segment param in antora-playbook.yml in docs-playbook repo the highest version will be automatically converted from numerical to symbolic version ie; latest
-    # max = ['0', '0', '0', '0']
-    # for version in versions:
-    #     nums = version.split('.')
-    #     if(int(nums[0]) > int(max[0])):
-    #         max = nums
-    #     elif(int(nums[0]) == int(max[0]) and int(nums[3]) > int(max[3])):
-    #         max = nums
-    # max = '.'.join(max)
-    max = 'latest'
+    max = ['0', '0', '0', '0']
+    for version in versions:
+        nums = version.split('.')
+        if(int(nums[0]) > int(max[0])):
+            max = nums
+        elif(int(nums[0]) == int(max[0]) and int(nums[3]) > int(max[3])):
+            max = nums
+    max = '.'.join(max)
+    #max = 'latest'
     print("Processing only version: " + max + " for the docs draft site.")
     versions = [max]
 
