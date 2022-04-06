@@ -501,7 +501,7 @@ function addClickListener(contents) {
       
       //updating canonical url when right container iframe clicked
       iFrameClicked = true;
-      //replaceCanonicalUrl(newURL);
+      replaceCanonicalUrl(newURL);
 
       var package;
       if(queryParams.has(PACKAGE_PARAM)){
@@ -585,7 +585,7 @@ function setIFrameContent(iframeName, href) {
 //when back button pressed or page refresh
 function popStateOrPageRefresh() {
   var url = window.top.location.href;
-  //replaceCanonicalUrl(url);
+  replaceCanonicalUrl(url);
 }
 
 // If package is provided as paramName, then return the class param. Otherwise return the package param.
@@ -750,7 +750,7 @@ function modifyPackageTopLinks() {
         iFrameClicked = true;
         var url = $(this).attr("href");
         //updating canonical url when left container iframe clicked
-        //replaceCanonicalUrl(url);
+        replaceCanonicalUrl(url);
         setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + package);
         window.history.pushState(
           {
@@ -766,10 +766,11 @@ function modifyPackageTopLinks() {
 }
 
 function replaceCanonicalUrl(url) {
-  var canonicalTag = document.querySelector('link[rel="canonical"]');
+  window.location.reload();
+  /*var canonicalTag = document.querySelector('link[rel="canonical"]');
   var canonicalUrl = canonicalTag.href;
   var newCanonicalUrl = canonicalUrl.replace(canonicalUrl.substring(canonicalUrl.indexOf('reference')), '')+url.substring(url.indexOf('reference'));
-  canonicalTag.href = newCanonicalUrl;
+  canonicalTag.href = newCanonicalUrl;*/
 }
 
 $(document).ready(function() {
