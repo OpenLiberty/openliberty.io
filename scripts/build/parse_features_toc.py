@@ -1,4 +1,4 @@
-ofrom bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 from pkg_resources import parse_version
 import os, fnmatch
 import re
