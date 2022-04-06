@@ -1,5 +1,11 @@
 $(function () {
-  demoFunc();
+  if((window.top.location.href.includes('/reference/javadoc/liberty-jakartaee'))||
+  (window.top.location.href.includes('/reference/javadoc/liberty-javaee'))||
+  (window.top.location.href.includes('/reference/javadoc/microprofile'))) {
+    var canonicalTag = document.querySelector('link[rel="canonical"]');
+    canonicalTag.href = window.top.location.href;
+    console.log("----------------------->")
+  }
   if (
       window.top.location.href.includes('/docs/modules/reference/microprofile-')
   ) {
@@ -16,9 +22,9 @@ $(function () {
     'https://' +
     window.top.location.hostname +
     port +
-    '/docs/ref/microprofile/' +
+    '/docs/latest/reference/javadoc/microprofile-' +
     version +
-    '/?package=' +
+    '-javadoc.html?package=' +
     pack +
     '/package-frame.html&class=' +
     jd;
@@ -67,12 +73,3 @@ $(function () {
     jd;
   }
 });
-function demoFunc() {
-  if((window.top.location.href.includes('/reference/javadoc/liberty-jakartaee'))||
-  (window.top.location.href.includes('/reference/javadoc/liberty-javaee'))||
-  (window.top.location.href.includes('/reference/javadoc/microprofile'))) {
-    var canonicalTag = document.querySelector('link[rel="canonical"]');
-    canonicalTag.href = window.top.location.href;
-    console.log("----------------------->")
-  }
-}
