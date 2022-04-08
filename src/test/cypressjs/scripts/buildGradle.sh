@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+echo "JAVA_HOME=$JAVA_HOME"
+
 downloadsDir=$1
 echo cd ${downloadsDir}
 cd ${downloadsDir}
