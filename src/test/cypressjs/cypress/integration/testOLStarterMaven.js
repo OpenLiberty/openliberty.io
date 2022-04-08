@@ -9,16 +9,15 @@ describe('Test Open Liberty Starter - Maven', () => {
     target_url += "/start/";
 
     // default JDK can be change via cypress.env.json base on user env variable java
-    let defaultJDK = Cypress.env('default_jdk'); 
+    let defaultJDK = Cypress.env('default_jdk');
 
 
     it('Default values for Open Liberty Starter', () => {
         cy.goToOpenLibertyStarter();
-        cy.log('default JDK ' + defaultJDK);
         cy.get("#Starter_Base_Package").should("have.value", "com.demo");
         cy.get("#Starter_App_Name").should("have.value", "app-name");
         cy.get("#starter_section input[type=radio]:checked").should("have.value", "maven");
-        cy.get("#Starter_Java_Version").should("have.value", defaultJDK);
+        cy.get("#Starter_Java_Version").should("have.value", "11");
         cy.get("#Starter_Jakarta_Version").should("have.value", "9.1");
         cy.get("#Starter_MicroProfile_Version").should("have.value", "5.0");
     });
