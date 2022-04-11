@@ -64,6 +64,8 @@ var navigation = (function(){
 
   };
 
+  var versions = [];
+
   $('.components .versions li a').on('click', function(e){
     e.stopPropagation();
     location.href = $(this)[0].href;
@@ -76,6 +78,24 @@ var navigation = (function(){
     var anchor = li.find('a');
     anchor.click();
   });
+
+  $('.components .versions .version')
+  .find("a")
+  .map(function() {
+    versions.push($(this).text());
+  });
+
+  versions.sort(orderVersions);
+  
+  if (
+    window.top.location.href.includes('/docs/'+versions[0])
+  ) {
+    var url = (window.location.pathname+window.location.search).substr(1)
+    url = url.split('/');
+    url[1] = 'latest';
+    url = url.join('/')
+    window.top.location.href = window.top.location.origin+"/"+url
+  }
 
   function find (from, selector) {
     return [].slice.call(from.querySelectorAll(selector))
@@ -174,6 +194,19 @@ var navigation = (function(){
       // Else, just leave the user on the initial TOC (at the top) with the element highlighted.
       panel.scrollTop = 0;
     }
+  }
+
+  function orderVersions(a, b) {
+    var arrA = a.split(".");
+    var arrB = b.split(".");
+    for (var i = 0; i < arrA.length; i++) {
+      if (parseInt(arrA[i]) > parseInt(arrB[i])) {
+        return -1;
+      } else if (parseInt(arrA[i]) < parseInt(arrB[i])) {
+        return 1;
+      }
+    }
+    return 0;
   }
 
   return {
