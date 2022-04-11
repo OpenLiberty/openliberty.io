@@ -87,6 +87,7 @@ var navigation = (function(){
 
   versions.sort(orderVersions);
   
+  
   if (
     window.top.location.href.includes('/docs/'+versions[0])
   ) {
