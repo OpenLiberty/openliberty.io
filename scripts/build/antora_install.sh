@@ -16,10 +16,8 @@ echo "Installing Antora dependencies"
 npm install -g @antora/site-generator@3.0.1
 npm install gulp -g --ignore-scripts
 npm install node-sass gulp-sass --save-dev
-npm install --production
-gulp sass:convert
-SOURCEMAPS=true gulp build
-gulp bundle:pack
+npm install
+SOURCEMAPS=true gulp bundle
 popd
 
 timer_end=$(date +%s)
