@@ -26,19 +26,5 @@ ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
 RUN node --version
 RUN npm --version
 
-RUN scripts/build/antora_install.sh
+# RUN scripts/build/antora_install.sh
 
-# RUN cd antora \
-#     && yarn \
-#     && cd .. \
-#     && mv -f src/main/content/_assets/js/custom-include-processor.js antora/node_modules/@antora/asciidoc-loader/lib/include/include-processor.js \
-#     && pushd src/main/content/antora_ui \
-#     && echo "Installing Antora dependencies" \
-#     && # npm install -g @antora/site-generator-default@2.3.3 # add back this line when upgrading antora to 3.0 \
-#     && npm install gulp -g \
-#     && npm install node-sass gulp-sass --save-dev \
-#     && npm install --production \
-#     && gulp sass:convert \
-#     && SOURCEMAPS=true gulp build \
-#     && gulp bundle:pack \
-#     && popd

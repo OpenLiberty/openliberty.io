@@ -1,9 +1,27 @@
-FROM us.icr.io/openlibertyio/myruby as builder
+FROM myruby as builder
 
 COPY gems /gems
 COPY robots.txt /
 COPY src /src
 COPY scripts /scripts
+
+# Install Antora on the machine
+RUN echo "Install Antora"
+RUN npm i -g @antora/cli@3.0.1
+
+RUN echo "Building the Antora"
+
+# add noindex metdata for non-prod/prod sites
+COPY src/main/content/_includes/noindex.html src/main/content/antora_ui/src/partials/noindex.hbs
+
+RUN pushd src/main/content/antora_ui && \
+    echo "Installing Antora dependencies" && \
+    npm install -g @antora/site-generator@3.0.1 && \
+    npm install gulp -g --ignore-scripts && \
+    npm install node-sass gulp-sass --save-dev && \
+    npm install && \
+    SOURCEMAPS=true gulp bundle && \
+    popd
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 
@@ -21,4 +39,5 @@ RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 package
 FROM icr.io/appcafe/open-liberty:22.0.0.3-full-java8-openj9-ubi as runtime
 ENV SEC_TLS_TRUSTDEFAULTCERTS true
 COPY src/main/wlp/server.xml /config/server.xml
-COPY --from=war --chown=1001:0 target/openliberty.war /config/apps/
+#COPY target/openliberty.war /config/dropins/openliberty.war
+COPY --from=war --chown=1001:0 target/openliberty.war /config/apps/openliberty.war
