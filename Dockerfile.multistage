@@ -14,7 +14,6 @@ RUN apt-get update && \
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 RUN scripts/build/ruby_install.sh
-# RUN scripts/build/node_install.sh
 
 RUN echo "Install Node"
 
@@ -29,7 +28,8 @@ ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
 RUN node --version
 RUN npm --version
 
-RUN scripts/build/antora_install.sh
+RUN echo "Install Antora"
+RUN npm i -g @antora/cli@3.0.1
 
 FROM ruby as jekyll
 
@@ -38,12 +38,28 @@ COPY robots.txt /
 COPY src /src
 COPY scripts /scripts
 
+RUN echo "Building the Antora"
+
+# add noindex metdata for non-prod/prod sites
+COPY src/main/content/_includes/noindex.html src/main/content/antora_ui/src/partials/noindex.hbs
+
+# Build the Antora UI look and feel (based on antora-ui-default)
+RUN pushd src/main/content/antora_ui && \
+    echo "Installing Antora dependencies" && \
+    rm -rf node_modules && \
+    npm install -g @antora/site-generator@3.0.1 && \
+    npm install gulp -g --ignore-scripts && \
+    npm install node-sass gulp-sass --save-dev && \
+    npm install && \
+    gulp sass:convert && \
+    SOURCEMAPS=true gulp build && \
+    gulp bundle:pack && \
+    popd
+
 ENV BUILD_SCRIPTS_DIR /scripts/build
 
+ENV DRAFT_SITE=true
 RUN ./scripts/build/jekyll.sh
-
-# This is for running this image for development
-CMD ["./scripts/jekyll_serve_dev.sh"]
 
 #
 #
