@@ -11,7 +11,6 @@ RUN apt-get update && \
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 RUN scripts/build/ruby_install.sh
-# RUN scripts/build/node_install.sh
 
 RUN echo "Install Node"
 
@@ -26,5 +25,5 @@ ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
 RUN node --version
 RUN npm --version
 
-# RUN scripts/build/antora_install.sh
-
+RUN echo "Install Antora"
+RUN npm i -g @antora/cli@3.0.1
