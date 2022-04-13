@@ -2,7 +2,6 @@
 #
 #
 FROM ubuntu:20.04 as ruby
-
 SHELL ["/bin/bash", "-c"]
 
 COPY scripts /scripts
@@ -10,7 +9,19 @@ COPY scripts /scripts
 # Have all the commands on one RUN to avoid multiple layers.  Each RUN command is a layer.
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install \
-    curl gnupg build-essential ruby-full git python3 python3-bs4
+    curl gnupg ruby-full git build-essential wget gpg
+
+# MD5 sum is found at https://www.python.org/downloads/release/python-351/
+# Python 3.5.1 was what worked in the former Cloud Foundary build environment
+RUN echo "Install Python 3.5.1" && \
+    wget https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz && \
+    echo "be78e48cdfc1a7ad90efff146dce6cfe Python-3.5.1.tgz" | md5sum -c - && \
+    tar xzvf Python-3.5.1.tgz && \
+    cd Python-3.5.1 && \
+    ./configure && \
+    make && \
+    make install && \
+    DEBIAN_FRONTEND=noninteractive apt-get -y install python3-bs4
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 RUN scripts/build/ruby_install.sh
@@ -30,9 +41,7 @@ RUN npm --version
 
 RUN echo "Install Antora"
 RUN npm i -g @antora/cli@3.0.1
-
 FROM ruby as jekyll
-
 COPY gems /gems
 COPY robots.txt /
 COPY src /src
