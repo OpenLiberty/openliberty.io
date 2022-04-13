@@ -11,13 +11,13 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install \
     curl gnupg ruby-full git build-essential wget gpg
 
-# MD5 sum is found at https://www.python.org/downloads/release/python-351/
-# Python 3.5.1 was what worked in the former Cloud Foundary build environment
-RUN echo "Install Python 3.5.1" && \
-    wget https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz && \
-    echo "be78e48cdfc1a7ad90efff146dce6cfe Python-3.5.1.tgz" | md5sum -c - && \
-    tar xzvf Python-3.5.1.tgz && \
-    cd Python-3.5.1 && \
+# MD5 sum is found at https://www.python.org/downloads/release/python-352/
+# Python 3.5.2 was what worked in the former Cloud Foundary build environment
+RUN echo "Install Python 3.5.2" && \
+    wget https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tgz && \
+    echo "3fe8434643a78630c61c6464fe2e7e72 Python-3.5.2.tgz" | md5sum -c - && \
+    tar xzvf Python-3.5.2.tgz && \
+    cd Python-3.5.2 && \
     ./configure && \
     make && \
     make install && \
