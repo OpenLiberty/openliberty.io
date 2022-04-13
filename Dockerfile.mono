@@ -1,0 +1,71 @@
+FROM ubuntu:20.04 as builder
+
+SHELL ["/bin/bash", "-c"]
+
+COPY scripts /scripts
+
+# Have all the commands on one RUN to avoid multiple layers.  Each RUN command is a layer.
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -y install \
+    curl gnupg build-essential ruby-full git python3 python3-bs4
+
+ENV BUILD_SCRIPTS_DIR /scripts/build
+RUN scripts/build/ruby_install.sh
+
+RUN echo "Install Node"
+
+# Cannot find a way to set the NODE_VERSION based on the version installed by `nvm install --lts`
+ENV NODE_VERSION="v16.13.2"
+ENV NVM_DIR=/root/.nvm
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+RUN . "$NVM_DIR/nvm.sh" && nvm install --lts
+RUN . "$NVM_DIR/nvm.sh" && node --version
+RUN . "$NVM_DIR/nvm.sh" && npm --version
+ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
+RUN node --version
+RUN npm --version
+
+RUN echo "Install Antora"
+RUN npm i -g @antora/cli@3.0.1
+
+COPY gems /gems
+COPY robots.txt /
+COPY src /src
+COPY scripts /scripts
+
+RUN echo "Building the Antora"
+
+# add noindex metdata for non-prod/prod sites
+COPY src/main/content/_includes/noindex.html src/main/content/antora_ui/src/partials/noindex.hbs
+
+# Build the Antora UI look and feel (based on antora-ui-default)
+RUN pushd src/main/content/antora_ui && \
+    echo "Installing Antora dependencies" && \
+    rm -rf node_modules && \
+    npm install -g @antora/site-generator@3.0.1 && \
+    npm install gulp -g --ignore-scripts && \
+    npm install node-sass gulp-sass --save-dev && \
+    npm install && \
+    gulp sass:convert && \
+    SOURCEMAPS=true gulp build && \
+    gulp bundle:pack && \
+    popd
+
+ENV BUILD_SCRIPTS_DIR /scripts/build
+
+RUN ./scripts/build/jekyll.sh
+
+FROM icr.io/appcafe/open-liberty-devfile-stack:21.0.0.12 as war
+
+COPY mvnw /
+COPY .mvn /.mvn
+COPY pom.xml /
+COPY src /src
+COPY --from=builder --chown=1001:0 /target /target
+RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 package
+
+FROM icr.io/appcafe/open-liberty:22.0.0.3-full-java8-openj9-ubi as runtime
+ENV SEC_TLS_TRUSTDEFAULTCERTS true
+COPY src/main/wlp/server.xml /config/server.xml
+#COPY target/openliberty.war /config/dropins/openliberty.war
+COPY --from=war --chown=1001:0 target/openliberty.war /config/apps/openliberty.war
