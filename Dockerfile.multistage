@@ -104,7 +104,6 @@ RUN $BUILD_SCRIPTS_DIR/gzip.sh
 #
 #
 #
-# FROM mydocs3:latest as runtime
 FROM icr.io/appcafe/open-liberty-devfile-stack:21.0.0.12 as war
 
 COPY mvnw /
@@ -117,12 +116,7 @@ RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 package
 #
 #
 #
-# FROM icr.io/appcafe/ibm-semeru-runtimes as build
-
-# COPY mvnw /
-# COPY --from=docs3 --chown=1001:0 /target /config/apps/
-
 FROM icr.io/appcafe/open-liberty:22.0.0.3-full-java8-openj9-ubi as runtime
 ENV SEC_TLS_TRUSTDEFAULTCERTS true
 COPY src/main/wlp/server.xml /config/server.xml
-COPY --from=war --chown=1001:0 target/openliberty.war /config/apps/
+COPY --from=war --chown=1001:0 target/openliberty.war /config/apps/openliberty.war
