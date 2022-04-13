@@ -10,7 +10,7 @@ for tag in tags:
     for post_name in posts:
         for file_name in os.listdir("src/main/content/_posts/"):            
             if os.path.isfile("src/main/content/_posts/" + file_name) and file_name.endswith(post_name + '.adoc'):
-                f_post = open("src/main/content/_posts/" + file_name)
+                f_post = open("src/main/content/_posts/" + file_name, encoding="utf-8")
                 data = f_post.readlines()
                 
                 # Check if there is already a tags front-matter from a previous tag
@@ -28,7 +28,7 @@ for tag in tags:
                     # Otherwise, add the tags after the first line of front-matter
                     data[2] = 'tags: ["' + tag_name + '"]\n' + data[2] 
 
-                with open("src/main/content/_posts/" + file_name, 'w') as f_write:
+                with open("src/main/content/_posts/" + file_name, 'w', encoding="utf-8") as f_write:
                     f_write.writelines(data)
                     f_write.close()
 f.close()
