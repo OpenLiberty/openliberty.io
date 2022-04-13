@@ -3,7 +3,7 @@
 module.exports.register = function () {
     this.on('contentAggregated', ({ contentAggregate }) => {
       contentAggregate.sort(sortByProperty("version"));
-    })
+    });
 }
 function sortByProperty(property){  
     return function(a,b){
