@@ -9,7 +9,8 @@ COPY scripts /scripts
 # Have all the commands on one RUN to avoid multiple layers.  Each RUN command is a layer.
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install \
-    curl gnupg ruby-full git build-essential wget gpg
+    curl gnupg ruby-full git build-essential wget gpg nodejs libgdbm-dev \
+    libncurses5-dev automake libtool bison libffi-dev python3-lxml python3-bs4
 
 # MD5 sum is found at https://www.python.org/downloads/release/python-352/
 # Python 3.5.2 was what worked in the former Cloud Foundary build environment
