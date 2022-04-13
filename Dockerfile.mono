@@ -53,8 +53,7 @@ RUN pushd src/main/content/antora_ui && \
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 
-ARG DRAFT_SITE=true
-RUN ./scripts/build/jekyll.sh
+RUN DRAFT_SITE=true ./scripts/build/jekyll.sh
 
 FROM icr.io/appcafe/open-liberty-devfile-stack:21.0.0.12 as war
 
