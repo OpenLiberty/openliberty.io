@@ -1,28 +1,15 @@
 #
 #
-#
-FROM ubuntu:20.04 as ruby
+# One major factor for using Ubuntu 18.04 LTS is to stay on an older Python 3.6 until the python
+# scripts are migrated to use a higher version
+FROM ubuntu:18.04 as ruby
 SHELL ["/bin/bash", "-c"]
 
 COPY scripts /scripts
 
-# Have all the commands on one RUN to avoid multiple layers.  Each RUN command is a layer.
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -y install \
-    curl gnupg ruby-full git build-essential wget gpg
-
-# MD5 sum is found at https://www.python.org/downloads/release/python-352/
-# Python 3.5.2 was what worked in the former Cloud Foundary build environment
-RUN echo "Install Python 3.5.2" && \
-    wget https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tgz && \
-    echo "3fe8434643a78630c61c6464fe2e7e72 Python-3.5.2.tgz" | md5sum -c - && \
-    tar xzvf Python-3.5.2.tgz && \
-    cd Python-3.5.2 && \
-    ./configure && \
-    make && \
-    make install && \
-    DEBIAN_FRONTEND=noninteractive apt-get -y install python3-bs4 && \
-    export PYTHONPATH="/usr/local/lib/python3/dist-packages"
+    apt-get -y install curl gnupg build-essential ruby-full git python3 python3-bs4 python3-lxml \
+    nodejs libgdbm-dev libncurses5-dev automake libtool bison libffi-dev 
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 RUN scripts/build/ruby_install.sh
@@ -42,6 +29,10 @@ RUN npm --version
 
 RUN echo "Install Antora"
 RUN npm i -g @antora/cli@3.0.1
+
+#
+#
+#
 FROM ruby as jekyll
 COPY gems /gems
 COPY robots.txt /
@@ -96,14 +87,27 @@ RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh
 #
 FROM docs1 as docs2
 
-RUN apt-get update && \
-    apt-get install -y nodejs python3-bs4 libgdbm-dev libncurses5-dev \
-    automake libtool bison libffi-dev python3-lxml
+RUN timer_start=$(date +%s) && \
+    python3 $BUILD_SCRIPTS_DIR/parse_features_toc.py && \
+    timer_end=$(date +%s) && \
+    echo "Total execution time for parsing the features toc: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
-ENV BUILD_SCRIPTS_DIR /scripts/build
-ENV STAGING_SITE true
+# Javadoc Portion of Docs
+RUN echo "Begin building javadoc content"  && \
+    $BUILD_SCRIPTS_DIR/javadoc_clone.sh
 
-RUN $BUILD_SCRIPTS_DIR/docs_part_2.sh
+# Move the javadocs into the web app
+RUN echo "Moving javadocs to the jekyll webapp" && \
+    timer_start=$(date +%s) && \
+    cp -r src/main/content/docs-javadoc/modules target/jekyll-webapp/docs && \
+    timer_end=$(date +%s) && \
+    echo "Total execution time for copying javadoc to webapp: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
+
+
+# Special handling for javadocs
+RUN $BUILD_SCRIPTS_DIR/javadoc_modify.sh  && \
+    echo "Finished building Javadoc content" && \
+    echo "Finished building all doc content"
 
 #
 #
