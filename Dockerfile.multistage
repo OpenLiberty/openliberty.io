@@ -21,7 +21,8 @@ RUN echo "Install Python 3.5.2" && \
     ./configure && \
     make && \
     make install && \
-    DEBIAN_FRONTEND=noninteractive apt-get -y install python3-bs4
+    DEBIAN_FRONTEND=noninteractive apt-get -y install python3-bs4 && \
+    export PYTHONPATH="/usr/local/lib/python3/dist-packages"
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 RUN scripts/build/ruby_install.sh
