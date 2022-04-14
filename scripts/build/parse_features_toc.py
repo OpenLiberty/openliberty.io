@@ -71,7 +71,7 @@ if(os.getenv("DRAFT_SITE") or os.getenv("DOCS_DRAFT_SITE")):
 for version in versions:
     # Read in front version/feature but write to all of the antora version later for changing the toc
     antora_path = featurePath + version + "/reference/"
-    featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "lxml")        
+    featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html', encoding="utf-8"), "lxml")        
 
     if version != 'latest':
         version_split = version.split('.')
@@ -171,7 +171,7 @@ for version in versions:
         firstElement = True;
         # determine whether there are multiple versions            
         firstHref = matchingTitleTOCs[0].get('href')
-        featurePage  = BeautifulSoup(open(antora_path + '/feature/' + firstHref), "lxml")
+        featurePage  = BeautifulSoup(open(antora_path + '/feature/' + firstHref, encoding="utf-8"), "lxml")
         pageTitle = featurePage.find('h1', {'class': 'page'})
         titleDiv = featurePage.new_tag('div', id='feature_name')
         versionDiv = featurePage.new_tag('div', id='feature_versions')
@@ -207,14 +207,14 @@ for version in versions:
 
         # write to the common version doc with the highest versioned content
         if newTOCHref is not "":
-            with open(antora_path + 'feature' +  newTOCHref, "w") as file:
+            with open(antora_path + 'feature' +  newTOCHref, "w", encoding="utf-8") as file:
                 file.write(str(featurePage))
         
         # Go through the matching TOC pages and write the version switcher to the top of the page
         for matchingTOC in matchingTOCs:
             # Open page and rewrite the version part
             versionHref = antora_path + 'feature/' + matchingTOC.get('href')
-            versionPage = BeautifulSoup(open(versionHref), "lxml")
+            versionPage = BeautifulSoup(open(versionHref, encoding="utf-8"), "lxml")
             versionTitle = versionPage.find('h1', {'class': 'page'})  
             # Get the matchingTOC's string and write it over the shared title of this feature version            
             if versionTitle is not None:   
@@ -224,7 +224,7 @@ for version in versions:
                 displayTitle.string = matchingTOC.string
                 displayTitle['full_title'] = "{}".format(matchingTOC.string)
                 displayTitle['aria-label'] = "{}".format(matchingTOC.string)
-            with open(versionHref, "w") as file:
+            with open(versionHref, "w", encoding="utf-8") as file:
                 file.write(str(versionPage))
 
     for TOC in TOCToDecompose:
@@ -243,11 +243,11 @@ for version in versions:
      linebreak.insert_after(li)
 
     # Write the new TOC to the feature-overview.html with version control in it
-    with open(antora_path + 'feature/feature-overview.html', "w") as file:     
+    with open(antora_path + 'feature/feature-overview.html', "w", encoding="utf-8") as file:     
         file.write(str(featureIndex))
 
     # Record the toc in the featureIndex to write over the other pages
-    featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "lxml")
+    featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html', encoding="utf-8"), "lxml")
     toc = featureIndex.find_all('ul', {'class': 'nav-list'})[0]
     if toc.find('span', text='Features') is not None:
         featureTOC = toc.find('span', text='Features').parent
@@ -267,7 +267,7 @@ for version in versions:
             if fnmatch.fnmatch(basename, "*.html"):
                 if(basename != "index.html"):
                     href = os.path.join(root, basename)
-                    page = BeautifulSoup(open(href), "lxml")
+                    page = BeautifulSoup(open(href, encoding="utf-8"), "lxml")
 
                     # Find the toc and replace it with the modified toc
                     page_toc = page.find_all('ul', {'class': 'nav-list'})[0]
@@ -277,7 +277,7 @@ for version in versions:
                         toc_to_replace = page_toc.find('a', text='Features').parent
                     toc_to_replace.clear()
                     toc_to_replace.append(featureTOC)
-                    with open(href, "w") as file:           
+                    with open(href, "w", encoding="utf-8") as file:           
                         file.write(str(page))
 
 timerEnd = time.time()
