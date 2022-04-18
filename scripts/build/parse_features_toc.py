@@ -51,15 +51,17 @@ print(versions)
 
 # Only process the features of the highest version for the docs draft site
 if(os.getenv("DRAFT_SITE") or os.getenv("DOCS_DRAFT_SITE")):
-    max = ['0', '0', '0', '0']
-    for version in versions:
-        nums = version.split('.')
-        if(int(nums[0]) > int(max[0])):
-            max = nums
-        elif(int(nums[0]) == int(max[0]) and int(nums[3]) > int(max[3])):
-            max = nums
-    max = '.'.join(max)
-
+    # Here the below code is commented out with the older version of antora we need to find the highest version and setting as max
+    # With update of antora adding latest_version_segment param in antora-playbook.yml in docs-playbook repo the highest version will be automatically converted from numerical to symbolic version ie; latest
+    # max = ['0', '0', '0', '0']
+    # for version in versions:
+    #     nums = version.split('.')
+    #     if(int(nums[0]) > int(max[0])):
+    #         max = nums
+    #     elif(int(nums[0]) == int(max[0]) and int(nums[3]) > int(max[3])):
+    #         max = nums
+    # max = '.'.join(max)
+    max = 'latest'
     print("Processing only version: " + max + " for the docs draft site.")
     versions = [max]
 
@@ -71,10 +73,13 @@ for version in versions:
     antora_path = featurePath + version + "/reference/"
     featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "lxml")        
 
-    version_split = version.split('.')
-    year = int(version_split[0])
-    month = int(version_split[3])
-    process_jakarta_features =  year > 21 or (year == 21 and month == 12)
+    if version != 'latest':
+        version_split = version.split('.')
+        year = int(version_split[0])
+        month = int(version_split[3])
+        process_jakarta_features =  year > 21 or (year == 21 and month == 12)
+    if version == 'latest':
+        process_jakarta_features = True
 
     # Keep track of new href with updated versions to update the TOCs later
     commonTOCs = {};
