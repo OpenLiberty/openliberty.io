@@ -70,8 +70,8 @@ FROM icr.io/appcafe/open-liberty-devfile-stack:21.0.0.12 as war
 COPY mvnw /
 COPY .mvn /.mvn
 COPY pom.xml /
-COPY --from=docs3 --chown=1001:0 /src /src
-COPY --from=docs3 --chown=1001:0 /target /target
+COPY --from=jekyll --chown=1001:0 /src /src
+COPY --from=jekyll --chown=1001:0 /target /target
 RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 package
 
 #
