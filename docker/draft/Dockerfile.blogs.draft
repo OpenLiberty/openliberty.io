@@ -5,8 +5,8 @@ FROM us.icr.io/openlibertyio/builder as jekyll
 COPY gems /gems
 COPY robots.txt /
 
-RUN git clone --single-branch --branch prod https://github.com/OpenLiberty/openliberty.io.git \
-    && mv ./openliberty.io/{*,.[^.]*} ./
+COPY src /src
+COPY scripts /scripts
 
 RUN echo "Building the Antora"
 
