@@ -1,6 +1,7 @@
 var navigation = (function(){
   'use strict';
   var init = function(){
+    console.log("01 nav js old one nw");
     var navContainer = document.querySelector('.nav-container');
     var navToggle = document.querySelector('.nav-toggle');
 
