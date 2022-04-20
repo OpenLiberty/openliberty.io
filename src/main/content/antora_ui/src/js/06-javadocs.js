@@ -585,7 +585,7 @@ function setIFrameContent(iframeName, href) {
 //when back button pressed or page refresh
 function popStateOrPageRefresh() {
   var url = window.top.location.href;
-  replaceCanonicalUrl(url);
+  //replaceCanonicalUrl(url);
 }
 
 // If package is provided as paramName, then return the class param. Otherwise return the package param.
