@@ -64,7 +64,7 @@ describe('Test Open Liberty Starter - Maven', () => {
     ];
 
     // tests
-    it('Test zip file is downloaded with gradle', () => {
+    it('Test zip file is downloaded with maven', () => {
         cy.exec(`rm -rf ${downloadsFolder}`);
 
         cy.goToOpenLibertyStarter();
