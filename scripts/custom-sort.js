@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports.register = function () {
+function register () {
     this.on('contentAggregated', ({ contentAggregate }) => {
       contentAggregate.sort(sortByProperty("version"));
     });
@@ -17,3 +17,4 @@ function sortByProperty(property){
        return 0;
     }  
 }
+module.exports.register = register;
