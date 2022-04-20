@@ -52,6 +52,8 @@ describe('Test Open Liberty Starter - Gradle', () => {
         cy.runGradlewLibertyDev(appname, javahome);
     });
 
+    // Note: for this gradle test Jakarta 9.1 & MP 5.0, separate calls to check local splash page & run gradlew libertyStop
+    // to prevent the re-run of runGradlewLibertyDev twice - idk why cypress does this
     it('Check local Splashpage - JDK17 Jarkata 9.1, MP 5.0', () => {
         cy.checkLocalSplashPage();
     });

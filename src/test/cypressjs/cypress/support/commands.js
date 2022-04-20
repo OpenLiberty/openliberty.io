@@ -87,7 +87,7 @@ Cypress.Commands.add('downloadAndUnZipFileMaven', (appname, jdkVer, jktVer, mpVe
     }
     cy.get("#starter_submit").click({force: true});
 
-    // add wait here helps with close the modal
+    // for some unknown reason have to add the wait along with click force true to close the modal
     cy.wait(5000);
     cy.get('.modal-dialog').should('be.visible');
     cy.get('#cmd_to_run').contains('mvnw liberty:dev');
@@ -120,7 +120,7 @@ Cypress.Commands.add('downloadAndUnZipFileGradle', (appname, jdkVer, jktVer, mpV
     }
     cy.get("#starter_submit").click({force: true});
 
-    // add wait here helps with close the modal
+    // for some unknown reason have to add the wait along with click force true to close the modal
     cy.wait(5000);
     cy.get('.modal-dialog').should('be.visible');
     cy.get('#cmd_to_run').contains('gradlew libertyDev');
