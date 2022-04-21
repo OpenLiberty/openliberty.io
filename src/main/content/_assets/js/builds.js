@@ -25,7 +25,7 @@ var starter_domain =
     isStagingSite() ? 'https://staging-starter.mybluemix.net' : 'https://start.openliberty.io';
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
-
+console.log("builds js new one");
 // Controls what build zips are exposed on openliberty.io.  This will need to be updated
 // if there is a new zip version published on DHE.  The intent of this allow_builds list is to
 // prevent the situation where unintential zips on DHE get shown on the website.
