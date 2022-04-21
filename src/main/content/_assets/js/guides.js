@@ -10,7 +10,7 @@
  *******************************************************************************/
 
 $(document).ready(function () {
-  console.log("guildes 123 new js loaded");
+  console.log("guildes 123 new1 js loaded");
   var title_key = 1;
   var description_key = 2;
   var tags_key = 4;
