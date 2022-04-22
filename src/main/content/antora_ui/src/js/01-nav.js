@@ -185,6 +185,7 @@ var navigation = (function(){
 
   versions.sort(orderVersions);
   console.log(versions);
+  console.log(versions[0]);
   var url = window.location.href;
   url = url.split('/')
   if(url[4] == versions[0]) {
@@ -194,7 +195,7 @@ var navigation = (function(){
     window.location.href = url;
   }
   else {
-    console.log("active url");
+    console.log("not latest url");
   }
   function orderVersions(a, b) {
     var arrA = a.split(".");
