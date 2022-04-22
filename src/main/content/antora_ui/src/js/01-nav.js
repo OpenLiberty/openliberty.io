@@ -185,7 +185,7 @@ var navigation = (function(){
 
   versions.sort(orderVersions);
   console.log(versions);
-  console.log(versions[0]);
+  console.log(versions[0]); 
   var url = window.location.href;
   url = url.split('/')
   if(url[4] == versions[0]) {
