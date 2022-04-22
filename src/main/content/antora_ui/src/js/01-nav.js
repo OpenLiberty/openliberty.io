@@ -176,7 +176,38 @@ var navigation = (function(){
       panel.scrollTop = 0;
     }
   }
+  var versions = [];
+  $(".components .versions .version")
+    .find("a")
+    .map(function() {
+      versions.push($(this).text());
+    });
 
+  versions.sort(orderVersions);
+  console.log(versions);
+  var url = window.location.href;
+  url = url.split('/')
+  if(url[4] == versions[0]) {
+    url[4] = 'latest'
+    url = url.join('/')
+    console.log(url)
+    window.location.href = url;
+  }
+  else {
+    console.log("active url");
+  }
+  function orderVersions(a, b) {
+    var arrA = a.split(".");
+    var arrB = b.split(".");
+    for (var i = 0; i < arrA.length; i++) {
+      if (parseInt(arrA[i]) > parseInt(arrB[i])) {
+        return -1;
+      } else if (parseInt(arrA[i]) < parseInt(arrB[i])) {
+        return 1;
+      }
+    }
+    return 0;
+  }
   return {
     init: init,
     activateCurrentPath: activateCurrentPath,
