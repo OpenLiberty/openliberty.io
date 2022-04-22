@@ -195,7 +195,7 @@ var navigation = (function(){
     window.location.href = url;
   }
   else {
-    console.log("not latest url");
+    console.log("not latest url")
   }
   function orderVersions(a, b) {
     var arrA = a.split(".");
