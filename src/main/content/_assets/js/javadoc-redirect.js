@@ -1,4 +1,16 @@
 $(function () {
+  var versions = [];
+  $(".components .versions .version")
+    .find("a")
+    .map(function() {
+      versions.push($(this).text());
+    });
+    console.log(versions);
+  if (
+    window.top.location.href.includes('/docs/22.0.0.5')
+) {
+  alert("1")
+}
   if (
       window.top.location.href.includes('/docs/modules/reference/microprofile-')
   ) {
