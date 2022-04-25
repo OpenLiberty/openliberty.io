@@ -10,6 +10,7 @@
   - **Option 2**: Supply a command line variable when launching cypress instead of changing `cypress.env.json`.  Option 2 is preferred to avoid changing a file tracked by `git`.
 
 ## Step 3:  Launch the Cypress test runner
+- `cd cypress`
 - **Option 1 from step 2** using `cypress.env.json`
   - `npx cypress open`
 - **Option 2 from step 2** using CLI variable instead of `cypress.env.json`
