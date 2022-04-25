@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 downloadsDir=$1
+echo "JAVA_HOME=$JAVA_HOME"
 echo cd ${downloadsDir}
 cd ${downloadsDir}
 echo pwd
