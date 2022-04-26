@@ -65,4 +65,4 @@ $(function () {
     '/package-frame.html&class=' +
     jd;
   }
-});
+}); 
