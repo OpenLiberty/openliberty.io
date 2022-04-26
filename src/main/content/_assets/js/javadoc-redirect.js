@@ -1,9 +1,7 @@
 $(function () {
-  var versions = [];
   if (
       window.top.location.href.includes('/docs/modules/reference/microprofile-')
   ) {
-    alert("microprofile");
       var jd = window.top.location.href;
       var version = jd.substring(
           jd.indexOf('microprofile-') + 13,
@@ -19,7 +17,7 @@ $(function () {
     port +
     '/docs/latest/reference/javadoc/microprofile-' +
     version +
-    '-javadoc.html#package=' +
+    '-javadoc.html?package=' +
     pack +
     '/package-frame.html&class=' +
     jd;
@@ -41,7 +39,7 @@ $(function () {
     port +
     '/docs/latest/reference/javadoc/liberty-javaee' +
     version +
-    '-javadoc.html#package=' +
+    '-javadoc.html?package=' +
     pack +
     '/package-frame.html&class=' +
     jd;
@@ -62,21 +60,9 @@ $(function () {
     port +
     '/docs/latest/reference/javadoc/liberty-jakartaee' +
     version +
-    '-javadoc.html#package=' +
+    '-javadoc.html?package=' +
     pack +
     '/package-frame.html&class=' +
     jd;
   }
-  else if (
-    window.top.location.href.includes('/docs/22.0.0.5')
-) {
-  alert("22.0.0.5");
-  $(".components .versions .version")
-  .find("a")
-  .map(function() {
-    versions.push($(this).text());
-  });
-  console.log(versions);
-  window.top.location.href = window.top.location.origin+"/docs/latest/reference/javadoc/liberty-javaee8-javadoc.html?package=javax/annotation/package-frame.html&class=overview-summary.html"
-}
 });
