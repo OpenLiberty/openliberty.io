@@ -1,7 +1,6 @@
 var navigation = (function(){
   'use strict';
   var init = function(){
-    console.log("01 nav js old one nw1");
     var navContainer = document.querySelector('.nav-container');
     var navToggle = document.querySelector('.nav-toggle');
 
@@ -176,39 +175,7 @@ var navigation = (function(){
       panel.scrollTop = 0;
     }
   }
-  var versions = [];
-  $(".components .versions .version")
-    .find("a")
-    .map(function() {
-      versions.push($(this).text());
-    });
 
-  versions.sort(orderVersions);
-  console.log(versions);
-  console.log(versions[0]);
-  var url = window.location.href;
-  url = url.split('/')
-  if(url[4] == versions[0]) {
-    url[4] = 'latest'
-    url = url.join('/')
-    console.log(url)
-    window.location.href = url;
-  }
-  else {
-    console.log("not latest url")
-  }
-  function orderVersions(a, b) {
-    var arrA = a.split(".");
-    var arrB = b.split(".");
-    for (var i = 0; i < arrA.length; i++) {
-      if (parseInt(arrA[i]) > parseInt(arrB[i])) {
-        return -1;
-      } else if (parseInt(arrA[i]) < parseInt(arrB[i])) {
-        return 1;
-      }
-    }
-    return 0;
-  }
   return {
     init: init,
     activateCurrentPath: activateCurrentPath,

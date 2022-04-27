@@ -62,10 +62,22 @@ public class RedirectFilter implements Filter {
         // url, it won't be a direct from and to.
         if (startsWithMatch) {
             String uri = ((HttpServletRequest) req).getRequestURI();
+            System.out.println("sreejith uri");
+            System.out.println(uri);
+            String queryString = ((HttpServletRequest) req).getQueryString();
+            System.out.println("sreejith queryString");
+            System.out.println(queryString);
+            if (queryString != null) {
+                uri = uri +"?"+ queryString;
+            }
             // Do not redirect if the uri doesn't contain anything more than the 'from'
             // redirect rule during a wildcard match.
             if (!uri.endsWith(from)) {
+                System.out.println("sreejith from");
+                System.out.println(from);
                 newURL = uri.replaceAll(from, to);
+                System.out.println("sreejith newURL inside");
+                System.out.println(newURL);
                 // It is possible that the filter intercepted, but the redirect rule does not
                 // apply
                 // in that case we set newURL to null so no redirect is sent and the filter
@@ -81,6 +93,8 @@ public class RedirectFilter implements Filter {
         if (newURL != null) {
             // if there is a newURL send a redirect with that new url
             newURL = req.getScheme() + "://" + req.getServerName() + sPort + newURL;
+            System.out.println("sreejith newURL");
+            System.out.println(newURL);
             ((HttpServletResponse) resp).sendRedirect(newURL);
         } else {
             // if there was no new url just proceed with normal processing
