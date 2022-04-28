@@ -1,5 +1,10 @@
 FROM ruby:latest as builder
 
+# Print out default locale and change it to en_US.UTF-8
+RUN echo "Default locale:" && \
+    echo `locale` && \
+    export LANG="en_US.UTF-8"
+
 COPY gems /gems
 COPY robots.txt /
 COPY src /src
@@ -25,6 +30,7 @@ RUN pushd src/main/content/antora_ui && \
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 
+ENV STAGING_SITE=true
 RUN ./scripts/build/jekyll.sh
 
 # FROM icr.io/appcafe/open-liberty-devfile-stack:21.0.0.12 as war

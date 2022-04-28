@@ -1,6 +1,8 @@
-FROM myjavadocs:latest
+FROM javadocs
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 ENV STAGING_SITE true
+
+COPY scripts /scripts
 
 RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh
