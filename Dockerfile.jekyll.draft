@@ -1,10 +1,7 @@
-#
-#
-#
-FROM us.icr.io/openlibertyio/builder as jekyll
+FROM us.icr.io/openlibertyio/myruby:latest as builder
+
 COPY gems /gems
 COPY robots.txt /
-
 COPY src /src
 COPY scripts /scripts
 
@@ -28,26 +25,20 @@ RUN pushd src/main/content/antora_ui && \
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 
-ENV BLOGS_DRAFT_SITE=true
-ENV NOT_PROD_SITE=true
+ENV DRAFT_SITE=true
 RUN ./scripts/build/jekyll.sh
 
-#
-#
-#
-FROM icr.io/appcafe/open-liberty-devfile-stack:21.0.0.12 as war
+# FROM icr.io/appcafe/open-liberty-devfile-stack:21.0.0.12 as war
 
-COPY mvnw /
-COPY .mvn /.mvn
-COPY pom.xml /
-COPY --from=jekyll --chown=1001:0 /src /src
-COPY --from=jekyll --chown=1001:0 /target /target
-RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 package
+# COPY mvnw /
+# COPY .mvn /.mvn
+# COPY pom.xml /
+# COPY src /src
+# COPY --from=builder --chown=1001:0 /target /target
+# RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 package
 
-#
-#
-#
-FROM icr.io/appcafe/open-liberty:22.0.0.3-full-java8-openj9-ubi as runtime
-ENV SEC_TLS_TRUSTDEFAULTCERTS true
-COPY src/main/wlp/server.xml /config/server.xml
-COPY --from=war --chown=1001:0 target/openliberty.war /config/apps/openliberty.war
+# FROM icr.io/appcafe/open-liberty:22.0.0.3-full-java8-openj9-ubi as runtime
+# ENV SEC_TLS_TRUSTDEFAULTCERTS true
+# COPY src/main/wlp/server.xml /config/server.xml
+# #COPY target/openliberty.war /config/dropins/openliberty.war
+# COPY --from=war --chown=1001:0 target/openliberty.war /config/apps/openliberty.war
