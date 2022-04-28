@@ -1,13 +1,14 @@
-FROM ubuntu:20.04
-
+FROM ubuntu:18.04
 SHELL ["/bin/bash", "-c"]
 
 COPY scripts /scripts
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Have all the commands on one RUN to avoid multiple layers.  Each RUN command is a layer.
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get -y install \
-    curl gnupg build-essential ruby-full git python3 python3-bs4
+    apt-get -y install curl gnupg build-essential ruby-full git python3 python3-bs4 python3-lxml \
+    nodejs libgdbm-dev libncurses5-dev automake libtool bison libffi-dev 
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 RUN scripts/build/ruby_install.sh
