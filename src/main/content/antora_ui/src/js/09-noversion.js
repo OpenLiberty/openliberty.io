@@ -60,7 +60,7 @@ $(window).on("load", function() {
       });
 
       $(".loader").remove();
-      $(".doc .paragraph p").removeClass("noversion-paragraph"); 
+      $(".doc .paragraph p").removeClass("noversion-paragraph");
       $(".doc .paragraph p").remove();
       $(".doc .paragraph").text(contentText);
 
