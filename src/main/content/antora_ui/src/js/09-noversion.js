@@ -1,6 +1,7 @@
 var nextRequest = true;
 $('.doc .paragraph').append('<div class="loader"></div>');
 var contentText = addContentText();
+$(".doc .paragraph p").addClass("noversion-paragraph");
 $(".doc .paragraph p").text(contentText);
 
 $(window).on("load", function() {
@@ -59,6 +60,7 @@ $(window).on("load", function() {
       });
 
       $(".loader").remove();
+      $(".doc .paragraph p").removeClass("noversion-paragraph");
       $(".doc .paragraph p").remove();
       $(".doc .paragraph").text(contentText);
 
