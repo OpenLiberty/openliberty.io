@@ -62,6 +62,10 @@ public class RedirectFilter implements Filter {
         // url, it won't be a direct from and to.
         if (startsWithMatch) {
             String uri = ((HttpServletRequest) req).getRequestURI();
+            String queryString = ((HttpServletRequest) req).getQueryString();
+            if (queryString != null) {
+                uri = uri +"?"+ queryString;
+            }
             // Do not redirect if the uri doesn't contain anything more than the 'from'
             // redirect rule during a wildcard match.
             if (!uri.endsWith(from)) {
