@@ -179,14 +179,19 @@ public class BuildInfo {
         return dateTime;
     }
 
+    @Override
     public int hashCode() {
         return dateTime.hashCode();
     }
 
-    public boolean equals(BuildInfo other) {
-        if (this == other) return true;
+    @Override
+    public boolean equals(Object other) {
         if (other == null) return false;
-        if (this.dateTime.equals(other.dateTime)) return true;
-        return false;
+        if (!(other instanceof BuildInfo)) {
+            return false;
+        }
+        BuildInfo otherBuildInfo = (BuildInfo) other;
+
+        return this.dateTime.equals(otherBuildInfo.dateTime);
     }
 }
