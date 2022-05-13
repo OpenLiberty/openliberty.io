@@ -32,7 +32,7 @@ public class LastUpdate {
     private ZonedDateTime lastSuccess;
 
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss z yyyy", Locale.US);
-    public static ZoneId UTC = ZoneId.of("UTC");
+    public static final ZoneId UTC = ZoneId.of("UTC");
 
     private static final Logger logger = Logger.getLogger(LastUpdate.class.getName());
 
