@@ -21,6 +21,9 @@ SOURCEMAPS=true gulp build
 gulp bundle:pack
 popd
 
+echo "npm analysis antora_install"
+npm ls -g --depth=0
+
 timer_end=$(date +%s)
 echo "Total execution time for installing Antora & dependencies: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)"
 
