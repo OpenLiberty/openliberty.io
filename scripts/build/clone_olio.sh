@@ -1,5 +1,4 @@
 #!/bin/bash
-
 BRANCH_NAME="prod"
 # Input step clones the git repo to root folder, we need to delete that content first.
 ls -la
