@@ -2,13 +2,17 @@
 #
 #
 FROM us.icr.io/openlibertyio/builder as jekyll
+
+# clone the website prod branch
+RUN ./scripts/build/clone_olio.sh
+
 COPY gems /gems
 COPY robots.txt /
 
 COPY src /src
 COPY scripts /scripts
 
-RUN ./scripts/builds/antora_build_ui.sh
+RUN ./scripts/build/antora_build_ui.sh
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 
