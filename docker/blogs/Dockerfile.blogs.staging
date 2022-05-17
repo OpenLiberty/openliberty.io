@@ -4,7 +4,16 @@
 FROM us.icr.io/openlibertyio/builder as jekyll
 
 # clone the website prod branch
-RUN ./scripts/build/clone_olio.sh
+# Input step clones the git repo to root folder, we need to delete that content first.
+RUN ls -la
+# Delete everything that doesn't start with an underscore
+RUN ls -A | grep -v ^_.* | xargs rm -rf
+RUN ls -la
+# Can't clone directly into root because it exists and is not empty
+RUN git clone --single-branch --branch prod https://github.com/OpenLiberty/openliberty.io.git
+RUN mv ./openliberty.io/{*,.[^.]*} ./
+RUN ls -lA
+RUN echo "Environment cleanup complete, starting build process"
 
 COPY gems /gems
 COPY robots.txt /
