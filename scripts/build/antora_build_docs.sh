@@ -1,4 +1,6 @@
 echo "Using the Antora playbook to generate what content to display for docs"
+echo "npm analysis antora_build" 
+npm ls -g --depth=0
 if [ "$PROD_SITE" = true ]
   then    
     # Enable google analytics in docs
