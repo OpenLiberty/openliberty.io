@@ -22,9 +22,6 @@ RUN ./scripts/build/jekyll.sh
 #
 FROM icr.io/appcafe/open-liberty-devfile-stack:21.0.0.12 as war
 
-ENV BLOGS_DRAFT_SITE=true
-ENV NOT_PROD_SITE=true
-
 COPY mvnw /
 COPY .mvn /.mvn
 COPY pom.xml /
