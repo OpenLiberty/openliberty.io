@@ -2,7 +2,7 @@
 #
 # One major factor for using Ubuntu 18.04 LTS is to stay on an older Python 3.6 until the python
 # scripts are migrated to use a higher version
-FROM ubuntu:18.04 as builder
+FROM icr.io/continuous-delivery/pipeline/pipeline-base-image:2.6 as builder
 SHELL ["/bin/bash", "-c"]
 
 COPY scripts /scripts
