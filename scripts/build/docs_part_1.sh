@@ -27,7 +27,15 @@ echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 timer_start=$(date +%s)
 $BUILD_SCRIPTS_DIR/antora_clone_playbook.sh
 
-$BUILD_SCRIPTS_DIR/antora_build_docs.sh
+# $BUILD_SCRIPTS_DIR/antora_build_docs.sh
+echo "Using the Antora playbook to generate what content to display for docs"
+if [ "$PROD_SITE" = true ]
+  then
+    # Enable google analytics in docs
+    antora --fetch --stacktrace --key google-analytics=GTM-TKP3KJ7 src/main/content/docs/antora-playbook.yml
+  else
+    antora --fetch --stacktrace src/main/content/docs/antora-playbook.yml
+fi
 timer_end=$(date +%s)
 echo "Total execution time for cloning playbook and building docs via Antora: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
