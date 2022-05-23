@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Using the Antora playbook to generate what content to display for docs"
 if [ "$PROD_SITE" = true ]
   then    
