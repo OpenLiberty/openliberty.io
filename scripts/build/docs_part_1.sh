@@ -20,7 +20,6 @@ echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 #Antora Portion of Docs
 echo "Begin building of Antora portion of docs"
 
-#$BUILD_SCRIPTS_DIR/node_install.sh
 
 $BUILD_SCRIPTS_DIR/antora_install.sh
 
