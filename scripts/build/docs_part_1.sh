@@ -1,3 +1,4 @@
+#!/bin/bash
 #comment this below line in local if nvm already installed
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
@@ -19,7 +20,6 @@ echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 
 #Antora Portion of Docs
 # echo "Begin building of Antora portion of docs"
-
 
 # $BUILD_SCRIPTS_DIR/antora_install.sh
 
