@@ -1,19 +1,17 @@
 #!/bin/bash
 #comment this below line in local if nvm already installed
-echo "Install Node"
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+RUN echo "Install Node"
 
-nvm install --lts
-nvm alias default node
-nvm use --lts
-echo "npm analysis during build"
-npm ls -g --depth=0
-
-#comment out this below two line in local during build
-ln -s "$(which node)" /usr/bin/node
-ln -s "$(which npm)" /usr/bin/npm
+# Cannot find a way to set the NODE_VERSION based on the version installed by `nvm install --lts`
+ENV NODE_VERSION="v16.13.2"
+ENV NVM_DIR=/root/.nvm
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+RUN . "$NVM_DIR/nvm.sh" && nvm install --lts
+RUN . "$NVM_DIR/nvm.sh" && node --version
+RUN . "$NVM_DIR/nvm.sh" && npm --version
+ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
+RUN node --version
+RUN npm --version
 
 set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
@@ -24,7 +22,12 @@ echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 
 # $BUILD_SCRIPTS_DIR/node_install.sh
 
-$BUILD_SCRIPTS_DIR/antora_install.sh
+#$BUILD_SCRIPTS_DIR/antora_install.sh
+# Install Antora on the machine
+echo "Install Antora"
+npm i -g @antora/cli@3.0.1
+
+$BUILD_SCRIPTS_DIR/antora_build_ui.sh
 
 # Use the Antora playbook to download the docs and build the doc pages
 timer_start=$(date +%s)
