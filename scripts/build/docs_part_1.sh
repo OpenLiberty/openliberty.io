@@ -25,7 +25,7 @@ echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 #$BUILD_SCRIPTS_DIR/antora_install.sh
 # Install Antora on the machine
 echo "Install Antora"
-npm i -g @antora/cli@3.0.1
+RUN npm i -g @antora/cli@3.0.1
 
 $BUILD_SCRIPTS_DIR/antora_build_ui.sh
 
