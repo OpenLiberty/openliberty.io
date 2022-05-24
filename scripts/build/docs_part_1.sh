@@ -1,4 +1,20 @@
 #!/bin/bash
+#comment this below line in local if nvm already installed
+echo "Install Node"
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+nvm install --lts
+nvm alias default node
+nvm use --lts
+echo "npm analysis during build"
+npm ls -g --depth=0
+
+#comment out this below two line in local during build
+ln -s "$(which node)" /usr/bin/node
+ln -s "$(which npm)" /usr/bin/npm
+
 set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
 echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
@@ -8,21 +24,13 @@ echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 
 # $BUILD_SCRIPTS_DIR/node_install.sh
 
-# $BUILD_SCRIPTS_DIR/antora_install.sh
+$BUILD_SCRIPTS_DIR/antora_install.sh
 
 # Use the Antora playbook to download the docs and build the doc pages
 timer_start=$(date +%s)
 $BUILD_SCRIPTS_DIR/antora_clone_playbook.sh
 
-# $BUILD_SCRIPTS_DIR/antora_build_docs.sh
-echo "Using the Antora playbook to generate what content to display for docs"
-if [ "$PROD_SITE" = true ]
-  then
-    # Enable google analytics in docs
-    antora --fetch --stacktrace --key google-analytics=GTM-TKP3KJ7 src/main/content/docs/antora-playbook.yml
-  else
-    antora --fetch --stacktrace src/main/content/docs/antora-playbook.yml
-fi
+$BUILD_SCRIPTS_DIR/antora_build_docs.sh
 timer_end=$(date +%s)
 echo "Total execution time for cloning playbook and building docs via Antora: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
