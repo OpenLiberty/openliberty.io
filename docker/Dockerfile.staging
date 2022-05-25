@@ -19,6 +19,10 @@ RUN echo "Install Ruby"
 RUN $BUILD_SCRIPTS_DIR/ruby_install.sh
 
 RUN $BUILD_SCRIPTS_DIR/node_install.sh
+ENV NODE_VERSION="v16.15.0"
+ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
+RUN echo "npm analysis during build"
+RUN npm ls -g --depth=0
 
 # Install Antora on the machine
 RUN echo "Install Antora"
