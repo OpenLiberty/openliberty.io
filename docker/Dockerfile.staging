@@ -15,7 +15,7 @@ ENV BUILD_SCRIPTS_DIR /scripts/build
 ENV STAGING_SITE=true
 ENV PIPELINE_DEBUG_SCRIPT=true
 
-RUN echo "Install Ruby"
+#RUN echo "Install Ruby"
 RUN $BUILD_SCRIPTS_DIR/ruby_install.sh
 
 #comment this below line in local if nvm already installed
@@ -25,14 +25,19 @@ ENV NODE_VERSION="v16.15.0"
 ENV NVM_DIR=/root/.nvm
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 RUN . "$NVM_DIR/nvm.sh" && nvm install --lts
-RUN . "$NVM_DIR/nvm.sh" && node --version
-RUN . "$NVM_DIR/nvm.sh" && npm --version
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default node
+RUN . "$NVM_DIR/nvm.sh" && nvm use --lts
 ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
 RUN node --version
 RUN npm --version
+RUN echo "npm analysis during build"
+RUN npm ls -g --depth=0
 
-RUN echo "Antora Install"
-RUN $BUILD_SCRIPTS_DIR/antora_install.sh
+# Install Antora on the machine
+RUN echo "Install Antora"
+RUN npm i -g @antora/cli@3.0.1
+
+RUN $BUILD_SCRIPTS_DIR/antora_build_ui.sh
 
 RUN echo "Run Jekyll"
 RUN $BUILD_SCRIPTS_DIR/jekyll.sh
