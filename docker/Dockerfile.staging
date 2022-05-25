@@ -23,7 +23,6 @@ COPY robots.txt /
 COPY src /src
 #COPY scripts /scripts
 
-#RUN ./scripts/builds/antora_build_ui.sh
 #RUN $BUILD_SCRIPTS_DIR/antora_build_ui.sh
 # RUN ./scripts/build/jekyll.sh
 RUN $BUILD_SCRIPTS_DIR/jekyll.sh
@@ -45,34 +44,10 @@ FROM jekyll as docs
 #RUN node --version
 #RUN npm --version
 
-RUN echo "Install Node"
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-RUN export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")" [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-RUN nvm install --lts
-
-RUN node --version
-RUN echo "npm version:"
-RUN echo `npm -v`
-
-#ENV BUILD_SCRIPTS_DIR /scripts/build
-#ENV STAGING_SITE true
 
 RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh
 
-#
-#
-#
-#FROM docs1 as docs2
-
 RUN $BUILD_SCRIPTS_DIR/docs_part_2.sh
-
-#
-#
-#
-#FROM docs2 as docs3
-
-#ENV BUILD_SCRIPTS_DIR /scripts/build
-#ENV STAGING_SITE true
 
 RUN $BUILD_SCRIPTS_DIR/gzip.sh
 
