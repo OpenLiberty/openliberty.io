@@ -16,21 +16,11 @@ RUN $BUILD_SCRIPTS_DIR/jekyll.sh
 #
 #
 #
-FROM jekyll as docs1
+FROM jekyll as docs
 
 RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh
 
-#
-#
-#
-FROM docs1 as docs2
-
 RUN $BUILD_SCRIPTS_DIR/docs_part_2.sh
-
-#
-#
-#
-FROM docs2 as docs3
 
 RUN $BUILD_SCRIPTS_DIR/gzip.sh
 
