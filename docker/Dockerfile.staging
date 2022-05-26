@@ -21,8 +21,9 @@ RUN $BUILD_SCRIPTS_DIR/ruby_install.sh
 RUN $BUILD_SCRIPTS_DIR/node_install.sh
 RUN . "/root/.nvm/nvm.sh" && nv=$(node --version) && echo "$nv"
 #ENV NODE_VERSION="v16.15.0"
-RUN echo "$nv"
-RUN NODE_VERSION=$nv && echo "$NODE_VERSION"
+RUN echo "node version $nv"
+ENV NODE_VERSION=$(nv)
+RUN echo "NODE_VERSION var $NODE_VERSION"
 ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
 RUN echo "npm analysis during build"
 RUN npm ls -g --depth=0
