@@ -18,12 +18,13 @@ ENV PIPELINE_DEBUG_SCRIPT=true
 RUN echo "Install Ruby"
 RUN $BUILD_SCRIPTS_DIR/ruby_install.sh
 
-ARG nv
-#"v16.15.0"
+#ARG nv
 RUN $BUILD_SCRIPTS_DIR/node_install.sh
-RUN . "/root/.nvm/nvm.sh" && nv=$(node --version) && echo "$nv"
-RUN echo "$nv"
-ENV NODE_VERSION=$nv
+#RUN . "/root/.nvm/nvm.sh" && nv=$(node --version) && echo "$nv"
+RUN . "/root/.nvm/nvm.sh" && export NODE_VERSION=$(node --version) && echo "$NODE_VERSION"
+#ENV NODE_VERSION="v16.15.0"
+#RUN echo "$nv"
+#ENV NODE_VERSION=$nv
 RUN echo "var $NODE_VERSION"
 ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
 RUN echo "$PATH"
