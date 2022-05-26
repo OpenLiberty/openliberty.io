@@ -12,9 +12,9 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 . "$NVM_DIR/nvm.sh" && nvm alias default node
 . "$NVM_DIR/nvm.sh" && nvm use --lts
 . "$NVM_DIR/nvm.sh" && export NODE_VERSION=$(node --version) && echo "$NODE_VERSION"
-#ENV NODE_VERSION="v16.15.0"
 echo "$NODE_VERSION"
 export PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
+echo "$PATH"
 node --version
 npm --version
 echo "npm analysis during build"
