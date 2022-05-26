@@ -19,7 +19,7 @@ RUN echo "Install Ruby"
 RUN $BUILD_SCRIPTS_DIR/ruby_install.sh
 
 RUN $BUILD_SCRIPTS_DIR/node_install.sh
-RUN . "/root/.nvm/nvm.sh" && ENV NODE_VERSION=$(node --version) 
+RUN . "/root/.nvm/nvm.sh" && \ export NODE_VERSION=$(node --version) && \ echo "$NODE_VERSION"
 #ENV NODE_VERSION="v16.15.0"
 RUN echo "$NODE_VERSION"
 ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
