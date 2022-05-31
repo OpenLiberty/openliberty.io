@@ -12,20 +12,15 @@ RUN apt-get update && \
     nodejs libgdbm-dev libncurses5-dev automake libtool bison libffi-dev 
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
-RUN scripts/build/ruby_install.sh
+RUN $BUILD_SCRIPTS_DIR/ruby_install.sh
 
-RUN echo "Install Node"
+RUN $BUILD_SCRIPTS_DIR/node_install.sh
 
-# Cannot find a way to set the NODE_VERSION based on the version installed by `nvm install --lts`
-ENV NODE_VERSION="v16.13.2"
-ENV NVM_DIR=/root/.nvm
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-RUN . "$NVM_DIR/nvm.sh" && nvm install --lts
-RUN . "$NVM_DIR/nvm.sh" && node --version
-RUN . "$NVM_DIR/nvm.sh" && npm --version
+ENV NODE_VERSION="v16.15.0"
+# After node install script ran, need to export the path
 ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
-RUN node --version
-RUN npm --version
+RUN echo "npm analysis during build"
+RUN npm ls -g --depth=0
 
 RUN echo "Install Antora"
 RUN npm i -g @antora/cli@3.0.1
