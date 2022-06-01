@@ -28,10 +28,11 @@ RUN echo "npm analysis during build"
 RUN npm ls -g --depth=0
 
 # Install Antora on the machine
-RUN echo "Install Antora"
-RUN npm i -g @antora/cli@3.0.1
+#RUN echo "Install Antora"
+#RUN npm i -g @antora/cli@3.0.1
 
-RUN $BUILD_SCRIPTS_DIR/antora_build_ui.sh
+#RUN $BUILD_SCRIPTS_DIR/antora_build_ui.sh
+RUN $BUILD_SCRIPTS_DIR/antora_install.sh
 
 RUN echo "Run Jekyll"
 RUN $BUILD_SCRIPTS_DIR/jekyll.sh
