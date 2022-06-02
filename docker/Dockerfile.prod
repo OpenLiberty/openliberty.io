@@ -6,67 +6,25 @@ COPY robots.txt /
 COPY src /src
 COPY scripts /scripts
 
-RUN ./scripts/builds/antora_build_ui.sh
-
 ENV BUILD_SCRIPTS_DIR /scripts/build
 
-ENV DRAFT_SITE=true
-RUN ./scripts/build/jekyll.sh
+RUN $BUILD_SCRIPTS_DIR/antora_build_ui.sh
+
+ENV PROD_SITE=true
+ENV JEKYLL_ENV=production
+ENV AVAILABILITY_SERVICE=OpenLiberty\ availability
+ENV PIPELINE_DEBUG_SCRIPT=true
+
+RUN $BUILD_SCRIPTS_DIR/jekyll.sh
 
 #
 #
 #
-FROM jekyll as javadocs
-
-ENV BUILD_SCRIPTS_DIR /scripts/build
-ENV STAGING_SITE true
-
-RUN $BUILD_SCRIPTS_DIR/javadoc_clone.sh
-
-#
-#
-#
-FROM javadocs as docs1
-
-ENV BUILD_SCRIPTS_DIR /scripts/build
-ENV STAGING_SITE true
+FROM jekyll as docs
 
 RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh
 
-#
-#
-#
-FROM docs1 as docs2
-
-RUN timer_start=$(date +%s) && \
-    python3 $BUILD_SCRIPTS_DIR/parse_features_toc.py && \
-    timer_end=$(date +%s) && \
-    echo "Total execution time for parsing the features toc: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
-
-# Javadoc Portion of Docs
-RUN echo "Begin building javadoc content"  && \
-    $BUILD_SCRIPTS_DIR/javadoc_clone.sh
-
-# Move the javadocs into the web app
-RUN echo "Moving javadocs to the jekyll webapp" && \
-    timer_start=$(date +%s) && \
-    cp -r src/main/content/docs-javadoc/modules target/jekyll-webapp/docs && \
-    timer_end=$(date +%s) && \
-    echo "Total execution time for copying javadoc to webapp: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
-
-
-# Special handling for javadocs
-RUN $BUILD_SCRIPTS_DIR/javadoc_modify.sh  && \
-    echo "Finished building Javadoc content" && \
-    echo "Finished building all doc content"
-
-#
-#
-#
-FROM docs2 as docs3
-
-ENV BUILD_SCRIPTS_DIR /scripts/build
-ENV STAGING_SITE true
+RUN $BUILD_SCRIPTS_DIR/docs_part_2.sh
 
 RUN $BUILD_SCRIPTS_DIR/gzip.sh
 
@@ -78,8 +36,8 @@ FROM icr.io/appcafe/open-liberty-devfile-stack:21.0.0.12 as war
 COPY mvnw /
 COPY .mvn /.mvn
 COPY pom.xml /
-COPY --from=docs3 --chown=1001:0 /src /src
-COPY --from=docs3 --chown=1001:0 /target /target
+COPY --from=docs --chown=1001:0 /src /src
+COPY --from=docs --chown=1001:0 /target /target
 RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 package
 
 #
