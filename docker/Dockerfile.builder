@@ -16,7 +16,7 @@ RUN $BUILD_SCRIPTS_DIR/ruby_install.sh
 
 RUN $BUILD_SCRIPTS_DIR/node_install.sh
 
-ENV NODE_VERSION="v16.15.0"
+ENV NODE_VERSION="v16.15.1"
 # After node install script ran, need to export the path
 ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
 RUN echo "npm analysis during build"
