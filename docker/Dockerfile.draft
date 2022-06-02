@@ -7,14 +7,7 @@ COPY scripts /scripts
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 
-#RUN $BUILD_SCRIPTS_DIR/antora_build_ui.sh
-
-# Cannot find a way to set the NODE_VERSION based on the version installed by `nvm install --lts`
-ENV NODE_VERSION="v16.15.0"
-# After node install script ran, need to export the path
-ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
-RUN echo "npm analysis during build"
-RUN npm ls -g --depth=0
+RUN $BUILD_SCRIPTS_DIR/antora_build_ui.sh
 
 ENV DRAFT_SITE=true
 ENV PIPELINE_DEBUG_SCRIPT=true
