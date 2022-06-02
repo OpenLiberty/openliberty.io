@@ -22,4 +22,5 @@ ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
 RUN echo "npm analysis during build"
 RUN npm ls -g --depth=0
 
-RUN $BUILD_SCRIPTS_DIR/antora_install.sh
+RUN echo "Install Antora"
+RUN npm i -g @antora/cli@3.0.1
