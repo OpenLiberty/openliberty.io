@@ -9,13 +9,14 @@ COPY robots.txt /
 COPY src /src
 COPY scripts /scripts
 
-RUN ./scripts/build/antora_build_ui.sh
-
 ENV BUILD_SCRIPTS_DIR /scripts/build
+
+RUN $BUILD_SCRIPTS_DIR/antora_build_ui.sh
 
 ENV BLOGS_STAGING_SITE=true
 ENV NOT_PROD_SITE=true
-RUN ./scripts/build/jekyll.sh
+
+RUN $BUILD_SCRIPTS_DIR/jekyll.sh
 
 #
 #
