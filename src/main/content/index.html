@@ -228,7 +228,7 @@ css:
     </div>
     <h2 id="news_title">Open Liberty News</h2>
     <p id="news_text">Check out the latest news on our blog and follow us on Twitter.</p>
-    <div class="row">
+    <div id="news_row" class="row">
         <div class="col-xs-12 col-lg-6">
             <div id="blog_post">
                 {% for post in site.posts limit:1 %}
@@ -288,7 +288,13 @@ css:
                 <a id="twitter_link" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">Follow</a>
             </div>
             <div id="twitter_iframe_div">
-                <a class="twitter-timeline" href="https://twitter.com/OpenLibertyIO?ref_src=twsrc%5Etfw" rel="noopener" data-tweet-limit="3" data-chrome="noheader nofooter"></a>
+                <a class="twitter-timeline"
+                    href="https://twitter.com/OpenLibertyIO?ref_src=twsrc%5Etfw"
+                    rel="noopener" data-tweet-limit="3"
+                    data-chrome="noheader nofooter"
+                    data-width="520"
+                    data-height="650" >
+                </a>
                 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
             </div>
         </div>
