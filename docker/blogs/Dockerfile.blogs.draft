@@ -1,0 +1,39 @@
+#
+#
+#
+FROM us.icr.io/openlibertyio/builder as jekyll
+
+COPY gems /gems
+COPY robots.txt /
+
+COPY src /src
+COPY scripts /scripts
+
+ENV BUILD_SCRIPTS_DIR /scripts/build
+
+RUN $BUILD_SCRIPTS_DIR/antora_build_ui.sh
+
+ENV BLOGS_DRAFT_SITE=true
+ENV NOT_PROD_SITE=true
+
+RUN $BUILD_SCRIPTS_DIR/jekyll.sh
+
+#
+#
+#
+FROM icr.io/appcafe/open-liberty-devfile-stack:21.0.0.12 as war
+
+COPY mvnw /
+COPY .mvn /.mvn
+COPY pom.xml /
+COPY --from=jekyll --chown=1001:0 /src /src
+COPY --from=jekyll --chown=1001:0 /target /target
+RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 package
+
+#
+#
+#
+FROM icr.io/appcafe/open-liberty:22.0.0.3-full-java8-openj9-ubi as runtime
+ENV SEC_TLS_TRUSTDEFAULTCERTS true
+COPY src/main/wlp/server.xml /config/server.xml
+COPY --from=war --chown=1001:0 target/openliberty.war /config/apps/openliberty.war

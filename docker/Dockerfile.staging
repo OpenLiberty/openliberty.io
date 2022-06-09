@@ -1,0 +1,69 @@
+
+FROM icr.io/continuous-delivery/pipeline/pipeline-base-image:2.6 as jekyll
+SHELL ["/bin/bash", "-c"]
+
+COPY gems /gems
+COPY robots.txt /
+COPY src /src
+COPY scripts /scripts
+
+RUN apt-get update && \
+    apt-get -y install curl gnupg build-essential ruby-full git python3 python3-bs4 python3-lxml \
+    nodejs libgdbm-dev libncurses5-dev automake libtool bison libffi-dev 
+
+ENV BUILD_SCRIPTS_DIR /scripts/build
+ENV STAGING_SITE=true
+ENV PIPELINE_DEBUG_SCRIPT=true
+
+RUN echo "Install Ruby"
+RUN $BUILD_SCRIPTS_DIR/ruby_install.sh
+
+RUN $BUILD_SCRIPTS_DIR/node_install.sh
+
+# Cannot find a way to set the NODE_VERSION based on the version installed by `nvm install --lts`
+ENV NODE_VERSION="v16.15.1"
+# After node install script ran, need to export the path
+ENV PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
+RUN echo "npm analysis during build"
+RUN npm ls -g --depth=0
+
+# Install Antora on the machine
+#RUN echo "Install Antora"
+#RUN npm i -g @antora/cli@3.0.1
+
+#RUN $BUILD_SCRIPTS_DIR/antora_build_ui.sh
+RUN $BUILD_SCRIPTS_DIR/antora_install.sh
+
+RUN echo "Run Jekyll"
+RUN $BUILD_SCRIPTS_DIR/jekyll.sh
+
+#
+#
+#
+FROM jekyll as docs
+
+RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh
+
+RUN $BUILD_SCRIPTS_DIR/docs_part_2.sh
+
+RUN $BUILD_SCRIPTS_DIR/gzip.sh
+
+#
+#
+#
+FROM icr.io/appcafe/open-liberty-devfile-stack:21.0.0.12 as war
+
+COPY mvnw /
+COPY .mvn /.mvn
+COPY pom.xml /
+COPY --from=docs --chown=1001:0 /src /src
+COPY --from=docs --chown=1001:0 /target /target
+RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 package
+
+#
+#
+#
+FROM icr.io/appcafe/open-liberty:22.0.0.3-full-java8-openj9-ubi as runtime
+ENV SEC_TLS_TRUSTDEFAULTCERTS true
+COPY src/main/wlp/server.xml /config/server.xml
+COPY --from=war --chown=1001:0 target/openliberty.war /config/apps/openliberty.war
