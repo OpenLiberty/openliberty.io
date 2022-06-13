@@ -12,7 +12,7 @@ RUN apt-get update && \
     nodejs libgdbm-dev libncurses5-dev automake libtool bison libffi-dev 
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
-RUN $BUILD_SCRIPTS_DIR/ruby_install.sh
+RUN $BUILD_SCRIPTS_DIR/ruby_install_ce.sh
 
 RUN $BUILD_SCRIPTS_DIR/node_install.sh
 
