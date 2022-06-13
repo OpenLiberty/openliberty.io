@@ -5,7 +5,14 @@ set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
 echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 
-source $BUILD_SCRIPTS_DIR/ruby_install.sh
+set +e
+source /usr/local/rvm/scripts/rvm || true
+set -e
+
+rvm requirements
+rvm use 2.7.6 --default
+echo "Ruby version:"
+echo `ruby -v`
 
 # Guides that are ready to be published to openliberty.io
 echo "Cloning repositories with name starting with guide or iguide..."

@@ -16,14 +16,14 @@ ENV JAVADOC_DRAFT_SITE=true
 ENV DOCS_DRAFT_SITE=true
 ENV NOT_PROD_SITE=true
 
-RUN $BUILD_SCRIPTS_DIR/jekyll.sh
+RUN $BUILD_SCRIPTS_DIR/jekyll_ce.sh
 
 #
 #
 #
 FROM jekyll as docs
 
-RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh
+RUN $BUILD_SCRIPTS_DIR/docs_part_1_ce.sh
 
 RUN $BUILD_SCRIPTS_DIR/docs_part_2.sh
 
