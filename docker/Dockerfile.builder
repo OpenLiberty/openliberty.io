@@ -1,6 +1,6 @@
 #
 #
-# One major factor for using Ubuntu 18.04 LTS is to stay on an older Python 3.6 until the python
+# One major factor for using `pipeline-base-image:2.6` is to stay on an older Python 3.6 until the python
 # scripts are migrated to use a higher version
 FROM icr.io/continuous-delivery/pipeline/pipeline-base-image:2.6 as builder
 SHELL ["/bin/bash", "-c"]
@@ -9,7 +9,7 @@ COPY scripts /scripts
 
 RUN apt-get update && \
     apt-get -y install curl gnupg build-essential ruby-full git python3 python3-bs4 python3-lxml \
-    nodejs libgdbm-dev libncurses5-dev automake libtool bison libffi-dev 
+    libgdbm-dev libncurses5-dev automake libtool bison libffi-dev 
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
 RUN $BUILD_SCRIPTS_DIR/ruby_install_ce.sh
