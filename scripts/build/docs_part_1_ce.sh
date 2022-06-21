@@ -3,8 +3,18 @@ set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
 echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 
+$BUILD_SCRIPTS_DIR/node_install.sh
+
+# Cannot find a way to set the NODE_VERSION based on the version installed by `nvm install --lts`
+export NODE_VERSION="v16.15.1"
+# After node install script ran, need to export the path
+export PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
+echo "npm analysis during build"
+npm ls -g --depth=0
+
 #Antora Portion of Docs
 echo "Begin building of Antora portion of docs"
+$BUILD_SCRIPTS_DIR/antora_install.sh
 
 # Use the Antora playbook to download the docs and build the doc pages
 timer_start=$(date +%s)

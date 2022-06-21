@@ -1,19 +1,25 @@
 
-FROM us.icr.io/openlibertyio/builder as jekyll
+FROM icr.io/continuous-delivery/pipeline/pipeline-base-image:2.6 as jekyll
+SHELL ["/bin/bash", "-c"]
 
 COPY gems /gems
 COPY robots.txt /
+
 COPY src /src
 COPY scripts /scripts
 
-ENV BUILD_SCRIPTS_DIR /scripts/build
+RUN apt-get update && \
+    apt-get -y install curl git python3 python3-bs4 python3-lxml \
+    libgdbm-dev libncurses5-dev automake libtool bison libffi-dev
 
-RUN $BUILD_SCRIPTS_DIR/antora_build_ui.sh
+ENV BUILD_SCRIPTS_DIR /scripts/build
 
 ENV PROD_SITE=true
 ENV JEKYLL_ENV=production
 ENV AVAILABILITY_SERVICE=OpenLiberty\ availability
 ENV PIPELINE_DEBUG_SCRIPT=true
+
+RUN $BUILD_SCRIPTS_DIR/ruby_install.sh
 
 RUN $BUILD_SCRIPTS_DIR/jekyll_ce.sh
 
