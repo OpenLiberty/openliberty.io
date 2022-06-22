@@ -1,0 +1,17 @@
+<div align="right">
+    {% for lang in site.languages %}
+      {% unless site.lang == lang %}
+        {% if lang == site.default_lang and site.default_locale_in_subfolder != true %}
+          <a href="{{ site.baseurl_root }}{{ page.url }}" >{% t langs.{{ lang }} %}</a>
+        {% else %}
+          <a href="{{ site.baseurl_root }}/{{ lang }}{{ page.url }}" >{% t langs.{{ lang }} %}</a>
+        {% endif %}
+        {% assign next = forloop.index | plus: 1 %}
+        
+        {% if forloop.last != true and site.languages[forloop.index] != site.lang or site.languages[forloop.index] == site.lang and next < forloop.length %}
+          <span class="separator"> &bull; </span>
+        {% endif %}
+        
+      {% endunless %}
+    {% endfor %}
+</div>

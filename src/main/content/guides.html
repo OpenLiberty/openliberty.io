@@ -40,9 +40,9 @@ plus: 1 %} {% endif %} {% endfor %}
   <div id="guides_border"></div>
   <div class="row">
     <div id="guide_search_information" class="col-xs-12 col-sm-7 col-md-6">
-      <h2 id="guides_title">Guides</h2>
+      <h2 id="guides_title">{% t pages.guides %}</h2>
       <p id="guides_description">
-        The quickest way to learn all things Open Liberty, and beyond!
+        {% t guides.description %}
       </p>
     </div>
     <img id="clouds" src="{{ "/img/guides_clouds.png" | relative }}"
@@ -115,17 +115,20 @@ plus: 1 %} {% endif %} {% endfor %}
 </div>
 
 <div id="guides_container">
+  {% include select-lang.html %}
   <div class="row">
     {% for guide in all-guides %}
+    {% assign guide_href =  guide.url  %}
+    <!--{% if site.lang == guide.lang %}-->
     <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      
       <a
-        href="{{ guide.url }}.html"
-        class="guide_item"
-        data-title="{{ guide.title | downcase }}"
-        data-description="{{ guide.description | downcase }}"
-        data-tags=""
-        data-search-keywords="{{ guide.search-keywords | join: ' ' | downcase }}"
-      >
+      href="{{guide_href}}.html"
+      class="guide_item"
+      data-title="{{ guide.title | downcase }}"
+      data-description="{{ guide.description | downcase }}"
+      data-tags=""
+      data-search-keywords="{{ guide.search-keywords | join: ' ' | downcase }}">
         <div class="guide_title_and_description_container">
           <h3 class="guide_title">{{guide.title}}</h3>
           <p class="guide_description" title="{{guide.description}}">
@@ -179,6 +182,7 @@ plus: 1 %} {% endif %} {% endfor %}
         {% endif %} 
       </a>
     </div>
+    <!--{% endif %}-->
     {% endfor %}
   </div>
 

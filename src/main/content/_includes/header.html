@@ -1,7 +1,11 @@
 <header>
     <nav id="nav_bar">
         <div id="nav_header">
+            {% if site.lang == 'en' %}
             <a id="home_link" href="/" aria-label="Open Liberty Home">
+            {% else %}
+            <a id="home_link" href="/{{site.lang}}" aria-label="Open Liberty Home">
+            {% endif %}
                 <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
             </a>
             <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
@@ -11,19 +15,44 @@
         <div id="hamburger_menu">
             <ul class="nav_list">
                 <li class="nav_link">
-                    <a href="/start/">Get Started</a>
+                    {% if site.lang == 'en' %}
+                    <a href="/start/">{% t pages.start %}</a>
+                    {% else %}
+                    <a href="/{{site.lang}}/start/">{% t pages.start %}</a>
+                    {% endif %}
+                    
                 </li>
                 <li class="nav_link">
-                    <a href="/guides/">Guides</a>
+                    {% if site.lang == 'en' %}
+                    <a href="/guides/">{% t pages.guides %}</a>
+                    {% else %}
+                    <a href="/{{site.lang}}/guides/">{% t pages.guides %}</a>
+                    {% endif %}
+                    
                 </li>
                 <li class="nav_link">
-                    <a href="/docs/">Docs</a>
+                    {% if site.lang == 'en' %}
+                    <a href="/docs/">{% t pages.docs %}</a>
+                    {% else %}
+                    <a href="/{{site.lang}}/docs/">{% t pages.docs %}</a>
+                    {% endif %}
+                    
                 </li>
                 <li class="nav_link">
-                    <a href="/support/">Support</a>
+                    {% if site.lang == 'en' %}
+                    <a href="/support/">{% t pages.support %}</a>
+                    {% else %}
+                    <a href="/{{site.lang}}/support/">{% t pages.support %}</a>
+                    {% endif %}
+                    
                 </li>
                 <li class="nav_link">
-                    <a href="/blog/">Blog</a>
+                    {% if site.lang == 'en' %}
+                    <a href="/blog/">{% t pages.blog %}</a>
+                    {% else %}
+                    <a href="/{{site.lang}}/blog/">{% t pages.blog %}</a>
+                    {% endif %}
+                    
                 </li>
             </ul>
             <div id="header_round_links_container"> 
@@ -33,5 +62,6 @@
                 <a id="header_gitter_link" class="header_round_button" href="https://gitter.im/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
             </div>
         </div>
+
     </nav>
 </header>

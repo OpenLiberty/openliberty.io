@@ -7,6 +7,14 @@
   {% assign description = site.description | strip_html | normalize_whitespace | truncate: 160 | escape %}
 {% endif %}
 
+{% capture has_guide_link %}{% if page.url contains '/guides' %}Yes{% else %}No{% endif %}{% endcapture%}
+{% if page.url and has_guide_link == 'Yes' %}
+  {% capture site_lang %}/{{site.lang}}{% endcapture %}
+  {% assign page_url = page.url | remove: site_lang %}
+{% else %}
+  {% assign page_url = page.url %}
+{% endif %}
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -38,7 +46,7 @@
     {% include google_tag_manager_head.html %}
   {% endif %}
 
-  <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
+  <link rel="canonical" href="{{ page_url | replace:'index.html','' | absolute_url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
   <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
     
@@ -51,12 +59,12 @@
   <meta property='og:title' content="{% if page.seo-title %}{{ page.seo-title }}{% else %}{{site.title}}{% endif %}" />
   <meta property='og:image' content="{% if page.open-graph-image %} {{page.open-graph-image}} {% else %}https://openliberty.io/img/twitter_card.jpg{% endif %}" />
   <meta property='og:description' content="{{ description }}" />
-  <meta property='og:url' content="{{ page.url | replace:'index.html','' | absolute_url }}" />
+  <meta property='og:url' content="{{ page_url | replace:'index.html','' | absolute_url }}" />
   <meta property='og:type' content="website" />
   
   <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
 
-  {% if jekyll.environment != 'production' or page.permalink == '/blog/redirected.html' or page.noindex == true %}
+  {% if jekyll.environment != 'production' or page.permalink == '/blog/redirected.html' %}
       {% include_cached noindex.html %}
   {% endif %}
 

@@ -68,13 +68,20 @@ $(document).ready(function () {
         $(".prereqs_list").html(prereq_html);
     });
 
+    var html_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
     // Read skills network json to see if we need to link to a cloud hosted guide equivalent.
     $.getJSON(
         "../../guides/guides-common/cloud-hosted-guides.json",
         function (data) {
             var guide_name = window.location.pathname
-                .replace(".html", "")
-                .replace("/guides/", "");
+            if(html_lang == 'en') {
+                guide_name = guide_name.replace(".html", "").replace("/guides/", "");
+            }
+            else {
+                guide_name = guide_name.replace(".html", "").replace("/"+html_lang+"/guides/", "");
+                //guide_name = guide_name.substring(0, guide_name.indexOf('_'));
+            }
+            console.log(guide_name)
             var host = window.location.hostname;
             var skills_network_url;
 
@@ -121,6 +128,8 @@ $(document).ready(function () {
                 $(".skills_network_description").append(skills_network_button);
                 var buttonText = data.buttonText;
                 buttonText = buttonText.replace(/\s+/g,'').toLowerCase();
+                console.log("guide static js");
+                console.log(hiddenTags);
                 if(hiddenTags.indexOf(buttonText) > -1) {
                     $(".skills_network_container").hide();
                 }

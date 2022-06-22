@@ -4,7 +4,9 @@ var blog = function(){
     // Read tags from json file and add tag to class
     function getTags(callback) {
         $.getJSON( "../../blog_tags.json", function(data) {
+            console.log(data)
             $.each(data.blog_tags, function(j, tag) {
+                console.log(tag)
                 var tag_class = tag.name.replace(" ", "_");
                 tag_names.push(tag_class.toLowerCase());
                 // get featured tags from json
@@ -14,7 +16,7 @@ var blog = function(){
                 }
                 $(".blog_post_title_link").each(function(i, link) {
                     if (this.hasAttribute('data-path')) {
-                        var post_name = this.getAttribute('data-path').substring(19).replace(".adoc", "");
+                        var post_name = this.getAttribute('data-path').substring(28).replace(".adoc", ""); //19
                     }
                     else {
                         var post_name = this.getAttribute('href').substring(17).replace('.html', '');

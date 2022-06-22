@@ -76,11 +76,33 @@ echo "Building with jekyll..."
 echo `jekyll -version`
 mkdir -p target/jekyll-webapp
 
+function setGuidesMultiLangPath {
+  declare -a langArray=("de" "jp")
+  langArrayLength=${#langArray[@]}
+  for (( i=0; i <${langArrayLength}; i++ ))
+  do
+    cp -rf target/jekyll-webapp/${langArray[$i]}/${langArray[$i]}/guides/. target/jekyll-webapp/${langArray[$i]}/guides
+    rm -r target/jekyll-webapp/${langArray[$i]}/${langArray[$i]}
+  done
+  for (( i=0; i <${langArrayLength}; i+=1 ))
+  do
+    for (( j=0; j<${langArrayLength}; j+=1 ))
+    do
+      if [ $i != $j ]
+      then
+        rm -r target/jekyll-webapp/${langArray[$i]}/${langArray[$j]}
+      fi
+    done
+  done
+}
+
 # Enable google analytics if ga is true
 if [ "$PROD_SITE" = true ]
   then 
     jekyll build --source src/main/content --config src/main/content/_config.yml,src/main/content/_google_analytics.yml --destination target/jekyll-webapp 
+    #setGuidesMultiLangPath
   else
     # Set the --future flag to show blogs with date timestamps in the future
-    jekyll build --future --source src/main/content --destination target/jekyll-webapp
+    jekyll build --future --source src/main/content --config src/main/content/_config.yml --destination target/jekyll-webapp
+    #setGuidesMultiLangPath
 fi
