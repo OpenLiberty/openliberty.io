@@ -8,11 +8,12 @@ SHELL ["/bin/bash", "-c"]
 COPY scripts /scripts
 
 RUN apt-get update && \
-    apt-get -y install curl gnupg build-essential ruby-full git python3 python3-bs4 python3-lxml \
+    apt-get -y install curl git python3 python3-bs4 python3-lxml \
     libgdbm-dev libncurses5-dev automake libtool bison libffi-dev 
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
-RUN $BUILD_SCRIPTS_DIR/ruby_install_ce.sh
+
+RUN $BUILD_SCRIPTS_DIR/ruby_install.sh
 
 RUN $BUILD_SCRIPTS_DIR/node_install.sh
 
