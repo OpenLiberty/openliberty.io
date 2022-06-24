@@ -100,9 +100,9 @@ function setGuidesMultiLangPath {
 if [ "$PROD_SITE" = true ]
   then 
     jekyll build --source src/main/content --config src/main/content/_config.yml,src/main/content/_google_analytics.yml --destination target/jekyll-webapp 
-    #setGuidesMultiLangPath
+    setGuidesMultiLangPath
   else
     # Set the --future flag to show blogs with date timestamps in the future
     jekyll build --future --source src/main/content --config src/main/content/_config.yml --destination target/jekyll-webapp
-    #setGuidesMultiLangPath
+    setGuidesMultiLangPath
 fi
