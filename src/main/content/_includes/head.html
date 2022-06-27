@@ -7,6 +7,8 @@
   {% assign description = site.description | strip_html | normalize_whitespace | truncate: 160 | escape %}
 {% endif %}
 
+{% assign default_image = 'https://openliberty.io/img/twitter_card.jpg' %}
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -46,10 +48,9 @@
   <meta name="twitter:site" content="@OpenLibertyIO" />
   <meta name="twitter:title" content="{% if page.seo-title %}{{ page.seo-title }}{% else %}{{site.title}}{% endif %}" />
   <meta name="twitter:description" content="{{ description }}" />
-  <meta name="twitter:image" content="https://openliberty.io/img/twitter_card.jpg" />
 
   <meta property='og:title' content="{% if page.seo-title %}{{ page.seo-title }}{% else %}{{site.title}}{% endif %}" />
-  <meta property='og:image' content="{% if page.open-graph-image %} {{page.open-graph-image}} {% else %}https://openliberty.io/img/twitter_card.jpg{% endif %}" />
+  <meta property='og:image' content="{% if page.open-graph-image %}{{page.open-graph-image}}{% else %}{{default_image}}{% endif %}" />
   <meta property='og:description' content="{{ description }}" />
   <meta property='og:url' content="{{ page.url | replace:'index.html','' | absolute_url }}" />
   <meta property='og:type' content="website" />
