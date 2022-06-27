@@ -22,7 +22,7 @@ var developer_tools_development_builds = [];
 
 var builds_url = '/api/builds/data';
 var starter_domain = 
-    isStagingSite() ? 'https://staging-starter.mybluemix.net' : 'https://localhost:9443';
+    isStagingSite() ? 'https://staging-starter.mybluemix.net' : 'https://start.openliberty.io';
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 
@@ -676,7 +676,6 @@ function validate_application_name() {
 var disableGenProjButton = false;
 function validate_starter_inputs(event) {
     var valid = true;
-    
     $('#starter_warnings').empty();
     $('#starter_submit').addClass('disabled');
 
