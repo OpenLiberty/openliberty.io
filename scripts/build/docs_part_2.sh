@@ -1,3 +1,4 @@
+#!/bin/bash
 set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
 

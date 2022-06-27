@@ -1,3 +1,4 @@
+#!/bin/bash
 # Determine which branch of docs-javadoc repo to clone
 timer_start=$(date +%s)
 
