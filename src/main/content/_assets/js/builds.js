@@ -22,7 +22,7 @@ var developer_tools_development_builds = [];
 
 var builds_url = '/api/builds/data';
 var starter_domain = 
-    isStagingSite() ? 'https://staging-starter.mybluemix.net' : 'https://start.openliberty.io';
+    isStagingSite() ? 'https://staging-starter.mybluemix.net' : 'https://localhost:9443';
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 
@@ -673,8 +673,10 @@ function validate_application_name() {
     return valid;
 }
 
+var disableGenProjButton = false;
 function validate_starter_inputs(event) {
     var valid = true;
+    
     $('#starter_warnings').empty();
     $('#starter_submit').addClass('disabled');
 
@@ -710,12 +712,15 @@ function validate_starter_inputs(event) {
                 if(EEVersionValue !== "None") {
                     curr_selected_mp_version = valuetoSelect = dependencies[d][dependencies[d].length - 1];
                 }
-                else{
-                    curr_selected_mp_version = valuetoSelect = starter_info[d].default;
-                }
                 var prev_selected_mp_version = options
                 .filter(':selected')
                 .text();
+                if ((EEVersionValue == "None")&&(prev_selected_mp_version == "None")) {
+                    disableGenProjButton = true;
+                }
+                else {
+                    disableGenProjButton = false;
+                }
                 for(var i=0; i<options.length; i++) {
                     var value = options[i].value;
                     if(value === valuetoSelect) {
@@ -741,17 +746,6 @@ function validate_starter_inputs(event) {
                                 curr_selected_mp_version +
                                 ' for compatibility with ' +
                                 starter_info[starter_key].name +
-                                '.</p>'
-                            );
-                        }
-                        else if(EEVersionValue == "None") {
-                            var message = $(
-                                '<p>' +
-                                starter_info[d].name +
-                                ' has been automatically updated to default Version ' +
-                                curr_selected_mp_version +
-                                ' since ' +
-                                starter_info[starter_key].name + ' has been selected as None ' +
                                 '.</p>'
                             );
                         }
@@ -786,9 +780,6 @@ function validate_starter_inputs(event) {
                 }
             }
         }
-        if(mpVersionValue == "None") {
-            EEVersion = starter_info['e'].default;
-        }
         var options = $(
             '.starter_field[data-starter-field=\'e\'] select option'
         );
@@ -798,7 +789,15 @@ function validate_starter_inputs(event) {
             .text();
             for(var i=0; i<options.length; i++) {
                 if(options[i].value === EEVersion) {
-                    $(options[i]).prop('selected', true);
+                    if(mpVersionValue !== "None"){
+                        $(options[i]).prop('selected', true);
+                    }
+                    if((mpVersionValue == "None")&&(prev_selected_ee_version == "None")) {
+                        disableGenProjButton = true;
+                    }
+                    else {
+                        disableGenProjButton = false;
+                    }
                 }
             }
             if((mpVersionValue !== "None")&&(prev_selected_ee_version !== "None")&&(EEVersion!==prev_selected_ee_version)) {
@@ -825,22 +824,11 @@ function validate_starter_inputs(event) {
                 '.</p>'
                 );
             }
-            else if(mpVersionValue == "None") {
-                var message = $(
-                    '<p>' +
-                    starter_info['e'].name +
-                    ' has been automatically updated to default Version ' +
-                    EEVersion +
-                    ' since ' +
-                    starter_info['m'].name + ' has been selected as None ' +
-                    '.</p>'
-                );
-            }
             displayMessage(message);
             valid = true;
         }
     }
-    valid = valid && group_name_valid && app_name_valid;
+    valid = valid && group_name_valid && app_name_valid && !disableGenProjButton;
     if (valid) {
         $('#starter_submit').removeClass('disabled');
     }
