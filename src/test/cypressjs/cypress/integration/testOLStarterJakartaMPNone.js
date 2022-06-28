@@ -1,4 +1,4 @@
-describe('Test Open Liberty Starter -  Java EE/Jakarta EE/Microprofile None', () => {
+describe('Test Open Liberty Starter -  Java EE/Jakarta EE/Microprofile if version selected as None', () => {
     // If we select None for MicroProfile, should have zero influence on the Java EE/Jakarta EE value and
     // If we select None for Java EE/Jakarta EE, it should have zero influence on the MicroProfile
     // Previously when we select None for MicroProfile it automatically sets Java EE/Jakarta EE default value 9.1 and 
@@ -62,13 +62,16 @@ describe('Test Open Liberty Starter -  Java EE/Jakarta EE/Microprofile None', ()
     it('Test if None Selected no message banner is shown and if correct versions selected message banner is shown', () => {
         cy.get('#Starter_Jakarta_Version').select("8.0");
         cy.get('#Starter_MicroProfile_Version').select("4.1");
-        cy.get('#starter_warnings p').should('exist')
+        cy.get('#starter_warnings p').should('exist') //message should be shown
+
         cy.get('#Starter_MicroProfile_Version').select("None");
-        cy.get('#starter_warnings p').should('not.exist')
+        cy.get('#starter_warnings p').should('not.exist') //message should not be shown
+
         cy.get('#Starter_MicroProfile_Version').select("1.4");
-        cy.get('#starter_warnings p').should('exist')
+        cy.get('#starter_warnings p').should('exist') //message should be shown
+
         cy.get('#Starter_Jakarta_Version').select("None");
-        cy.get('#starter_warnings p').should('not.exist')
+        cy.get('#starter_warnings p').should('not.exist') //message should not be shown
     })
 
     it('Test if None selected for both Java EE/Jakarta EE and Microprofile Version Generate Project should be disabled and viceversa', () => {
