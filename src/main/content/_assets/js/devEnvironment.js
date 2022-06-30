@@ -6,7 +6,8 @@ $(document).ready(function(){
     if (host.indexOf('staging') > -1) {
         label.text('Staging Site');
         $("#nav_bar").after(label);
-    } else if (host.indexOf('draft-openlibertyio') > -1) {
+    } else if (host.indexOf('draft-openlibertyio') > -1 ||
+               host.indexOf('draft') > -1) {
         label.text('Draft Site');
         $("#nav_bar").after(label);
     } else if (host.indexOf('dev-openlibertyio') > -1) {
