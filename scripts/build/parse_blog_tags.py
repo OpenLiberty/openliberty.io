@@ -10,7 +10,7 @@ f = open("src/main/content/blog_tags.json", "r")
 content = json.loads(f.read())
 tags = content['blog_tags']
 
-def remove_duplicates(beta_posts):
+def format_links_and_remove_duplicates(beta_posts):
     for beta_post_name in beta_posts:
         date = strip_character.join(beta_post_name.split(strip_character)[:3])
         for idx, x in enumerate(date.split('-')):
@@ -62,7 +62,7 @@ for tag in tags:
                     f_write.close()
     if tag_name == "beta":
         beta_posts.sort(reverse = True)
-        after_format_beta_links = remove_duplicates(beta_posts)
+        after_format_beta_links = format_links_and_remove_duplicates(beta_posts)
         tag["beta_post_links"] = after_format_beta_links
 with open("src/main/content/blog_tags.json", 'w') as json_out_file:
     json.dump(content, json_out_file)
