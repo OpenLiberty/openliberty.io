@@ -341,6 +341,7 @@ function render_builds(builds, parent) {
 
             // beta releases table only
             else if (parent.parent().data('builds-id') == 'runtime_betas') {
+                var betaBuild = createBlogBetaLink(build);
                 var beta_package_locations = build.package_locations;
                 var sorted_beta_package_locations;
                 if (beta_package_locations !== null && beta_package_locations !== undefined) {
@@ -367,9 +368,9 @@ function render_builds(builds, parent) {
                             tableID +
                             '_version" rowspan="' +
                             num_beta_packages +
-                            '">' +
+                            '"><a href="/blog/'+betaBuild.betaPostLink+'">' +
                             build.version +
-                            '</td>'
+                            '</a></td>'
                     );
             
                     for (var d = 0; d < beta_package_locations.length; d++) {
@@ -540,6 +541,35 @@ function highlightAlternateRows() {
     $("tr.highlight_alternate_rows td[rowspan]").each(function() {
         $(this).parent().nextAll().slice(0, this.rowSpan - 1).addClass('highlight_alternate_rows');
     });
+}
+
+
+betaTagPostLinks = [];
+getBlogsTags();
+
+function getBlogsTags() {
+    $.getJSON( "../../blog_tags.json", function(data) {
+        $.each(data.blog_tags, function(j, tag) {
+            if(tag.name == "beta") {
+               betaTagPostLinks = tag.beta_post_links
+            }
+        })
+    });
+}
+
+function createBlogBetaLink(build) {
+    versionwithdots = build.version.split('-')[0];
+    versionwithoutdots = versionwithdots.split('.').join("")
+    var betaPostLink
+    betaTagPostLinks.filter(postLink => {
+       if(postLink.includes(versionwithdots) || postLink.includes(versionwithoutdots)){
+            betaPostLink = postLink;
+        }
+    });
+    if(betaPostLink) {
+        build.betaPostLink = betaPostLink;
+    }
+    return build;
 }
 
 function add_lead_zero(number) {
