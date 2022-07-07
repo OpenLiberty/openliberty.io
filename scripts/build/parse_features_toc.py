@@ -56,7 +56,7 @@ featurePath = 'target/jekyll-webapp/docs/'
 
 versions = []
 for version in os.listdir(featurePath):
-    reference_directory_path = path.join(featurePath, version, "reference")
+    reference_directory_path = featurePath + version + "/reference/"
     if(path.isdir(reference_directory_path)):
         for file in os.listdir(reference_directory_path):
             if file == "feature":
@@ -87,7 +87,7 @@ if(os.getenv("DRAFT_SITE") or os.getenv("DOCS_DRAFT_SITE")):
 for version in versions:
     print("Processing version: " + version)
     # Read in front version/feature but write to all of the antora version later for changing the toc
-    antora_path = path.join(featurePath, version, "reference")
+    antora_path = featurePath + version + "/reference/"
     featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "lxml")        
 
     if version != 'latest':
@@ -283,7 +283,7 @@ for version in versions:
 
     # Write the reduced feature TOC of all of the Antora doc pages in this version
     print("Modifying the docs TOCs of version " + version + " to remove the duplicate feature versions.")
-    feature_version_path = path.join(featurePath, version)
+    feature_version_path = featurePath + version
     for root, dirs, files in os.walk(feature_version_path):
         for basename in files:
             if fnmatch.fnmatch(basename, "*.html"):
