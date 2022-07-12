@@ -673,6 +673,7 @@ function validate_application_name() {
     return valid;
 }
 
+var disableGenProjButton = false;
 function validate_starter_inputs(event) {
     var valid = true;
     $('#starter_warnings').empty();
@@ -680,7 +681,7 @@ function validate_starter_inputs(event) {
 
     var group_name_valid = validate_group_name();
     var app_name_valid = validate_application_name();
-    if((event)&&(event.target.id == "Starter_Jakarta_Version")){
+    if((event) && (event.target.id === "Starter_Jakarta_Version")) {
         for (var starter_key in starter_dependencies) {
             var versions = starter_dependencies[starter_key].versions;
             var EEVersionValue = $(
@@ -710,17 +711,20 @@ function validate_starter_inputs(event) {
                 if(EEVersionValue !== "None") {
                     curr_selected_mp_version = valuetoSelect = dependencies[d][dependencies[d].length - 1];
                 }
-                else{
-                    curr_selected_mp_version = valuetoSelect = starter_info[d].default;
-                }
                 var prev_selected_mp_version = options
                 .filter(':selected')
                 .text();
+                if ((EEVersionValue === "None") && (prev_selected_mp_version === "None")) {
+                    disableGenProjButton = true;
+                }
+                else {
+                    disableGenProjButton = false;
+                }
                 for(var i=0; i<options.length; i++) {
                     var value = options[i].value;
                     if(value === valuetoSelect) {
                         $(options[i]).prop('selected', true);
-                        if((prev_selected_mp_version !== "None")&&(EEVersionValue !== "None")&&(prev_selected_mp_version!==curr_selected_mp_version)) {
+                        if((prev_selected_mp_version !== "None") && (EEVersionValue !== "None") && (prev_selected_mp_version !== curr_selected_mp_version)) {
                             var message = $(
                                 '<p>' +
                                 starter_info[d].name +
@@ -733,7 +737,7 @@ function validate_starter_inputs(event) {
                                 '.</p>'
                             );
                         }
-                        else if((prev_selected_mp_version == "None")&&(EEVersionValue !== "None")) {
+                        else if((prev_selected_mp_version === "None") && (EEVersionValue !== "None")) {
                             var message = $(
                                 '<p>' +
                                 starter_info[d].name +
@@ -744,17 +748,6 @@ function validate_starter_inputs(event) {
                                 '.</p>'
                             );
                         }
-                        else if(EEVersionValue == "None") {
-                            var message = $(
-                                '<p>' +
-                                starter_info[d].name +
-                                ' has been automatically updated to default Version ' +
-                                curr_selected_mp_version +
-                                ' since ' +
-                                starter_info[starter_key].name + ' has been selected as None ' +
-                                '.</p>'
-                            );
-                        }
                         displayMessage(message);
                         valid = true;
                     }
@@ -762,7 +755,7 @@ function validate_starter_inputs(event) {
             }
         }
     }
-    else if((event)&&(event.target.id == "Starter_MicroProfile_Version")){
+    else if((event)&&(event.target.id === "Starter_MicroProfile_Version")) {
         var versions;
         var keys;
         var EEVersion;
@@ -776,7 +769,7 @@ function validate_starter_inputs(event) {
             keys = Object.keys(versions);
         }
         for(var i=0; i<keys.length; i++) {
-            if(keys[i] !== "None"){
+            if(keys[i] !== "None") {
                 var dependencies = versions[keys[i]];
                 for (var d in dependencies) {
                     if (dependencies[d].indexOf(mpVersionValue) !== -1) {
@@ -785,9 +778,6 @@ function validate_starter_inputs(event) {
                     }
                 }
             }
-        }
-        if(mpVersionValue == "None") {
-            EEVersion = starter_info['e'].default;
         }
         var options = $(
             '.starter_field[data-starter-field=\'e\'] select option'
@@ -798,10 +788,18 @@ function validate_starter_inputs(event) {
             .text();
             for(var i=0; i<options.length; i++) {
                 if(options[i].value === EEVersion) {
-                    $(options[i]).prop('selected', true);
+                    if(mpVersionValue !== "None") {
+                        $(options[i]).prop('selected', true);
+                    }
+                    if((mpVersionValue === "None") && (prev_selected_ee_version === "None")) {
+                        disableGenProjButton = true;
+                    }
+                    else {
+                        disableGenProjButton = false;
+                    }
                 }
             }
-            if((mpVersionValue !== "None")&&(prev_selected_ee_version !== "None")&&(EEVersion!==prev_selected_ee_version)) {
+            if((mpVersionValue !== "None") && (prev_selected_ee_version !== "None") && (EEVersion !== prev_selected_ee_version)) {
                 var message = $(
                 '<p>' +
                 starter_info['e'].name +
@@ -814,7 +812,7 @@ function validate_starter_inputs(event) {
                 '.</p>'
                 );
             }
-            else if((prev_selected_ee_version == "None")&&(mpVersionValue !== "None")) {
+            else if((prev_selected_ee_version === "None") && (mpVersionValue !== "None")) {
                 var message = $(
                 '<p>' +
                 starter_info['e'].name +
@@ -825,22 +823,11 @@ function validate_starter_inputs(event) {
                 '.</p>'
                 );
             }
-            else if(mpVersionValue == "None") {
-                var message = $(
-                    '<p>' +
-                    starter_info['e'].name +
-                    ' has been automatically updated to default Version ' +
-                    EEVersion +
-                    ' since ' +
-                    starter_info['m'].name + ' has been selected as None ' +
-                    '.</p>'
-                );
-            }
             displayMessage(message);
             valid = true;
         }
     }
-    valid = valid && group_name_valid && app_name_valid;
+    valid = valid && group_name_valid && app_name_valid && !disableGenProjButton;
     if (valid) {
         $('#starter_submit').removeClass('disabled');
     }
