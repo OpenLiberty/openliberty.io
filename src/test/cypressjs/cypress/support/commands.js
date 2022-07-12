@@ -32,6 +32,10 @@ Cypress.Commands.add('goToBlogs', () => {
     cy.visit(websiteUrl + '/blog/');
 })
 
+Cypress.Commands.add('goToFeatureDocs', () => {
+    cy.visit(websiteUrl + "/docs/latest/reference/feature/feature-overview.html")
+})
+
 Cypress.Commands.add('goToOpenLibertyStarter', () => {
     cy.visit(websiteUrl + '/start/');
 })
