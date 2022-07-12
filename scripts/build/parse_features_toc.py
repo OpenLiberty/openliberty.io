@@ -1,8 +1,12 @@
 from bs4 import BeautifulSoup
 from pkg_resources import parse_version
-import os, fnmatch
+import os
+import os.path as path
+import fnmatch
 import re
 import time
+
+SORT_HIGH_TO_LOW = True
 
 def getTOCVersion(tocString):
     versionPattern = re.compile('^([\s\D]*)(?P<version>\d+[.]?\d*)([\s\D]*)')
@@ -27,11 +31,23 @@ def createVersionHref(parent, tocHref, tocString):
     hrefTag['class'] = 'feature_version'
     hrefTag['tabindex'] = '0'
     docVersion = getTOCVersion(tocString)
-    if docVersion is None:        
+    if docVersion is None:
         docVersion = getTOCVersion(tocHref)
     hrefTag['aria-label'] = 'Version ' + docVersion
     hrefTag.string = docVersion
     return hrefTag
+
+def get_feature_version(htmlElement):
+    href_value = htmlElement.get('href')
+    # Look for n.n, where n is one or more digits
+    regex_for_decimal_num = r"\d+\.*\d+"
+    feature_version_number = re.findall(regex_for_decimal_num, href_value)[0]
+    feature_version_number = float(feature_version_number)
+    return feature_version_number
+
+# This method will sort the feature by their versions
+def sort_versions_for(feature, high_to_low=True):
+    feature.sort(key=lambda x: get_feature_version(x), reverse=high_to_low)
 
 timerStart = time.time()
 
@@ -40,14 +56,14 @@ featurePath = 'target/jekyll-webapp/docs/'
 
 versions = []
 for version in os.listdir(featurePath):
-    if(os.path.isdir(featurePath + version + "/reference/")):
-        for file in os.listdir(featurePath + version + "/reference/"):
+    reference_directory_path = featurePath + version + "/reference/"
+    if(path.isdir(reference_directory_path)):
+        for file in os.listdir(reference_directory_path):
             if file == "feature":
                 if version != "modules":
                     versions.append(version)
 
-print("Doc versions:")
-print(versions)
+print("Documentation found for these Liberty versions: ".join(versions))
 
 # Only process the features of the highest version for the docs draft site
 if(os.getenv("DRAFT_SITE") or os.getenv("DOCS_DRAFT_SITE")):
@@ -67,8 +83,9 @@ if(os.getenv("DRAFT_SITE") or os.getenv("DOCS_DRAFT_SITE")):
 
 
 
-#Loop through each Antora version to fix its feature TOC and combine the pages
+# Loop through each Antora version to fix its feature TOC and combine the pages
 for version in versions:
+    print("Processing version: " + version)
     # Read in front version/feature but write to all of the antora version later for changing the toc
     antora_path = featurePath + version + "/reference/"
     featureIndex = BeautifulSoup(open(antora_path + 'feature/feature-overview.html'), "lxml")        
@@ -82,7 +99,7 @@ for version in versions:
         process_jakarta_features = True
 
     # Keep track of new href with updated versions to update the TOCs later
-    commonTOCs = {};
+    commonTOCs = {}
 
     # gather TOCs with version in the title
     # Find TOC then find the feature section
@@ -105,7 +122,7 @@ for version in versions:
             tocCommonString = matches.group('preString') + matches.group('postString')
             if tocCommonString not in commonTOCs:
                 commonTOCs[tocCommonString] = tocCompileString
-        
+
     # process each TOC with version in the title
     commonTOCKeys = commonTOCs.keys()
     commonTOCKeys = list(commonTOCKeys)
@@ -142,6 +159,7 @@ for version in versions:
             java_feature_name = mapping[0]
             jakarta_feature_name = mapping[1]
             if java_feature_name + '.html' in commonTOCKeys:
+                print("Removing " + java_feature_name + " from the table of content due to it having a new feature name " + jakarta_feature_name)
                 del commonTOCs[java_feature_name + '.html']
             if jakarta_feature_name + '.html' not in commonTOCKeys:
                 commonTOCs[jakarta_feature_name + '.html'] = '^' + jakarta_feature_name + '-\\d+[.]?\\d*.html$'
@@ -152,12 +170,14 @@ for version in versions:
     TOCToDecompose = []
     for commonTOC in commonTOCKeys:
         commonTOCMatchString = commonTOCs[commonTOC]
+        # Look for all the versions of a particular feature name. This is similar to doing:
+        # find . -name "webProfile*.html"
         matchingTitleTOCs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(commonTOCMatchString))
 
         if process_jakarta_features:
             # Check for old Java features here and concat them to the list of Jakarta matches
             for mapping in java_to_jakarta_feature_mapping:
-                jakarta_feature_name = mapping[1]            
+                jakarta_feature_name = mapping[1]
                 if jakarta_feature_name + '.html' == commonTOC:
                     # Get the Java equivalent
                     java_name = mapping[0]
@@ -165,11 +185,14 @@ for version in versions:
                     matching_java_tocs = featureIndex.find_all('a', {'class': 'nav-link'}, href=re.compile(java_regex))
                     # Add in reversed order to the list of Jakarta feature versions
                     for java_toc in matching_java_tocs[::-1]:
-                        matchingTitleTOCs.insert(0, java_toc) # Prepend     
+                        matchingTitleTOCs.insert(0, java_toc) # Prepend
                         TOCToDecompose.append(java_toc.parent)
-                
+
+        # Collected all the versions for a particular feature, now sort the list from highest
+        # to lowest version number.
+
         firstElement = True;
-        # determine whether there are multiple versions            
+        # determine whether there are multiple versions
         firstHref = matchingTitleTOCs[0].get('href')
         featurePage  = BeautifulSoup(open(antora_path + '/feature/' + firstHref), "lxml")
         pageTitle = featurePage.find('h1', {'class': 'page'})
@@ -177,10 +200,9 @@ for version in versions:
         versionDiv = featurePage.new_tag('div', id='feature_versions')
         pageTitle.string = ''
         newTOCHref = ''
-        # in reverse descending order
-        matchingTOCs = matchingTitleTOCs[::-1] # Reverse list        
-        for matchingTOC in matchingTOCs:
-            tocHref = matchingTOC.get('href')            
+        sort_versions_for(matchingTitleTOCs, SORT_HIGH_TO_LOW)
+        for matchingTOC in matchingTitleTOCs:
+            tocHref = matchingTOC.get('href')
             if not str.startswith(tocHref, ".."):
                 if firstElement:
                     firstElement = False
@@ -199,8 +221,8 @@ for version in versions:
                         versionDiv.append(hrefTag)
                 else:
                     hrefTag = createVersionHref(featurePage, tocHref, matchingTOC.string)
-                    versionDiv.append(hrefTag) 
-                    TOCToDecompose.append(matchingTOC.parent)                        
+                    versionDiv.append(hrefTag)
+                    TOCToDecompose.append(matchingTOC.parent)
         # Write the feature title and the versions to the page div
         pageTitle.append(titleDiv)
         pageTitle.append(versionDiv)
@@ -209,16 +231,16 @@ for version in versions:
         if newTOCHref is not "":
             with open(antora_path + 'feature' +  newTOCHref, "w") as file:
                 file.write(str(featurePage))
-        
+
         # Go through the matching TOC pages and write the version switcher to the top of the page
-        for matchingTOC in matchingTOCs:
+        for matchingTOC in matchingTitleTOCs:
             # Open page and rewrite the version part
             versionHref = antora_path + 'feature/' + matchingTOC.get('href')
             versionPage = BeautifulSoup(open(versionHref), "lxml")
-            versionTitle = versionPage.find('h1', {'class': 'page'})  
-            # Get the matchingTOC's string and write it over the shared title of this feature version            
-            if versionTitle is not None:   
-                versionTitle.replace_with(pageTitle)       
+            versionTitle = versionPage.find('h1', {'class': 'page'})
+            # Get the matchingTOC's string and write it over the shared title of this feature version
+            if versionTitle is not None:
+                versionTitle.replace_with(pageTitle)
             displayTitle = versionPage.find('div', {'id': 'feature_name_string'})
             if displayTitle is not None and len(displayTitle) > 0:
                 displayTitle.string = matchingTOC.string
@@ -229,7 +251,7 @@ for version in versions:
 
     for TOC in TOCToDecompose:
         TOC.decompose()
-    
+
     # Remove .is-current-page so they don't show up as highlighted in other types of docs
     tocs = featureIndex.find_all('li', {'class':'is-current-page'})
     for toc in tocs:
@@ -243,7 +265,7 @@ for version in versions:
      linebreak.insert_after(li)
 
     # Write the new TOC to the feature-overview.html with version control in it
-    with open(antora_path + 'feature/feature-overview.html', "w") as file:     
+    with open(antora_path + 'feature/feature-overview.html', "w") as file:
         file.write(str(featureIndex))
 
     # Record the toc in the featureIndex to write over the other pages
@@ -261,12 +283,12 @@ for version in versions:
 
     # Write the reduced feature TOC of all of the Antora doc pages in this version
     print("Modifying the docs TOCs of version " + version + " to remove the duplicate feature versions.")
-    path = featurePath + version
-    for root, dirs, files in os.walk(path):
+    feature_version_path = featurePath + version
+    for root, dirs, files in os.walk(feature_version_path):
         for basename in files:
             if fnmatch.fnmatch(basename, "*.html"):
                 if(basename != "index.html"):
-                    href = os.path.join(root, basename)
+                    href = path.join(root, basename)
                     page = BeautifulSoup(open(href), "lxml")
 
                     # Find the toc and replace it with the modified toc
@@ -277,7 +299,7 @@ for version in versions:
                         toc_to_replace = page_toc.find('a', text='Features').parent
                     toc_to_replace.clear()
                     toc_to_replace.append(featureTOC)
-                    with open(href, "w") as file:           
+                    with open(href, "w") as file:
                         file.write(str(page))
 
 timerEnd = time.time()
