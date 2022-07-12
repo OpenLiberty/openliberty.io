@@ -681,7 +681,7 @@ function validate_starter_inputs(event) {
 
     var group_name_valid = validate_group_name();
     var app_name_valid = validate_application_name();
-    if((event)&&(event.target.id == "Starter_Jakarta_Version")){
+    if((event) && (event.target.id === "Starter_Jakarta_Version")) {
         for (var starter_key in starter_dependencies) {
             var versions = starter_dependencies[starter_key].versions;
             var EEVersionValue = $(
@@ -714,7 +714,7 @@ function validate_starter_inputs(event) {
                 var prev_selected_mp_version = options
                 .filter(':selected')
                 .text();
-                if ((EEVersionValue == "None")&&(prev_selected_mp_version == "None")) {
+                if ((EEVersionValue === "None") && (prev_selected_mp_version === "None")) {
                     disableGenProjButton = true;
                 }
                 else {
@@ -724,7 +724,7 @@ function validate_starter_inputs(event) {
                     var value = options[i].value;
                     if(value === valuetoSelect) {
                         $(options[i]).prop('selected', true);
-                        if((prev_selected_mp_version !== "None")&&(EEVersionValue !== "None")&&(prev_selected_mp_version!==curr_selected_mp_version)) {
+                        if((prev_selected_mp_version !== "None") && (EEVersionValue !== "None") && (prev_selected_mp_version !== curr_selected_mp_version)) {
                             var message = $(
                                 '<p>' +
                                 starter_info[d].name +
@@ -737,7 +737,7 @@ function validate_starter_inputs(event) {
                                 '.</p>'
                             );
                         }
-                        else if((prev_selected_mp_version == "None")&&(EEVersionValue !== "None")) {
+                        else if((prev_selected_mp_version === "None") && (EEVersionValue !== "None")) {
                             var message = $(
                                 '<p>' +
                                 starter_info[d].name +
@@ -755,7 +755,7 @@ function validate_starter_inputs(event) {
             }
         }
     }
-    else if((event)&&(event.target.id == "Starter_MicroProfile_Version")){
+    else if((event)&&(event.target.id === "Starter_MicroProfile_Version")) {
         var versions;
         var keys;
         var EEVersion;
@@ -769,7 +769,7 @@ function validate_starter_inputs(event) {
             keys = Object.keys(versions);
         }
         for(var i=0; i<keys.length; i++) {
-            if(keys[i] !== "None"){
+            if(keys[i] !== "None") {
                 var dependencies = versions[keys[i]];
                 for (var d in dependencies) {
                     if (dependencies[d].indexOf(mpVersionValue) !== -1) {
@@ -788,10 +788,10 @@ function validate_starter_inputs(event) {
             .text();
             for(var i=0; i<options.length; i++) {
                 if(options[i].value === EEVersion) {
-                    if(mpVersionValue !== "None"){
+                    if(mpVersionValue !== "None") {
                         $(options[i]).prop('selected', true);
                     }
-                    if((mpVersionValue == "None")&&(prev_selected_ee_version == "None")) {
+                    if((mpVersionValue === "None") && (prev_selected_ee_version === "None")) {
                         disableGenProjButton = true;
                     }
                     else {
@@ -799,7 +799,7 @@ function validate_starter_inputs(event) {
                     }
                 }
             }
-            if((mpVersionValue !== "None")&&(prev_selected_ee_version !== "None")&&(EEVersion!==prev_selected_ee_version)) {
+            if((mpVersionValue !== "None") && (prev_selected_ee_version !== "None") && (EEVersion !== prev_selected_ee_version)) {
                 var message = $(
                 '<p>' +
                 starter_info['e'].name +
@@ -812,7 +812,7 @@ function validate_starter_inputs(event) {
                 '.</p>'
                 );
             }
-            else if((prev_selected_ee_version == "None")&&(mpVersionValue !== "None")) {
+            else if((prev_selected_ee_version === "None") && (mpVersionValue !== "None")) {
                 var message = $(
                 '<p>' +
                 starter_info['e'].name +
