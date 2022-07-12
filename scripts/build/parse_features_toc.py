@@ -41,7 +41,18 @@ def get_feature_version(htmlElement):
     href_value = htmlElement.get('href')
     # Look for n.n, where n is one or more digits
     regex_for_decimal_num = r"\d+\.*\d+"
-    feature_version_number = re.findall(regex_for_decimal_num, href_value)[0]
+    feature_version_number = re.findall(regex_for_decimal_num, href_value)
+    if len(feature_version_number) == 0:
+        # SPECIAL CASE HANDLING
+        # In 20.0.0.9 feature documentation, there are two entries that are NOT features. These
+        # links take the user to a page outside of the feature pages! This means these links have no
+        # concept of feature versions! We must skip these pages!
+        # Two pages are have href like so
+        #   href="../fault-tolerance-1-dif.html"
+        #   href="../metrics-1-dif.html"
+        print("Special case handling for page: " + href_value)
+        return 1 # returning 1 should result in sort effectively do nothing due to having no feature versions
+    feature_version_number = feature_version_number[0]
     feature_version_number = float(feature_version_number)
     return feature_version_number
 
@@ -63,7 +74,8 @@ for version in os.listdir(featurePath):
                 if version != "modules":
                     versions.append(version)
 
-print("Documentation found for these Liberty versions: ".join(versions))
+print("Documentation found for these Liberty versions: ")
+print(" ".join([str(x) for x in versions]))
 
 # Only process the features of the highest version for the docs draft site
 if(os.getenv("DRAFT_SITE") or os.getenv("DOCS_DRAFT_SITE")):
