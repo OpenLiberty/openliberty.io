@@ -1,3 +1,4 @@
+#!/bin/bash
 # This script contains the end-to-end steps for building the website with Jekyll and using Maven to package
 # Exit immediately if a simple command exits with a non-zero status.
 set -e
