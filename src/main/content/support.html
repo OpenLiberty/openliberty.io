@@ -19,17 +19,17 @@ seo-description: How to obtain community and commercial support for Open Liberty
     </div>
 
     <div id="not_alone_text">
-        You are not alone...
+        {% t support.you_are_not_alone %}
     </div>
     <p id="support_for_all_text">
-        Whether you're an enterprise or a smaller crew, there's Open Liberty support for all
+        {% t support.support_for_all_text %}
     </p>
     
     <div class="row support_options_row">
         <div class="support_box col-md-6">
             <img id="websphere_logo" src="/img/support_websphere.png" class="d-block mx-auto" alt="WebSphere Liberty logo">
-            <h2>WebSphere Application Server</h2>
-            <a class="support_link" href="https://www.ibm.com/cloud/websphere-liberty" target="_blank" rel="noopener">Find out more</a>
+            <h2>{% t global.websphere_application_server %}</h2>
+            <a class="support_link" href="https://www.ibm.com/cloud/websphere-liberty" target="_blank" rel="noopener">{% t support.find_out_more %}</a>
         </div>
     </div>
 </div>
@@ -39,10 +39,10 @@ seo-description: How to obtain community and commercial support for Open Liberty
 <div id="community_support_section">
     <div class="container">
         <div id="community_support_title">
-            Community support
+            {% t support.community_support %}
         </div>
         <p id="community_support_text">
-            You can rely on your Open Liberty crew to get you un-stuck
+            {% t support.community_support_text %}
         </p>
 
         <div id="cards_container" class="container">
@@ -53,8 +53,8 @@ seo-description: How to obtain community and commercial support for Open Liberty
                             <img id="twitter_logo" src="/img/twitter_logo.svg" class="d-block mx-auto" alt="twitter">
                         </figure>
                         <div class="card-body">
-                            <h5 class="card-title">@openlibertyio</h5>
-                            <p class="card-text">News & updates</p>
+                            <h5 class="card-title">@{% t global.openlibertyio %}</h5>
+                            <p class="card-text">{% t global.news_and_updates %}</p>
                         </div>
                     </a>
                 </div>
@@ -65,8 +65,8 @@ seo-description: How to obtain community and commercial support for Open Liberty
                             <img id="stack_overflow_logo" src="/img/stack_overflow_logo.svg" class="d-block mx-auto" alt="stackoverflow">
                         </figure>
                         <div id="stack_overflow_body" class="card-body">
-                            <h5 class="card-title">Stack Overflow</h5>
-                            <p class="card-text">Q & A</p>
+                            <h5 class="card-title">{% t global.stackoverflow %}</h5>
+                            <p class="card-text">{% t global.q_and_a %}</p>
                         </div>
                     </a>
                 </div>
@@ -77,8 +77,8 @@ seo-description: How to obtain community and commercial support for Open Liberty
                             <img id="groups_io_logo" src="/img/groups.io_logo.svg" class="d-block mx-auto" alt="groups">
                         </figure>
                         <div class="card-body">
-                            <h5 class="card-title">Groups.io</h5>
-                            <p class="card-text">Community forums</p>
+                            <h5 class="card-title">{% t global.groupsio %}</h5>
+                            <p class="card-text">{% t global.community_forums %}</p>
                         </div>
                     </a>
                 </div>
@@ -89,8 +89,8 @@ seo-description: How to obtain community and commercial support for Open Liberty
                             <img id="gitter_logo" src="/img/gitter_logo.svg" class="d-block mx-auto" alt="gitter">
                         </figure>
                         <div class="card-body">
-                            <h5 class="card-title">Gitter</h5>
-                            <p class="card-text">Community chat</p>
+                            <h5 class="card-title">{% t global.gitter %}</h5>
+                            <p class="card-text">{% t global.community_chat %}</p>
                         </div>
                     </a>
                 </div>
@@ -98,19 +98,21 @@ seo-description: How to obtain community and commercial support for Open Liberty
         </div>
 
         <p id="connect_text">
-            Connect with others using the tag <span id="bold_text">#OpenLiberty</span> across all social media.
+            {% t support.connect_text1 %} 
+            <span id="bold_text">#{% t global.openliberty_without_space %}</span> 
+            {% t support.connect_text2 %} 
         </p>
         
         <p id="fix_text">
-            Found something that needs to be fixed?<br>
-            Check out the open issues or report a new one.
+            {% t support.fix_text1 %}<br>
+            {% t support.fix_text2 %}
         </p>
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-7">
                 <div id="github_link_container">
                     <a id="github_link" href="https://github.com/OpenLiberty/openliberty.io/issues" target="_blank" rel="noopener">
                         <div class="github_link_label_container">
-                            <div class="button_label">Open an issue on GitHub</div>
+                            <div class="button_label">{% t support.open_issue_github %}</div>
                         </div>
                     </a>
                 </div>
@@ -130,15 +132,19 @@ seo-description: How to obtain community and commercial support for Open Liberty
         <img id="spaceship" src="{{ "/img/spaceship.svg" | relative }}" class="img-fluid" alt="spaceship">
 
         <div id="contribute_title">
-            Become a contributor
+            {% t support.contributor_title %}
         </div>
         <p id="contribute_text">
-            Open Liberty is speeding toward the future, but your contributions can get us there at lightspeed
+            {% t support.contributor_text %}
         </p>
         <div id="contribute_link_container">
+            {% if site.lang == 'en' %}
             <a id="contribute_link" href="/contribute/">
+            {% else %}
+            <a id="contribute_link" href="/{{site.lang}}/contribute/">
+            {% endif %}
                 <div class="contribute_link_label_container">
-                    <div class="button_label">Contribute to Open Liberty</div>
+                    <div class="button_label">{% t support.contribute_to_openliberty %}</div>
                 </div>
             </a>
         </div>
