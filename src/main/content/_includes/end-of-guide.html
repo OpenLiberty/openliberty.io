@@ -29,11 +29,11 @@
 {% assign all_guides_by_date = all-guides | sort: "releasedate" | reverse %}
 
 <div id="end_of_guide">
-        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <h2 tabindex="0">{% t endofguide.nice_work %} {% t endofguide.where_to_next %}</h2>
         <div id="end_of_guide_left_section">
             <p id="guide_attribution"></p>
             
-            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <h3 id="feedback_rating_question">{% t endofguide.what_do_you_think_of_this_guide %}</h3>
             <div id="feedback_ratings">
                 <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
                 <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
@@ -43,48 +43,48 @@
 
             <div id="like_popup" class="popup">
                 <div class="popup_content" tabindex="0">
-                    <p class="popup_title">Thank you for your feedback!</p>
-                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                    <p class="popup_title">{% t endofguide.thanks_for_feedback %}</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">{% t endofguide.close %}</button>
                 </div>
             </div>
 
             <div id="dislike_popup" class="popup">
                 <div class="popup_content" tabindex="0">
-                    <p class="popup_title">Thank you for your feedback!</p>
-                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    <p class="popup_title">{% t endofguide.thanks_for_feedback %}</p>
+                    <p id="open_issue">{% t endofguide.open_github_issue %}</p>
                     {% if page.layout == 'guide' or page.layout == 'guide-multipane' %}
-                        <a href="https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();">Yes</a>
+                        <a href="https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();">{% t global.trans_yes %}</a>
                     {% elsif page.layout == 'iguide-multipane' %}
-                        <a href="https://github.com/OpenLiberty/iguide-{{page.url | replace: '/guides/', ''}}/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();">Yes</a>
+                        <a href="https://github.com/OpenLiberty/iguide-{{page.url | replace: '/guides/', ''}}/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();">{% t global.trans_yes %}</a>
                     {% endif %}
-                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">{% t endofguide.no_thankyou %}</button>
                 </div>
             </div>
 
-            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            <h3 id="improve_guide_feedback">{% t endofguide.what_makes_guide_better %}</h3>
             {% if page.layout == 'guide' or page.layout == 'guide-multipane' %}
-                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}/issues">Raise an issue</a> to share feedback</p>
-                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}/pulls">Create a pull request</a> to contribute to this guide</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}/issues">{% t endofguide.raise_an_issue %}</a> {% t endofguide.to_share_feedback %}</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-{{page.url | replace: '/guides/', ''}}/pulls">{% t endofguide.create_pr %}</a> {% t endofguide.to_contribute_guide %}</p>
             {% elsif page.layout == 'iguide-multipane' %}
-                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/iguide-{{page.url | replace: '/guides/', ''}}/issues">Raise an issue</a> to share feedback</p>
-                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/iguide-{{page.url | replace: '/guides/', ''}}/pulls">Create a pull request</a> to contribute to this guide</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/iguide-{{page.url | replace: '/guides/', ''}}/issues">{% t endofguide.raise_an_issue %}</a> {% t endofguide.to_share_feedback %}</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/iguide-{{page.url | replace: '/guides/', ''}}/pulls">{% t endofguide.create_pr %}</a> {% t endofguide.to_contribute_guide %}</p>
             {% endif %}
 
-            <h3 id="need_help">Need help?</h3>
-            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+            <h3 id="need_help">{% t endofguide.need_help %}</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">{% t endofguide.ask_ques_on_stackoverflow %}</a></p>
 
-            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
-            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub">Star</a>
+            <h3>{% t endofguide.like_olio %}</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub">{% t endofguide.star %}</a>
         </div>
         <div id="end_of_guide_right_section">
-            <h3 id="where_to_next">Where to next?</h3>
+            <h3 id="where_to_next">{% t endofguide.where_to_next %}</h3>
 
             {% if page.layout == 'iguide-multipane' %}
-                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/iguide-{{page.url | replace: '/guides/', ''}}/tree/prod/finish">Download the sample application for this guide bundled with Open Liberty on github</a></p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/iguide-{{page.url | replace: '/guides/', ''}}/tree/prod/finish">{% t endofguide.download_sample_app %}</a></p>
                 <br>
             {% endif %}
             {% if page.categories %}
-            <p>Keep exploring <b>{{ page.categories }}</b> with these guides.</p>
+            <p>{% t endofguide.keep_exploring %} <b>{{ page.categories }}</b> {% t endofguide.with_these_guides %}</p>
             {% endif %}
 
             <!-- Related guides section -->
@@ -111,7 +111,7 @@
                                     {% if related-guide-metadata.title ==  all_guides_by_date[0].title or related-guide-metadata.title ==  all_guides_by_date[1].title 
                                     or related-guide-metadata.title ==  all_guides_by_date[2].title or related-guide-metadata.title ==  all_guides_by_date[3].title %}
                                         <div class="new_guide_container">
-                                            <span class="guide_new">New</span>
+                                            <span class="guide_new">{% t guides.new_camel_case %}</span>
                                         </div>
                                     {% endif %}
                                 <!-- If new posts count is >= 4, use posts from last 30 days-->
@@ -122,7 +122,7 @@
                                     <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
                                     {% if date_difference < 2592000 %}
                                         <div class="new_guide_container">
-                                            <span class="guide_new">New</span>
+                                            <span class="guide_new">{% t guides.new_camel_case %}</span>
                                         </div>
                                     {% endif %}
                                 {% endif %}
@@ -134,13 +134,13 @@
                                 {% assign date_now = 'now' | date:'%s' %} {% assign date_difference =
                                 date_now | minus: date_updated %} {% if date_difference < 7257600 %}
                                 <div class="updated_guide_container">
-                                    <span class="guide_updated">Updated</span>
+                                    <span class="guide_updated">{% t guides.updated %}</span>
                                 </div>
                                 {% endif %}{% endif %}
                                 {% if related-guide-metadata.layout == 'iguide-multipane' %}
                                     <div class="guide_interactive_container">
                                         <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
-                                        <span class="guide_interactive">Interactive</span>
+                                        <span class="guide_interactive">{% t guides.interactive_camel_case %}</span>
                                     </div>
                                 {% endif %}
                             </a>
