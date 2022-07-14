@@ -78,6 +78,10 @@ function updateTOCHighlighting(id) {
     $('.liSelected').removeClass('liSelected');
     var anchor = $("#toc_container a[href='#" + id + "']");
     anchor.parent().addClass('liSelected');
+    var targetElm = document.querySelector('.liSelected');
+    if(targetElm) {
+        targetElm.scrollIntoView();
+    }
 }
 
 // Handle when the table of content (TOC) is too small to fit completely in the dark background.
