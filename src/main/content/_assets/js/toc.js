@@ -79,7 +79,7 @@ function updateTOCHighlighting(id) {
     var anchor = $("#toc_container a[href='#" + id + "']");
     anchor.parent().addClass('liSelected');
     var targetElm = document.querySelector('.liSelected');
-    if(targetElm) {
+    if (targetElm) {
         targetElm.scrollIntoView();
     }
 }
