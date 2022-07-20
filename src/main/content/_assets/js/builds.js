@@ -181,6 +181,7 @@ function render_builds(builds, parent) {
 
             // ol releases table only
             if (parent.parent().data('builds-id') == 'runtime_releases') {
+                var releaseBuild = createBlogBetaLink("release",build);
                 var package_locations = build.package_locations;
                 var sorted_package_locations;
                 if (package_locations !== null && package_locations !== undefined) {
@@ -216,6 +217,7 @@ function render_builds(builds, parent) {
                             num_packages +
                             '">' +
                             build.version +
+                            (releaseBuild.releasePostLink ? '<a class="blog_release_notes" href="/blog/'+releaseBuild.releasePostLink+'">( Release Notes )</a>' : '') +
                             '</td>'
                     );
 
@@ -341,7 +343,7 @@ function render_builds(builds, parent) {
 
             // beta releases table only
             else if (parent.parent().data('builds-id') == 'runtime_betas') {
-                var betaBuild = createBlogBetaLink(build);
+                var betaBuild = createBlogBetaLink("beta",build);
                 var beta_package_locations = build.package_locations;
                 var sorted_beta_package_locations;
                 if (beta_package_locations !== null && beta_package_locations !== undefined) {
@@ -368,9 +370,10 @@ function render_builds(builds, parent) {
                             tableID +
                             '_version" rowspan="' +
                             num_beta_packages +
-                            '"><a href="/blog/'+betaBuild.betaPostLink+'">' +
+                            '">' +
                             build.version +
-                            '</a></td>'
+                            (betaBuild.betaPostLink ? '<a class="blog_release_notes" href="/blog/'+betaBuild.betaPostLink+'">( Release Notes )</a>' : '') +
+                            '</td>'
                     );
             
                     for (var d = 0; d < beta_package_locations.length; d++) {
@@ -543,31 +546,46 @@ function highlightAlternateRows() {
     });
 }
 
-
+releaseTagPostLinks = [];
 betaTagPostLinks = [];
 getBlogsTags();
 
 function getBlogsTags() {
     $.getJSON( "../../blog_tags.json", function(data) {
         $.each(data.blog_tags, function(j, tag) {
-            if(tag.name == "beta") {
+            if(tag.name == "release") {
+                releaseTagPostLinks = tag.release_post_links
+            }
+            else if(tag.name == "beta") {
                betaTagPostLinks = tag.beta_post_links
             }
         })
     });
 }
 
-function createBlogBetaLink(build) {
+function createBlogBetaLink(buildId, build) {
     versionwithdots = build.version.split('-')[0];
     versionwithoutdots = versionwithdots.split('.').join("")
-    var betaPostLink
-    betaTagPostLinks.filter(postLink => {
-       if(postLink.includes(versionwithdots) || postLink.includes(versionwithoutdots)){
-            betaPostLink = postLink;
+    var releasePostLink, betaPostLink
+    if(buildId == "release") {
+        releaseTagPostLinks.filter(postLink => {
+            if(postLink.includes(versionwithdots) || postLink.includes(versionwithoutdots)){
+                releasePostLink = postLink;
+            }
+        });
+        if(releasePostLink) {
+            build.releasePostLink = releasePostLink;
         }
-    });
-    if(betaPostLink) {
-        build.betaPostLink = betaPostLink;
+    }
+    else if(buildId == "beta") {
+        betaTagPostLinks.filter(postLink => {
+            if(postLink.includes(versionwithdots) || postLink.includes(versionwithoutdots)){
+                betaPostLink = postLink;
+            }
+        });
+        if(betaPostLink) {
+            build.betaPostLink = betaPostLink;
+        }
     }
     return build;
 }

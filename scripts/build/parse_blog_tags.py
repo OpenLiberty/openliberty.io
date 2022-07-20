@@ -1,29 +1,31 @@
 import json
 import os
 
+release_posts = []
 beta_posts = []
 strip_character = "-"
-final_output = []
-formatted_beta_posts = []
+
 
 f = open("src/main/content/blog_tags.json", "r")
 content = json.loads(f.read())
 tags = content['blog_tags']
 
-def format_links_and_remove_duplicates(beta_posts):
-    for beta_post_name in beta_posts:
-        date = strip_character.join(beta_post_name.split(strip_character)[:3])
+def format_links_and_remove_duplicates(_posts):
+    final_output = []
+    formatted_posts = []
+    for format_post_name in _posts:
+        date = strip_character.join(format_post_name.split(strip_character)[:3])
         for idx, x in enumerate(date.split('-')):
             date = addLeadingZero(date,idx,str(x).zfill(2))
-        beta_post_name_after_date_split = strip_character.join(beta_post_name.split(strip_character)[3:])
+        format_post_name_after_date_split = strip_character.join(format_post_name.split(strip_character)[3:])
         date = "/".join(date.split(strip_character))
-        beta_post_name = date +'/'+beta_post_name_after_date_split
-        formatted_beta_posts.append(beta_post_name)
-        final_output.append(beta_post_name_after_date_split)
+        format_post_name = date +'/'+format_post_name_after_date_split
+        formatted_posts.append(format_post_name)
+        final_output.append(format_post_name_after_date_split)
     res = [idx for idx, item in enumerate(final_output) if item in final_output[:idx]]
     for i in sorted(res, reverse=True):
-        del formatted_beta_posts[i]
-    return formatted_beta_posts
+        del formatted_posts[i]
+    return formatted_posts
 
 def addLeadingZero(date,index,addZero):
     date = date.split('-')
@@ -42,6 +44,9 @@ for tag in tags:
                 if tag_name == "beta":
                     if file_name.endswith(post_name + '.adoc'):
                         beta_posts.append(file_name.replace(".adoc", ".html"))
+                if tag_name == "release":
+                    if file_name.endswith(post_name + '.adoc') and "beta" not in post_name:
+                        release_posts.append(file_name.replace(".adoc", ".html"))
                 # Check if there is already a tags front-matter from a previous tag
                 line_num = 0
                 tags_line = -1
@@ -64,6 +69,10 @@ for tag in tags:
         beta_posts.sort(reverse = True)
         after_format_beta_links = format_links_and_remove_duplicates(beta_posts)
         tag["beta_post_links"] = after_format_beta_links
+    if tag_name == "release":
+        release_posts.sort(reverse = True)
+        after_format_release_links = format_links_and_remove_duplicates(release_posts)
+        tag["release_post_links"] = after_format_release_links
 with open("src/main/content/blog_tags.json", 'w') as json_out_file:
     json.dump(content, json_out_file)
 f.close()
