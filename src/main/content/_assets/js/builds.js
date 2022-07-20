@@ -553,10 +553,10 @@ getBlogsTags();
 function getBlogsTags() {
     $.getJSON( "../../blog_tags.json", function(data) {
         $.each(data.blog_tags, function(j, tag) {
-            if(tag.name == "release") {
+            if (tag.name == "release") {
                 releaseTagPostLinks = tag.release_post_links
             }
-            else if(tag.name == "beta") {
+            else if (tag.name == "beta") {
                betaTagPostLinks = tag.beta_post_links
             }
         })
@@ -567,23 +567,23 @@ function createBlogBetaLink(buildId, build) {
     versionwithdots = build.version.split('-')[0];
     versionwithoutdots = versionwithdots.split('.').join("")
     var releasePostLink, betaPostLink
-    if(buildId == "release") {
+    if (buildId == "release") {
         releaseTagPostLinks.filter(postLink => {
-            if(postLink.includes(versionwithdots) || postLink.includes(versionwithoutdots)){
+            if (postLink.includes(versionwithdots) || postLink.includes(versionwithoutdots)) {
                 releasePostLink = postLink;
             }
         });
-        if(releasePostLink) {
+        if (releasePostLink) {
             build.releasePostLink = releasePostLink;
         }
     }
-    else if(buildId == "beta") {
+    else if (buildId == "beta") {
         betaTagPostLinks.filter(postLink => {
-            if(postLink.includes(versionwithdots) || postLink.includes(versionwithoutdots)){
+            if (postLink.includes(versionwithdots) || postLink.includes(versionwithoutdots)) {
                 betaPostLink = postLink;
             }
         });
-        if(betaPostLink) {
+        if (betaPostLink) {
             build.betaPostLink = betaPostLink;
         }
     }

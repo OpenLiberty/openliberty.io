@@ -5,7 +5,6 @@ release_posts = []
 beta_posts = []
 strip_character = "-"
 
-
 f = open("src/main/content/blog_tags.json", "r")
 content = json.loads(f.read())
 tags = content['blog_tags']
@@ -41,12 +40,12 @@ for tag in tags:
             if os.path.isfile("src/main/content/_posts/" + file_name) and file_name.endswith(post_name + '.adoc'):
                 f_post = open("src/main/content/_posts/" + file_name)
                 data = f_post.readlines()
-                if tag_name == "beta":
-                    if file_name.endswith(post_name + '.adoc'):
-                        beta_posts.append(file_name.replace(".adoc", ".html"))
                 if tag_name == "release":
                     if file_name.endswith(post_name + '.adoc') and "beta" not in post_name:
                         release_posts.append(file_name.replace(".adoc", ".html"))
+                if tag_name == "beta":
+                    if file_name.endswith(post_name + '.adoc'):
+                        beta_posts.append(file_name.replace(".adoc", ".html"))
                 # Check if there is already a tags front-matter from a previous tag
                 line_num = 0
                 tags_line = -1
@@ -65,14 +64,14 @@ for tag in tags:
                 with open("src/main/content/_posts/" + file_name, 'w') as f_write:
                     f_write.writelines(data)
                     f_write.close()
-    if tag_name == "beta":
-        beta_posts.sort(reverse = True)
-        after_format_beta_links = format_links_and_remove_duplicates(beta_posts)
-        tag["beta_post_links"] = after_format_beta_links
     if tag_name == "release":
         release_posts.sort(reverse = True)
         after_format_release_links = format_links_and_remove_duplicates(release_posts)
         tag["release_post_links"] = after_format_release_links
+    if tag_name == "beta":
+        beta_posts.sort(reverse = True)
+        after_format_beta_links = format_links_and_remove_duplicates(beta_posts)
+        tag["beta_post_links"] = after_format_beta_links
 with open("src/main/content/blog_tags.json", 'w') as json_out_file:
     json.dump(content, json_out_file)
 f.close()
