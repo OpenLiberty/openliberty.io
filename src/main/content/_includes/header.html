@@ -1,11 +1,15 @@
+
+{% assign baseURL = '' %}
+{% assign homeURL = '/' %}
+{% if site.lang != 'en' %}
+    {% assign baseURL = '/' | append: site.lang %}
+    {% assign homeURL = baseURL %}
+{% endif %}
+
 <header>
     <nav id="nav_bar">
         <div id="nav_header">
-            {% if site.lang == 'en' %}
-            <a id="home_link" href="/" aria-label="Open Liberty Home">
-            {% else %}
-            <a id="home_link" href="/{{site.lang}}" aria-label="Open Liberty Home">
-            {% endif %}
+            <a id="home_link" href="{{homeURL}}" aria-label="Open Liberty Home">
                 <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
             </a>
             <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
@@ -15,44 +19,19 @@
         <div id="hamburger_menu">
             <ul class="nav_list">
                 <li class="nav_link">
-                    {% if site.lang == 'en' %}
-                    <a href="/start/">{% t pages.start %}</a>
-                    {% else %}
-                    <a href="/{{site.lang}}/start/">{% t pages.start %}</a>
-                    {% endif %}
-                    
+                    <a href="{{baseURL}}/start/">{% t pages.start %}</a>
                 </li>
                 <li class="nav_link">
-                    {% if site.lang == 'en' %}
-                    <a href="/guides/">{% t pages.guides %}</a>
-                    {% else %}
-                    <a href="/{{site.lang}}/guides/">{% t pages.guides %}</a>
-                    {% endif %}
-                    
+                    <a href="{{baseURL}}/guides/">{% t pages.guides %}</a>
                 </li>
                 <li class="nav_link">
-                    {% if site.lang == 'en' %}
-                    <a href="/docs/">{% t pages.docs %}</a>
-                    {% else %}
-                    <a href="/{{site.lang}}/docs/">{% t pages.docs %}</a>
-                    {% endif %}
-                    
+                    <a href="{{baseURL}}/docs/">{% t pages.docs %}</a>
                 </li>
                 <li class="nav_link">
-                    {% if site.lang == 'en' %}
-                    <a href="/support/">{% t pages.support %}</a>
-                    {% else %}
-                    <a href="/{{site.lang}}/support/">{% t pages.support %}</a>
-                    {% endif %}
-                    
+                    <a href="{{baseURL}}/support/">{% t pages.support %}</a>
                 </li>
                 <li class="nav_link">
-                    {% if site.lang == 'en' %}
-                    <a href="/blog/">{% t pages.blog %}</a>
-                    {% else %}
-                    <a href="/{{site.lang}}/blog/">{% t pages.blog %}</a>
-                    {% endif %}
-                    
+                    <a href="{{baseURL}}/blog/">{% t pages.blog %}</a>
                 </li>
             </ul>
             <div id="header_round_links_container"> 

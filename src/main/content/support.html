@@ -7,6 +7,11 @@ permalink: /support/
 seo-description: How to obtain community and commercial support for Open Liberty to build and deploy cloud-native Java workloads. Links to contact Open Liberty team via Twitter, Stack Overflow, Groups.io and Gitter. How to raise issues and contribute to Open Liberty on GitHub.
 ---
 
+{% assign baseURL = '' %}
+{% if site.lang != 'en' %}
+    {% assign baseURL = '/' | append: site.lang %}
+{% endif %}
+
 <!-- ENTERPRISE SUPPORT SECTION -->
 <div id="enterprise_support_section" class="container">
     <div id="cloud_images_div">
@@ -126,7 +131,6 @@ seo-description: How to obtain community and commercial support for Open Liberty
 
 </div>
 
-
 <!-- CONTRIBUTE SECTION -->
 <div id="contribute_section">
         <img id="spaceship" src="{{ "/img/spaceship.svg" | relative }}" class="img-fluid" alt="spaceship">
@@ -138,11 +142,7 @@ seo-description: How to obtain community and commercial support for Open Liberty
             {% t support.contributor_text %}
         </p>
         <div id="contribute_link_container">
-            {% if site.lang == 'en' %}
-            <a id="contribute_link" href="/contribute/">
-            {% else %}
-            <a id="contribute_link" href="/{{site.lang}}/contribute/">
-            {% endif %}
+            <a id="contribute_link" href="{{baseURL}}/contribute/">
                 <div class="contribute_link_label_container">
                     <div class="button_label">{% t support.contribute_to_openliberty %}</div>
                 </div>

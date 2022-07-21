@@ -28,6 +28,11 @@
 <!-- Sort list of guides by date with most recent first -->
 {% assign all_guides_by_date = all-guides | sort: "releasedate" | reverse %}
 
+{% assign baseURL = '' %}
+{% if site.lang != 'en' %}
+    {% assign baseURL = '/' | append: site.lang %}
+{% endif %}
+
 <div id="end_of_guide">
         <h2 tabindex="0">{% t endofguide.nice_work %} {% t endofguide.where_to_next %}</h2>
         <div id="end_of_guide_left_section">
@@ -98,7 +103,7 @@
                         <!-- Only create a card if we find the permalink -->
                         {% assign related-guide-metadata = list[0] %}
                         <div class="col-sm-12 col-lg-6">
-                            <a href="/guides/{{related-guide}}.html" class="small_guide_item">
+                            <a href="{{baseURL}}/guides/{{related-guide}}.html" class="small_guide_item">
                                 <div class="guide_title_container">
                                     <h3 class="guide_title">{{related-guide-metadata.title}}</h3>
                                 </div>

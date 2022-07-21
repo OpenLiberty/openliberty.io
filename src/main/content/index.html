@@ -7,6 +7,10 @@ css:
 - home
 ---
 
+{% assign baseURL = '' %}
+{% if site.lang != 'en' %}
+    {% assign baseURL = '/' | append: site.lang %}
+{% endif %}
 
 <!-- INTRO -->
 <div id="intro_background">
@@ -31,11 +35,7 @@ css:
                         {% t home.intro_paragraph3 %}
                     </p>
                     <div id="download_links_container">
-                        {% if site.lang == 'en' %}
-                        <a id="download_link" href="/start">{% t home.get_openliberty %}</a>
-                        {% else %}
-                        <a id="download_link" href="/{{site.lang}}/start/">{% t home.get_openliberty %}</a>
-                        {% endif %}
+                        <a id="download_link" href="{{baseURL}}/start">{% t home.get_openliberty %}</a>
                     </div>
                 </div>
             </div>
@@ -72,72 +72,35 @@ css:
                 <h2 class="develop_title">{% t home.cloud_native_develop_title %}</h2>
                 <p class="develop_text">
                     {% t home.cloud_native_develop_text1 %}
-                    {% if site.lang == 'en' %}
-                    <a class="blue_link_light_background_external" href="/docs/latest/microprofile.html">{% t global.microprofile %}</a>
-                    {% else %}
-                    <a class="blue_link_light_background_external" href="/{{site.lang}}/docs/latest/microprofile.html">{% t global.microprofile %}</a>
-                    {% endif %}
+                    <a class="blue_link_light_background_external" href="{{baseURL}}/docs/latest/microprofile.html">MicroProfile</a>
                     {% t global.and %}
-                    {% if site.lang == 'en' %}
-                    <a class="blue_link_light_background_external" href="/docs/latest/jakarta-ee.html">{% t global.jakartaee %}</a>.
-                    {% else %}
-                    <a class="blue_link_light_background_external" href="/{{site.lang}}/docs/latest/jakarta-ee.html">{% t global.jakartaee %}</a>.
-                    {% endif %}
-                    {% if site.lang == 'en' %}
-                    <a class="blue_link_light_background_external" href="/docs/latest/zero-migration-architecture.html">{% t global.zero_migration %}</a>
-                    {% else %}
-                    <a class="blue_link_light_background_external" href="/{{site.lang}}/docs/latest/zero-migration-architecture.html">{% t global.zero_migration %}</a>
-                    {% endif %}
+                    <a class="blue_link_light_background_external" href="{{baseURL}}/docs/latest/jakarta-ee.html">Jakarta EE</a>.
+                    <a class="blue_link_light_background_external" href="{{baseURL}}/docs/latest/zero-migration-architecture.html">zero migration</a>
                     {% t home.cloud_native_develop_text2 %}
                 </p>
                 <div class="learn_more_container">
-                    {% if site.lang == 'en' %}
-                    <a class="learn_more_link" href="/docs/ref/general/#microprofile.html">{% t global.learnmore %}</a>
-                    {% else %}
-                    <a class="learn_more_link" href="/{{site.lang}}/docs/ref/general/#microprofile.html">{% t global.learnmore %}</a>
-                    {% endif %}
+                    <a class="learn_more_link" href="{{baseURL}}/docs/ref/general/#microprofile.html">{% t global.learnmore %}</a>
                 </div>
             </div>
             <div class="col-md-6">
                 <div id="develop_image">
-                    {% if site.lang == 'en' %}
-                    <div class="green_box"><a href="/guides/microprofile-opentracing.html">{% t global.opentracing %}</a></div>
-                    <div class="green_box"><a href="/guides/microprofile-health.html">{% t global.healthcheck %}</a></div>
-                    <div class="green_box"><a href="/guides/microprofile-metrics.html">{% t global.metrics %}</a></div>
-                    {% else %}
-                    <div class="green_box"><a href="/{{site.lang}}/guides/microprofile-opentracing.html">{% t global.opentracing %}</a></div>
-                    <div class="green_box"><a href="/{{site.lang}}/guides/microprofile-health.html">{% t global.healthcheck %}</a></div>
-                    <div class="green_box"><a href="/{{site.lang}}/guides/microprofile-metrics.html">{% t global.metrics %}</a></div>
-                    {% endif %}
+                    <div class="green_box"><a href="{{baseURL}}/guides/microprofile-opentracing.html">OpenTracing</a></div>
+                    <div class="green_box"><a href="{{baseURL}}/guides/microprofile-health.html">Health Check</a></div>
+                    <div class="green_box"><a href="{{baseURL}}/guides/microprofile-metrics.html">Metrics</a></div>
                     <div class="green_box space_holder"></div>
                     <div class="green_box space_holder"></div>
-                    {% if site.lang == 'en' %}
-                    <div class="green_box"><a href="/guides/microprofile-openapi.html">{% t global.openapi %}</a></div>
-                    <div class="green_box"><a href="/guides/retry-timeout.html" class="long_title">{% t global.fault_tolerance %}</a></div>
-                    <div class="green_box"><a href="/guides/microprofile-jwt.html" class="long_title">{% t global.jwt %}</a></div>
-                    <div class="green_box"><a href="/guides/microprofile-config-intro.html">{% t global.config %}</a></div>
-                    {% else %}
-                    <div class="green_box"><a href="/{{site.lang}}/guides/microprofile-openapi.html">{% t global.openapi %}</a></div>
-                    <div class="green_box"><a href="/{{site.lang}}/guides/retry-timeout.html" class="long_title">{% t global.fault_tolerance %}</a></div>
-                    <div class="green_box"><a href="/{{site.lang}}/guides/microprofile-jwt.html" class="long_title">{% t global.jwt %}</a></div>
-                    <div class="green_box"><a href="/{{site.lang}}/guides/microprofile-config-intro.html">{% t global.config %}</a></div>
-                    {% endif %}
+                    <div class="green_box"><a href="{{baseURL}}/guides/microprofile-openapi.html">OpenAPI</a></div>
+                    <div class="green_box"><a href="{{baseURL}}/guides/retry-timeout.html" class="long_title">Fault Tolerance</a></div>
+                    <div class="green_box"><a href="{{baseURL}}/guides/microprofile-jwt.html" class="long_title">JWT</a></div>
+                    <div class="green_box"><a href="{{baseURL}}/guides/microprofile-config-intro.html">Config</a></div>
                     <div class="green_box space_holder"></div>
-                    {% if site.lang == 'en' %}
-                    <div class="green_box"><a href="/guides/microprofile-rest-client.html">{% t global.restclient %}</a></div>
-                    <div class="green_box"><a href="/guides/rest-intro.html">{% t global.jaxrs %}</a></div>
-                    <div class="green_box"><a href="/guides/rest-client-java.html">{% t global.jsonp %}</a></div>
-                    <div class="green_box"><a href="/guides/rest-client-java.html">{% t global.jsonb %}</a></div>
-                    <div class="green_box"><a href="/guides/cdi-intro.html">{% t global.cdi %}</a></div>
-                    {% else %}
-                    <div class="green_box"><a href="/{{site.lang}}/guides/microprofile-rest-client.html">{% t global.restclient %}</a></div>
-                    <div class="green_box"><a href="/{{site.lang}}/guides/rest-intro.html">{% t global.jaxrs %}</a></div>
-                    <div class="green_box"><a href="/{{site.lang}}/guides/rest-client-java.html">{% t global.jsonp %}</a></div>
-                    <div class="green_box"><a href="/{{site.lang}}/guides/rest-client-java.html">{% t global.jsonb %}</a></div>
-                    <div class="green_box"><a href="/{{site.lang}}/guides/cdi-intro.html">{% t global.cdi %}</a></div>
-                    {% endif %}
+                    <div class="green_box"><a href="{{baseURL}}/guides/microprofile-rest-client.html">Rest Client</a></div>
+                    <div class="green_box"><a href="{{baseURL}}/guides/rest-intro.html">JAX-RS</a></div>
+                    <div class="green_box"><a href="{{baseURL}}/guides/rest-client-java.html">JSON-P</a></div>
+                    <div class="green_box"><a href="{{baseURL}}/guides/rest-client-java.html">JSON-B</a></div>
+                    <div class="green_box"><a href="{{baseURL}}/guides/cdi-intro.html">CDI</a></div>
                 </div>
-                <h2 id="table_label" class="d-none d-md-block">{% t global.microprofile %}</h2>
+                <h2 id="table_label" class="d-none d-md-block">MicroProfile</h2>
 
             </div>
         </div>
@@ -151,11 +114,7 @@ css:
                     {% t home.fast_iteration_develop_text %}
                 </p>
                 <div class="learn_more_container">
-                    {% if site.lang == 'en' %}
-                    <a class="learn_more_link" href="/docs/latest/development-mode.html">{% t global.learnmore %}</a>
-                    {% else %}
-                    <a class="learn_more_link" href="/{{site.lang}}/docs/latest/development-mode.html">{% t global.learnmore %}</a>
-                    {% endif %}
+                    <a class="learn_more_link" href="{{baseURL}}/docs/latest/development-mode.html">{% t global.learnmore %}</a>
                 </div>
             </div>
         </div>
@@ -164,19 +123,11 @@ css:
                 <h2 class="develop_title">{% t home.deploy_containers_develop_title %}</h2>
                 <p class="develop_text">
                     {% t home.deploy_containers_develop_text1 %}
-                    {% if site.lang == 'en' %}
-                    <a class="blue_link_light_background_external" href="/docs/latest/zero-migration-architecture.html">{% t global.zero_migration %}</a>.
-                    {% else %}
-                    <a class="blue_link_light_background_external" href="/{{site.lang}}/docs/latest/zero-migration-architecture.html">{% t global.zero_migration %}</a>.
-                    {% endif %}
+                    <a class="blue_link_light_background_external" href="{{baseURL}}/docs/latest/zero-migration-architecture.html">zero migration</a>.
                     {% t home.deploy_containers_develop_text2 %}
                 </p>
                 <div class="learn_more_container">
-                    {% if site.lang == 'en' %}
-                    <a class="learn_more_link" href="/guides/?search=cloud">{% t global.learnmore %}</a>
-                    {% else %}
-                    <a class="learn_more_link" href="/{{site.lang}}/guides/?search=cloud">{% t global.learnmore %}</a>
-                    {% endif %}
+                    <a class="learn_more_link" href="{{baseURL}}/guides/?search=cloud">{% t global.learnmore %}</a>
                 </div>
             </div>
             <div class="col-md-6">
@@ -193,11 +144,7 @@ css:
                 {% t home.monitor_microservice_develop_text %}
                 </p>
                 <div class="learn_more_container">
-                    {% if site.lang == 'en' %}
-                    <a class="learn_more_link" href="/blog/2018/10/05/microprofile-faulttolerance-1.1-metrics.html">{% t global.learnmore %}</a>
-                    {% else %}
-                    <a class="learn_more_link" href="/{{site.lang}}/blog/2018/10/05/microprofile-faulttolerance-1.1-metrics.html">{% t global.learnmore %}</a>
-                    {% endif %}
+                    <a class="learn_more_link" href="{{baseURL}}/blog/2018/10/05/microprofile-faulttolerance-1.1-metrics.html">{% t global.learnmore %}</a>
                 </div>
             </div>
         </div>
@@ -216,11 +163,7 @@ css:
             </div>
         </div>
         <div class="learn_more_container">
-            {% if site.lang == 'en' %}
-            <a class="learn_more_link" href="/blog/2019/10/30/faster-startup-open-liberty.html">{% t global.learnmore %}</a>
-            {% else %}
-            <a class="learn_more_link" href="/{{site.lang}}/blog/2019/10/30/faster-startup-open-liberty.html">{% t global.learnmore %}</a>
-            {% endif %}
+            <a class="learn_more_link" href="{{baseURL}}/blog/2019/10/30/faster-startup-open-liberty.html">{% t global.learnmore %}</a>
         </div>
     </div>
 
@@ -237,19 +180,19 @@ css:
                     </div>
                 </div>
                 <div class="logos_row row justify-content-center">
-                    <p>{% t global.jenkins %}</p>
-                    <p>{% t global.spring %}</p>
-                    <p>{% t global.docker %}</p>
-                    <p>{% t global.grafana %}</p>
-                    <p>{% t global.gradle %}</p>
-                    <p>{% t global.logstash %}</p>
+                    <p>Jenkins</p>
+                    <p>Spring</p>
+                    <p>Docker</p>
+                    <p>Grafana</p>
+                    <p>Gradle</p>
+                    <p>Logstash</p>
                 </div>
                 <div class="logos_row row justify-content-center">
-                    <p>{% t global.prometheus %}</p>
-                    <p>{% t global.maven %}</p>
-                    <p>{% t global.kubernetes %}</p>
-                    <p>{% t global.kibana %}</p>
-                    <p>{% t global.elastic_search %}</p>
+                    <p>Prometheus</p>
+                    <p>Maven</p>
+                    <p>Kubernetes</p>
+                    <p>Kibana</p>
+                    <p>Elastic Search</p>
                 </div>
             </div>
         </div>
@@ -319,11 +262,7 @@ css:
                         {% endif %}
                     </p>
                 {% endfor %}
-                {% if site.lang == 'en' %}
-                <a id="blog_link" href="/blog/">{% t home.link_to_blog_post %}</a>
-                {% else %}
-                <a id="blog_link" href="/{{site.lang}}/blog/">{% t home.link_to_blog_post %}</a>
-                {% endif %}
+                <a id="blog_link" href="{{baseURL}}/blog/">{% t home.link_to_blog_post %}</a>
             </div>
         </div>
         <div class="col-xs-12 col-lg-6">
@@ -353,11 +292,7 @@ css:
                     <br>
                     {% t home.support_text2 %}
                 </p>
-                {% if site.lang == 'en' %}
-                <a id="support_link" href="/support/">{% t home.link_to_openliberty_support %}</a>
-                {% else %}
-                <a id="support_link" href="/{{site.lang}}/support/">{% t home.link_to_openliberty_support %}</a>
-                {% endif %}
+                <a id="support_link" href="{{baseURL}}/support/">{% t home.link_to_openliberty_support %}</a>
             </div>
             <div id="support_image" class="col-md-6 order-first order-md-2">
                 <span id="star6" class="star d-none d-sm-block"></span>
@@ -393,11 +328,7 @@ css:
             {% t home.get_involved_text %}
             </p>
             <div id="contribute_link_container">
-                {% if site.lang == 'en' %}
-                <a id="contribute_link" href="/contribute/">{% t home.contribute_link %}</a>
-                {% else %}
-                <a id="contribute_link" href="/{{site.lang}}/contribute/">{% t home.contribute_link %}</a>
-                {% endif %}
+                <a id="contribute_link" href="{{baseURL}}/contribute/">{% t home.contribute_link %}</a>
             </div>
             <p id="contributors_title">{% t home.contributors_title %}</p>
             <div id="contributors_div">

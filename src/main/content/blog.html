@@ -7,6 +7,11 @@ permalink: /blog/
 seo-description: Latest news and information about Open Liberty, a lightweight open framework for building cloud-native Java applications and microservices. Blogs include latest release and beta updates, technical articles on Jakarta EE, MicroProfile, Kubernetes and container-related Java technologies, and community content.
 ---
 
+{% assign baseURL = '' %}
+{% if site.lang != 'en' %}
+    {% assign baseURL = '/' | append: site.lang %}
+{% endif %}
+
 <!-- BLOG -->
 <div id="background_container">
     <img id="right_cloud_back" class="d-none d-xl-block" src="/img/blog_cloud_back.svg" alt="cloud">
@@ -22,7 +27,7 @@ seo-description: Latest news and information about Open Liberty, a lightweight o
                 <span id="star5" class="star d-none d-md-block"></span>
                 <span id="star6" class="star d-none d-md-block"></span>
                 <h2 class="blog_subtitle">{% t blog.never_miss_a_post %}</h2>
-                <p class="blog_subtext">{% t blog.be_sure_to_follow %} <a class="green_link" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@{% t global.openlibertyio %}</a> {% t blog.twitter_or_subscribe %} <a class="green_link" href="https://openliberty.io/feed.xml" target="_blank" rel="noopener">{% t blog.rss_feed %}</a>.</p>
+                <p class="blog_subtext">{% t blog.be_sure_to_follow %} <a class="green_link" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@{% t global.openlibertyio %}</a> {% t blog.twitter_or_subscribe %} <a class="green_link" href="https://openliberty.io/feed.xml" target="_blank" rel="noopener">{% t blog.rss_feed %}</a></p>
                 <h2 class="blog_subtitle">{% t blog.featured_tags %}</h2>
                 <div role="list" id="featured_tags_list">
 
@@ -33,12 +38,8 @@ seo-description: Latest news and information about Open Liberty, a lightweight o
             <div id="right_column" class="col-md-12 col-lg-8 offset-lg-4">
                 <div id="filter">
                     <img tabindex="0" id="x_button" src="/img/blog_x_button.svg" onclick="blog.removeFilter(); blog.updateSearchUrl();" onkeypress="blog.removeFilter(); blog.updateSearchUrl();" alt="Remove tag filter">
-                    <span id="no_results_message">{% t blog.no_results_found %}. {% t blog.see %} 
-                      {% if site.lang == 'en' %}
-                      <a class="orange_link_light_background" href="/blog/">{% t blog.all_blogs %}</a>.
-                      {% else %}
-                      <a class="orange_link_light_background" href="/{{site.lang}}/blog/">{% t blog.all_blogs %}</a>.
-                      {% endif %}
+                    <span id="no_results_message">{% t blog.no_results_found %} {% t blog.see %}
+                      <a class="orange_link_light_background" href="{{baseURL}}/blog/">{% t blog.all_blogs %}</a>
                     </span>
                     <span id="filter_message">
                         <span>{% t blog.filtered_by_tag %}: </span>
@@ -194,7 +195,7 @@ seo-description: Latest news and information about Open Liberty, a lightweight o
                 <div class="row blog_post_row">
                     <div id="final_post" class="blog_post_content">
                         <p id="final_post_title">{% t blog.stay_light_years_ahead %}</p>
-                        <p>{% t global.follow %} <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@{% t global.openlibertyio %}</a> {% t blog.twitter_or_subscribe %} <a class="orange_link_light_background" href="https://openliberty.io/feed.xml" target="_blank" rel="noopener">{% t blog.rss_feed %}</a>.</p>
+                        <p>{% t global.follow %} <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@{% t global.openlibertyio %}</a> {% t blog.twitter_or_subscribe %} <a class="orange_link_light_background" href="https://openliberty.io/feed.xml" target="_blank" rel="noopener">{% t blog.rss_feed %}</a></p>
                     </div>
                 </div>
             </div>
