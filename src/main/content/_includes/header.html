@@ -1,7 +1,15 @@
+
+{% assign baseURL = '' %}
+{% assign homeURL = '/' %}
+{% if site.lang != 'en' %}
+    {% assign baseURL = '/' | append: site.lang %}
+    {% assign homeURL = baseURL %}
+{% endif %}
+
 <header>
     <nav id="nav_bar">
         <div id="nav_header">
-            <a id="home_link" href="/" aria-label="Open Liberty Home">
+            <a id="home_link" href="{{homeURL}}" aria-label="Open Liberty Home">
                 <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
             </a>
             <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
@@ -11,19 +19,19 @@
         <div id="hamburger_menu">
             <ul class="nav_list">
                 <li class="nav_link">
-                    <a href="/start/">Get Started</a>
+                    <a href="{{baseURL}}/start/">{% t pages.start %}</a>
                 </li>
                 <li class="nav_link">
-                    <a href="/guides/">Guides</a>
+                    <a href="{{baseURL}}/guides/">{% t pages.guides %}</a>
                 </li>
                 <li class="nav_link">
-                    <a href="/docs/">Docs</a>
+                    <a href="{{baseURL}}/docs/">{% t pages.docs %}</a>
                 </li>
                 <li class="nav_link">
-                    <a href="/support/">Support</a>
+                    <a href="{{baseURL}}/support/">{% t pages.support %}</a>
                 </li>
                 <li class="nav_link">
-                    <a href="/blog/">Blog</a>
+                    <a href="{{baseURL}}/blog/">{% t pages.blog %}</a>
                 </li>
             </ul>
             <div id="header_round_links_container"> 
@@ -33,5 +41,6 @@
                 <a id="header_gitter_link" class="header_round_button" href="https://gitter.im/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
             </div>
         </div>
+
     </nav>
 </header>
