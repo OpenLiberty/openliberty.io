@@ -26,7 +26,6 @@ echo `ruby -v`
 
 gem install jekyll -v 3.8.6
 gem install jekyll-assets -v 2.4.0
-gem install jekyll-multiple-languages-plugin
 gem install bundler jekyll-feed jekyll-asciidoc jekyll-include-cache coderay octokit
 
 timer_end=$(date +%s)
