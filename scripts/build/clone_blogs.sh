@@ -26,6 +26,7 @@ git clone https://github.com/OpenLiberty/blogs.git --branch $BRANCH_NAME blogs_t
 
 mv blogs_temp/posts/ .
 mv posts/ _posts
+cp -a _posts/. _i18n/en/_posts
 
 mv blogs_temp/img/blog img
 
