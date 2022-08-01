@@ -15,7 +15,7 @@ $(document).ready(function () {
     var target_position;
     var target_width;
     var target_height;
-
+    var html_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
     $("#preamble").detach().insertAfter("#duration_container");
 
     // Read prereqs from json file and add to html
@@ -247,7 +247,9 @@ $(window).on("load", function () {
     $.ready.then(function () {
         // Both ready and loaded
         createEndOfGuideContent();
-
+        if(html_lang == "jp") {
+            stepHashContentForKanji();
+        }
         if (location.hash) {
             handleFloatingTableOfContent();
             var hash = location.hash;

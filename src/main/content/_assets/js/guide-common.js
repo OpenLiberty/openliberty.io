@@ -330,6 +330,14 @@ function createEndOfGuideContent() {
     }
 }
 
+function stepHashContentForKanji() {
+   console.log("stepHashContentForKanji function called");
+   var anchorTags = $("#toc_container a");
+   for (var i=0; i<anchorTags.length; i++) {
+        anchorTags[i].setAttribute("href","#"+anchorTags[i].innerHTML)
+   }
+}
+
 // Adjust the window for the sticky header.
 function shiftWindow() {
     scrollBy(0, -100);
