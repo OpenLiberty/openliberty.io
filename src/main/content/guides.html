@@ -34,15 +34,15 @@ plus: 1 %} {% endif %} {% endfor %}
 
 <!-- Sort list of guides by date with most recent first -->
 {% assign all_guides_by_date = all-guides | sort: "releasedate" | reverse %}
-{% capture placeholder_filter_guides %}{% t guides.placeholder_filter_guides %}{% endcapture%}
+
 <!-- INTRODUCTION AND SEARCH BAR -->
 <div id="guides_information_container" class="container">
   <div id="guides_border"></div>
   <div class="row">
     <div id="guide_search_information" class="col-xs-12 col-sm-7 col-md-6">
-      <h2 id="guides_title">{% t pages.guides %}</h2>
+      <h2 id="guides_title">Guides</h2>
       <p id="guides_description">
-        {% t guides.description %}
+        The quickest way to learn all things Open Liberty, and beyond!
       </p>
     </div>
     <img id="clouds" src="{{ "/img/guides_clouds.png" | relative }}"
@@ -51,7 +51,7 @@ plus: 1 %} {% endif %} {% endfor %}
       <input
         id="guide_search_input"
         class="search-box"
-        placeholder="{{placeholder_filter_guides}}"
+        placeholder="Filter guides"
         autocomplete="off"
         data-toggle="popover"
         data-placement="bottom"
@@ -65,12 +65,12 @@ plus: 1 %} {% endif %} {% endfor %}
         aria-label="Clear search bar"
       ></button>
       <div id="popover_content" class="hide" style="display: none">
-        <p class="tags_title">{% t guides.suggested_tags %}</p>
-        <button type="button" class="tag_button">{% t guides.new %}</button>
+        <p class="tags_title">Suggested tags</p>
+        <button type="button" class="tag_button">new</button>
         <button type="button" class="tag_button">microprofile</button>
         <button type="button" class="tag_button">jakarta ee</button>
-        <button type="button" class="tag_button">{% t guides.run_in_cloud %}</button>
-        <button type="button" class="tag_button">{% t guides.interactive %}</button>
+        <button type="button" class="tag_button">run in cloud</button>
+        <button type="button" class="tag_button">interactive</button>
       </div>
     </div>
   </div>
@@ -90,11 +90,11 @@ plus: 1 %} {% endif %} {% endfor %}
       type="button"
       tabindex="0"
     >
-      <span class="sr-only">{% t guides.toggle_navigation %}</span>
+      <span class="sr-only">Toggle navigation</span>
       <span class="icon-bar"></span> <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <span>{% t guides.table_of_contents %}</span>
+    <span>Table of contents</span>
   </div>
 </div>
 
@@ -144,7 +144,7 @@ plus: 1 %} {% endif %} {% endfor %}
         guide == all_guides_by_date[1] or guide == all_guides_by_date[2] or
         guide == all_guides_by_date[3] %}
         <div class="new_guide_container">
-          <span class="guide_new">{% t guides.new_camel_case %}</span>
+          <span class="guide_new">New</span>
         </div>
         {% endif %}
 
@@ -153,7 +153,7 @@ plus: 1 %} {% endif %} {% endfor %}
         {% assign date_now = 'now' | date:'%s' %} {% assign date_difference =
         date_now | minus: date_published %} {% if date_difference < 2592000 %}
         <div class="new_guide_container">
-          <span class="guide_new">{% t guides.new_camel_case %}</span>
+          <span class="guide_new">New</span>
         </div>
         {% endif %} {% endif %} 
         <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
@@ -164,7 +164,7 @@ plus: 1 %} {% endif %} {% endfor %}
         {% assign date_now = 'now' | date:'%s' %} {% assign date_difference =
         date_now | minus: date_updated %} {% if date_difference < 7257600 %}
         <div class="updated_guide_container">
-          <span class="guide_updated">{% t guides.updated %}</span>
+          <span class="guide_updated">Updated</span>
         </div>
         {% endif %}{% endif %}
         {% if guide.layout == 'iguide-multipane' %}
@@ -174,7 +174,7 @@ plus: 1 %} {% endif %} {% endfor %}
             src="/img/guide_lightning_bolt.svg"
             alt="Interactive"
           />
-          <span class="guide_interactive">{% t guides.interactive_camel_case %}</span>
+          <span class="guide_interactive">Interactive</span>
         </div>
         {% endif %} 
       </a>
@@ -185,30 +185,30 @@ plus: 1 %} {% endif %} {% endfor %}
   <!-- Zero Search Results -->
   <div class="no_results_section row">
     <h2 id="no_results_title">
-      <b class="search_term"></b> - {% t guides.no_results_found %}
+      <b class="search_term"></b> - No results found
     </h2>
     <div id="no_search_results_container" class="container">
       <div class="subtitle">
         <p>
           <b
-            >{% t guides.no_guides_matching %}
+            >Sorry, we couldn't find any guides matching
             <span class="search_term"></span
           ></b>
         </p>
         <p>
-          {% t guides.want_to_see_guide_on_this_topic %}
+          Want to see a guide on this topic?
           <b
             ><a
               href="https://github.com/OpenLiberty/guides-common/projects/1"
               class="orange_link_light_background"
-              >{% t guides.checkout_and_raise_issue %}</a
+              >Check out our project board and raise an issue.</a
             ></b
           >
         </p>
       </div>
       <button id="back_to_guides_button" class="btn">
         <img class="arrow" src="/img/guides_arrow_left.svg" alt="" /><b
-          >{% t guides.back_to_all_ol_guides %}</b
+          >Back to all Open Liberty guides</b
         >
       </button>
     </div>
