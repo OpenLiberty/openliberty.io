@@ -68,7 +68,6 @@ $(document).ready(function () {
         $(".prereqs_list").html(prereq_html);
     });
 
-    var html_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
     // Read skills network json to see if we need to link to a cloud hosted guide equivalent.
     $.getJSON(
         "../../guides/guides-common/cloud-hosted-guides.json",
