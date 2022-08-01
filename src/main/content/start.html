@@ -9,11 +9,6 @@ permalink: /start/
 seo-description: Use Maven or Gradle to create a starter application for developing cloud-native Java applications on Open Liberty that use Jakarta EE and MicroProfile APIs. Information about Open Liberty Docker images, Maven and Gradle coordinates, and release, beta, and development build downloads.
 ---
 
-{% assign baseURL = '' %}
-{% if site.lang != 'en' %}
-    {% assign baseURL = '/' | append: site.lang %}
-{% endif %}
-
 <!-- INTRO -->
 <div id="downloads_intro_background">
     <img id="leftcloud" class="d-none d-lg-block" src="{{ "/img/home_cloud_1.png" | relative }}" alt="">
@@ -26,9 +21,9 @@ seo-description: Use Maven or Gradle to create a starter application for develop
     <div class="container" id="downloads_intro_text">
         <div class="row">
             <div class="col">
-                <h1 id="get_started">{% t start.get_start_title %}</h1>
+                <h1 id="get_started">Get started with Open Liberty</h1>
                 <p id="intro_text_1">
-                    {% t start.intro_text %}
+                    Whether trying or updating Open Liberty, we've got you covered!
                 </p>
             </div>
         </div>
@@ -39,35 +34,36 @@ seo-description: Use Maven or Gradle to create a starter application for develop
 <div id="starter_section" class="container">
     <div class="row">
         <div class="col">
-            <h2 class="section_title">{% t start.starter_app_heading %}</h2> 
+            <h2 class="section_title">Create a starter application</h2> 
         </div>               
     </div>   
     <div class="row">
         <div class="col">
             <p id="starter_description">
-                {% t start.starter_desc1 %}
+                Select the development tools that you prefer to use, then generate a package to 
+                start developing your application.
                 <br />
-                {% t start.starter_desc2 %}
+                Find a bug? Need an enhancement?
                 <a href="https://github.com/OpenLiberty/start.openliberty.io/issues/new/choose" 
-                class="orange_link_light_background">{% t start.raise_an_issue %}</a>
+                    class="orange_link_light_background">Raise an issue</a>.
             </p>
         </div>        
     </div> 
     <div id="starter_form">
         <div class="row-no-gutters">
             <div id="base_package_section" class="starter_field" data-starter-field="g">
-                <label class="starter_field_label" for="Starter_Base_Package">{% t start.group %}</label>
+                <label class="starter_field_label" for="Starter_Base_Package">Group</label>
                 <input type="text" class="starter_field_input" id="Starter_Base_Package" />
             </div>
             <div id="app_name_section" class="starter_field" data-starter-field="a">
-                <label class="starter_field_label" for="Starter_App_Name">{% t start.artifact %}</label>
+                <label class="starter_field_label" for="Starter_App_Name">Artifact</label>
                 <input type="text" class="starter_field_input" id="Starter_App_Name" />
             </div>         
         </div>
         <div class="row">
             <div class="col">
                 <div id="build_system_section" class="starter_field" data-starter-field="b">
-                    <span class="starter_field_label" id="build_system_section_description">{% t start.build_tool %}</span>
+                    <span class="starter_field_label" id="build_system_section_description">Build Tool</span>
                     <div class="radio_group" role="radiogroup" aria-labelledby="build_system_section_description"></div>
                 </div>
             </div>            
@@ -75,17 +71,17 @@ seo-description: Use Maven or Gradle to create a starter application for develop
         <div class="row">
             <div class="col">
                 <div id="java_version_section" class="starter_field" data-starter-field="j">
-                    <label class="starter_field_label" for="Starter_Java_Version">{% t start.java_se_version %}</label>
+                    <label class="starter_field_label" for="Starter_Java_Version">Java SE Version</label>
                     <select class="starter_field_input starter_field_selector" id="Starter_Java_Version" aria-label="Java SE Version">
                     </select>
                 </div>
                 <div id="jakarta_version_section" class="starter_field" data-starter-field="e">
-                    <label class="starter_field_label" for="Starter_Jakarta_Version">{% t start.java_jakarta_ee_version %}</label>
+                    <label class="starter_field_label" for="Starter_Jakarta_Version">Java EE/Jakarta EE Version</label>
                     <select class="starter_field_input starter_field_selector" id="Starter_Jakarta_Version" aria-label="Java EE/Jakarta EE Version">
                     </select>
                 </div>
                 <div id="microprofile_version_section" class="starter_field" data-starter-field="m">
-                    <label class="starter_field_label" for="Starter_MicroProfile_Version">{% t start.microprofile_version %}</label>
+                    <label class="starter_field_label" for="Starter_MicroProfile_Version">MicroProfile Version</label>
                     <select class="starter_field_input starter_field_selector" id="Starter_MicroProfile_Version" aria-label="MicroProfile Version">
                     </select>
                 </div>
@@ -95,7 +91,7 @@ seo-description: Use Maven or Gradle to create a starter application for develop
     <div class="row">
         <div class="col">
             <div id="starter_warnings"></div>
-            <a id="starter_submit" class="light_green_link_light_background disabled" tabindex="0" data-toggle="modal">{% t start.generate_project %}</a>
+            <a id="starter_submit" class="light_green_link_light_background disabled" tabindex="0" data-toggle="modal">Generate Project</a>
         </div>        
     </div>
 </div>
@@ -110,15 +106,13 @@ seo-description: Use Maven or Gradle to create a starter application for develop
           </button>
         </div>
         <div class="modal-body">
-            <h3>{% t start.generate_project_modal.heading %}</h3>
-            <p>{% t start.generate_project_modal.instruction %}</p>
+            <h3>Your zip file has been beamed to your computer!</h3>
+            <p>Unzip it and run this command, or refer to the included README.</p>
             <div id="cmd_to_run" class="cmd_to_run"></div>
-            <p class="guide-link">{% t start.generate_project_modal.guide_link %}
-                <a href="{{baseURL}}/guides/" class="orange_link_light_background" tabindex="0">{% t start.guides_smallcase %}</a>.
-            </p>
+            <p class="guide-link">For more help, visit our <a href="/guides/" class="orange_link_light_background" tabindex="0">guides.</a></p>
         </div>
         <div class="modal-footer">
-          <button type="button" id="gen_proj_popup_button" class="btn btn-primary"  data-dismiss="modal">{% t start.generate_project_modal.got_it %}</button>
+          <button type="button" id="gen_proj_popup_button" class="btn btn-primary"  data-dismiss="modal">Got it!</button>
         </div>
       </div>
     </div>
@@ -126,8 +120,8 @@ seo-description: Use Maven or Gradle to create a starter application for develop
 
 <!-- MAVEN, GRADLE, DOCKER -->
 <div id="get_section" class="container">
-    <h2 id="getOL" class="section_title">{% t start.get_OL_section_title %}</h2>
-    <p>{% t start.get_OL_section_text %}</p>
+    <h2 id="getOL" class="section_title">Add to an existing application</h2>
+    <p>Get Open Liberty using these commands for Maven, Gradle, or Docker.</p>
     <div class="row tabs_container">
         <!-- TABS -->
         <div class="col">
@@ -151,23 +145,17 @@ seo-description: Use Maven or Gradle to create a starter application for develop
                 <!-- MAVEN -->
                 <div id="maven" class="tab-pane fade show active" tabindex="0" role="tabpanel" aria-labelledby="getOL-maven">
                     <pre class="code_container">&lt;dependency&gt;<br>    &lt;groupId&gt;io.openliberty&lt;/groupId&gt;<br>    &lt;artifactId&gt;openliberty-runtime&lt;/artifactId&gt;<br>    &lt;version&gt;[<span class="latest_version">19.0.0.9</span>,)&lt;/version&gt;<br>    &lt;type&gt;zip&lt;/type&gt;<br>&lt;/dependency&gt;</pre>
-                    <p>{% t start.find_out %}
-                        <a href="{{baseURL}}/guides/maven-intro.html" class="orange_link_light_background">{% t start.how_to_use_maven %}</a>
-                    </p>
+                    <p>Find out <a href="/guides/maven-intro.html" class="orange_link_light_background">how to use Maven with Open Liberty</a>.</p>
                 </div>
                 <!-- GRADLE -->
                 <div id="gradle" class="tab-pane fade" tabindex="-1" role="tabpanel" aria-labelledby="getOL-gradle">
                     <pre class="code_container">dependencies {<br>    libertyRuntime group: 'io.openliberty', name: 'openliberty-runtime', version: '[<span class="latest_version">19.0.0.9</span>,)'<br>}</pre>
-                    <p>{% t start.find_out %}
-                        <a href="{{baseURL}}/guides/gradle-intro.html" class="orange_link_light_background">{% t start.how_to_use_gradle %}</a>
-                    </p>
+                    <p>Find out <a href="/guides/gradle-intro.html" class="orange_link_light_background">how to use Gradle with Open Liberty</a>.</p>
                 </div>
                 <!-- DOCKER -->
                 <div id="docker" class="tab-pane fade" tabindex="-1" role="tabpanel" aria-labelledby="getOL-docker">
                     <div class="code_container">docker pull open-liberty</div>
-                    <p>{% t start.find_out %}
-                        <a href="{{baseURL}}/guides/containerize.html" class="orange_link_light_background">{% t start.how_to_use_docker %}</a>
-                    </p>
+                    <p>Find out <a href="/guides/containerize.html" class="orange_link_light_background">how to use Docker with Open Liberty</a>.</p>
                 </div>
             </div>
         </div>
@@ -178,21 +166,21 @@ seo-description: Use Maven or Gradle to create a starter application for develop
 
 <!-- DOWNLOADS TABLE TABS -->
 <div class="container">
-    <h2 id="downloads-pkg" class="section_title">{% t start.download_package %}</h2>
-    <p>{% t start.download_package_section.para %}</p>
+    <h2 id="downloads-pkg" class="section_title">Download package</h2>
+    <p>We recommend using the latest release, but beta and development builds are also available for use. Once downloaded, you're ready for lift-off.</p>
     <div class="row tabs_container">
         <ul class="nav nav-tabs" role="tablist" aria-labelledby="downloads-pkg">
             <li class="nav-item" role="presentation">
-                <a id="downloads-releases" class="nav-link active" aria-controls="runtime_releases" href="#runtime_releases" role="tab" data-toggle="tab" tabindex="0" aria-selected="true">{% t start.download_package_section.releases %}</a>
+                <a id="downloads-releases" class="nav-link active" aria-controls="runtime_releases" href="#runtime_releases" role="tab" data-toggle="tab" tabindex="0" aria-selected="true">Releases</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a id="downloads-betas" class="nav-link" aria-controls="runtime_betas" href="#runtime_betas" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false">{% t start.download_package_section.betas %}</a>
+                <a id="downloads-betas" class="nav-link" aria-controls="runtime_betas" href="#runtime_betas" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false">Betas</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a id="downloads-devbuilds" class="nav-link" aria-controls="development_builds" href="#development_builds" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false">{% t start.download_package_section.nightly_builds %}</a>
+                <a id="downloads-devbuilds" class="nav-link" aria-controls="development_builds" href="#development_builds" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false">Nightly Builds</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a id="downloads-eclipse-devtools" class="nav-link" aria-controls="eclipse_developer_tools" href="#eclipse_developer_tools" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false">{% t start.download_package_section.eclipse_developer_tools %}</a>
+                <a id="downloads-eclipse-devtools" class="nav-link" aria-controls="eclipse_developer_tools" href="#eclipse_developer_tools" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false">Eclipse Developer Tools</a>
             </li>
         </ul>
     </div>
@@ -204,30 +192,28 @@ seo-description: Use Maven or Gradle to create a starter application for develop
                 <div class="row">
                     <div class="col-sm-12">
                         <p class="download_sentence">
-                            {% t start.download_package_section.releases_content1 %}
-                            <a href="{{baseURL}}/blog/?search=release&key=tag" class="orange_link_light_background">{% t pages.blog %}</a>
-                            {% t global.and %} <a href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener" class="orange_link_light_background">{% t global.twitter %}</a>.
+                            New releases will be announced on the Open Liberty <a href="/blog/?search=release&key=tag" class="orange_link_light_background">blog</a>
+                            and <a href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener" class="orange_link_light_background">Twitter</a>.
                             <br/>
                             <br/>
-                            {% t start.download_package_section.releases_content2 %} 
-                            <a href="{{baseURL}}/docs/22.0.0.1/verifying-package-signatures.html"
-                            class="orange_link_light_background">{% t start.download_package_section.verify_oio_release_packages %}</a>
+                            Starting with version 22.0.0.1, signature files are produced for every package of an Open Liberty release. You can use these signature files
+                            and the corresponding public key to verify the authenticity and integrity of an Open Liberty release package. For more information, see
+                            <a href="/docs/22.0.0.1/verifying-package-signatures.html"
+                            class="orange_link_light_background">Verifying Open Liberty release packages</a>.
                             <br/>
                             <br/>
-                            <a href="https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_06-02-2021.pem" class="orange_link_light_background">
-                                {% t start.download_package_section.obtain_public_key %}
-                            </a>
-                            {% t start.download_package_section.save_file_from_browser %}
-                            <code>{% t start.download_package_section.pem %}</code> {% t start.download_package_section.file %}.
+                            <a href="https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_06-02-2021.pem" class="orange_link_light_background">Obtain the public key
+                            from this link</a>.
+                            Save the file from your browser as a <code>.pem</code> file.
                         </p>
                         <div id="runtime_releases_table_container" class="narrow_table_container">
                             <table class="build_table releases_table white_table" data-builds-id="runtime_releases" id="runtime_releases_table">
                                 <thead>
                                     <tr>
-                                        <th id="runtime_releases_version" class="version_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">{% t start.download_package_section.table_header.version %}</a></th>
-                                        <th id="runtime_releases_package" class="package_name_column">{% t start.download_package_section.table_header.package %}</th>
-                                        <th id="runtime_releases_download" class="download_button_column">{% t start.download_package_section.table_header.download %}</th>
-                                        <th id="runtime_releases_verification" class="download_button_column">{% t start.download_package_section.table_header.verification %}</th>
+                                        <th id="runtime_releases_version" class="version_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">Version</a></th>
+                                        <th id="runtime_releases_package" class="package_name_column">Package</th>
+                                        <th id="runtime_releases_download" class="download_button_column">Download</th>
+                                        <th id="runtime_releases_verification" class="download_button_column">Verification</th>
                                     </tr>
                                 </thead>
                                 <tbody class="release_table_body">
@@ -242,29 +228,27 @@ seo-description: Use Maven or Gradle to create a starter application for develop
                 <div class="row">
                     <div class="col-sm-12">
                         <p class="download_sentence">
-                            {% t start.download_package_section.beta_content1 %}
-                            <a href="{{baseURL}}/contribute" class="orange_link_light_background">{% t start.download_package_section.beta_content2 %}</a>
-                            {% t start.download_package_section.beta_content3 %}
-                            <a href="{{baseURL}}/blog/?search=beta&key=tag" class="orange_link_light_background">{% t start.download_package_section.beta_content4 %}</a>
+                            Try out new features in our betas and let us know <a href="/contribute" class="orange_link_light_background">your feedback</a>. Beta content may change from <a href="/blog/?search=beta&key=tag" class="orange_link_light_background">release to release</a>.
                             <br/>
                             <br/>
-                            {% t start.download_package_section.beta_content5 %}
-                            <a href="{{baseURL}}/docs/22.0.0.1/verifying-package-signatures.html"
-                            class="orange_link_light_background">{% t start.download_package_section.verify_oio_release_packages %}</a>
+                            Starting with version 22.0.0.1, signature files are produced for every package of an Open Liberty release. You can use these signature files
+                            and the corresponding public key to verify the authenticity and integrity of an Open Liberty release package. For more information, see
+                            <a href="/docs/22.0.0.1/verifying-package-signatures.html"
+                            class="orange_link_light_background">Verifying Open Liberty release packages</a>.
                             <br/>
                             <br/>
-                            <a href="https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_06-02-2021.pem" class="orange_link_light_background">
-                            {% t start.download_package_section.obtain_public_key %}</a>
-                            {% t start.download_package_section.save_file_from_browser %} <code>{% t start.download_package_section.pem %}</code> {% t start.download_package_section.file %}.
+                            <a href="https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_06-02-2021.pem" class="orange_link_light_background">Obtain the public key
+                            from this link</a>.
+                            Save the file from your browser as a <code>.pem</code> file.
                         </p>
                         <div id="runtime_betas_table_container" class="narrow_table_container">
                             <table class="build_table releases_table white_table" data-builds-id="runtime_betas" id="runtime_betas_table">
                                 <thead>
                                     <tr>
-                                        <th id="runtime_betas_version" class="version_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">{% t start.download_package_section.table_header.version %}</a></th>
-                                        <th id="runtime_betas_package" class="package_name_column">{% t start.download_package_section.table_header.package %}</th>
-                                        <th id="runtime_betas_download" class="download_button_column">{% t start.download_package_section.table_header.download %}</th>
-                                        <th id="runtime_betas_verification" class="download_button_column">{% t start.download_package_section.table_header.verification %}</th>
+                                        <th id="runtime_betas_version" class="version_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">Version</a></th>
+                                        <th id="runtime_betas_package" class="package_name_column">Package</th>
+                                        <th id="runtime_betas_download" class="download_button_column">Download</th>
+                                        <th id="runtime_betas_verification" class="download_button_column">Verification</th>
                                     </tr>
                                 </thead>
                                 <tbody class="release_table_body">
@@ -279,16 +263,16 @@ seo-description: Use Maven or Gradle to create a starter application for develop
                 <div class="row">
                     <div class="col-sm-12">
                         <p class="download_sentence">
-                            {% t start.download_package_section.nightly_builds_content %}
+                            Nightly builds contain in-development features, have not gone through the full release process and are potentially unstable.
                         </p>
                         <div id="runtime_development_builds_table_container" class="table_container">
                             <table class="build_table development_builds_table white_table" data-builds-id="runtime_development_builds">
                                 <thead>
                                     <tr>
-                                        <th id="runtime_development_builds_date" class="date_column"><a href="" data-key="date" data-descending="true" class="functional_link sort_link">{% t start.download_package_section.table_header.build_date %}</a></th>
-                                        <th id="runtime_development_builds_tests" class="tests_passed_column"><a href="" data-key="test_passed" data-descending="false" class="functional_link sort_link">{% t start.download_package_section.table_header.tests %}<span class="table_header_arrow" aria-hidden="true"></span></a></th>
-                                        <th id="runtime_development_builds_logs" class="view_logs_column">{% t start.download_package_section.table_header.logs %}</th>
-                                        <th id="runtime_development_builds_download" class="download_button_column">{% t start.download_package_section.table_header.download %}</th>
+                                        <th id="runtime_development_builds_date" class="date_column"><a href="" data-key="date" data-descending="true" class="functional_link sort_link">Build Date</a></th>
+                                        <th id="runtime_development_builds_tests" class="tests_passed_column"><a href="" data-key="test_passed" data-descending="false" class="functional_link sort_link">Tests<span class="table_header_arrow" aria-hidden="true"></span></a></th>
+                                        <th id="runtime_development_builds_logs" class="view_logs_column">Logs</th>
+                                        <th id="runtime_development_builds_download" class="download_button_column">Download</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -303,18 +287,18 @@ seo-description: Use Maven or Gradle to create a starter application for develop
                 <div class="row">
                     <div class="col-sm-12">
                         <p class="download_sentence">
-                            {% t start.download_package_section.eclipse_developer_tools_content1 %}
-                            <a href="https://github.com/OpenLiberty/open-liberty-tools" target="_blank" rel="noopener" class="orange_link_light_background">{% t start.download_package_section.eclipse_developer_tools_content2 %}</a>
+                            We recommend IDE tools based on Eclipse since it gives you an integrated environment right out of the box.
+                            <a href="https://github.com/OpenLiberty/open-liberty-tools" target="_blank" rel="noopener" class="orange_link_light_background">Learn how to install the tools here</a>. 
                         </p>
                         <div class="clearfix">
-                            <h3 class="eclipse_development_tools_title pull-left">{% t start.download_package_section.releases %}</h3>
+                            <h3 class="eclipse_development_tools_title pull-left">Releases</h3>
                         </div>
                         <div id="eclipse_development_tools_releases_table_container" class="narrow_table_container">
                             <table class="build_table releases_table white_table" data-builds-id="developer_tools_releases">
                                 <thead>
                                     <tr>
-                                        <th id="developer_tools_releases_version" class="date_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">{% t start.download_package_section.table_header.version %}</a></th>
-                                        <th id="developer_tools_releases_download" class="download_button_column">{% t start.download_package_section.table_header.download %}</th>
+                                        <th id="developer_tools_releases_version" class="date_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">Version</a></th>
+                                        <th id="developer_tools_releases_download" class="download_button_column">Download</th>
                                     </tr>
                                 </thead>
                                 <tbody class="release_table_body">
@@ -322,16 +306,16 @@ seo-description: Use Maven or Gradle to create a starter application for develop
                             </table>
                         </div>
                         <div class="clearfix">
-                            <h3 class="eclipse_development_tools_title pull-left">{% t start.download_package_section.development_builds %}</h3>
+                            <h3 class="eclipse_development_tools_title pull-left">Development builds</h3>
                         </div>
                         <div id="eclipse_development_tools_development_builds_table_container" class="table_container">
                             <table class="build_table development_builds_table white_table" data-builds-id="developer_tools_development_builds">
                                 <thead>
                                     <tr>
-                                        <th id="developer_tools_development_builds_date" class="date_column"><a href="" data-key="date" data-descending="true" class="functional_link sort_link">{% t start.download_package_section.table_header.version %}</a></th>
-                                        <th id="developer_tools_development_builds_tests" class="tests_passed_column"><a href="" data-key="test_passed" data-descending="false" class="functional_link sort_link">{% t start.download_package_section.table_header.tests %}<span class="table_header_arrow" aria-hidden="true"></span></a></th>
-                                        <th id="developer_tools_development_builds_logs" class="view_logs_column">{% t start.download_package_section.table_header.logs %}</th>
-                                        <th id="developer_tools_development_builds_download" class="download_button_column">{% t start.download_package_section.table_header.download %}</th>
+                                        <th id="developer_tools_development_builds_date" class="date_column"><a href="" data-key="date" data-descending="true" class="functional_link sort_link">Version</a></th>
+                                        <th id="developer_tools_development_builds_tests" class="tests_passed_column"><a href="" data-key="test_passed" data-descending="false" class="functional_link sort_link">Tests<span class="table_header_arrow" aria-hidden="true"></span></a></th>
+                                        <th id="developer_tools_development_builds_logs" class="view_logs_column">Logs</th>
+                                        <th id="developer_tools_development_builds_download" class="download_button_column">Download</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -355,11 +339,10 @@ seo-description: Use Maven or Gradle to create a starter application for develop
     <img id="bottomleftclouds" src="{{ "/img/bottom_left_clouds.png" | relative }}" alt="bottom left clouds">
     <img id="bottomrightcloud" src="{{ "/img/bottom_right_cloud.png" | relative }}" alt="bottom right cloud">
     <p id="cow_text">
-        {% t start.download_package_section.cow_text %}
+            Don't have a cow.
     </p>
     <p id="more_downloads_text">
-        {% t start.download_package_section.more_downloads_on_the_way %}
-        <br>
-        {% t start.download_package_section.check_back_soon %}
+        More downloads are on the way.<br>
+        Check back soon!
     </p>
 </div>

@@ -55,11 +55,11 @@ plus: 1 %} {% endif %} {% endfor %}
             tabindex="0"
           />
         </div>
-        <h3 id="toc_title">{% t guides.contents %}</h3>
+        <h3 id="toc_title">Contents</h3>
         <div id="toc_container">{{ toc }}</div>
         <div id="toc_separator"></div>
         {% endif %}
-        <h3 id="tag_title">{% t guides.tags %}</h3>
+        <h3 id="tag_title">Tags</h3>
         <div id="tags_container"></div>
       </div>
     </div>
@@ -93,7 +93,7 @@ plus: 1 %} {% endif %} {% endfor %}
             all_guides_by_date[2].title or page.title ==
             all_guides_by_date[3].title %}
             <div class="new_guide_container">
-              <span class="guide_new">{% t guides.new_camel_case %}</span>
+              <span class="guide_new">New</span>
             </div>
             {% endif %}
             <!-- If new posts count is >= 4, use posts from last 30 days-->
@@ -103,7 +103,7 @@ plus: 1 %} {% endif %} {% endfor %}
             <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
             {% if date_difference < 2592000 %}
             <div class="new_guide_container">
-              <span class="guide_new">{% t guides.new_camel_case %}</span>
+              <span class="guide_new">New</span>
             </div>
             {% endif %} {% endif %}
             <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
@@ -114,12 +114,12 @@ plus: 1 %} {% endif %} {% endfor %}
             {% assign date_now = 'now' | date:'%s' %} {% assign date_difference =
             date_now | minus: date_updated %} {% if date_difference < 7257600 %}
             <div class="updated_guide_container">
-              <span class="guide_updated">{% t guides.updated %}</span>
+              <span class="guide_updated">Updated</span>
             </div>
             {% endif %}{% endif %}
           </div>
           <div id="mobile_prereqs_section">
-            <p id="mobile_prereqs_title">{% t guides.prerequisites %}:</p>
+            <p id="mobile_prereqs_title">Prerequisites:</p>
             <div class="prereqs_list"></div>
           </div>
         </div>
@@ -139,7 +139,7 @@ plus: 1 %} {% endif %} {% endfor %}
               type="button"
               tabindex="0"
             >
-              <span class="sr-only">{% t guides.toggle_navigation %}</span>
+              <span class="sr-only">Toggle navigation</span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
@@ -149,14 +149,14 @@ plus: 1 %} {% endif %} {% endfor %}
                 alt="Table of contents close button"
               />
             </button>
-            <span>{% t guides.table_of_contents %}</span>
+            <span>Table of contents</span>
           </div>
         </div>
 
         <!-- Guide content section -->
         {{ content }}
       </div>
-      <div id="guide_section_copied_confirmation">{% t guides.copied_to_clipboard %}</div>
+      <div id="guide_section_copied_confirmation">Copied to clipboard</div>
       <img
         id="copy_to_clipboard"
         src="/img/guides_copy_button.svg"
