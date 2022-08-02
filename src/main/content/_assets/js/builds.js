@@ -623,7 +623,6 @@ function sortBetaLocations(package_locations_param) {
   });
   sortArr.sort(orderVersions);
   var newLoc = sortArr.map((x) => x.location);
-  console.log(newLoc);
   return newLoc;
 }
 
