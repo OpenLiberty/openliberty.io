@@ -6,11 +6,16 @@ css:
 js: post
 ---
 
+{% assign baseURL = '' %}
+{% if site.lang != 'en' %}
+    {% assign baseURL = '/' | append: site.lang %}
+{% endif %}
+
 <div id="article_container" class="container-fluid">
     <article class="post" aria-label="article">
         <header id="post_header">
             <div class="container">
-                <a id="blog_link" href="/blog"><img class="arrow" src="/img/post_arrow.svg" alt="back to all blogs">See all blog posts</a>
+                <a id="blog_link" href="{{baseURL}}/blog"><img class="arrow" src="/img/post_arrow.svg" alt="back to all blogs">{% t blog.see_all_blog_posts %}</a>
                 <div class="share_post_container">
                     {% assign page_title = page.title | replace: "'" , "\\\\'" %}
                     <a class="twitter_link" href="https://twitter.com/intent" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('{{ page_title }}') + '&url=' + encodeURIComponent(window.location)); return false" aria-label="Twitter link"></a>
@@ -32,12 +37,12 @@ js: post
                     <a class="author_name" href="{{ page.author_github }}" target="_blank" rel="noopener">{{ page.author }}</a>
                     {% for author in page.additional_authors %}
                         {% if additional_author_count == 1 %}
-                            <span>and</span>
+                            <span>{% t global.and %}</span>
                         {% elsif additional_author_count > 1 %}
                             {% if current < additional_author_count %}
                                 <span class="comma">,</span>
                             {% elsif current == additional_author_count %}
-                                <span class="comma">, and</span>
+                                <span class="comma">, {% t global.and %}</span>
                             {% endif %}
                         {% endif %}
                         {% assign current = current | plus: 1 %}
@@ -57,12 +62,12 @@ js: post
                 <a class="reddit_link" href="https://www.reddit.com/submit" onclick="window.open('https://www.reddit.com/submit?url=' + encodeURIComponent(window.location)); return false" aria-label="Reddit link"></a>
             </div>
             <div id="blog_link_container">
-                <a id="blog_link_bottom" href="/blog"><img class="arrow" src="/img/post_arrow.svg" alt="back to all blogs">See all blog posts</a>
+                <a id="blog_link_bottom" href="{{baseURL}}/blog"><img class="arrow" src="/img/post_arrow.svg" alt="back to all blogs">{% t blog.see_all_blog_posts %}</a>
             </div>
         </div>
         <div class="tags_container_bottom">	
             <div class="container">	
-                <p id="tags">Tags</p>	
+                <p id="tags">{% t guides.tags %}</p>	
                 <div class="post_tags_container"></div>	
             </div>	
         </div>
