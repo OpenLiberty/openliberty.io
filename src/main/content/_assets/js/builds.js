@@ -217,7 +217,7 @@ function render_builds(builds, parent) {
                             num_packages +
                             '">' +
                             build.version +
-                            (releaseBuild.releasePostLink ? '<a class="blog_release_notes" href="/blog/'+releaseBuild.releasePostLink+'">( Release Notes )</a>' : '') +
+                            (releaseBuild.releasePostLink ? '<a class="blog_release_notes" href="/blog/'+releaseBuild.releasePostLink+'">Release Notes</a>' : '') +
                             '</td>'
                     );
 
@@ -372,7 +372,7 @@ function render_builds(builds, parent) {
                             num_beta_packages +
                             '">' +
                             build.version +
-                            (betaBuild.betaPostLink ? '<a class="blog_release_notes" href="/blog/'+betaBuild.betaPostLink+'">( Release Notes )</a>' : '') +
+                            (betaBuild.betaPostLink ? '<a class="blog_release_notes" href="/blog/'+betaBuild.betaPostLink+'">Release Notes</a>' : '') +
                             '</td>'
                     );
             
