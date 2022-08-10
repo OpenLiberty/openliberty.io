@@ -11,6 +11,8 @@
 package io.openliberty.website;
 
 import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.lang.NullPointerException;
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -21,7 +23,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import java.io.FileNotFoundException;
+
+import org.jsoup.Jsoup;
+import org.jsoup.Connection;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import java.io.PrintWriter;
 
 /**
  * Originally this filter was used simply to force the use of TLS, however it
@@ -34,6 +41,9 @@ import java.io.FileNotFoundException;
  */
 public class TLSFilter implements Filter {
     FilterConfig cfg;
+    public String uriQueryString;
+    public Document docsPage;
+    public PrintWriter htmlResponse;
 
     public void destroy() {
     }
@@ -104,6 +114,7 @@ public class TLSFilter implements Filter {
             // but not
             // for everything else.
             String uri = ((HttpServletRequest) req).getRequestURI();
+            String queryString = ((HttpServletRequest) req).getQueryString();
             if (uri.startsWith("/img/")) {
                 response.setHeader("Cache-Control", "max-age=604800");
                 // if requesting the JAX-RS api set cache control to not cache
@@ -125,12 +136,30 @@ public class TLSFilter implements Filter {
                 }
                 if (doGzip) {
                     response.setHeader("Content-Type", "text/html");
-                    response.setHeader("Content-Encoding", "gzip");
                     doFilter = false;
                     try {
-                        req.getRequestDispatcher(uri.concat(".gz")).include(req, response);
+                        if (queryString != null) {
+                            uriQueryString = uri +"?"+ queryString;
+                            docsPage = Jsoup.connect("https://openliberty.io"+uriQueryString).get();
+                            String ifError = docsPage.select("head > title").first().text();
+                            if(ifError.contains("404")){
+                                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                                response.sendRedirect("/404.html");
+                            }
+                            else {
+                                String updatedCanonicalUrl = uriQueryString.replace(uriQueryString.split("\\/")[2], "latest");
+                                Element result = docsPage.select("link[rel=\"canonical\"]").first();
+                                result.attr("href", "https://openliberty.io"+updatedCanonicalUrl);
+                                htmlResponse = response.getWriter();
+                                htmlResponse.println(docsPage.html());
+                            }
+                        }
+                        else {
+                            response.setHeader("Content-Encoding", "gzip");
+                            req.getRequestDispatcher(uri.concat(".gz")).include(req, response);
+                        }
                     }
-                    catch(FileNotFoundException e) {
+                    catch(FileNotFoundException | NullPointerException e) {
                         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                         response.sendRedirect("/404.html");
                     }

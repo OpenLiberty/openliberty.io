@@ -534,13 +534,6 @@ function setPackageContainerHeight() {
 }
 
 function setIFrameContent(iframeName, href) {
-  window.onpopstate = (e) => {
-    popStateOrPageRefresh();
-
-  };
-  if(iFrameClicked == false) {
-    popStateOrPageRefresh();
-  }
   var iframeContent = $("#javadoc_container")
     .contents()
     .find(iframeName)
@@ -580,12 +573,6 @@ function setIFrameContent(iframeName, href) {
   };
   http.open("HEAD", href);
   http.send();
-}
-
-//when back button pressed or page refresh
-function popStateOrPageRefresh() {
-  var url = window.top.location.href;
-  replaceCanonicalUrl(url);
 }
 
 // If package is provided as paramName, then return the class param. Otherwise return the package param.
