@@ -151,8 +151,15 @@ function handleFloatingTOCAccordion() {
 function TOCEntryClick(liElement, event) {
     // 'this' is the li element in the #toc_container.
     // Its first child is the anchor tag pointing to the id of the section to go to.
-    var hash = $(liElement).find('a').prop('hash');
-
+    console.log(html_lang)
+    var hash = "";
+    if(html_lang == "jp") {
+        hash = "#"+$(liElement).find('a').text();
+    }
+    else {
+        hash = $(liElement).find('a').prop('hash');
+    }
+    //var hash = $(liElement).find('a').prop('hash');
     // Handle our own scrolling to the appropriate section so stop event processing.
     event.preventDefault();
     event.stopPropagation();
@@ -163,10 +170,13 @@ function TOCEntryClick(liElement, event) {
     }
 
     var windowHash = window.location.hash;
+    console.log("windowHash---->"+windowHash);
     if (windowHash !== hash) {
         // Update the URL hash with where we wish to go....
         var currentPath = window.location.pathname;
+        console.log("currentPath---->"+currentPath);
         var newPath = currentPath.substring(currentPath.lastIndexOf('/')+1) + hash;
+        console.log("newPath--->"+newPath);
         // Not setting window.location.hash here because that causes the
         // window to scroll immediately to the section.  We want to implement
         // smooth scrolling that is adjusted to account for the sticky header.
@@ -175,6 +185,7 @@ function TOCEntryClick(liElement, event) {
         // to perform the smooth scrolling to the requested section.
         history.replaceState(null, null, newPath);
     }
+    console.log(hash)
     accessContentsFromHash(hash);
 }
 
@@ -266,6 +277,7 @@ $('body').on('animationend webkitAnimationEnd oAnimationEnd', '#toc_indicator', 
 });
 
 $(document).ready(function() {
+    var html_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
     if ($(this).outerWidth() >= twoColumnBreakpoint && $(this).outerWidth() <= threeColumnBreakpoint) {
         TocIndicatorBounce();
     }
