@@ -44,27 +44,52 @@ var blog = function(){
         }
     }
 
-    function filterPosts(tag, exclude) {
+    function filterPosts(tagList) {
+        // check type, if string, align with obj list
+        // or create diff process for arrays
+        if(typeof(tagList) === "string"){
+            var temp = {};
+            temp["tag"] = tagList;
+            temp["exclude"] = false;
+            tagList = [temp];
+        }
+        
         // scroll to top of page to see filter message
+        var tag = tagList[0].tag;
+        var exclude = tagList[0].exclude;
         $(window).scrollTop(0);
+        var filterStr = "";
+        var includeStr = "";
+        var excludeList = [];
+
+        for(var i = 0; i < tagList.length; i++){
+            if(tagList[i].exclude){
+                excludeList.push(tagList[i].tag.toLowerCase());
+            } else {
+                includeStr = includeStr + ("." + tagList[i].tag.toLowerCase());
+                filterStr = filterStr + tagList[i].tag.replace("_", " ") + ", "
+            }
+        }
 
         $('#no_results_message').hide();
         $('#older_posts').hide();
 
-        if(exclude){
-            // hide posts that have tag
-            $("." + tag.toLowerCase()).hide();
-
-        } else {
+        if(includeStr.length > 0){
             // clear blog post content
             $('.blog_post_content').hide();
             // show filter message at top of page
             $('#filter').show();
             $('#filter_message').show();
-            $('#filter_tag').text(tag.replace("_", " "));
+            $('#filter_tag').text(filterStr.substring(0, filterStr.length-2));
 
-            // show posts that have tag
-            $("." + tag.toLowerCase()).show();
+            // show posts that have tags
+            $(includeStr).show();
+        }
+        if(excludeList.length > 0){
+            // hide posts that have tag
+            for(var i = 0; i < excludeList.length; i++){
+                $("." + excludeList[i].toLowerCase()).hide();
+            }
         }
         
         $('#final_post').show();
@@ -95,15 +120,14 @@ var blog = function(){
 
     $(window).on('popstate', function(){
         removeFilter();
-        var tagObj = getTagFromUrl();
-        var tag = tagObj.tag;
-        var ex = tagObj.exclude;
-        if (tag) {
-            filterPosts(tag, ex);
+        var tagList = getTagFromUrl();
+        if (tagList.length > 0) {
+            filterPosts(tagList);
         }
     });
 
     function getTagFromUrl(){
+        var tList = [];
         var t;
         var query_string = location.search;
         var ex = false;
@@ -120,7 +144,6 @@ var blog = function(){
             var query_params = query_string.substring(1).split('&');
             for(var i = 0; i < query_params.length; i++){
                 if(query_params[i].indexOf('search=') === 0) {
-                    console.log(query_params[i]);
                     var tag_name;
                     if(query_params[i].indexOf('!') > -1){
                         tag_name = query_params[i].substring(8);
@@ -132,18 +155,19 @@ var blog = function(){
                     // Check if the tag search query is in the list of supported tags before filtering
                     if(tag_names.indexOf(tag_name.toLowerCase()) > -1){
                         t = tag_name;
+                        ret['tag'] = tag_name;
+                        ret['exclude'] = ex;
+                        tList.push(ret);
+                        ret = {};
                     }
                     else {
                         showNoResultsMessage();
-                    } 
-                    console.log("Tag="+t+", Exclude="+ex);               
-                    break;
+                    }                
+                    
                 }
             }        
         }
-        ret['tag'] = t;
-        ret['exclude'] = ex;
-        return ret;
+        return tList;
     }
 
     // Calculate the viewport height and make sure that the blogs column takes up at least
@@ -158,11 +182,9 @@ var blog = function(){
 
 
     function init() {
-        var tagObj = getTagFromUrl();
-        var tag = tagObj.tag;
-        var ex = tagObj.exclude;
-        if(tag){
-            filterPosts(tag, ex);
+        var tagList = getTagFromUrl();
+        if(tagList && tagList.length > 0){
+            filterPosts(tagList);
         }
         // if blog post has no tags, add col-md-7 class so that text doesn't overlap
         $('.blog_tags_container').each(function() {
