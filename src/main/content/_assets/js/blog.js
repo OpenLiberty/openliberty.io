@@ -1,6 +1,6 @@
 var blog = function(){
     var tag_names = [];
-
+    var html_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
     // Read tags from json file and add tag to class
     function getTags(callback) {
         $.getJSON( "../../blog_tags.json", function(data) {
@@ -16,13 +16,34 @@ var blog = function(){
                 }
                 $(".blog_post_title_link").each(function(i, link) {
                     if (this.hasAttribute('data-path')) {
-                        var post_name = this.getAttribute('data-path').substring(28).replace(".adoc", ""); //19
+                        if(html_lang == 'en') {
+                            console.log("en");
+                            console.log("data-path if");
+                            var post_name = this.getAttribute('data-path').substring(28).replace(".adoc", ""); //19
+                        }
+                        else {
+                            console.log("non-english");
+                            console.log("data-path else")
+                            var post_name = this.getAttribute('data-path').substring(31).replace(".adoc", ""); //19 //31
+                        }
                     }
                     else {
+                        if(html_lang == 'en') {
+                            console.log("else en");
+                            console.log("href else");
                         var post_name = this.getAttribute('href').substring(17).replace('.html', '');
+                        }
+                        else {
+                            console.log("else non-english");
+                            console.log("href else else")
+                            var post_name = this.getAttribute('href').substring(20).replace('.html', '');
+                        }
                     }
                     var tags_html = "";
+                    console.log("post_name");
+                    console.log(post_name)
                     if (tag.posts.indexOf(post_name) > -1) {
+                        console.log("entered")
                         tags_html = '<p tabindex="0" role="listitem" class="blog_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');" onkeypress="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tag.name + '</p>' + '<span>, </span>';
                         
                         $(".blog_post_content:eq(" + i + ")").addClass(tag_class.toLowerCase());
