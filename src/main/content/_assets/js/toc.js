@@ -151,6 +151,7 @@ function handleFloatingTOCAccordion() {
 function TOCEntryClick(liElement, event) {
     // 'this' is the li element in the #toc_container.
     // Its first child is the anchor tag pointing to the id of the section to go to.
+    var html_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
     console.log(html_lang)
     var hash = "";
     if(html_lang == "jp") {
@@ -277,7 +278,6 @@ $('body').on('animationend webkitAnimationEnd oAnimationEnd', '#toc_indicator', 
 });
 
 $(document).ready(function() {
-    var html_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
     if ($(this).outerWidth() >= twoColumnBreakpoint && $(this).outerWidth() <= threeColumnBreakpoint) {
         TocIndicatorBounce();
     }
