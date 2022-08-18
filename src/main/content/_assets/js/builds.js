@@ -77,6 +77,12 @@ var allowed_builds = {
     tools_nightly_builds: undefined, // based on "driver_location" /api/builds/data
 };
 
+var site_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
+var baseURL = '';
+if (site_lang != 'en') {
+    baseURL = '/'+site_lang;
+}
+
 function isStagingSite() {
     var host = window.location.hostname;
     return host.indexOf('staging') > -1;
@@ -181,7 +187,7 @@ function render_builds(builds, parent) {
 
             // ol releases table only
             if (parent.parent().data('builds-id') == 'runtime_releases') {
-                var releaseBuild = createBlogBetaLink("release",build);
+                var releaseBuild = createBlogReleaseAndBetaLink("release",build);
                 var package_locations = build.package_locations;
                 var sorted_package_locations;
                 if (package_locations !== null && package_locations !== undefined) {
@@ -217,7 +223,7 @@ function render_builds(builds, parent) {
                             num_packages +
                             '">' +
                             build.version +
-                            (releaseBuild.releasePostLink ? '<a class="blog_release_notes" href="/blog/'+releaseBuild.releasePostLink+'">Release blog</a>' : '') +
+                            (releaseBuild.releasePostLink ? '<a class="blog_release_notes" href="'+baseURL+'/blog/'+releaseBuild.releasePostLink+'">'+release_blog+'</a>' : '') +
                             '</td>'
                     );
 
@@ -343,7 +349,7 @@ function render_builds(builds, parent) {
 
             // beta releases table only
             else if (parent.parent().data('builds-id') == 'runtime_betas') {
-                var betaBuild = createBlogBetaLink("beta",build);
+                var betaBuild = createBlogReleaseAndBetaLink("beta",build);
                 var beta_package_locations = build.package_locations;
                 var sorted_beta_package_locations;
                 if (beta_package_locations !== null && beta_package_locations !== undefined) {
@@ -372,7 +378,7 @@ function render_builds(builds, parent) {
                             num_beta_packages +
                             '">' +
                             build.version +
-                            (betaBuild.betaPostLink ? '<a class="blog_release_notes" href="/blog/'+betaBuild.betaPostLink+'">Release blog</a>' : '') +
+                            (betaBuild.betaPostLink ? '<a class="blog_release_notes" href="'+baseURL+'/blog/'+betaBuild.betaPostLink+'">'+release_blog+'</a>' : '') +
                             '</td>'
                     );
             
@@ -563,7 +569,7 @@ function getBlogsTags() {
     });
 }
 
-function createBlogBetaLink(buildId, build) {
+function createBlogReleaseAndBetaLink(buildId, build) {
     versionwithdots = build.version.split('-')[0];
     versionwithoutdots = versionwithdots.split('.').join("")
     var releasePostLink, betaPostLink

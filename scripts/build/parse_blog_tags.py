@@ -25,7 +25,8 @@ def format_links_and_remove_duplicates(_posts):
     for i in sorted(res, reverse=True):
         del formatted_posts[i]
     return formatted_posts
-
+    
+# checks if date is mistakenly entered in single digit eg: 1/1/2022 will be converted as 01/01/2022 
 def addLeadingZero(date,index,addZero):
     date = date.split('-')
     date[index] = addZero
