@@ -67,7 +67,7 @@ var openliberty = (function() {
 
         // fix nav bar to top of screen
         $("#nav_bar").addClass("fixed_top");
-        $("#nav_bar").css("top", "0px");
+        $("#nav_bar").removeClass("hide_nav");
 
         // push toc column, toc indicator and code column down below nav bar
         $("#toc_column").css("top", nav_height + "px");
@@ -108,8 +108,8 @@ var openliberty = (function() {
     function hideNav() {
     // reset nav bar and move off screen
         $("#nav_bar").removeClass("fixed_top");
-        $("#nav_bar").css({"top": "-60px"});
-
+        $("#nav_bar").addClass("hide_nav");
+        
         // reset toc column, toc indicator and code column position
         $("#toc_column").css("top", "0px");
         if (window.innerWidth > 1440) {
