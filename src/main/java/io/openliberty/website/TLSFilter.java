@@ -83,7 +83,7 @@ public class TLSFilter implements Filter {
             response.setHeader("X-Content-Type-Options", "nosniff"); // Stops a browser from trying to MIME-sniff the
                                                                      // content type.
             response.setHeader("Content-Security-Policy",
-                    "default-src 'self' 'unsafe-inline' 'unsafe-eval' maxcdn.bootstrapcdn.com fonts.googleapis.com ajax.googleapis.com code.jquery.com fonts.gstatic.com  *.githubusercontent.com api.github.com www.googletagmanager.com tagmanager.google.com www.google-analytics.com cdnjs.cloudflare.com data: buttons.github.io www.youtube.com *.twitter.com *.twimg.com video.ibm.com https://start.openliberty.io/ https://staging-starter.mybluemix.net/"); // Mitigating
+                    "default-src 'self' 'unsafe-inline' 'unsafe-eval' maxcdn.bootstrapcdn.com fonts.googleapis.com ajax.googleapis.com code.jquery.com fonts.gstatic.com  *.githubusercontent.com api.github.com www.googletagmanager.com tagmanager.google.com www.google-analytics.com cdnjs.cloudflare.com data: buttons.github.io www.youtube.com *.twitter.com *.twimg.com video.ibm.com https://start.openliberty.io/ gitlab.com starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud"); // Mitigating
             // cross
             // site
             // scripting
