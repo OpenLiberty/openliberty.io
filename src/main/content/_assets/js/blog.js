@@ -45,6 +45,14 @@ var blog = function(){
     }
 
     function filterPosts(tagList) {
+        var filterStr = "";
+        var includeStr = "";
+        var excludeList = [];
+        var excludeStr = "";
+        
+        // remove any curent filters
+        removeFilter();
+
         // check type, if string, align with obj list
         // or create diff process for arrays
         if(typeof(tagList) === "string"){
@@ -55,41 +63,44 @@ var blog = function(){
         }
         
         // scroll to top of page to see filter message
-        var tag = tagList[0].tag;
-        var exclude = tagList[0].exclude;
         $(window).scrollTop(0);
-        var filterStr = "";
-        var includeStr = "";
-        var excludeList = [];
 
+        // separate tags based on whether they should be included or excluded
+        // create class selector for posts that have all include tags
         for(var i = 0; i < tagList.length; i++){
             if(tagList[i].exclude){
                 excludeList.push(tagList[i].tag.toLowerCase());
+                excludeStr = excludeStr + tagList[i].tag.replace("_", " ") + ", ";
             } else {
                 includeStr = includeStr + ("." + tagList[i].tag.toLowerCase());
-                filterStr = filterStr + tagList[i].tag.replace("_", " ") + ", "
+                filterStr = filterStr + tagList[i].tag.replace("_", " ") + ", ";
             }
         }
 
         $('#no_results_message').hide();
         $('#older_posts').hide();
 
+        // included tags have to processed first as they require all posts to be hidden
         if(includeStr.length > 0){
             // clear blog post content
             $('.blog_post_content').hide();
             // show filter message at top of page
             $('#filter').show();
             $('#filter_message').show();
-            $('#filter_tag').text(filterStr.substring(0, filterStr.length-2));
+            $('#include_filter_tag').text("Include: "+filterStr.substring(0, filterStr.length-2));
 
             // show posts that have tags
             $(includeStr).show();
         }
+
+        // excluded tags are removed from filtered include results
         if(excludeList.length > 0){
-            // hide posts that have tag
+            // hide posts that have tag on exclude list
             for(var i = 0; i < excludeList.length; i++){
                 $("." + excludeList[i].toLowerCase()).hide();
             }
+            $('#filter').show();
+            $('#exclude_filter_tag').text("Exclude: "+excludeStr.substring(0, excludeStr.length-2));
         }
         
         $('#final_post').show();
@@ -98,6 +109,8 @@ var blog = function(){
 
     function removeFilter() {
         $('#filter').hide();
+        $('#exclude_filter_tag').text("");
+        $('#include_filter_tag').text("");
         $('.blog_post_content').show();
         $('#older_posts').show();
         adjustWhiteBackground();
