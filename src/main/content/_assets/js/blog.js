@@ -87,7 +87,7 @@ var blog = function(){
             $('.blog_post_content').hide();
             // show filter message at top of page
             $('#filter_message').show();
-            $('#include_filter_tag').text("Include: "+filterStr.substring(0, filterStr.length-2));
+            $('#include_filter_tag').text(filterStr.substring(0, filterStr.length-2));
 
             // show posts that have tags
             $(includeStr).show();
@@ -99,7 +99,7 @@ var blog = function(){
             for(var i = 0; i < excludeList.length; i++){
                 $("." + excludeList[i].toLowerCase()).hide();
             }
-            $('#exclude_filter_tag').text("Exclude: "+excludeStr.substring(0, excludeStr.length-2));
+            $('#exclude_filter_tag').text("Excluded tags: "+excludeStr.substring(0, excludeStr.length-2));
         }
         
         $('#final_post').show();
