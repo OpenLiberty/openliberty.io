@@ -64,6 +64,7 @@ var blog = function(){
         
         // scroll to top of page to see filter message
         $(window).scrollTop(0);
+        $("#nav_bar").removeClass("hide_nav");
 
         // separate tags based on whether they should be included or excluded
         // create class selector for posts that have all include tags
