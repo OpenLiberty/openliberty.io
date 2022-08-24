@@ -151,7 +151,7 @@ var blog = function(){
         if (query_string.length > 0) {
             var query_params = query_string.substring(1).split('&');
             for(var i = 0; i < query_params.length; i++){
-                if(query_params[i].indexOf('search=') === 0) {
+                if(query_params[i].indexOf('search=') === 0 || query_params[i].indexOf('search!=') === 0) {
                     var tag_name;
                     if(query_params[i].indexOf('!') > -1){
                         tag_name = query_params[i].substring(8);
@@ -159,6 +159,7 @@ var blog = function(){
                     } 
                     else {
                         tag_name = query_params[i].substring(7);
+                        ex = false;
                     }
                     // Check if the tag search query is in the list of supported tags before filtering
                     if(tag_names.indexOf(tag_name.toLowerCase()) > -1){
