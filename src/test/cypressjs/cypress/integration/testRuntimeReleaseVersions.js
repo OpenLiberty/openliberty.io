@@ -1,45 +1,48 @@
+/**
+ * Helper method to check that the array's elements are in custom runtime order
+ * @param {*} array 
+ * @returns 
+ */
+ function inCustomOrder(array) {
+    
+}
+
 describe('Test that all runtime release versions are in the correct custom order', () => {
     before(() => {
         cy.goToOpenLibertyStarter();
     });
 
     it('Test that all runtime release versions are in the correct custom order', () => {
-        let ind = [];
-        let packages = [];
-        let listOfPackLists = [[]];
-        let currInd = 0;
-        let orderGuide = ["Jakarta EE 9",
-        "Web Profile 9",
-        "MicroProfile 5",
-        "Jakarta EE 8",
-        "Java EE 8",
-        "Web Profile 8",
-        "MicroProfile 4",
-        "MicroProfile 3",
-        "Kernel",
-        "All GA Features"]
-        cy.get("td[headers='runtime_releases_package']").each((elm, i) => {
-            packages.push(elm.text());
-            if(elm.text() === "All GA Features"){
-                ind.push(i);
-            }
-            // cy.log(elm.text())
-        }).then(() => {
-            for(let j = 0; j < packages.length; j++){
-                listOfPackLists[currInd].push(packages[j]);
-                if(packages[j] === "All GA Features"){
-                    listOfPackLists.push([]);
-                    currInd++;
-                }
-            }
-            listOfPackLists.pop()
-        }).then(() => {
-            listOfPackLists.forEach((item) => {
-                for(let i = 0; i < item.length-1; i++){
-                    cy.expect(orderGuide.indexOf(item[i])).to.be.lessThan(orderGuide.indexOf(item[i+1]));
-                }
 
-            })
-        })
+        const runtimeReleaseTable = cy.get(".release_table_body tr").eq(2);
+        cy.log(runtimeReleaseTable);
+        // const listOfReleases = runtimeReleaseTable.siblings(".nav-list")
+
+    //     listOfFeatures.find("a").then((foo) => {
+    //         foo.each((index, element) => {
+
+    //             // *****
+    //             // Check if this page needs to be skipped
+    //             const page = element.href.split('/').pop()
+    //             if(skipPages.indexOf(page) > -1) {
+    //                 cy.log("Skipping page: " + page)
+    //                 return true
+    //             }
+
+    //             // *****
+    //             // Go to the feature page
+    //             cy.visit(element.href)
+                
+    //             // *****
+    //             // Check if the versions are sorted correctly
+    //             cy.get("#feature_versions").children().then((versions) => {
+    //                 if (versions.length > 1) {
+    //                     // Only check features that have multiple versions
+    //                     const arr = Array.from(versions).map(el => parseFloat(el.innerText))
+    //                     cy.expect(isDescending(arr)).to.be.true
+    //                 }
+    //             })
+    //         })
+    //     })
     })
 });
