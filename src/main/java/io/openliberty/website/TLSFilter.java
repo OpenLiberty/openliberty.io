@@ -152,6 +152,8 @@ public class TLSFilter implements Filter {
                                 result.attr("href", "https://openliberty.io"+updatedCanonicalUrl);
                                 htmlResponse = response.getWriter();
                                 htmlResponse.println(docsPage.html());
+                                htmlResponse.flush();
+                                htmlResponse.close();
                             }
                         }
                         else {
