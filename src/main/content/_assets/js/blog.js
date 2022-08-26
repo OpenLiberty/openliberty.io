@@ -218,6 +218,7 @@ $(window).on('resize', function(){
 });
 
 $(document).ready(function() {
+    blog.adjustWhiteBackground();
     blog.getTags(function () {
         blog.init();
     });
