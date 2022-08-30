@@ -20,7 +20,11 @@ $(document).ready(function () {
   var mobileBreakpoint = 767.98;
   var tabletBreakpoint = 991.98;
 
-  var html_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
+  var site_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
+  var baseURL = '';
+  if (site_lang != 'en') {
+     baseURL = '/'+site_lang;
+  }
   var guidename;
   var guide_card_link;
   function isMobileView() {
@@ -504,19 +508,10 @@ $(document).ready(function () {
         tag_name = tag.name + search_terms_string;
 
         $(".guide_item").each(function (j, guide_item) {
-          if(html_lang == 'en') {
             project_id = $(this)
             .attr("href")
-            .replace("/guides/", "")
+            .replace(baseURL+"/guides/", "")
             .replace(".html", "");
-          }
-          else {
-            project_id = $(this)
-            .attr("href")
-            .replace("/"+html_lang+"/guides/", "")
-            .replace(".html", "");
-            //project_id = project_id.substring(0, project_id.indexOf('_'));
-          }
           console.log(project_id);
           // add tag to data-tags attribute if the guide's project id is in the array for that tag
           if (tag.guides.indexOf(project_id) > -1) {
@@ -597,15 +592,8 @@ $(document).ready(function () {
   function sortGuides(subcategory, guideList) {
     // iterate over array of guides from JSON file
     $.each(guideList, function (index, guide) {
-      if(html_lang == 'en') {
         guidename = guide;
-        guide_card_link = ".guide_item[href='/guides/" + guidename + ".html']"
-      }
-      else {
-        //guidename = guide+"_"+html_lang;
-        guidename = guide;
-        guide_card_link = ".guide_item[href='/"+html_lang+"/guides/" + guidename + ".html']"
-      }
+        guide_card_link = ".guide_item[href='"+baseURL+"/guides/" + guidename + ".html']"
       console.log(guide_card_link);
       // look for guide card that matches the guide's projectid from the array
       var guide_card = $(guide_card_link);
@@ -625,14 +613,14 @@ $(document).ready(function () {
         $.each(data, function (index, category) {
           // make category name lowercase and replace spaces with underscores
           categoryId = category.category_name.toLowerCase().replace(/ /g, "_");
-          if(html_lang == "en") {
+          if(site_lang == "en") {
             guide_sidebar_category_name = category.category_name
             guide_category_title = category.category_title;
           }
           else {
             console.log("else")
-            guide_sidebar_category_name = category["category_name_"+html_lang];
-            guide_category_title = category["category_title_"+html_lang];
+            guide_sidebar_category_name = category["category_name_"+site_lang];
+            guide_category_title = category["category_title_"+site_lang];
           }
           // add categories to TOC
           $("#toc_column > #toc_container > ul").append(
@@ -655,11 +643,11 @@ $(document).ready(function () {
             subcategoryId = subcategory.subcategory_name
               .toLowerCase()
               .replace(/ /g, "_");
-              if(html_lang == "en") {
+              if(site_lang == "en") {
                 sub_category_name = subcategory.subcategory_name
               }
               else {
-                sub_category_name = subcategory["subcategory_name_"+html_lang];
+                sub_category_name = subcategory["subcategory_name_"+site_lang];
               }
             // add subcategories to TOC
             $("#toc_column > #toc_container > ul").append(

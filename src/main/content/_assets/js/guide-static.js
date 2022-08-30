@@ -15,7 +15,11 @@ $(document).ready(function () {
     var target_position;
     var target_width;
     var target_height;
-    var html_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
+    var site_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
+    var baseURL = '';
+    if (site_lang != 'en') {
+       baseURL = '/'+site_lang;
+    }
     $("#preamble").detach().insertAfter("#duration_container");
 
     // Read prereqs from json file and add to html
@@ -73,13 +77,7 @@ $(document).ready(function () {
         "../../guides/guides-common/cloud-hosted-guides.json",
         function (data) {
             var guide_name = window.location.pathname
-            if(html_lang == 'en') {
-                guide_name = guide_name.replace(".html", "").replace("/guides/", "");
-            }
-            else {
-                guide_name = guide_name.replace(".html", "").replace("/"+html_lang+"/guides/", "");
-                //guide_name = guide_name.substring(0, guide_name.indexOf('_'));
-            }
+            guide_name = guide_name.replace(".html", "").replace(baseURL+"/guides/", "");
             console.log(guide_name)
             var host = window.location.hostname;
             var skills_network_url;
@@ -246,7 +244,7 @@ $(window).on("load", function () {
     $.ready.then(function () {
         // Both ready and loaded
         createEndOfGuideContent();
-        if(html_lang == "jp") {
+        if(site_lang == "jp") {
             stepHashContentForKanji();
         }
         if (location.hash) {

@@ -420,7 +420,11 @@ function defaultToFirstPage() {
 }
 
 var hiddenTags = [];
-var html_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
+var site_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
+ var baseURL = '';
+ if (site_lang != 'en') {
+     baseURL = '/'+site_lang;
+ }
 // Read tags from json file and add link to guides page with tag search
 function getTags(callback) {
     $.getJSON("../../guides/guides-common/guide_tags.json", function (data) {
@@ -432,34 +436,18 @@ function getTags(callback) {
                 console.log("tag.visible");
                 project_id = window.location.pathname
                 console.log(project_id)
-                console.log(html_lang)
-                    if(html_lang == 'en') {
-                        project_id = project_id.replace("/guides/", "").replace(".html", "");
-                    }
-                    else {
-                        project_id = project_id.replace("/"+html_lang+"/guides/", "").replace(".html", "");
-                        //project_id = project_id.substring(0, project_id.indexOf('_'));
-                    }
-                    console.log(project_id)
+                    
+                project_id = project_id.replace(baseURL+"/guides/", "").replace(".html", "");
+                console.log(project_id)
                 // Add tag to tags_container if the guide's project id is in the array for that tag
                 if (tag.guides.indexOf(project_id) > -1) {
                     console.log("enter")
-                    if(html_lang == 'en') {
                     tag_html =
-                        ' <a href="/guides?search=' +
+                        ' <a href="'+baseURL+'/guides?search=' +
                         tag.name +
                         '&key=tag">' +
                         tag.name +
                         "</a>";
-                    }
-                    else {
-                        tag_html =
-                        ' <a href="'+'/'+html_lang+'/guides?search=' +
-                        tag.name +
-                        '&key=tag">' +
-                        tag.name +
-                        "</a>";
-                    }
                     console.log(tag_html);
                     $("#tags_container").append(tag_html);
                 }
