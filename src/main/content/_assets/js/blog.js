@@ -139,13 +139,12 @@ var blog = function(){
 
     function getTagFromUrl(){
         var tList = [];
-        var t;
         var query_string = location.search;
         var ex = false;
         var ret = {};
 
         if(query_string === ""){
-            return;
+            return tList;
         }
 
         // Process the url parameters for searching
@@ -164,7 +163,6 @@ var blog = function(){
                     }
                     // Check if the tag search query is in the list of supported tags before filtering
                     if(tag_names.indexOf(tag_name.toLowerCase()) > -1){
-                        t = tag_name;
                         ret['tag'] = tag_name;
                         ret['exclude'] = ex;
                         tList.push(ret);
@@ -193,7 +191,7 @@ var blog = function(){
 
     function init() {
         var tagList = getTagFromUrl();
-        if(tagList && tagList.length > 0){
+        if(tagList.length > 0){
             filterPosts(tagList);
         }
         // if blog post has no tags, add col-md-7 class so that text doesn't overlap
