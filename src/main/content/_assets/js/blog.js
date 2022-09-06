@@ -96,6 +96,10 @@ var blog = function(){
 
         // excluded tags are removed from filtered include results
         if(excludeList.length > 0){
+            if(includeStr.length > 0){
+                $("#excluded_tags").addClass("exclude_tags")
+                $("#multifilter_break").show();
+            }
             // hide posts that have tag on exclude list
             for(var i = 0; i < excludeList.length; i++){
                 $("." + excludeList[i].toLowerCase()).hide();
@@ -111,6 +115,9 @@ var blog = function(){
         $('#filter').hide();
         $('#exclude_filter_tag').text("");
         $('#include_filter_tag').text("");
+        $('#filter_message').hide();
+        $("#multifilter_break").hide();
+        $("#excluded_tags").removeClass("exclude_tags")
         $('.blog_post_content').show();
         $('#older_posts').show();
         adjustWhiteBackground();
@@ -138,13 +145,13 @@ var blog = function(){
     });
 
     function getTagFromUrl(){
-        var tList = [];
+        var tagList = [];
         var query_string = location.search;
         var ex = false;
         var ret = {};
 
         if(query_string === ""){
-            return tList;
+            return tagList;
         }
 
         // Process the url parameters for searching
@@ -165,7 +172,7 @@ var blog = function(){
                     if(tag_names.indexOf(tag_name.toLowerCase()) > -1){
                         ret['tag'] = tag_name;
                         ret['exclude'] = ex;
-                        tList.push(ret);
+                        tagList.push(ret);
                         ret = {};
                     }
                     else {
@@ -175,7 +182,7 @@ var blog = function(){
                 }
             }        
         }
-        return tList;
+        return tagList;
     }
 
     // Calculate the viewport height and make sure that the blogs column takes up at least
