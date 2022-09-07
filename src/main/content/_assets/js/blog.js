@@ -47,7 +47,8 @@ var blog = function(){
     function filterPosts(tag) {
         // scroll to top of page to see filter message
         $(window).scrollTop(0);
-
+        $("#nav_bar").removeClass("hide_nav");
+        
         // show filter message at top of page
         $('#filter').show();
         $('#filter_message').show();
@@ -159,6 +160,7 @@ $(window).on('resize', function(){
 });
 
 $(document).ready(function() {
+    blog.adjustWhiteBackground();
     blog.getTags(function () {
         blog.init();
     });
