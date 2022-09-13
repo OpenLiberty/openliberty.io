@@ -185,6 +185,7 @@ public class TLSFilter implements Filter {
 
     }
 
+    
     private String getServerPort(ServletRequest req) {
         String sPort = "";
         int serverPort = req.getServerPort();
