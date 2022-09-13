@@ -22,7 +22,7 @@ var developer_tools_development_builds = [];
 
 var builds_url = '/api/builds/data';
 var starter_domain = 
-    isStagingSite() ? 'https://staging-starter.mybluemix.net' : 'https://start.openliberty.io';
+    isStagingSite() ? 'https://starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud' : 'https://start.openliberty.io';
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 
