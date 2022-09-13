@@ -12,7 +12,6 @@ package io.openliberty.website;
 
 import java.io.IOException;
 import java.io.FileNotFoundException;
-import java.lang.NullPointerException;
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -115,6 +114,9 @@ public class TLSFilter implements Filter {
             // for everything else.
             String uri = ((HttpServletRequest) req).getRequestURI();
             String queryString = ((HttpServletRequest) req).getQueryString();
+            String sPort = getServerPort(req);
+            String urlWithServerName = req.getScheme() + "://" + req.getServerName() + sPort;
+            
             if (uri.startsWith("/img/")) {
                 response.setHeader("Cache-Control", "max-age=604800");
                 // if requesting the JAX-RS api set cache control to not cache
@@ -138,18 +140,23 @@ public class TLSFilter implements Filter {
                     response.setHeader("Content-Type", "text/html");
                     doFilter = false;
                     try {
-                        if (queryString != null) {
+                        if ((queryString != null)&&("".equals(sPort))) {
                             uriQueryString = uri +"?"+ queryString;
-                            docsPage = Jsoup.connect("https://openliberty.io"+uriQueryString).get();
+                            String version = uriQueryString.split("\\/")[2];
+                            if ((!version.matches("[0-9]+(\\.[0-9]+)*")) && !"latest".equals(version)) {
+                                redirectTo404Page(response);
+                            }
+                            String urlWithQueryString = urlWithServerName + uriQueryString;
+                            docsPage = Jsoup.connect(urlWithQueryString).get();
                             String ifError = docsPage.select("head > title").first().text();
                             if(ifError.contains("404")){
-                                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                                response.sendRedirect("/404.html");
+                                redirectTo404Page(response);
                             }
                             else {
                                 String updatedCanonicalUrl = uriQueryString.replace(uriQueryString.split("\\/")[2], "latest");
+                                updatedCanonicalUrl = urlWithServerName + updatedCanonicalUrl;
                                 Element result = docsPage.select("link[rel=\"canonical\"]").first();
-                                result.attr("href", "https://openliberty.io"+updatedCanonicalUrl);
+                                result.attr("href", updatedCanonicalUrl);
                                 htmlResponse = response.getWriter();
                                 htmlResponse.println(docsPage.html());
                                 htmlResponse.flush();
@@ -161,9 +168,8 @@ public class TLSFilter implements Filter {
                             req.getRequestDispatcher(uri.concat(".gz")).include(req, response);
                         }
                     }
-                    catch(FileNotFoundException | NullPointerException e) {
-                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                        response.sendRedirect("/404.html");
+                    catch(FileNotFoundException e) {
+                        redirectTo404Page(response);
                     }
                 }
             } else if (uri.startsWith("/api/builds/") || uri.startsWith("/api/github/")) {
@@ -177,5 +183,21 @@ public class TLSFilter implements Filter {
             chain.doFilter(req, resp);
         }
 
+    }
+
+    private String getServerPort(ServletRequest req) {
+        String sPort = "";
+        int serverPort = req.getServerPort();
+        if ((serverPort == 80) || (serverPort == 443)) {
+            // Do not add server port other than localhost
+        } else {
+            sPort = ":" + serverPort;
+        }
+        return sPort;
+    }
+
+    private void redirectTo404Page(HttpServletResponse response) throws IOException {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        response.sendRedirect("/404.html");
     }
 }
