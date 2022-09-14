@@ -27,10 +27,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jsoup.Jsoup;
-import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import java.io.PrintWriter;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * Originally this filter was used simply to force the use of TLS, however it
@@ -42,6 +43,9 @@ import java.io.PrintWriter;
  * </p>
  */
 public class TLSFilter implements Filter {
+
+    private static final Logger logger = Logger.getLogger(TLSFilter.class.getName());
+
     FilterConfig cfg;
     public String uriQueryString;
     public Document docsPage;
@@ -56,6 +60,8 @@ public class TLSFilter implements Filter {
 
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
             throws IOException, ServletException {
+
+        final String METHOD_NAME = "doFilter";
 
         HttpServletResponse response = ((HttpServletResponse) resp);
 
@@ -151,7 +157,17 @@ public class TLSFilter implements Filter {
                             }
                             String urlWithQueryString = urlWithServerName + uriQueryString;
                             try {
+                                if (logger.isLoggable(Level.FINEST)) {
+                                    logger.log(Level.FINEST, METHOD_NAME, "queryString="+queryString);
+                                    logger.log(Level.FINEST, METHOD_NAME, "uri="+uri);
+                                    logger.log(Level.FINEST, METHOD_NAME, "urlWithServerName="+urlWithServerName);
+                                    logger.log(Level.FINEST, METHOD_NAME, "uriQueryString="+uriQueryString);
+                                    logger.log(Level.FINEST, METHOD_NAME, "urlWithQueryString="+urlWithQueryString);
+                                }
                                 docsPage = Jsoup.connect(urlWithQueryString).get();
+                                if (logger.isLoggable(Level.FINEST)) {
+                                    logger.log(Level.FINEST, METHOD_NAME, "JSOUP connected...");
+                                }
                                 String ifError = docsPage.select("head > title").first().text();
                                 if (ifError.contains("404")) {
                                   redirectTo404Page(response);
@@ -168,14 +184,18 @@ public class TLSFilter implements Filter {
                                 }
                             }
                             catch(SocketException | SocketTimeoutException | HttpStatusException e) {
-                                loadPageWithoutJsoupConn(req,response,uri);
+                                logger.log(Level.SEVERE, "ERROR1" + METHOD_NAME, e);
+                                // loadPageWithoutJsoupConn(req,response,uri);
                             }
-                        }
-                        else {
+                        } else {
+                            if (logger.isLoggable(Level.FINEST)) {
+                                logger.log(Level.FINEST, METHOD_NAME, "queryString="+queryString + "sPort="+sPort);
+                            }
                             loadPageWithoutJsoupConn(req,response,uri);
                         }
                     }
                     catch(FileNotFoundException e) {
+                        logger.log(Level.SEVERE, "FileNotFoundException " + METHOD_NAME, e);
                         redirectTo404Page(response);
                     }
                 }
