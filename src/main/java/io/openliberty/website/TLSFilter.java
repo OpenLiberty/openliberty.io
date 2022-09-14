@@ -12,6 +12,9 @@ package io.openliberty.website;
 
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import org.jsoup.HttpStatusException;
 import java.util.Map;
 
 import javax.servlet.Filter;
@@ -140,32 +143,36 @@ public class TLSFilter implements Filter {
                     response.setHeader("Content-Type", "text/html");
                     doFilter = false;
                     try {
-                        if ((queryString != null)&&("".equals(sPort))) {
+                        if ((queryString != null) && ("".equals(sPort))) {
                             uriQueryString = uri +"?"+ queryString;
                             String version = uriQueryString.split("\\/")[2];
                             if ((!version.matches("[0-9]+(\\.[0-9]+)*")) && !"latest".equals(version)) {
                                 redirectTo404Page(response);
                             }
                             String urlWithQueryString = urlWithServerName + uriQueryString;
-                            docsPage = Jsoup.connect(urlWithQueryString).get();
-                            String ifError = docsPage.select("head > title").first().text();
-                            if(ifError.contains("404")){
-                                redirectTo404Page(response);
+                            try {
+                                docsPage = Jsoup.connect(urlWithQueryString).get();
+                                String ifError = docsPage.select("head > title").first().text();
+                                if (ifError.contains("404")) {
+                                  redirectTo404Page(response);
+                                }
+                                else {
+                                  String updatedCanonicalUrl = uriQueryString.replace(uriQueryString.split("\\/")[2], "latest");
+                                  updatedCanonicalUrl = urlWithServerName + updatedCanonicalUrl;
+                                  Element result = docsPage.select("link[rel=\"canonical\"]").first();
+                                  result.attr("href", updatedCanonicalUrl);
+                                  htmlResponse = response.getWriter();
+                                  htmlResponse.println(docsPage.html());
+                                  htmlResponse.flush();
+                                  htmlResponse.close();
+                                }
                             }
-                            else {
-                                String updatedCanonicalUrl = uriQueryString.replace(uriQueryString.split("\\/")[2], "latest");
-                                updatedCanonicalUrl = urlWithServerName + updatedCanonicalUrl;
-                                Element result = docsPage.select("link[rel=\"canonical\"]").first();
-                                result.attr("href", updatedCanonicalUrl);
-                                htmlResponse = response.getWriter();
-                                htmlResponse.println(docsPage.html());
-                                htmlResponse.flush();
-                                htmlResponse.close();
+                            catch(SocketException | SocketTimeoutException | HttpStatusException e) {
+                                loadPageWithoutJsoupConn(req,response,uri);
                             }
                         }
                         else {
-                            response.setHeader("Content-Encoding", "gzip");
-                            req.getRequestDispatcher(uri.concat(".gz")).include(req, response);
+                            loadPageWithoutJsoupConn(req,response,uri);
                         }
                     }
                     catch(FileNotFoundException e) {
@@ -184,7 +191,6 @@ public class TLSFilter implements Filter {
         }
 
     }
-
     
     private String getServerPort(ServletRequest req) {
         String sPort = "";
@@ -197,8 +203,13 @@ public class TLSFilter implements Filter {
         return sPort;
     }
 
-    private void redirectTo404Page(HttpServletResponse response) throws IOException {
+    private void redirectTo404Page(HttpServletResponse response) throws IOException, ServletException {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         response.sendRedirect("/404.html");
+    }
+
+    private void loadPageWithoutJsoupConn(ServletRequest req,HttpServletResponse response,String uri) throws IOException, ServletException {
+        response.setHeader("Content-Encoding", "gzip");
+        req.getRequestDispatcher(uri.concat(".gz")).include(req, response);
     }
 }
