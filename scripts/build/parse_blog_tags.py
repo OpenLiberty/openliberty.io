@@ -37,9 +37,9 @@ for tag in tags:
     tag_name = tag['name']
     posts = tag['posts']
     for post_name in posts:
-        for file_name in os.listdir("src/main/content/_posts/"):            
-            if os.path.isfile("src/main/content/_posts/" + file_name) and file_name.endswith(post_name + '.adoc'):
-                f_post = open("src/main/content/_posts/" + file_name)
+        for file_name in os.listdir("src/main/content/_i18n/en/_posts/"):            
+            if os.path.isfile("src/main/content/_i18n/en/_posts/" + file_name) and file_name.endswith(post_name + '.adoc'):
+                f_post = open("src/main/content/_i18n/en/_posts/" + file_name)
                 data = f_post.readlines()
                 if tag_name == "release":
                     if file_name.endswith(post_name + '.adoc') and "beta" not in post_name:
@@ -62,7 +62,7 @@ for tag in tags:
                     # Otherwise, add the tags after the first line of front-matter
                     data[2] = 'tags: ["' + tag_name + '"]\n' + data[2] 
 
-                with open("src/main/content/_posts/" + file_name, 'w') as f_write:
+                with open("src/main/content/_i18n/en/_posts/" + file_name, 'w') as f_write:
                     f_write.writelines(data)
                     f_write.close()
     if tag_name == "release":
