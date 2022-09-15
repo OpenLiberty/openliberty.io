@@ -24,7 +24,6 @@ describe('Test that all runtime release versions are in the correct custom order
             if(elm.text() === "All GA Features"){
                 ind.push(i);
             }
-            // cy.log(elm.text())
         }).then(() => {
             for(let j = 0; j < packages.length; j++){
                 listOfPackLists[currInd].push(packages[j]);
