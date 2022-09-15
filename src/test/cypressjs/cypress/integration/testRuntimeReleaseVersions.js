@@ -36,7 +36,9 @@ describe('Test that all runtime release versions are in the correct custom order
         }).then(() => {
             listOfPackLists.forEach((item) => {
                 for(let i = 0; i < item.length-1; i++){
-                    cy.expect(orderGuide.indexOf(item[i])).to.be.lessThan(orderGuide.indexOf(item[i+1]));
+                    let itemIndex = orderGuide.indexOf(item[i]);
+                    let nextItemIndex = orderGuide.indexOf(item[i+1]);
+                    cy.expect(itemIndex).to.be.lessThan(nextItemIndex);
                 }
 
             })
