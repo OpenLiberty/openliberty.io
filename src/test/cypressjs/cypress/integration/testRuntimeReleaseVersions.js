@@ -8,16 +8,17 @@ describe('Test that all runtime release versions are in the correct custom order
         let packages = [];
         let listOfPackLists = [[]];
         let currInd = 0;
-        let orderGuide = ["Jakarta EE 9",
-        "Web Profile 9",
-        "MicroProfile 5",
-        "Jakarta EE 8",
-        "Java EE 8",
-        "Web Profile 8",
-        "MicroProfile 4",
-        "MicroProfile 3",
-        "Kernel",
-        "All GA Features"]
+        let orderGuide = [
+            "Jakarta EE 9",
+            "Web Profile 9",
+            "MicroProfile 5",
+            "Jakarta EE 8",
+            "Java EE 8",
+            "Web Profile 8",
+            "MicroProfile 4",
+            "MicroProfile 3",
+            "Kernel",
+            "All GA Features"]
         cy.get("td[headers='runtime_releases_package']").each((elm, i) => {
             packages.push(elm.text());
             if(elm.text() === "All GA Features"){
