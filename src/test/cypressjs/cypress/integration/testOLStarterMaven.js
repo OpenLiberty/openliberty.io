@@ -8,7 +8,7 @@ describe('Test Open Liberty Starter - Maven', () => {
     // user can modify the java home path for jdk17, jdk11, jdk8 in cypress.env.json
     const javase_javahome = {
         17: Cypress.env('jdk_17_home'),
-        11: Cypress.env('jdk_17_home'),
+        11: Cypress.env('jdk_11_home'),
         8: Cypress.env('jdk_8_home')
     };
 
