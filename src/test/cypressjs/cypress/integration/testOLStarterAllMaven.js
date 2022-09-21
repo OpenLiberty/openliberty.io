@@ -54,12 +54,36 @@ describe('Test Open Liberty Starter - Maven', () => {
           mp: "2.2"
         },
         {
+          jakarta: "8.0",
+          mp: "None"
+        },
+        {
           jakarta: "7.0",
           mp: "1.4"
         },
         {
+          jakarta: "7.0",
+          mp: "None"
+        },
+        {
           jakarta: "None",
           mp: "5.0"
+        },
+        {
+          jakarta: "None",
+          mp: "4.1"
+        },
+        {
+          jakarta: "None",
+          mp: "3.3"
+        },
+        {
+          jakarta: "None",
+          mp: "2.2"
+        },
+        {
+          jakarta: "None",
+          mp: "1.4"
         }
     ];
 
@@ -136,6 +160,17 @@ describe('Test Open Liberty Starter - Maven', () => {
         cy.runMVNWLibertyStop(appname, javahome);
     });
 
+    // Jakarta 8.0, MP None
+    it('Test Open Liberty Starter - JDK' + jdkVer + ' Jakarta 8.0, MP None', () => {
+      const appname = javase_appname[jdkVer]+'-m-'+convertNum2Str["8.0"]+'-'+convertNum2Str["None"];
+      cy.log('appname ' + appname);
+      const javahome = javase_javahome[jdkVer];
+
+      cy.runMVNWLibertyDev(appname, javahome);
+      cy.checkLocalSplashPage();
+      cy.runMVNWLibertyStop(appname, javahome);
+    });    
+
     // Jakarta 7.0, MP 1.4
     it('Test Open Liberty Starter - JDK' + jdkVer + ' Jakarta 7.0, MP 1.4', () => {
         const appname = javase_appname[jdkVer]+'-m-'+convertNum2Str["7.0"]+'-'+convertNum2Str["1.4"];
@@ -146,6 +181,17 @@ describe('Test Open Liberty Starter - Maven', () => {
         cy.runMVNWLibertyStop(appname, javahome);
     });
 
+    // Jakarta 7.0, MP None
+    it('Test Open Liberty Starter - JDK' + jdkVer + ' Jakarta 7.0, MP None', () => {
+      const appname = javase_appname[jdkVer]+'-m-'+convertNum2Str["7.0"]+'-'+convertNum2Str["None"];
+      cy.log('appname ' + appname);
+      const javahome = javase_javahome[jdkVer];
+
+      cy.runMVNWLibertyDev(appname, javahome);
+      cy.checkLocalSplashPage();
+      cy.runMVNWLibertyStop(appname, javahome);
+    });
+
     // Jakarta None, MP 5.0
     it('Test Open Liberty Starter - JDK' + jdkVer + ' Jakarta None, MP 5.0', () => {
         const appname = javase_appname[jdkVer]+'-m-'+convertNum2Str["None"]+'-'+convertNum2Str["5.0"];
@@ -154,6 +200,46 @@ describe('Test Open Liberty Starter - Maven', () => {
         cy.runMVNWLibertyDev(appname, javahome);
         cy.checkLocalSplashPage();
         cy.runMVNWLibertyStop(appname, javahome);
+    });
+
+    // Jakarta None, MP 4.1
+    it('Test Open Liberty Starter - JDK' + jdkVer + ' Jakarta None, MP 4.1', () => {
+      const appname = javase_appname[jdkVer]+'-m-'+convertNum2Str["None"]+'-'+convertNum2Str["4.1"];
+      const javahome = javase_javahome[jdkVer];
+
+      cy.runMVNWLibertyDev(appname, javahome);
+      cy.checkLocalSplashPage();
+      cy.runMVNWLibertyStop(appname, javahome);
+    });
+
+    // Jakarta None, MP 3.3
+    it('Test Open Liberty Starter - JDK' + jdkVer + ' Jakarta None, MP 3.3', () => {
+      const appname = javase_appname[jdkVer]+'-m-'+convertNum2Str["None"]+'-'+convertNum2Str["3.3"];
+      const javahome = javase_javahome[jdkVer];
+
+      cy.runMVNWLibertyDev(appname, javahome);
+      cy.checkLocalSplashPage();
+      cy.runMVNWLibertyStop(appname, javahome);
+    });
+
+    // Jakarta None, MP 2.2
+    it('Test Open Liberty Starter - JDK' + jdkVer + ' Jakarta None, MP 2.2', () => {
+      const appname = javase_appname[jdkVer]+'-m-'+convertNum2Str["None"]+'-'+convertNum2Str["2.2"];
+      const javahome = javase_javahome[jdkVer];
+
+      cy.runMVNWLibertyDev(appname, javahome);
+      cy.checkLocalSplashPage();
+      cy.runMVNWLibertyStop(appname, javahome);
+    });
+
+    // Jakarta None, MP 1.4
+    it('Test Open Liberty Starter - JDK' + jdkVer + ' Jakarta None, MP 1.4', () => {
+      const appname = javase_appname[jdkVer]+'-m-'+convertNum2Str["None"]+'-'+convertNum2Str["1.4"];
+      const javahome = javase_javahome[jdkVer];
+
+      cy.runMVNWLibertyDev(appname, javahome);
+      cy.checkLocalSplashPage();
+      cy.runMVNWLibertyStop(appname, javahome);
     });
 
 });
