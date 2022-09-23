@@ -63,6 +63,8 @@ var blog = function(){
         }
         
         // scroll to top of page to see filter message
+        var tag = tagList[0].tag;
+        var exclude = tagList[0].exclude;
         $(window).scrollTop(0);
         $("#nav_bar").removeClass("hide_nav");
 
@@ -138,9 +140,9 @@ var blog = function(){
 
     $(window).on('popstate', function(){
         removeFilter();
-        var tag = getTagFromUrl();
-        if (tag) {
-            filterPosts(tag);
+        var tagList = getTagFromUrl();
+        if (tagList.length > 0) {
+            filterPosts(tagList);
         }
     });
 
@@ -176,11 +178,11 @@ var blog = function(){
                     else {
                         showNoResultsMessage();
                     }                
-                    break;
+                    
                 }
             }        
         }
-        return tagList;
+        return tList;
     }
 
     // Calculate the viewport height and make sure that the blogs column takes up at least
