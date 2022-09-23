@@ -44,7 +44,24 @@ var blog = function(){
         }
     }
 
-    function filterPosts(tag) {
+    function filterPosts(tagList) {
+        var filterStr = "";
+        var includeStr = "";
+        var excludeList = [];
+        var excludeStr = "";
+        
+        // remove any curent filters
+        removeFilter();
+
+        // check type, if string, align with obj list
+        // or create diff process for arrays
+        if(typeof(tagList) === "string"){
+            var temp = {};
+            temp["tag"] = tagList;
+            temp["exclude"] = false;
+            tagList = [temp];
+        }
+        
         // scroll to top of page to see filter message
         $(window).scrollTop(0);
         $("#nav_bar").removeClass("hide_nav");
@@ -91,7 +108,6 @@ var blog = function(){
         }
         
         $('#final_post').show();
-
         adjustWhiteBackground();
     }
 
