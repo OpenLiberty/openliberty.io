@@ -149,6 +149,8 @@ var blog = function(){
     function getTagFromUrl(){
         var tagList = [];
         var query_string = location.search;
+        var ex = false;
+        var ret = {};
 
         if(query_string === ""){
             return tagList;
