@@ -64,9 +64,6 @@ var blog = function(){
         $('#no_results_message').hide();
         $('#older_posts').hide();
         $('#filter').show();
-        $('#filter_message').show();
-        $('#no_results_message').hide();
-        $('#filter_tag').text(tag.replace("_", " "));
 
         // included tags have to processed first as they require all posts to be hidden
         if(includeStr.length > 0){
