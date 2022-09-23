@@ -55,10 +55,31 @@ var blog = function(){
         $('#no_results_message').hide();
         $('#filter_tag').text(tag.replace("_", " "));
 
-        // hide posts that dont have tag
-        $('.blog_post_content').hide();
-        $('#older_posts').hide();
-        $("." + tag.toLowerCase()).show();
+        // included tags have to processed first as they require all posts to be hidden
+        if(includeStr.length > 0){
+            // clear blog post content
+            $('.blog_post_content').hide();
+            // show filter message at top of page
+            $('#filter_message').show();
+            $('#include_filter_tag').text(filterStr.substring(0, filterStr.length-2));
+
+            // show posts that have tags
+            $(includeStr).show();
+        }
+
+        // excluded tags are removed from filtered include results
+        if(excludeList.length > 0){
+            if(includeStr.length > 0){
+                $("#excluded_tags").addClass("exclude_tags")
+                $("#multifilter_break").show();
+            }
+            // hide posts that have tag on exclude list
+            for(var i = 0; i < excludeList.length; i++){
+                $("." + excludeList[i].toLowerCase()).hide();
+            }
+            $('#exclude_filter_tag').text("Excluded tags: "+excludeStr.substring(0, excludeStr.length-2));
+        }
+        
         $('#final_post').show();
 
         adjustWhiteBackground();
@@ -66,6 +87,11 @@ var blog = function(){
 
     function removeFilter() {
         $('#filter').hide();
+        $('#exclude_filter_tag').text("");
+        $('#include_filter_tag').text("");
+        $('#filter_message').hide();
+        $("#multifilter_break").hide();
+        $("#excluded_tags").removeClass("exclude_tags")
         $('.blog_post_content').show();
         $('#older_posts').show();
         adjustWhiteBackground();
@@ -93,11 +119,11 @@ var blog = function(){
     });
 
     function getTagFromUrl(){
-        var tag;
+        var tagList = [];
         var query_string = location.search;
 
         if(query_string === ""){
-            return;
+            return tagList;
         }
 
         // Process the url parameters for searching
@@ -108,7 +134,10 @@ var blog = function(){
                     var tag_name = query_params[i].substring(7);
                     // Check if the tag search query is in the list of supported tags before filtering
                     if(tag_names.indexOf(tag_name.toLowerCase()) > -1){
-                        tag = tag_name;
+                        ret['tag'] = tag_name;
+                        ret['exclude'] = ex;
+                        tagList.push(ret);
+                        ret = {};
                     }
                     else {
                         showNoResultsMessage();
@@ -117,7 +146,7 @@ var blog = function(){
                 }
             }        
         }
-        return tag;
+        return tagList;
     }
 
     // Calculate the viewport height and make sure that the blogs column takes up at least
