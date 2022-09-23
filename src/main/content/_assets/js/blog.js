@@ -48,8 +48,21 @@ var blog = function(){
         // scroll to top of page to see filter message
         $(window).scrollTop(0);
         $("#nav_bar").removeClass("hide_nav");
-        
-        // show filter message at top of page
+
+        // separate tags based on whether they should be included or excluded
+        // create class selector for posts that have all include tags
+        for(var i = 0; i < tagList.length; i++){
+            if(tagList[i].exclude){
+                excludeList.push(tagList[i].tag.toLowerCase());
+                excludeStr = excludeStr + tagList[i].tag.replace("_", " ") + ", ";
+            } else {
+                includeStr = includeStr + ("." + tagList[i].tag.toLowerCase());
+                filterStr = filterStr + tagList[i].tag.replace("_", " ") + ", ";
+            }
+        }
+
+        $('#no_results_message').hide();
+        $('#older_posts').hide();
         $('#filter').show();
         $('#filter_message').show();
         $('#no_results_message').hide();
