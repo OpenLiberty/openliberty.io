@@ -161,9 +161,9 @@ var blog = function(){
 
 
     function init() {
-        var tag = getTagFromUrl();
-        if(tag){
-            filterPosts(tag);
+        var tagList = getTagFromUrl();
+        if(tagList.length > 0){
+            filterPosts(tagList);
         }
         // if blog post has no tags, add col-md-7 class so that text doesn't overlap
         $('.blog_tags_container').each(function() {
