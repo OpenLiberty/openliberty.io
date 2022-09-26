@@ -186,7 +186,7 @@ function render_builds(builds, parent) {
             }
 
             // ol releases table only
-            if (parent.parent().data('builds-id') == 'runtime_releases') {
+            if (parent.parent().data('builds-id') == 'runtime_releases' && parseInt(build.version.split(".")[3]) % 3 == 0) {
                 var releaseBuild = createBlogReleaseAndBetaLink("release",build);
                 var package_locations = build.package_locations;
                 var sorted_package_locations;
@@ -215,7 +215,7 @@ function render_builds(builds, parent) {
                             parent.append('<tr></tr>');
                         }
                     }
-
+                    
                     var version_column = $(
                         '<td headers="' +
                             tableID +
@@ -574,7 +574,7 @@ function createBlogReleaseAndBetaLink(buildId, build) {
     versionwithoutdots = versionwithdots.split('.').join("")
     var releasePostLink, betaPostLink
     if (buildId == "release") {
-        releaseTagPostLinks.filter(postLink => {
+        releaseTagPostLinks.filter(function (postLink) {
             if (postLink.includes(versionwithdots) || postLink.includes(versionwithoutdots)) {
                 releasePostLink = postLink;
             }
@@ -584,7 +584,7 @@ function createBlogReleaseAndBetaLink(buildId, build) {
         }
     }
     else if (buildId == "beta") {
-        betaTagPostLinks.filter(postLink => {
+        betaTagPostLinks.filter(function (postLink) {
             if (postLink.includes(versionwithdots) || postLink.includes(versionwithoutdots)) {
                 betaPostLink = postLink;
             }
