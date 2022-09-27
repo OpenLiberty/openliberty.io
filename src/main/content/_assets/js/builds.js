@@ -154,7 +154,9 @@ function render_builds(builds, parent) {
 
     // update maven and gradle commands to use latest version
     if (parent.parent().data('builds-id') == 'runtime_releases') {
-        var latest_version = latest_releases.runtime.version.trim();
+        // Hack for 22.0.0.10
+        // var latest_version = latest_releases.runtime.version.trim();
+        var latest_version = "22.0.0.10";
 
         // check that latest version matches x.x.x.x before updating
         var re = /^\d+\.\d\.\d\.\d+/;
@@ -1116,7 +1118,9 @@ $(document).ready(function () {
             if (latest_releases.runtime) {
                 if (latest_releases.runtime.version) {
                     $('#runtime_download_button_version').text(
-                        latest_releases.runtime.version
+                        // Hardcoded hack for 22.0.0.10
+                        // latest_releases.runtime.version
+                        "22.0.0.10"
                     );
                 }
                 if (latest_releases.runtime.driver_location) {
@@ -1141,6 +1145,18 @@ $(document).ready(function () {
             }
         }
 
+        function tempHack(builds_from_response) {
+            var buildsLength = builds_from_response.length;
+            for (var i = 0; i < buildsLength; i++) {
+                if (builds_from_response[i].version == "22.0.0.10") {
+                    var release = builds_from_response.splice(i, 1)[0];
+                    builds_from_response.splice(0, 0, release);
+                    return builds_from_response;
+                }
+            }
+            return builds_from_response;
+        }
+
         function formatBuilds(builds_from_response) {
             for (var i = 0; i < builds_from_response.length; i++) {
                 var date_string = builds_from_response[i].date_time;
@@ -1159,6 +1175,7 @@ $(document).ready(function () {
         if (data.builds) {
             if (data.builds.runtime_releases) {
                 runtime_releases = formatBuilds(data.builds.runtime_releases);
+                runtime_releases = tempHack(runtime_releases);
                 builds['runtime_releases'] = runtime_releases;
                 render_builds(
                     runtime_releases,
