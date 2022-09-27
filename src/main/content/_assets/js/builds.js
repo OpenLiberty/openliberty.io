@@ -180,13 +180,14 @@ function render_builds(builds, parent) {
     });
 
     builds.forEach(function (build) {
+        console.log(build);
         if (parent.hasClass('release_table_body')) {
             if (build.version.indexOf('-RC') > -1) {
                 build.version.replace('-RC', ' Release Candidate');
             }
 
             // ol releases table only
-            if (parent.parent().data('builds-id') == 'runtime_releases' && parseInt(build.version.split(".")[3]) % 3 == 0) {
+            if (parent.parent().data('builds-id') == 'runtime_releases') {
                 var releaseBuild = createBlogReleaseAndBetaLink("release",build);
                 var package_locations = build.package_locations;
                 var sorted_package_locations;
@@ -342,7 +343,9 @@ function render_builds(builds, parent) {
                         row.append(package_column);
                         row.append(download_column);
                         row.append(verification_column);
-                        parent.append(row);
+                        if(parseInt(build.version.split(".")[3]) % 3 === 0){
+                            parent.append(row);
+                        }
                     }
                 }
             }
