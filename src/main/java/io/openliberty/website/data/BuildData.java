@@ -68,7 +68,7 @@ public class BuildData {
 
                 @Override
                 public int compare(BuildInfo o1, BuildInfo o2) {
-                    return o2.dateTime.compareTo(o1.dateTime);
+                    return o2.sortField.compareTo(o1.sortField);
                 }
             });
             this.builds.put(type, storedBuilds);
@@ -104,7 +104,7 @@ public class BuildData {
      * if the build already exists then the old data will be purged. It also
      * updates latestReleases with the new data.
      * 
-     * <p>BuildInfo must have dateTime set when this is called or a NPE will occur</p>
+     * <p>BuildInfo must have sortField set when this is called or a NPE will occur</p>
      * 
      * @param type The type of build being added
      * @param bi the build info for the build.
@@ -120,11 +120,11 @@ public class BuildData {
 
         // We need to update the latest release for both tools and
         // runtime. If the current value is null we set it to this, 
-        // otherwise we do a comparison based on the dateTime. If this
+        // otherwise we do a comparison based on the sortField. If this
         // build is the same or newer we update the release.
         if (type == BuildType.runtime_releases) {
             if (latestReleases.runtime == null || 
-                latestReleases.runtime.dateTime.compareTo(bi.dateTime) <= 0) {
+                latestReleases.runtime.sortField.compareTo(bi.sortField) <= 0) {
                 latestReleases.runtime = bi;
                 // Notify the build to any CDI event listeners.
                 if (type.isLatestBuildNotifiable() && event != null) {
@@ -133,7 +133,7 @@ public class BuildData {
             } 
         } else if (type == BuildType.tools_releases) {
             if (latestReleases.tools == null || 
-                latestReleases.tools.dateTime.compareTo(bi.dateTime) <= 0) {
+                latestReleases.tools.sortField.compareTo(bi.sortField) <= 0) {
                 latestReleases.tools = bi;
             } 
         }

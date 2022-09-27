@@ -13,9 +13,12 @@ package io.openliberty.website.data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbTransient;
 
 import io.openliberty.website.Constants;
 
@@ -70,6 +73,9 @@ public class BuildInfo {
     public List<String> packageLocations = new ArrayList<>();
     @JsonbProperty(Constants.PACKAGE_SIGNATURE_LOCATIONS)
     public List<String> packageSignatureLocations = new ArrayList<>();
+    @JsonbTransient
+    public String sortField;
+    private static Pattern parseVersion = Pattern.compile("\\.");
 
     // For unit testing
     public BuildInfo(String buildLog, String driverLocation, int testPassed, int totalTests, String testLog) {
@@ -148,6 +154,23 @@ public class BuildInfo {
 
         if(packageSignatureLocations != null && !packageSignatureLocations.isEmpty()) {
             packageSignatureLocations = fixLocations(prefix, packageSignatureLocations);
+        }
+
+        if (version != null) {
+            String[] elements = parseVersion.split(version);
+            StringBuilder versionMatch = new StringBuilder();
+            for (String e : elements) {
+                if (e.length() == 1) {
+                    versionMatch.append("00");
+                } else if (e.length() == 2) {
+                    versionMatch.append("0");
+                }
+                versionMatch.append(e);
+                versionMatch.append(".");
+            }
+            sortField = versionMatch.toString();
+        } else {
+            sortField = dateTime;
         }
     }
 
