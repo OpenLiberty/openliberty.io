@@ -8,6 +8,7 @@
 {% endif %}
 
 {% assign default_image = 'https://openliberty.io/img/twitter_card.jpg' %}
+{% assign default_image_alt = 'Open Liberty Logo' %}
 
 <head>
   <meta charset="utf-8">
@@ -51,6 +52,7 @@
 
   <meta property='og:title' content="{% if page.seo-title %}{{ page.seo-title }}{% else %}{{site.title}}{% endif %}" />
   <meta property='og:image' content="{% if page.open-graph-image %}{{page.open-graph-image}}{% else %}{{default_image}}{% endif %}" />
+  <meta property='og:image:alt' content="{% if page.open-graph-image-alt %}{{page.open-graph-image-alt}}{% else %}{{default_image_alt}}{% endif %}" />
   <meta property='og:description' content="{{ description }}" />
   <meta property='og:url' content="{{ page.url | replace:'index.html','' | absolute_url }}" />
   <meta property='og:type' content="website" />
