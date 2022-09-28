@@ -180,7 +180,12 @@ function render_builds(builds, parent) {
     });
 
     builds.forEach(function (build) {
-        console.log(build);
+        if(parseInt(build.version.split(".")[3]) % 3 === 0 && !build.date_time.includes(".")){
+            var today = Date.now();
+            var pub = new Date(build.date);
+            var diff = Math.ceil(Math.abs(today - pub)/(1000*60*60*24));
+            console.log("Diff: "+diff+", Vers: "+build.version);
+        }
         if (parent.hasClass('release_table_body')) {
             if (build.version.indexOf('-RC') > -1) {
                 build.version.replace('-RC', ' Release Candidate');
