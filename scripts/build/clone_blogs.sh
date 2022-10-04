@@ -23,11 +23,15 @@ fi
 
 echo "Cloning the $BRANCH_NAME branch of blogs repository..."
 
-git clone https://github.com/OpenLiberty/blogs.git --branch $BRANCH_NAME blogs_temp
+git clone https://github.com/OpenLiberty/blogs.git --branch "demo1" blogs_temp
 
+# This section is moving the blog posts around for the Jekyll build process
 mv blogs_temp/posts/ .
 mv posts/ _posts
+## Separate the blog posts into their respective language folder for the 
+## `jekyll-multiple-languages-plugin` Jekyll plugin
 cp -a _posts/. _i18n/en/_posts
+mv _i18n/en/_posts/jp _i18n/ja/_posts
 
 mv blogs_temp/img/blog img
 
