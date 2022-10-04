@@ -31,7 +31,7 @@ mv posts/ _posts
 ## Separate the blog posts into their respective language folder for the 
 ## `jekyll-multiple-languages-plugin` Jekyll plugin
 cp -a _posts/. _i18n/en/_posts
-mv _i18n/en/_posts/jp _i18n/ja/_posts
+mv _i18n/en/_posts/ja/. _i18n/ja/_posts
 
 mv blogs_temp/img/blog img
 
