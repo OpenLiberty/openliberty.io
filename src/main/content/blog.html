@@ -19,7 +19,16 @@ seo-description: Latest news and information about Open Liberty, a lightweight o
     <div id="blog_container" class="container-fluid">
         <div class="row">
             <div id="left_column" class="col-md-12 col-lg-4">
-                <img id="blog_title" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-fluid d-none d-md-block" alt="Blog">
+                {% if site.lang != 'en' %}
+                    <div style="margin-top: 60px;
+                            color: #fff;
+                            padding-left: 63px;
+                            font-size: 60px;">
+                        {% t pages.blog %}
+                    </div>
+                {% else %}
+                    <img id="blog_title" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-fluid d-none d-md-block" alt="Blog">
+                {% endif %}
                 <span id="star1" class="star d-none d-md-block"></span>
                 <span id="star2" class="star d-none d-md-block"></span>
                 <span id="star3" class="star d-none d-md-block"></span>
