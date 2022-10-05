@@ -180,12 +180,6 @@ function render_builds(builds, parent) {
     });
 
     builds.forEach(function (build) {
-        if(parseInt(build.version.split(".")[3]) % 3 === 0 && !build.date_time.includes(".")){
-            var today = Date.now();
-            var pub = new Date(build.date);
-            var diff = Math.ceil(Math.abs(today - pub)/(1000*60*60*24));
-            console.log("Diff: "+diff+", Vers: "+build.version);
-        }
         if (parent.hasClass('release_table_body')) {
             if (build.version.indexOf('-RC') > -1) {
                 build.version.replace('-RC', ' Release Candidate');
@@ -193,6 +187,15 @@ function render_builds(builds, parent) {
 
             // ol releases table only
             if (parent.parent().data('builds-id') == 'runtime_releases') {
+                var diff = 0;
+                var gnu = false;
+                if(!build.date_time.includes(".")){
+                    var today = Date.now();
+                    var pub = new Date(build.date);
+                    diff = Math.ceil(Math.abs(today - pub)/(1000*60*60*24));
+                }else{
+                    gnu = true;
+                }
                 var releaseBuild = createBlogReleaseAndBetaLink("release",build);
                 var package_locations = build.package_locations;
                 var sorted_package_locations;
@@ -348,7 +351,7 @@ function render_builds(builds, parent) {
                         row.append(package_column);
                         row.append(download_column);
                         row.append(verification_column);
-                        if(parseInt(build.version.split(".")[3]) % 3 === 0){
+                        if(diff < 730 || gnu){
                             parent.append(row);
                         }
                     }
