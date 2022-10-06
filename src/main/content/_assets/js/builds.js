@@ -179,6 +179,17 @@ function render_builds(builds, parent) {
         }
     });
 
+    var versArr = builds.map(function(b){
+        if (parent.parent().data('builds-id') == 'runtime_releases')
+        {
+            return parseInt(b.version.split(".")[0]);
+        }
+    })
+
+    var newest = Math.max.apply(Math, versArr);
+    var subRelease = (new Date()).getMonth() + 1;
+
+
     builds.forEach(function (build) {
         if (parent.hasClass('release_table_body')) {
             if (build.version.indexOf('-RC') > -1) {
@@ -187,15 +198,6 @@ function render_builds(builds, parent) {
 
             // ol releases table only
             if (parent.parent().data('builds-id') == 'runtime_releases') {
-                var diff = 0;
-                var gnu = false;
-                if(!build.date_time.includes(".")){
-                    var today = Date.now();
-                    var pub = new Date(build.date);
-                    diff = Math.ceil(Math.abs(today - pub)/(1000*60*60*24));
-                }else{
-                    gnu = true;
-                }
                 var releaseBuild = createBlogReleaseAndBetaLink("release",build);
                 var package_locations = build.package_locations;
                 var sorted_package_locations;
@@ -205,6 +207,8 @@ function render_builds(builds, parent) {
                 }
                 var package_signature_locations = build.package_signature_locations || [];
                 var sorted_package_signature_locations;
+                var primary = parseInt(build.version.split(".")[0]);
+                var secondary = parseInt(build.version.split(".")[3]);
                 if (package_signature_locations !== null && package_signature_locations !== undefined) {
                     sorted_package_signature_locations = sortRuntimeLocations(package_signature_locations);
                     package_signature_locations = sorted_package_signature_locations;
@@ -351,8 +355,18 @@ function render_builds(builds, parent) {
                         row.append(package_column);
                         row.append(download_column);
                         row.append(verification_column);
-                        if(diff < 730 || gnu){
-                            parent.append(row);
+
+                        if(newest - primary <= 2){
+                            console.log("Primary: "+primary);
+                            console.log("Secondary: "+secondary);
+                            console.log("Newest: "+newest);
+                            if(primary === (newest - 2)){
+                                if(secondary >= subRelease){
+                                    parent.append(row);
+                                }
+                            } else {
+                                parent.append(row);
+                            }
                         }
                     }
                 }
