@@ -40,7 +40,23 @@ seo-description: Latest news and information about Open Liberty, a lightweight o
                 <!-- <p class="blog_subtext">{% t blog.be_sure_to_follow %} <a class="green_link" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@{% t global.openlibertyio %}</a> {% t blog.twitter_or_subscribe %} <a class="green_link" href="https://openliberty.io/feed.xml" target="_blank" rel="noopener">{% t blog.rss_feed %}</a></p> -->
                 <h2 class="blog_subtitle">{% t blog.featured_tags %}</h2>
                 <div role="list" id="featured_tags_list">
-
+                </div>
+                <div role="list" id="featured_tags_list">
+                </div>
+                <h2 class="blog_subtitle">{% t blog.posts_in_other_languages %}</h2>
+                <div role="list" id="language_list">
+                    {% for current_lang in site.languages %}
+                    <!-- Make sure to exclude the currently selected language from the language picker -->
+                    {% if current_lang != site.lang %}
+                        {% if 'en' == current_lang %}
+                            <!-- Special case: `en` URLs do not have /en/blogs but rather just /blogs -->
+                            {% assign href_lang = page.permalink %}
+                        {% else %}
+                            {% assign href_lang = '/' | append: current_lang | append: page.permalink %}
+                        {% endif %}
+                        <a class="blog_lang" href="{{href_lang}}">{% t langs.{{current_lang}} %}</a>
+                    {% endif %}
+                    {% endfor %}
                 </div>
                 <img id="ufo_images_desktop" class="d-none d-lg-block" src="/img/blog_images_desktop.svg" alt="ufo and clouds">
                 <img id="ufo_images_tablet" class="d-none d-md-block d-lg-none" src="/img/blog_images_tablet.svg" alt="ufo and clouds">
