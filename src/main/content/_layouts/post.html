@@ -53,7 +53,7 @@ js: post
                 </div>
                 <div class="post_tags_container"></div>
                 <div class="language_container">
-                    {% t blog.post_in_other_lang %}
+                    <span class="lang_text">{% t blog.post_in_other_lang %}:</span>
                     {% for current_lang in page.blog-available-in-languages %}
                     <!-- Make sure to exclude the currently selected language from the language picker -->
                     {% if current_lang != site.lang %}
@@ -66,6 +66,7 @@ js: post
                             {% assign href_lang = '/' | append: current_lang | append: page.url %}
                         {% endif %}
                         <a class="blog_lang" href="{{href_lang}}">{% t langs.{{current_lang}} %}</a>
+                        <span class="comma">, </span>
                     {% endif %}
                     {% endfor %}
                 </div>
