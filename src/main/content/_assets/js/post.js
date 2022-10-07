@@ -12,7 +12,7 @@
 // Read tags from json file and add tag to class
 $.getJSON( "../../../../blog_tags.json", function(data) {
     var path = $(location).attr('pathname');
-    post_name = path.substring(17).replace('.html', '');
+    var post_name = getPostName(path)
 
     var tags_html = "";
     $.each(data.blog_tags, function(j, tag) {
@@ -23,6 +23,20 @@ $.getJSON( "../../../../blog_tags.json", function(data) {
     });
 
 });
+
+function getPostName(path) {
+    var filename = getFilename(path);
+    var post_name = removeFileExtension(filename);
+    return post_name;
+}
+
+function getFilename(uri) {
+    return uri.split('/').pop();
+}
+
+function removeFileExtension(filename) {
+    return filename.split('.')[0];
+}
 
 var code_blocks_with_copy_to_clipboard = 'pre:not(.no_copy pre)'; // CSS Selector
 
