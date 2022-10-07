@@ -15,7 +15,22 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>{% if page.seo-title %}{{ page.seo-title | escape }}{% else %}{% if page.title %}{{ page.title | append: ' - ' | append: site.title | escape }}{% else %}{{ site.title | escape }}{% endif %}{% endif %}</title>
+  <title>
+    {% if page.seo-title %}
+      {{ page.seo-title | escape }}
+    {% else %}
+      {% if page.i18n-title %}
+        {%- capture i18n -%}
+          {% t page.i18n-title %}
+        {%- endcapture %}
+        {{ i18n | append: ' - ' | append: site.title | escape }}
+      {% elsif page.title %}
+        {{ page.title | append: ' - ' | append: site.title | escape }}
+      {% else %}
+        {{ site.title | escape }}
+      {% endif %}
+    {% endif %}
+  </title>
   <meta name="description" content="{{ description }}">
 
   {% if page.layout == "default" or page.layout == "post" or page.layout == "certification" %}
