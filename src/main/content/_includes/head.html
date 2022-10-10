@@ -1,5 +1,9 @@
 {% assign description = '' %}
-{% if page.seo-description %}    
+{% if page.i18n-seo-description %}
+  {%- capture description -%}
+    {% t page.i18n-seo-description %}
+  {%- endcapture %}
+{% elsif page.seo-description %}
   {% assign description = page.seo-description | escape %}
 {% elsif page.description %}
   {% assign description = page.description | escape %}
