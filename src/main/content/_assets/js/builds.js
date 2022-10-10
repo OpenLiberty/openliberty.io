@@ -179,16 +179,16 @@ function render_builds(builds, parent) {
         }
     });
 
+    // get the newest release version
+    // used to only add builds from the last two years to the runtime release table
     var versArr = builds.map(function(b){
         if (parent.parent().data('builds-id') == 'runtime_releases')
         {
             return parseInt(b.version.split(".")[0]);
         }
     })
-
     var newest = Math.max.apply(Math, versArr);
     var subRelease = (new Date()).getMonth() + 1;
-
 
     builds.forEach(function (build) {
         if (parent.hasClass('release_table_body')) {
@@ -207,8 +207,6 @@ function render_builds(builds, parent) {
                 }
                 var package_signature_locations = build.package_signature_locations || [];
                 var sorted_package_signature_locations;
-                var primary = parseInt(build.version.split(".")[0]);
-                var secondary = parseInt(build.version.split(".")[3]);
                 if (package_signature_locations !== null && package_signature_locations !== undefined) {
                     sorted_package_signature_locations = sortRuntimeLocations(package_signature_locations);
                     package_signature_locations = sorted_package_signature_locations;
@@ -356,11 +354,11 @@ function render_builds(builds, parent) {
                         row.append(download_column);
                         row.append(verification_column);
 
+                        // checking if version is from the last two years before adding to table
+                        var primary = parseInt(build.version.split(".")[0]);
+                        var secondary = parseInt(build.version.split(".")[3]);
                         if(newest - primary <= 2){
-                            console.log("Primary: "+primary);
-                            console.log("Secondary: "+secondary);
-                            console.log("Newest: "+newest);
-                            if(primary === (newest - 2)){
+                            if((newest - primary) === 2){
                                 if(secondary >= subRelease){
                                     parent.append(row);
                                 }
