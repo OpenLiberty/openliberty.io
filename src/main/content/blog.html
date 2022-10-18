@@ -1,10 +1,12 @@
 ---
 layout: default
 title: Blog
+i18n-title: pages.blog
 css: blog
 js: blog
 permalink: /blog/
-seo-description: Latest news and information about Open Liberty, a lightweight open framework for building cloud-native Java applications and microservices. Blogs include latest release and beta updates, technical articles on Jakarta EE, MicroProfile, Kubernetes and container-related Java technologies, and community content.
+# the value is the key in the nls message files 
+i18n-seo-description: seo.blogs
 ---
 
 {% assign baseURL = '' %}
@@ -19,7 +21,11 @@ seo-description: Latest news and information about Open Liberty, a lightweight o
     <div id="blog_container" class="container-fluid">
         <div class="row">
             <div id="left_column" class="col-md-12 col-lg-4">
-                <img id="blog_title" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-fluid d-none d-md-block" alt="Blog">
+                {% if site.lang != 'en' %}
+                    <div id="blog_title_i18n">{% t pages.blog %}</div>
+                {% else %}
+                    <img id="blog_title" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-fluid d-none d-md-block" alt="Blog">
+                {% endif %}
                 <span id="star1" class="star d-none d-md-block"></span>
                 <span id="star2" class="star d-none d-md-block"></span>
                 <span id="star3" class="star d-none d-md-block"></span>
@@ -27,10 +33,26 @@ seo-description: Latest news and information about Open Liberty, a lightweight o
                 <span id="star5" class="star d-none d-md-block"></span>
                 <span id="star6" class="star d-none d-md-block"></span>
                 <h2 class="blog_subtitle">{% t blog.never_miss_a_post %}</h2>
-                <p class="blog_subtext">{% t blog.be_sure_to_follow %} <a class="green_link" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@{% t global.openlibertyio %}</a> {% t blog.twitter_or_subscribe %} <a class="green_link" href="https://openliberty.io/feed.xml" target="_blank" rel="noopener">{% t blog.rss_feed %}</a></p>
+                <p class="blog_subtext">{% t blog.be_sure_to_follow %} <a class="green_link" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@openliberty.io</a> {% t blog.twitter_or_subscribe %} <a class="green_link" href="{{ "/feed.xml" | relative_url }}" target="_blank" rel="noopener">RSS </a>{% t blog.feed %}</p>
                 <h2 class="blog_subtitle">{% t blog.featured_tags %}</h2>
                 <div role="list" id="featured_tags_list">
-
+                </div>
+                <div role="list" id="featured_tags_list">
+                </div>
+                <h2 class="blog_subtitle">{% t blog.posts_in_other_languages %}</h2>
+                <div role="list" id="language_list">
+                    {% for current_lang in site.languages %}
+                    <!-- Make sure to exclude the currently selected language from the language picker -->
+                    {% if current_lang != site.lang %}
+                        {% if 'en' == current_lang %}
+                            <!-- Special case: `en` URLs do not have /en/blogs but rather just /blogs -->
+                            {% assign href_lang = page.permalink %}
+                        {% else %}
+                            {% assign href_lang = '/' | append: current_lang | append: page.permalink %}
+                        {% endif %}
+                        <a class="blog_lang" href="{{href_lang}}">{% t langs.{{current_lang}} %}</a>
+                    {% endif %}
+                    {% endfor %}
                 </div>
                 <img id="ufo_images_desktop" class="d-none d-lg-block" src="/img/blog_images_desktop.svg" alt="ufo and clouds">
                 <img id="ufo_images_tablet" class="d-none d-md-block d-lg-none" src="/img/blog_images_tablet.svg" alt="ufo and clouds">
@@ -199,7 +221,7 @@ seo-description: Latest news and information about Open Liberty, a lightweight o
                 <div class="row blog_post_row">
                     <div id="final_post" class="blog_post_content">
                         <p id="final_post_title">{% t blog.stay_light_years_ahead %}</p>
-                        <p>{% t global.follow %} <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@{% t global.openlibertyio %}</a> {% t blog.twitter_or_subscribe %} <a class="orange_link_light_background" href="https://openliberty.io/feed.xml" target="_blank" rel="noopener">{% t blog.rss_feed %}</a></p>
+                        <p>{% t blog.follow.part1 %} <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@openliberty.io</a> {% t blog.follow.part2 %} <a class="orange_link_light_background" href="{{ "/feed.xml" | relative_url }}" target="_blank" rel="noopener">RSS</a> {% t blog.follow.part3 %}</p>
                     </div>
                 </div>
             </div>

@@ -2,8 +2,9 @@ pushd src/main/content
 
 # For development purposes, lets always delete previously created folders
 # so that you can run this script to refresh your blog files
-rm -rf _posts _drafts
-rm -rf _i18n/en/_posts _drafts
+rm -rf _posts
+rm -rf _drafts
+rm -rf _i18n/en/_posts _i18n/ja/_posts
 rm -rf img/blog
 
 echo "Start cloning blogs repository..."
@@ -25,8 +26,13 @@ echo "Cloning the $BRANCH_NAME branch of blogs repository..."
 
 git clone https://github.com/OpenLiberty/blogs.git --branch $BRANCH_NAME blogs_temp
 
+# This section is moving the blog posts around for the Jekyll build process
 mv blogs_temp/posts/ .
 mv posts/ _posts
+## Separate the blog posts into their respective language folder for the 
+## `jekyll-multiple-languages-plugin` Jekyll plugin
+mv _posts/ja _i18n/ja/_posts
+rm -rf _posts/ja
 cp -a _posts/. _i18n/en/_posts
 
 mv blogs_temp/img/blog img
