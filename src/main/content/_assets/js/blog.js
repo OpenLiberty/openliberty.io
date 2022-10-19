@@ -13,12 +13,7 @@ var blog = function(){
                     $('#featured_tags_list').append(featured_tags_html);
                 }
                 $(".blog_post_title_link").each(function(i, link) {
-                    if (this.hasAttribute('data-path')) {
-                        var post_name = this.getAttribute('data-path').substring(19).replace(".adoc", "");
-                    }
-                    else {
-                        var post_name = this.getAttribute('href').substring(17).replace('.html', '');
-                    }
+                    var post_name = getPostName(this);
                     var tags_html = "";
                     if (tag.posts.indexOf(post_name) > -1) {
                         tags_html = '<p tabindex="0" role="listitem" class="blog_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');" onkeypress="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tag.name + '</p>' + '<span>, </span>';
@@ -30,6 +25,26 @@ var blog = function(){
             });
             callback();
         });
+    }
+
+    function getPostName(e) {
+        var path = "";
+        if (e.hasAttribute('data-path')) {
+            path = e.getAttribute('data-path');
+        } else {
+            path = e.getAttribute('href');
+        }
+        var filename = getFilename(path);
+        var post_name = removeFileExtension(filename);
+        return post_name;
+    }
+
+    function getFilename(uri) {
+        return uri.split('/').pop();
+    }
+
+    function removeFileExtension(filename) {
+        return filename.split('.')[0];
     }
 
     function updateSearchUrl(tag) {

@@ -85,3 +85,11 @@ if [ "$PROD_SITE" = true ]
     # Set the --future flag to show blogs with date timestamps in the future
     jekyll build --future --source src/main/content --config src/main/content/_config.yml --destination target/jekyll-webapp
 fi
+
+# Temporary routine
+# Remove all translated pages expect the ones ready for public viewing
+mv target/jekyll-webapp/ja/ .
+mkdir -p target/jekyll-webapp/ja/
+mv ja/feed.xml target/jekyll-webapp/ja/
+mv ja/blog target/jekyll-webapp/ja/
+mv ja/assets target/jekyll-webapp/ja/
