@@ -6,9 +6,9 @@ echo "Install Node"
 #comment this below line in local if nvm already installed
 export NVM_DIR=/root/.nvm
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-. "$NVM_DIR/nvm.sh" && nvm install --lts
+. "$NVM_DIR/nvm.sh" && nvm install 16
 . "$NVM_DIR/nvm.sh" && nvm alias default node
-. "$NVM_DIR/nvm.sh" && nvm use --lts
+. "$NVM_DIR/nvm.sh" && nvm use 16
 . "$NVM_DIR/nvm.sh" && export NODE_VERSION=$(node --version)
 export PATH="/root/.nvm/versions/node/${NODE_VERSION}/bin/:${PATH}"
 echo "$PATH"
