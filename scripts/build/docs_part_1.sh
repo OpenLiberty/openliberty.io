@@ -8,7 +8,7 @@ $BUILD_SCRIPTS_DIR/node_install.sh
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
-nvm use --lts
+nvm use 16
 echo "npm analysis during build"
 npm ls -g --depth=0
 
