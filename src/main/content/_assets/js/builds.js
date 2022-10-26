@@ -179,6 +179,17 @@ function render_builds(builds, parent) {
         }
     });
 
+    // get the newest release version
+    // used to only add builds from the last two years to the runtime release table
+    var versArr = builds.map(function(b){
+        if (parent.parent().data('builds-id') == 'runtime_releases')
+        {
+            return parseInt(b.version.split(".")[0]);
+        }
+    })
+    var newest = Math.max.apply(Math, versArr);
+    var subRelease = (new Date()).getMonth() + 1;
+
     builds.forEach(function (build) {
         if (parent.hasClass('release_table_body')) {
             if (build.version.indexOf('-RC') > -1) {
@@ -215,7 +226,7 @@ function render_builds(builds, parent) {
                             parent.append('<tr></tr>');
                         }
                     }
-
+                    
                     var version_column = $(
                         '<td headers="' +
                             tableID +
@@ -342,7 +353,19 @@ function render_builds(builds, parent) {
                         row.append(package_column);
                         row.append(download_column);
                         row.append(verification_column);
-                        parent.append(row);
+
+                        // checking if version is from the last two years before adding to table
+                        var primary = parseInt(build.version.split(".")[0]);
+                        var secondary = parseInt(build.version.split(".")[3]);
+                        if(newest - primary <= 2){
+                            if((newest - primary) === 2){
+                                if(secondary >= subRelease){
+                                    parent.append(row);
+                                }
+                            } else {
+                                parent.append(row);
+                            }
+                        }
                     }
                 }
             }
@@ -574,7 +597,7 @@ function createBlogReleaseAndBetaLink(buildId, build) {
     versionwithoutdots = versionwithdots.split('.').join("")
     var releasePostLink, betaPostLink
     if (buildId == "release") {
-        releaseTagPostLinks.filter(postLink => {
+        releaseTagPostLinks.filter(function (postLink) {
             if (postLink.includes(versionwithdots) || postLink.includes(versionwithoutdots)) {
                 releasePostLink = postLink;
             }
@@ -584,7 +607,7 @@ function createBlogReleaseAndBetaLink(buildId, build) {
         }
     }
     else if (buildId == "beta") {
-        betaTagPostLinks.filter(postLink => {
+        betaTagPostLinks.filter(function (postLink) {
             if (postLink.includes(versionwithdots) || postLink.includes(versionwithoutdots)) {
                 betaPostLink = postLink;
             }
