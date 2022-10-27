@@ -35,7 +35,7 @@ function getFilename(uri) {
 }
 
 function removeFileExtension(filename) {
-    return filename.split('.')[0];
+    return filename.substring(0, filename.lastIndexOf('.')) || filename
 }
 
 var code_blocks_with_copy_to_clipboard = 'pre:not(.no_copy pre)'; // CSS Selector
