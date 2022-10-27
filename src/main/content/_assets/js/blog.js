@@ -44,7 +44,7 @@ var blog = function(){
     }
 
     function removeFileExtension(filename) {
-        return filename.split('.')[0];
+        return filename.substring(0, filename.lastIndexOf('.')) || filename
     }
 
     function updateSearchUrl(tag) {
