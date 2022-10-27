@@ -54,20 +54,9 @@ js: post
                 <div class="post_tags_container"></div>
                 <div class="language_container">
                     <span class="lang_text">{% t blog.post_in_other_lang %}:</span>
-                    {% for current_lang in page.blog-available-in-languages %}
-                    <!-- Make sure to exclude the currently selected language from the language picker -->
-                    {% if current_lang != site.lang %}
-                        {% if 'en' == current_lang %}
-                            <!-- Special case: `en` URLs do not have /en/blogs but rather just /blogs -->
-                            <!-- Assume `page.url` does not include the language from the URL path set by -->
-                            <!-- the folder structure created from `jekyll-multiple-languages-plugin` -->
-                            {% assign href_lang = page.url %}
-                        {% else %}
-                            {% assign href_lang = '/' | append: current_lang | append: page.url %}
-                        {% endif %}
-                        <a class="blog_lang" href="{{href_lang}}">{% t langs.{{current_lang}} %}</a>
+                    {% for i18n in page.blog-available-in-languages %}
+                        <a class="blog_lang" href="{{i18n.path}}">{% t langs.{{i18n.lang}} %}</a>
                         <span class="comma">, </span>
-                    {% endif %}
                     {% endfor %}
                 </div>
             </div>
