@@ -3,6 +3,11 @@ var blog = function(){
 
     // Read tags from json file and add tag to class
     function getTags(callback) {
+        if(document.documentElement.lang === 'ja') {
+            // Temporarily disable tags for Japanese posts until there is a design in place on how the
+            // code should manage tags for a post in different languages.
+            return;
+        }
         $.getJSON( "../../blog_tags.json", function(data) {
             $.each(data.blog_tags, function(j, tag) {
                 var tag_class = tag.name.replace(" ", "_");
