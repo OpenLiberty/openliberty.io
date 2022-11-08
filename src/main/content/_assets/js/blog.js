@@ -3,8 +3,8 @@ var blog = function(){
 
     // Read tags from json file and add tag to class
     function getTags(callback) {
-        if(document.documentElement.lang === 'ja') {
-            // Temporarily disable tags for Japanese posts until there is a design in place on how the
+        if(document.documentElement.lang !== 'en') {
+            // Temporarily disable tags for non-English posts until there is a design in place on how the
             // code should manage tags for a post in different languages.
             return;
         }
