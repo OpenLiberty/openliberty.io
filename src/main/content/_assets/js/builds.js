@@ -1462,10 +1462,13 @@ $(document).ready(function () {
             startAnimation();
         }
 
-        if(!failed_builds_request){
-            $('#bottom_images_container').hide();
-        } else {
+        // if builds only partially render or don't render at all, show the animation
+        var rendered_builds = $("#runtime_releases_table > tbody > tr").length;
+
+        if(rendered_builds < 24 || failed_builds_request){
             $('#bottom_images_container').show();
+        } else{
+            $('#bottom_images_container').hide();
         }
     });
 });
