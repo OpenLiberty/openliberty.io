@@ -4,7 +4,7 @@ pushd src/main/content
 # so that you can run this script to refresh your blog files
 rm -rf _posts
 rm -rf _drafts
-rm -rf _i18n/en/_posts _i18n/ja/_posts _i18n/zh_HANS/_posts
+rm -rf _i18n/en/_posts _i18n/ja/_posts _i18n/zh-Hans/_posts
 rm -rf img/blog
 
 echo "Start cloning blogs repository..."
@@ -36,8 +36,8 @@ mv _posts/ja _i18n/ja/_posts
 rm -rf _posts/ja
 
 # Simplified Chinese
-mv _posts/zh_HANS _i18n/zh_HANS/_posts
-rm -rf _posts/zh_HANS
+mv _posts/zh-Hans _i18n/zh-Hans/_posts
+rm -rf _posts/zh-Hans
 
 # English
 cp -a _posts/. _i18n/en/_posts

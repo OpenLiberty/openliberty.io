@@ -96,8 +96,8 @@ mv ja/blog target/jekyll-webapp/ja/
 mv ja/assets target/jekyll-webapp/ja/
 
 # Chinese
-mv target/jekyll-webapp/zh_HANS/ .
-mkdir -p target/jekyll-webapp/zh_HANS/
-mv zh_HANS/feed.xml target/jekyll-webapp/zh_HANS/
-mv zh_HANS/blog target/jekyll-webapp/zh_HANS/
-mv zh_HANS/assets target/jekyll-webapp/zh_HANS/
+mv target/jekyll-webapp/zh-Hans/ .
+mkdir -p target/jekyll-webapp/zh-Hans/
+mv zh-Hans/feed.xml target/jekyll-webapp/zh-Hans/
+mv zh-Hans/blog target/jekyll-webapp/zh-Hans/
+mv zh-Hans/assets target/jekyll-webapp/zh-Hans/
