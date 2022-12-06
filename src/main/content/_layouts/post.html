@@ -55,7 +55,14 @@ js: post
                 <div class="language_container">
                     <span class="lang_text">{% t blog.post_in_other_lang %}:</span>
                     {% for i18n in page.blog-available-in-languages %}
-                        <a class="blog_lang" href="{{i18n.path}}">{% t langs.{{i18n.lang}} %}</a>
+                        {% if i18n.path contains 'https://openliberty.io' %}
+                            {% assign link_color = 'blue_link_light_background' %}
+                        {% elsif i18n.path contains 'https://' %}
+                            {% assign link_color = 'orange_link_light_background' %}
+                        {% else %}
+                            {% assign link_color = 'blue_link_light_background' %}
+                        {% endif %}
+                        <a class="blog_lang {{link_color}}" href="{{i18n.path}}">{% t langs.{{i18n.lang}} %}</a>
                         <span class="comma">, </span>
                     {% endfor %}
                 </div>
