@@ -4,7 +4,7 @@ pushd src/main/content
 # so that you can run this script to refresh your blog files
 rm -rf _posts
 rm -rf _drafts
-rm -rf _i18n/en/_posts _i18n/ja/_posts
+rm -rf _i18n/en/_posts _i18n/ja/_posts _i18n/zh-Hans/_posts
 rm -rf img/blog
 
 echo "Start cloning blogs repository..."
@@ -31,8 +31,15 @@ mv blogs_temp/posts/ .
 mv posts/ _posts
 ## Separate the blog posts into their respective language folder for the 
 ## `jekyll-multiple-languages-plugin` Jekyll plugin
+# Japanese
 mv _posts/ja _i18n/ja/_posts
 rm -rf _posts/ja
+
+# Simplified Chinese
+mv _posts/zh-Hans _i18n/zh-Hans/_posts
+rm -rf _posts/zh-Hans
+
+# English
 cp -a _posts/. _i18n/en/_posts
 
 mv blogs_temp/img/blog img
