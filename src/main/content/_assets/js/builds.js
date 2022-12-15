@@ -19,6 +19,7 @@ var runtime_development_builds = [];
 var runtime_betas = [];
 var developer_tools_releases = [];
 var developer_tools_development_builds = [];
+var versArr = [];
 
 var builds_url = '/api/builds/data';
 var starter_domain = 
@@ -157,6 +158,8 @@ function render_builds(builds, parent) {
     var analytics_class_name = 'link_' + tableID;
     var download_arrow =
         '<div class="download_arrow"><div class="table_arrow"></div><div class="table_line"></div></div>';
+    var newest = 0;
+    var subRelease = 0;
 
     // update maven and gradle commands to use latest version
     if (parent.parent().data('builds-id') == 'runtime_releases') {
@@ -167,6 +170,13 @@ function render_builds(builds, parent) {
         if (re.test(latest_version)) {
             $('.latest_version').html(latest_version);
         }
+
+        // get the newest release version
+        // used to only add builds from the last two years to the runtime release table
+        versArr = JSON.parse(JSON.stringify(builds));
+        sort_builds(versArr, "version", true);
+        newest = parseInt(versArr[0].version.split(".")[0]);
+        subRelease = parseInt(versArr[0].version.split(".")[3]);
     }
 
     // get the max number of package locations to determine number of rows
@@ -178,17 +188,6 @@ function render_builds(builds, parent) {
             }
         }
     });
-
-    // get the newest release version
-    // used to only add builds from the last two years to the runtime release table
-    var versArr = builds.map(function(b){
-        if (parent.parent().data('builds-id') == 'runtime_releases')
-        {
-            return parseInt(b.version.split(".")[0]);
-        }
-    })
-    var newest = Math.max.apply(Math, versArr);
-    var subRelease = (new Date()).getMonth() + 1;
 
     builds.forEach(function (build) {
         if (parent.hasClass('release_table_body')) {
@@ -679,13 +678,38 @@ function sortBetaLocations(package_locations_param) {
 
 
 function sort_builds(builds, key, descending) {
-    builds.sort(function (a, b) {
-        if (descending) {
-            return a[key] < b[key] ? 1 : -1;
-        } else {
-            return a[key] > b[key] ? 1 : -1;
-        }
-    });
+    if(key === "version"){
+        // split version numbers by periods, loop through the resulting arrays to compare
+        builds.sort(function (a,b){
+            var aVers = (a[key].split(".")).map(Number);
+            var bVers = (b[key].split(".")).map(Number);
+            for(var i = 0; i < aVers.length; i++){
+                if(aVers[i] < bVers[i]){
+                    if(descending){
+                        return 1;
+                    }
+                    return -1;
+                }
+                if(aVers[i] > bVers[i]){
+                    if(descending){
+                        return -1;
+                    }
+                    return 1;
+                }
+                if(i === aVers.length - 1){
+                    return 0;
+                }
+            }
+        })
+    } else {
+        builds.sort(function (a, b) {
+            if (descending) {
+                return a[key] < b[key] ? 1 : -1;
+            } else {
+                return a[key] > b[key] ? 1 : -1;
+            }
+        });
+    }
 }
 
 function get_starter_info() {
@@ -1239,6 +1263,7 @@ $(document).ready(function () {
             if (data.builds.runtime_releases) {
                 runtime_releases = formatBuilds(data.builds.runtime_releases);
                 builds['runtime_releases'] = runtime_releases;
+                sort_builds(runtime_releases, "version", true);
                 render_builds(
                     runtime_releases,
                     $('table[data-builds-id="runtime_releases"] tbody')
