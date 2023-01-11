@@ -47,62 +47,40 @@ public class TLSFilter implements Filter {
 
         HttpServletResponse response = ((HttpServletResponse) resp);
 
-        String servletPath = ((HttpServletRequest) req).getServletPath();
-        String serverName = req.getServerName();
-
         boolean doFilter = true;
 
-        if (!Constants.API_SERVLET_PATH.equals(servletPath) && (serverName.equals(Constants.OPEN_LIBERTY_GREEN_APP_HOST)
-                || serverName.equals(Constants.OPEN_LIBERTY_BLUE_APP_HOST))) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        if ("http".equals(req.getScheme())) {
             // If the request is via http sends a redirect to HTTPS. Note the filter chain
-            // is still
-            // called which is probably not the right behaviour.
-        } else if ("http".equals(req.getScheme())) {
+            // is still called which is probably not the right behavior.
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY); // HTTP 301
             // This assumes default https port number.
             response.setHeader("Location",
                     ((HttpServletRequest) req).getRequestURL().replace(0, 4, "https").toString());
-            // If HTTPS is configured this sets a bunch of security headers
         } else if ("https".equals(req.getScheme())) {
-            response.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains"); // Tell browsers
-                                                                                                    // that this site
-                                                                                                    // should only be
-                                                                                                    // accessed using
-                                                                                                    // HTTPS, instead of
-                                                                                                    // using HTTP.
-                                                                                                    // IncludeSubDomains
-                                                                                                    // and 1 year set
-                                                                                                    // per OWASP.
-            response.setHeader("X-Frame-Options", "SAMEORIGIN"); // Prevent framing of this website.
-            response.setHeader("X-XSS-Protection", "1; mode=block"); // Cross-site scripting prevention for Chrome,
-                                                                     // Safari, and IE. It's not necessary with newer
-                                                                     // browser versions that support the
-                                                                     // Content-Security-Policy but it helps prevent XSS
-                                                                     // on older versions of these browsers.
-            response.setHeader("X-Content-Type-Options", "nosniff"); // Stops a browser from trying to MIME-sniff the
-                                                                     // content type.
-            response.setHeader("Content-Security-Policy",
-                    "default-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net fonts.googleapis.com ajax.googleapis.com code.jquery.com fonts.gstatic.com  *.githubusercontent.com api.github.com www.googletagmanager.com tagmanager.google.com www.google-analytics.com cdnjs.cloudflare.com data: buttons.github.io www.youtube.com *.twitter.com *.twimg.com video.ibm.com https://start.openliberty.io/ gitlab.com starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud"); // Mitigating
-            // cross
-            // site
-            // scripting
-            // (XSS)
-            // from
-            // other
-            // domains.
-            response.setHeader("Referrer-Policy", "no-referrer"); // Limits the information sent cross-domain and does
-                                                                  // not send the origin name.
+            // If HTTPS is configured this sets a bunch of security headers
 
-            // Note this should be moved into its own filter. It appears to set cache
-            // control
+            // Tell browsers that this site should only be accessed using HTTPS, instead of using HTTP.
+            // IncludeSubDomains and 1 year set per OWASP.
+            response.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+            // Prevent framing of this website.
+            response.setHeader("X-Frame-Options", "SAMEORIGIN");
+            // Cross-site scripting prevention for Chrome, Safari, and IE. It's not necessary with newer browser 
+            // versions that support the Content-Security-Policy but it helps prevent XSS on older versions of these browsers.
+            response.setHeader("X-XSS-Protection", "1; mode=block"); 
+            // Stops a browser from trying to MIME-sniff the content type.
+            response.setHeader("X-Content-Type-Options", "nosniff");
+             // Mitigating cross site scripting (XSS) from other domains.
+            response.setHeader("Content-Security-Policy",
+                    "default-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net fonts.googleapis.com ajax.googleapis.com code.jquery.com fonts.gstatic.com  *.githubusercontent.com api.github.com www.googletagmanager.com tagmanager.google.com www.google-analytics.com cdnjs.cloudflare.com data: buttons.github.io www.youtube.com *.twitter.com *.twimg.com video.ibm.com https://start.openliberty.io/ gitlab.com starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud");
+
+            // Limits the information sent cross-domain and does not send the origin name.
+            response.setHeader("Referrer-Policy", "no-referrer");
+
+            // Note this should be moved into its own filter. It appears to set cache control
             // for images, and no cache for everything else. This could likely be replaced
-            // with a
-            // filter just on /img/* which sets Cache-Control only for images. It also isn't
-            // clear
-            // why the Pragma header (for some HTTP 1.0 clients) is set for the api calls,
-            // but not
-            // for everything else.
+            // with a filter just on /img/* which sets Cache-Control only for images. It also isn't
+            // clear why the Pragma header (for some HTTP 1.0 clients) is set for the api calls,
+            // but not for everything else.
             String uri = ((HttpServletRequest) req).getRequestURI();
             if (uri.startsWith("/img/")) {
                 response.setHeader("Cache-Control", "max-age=604800");
