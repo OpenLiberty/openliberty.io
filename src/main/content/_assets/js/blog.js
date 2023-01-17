@@ -45,7 +45,7 @@ var blog = function(){
     }
 
     function getFilename(uri) {
-        return uri.split('/').pop();
+        return uri.replace(/\d{4}-\d{2}-\d{2}-/, "").split('/').pop(); // Remove the date from external blogs and then remove all of the previous file folders from uri.
     }
 
     function removeFileExtension(filename) {
