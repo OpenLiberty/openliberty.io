@@ -22,6 +22,10 @@ pushd src/main/content
 # Remove previous installations of docs-javadoc
 rm -rf docs-javadoc
 git clone https://github.com/OpenLiberty/docs-javadoc.git --branch $BRANCH_NAME
+
+echo "git version"
+git --version
+
 popd
 
 timer_end=$(date +%s)

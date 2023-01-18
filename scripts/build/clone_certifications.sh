@@ -27,6 +27,9 @@ echo "Cloning the $BRANCH_NAME branch of certifications repository..."
 
 git clone https://github.com/OpenLiberty/certifications.git --branch $BRANCH_NAME
 
+echo "git version"
+git --version
+
 # Move the certifications redirect file to the WEB-INF directory
 if [ -f certifications/cert-redirects.properties ]; then
    echo "Moving the certifications redirects file"
