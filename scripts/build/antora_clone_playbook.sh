@@ -21,6 +21,9 @@ echo "Cloning the $BRANCH_NAME Antora playbook branch"
 
 git clone https://github.com/OpenLiberty/docs-playbook.git --branch $BRANCH_NAME
 
+echo "git version"
+git --version
+
 # Move the docs playbook over to the docs dir so it can generate the doc pages
 mkdir -p src/main/content/docs/
 cp -f docs-playbook/antora-playbook.yml src/main/content/docs/
