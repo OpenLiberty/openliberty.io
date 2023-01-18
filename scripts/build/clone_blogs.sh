@@ -26,6 +26,9 @@ echo "Cloning the $BRANCH_NAME branch of blogs repository..."
 
 git clone https://github.com/OpenLiberty/blogs.git --branch $BRANCH_NAME blogs_temp
 
+echo "git version: "
+git --version
+
 # This section is moving the blog posts around for the Jekyll build process
 mv blogs_temp/posts/ .
 mv posts/ _posts

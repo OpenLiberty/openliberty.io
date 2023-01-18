@@ -11,6 +11,11 @@ RUN apt-get update && \
     apt-get -y install curl git python3 python3-bs4 python3-lxml \
     libgdbm-dev libncurses5-dev automake libtool bison libffi-dev
 
+RUN add-apt-repository -y ppa:git-core/ppa \
+    apt-get update \
+    apt-get install git -y \
+    git --version
+
 ENV BUILD_SCRIPTS_DIR /scripts/build
 
 ENV PIPELINE_DEBUG_SCRIPT=false
