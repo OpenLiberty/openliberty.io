@@ -11,6 +11,9 @@
 require 'octokit'
 puts "Using Ruby to get all guide repos"
 
+puts "git version:"
+`git --version`
+
 # --------------------------------------------
 # Get all the Open Liberty repositories
 # --------------------------------------------
