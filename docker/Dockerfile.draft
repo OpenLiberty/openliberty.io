@@ -12,9 +12,9 @@ RUN apt-get update && \
     libgdbm-dev libncurses5-dev automake libtool bison libffi-dev
 
 # Upgrade the git manually to mitigate risk from CVE-2022-41903, CVE-2022-23521, CVE-2022-41953
-RUN add-apt-repository -y ppa:git-core/ppa \
-    apt-get update \
-    apt-get install git -y \
+RUN add-apt-repository -y ppa:git-core/ppa && \
+    apt-get update && \
+    apt-get install git -y && \
     git --version
 
 ENV BUILD_SCRIPTS_DIR /scripts/build
