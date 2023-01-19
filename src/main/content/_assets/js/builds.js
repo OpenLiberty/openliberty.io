@@ -26,6 +26,7 @@ var starter_domain =
     isStagingSite() ? 'https://starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud' : 'https://start.openliberty.io';
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
+var failed_builds_request = false;
 
 // Controls what build zips are exposed on openliberty.io.  This will need to be updated
 // if there is a new zip version published on DHE.  The intent of this allow_builds list is to
@@ -1214,6 +1215,7 @@ $(document).ready(function () {
     $.ajax({
         url: builds_url,
     }).done(function (data) {
+        failed_builds_request = false;
         if (data.latest_releases) {
             latest_releases = data.latest_releases;
             if (latest_releases.runtime) {
@@ -1324,6 +1326,9 @@ $(document).ready(function () {
                 );
             }
         }
+    })
+    .fail(function (){
+        failed_builds_request = true;
     });
 
     // Set up the tab groups to work according to accessibility guidelines
@@ -1480,6 +1485,15 @@ $(document).ready(function () {
         // start animation if images are in viewport
         if ($('#bottom_images_container').isInViewport()) {
             startAnimation();
+        }
+
+        // if builds only partially render or don't render at all, show the animation
+        var rendered_builds = $("#runtime_releases_table > tbody > tr").length;
+
+        if(rendered_builds < 24 || failed_builds_request){
+            $('#bottom_images_container').show();
+        } else{
+            $('#bottom_images_container').hide();
         }
     });
 });
