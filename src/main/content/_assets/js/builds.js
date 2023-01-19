@@ -54,19 +54,22 @@ var allowed_builds = {
     //     }
     // }
     runtime_releases: [
+        'jakartaee10.zip',
         'jakartaee9.zip',
         'javaee8.zip',
         'kernel.zip',
-        'microProfile3.zip',
-        'microProfile4.zip',
+        'microProfile6.zip',
         'microProfile5.zip',
+        'microProfile4.zip',
+        'microProfile3.zip',
         'openliberty.zip',
-        'webProfile8.zip',
-        'webProfile9.zip'
+        'webProfile9.zip',
+        'webProfile8.zip'
     ],
+    // ask if this should be changed to J10
     runtime_betas: function(version) { 
         return [
-            'jakartaee9.zip', 
+            'jakartaee10.zip', 
             version+'.zip'
         ]; 
     },
@@ -189,6 +192,34 @@ function render_builds(builds, parent) {
         }
     });
 
+    if (parent.parent().data('builds-id') == 'runtime_releases') {
+        // get packages names for each build
+        var names = builds.map(function(x){
+            return x.package_locations.map(function(y){
+                return y.split(".")[0];
+            })
+        })
+        
+        // if MicroProfile 5 and 6 are present, remove MicroProfile 5
+        // if Jakarta EE 9 and 10 are present, remove Jakarta EE 9
+        for(var i = 0; i < builds.length; i++){
+            if(names[i].includes("microProfile6")){
+                var mInd = names[i].indexOf("microProfile5");
+                if(mInd > -1){
+                    builds[i].package_locations.splice(mInd, 1);
+                    builds[i].package_signature_locations.splice(mInd, 1);
+                }
+            }
+            if(names[i].includes("jakartaee10")){
+                var jInd = names[i].indexOf("jakartaee9");
+                if(jInd > -1){
+                    builds[i].package_locations.splice(jInd, 1);
+                    builds[i].package_signature_locations.splice(jInd, 1);
+                }
+            }
+        }
+    }
+
     builds.forEach(function (build) {
         if (parent.hasClass('release_table_body')) {
             if (build.version.indexOf('-RC') > -1) {
@@ -288,9 +319,15 @@ function render_builds(builds, parent) {
                                 build.version.lastIndexOf('.') + 1
                             ),
                             10
-                        );              
-                        if (package_name.indexOf('jakartaee9') > -1) {
-                            // 21.0.0.12 and higher should be labled "Jakarta EE 9"
+                        );  
+                        if (package_name.indexOf('jakartaee10') > -1) {
+                            // 23.0.0.2 and higher should hav EE10 instead of EE9
+                            package_column =
+                                    '<td headers=\'' +
+                                    tableID +
+                                    '_package\'>Jakarta EE 10</td>';
+                        } else if (package_name.indexOf('jakartaee9') > -1) {
+                            // 21.0.0.12 to 23.0.0.2 should be labled "Jakarta EE 9"
                             package_column =
                                     '<td headers=\'' +
                                     tableID +
@@ -337,6 +374,11 @@ function render_builds(builds, parent) {
                                 '<td headers="' +
                                 tableID +
                                 '_package">MicroProfile 5</td>';
+                        } else if (package_name.indexOf('microprofile6') > -1) {
+                            package_column =
+                                '<td headers="' +
+                                tableID +
+                                '_package">MicroProfile 6</td>';
                         } else if (package_name.indexOf('kernel') > -1) {
                             package_column =
                                 '<td headers="' +
@@ -655,8 +697,10 @@ function sortBetaLocations(package_locations_param) {
     // this array is used to order the different applications available for each runtime version
     // priority should list newest to oldest platforms, ending with kernel and GA
     app_priority_array = [
+      "jakartaee10",
       "jakartaee9",
       "webProfile9",
+      "microProfile6",
       "microProfile5",
       "javaee8",
       "webProfile8",
