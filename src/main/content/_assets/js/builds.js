@@ -1413,19 +1413,22 @@ $(document).ready(function () {
         });
 
     // Show copy to clipboard button when mouse enters code block
+    $('.code_container, .cmd_to_run').wrap('<div class="code_block_wrapper"></div>');
+    $('.code_block_wrapper').prepend('<div id="copied_confirmation">Copied to clipboard</div><input type="image" id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
     $('.code_container, .cmd_to_run')
         .on('mouseenter', function (event) {
             target = $(event.currentTarget);
-            $('main').append(
-                '<div id="copied_confirmation">Copied to clipboard</div><img id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">'
-            );
-            $('#copy_to_clipboard')
+            var w = $(this).width();
+            var h = $(this).siblings('#copy_to_clipboard').height();
+            // $(this).parent().prepend(
+            //     '<div id="copied_confirmation">Copied to clipboard</div><img id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">'
+            // );
+            // console.log($(this).siblings('#copy_to_clipboard'));
+            $(this).siblings('#copy_to_clipboard')
                 .css({
-                    top: target.offset().top + 1,
-                    right:
-                        $(window).width() -
-                        (target.offset().left + target.outerWidth()) +
-                        1,
+                    "top": "0px",
+                    "left": (w + h + h + 15) + "px",
+                    "right": "0px",
                 })
                 .stop()
                 .fadeIn();
@@ -1450,9 +1453,9 @@ $(document).ready(function () {
                     y < copy_button_bottom
                 )
             ) {
-                $('#copied_confirmation').remove();
-                $('#copy_to_clipboard').remove();
-                $('#copy_to_clipboard').stop().fadeOut();
+                // $('#copied_confirmation').remove();
+                // $('#copy_to_clipboard').remove();
+                $('#copy_to_clipboard').fadeOut();
             }
         });
 
