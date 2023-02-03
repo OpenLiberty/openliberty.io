@@ -750,12 +750,14 @@ code .conum[data-value]+b {
     color: #5e6b8d;
     line-height: 11px;
     z-index: 9999;
+    width: 100%;
 }
 
 #copy_to_clipboard {	
     position: absolute;	
-    display: none;	
     background-color: #eeeff3;	
+    transition: opacity 1s ease-in-out;
+    opacity: 0;
     width: 38px;	
     height: 38px;	
     padding: 8.5px 10px;
@@ -768,4 +770,11 @@ code .conum[data-value]+b {
     &:active {	
         border: solid 1px #5e6b8d;	
     }
+}
+
+.code_block_wrapper:hover{
+    #copy_to_clipboard{
+        opacity: 1;
+    }
+
 }

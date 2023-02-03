@@ -27,6 +27,9 @@ var starter_domain =
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 
+var cc_w = 0;
+var cc_h = 0;
+
 // Controls what build zips are exposed on openliberty.io.  This will need to be updated
 // if there is a new zip version published on DHE.  The intent of this allow_builds list is to
 // prevent the situation where unintential zips on DHE get shown on the website.
@@ -1358,6 +1361,26 @@ $(document).ready(function () {
                     .find('.tab-pane')
                     .eq($tab.parent().index())
                     .attr({ tabindex: '0' });
+
+                //try to move to different section
+                var id = ($tab.attr("id")).split("-")[1];
+                var section_id = $tab.parents()[4];
+                var h = $(section_id).find("#"+id + " #copy_to_clipboard").height();
+                var w = $(section_id).find("#"+id + " .code_container, #"+id+" .cmd_to_run").width();
+                console.log(h+" "+w);
+                $(section_id).find("#"+id + " #copied_confirmation").css({
+                    "top": "-15px",
+                    "left": w + "px",
+                    "right": "0px",
+                })
+                $(section_id).find("#"+id + " #copy_to_clipboard").css({
+                    "top": "0px",
+                    "left": (w + h + h + 15) + "px",
+                    "right": "0px",
+                })
+                console.log("here")
+
+                // console.log($tab.split("-")[1]);
             });
 
             $tab.keydown(function (e) {
@@ -1412,71 +1435,58 @@ $(document).ready(function () {
             });
         });
 
-    // Show copy to clipboard button when mouse enters code block
-    $('.code_container, .cmd_to_run').wrap('<div class="code_block_wrapper"></div>');
-    $('.code_block_wrapper').prepend('<div id="copied_confirmation">Copied to clipboard</div><input type="image" id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
+    // Set position for copy to clipboard button and confirmation
+    $('.code_container, .cmd_to_run').each(function (){
+        $(this).wrap('<div class="code_block_wrapper" title="Code block"></div>');  
+    })
+    $('.code_block_wrapper').each(function (){
+        $(this).prepend('<div id="copied_confirmation">Copied to clipboard</div><input type="image" id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
+    });
     $('.code_container, .cmd_to_run')
-        .on('mouseenter', function (event) {
-            target = $(event.currentTarget);
-            var w = $(this).width();
-            var h = $(this).siblings('#copy_to_clipboard').height();
-            // $(this).parent().prepend(
-            //     '<div id="copied_confirmation">Copied to clipboard</div><img id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">'
-            // );
-            // console.log($(this).siblings('#copy_to_clipboard'));
+        .each(function (event) {
+            cc_w = $(this).width();
+            cc_h = $(this).siblings('#copy_to_clipboard').height();
             $(this).siblings('#copy_to_clipboard')
                 .css({
                     "top": "0px",
-                    "left": (w + h + h + 15) + "px",
+                    "left": (cc_w + cc_h + cc_h + 15) + "px",
                     "right": "0px",
                 })
-                .stop()
-                .fadeIn();
-            // Hide copy to clipboard button when mouse leaves code block (unless mouse enters copy to clipboard button)
-        })
-        .on('mouseleave', function (event) {
-            var x = event.clientX;
-            var y = event.clientY + $(window).scrollTop();
-            var copy_button_top = $('#copy_to_clipboard').offset().top;
-            var copy_button_left = $('#copy_to_clipboard').offset().left;
-            var copy_button_bottom =
-                copy_button_top + $('#copy_to_clipboard').outerHeight();
-            var copy_button_right =
-                $('#copy_to_clipboard').offset().left +
-                $('#copy_to_clipboard').outerWidth();
+            $(this).siblings('#copied_confirmation')
+                .css({
+                    "top": "-15px",
+                    "left": cc_w + "px",
+                    "right": "0px",
+                })
+    })
 
-            if (
-                !(
-                    x > copy_button_left &&
-                    x < copy_button_right &&
-                    y > copy_button_top &&
-                    y < copy_button_bottom
-                )
-            ) {
-                // $('#copied_confirmation').remove();
-                // $('#copy_to_clipboard').remove();
-                $('#copy_to_clipboard').fadeOut();
-            }
-        });
+    // Readjust position for copy to clipboard button and confirmation on resize
+    $(window).on("resize", function(){
+            $('.code_container, .cmd_to_run').each(function (event) {
+                var w = $(this).width();
+                var h = $(this).siblings('#copy_to_clipboard').height();
+                $(this).siblings('#copy_to_clipboard')
+                    .css({
+                        "top": "0px",
+                        "left": (cc_w + cc_h + cc_h + 15) + "px",
+                        "right": "0px",
+                    })
+                $(this).siblings('#copied_confirmation')
+                    .css({
+                        "top": "-15px",
+                        "left": cc_w + "px",
+                        "right": "0px",
+                    })
+            })
+    });
 
     // Copy target element and show copied confirmation when copy to clipboard button clicked
     $(document).on('click', '#copy_to_clipboard', function (event) {
         event.preventDefault();
         // Target was assigned while hovering over the element to copy.
-        openliberty.copy_element_to_clipboard(target, function () {
-            $('#copied_confirmation')
-                .css({
-                    top: target.offset().top - 15,
-                    right:
-                        $(window).width() -
-                        (target.offset().left + target.outerWidth()) +
-                        1,
-                })
-                .stop()
-                .fadeIn()
-                .delay(3500)
-                .fadeOut();
-        });
+        target = $(this).siblings('.code_container, .cmd_to_run');
+        openliberty.copy_element_to_clipboard(target, function () {});
+        $(this).prev().fadeIn("slow").delay(1000).fadeOut()
     });
 
     $(window).on('scroll', function (event) {
