@@ -19,12 +19,14 @@ var runtime_development_builds = [];
 var runtime_betas = [];
 var developer_tools_releases = [];
 var developer_tools_development_builds = [];
+var versArr = [];
 
 var builds_url = '/api/builds/data';
 var starter_domain = 
     isStagingSite() ? 'https://starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud' : 'https://start.openliberty.io';
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
+var failed_builds_request = false;
 
 // Controls what build zips are exposed on openliberty.io.  This will need to be updated
 // if there is a new zip version published on DHE.  The intent of this allow_builds list is to
@@ -53,19 +55,22 @@ var allowed_builds = {
     //     }
     // }
     runtime_releases: [
+        'jakartaee10.zip',
         'jakartaee9.zip',
         'javaee8.zip',
         'kernel.zip',
-        'microProfile3.zip',
-        'microProfile4.zip',
+        'microProfile6.zip',
         'microProfile5.zip',
+        'microProfile4.zip',
+        'microProfile3.zip',
         'openliberty.zip',
-        'webProfile8.zip',
-        'webProfile9.zip'
+        'webProfile9.zip',
+        'webProfile8.zip'
     ],
+    // ask if this should be changed to J10
     runtime_betas: function(version) { 
         return [
-            'jakartaee9.zip', 
+            'jakartaee10.zip', 
             version+'.zip'
         ]; 
     },
@@ -157,6 +162,8 @@ function render_builds(builds, parent) {
     var analytics_class_name = 'link_' + tableID;
     var download_arrow =
         '<div class="download_arrow"><div class="table_arrow"></div><div class="table_line"></div></div>';
+    var newest = 0;
+    var subRelease = 0;
 
     // update maven and gradle commands to use latest version
     if (parent.parent().data('builds-id') == 'runtime_releases') {
@@ -167,6 +174,13 @@ function render_builds(builds, parent) {
         if (re.test(latest_version)) {
             $('.latest_version').html(latest_version);
         }
+
+        // get the newest release version
+        // used to only add builds from the last two years to the runtime release table
+        versArr = JSON.parse(JSON.stringify(builds));
+        sort_builds(versArr, "version", true);
+        newest = parseInt(versArr[0].version.split(".")[0]);
+        subRelease = parseInt(versArr[0].version.split(".")[3]);
     }
 
     // get the max number of package locations to determine number of rows
@@ -179,16 +193,33 @@ function render_builds(builds, parent) {
         }
     });
 
-    // get the newest release version
-    // used to only add builds from the last two years to the runtime release table
-    var versArr = builds.map(function(b){
-        if (parent.parent().data('builds-id') == 'runtime_releases')
-        {
-            return parseInt(b.version.split(".")[0]);
+    if (parent.parent().data('builds-id') == 'runtime_releases') {
+        // get packages names for each build
+        var names = builds.map(function(x){
+            return x.package_locations.map(function(y){
+                return y.split(".")[0];
+            })
+        })
+        
+        // if MicroProfile 5 and 6 are present, remove MicroProfile 5
+        // if Jakarta EE 9 and 10 are present, remove Jakarta EE 9
+        for(var i = 0; i < builds.length; i++){
+            if(names[i].includes("microProfile6")){
+                var mInd = names[i].indexOf("microProfile5");
+                if(mInd > -1){
+                    builds[i].package_locations.splice(mInd, 1);
+                    builds[i].package_signature_locations.splice(mInd, 1);
+                }
+            }
+            if(names[i].includes("jakartaee10")){
+                var jInd = names[i].indexOf("jakartaee9");
+                if(jInd > -1){
+                    builds[i].package_locations.splice(jInd, 1);
+                    builds[i].package_signature_locations.splice(jInd, 1);
+                }
+            }
         }
-    })
-    var newest = Math.max.apply(Math, versArr);
-    var subRelease = (new Date()).getMonth() + 1;
+    }
 
     builds.forEach(function (build) {
         if (parent.hasClass('release_table_body')) {
@@ -289,9 +320,15 @@ function render_builds(builds, parent) {
                                 build.version.lastIndexOf('.') + 1
                             ),
                             10
-                        );              
-                        if (package_name.indexOf('jakartaee9') > -1) {
-                            // 21.0.0.12 and higher should be labled "Jakarta EE 9"
+                        );  
+                        if (package_name.indexOf('jakartaee10') > -1) {
+                            // 23.0.0.2 and higher should hav EE10 instead of EE9
+                            package_column =
+                                    '<td headers=\'' +
+                                    tableID +
+                                    '_package\'>Jakarta EE 10</td>';
+                        } else if (package_name.indexOf('jakartaee9') > -1) {
+                            // 21.0.0.12 to 23.0.0.2 should be labled "Jakarta EE 9"
                             package_column =
                                     '<td headers=\'' +
                                     tableID +
@@ -338,6 +375,11 @@ function render_builds(builds, parent) {
                                 '<td headers="' +
                                 tableID +
                                 '_package">MicroProfile 5</td>';
+                        } else if (package_name.indexOf('microprofile6') > -1) {
+                            package_column =
+                                '<td headers="' +
+                                tableID +
+                                '_package">MicroProfile 6</td>';
                         } else if (package_name.indexOf('kernel') > -1) {
                             package_column =
                                 '<td headers="' +
@@ -656,8 +698,10 @@ function sortBetaLocations(package_locations_param) {
     // this array is used to order the different applications available for each runtime version
     // priority should list newest to oldest platforms, ending with kernel and GA
     app_priority_array = [
+      "jakartaee10",
       "jakartaee9",
       "webProfile9",
+      "microProfile6",
       "microProfile5",
       "javaee8",
       "webProfile8",
@@ -679,13 +723,38 @@ function sortBetaLocations(package_locations_param) {
 
 
 function sort_builds(builds, key, descending) {
-    builds.sort(function (a, b) {
-        if (descending) {
-            return a[key] < b[key] ? 1 : -1;
-        } else {
-            return a[key] > b[key] ? 1 : -1;
-        }
-    });
+    if(key === "version"){
+        // split version numbers by periods, loop through the resulting arrays to compare
+        builds.sort(function (a,b){
+            var aVers = (a[key].split(".")).map(Number);
+            var bVers = (b[key].split(".")).map(Number);
+            for(var i = 0; i < aVers.length; i++){
+                if(aVers[i] < bVers[i]){
+                    if(descending){
+                        return 1;
+                    }
+                    return -1;
+                }
+                if(aVers[i] > bVers[i]){
+                    if(descending){
+                        return -1;
+                    }
+                    return 1;
+                }
+                if(i === aVers.length - 1){
+                    return 0;
+                }
+            }
+        })
+    } else {
+        builds.sort(function (a, b) {
+            if (descending) {
+                return a[key] < b[key] ? 1 : -1;
+            } else {
+                return a[key] > b[key] ? 1 : -1;
+            }
+        });
+    }
 }
 
 function get_starter_info() {
@@ -1190,6 +1259,7 @@ $(document).ready(function () {
     $.ajax({
         url: builds_url,
     }).done(function (data) {
+        failed_builds_request = false;
         if (data.latest_releases) {
             latest_releases = data.latest_releases;
             if (latest_releases.runtime) {
@@ -1239,6 +1309,7 @@ $(document).ready(function () {
             if (data.builds.runtime_releases) {
                 runtime_releases = formatBuilds(data.builds.runtime_releases);
                 builds['runtime_releases'] = runtime_releases;
+                sort_builds(runtime_releases, "version", true);
                 render_builds(
                     runtime_releases,
                     $('table[data-builds-id="runtime_releases"] tbody')
@@ -1299,6 +1370,9 @@ $(document).ready(function () {
                 );
             }
         }
+    })
+    .fail(function (){
+        failed_builds_request = true;
     });
 
     // Set up the tab groups to work according to accessibility guidelines
@@ -1455,6 +1529,15 @@ $(document).ready(function () {
         // start animation if images are in viewport
         if ($('#bottom_images_container').isInViewport()) {
             startAnimation();
+        }
+
+        // if builds only partially render or don't render at all, show the animation
+        var rendered_builds = $("#runtime_releases_table > tbody > tr").length;
+
+        if(rendered_builds < 24 || failed_builds_request){
+            $('#bottom_images_container').show();
+        } else{
+            $('#bottom_images_container').hide();
         }
     });
 });

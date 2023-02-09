@@ -88,8 +88,16 @@ fi
 
 # Temporary routine
 # Remove all translated pages expect the ones ready for public viewing
+# Japanese
 mv target/jekyll-webapp/ja/ .
 mkdir -p target/jekyll-webapp/ja/
 mv ja/feed.xml target/jekyll-webapp/ja/
 mv ja/blog target/jekyll-webapp/ja/
 mv ja/assets target/jekyll-webapp/ja/
+
+# Simplified Chinese
+mv target/jekyll-webapp/zh-Hans/ .
+mkdir -p target/jekyll-webapp/zh-Hans/
+mv zh-Hans/feed.xml target/jekyll-webapp/zh-Hans/
+mv zh-Hans/blog target/jekyll-webapp/zh-Hans/
+mv zh-Hans/assets target/jekyll-webapp/zh-Hans/

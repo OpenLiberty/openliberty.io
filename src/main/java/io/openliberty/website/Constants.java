@@ -60,7 +60,4 @@ public final class Constants {
     public static final String GITHUB_ISSUES_URL = "https://api.github.com/repos/OpenLiberty/open-liberty/issues?sort=update";
     public static final String PAT_ENV_VARIABLE_NAME = "PAT";
 
-    // BLUEMIX
-    public static final String OPEN_LIBERTY_GREEN_APP_HOST = "openliberty-green.mybluemix.net";
-    public static final String OPEN_LIBERTY_BLUE_APP_HOST = "openliberty-blue.mybluemix.net";
 }

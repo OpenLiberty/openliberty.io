@@ -54,20 +54,16 @@ js: post
                 <div class="post_tags_container"></div>
                 <div class="language_container">
                     <span class="lang_text">{% t blog.post_in_other_lang %}:</span>
-                    {% for current_lang in page.blog-available-in-languages %}
-                    <!-- Make sure to exclude the currently selected language from the language picker -->
-                    {% if current_lang != site.lang %}
-                        {% if 'en' == current_lang %}
-                            <!-- Special case: `en` URLs do not have /en/blogs but rather just /blogs -->
-                            <!-- Assume `page.url` does not include the language from the URL path set by -->
-                            <!-- the folder structure created from `jekyll-multiple-languages-plugin` -->
-                            {% assign href_lang = page.url %}
+                    {% for i18n in page.blog-available-in-languages %}
+                        {% if i18n.path contains 'https://openliberty.io' %}
+                            {% assign link_color = 'blue_link_light_background' %}
+                        {% elsif i18n.path contains 'https://' %}
+                            {% assign link_color = 'orange_link_light_background' %}
                         {% else %}
-                            {% assign href_lang = '/' | append: current_lang | append: page.url %}
+                            {% assign link_color = 'blue_link_light_background' %}
                         {% endif %}
-                        <a class="blog_lang" href="{{href_lang}}">{% t langs.{{current_lang}} %}</a>
+                        <a class="blog_lang {{link_color}}" href="{{i18n.path}}">{% t langs.{{i18n.lang}} %}</a>
                         <span class="comma">, </span>
-                    {% endif %}
                     {% endfor %}
                 </div>
             </div>
