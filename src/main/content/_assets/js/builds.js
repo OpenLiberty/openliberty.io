@@ -27,8 +27,6 @@ var starter_domain =
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 
-var cc_h = 0;
-
 // Controls what build zips are exposed on openliberty.io.  This will need to be updated
 // if there is a new zip version published on DHE.  The intent of this allow_builds list is to
 // prevent the situation where unintential zips on DHE get shown on the website.
@@ -1421,21 +1419,6 @@ $(document).ready(function () {
     $('.code_block_wrapper').each(function (){
         $(this).prepend('<div id="copied_confirmation">Copied to clipboard</div><input type="image" id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
     });
-    $('.code_container, .cmd_to_run')
-        .each(function (event) {
-            console.log("two")
-            cc_h = $(this).siblings('#copy_to_clipboard').height();
-            $(this).siblings('#copy_to_clipboard')
-                .css({
-                    "top": "0px",
-                    "right": (cc_h - 5)+"px",
-                })
-            $(this).siblings('#copied_confirmation')
-                .css({
-                    "top": "-15px",
-                    "right": "15px",
-                })
-    })
 
     // Copy target element and show copied confirmation when copy to clipboard button clicked
     $(document).on('click', '#copy_to_clipboard', function (event) {
@@ -1443,7 +1426,7 @@ $(document).ready(function () {
         // Target was assigned while hovering over the element to copy.
         target = $(this).siblings('.code_container, .cmd_to_run');
         openliberty.copy_element_to_clipboard(target, function () {});
-        $(this).prev().fadeIn().delay(1000).fadeOut()
+        $(this).prev().fadeIn().delay(500).fadeOut()
     });
 
     $(window).on('scroll', function (event) {

@@ -453,6 +453,13 @@ $(document).ready(function () {
         $(this).css("opacity", "1");
     });
 
+    $('pre:not(.no_copy pre)').each(function (){
+        $(this).wrap('<div class="code_block_wrapper" title="Code block"></div>');  
+    })
+    $('.code_block_wrapper').each(function (){
+        $(this).prepend('<div id="copied_confirmation">Copied to clipboard</div><input type="image" id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
+    });
+
     $(window).on("resize", function () {
         if (!inSingleColumnView()){
             $("#code_column").css("top", "0px");
@@ -461,8 +468,8 @@ $(document).ready(function () {
         handleFloatingTOCAccordion();
         resizeGuideSections();
         handleFloatingCodeColumn();
-        $("#copy_to_clipboard").hide();
-        $("#guide_section_copied_confirmation").hide();
+        // $("#copy_to_clipboard").hide();
+        // $("#guide_section_copied_confirmation").hide();
     });
 
     $(window).on("scroll", function () {
