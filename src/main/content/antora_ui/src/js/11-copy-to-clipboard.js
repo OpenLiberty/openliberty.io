@@ -34,7 +34,6 @@ $(document).ready(function () {
     // Copy target element and show copied confirmation when copy to clipboard button clicked
     $(document).on("click", "#copy_to_clipboard", function(event) {
         event.preventDefault();
-        // Target was assigned while hovering over the element to copy.
         target = $(this).siblings(code_blocks_with_copy_to_clipboard);
         copy_element_to_clipboard(target, function(){});
         $(this).prev().fadeIn().delay(1000).fadeOut()
