@@ -466,7 +466,7 @@ $(document).ready(function () {
         target = $(this).siblings(static_codeblock_selector);
         console.log(target);
         openliberty.copy_element_to_clipboard(target, function () {});
-        $(this).prev().fadeIn().delay(500).fadeOut()
+        $(this).prev().fadeIn().delay(500).fadeOut();
     });
 
 
