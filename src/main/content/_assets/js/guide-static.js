@@ -10,12 +10,6 @@
  *******************************************************************************/
 
 $(document).ready(function () {
-    var offset;
-    var target;
-    var target_position;
-    var target_width;
-    var target_height;
-
     $("#preamble").detach().insertAfter("#duration_container");
 
     // Read prereqs from json file and add to html

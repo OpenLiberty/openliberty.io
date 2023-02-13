@@ -37,7 +37,8 @@ function getFilename(uri) {
 function removeFileExtension(filename) {
     return filename.substring(0, filename.lastIndexOf('.')) || filename
 }
-                
+
+// set up html for copy code block accessibility
 var code_blocks_with_copy_to_clipboard = 'pre:not(.no_copy pre)'; // CSS Selector
 $(document).ready(function () {
     $(code_blocks_with_copy_to_clipboard).each(function (){
@@ -45,11 +46,5 @@ $(document).ready(function () {
     })
     $('.code_block_wrapper').each(function (){
         $(this).prepend('<div id="copied_confirmation">Copied to clipboard</div><input type="image" id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
-    });
-    $(document).on("click", "#copy_to_clipboard", function(event) {
-        event.preventDefault();
-        target = $(this).siblings(code_blocks_with_copy_to_clipboard);
-        openliberty.copy_element_to_clipboard(target, function(){});
-        $(this).prev().fadeIn().delay(1000).fadeOut()
     });
 })

@@ -453,6 +453,7 @@ $(document).ready(function () {
         $(this).css("opacity", "1");
     });
 
+    // set up html for copy code block accessibility
     var static_codeblock_selector = "#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre):not(.code_column pre), #guide_content .code_command .content"
     $(static_codeblock_selector).each(function (){
         $(this).wrap('<div class="code_block_wrapper" title="Code block"></div>');  
@@ -460,15 +461,6 @@ $(document).ready(function () {
     $('.code_block_wrapper').each(function (){
         $(this).prepend('<div id="copied_confirmation">Copied to clipboard</div><input type="image" id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
     });
-
-    $(document).on('click', '#copy_to_clipboard', function (event) {
-        event.preventDefault();
-        target = $(this).siblings(static_codeblock_selector);
-        console.log(target);
-        openliberty.copy_element_to_clipboard(target, function () {});
-        $(this).prev().fadeIn().delay(500).fadeOut();
-    });
-
 
     $(window).on("resize", function () {
         if (!inSingleColumnView()){

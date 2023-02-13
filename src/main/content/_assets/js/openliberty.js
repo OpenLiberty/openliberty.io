@@ -59,6 +59,13 @@ var openliberty = (function() {
                 $(".toolbar").css("top", $("#nav_bar").outerHeight() + "px");
             }
         });
+
+        $(document).on('click', '#copy_to_clipboard', function (event) {
+            event.preventDefault();
+            target = $(this).siblings('pre, codeblock');
+            openliberty.copy_element_to_clipboard(target, function () {});
+            $(this).prev().fadeIn().delay(500).fadeOut()
+        });
     });
 
     // slide nav bar into view, move down elements that are fixed to top of screen
