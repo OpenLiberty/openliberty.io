@@ -45,6 +45,6 @@ $(document).ready(function () {
         $(this).wrap('<div class="code_block_wrapper" title="Code block"></div>');  
     })
     $('.code_block_wrapper').each(function (){
-        $(this).prepend('<div id="copied_confirmation">Copied to clipboard</div><input type="image" id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
+        $(this).prepend('<div class="copied_confirmation">Copied to clipboard</div><input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
     });
 })

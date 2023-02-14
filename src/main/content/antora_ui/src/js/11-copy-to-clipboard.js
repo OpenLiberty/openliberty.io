@@ -15,11 +15,11 @@ $(document).ready(function () {
         $(this).wrap('<div class="code_block_wrapper" title="Code block"></div>');  
     })
     $('.code_block_wrapper').each(function (){
-        $(this).prepend('<div id="copied_confirmation">Copied to clipboard</div><input type="image" id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
+        $(this).prepend('<div class="copied_confirmation">Copied to clipboard</div><input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
     });
 
     // Copy target element and show copied confirmation when copy to clipboard button clicked
-    $(document).on("click", "#copy_to_clipboard", function(event) {
+    $(document).on("click", ".copy_to_clipboard", function(event) {
         event.preventDefault();
         target = $(this).siblings(code_blocks_with_copy_to_clipboard);
         copy_element_to_clipboard(target, function(){});

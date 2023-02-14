@@ -60,7 +60,7 @@ var openliberty = (function() {
             }
         });
 
-        $(document).on('click', '#copy_to_clipboard', function (event) {
+        $(document).on('click', '.copy_to_clipboard', function (event) {
             event.preventDefault();
             target = $(this).siblings('pre, codeblock');
             openliberty.copy_element_to_clipboard(target, function () {});
