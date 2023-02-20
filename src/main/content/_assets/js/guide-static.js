@@ -10,12 +10,6 @@
  *******************************************************************************/
 
 $(document).ready(function () {
-    var offset;
-    var target;
-    var target_position;
-    var target_width;
-    var target_height;
-
     $("#preamble").detach().insertAfter("#duration_container");
 
     // Read prereqs from json file and add to html
@@ -161,70 +155,6 @@ $(document).ready(function () {
             }
         }
     }
-
-    $(
-        "#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre):not(.code_column pre), #guide_content .code_command .content"
-    )
-        .on("mouseenter", function (event) {
-            offset = $("#guide_column").position();
-            target = event.currentTarget;
-            var current_target_object = $(event.currentTarget);
-            target_position = current_target_object.position();
-            target_width = current_target_object.outerWidth();
-            target_height = current_target_object.outerHeight();
-            if (window.location.href.indexOf("cloud-ibm") > -1) {
-                var right_position = $(window).outerWidth() < 1170 ? 1 : 46;
-            } else {
-                var right_position = inSingleColumnView() ? 1 : 46;
-            }
-            $("#copy_to_clipboard")
-                .css({
-                    top: target_position.top + 1,
-                    right:
-                        parseInt($("#guide_column").css("padding-right")) +
-                        right_position,
-                })
-                .addClass("copy_to_clipboard_git_clone");
-            $("#copy_to_clipboard").stop().fadeIn();
-        })
-        .on("mouseleave", function (event) {
-            if (offset) {
-                var x = event.clientX - offset.left;
-                var y = event.clientY - offset.top + $(window).scrollTop();
-                if (
-                    !(
-                        x > target_position.left &&
-                        x < target_position.left + target_width &&
-                        y > target_position.top &&
-                        y < target_position.top + target_height
-                    )
-                ) {
-                    $("#copy_to_clipboard").stop().fadeOut();
-                    $("#copy_to_clipboard").removeClass(
-                        "copy_to_clipboard_git_clone"
-                    );
-                    $("#guide_section_copied_confirmation").stop().fadeOut();
-                }
-            }
-        });
-
-    $("#copy_to_clipboard").on("click", function (event) {
-        event.preventDefault();
-        // Target was assigned while hovering over the element to copy.
-        openliberty.copy_element_to_clipboard(target, function () {
-            var current_target_object = $(event.currentTarget);
-            var position = current_target_object.position();
-            $("#guide_section_copied_confirmation")
-                .css({
-                    top: position.top - 18,
-                    right: inSingleColumnView() ? 20 : 50,
-                })
-                .stop()
-                .fadeIn()
-                .delay(3500)
-                .fadeOut();
-        });
-    });
 
     $(window).on("scroll", function (event) {
         // Check if a scroll animation from another piece of code is taking place and prevent normal behavior.
