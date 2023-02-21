@@ -78,3 +78,12 @@ $(document).on("click", "#copy_to_clipboard", function(event) {
         }).stop().fadeIn().delay(3500).fadeOut();
     });	
 });
+
+$(document).ready(function (){
+    // get BCP 47 code from URL to use in date parsing
+    var country = window.location.pathname.split("/")[1];
+    if(country !== 'blog'){
+        var temp = new Date(Date.parse($("#post_date").text().substring(3)));
+        $("#post_date").text(temp.toLocaleDateString(country, {month:"short", day:"numeric", year:"numeric"}) + "に");
+    }
+});
