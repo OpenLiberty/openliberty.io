@@ -249,4 +249,13 @@ $(document).ready(function() {
     blog.getTags(function () {
         blog.init();
     });
+
+    // get BCP 47 code from URL to use in date parsing
+    var country = window.location.pathname.split("/")[1];
+    if(country !== 'blog'){
+        $(".blog_post_date").each(function (){
+            var dateString = new Date(Date.parse($(this).attr("title")));
+            $(".blog_post_date").text(dateString.toLocaleDateString(country, {month:"short", day:"numeric", year:"numeric"}));
+        })
+    }
 });
