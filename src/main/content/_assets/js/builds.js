@@ -1461,6 +1461,70 @@ $(document).ready(function () {
             });
         });
 
+    // Show copy to clipboard button when mouse enters code block
+    $('.code_container, .cmd_to_run')
+        .on('mouseenter', function (event) {
+            target = $(event.currentTarget);
+            $('main').append(
+                '<div id="copied_confirmation">Copied to clipboard</div><img id="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">'
+            );
+            $('#copy_to_clipboard')
+                .css({
+                    top: target.offset().top + 1,
+                    right:
+                        $(window).width() -
+                        (target.offset().left + target.outerWidth()) +
+                        1,
+                })
+                .stop()
+                .fadeIn();
+            // Hide copy to clipboard button when mouse leaves code block (unless mouse enters copy to clipboard button)
+        })
+        .on('mouseleave', function (event) {
+            var x = event.clientX;
+            var y = event.clientY + $(window).scrollTop();
+            var copy_button_top = $('#copy_to_clipboard').offset().top;
+            var copy_button_left = $('#copy_to_clipboard').offset().left;
+            var copy_button_bottom =
+                copy_button_top + $('#copy_to_clipboard').outerHeight();
+            var copy_button_right =
+                $('#copy_to_clipboard').offset().left +
+                $('#copy_to_clipboard').outerWidth();
+
+            if (
+                !(
+                    x > copy_button_left &&
+                    x < copy_button_right &&
+                    y > copy_button_top &&
+                    y < copy_button_bottom
+                )
+            ) {
+                $('#copied_confirmation').remove();
+                $('#copy_to_clipboard').remove();
+                $('#copy_to_clipboard').stop().fadeOut();
+            }
+        });
+
+    // Copy target element and show copied confirmation when copy to clipboard button clicked
+    $(document).on('click', '#copy_to_clipboard', function (event) {
+        event.preventDefault();
+        // Target was assigned while hovering over the element to copy.
+        openliberty.copy_element_to_clipboard(target, function () {
+            $('#copied_confirmation')
+                .css({
+                    top: target.offset().top - 15,
+                    right:
+                        $(window).width() -
+                        (target.offset().left + target.outerWidth()) +
+                        1,
+                })
+                .stop()
+                .fadeIn()
+                .delay(3500)
+                .fadeOut();
+        });
+    });
+
     $(window).on('scroll', function (event) {
         // start animation if images are in viewport
         if ($('#bottom_images_container').isInViewport()) {
