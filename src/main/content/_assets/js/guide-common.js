@@ -454,7 +454,7 @@ $(document).ready(function () {
     });
 
     // set up html for copy code block accessibility
-    var static_codeblock_selector = "#guide_content pre:not(.no_copy pre):not(.code_command pre):not(.hotspot pre):not(.code_column pre), #guide_content .code_command .content"
+    var static_codeblock_selector = "#guide_content pre:not(.no_copy pre):not(.hotspot pre):not(.code_column pre), #guide_content .code_command .content"
     $(static_codeblock_selector).each(function (){
         $(this).wrap('<div class="code_block_wrapper" title="Code block"></div>');  
     })
@@ -760,7 +760,7 @@ $(window).on("load", function () {
     $(".code_command .content pre")
         .find("mark")
         .each(function () {
-            var newPlacement = $(this).parent().parent().parent();
+            var newPlacement = $(this).parent().parent().parent().parent();
             $(this).find("code").contents().unwrap();
             newPlacement.prepend($(this));
         });
