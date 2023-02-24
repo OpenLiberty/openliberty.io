@@ -760,7 +760,7 @@ $(window).on("load", function () {
     $(".code_command .content pre")
         .find("mark")
         .each(function () {
-            var newPlacement = $(this).parent().parent().parent().parent();
+            var newPlacement = $(this).parents(".code_command");
             $(this).find("code").contents().unwrap();
             newPlacement.prepend($(this));
         });
