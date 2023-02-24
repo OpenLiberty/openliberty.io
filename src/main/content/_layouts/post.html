@@ -49,9 +49,11 @@ js: post
                         <a class="author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }} </a>
                     {% endfor %}
                     {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
-                    <span id="post_date">on {{ page.date | date: date_format }}</span>
-                    <!-- this works -->
-                    <span> {{ site.lang }}</span>
+                    {% if site.lang == "ja" %}
+                        <span id="post_date">on {{ page.date | date: "%Y年 %m月 %e日" }}</span>
+                    {% else %}
+                        <span id="post_date">on {{ page.date | date: date_format }}</span>
+                    {% endif %}
                 </div>
                 <div class="post_tags_container"></div>
                 <div class="language_container">
