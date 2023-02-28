@@ -91,7 +91,11 @@ i18n-seo-description: seo.blogs
 
                 {% endfor %}
 
-                {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
+                {% if site.lang == "ja" or site.lang == "zh-Hans" %}
+                    {% assign date_format = "%Y年%-m月%e日" %}
+                {% else %}
+                    {% assign date_format = site.minima.date_format | default: "on %b %-d, %Y" %}
+                {% endif %}
                 {% assign count = 1 %}
                 {% for post in site.posts %}
 
@@ -144,7 +148,7 @@ i18n-seo-description: seo.blogs
                                                     {% break %}
                                                 {% endif %}
                                             {% endfor %}
-                                            <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
+                                            <span class="blog_post_date" title="{{ post.date | date: date_format }}">{{ post.date | date: date_format }}</span>
                                         </div>
                                     </div>
                                     <div class="row">

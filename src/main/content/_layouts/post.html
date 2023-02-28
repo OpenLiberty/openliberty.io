@@ -10,6 +10,11 @@ js: post
 {% if site.lang != 'en' %}
     {% assign baseURL = '/' | append: site.lang %}
 {% endif %}
+{% if site.lang == "ja" or site.lang == "zh-Hans" %}
+    {% assign date_format = "%Y年%-m月%e日" %}
+{% else %}
+    {% assign date_format = site.minima.date_format | default: "on %b %-d, %Y" %}
+{% endif %}
 
 <div id="article_container" class="container-fluid">
     <article class="post" aria-label="article">
@@ -48,12 +53,7 @@ js: post
                         {% assign current = current | plus: 1 %}
                         <a class="author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }} </a>
                     {% endfor %}
-                    {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
-                    {% if site.lang == "ja" %}
-                        <span id="post_date">on {{ page.date | date: "%Y年%-m月%e日" }}</span>
-                    {% else %}
-                        <span id="post_date">on {{ page.date | date: date_format }}</span>
-                    {% endif %}
+                    <span id="post_date">on {{ page.date | date: date_format }}</span>
                 </div>
                 <div class="post_tags_container"></div>
                 <div class="language_container">
