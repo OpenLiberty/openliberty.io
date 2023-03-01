@@ -1,0 +1,35 @@
+# This workflow will kick off the cypress tests for the starter app
+name: Manually Test Starter App
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+#    inputs:
+#      buildTool:
+#        description: 'Maven or Gradle'
+#       #default: 'Maven'
+#        required: true
+#      javaVersion:
+#        description: '8, 11 or 17'
+#       #default: '11'
+#        required: true
+#      eeVersion:
+#        description: 'None, 7.0, 8.0, 9.1'
+#       #default: '8.0'
+#        required: true
+#      mpVersion:
+#        description: 'None, 1.4, 2.2, 3.3, 4.1, 5.0'
+#       #default: '8.0'
+#        required: true
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+    cypress-run:
+        runs-on: ubuntu-latest
+        container: cypress/included:12.5.1
+        steps: 
+          - uses: actions/checkout@v5
+          - run: cypress run --spec cypress/e2e/testOLStarterAllGradle.cy.js
