@@ -9,7 +9,7 @@ source $BUILD_SCRIPTS_DIR/ruby_install.sh
 
 # Guides that are ready to be published to openliberty.io
 echo "Cloning repositories with name starting with guide or iguide..."
-ruby $BUILD_SCRIPTS_DIR/clone_guides.rb
+# ruby $BUILD_SCRIPTS_DIR/clone_guides.rb
 
 # Move the blog redirect file to the WEB-INF directory
 if [ -f src/main/content/guides/guides-common/guide-redirects.properties ]; then
@@ -60,10 +60,10 @@ if [ $(find src/main/content/guides -type d -name "iguide*" | wc -l ) != "0" ] ;
 fi
 
 # Clone certifications
-$BUILD_SCRIPTS_DIR/clone_certifications.sh
+# $BUILD_SCRIPTS_DIR/clone_certifications.sh
 
 # Clone draft and published blogs
-$BUILD_SCRIPTS_DIR/clone_blogs.sh
+# $BUILD_SCRIPTS_DIR/clone_blogs.sh
 
 # Read in the blog tags file and add the tag to each blog so jekyll knows how to process them.
 if [ -f src/main/content/blog_tags.json ]; then
@@ -89,15 +89,15 @@ fi
 # Temporary routine
 # Remove all translated pages expect the ones ready for public viewing
 # Japanese
-mv target/jekyll-webapp/ja/ .
-mkdir -p target/jekyll-webapp/ja/
-mv ja/feed.xml target/jekyll-webapp/ja/
-mv ja/blog target/jekyll-webapp/ja/
-mv ja/assets target/jekyll-webapp/ja/
+# mv target/jekyll-webapp/ja/ .
+# mkdir -p target/jekyll-webapp/ja/
+# mv ja/feed.xml target/jekyll-webapp/ja/
+# mv ja/blog target/jekyll-webapp/ja/
+# mv ja/assets target/jekyll-webapp/ja/
 
-# Simplified Chinese
-mv target/jekyll-webapp/zh-Hans/ .
-mkdir -p target/jekyll-webapp/zh-Hans/
-mv zh-Hans/feed.xml target/jekyll-webapp/zh-Hans/
-mv zh-Hans/blog target/jekyll-webapp/zh-Hans/
-mv zh-Hans/assets target/jekyll-webapp/zh-Hans/
+# # Simplified Chinese
+# mv target/jekyll-webapp/zh-Hans/ .
+# mkdir -p target/jekyll-webapp/zh-Hans/
+# mv zh-Hans/feed.xml target/jekyll-webapp/zh-Hans/
+# mv zh-Hans/blog target/jekyll-webapp/zh-Hans/
+# mv zh-Hans/assets target/jekyll-webapp/zh-Hans/

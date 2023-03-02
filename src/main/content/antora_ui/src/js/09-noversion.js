@@ -29,6 +29,8 @@ $(window).on("load", function() {
         if (
           preceed1 === "feature" ||
           preceed1 === "javadoc" ||
+          preceed1 === "api" ||
+          preceed1 === "spi" ||
           preceed1 === "config" ||
           preceed1 === "command"
         ) {

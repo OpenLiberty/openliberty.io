@@ -248,6 +248,7 @@ function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
   var frame = $("#javadoc_container")
     .contents()
     .find(frameToListen);
+  if(frame.length === 0) return;
   var frameHeader = frame.contents().find(frameElementToListen);
   var packagesList = frame
     .contents()
@@ -397,9 +398,11 @@ function setDynamicIframeContent() {
       .find(".leftTop iframe")
       .contents()
       .attr("location");
-    defaultHtmlRootPath = getJavaDocHtmlPath(alocation.href, true);
-    defaultPackageHtml = defaultHtmlRootPath + DEFAULT_PACKAGE_HTML;
-    defaultClassHtml = defaultHtmlRootPath + DEFAULT_CLASS_HTML;
+    if(alocation){
+      defaultHtmlRootPath = getJavaDocHtmlPath(alocation.href, true);
+      defaultPackageHtml = defaultHtmlRootPath + DEFAULT_PACKAGE_HTML;
+      defaultClassHtml = defaultHtmlRootPath + DEFAULT_CLASS_HTML;
+    }    
   }
 
   var targetPage = parseQueryParams();
@@ -545,6 +548,7 @@ function setIFrameContent(iframeName, href) {
     .contents()
     .find(iframeName)
     .contents();
+  if(iframeContent.length === 0) return;
   var errorhref = "/docs/ref/javadocs/doc-404.html";
   // get current version to create path to all classes frame
   var path = window.top.location.pathname;
@@ -678,6 +682,7 @@ function getDocInfo(iframe_src) {
   } else {
     // Should never happen
     doc_version = 0;
+    doc_type = 0;
   }
   return {version: doc_version, type: doc_type};
 }
@@ -772,11 +777,46 @@ function replaceCanonicalUrl(url) {
   canonicalTag.href = newCanonicalUrl;
 }
 
+function setFramelessQueryParams(){
+  var mainFrame = $('#javadoc_container');
+  var isFrameless = mainFrame.contents().find('iframe').length === 0;
+  if(isFrameless){
+    var alocation = mainFrame.contents().attr('location').href;
+    var newURL = new URL(window.location.href);
+    var queryParams = newURL.searchParams;
+    queryParams.set('javadocPath', alocation);
+    var search = window.location.search;
+    var hash = window.location.hash;
+    var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
+    window.history.pushState({}, null, newURL);
+  }
+}
+
+// Load the frameless javadoc location if the javadocPath query parameter does not match the existing iframe src
+function loadJavadocFromUrl(){
+  var mainFrame = $('#javadoc_container');
+  var isFrameless = mainFrame.contents().find('iframe').length === 0;
+  if(isFrameless){
+    var search = window.location.search;
+    if(!search) return;
+    var params = new URLSearchParams(search);
+    var javadocPath = encodeURI(params.get('javadocPath'));
+    if(!(javadocPath === null || javadocPath === "null" || javadocPath === "")){
+      if (mainFrame[0].contentWindow.location.href !== javadocPath) {
+        console.error('setting the iframe location to ' + javadocPath + '.');
+        mainFrame[0].src = javadocPath;
+      }
+    }       
+  }  
+}
+
 $(document).ready(function() {
   iFrameClicked = false;
   $(window).on("resize", function() {
     resizeJavaDocWindow();
   });
+  
+  loadJavadocFromUrl();
 
   $("#javadoc_container").on("load", function() {
     resizeJavaDocWindow();
@@ -788,7 +828,8 @@ $(document).ready(function() {
     addScrollListener();
     addClickListeners();
     addiPadScrolling();
-    highlightTOC(".leftTop iframe");
+    highlightTOC(".leftTop iframe");    
+    setFramelessQueryParams();    
 
     $("#javadoc_container")
       .contents()
@@ -827,7 +868,9 @@ $(document).ready(function() {
       .contents()
       .find(".leftTop iframe")
       .ready(function() {
-        modifyPackageTopLinks();
+        if($("#javadoc_container").contents().find(".leftTop iframe").length > 0){
+          modifyPackageTopLinks();
+        }       
       });
 
     setDynamicIframeContent();
