@@ -2,7 +2,7 @@
 # Determine which branch of docs-javadoc repo to clone
 timer_start=$(date +%s)
 
-BRANCH_NAME="prod"
+BRANCH_NAME="open-liberty-apis-prototype"
 # Development environments with draft content
 if [[ "$STAGING_SITE" == "true" || "$JAVADOC_STAGING_SITE" == "true" ]]; then
     echo "Cloning the staging branch of javadoc"

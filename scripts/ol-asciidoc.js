@@ -21,6 +21,8 @@ function register (registry, context) {
   registry.inlineMacro('config', DocLinkMacros(context, "config"));
   registry.inlineMacro('feature', DocLinkMacros(context, "feature"));
   registry.inlineMacro('javadoc', DocLinkMacros(context, "javadoc"));
+  registry.inlineMacro('api', DocLinkMacros(context, "api"));
+  registry.inlineMacro('spi', DocLinkMacros(context, "spi"));
 }
 
 module.exports.register = register;

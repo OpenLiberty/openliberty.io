@@ -248,6 +248,7 @@ function addLeftFrameScrollListener(frameToListen, frameElementToListen) {
   var frame = $("#javadoc_container")
     .contents()
     .find(frameToListen);
+  if(frame.length === 0) return;
   var frameHeader = frame.contents().find(frameElementToListen);
   var packagesList = frame
     .contents()
@@ -392,14 +393,27 @@ function parseQueryParams() {
 function setDynamicIframeContent() {
   // setup the default html path
   if (defaultPackageHtml === "") {
-    var alocation = $("#javadoc_container")
+    var container = $("#javadoc_container");
+    var isFrameless = container.contents().find('iframe').length === 0;
+    var alocation;
+    if(isFrameless){
+      alocation = container.contents().attr('location');
+      console.error('alocation: ' + alocation);
+    } else {
+      alocation = container
       .contents()
       .find(".leftTop iframe")
       .contents()
       .attr("location");
-    defaultHtmlRootPath = getJavaDocHtmlPath(alocation.href, true);
-    defaultPackageHtml = defaultHtmlRootPath + DEFAULT_PACKAGE_HTML;
-    defaultClassHtml = defaultHtmlRootPath + DEFAULT_CLASS_HTML;
+    }    
+    if(alocation){
+      defaultHtmlRootPath = getJavaDocHtmlPath(alocation.href, true);
+      defaultPackageHtml = defaultHtmlRootPath + DEFAULT_PACKAGE_HTML;
+      defaultClassHtml = defaultHtmlRootPath + DEFAULT_CLASS_HTML;
+      console.error('defaultHtmlRootPath: ' + defaultHtmlRootPath);
+      console.error('defaultPackageHtml: ' + defaultPackageHtml);
+      console.error('defaultClassHtml: ' + defaultClassHtml);
+    }    
   }
 
   var targetPage = parseQueryParams();
@@ -427,13 +441,47 @@ function updateTitle(currentPage) {
 }
 
 function addClickListeners() {
-  var iframes = $("#javadoc_container")
+  var main_frame = $("#javadoc_container");
+  var iframes = main_frame
     .contents()
     .find("iframe");
 
-  $(iframes).each(function() {
+  $(main_frame, iframes).each(function() {
     addClickListener($(this).contents());
   });
+}
+
+function updateQueryParams(href, paramKey){
+   var queryParams = setQueryParams(href, paramKey);
+   // provide state data to be used by the popstate event to render the frame contents
+   var state = {};
+   var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey);
+   testObject = otherQueryParamsContent;
+   for (key in otherQueryParamsContent) {
+     var otherStateKey = CLASS_FRAME;
+     if (otherQueryParamsContent.hasOwnProperty(key)){
+       if (key === PACKAGE_PARAM) {
+         otherStateKey = PACKAGE_FRAME;
+       }
+       var value = otherQueryParamsContent[key];
+       state[otherStateKey] = defaultHtmlRootPath + decodeURIComponent(value);
+     }
+   }
+
+   var search = window.location.search;
+   var hash = window.location.hash;      
+   // Removing old search and hash, otherwise it adds duplicate query parameters and hashes.
+   var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
+   window.history.pushState(state, null, newURL);
+
+   replaceCanonicalUrl(newURL);
+
+   var package;
+   if(queryParams.has(PACKAGE_PARAM)){
+     queryParams.delete(PACKAGE_PARAM);
+   }
+
+   updateTitle(package);
 }
 
 function addClickListener(contents) {
@@ -442,6 +490,7 @@ function addClickListener(contents) {
     var iframeName = CLASS_FRAME;
     var paramKey = CLASS_PARAM;
     var href = e.target.href;
+    console.error('href is: ' + href);
     if (e.target.target === undefined) {
       // handling
       // <a href ...>
@@ -452,7 +501,7 @@ function addClickListener(contents) {
       //   <code> ... </code>
       // </a>
       if (e.target.parentNode.localName === "a") {
-        href = e.target.parentNode.href;
+        href = e.target.parentNode.href; // This is when a click happens in the contents instead of one of the tabs in the javadoc.
         if (e.target.parentNode.target === "packageFrame") {
           iframeName = PACKAGE_FRAME;
           paramKey = PACKAGE_PARAM;
@@ -480,7 +529,10 @@ function addClickListener(contents) {
       // provide state data to be used by the popstate event to render the frame contents
       var state = {};
       state[iframeName] = href;
-      var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey);
+      queryParams.forEach((value, key) => {
+        console.log(`${key}: ${value}`);
+      });
+      var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey); // steven
       testObject = otherQueryParamsContent;
       for (key in otherQueryParamsContent) {
         var otherStateKey = CLASS_FRAME;
@@ -536,15 +588,25 @@ function setPackageContainerHeight() {
 function setIFrameContent(iframeName, href) {
   window.onpopstate = (e) => {
     popStateOrPageRefresh();
-
   };
   if(iFrameClicked == false) {
     popStateOrPageRefresh();
   }
-  var iframeContent = $("#javadoc_container")
-    .contents()
+  var iframeContent;
+  // var main_frame = $("#javadoc_container");
+  // var isFrameless = main_frame.contents().find('iframe').length === 0;
+  // if(isFrameless){
+  //   iframeContent = main_frame.contents();
+  // } else {
+  //   iframeContent = main_frame
+  //   .contents()
+  //   .find(iframeName)
+  //   .contents();
+  // }
+  var iframeContent = $("#javadoc_container").contents()
     .find(iframeName)
     .contents();
+  if(iframeContent.length === 0) return;
   var errorhref = "/docs/ref/javadocs/doc-404.html";
   // get current version to create path to all classes frame
   var path = window.top.location.pathname;
@@ -554,12 +616,15 @@ function setIFrameContent(iframeName, href) {
       "/javadocs/microprofile-" +
       currentVersion +
       "-javadoc/allclasses-frame.html";
-  } else {
+  } else if (path.includes("liberty-javaee")){
     var currentVersion = path.slice(-2, -1);
     var allClassesHref =
       "/javadocs/liberty-javaee" +
       currentVersion +
       "-javadoc/allclasses-frame.html";
+  } else {
+    // Steven
+    var allClassesHref = defaultPackageHtml;
   }
 
   // check if href results in 404 and redirect to doc-404.html if it does
@@ -646,7 +711,8 @@ function getJavaDocHtmlPath(href, returnBase) {
     } else {
       javaDocPath = groups[2];
     }
-  } catch (e) {}
+    console.log(javadocPath);
+  } catch (e) {}  
   return javaDocPath;
 }
 
@@ -678,6 +744,7 @@ function getDocInfo(iframe_src) {
   } else {
     // Should never happen
     doc_version = 0;
+    doc_type = 0;
   }
   return {version: doc_version, type: doc_type};
 }
@@ -772,11 +839,62 @@ function replaceCanonicalUrl(url) {
   canonicalTag.href = newCanonicalUrl;
 }
 
+function setFramelessQueryParams(){
+  var mainFrame = $('#javadoc_container');
+  var isFrameless = mainFrame.contents().find('iframe').length === 0;
+  if(isFrameless){
+    var alocation = mainFrame.contents().attr('location').href;
+    var origin = window.location.origin;
+    alocation = alocation.substring(origin.length);
+    // remove /docs/modules/reference/
+    if(alocation.indexOf('/docs/modules/reference') === 0){
+      alocation = alocation.substring(23);
+    }
+    var package_pattern = /(io\.openliberty\.[^\/]+-javadoc\/com\/ibm\/websphere\/[^\/]+)/;
+    var class_pattern = /([a-zA-Z-]+\.html)/;
+    var package_match = alocation.match(package_pattern);
+    var class_match = alocation.match(class_pattern);
+    if(package_match){
+      updateQueryParams(package_match[1], PACKAGE_PARAM);
+    }
+    if(class_match){
+      updateQueryParams(class_match[1], CLASS_PARAM);
+    }    
+    // var newURL = new URL(window.location.href);
+    // var queryParams = newURL.searchParams;
+    // queryParams.set('javadocPath', alocation);
+    // var search = window.location.search;
+    // var hash = window.location.hash;
+    // var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
+    // window.history.pushState({}, null, newURL);
+  }
+}
+
+// Load the frameless javadoc location if the javadocPath query parameter does not match the existing iframe src
+function loadJavadocFromUrl(){
+  var mainFrame = $('#javadoc_container');
+  var isFrameless = mainFrame.contents().find('iframe').length === 0;
+  if(isFrameless){
+    var search = window.location.search;
+    var params = new URLSearchParams(search);
+    var old_query_params = parseQueryParams();
+    var javadocPath = encodeURI(params.get('javadocPath'));
+    if(!(javadocPath === null || javadocPath === "null" || javadocPath === "")){
+      if (mainFrame[0].contentWindow.location.href !== javadocPath) {
+        console.error('setting the iframe location to ' + javadocPath + '.');
+        mainFrame[0].src = javadocPath;
+      }
+    }       
+  }  
+}
+
 $(document).ready(function() {
   iFrameClicked = false;
   $(window).on("resize", function() {
     resizeJavaDocWindow();
   });
+  
+  // loadJavadocFromUrl();
 
   $("#javadoc_container").on("load", function() {
     resizeJavaDocWindow();
@@ -788,7 +906,8 @@ $(document).ready(function() {
     addScrollListener();
     addClickListeners();
     addiPadScrolling();
-    highlightTOC(".leftTop iframe");
+    highlightTOC(".leftTop iframe");    
+    // setFramelessQueryParams();    
 
     $("#javadoc_container")
       .contents()
@@ -827,7 +946,11 @@ $(document).ready(function() {
       .contents()
       .find(".leftTop iframe")
       .ready(function() {
-        modifyPackageTopLinks();
+        var mainFrame = $('#javadoc_container');
+        var isFrameless = mainFrame.contents().find('iframe').length === 0;
+        if(!isFrameless){
+          modifyPackageTopLinks();
+        }       
       });
 
     setDynamicIframeContent();
