@@ -78,4 +78,3 @@ $(document).on("click", "#copy_to_clipboard", function(event) {
         }).stop().fadeIn().delay(3500).fadeOut();
     });	
 });
-
