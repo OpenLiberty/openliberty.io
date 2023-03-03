@@ -117,7 +117,11 @@ seo-description: Use Maven or Gradle to create a starter application for develop
         <div class="modal-body">
             <h3>{% t start.generate_project_modal.heading %}</h3>
             <p>{% t start.generate_project_modal.instruction %}</p>
-            <div id="cmd_to_run" class="cmd_to_run"></div>
+            <div class="code_block_wrapper" title="Code block">
+                <div class="copied_confirmation">Copied to clipboard</div>
+                <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>
+                <pre id="cmd_to_run" class="cmd_to_run"></pre>
+            </div>
             <p class="guide-link">{% t start.generate_project_modal.guide_link %}
                 <a href="{{baseURL}}/guides/" class="orange_link_light_background" tabindex="0">{% t start.guides_smallcase %}</a>.
             </p>
@@ -155,14 +159,22 @@ seo-description: Use Maven or Gradle to create a starter application for develop
             <div class="tab-content">
                 <!-- MAVEN -->
                 <div id="maven" class="tab-pane fade show active" tabindex="0" role="tabpanel" aria-labelledby="getOL-maven">
-                    <pre class="code_container">&lt;dependency&gt;<br>    &lt;groupId&gt;io.openliberty&lt;/groupId&gt;<br>    &lt;artifactId&gt;openliberty-runtime&lt;/artifactId&gt;<br>    &lt;version&gt;[<span class="latest_version">19.0.0.9</span>,)&lt;/version&gt;<br>    &lt;type&gt;zip&lt;/type&gt;<br>&lt;/dependency&gt;</pre>
+                    <div class="code_block_wrapper" title="Code block">
+                        <div class="copied_confirmation">Copied to clipboard</div>
+                        <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>
+                        <pre class="code_container">&lt;dependency&gt;<br>    &lt;groupId&gt;io.openliberty&lt;/groupId&gt;<br>    &lt;artifactId&gt;openliberty-runtime&lt;/artifactId&gt;<br>    &lt;version&gt;[<span class="latest_version">19.0.0.9</span>,)&lt;/version&gt;<br>    &lt;type&gt;zip&lt;/type&gt;<br>&lt;/dependency&gt;</pre>
+                    </div>
                     <p>{% t start.find_out %}
                         <a href="{{baseURL}}/guides/maven-intro.html" class="blue_link_light_background_external">{% t start.how_to_use_maven %}</a>
                     </p>
                 </div>
                 <!-- GRADLE -->
                 <div id="gradle" class="tab-pane fade" tabindex="-1" role="tabpanel" aria-labelledby="getOL-gradle">
-                    <pre class="code_container">dependencies {<br>    libertyRuntime group: 'io.openliberty', name: 'openliberty-runtime', version: '[<span class="latest_version">19.0.0.9</span>,)'<br>}</pre>
+                    <div class="code_block_wrapper" title="Code block">
+                        <div class="copied_confirmation">Copied to clipboard</div>
+                        <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>
+                        <pre class="code_container">dependencies {<br>    libertyRuntime group: 'io.openliberty', name: 'openliberty-runtime', version: '[<span class="latest_version">19.0.0.9</span>,)'<br>}</pre>
+                    </div>
                     <p>{% t start.find_out %}
                         <a href="{{baseURL}}/guides/gradle-intro.html" class="blue_link_light_background_external">{% t start.how_to_use_gradle %}</a>
                     </p>
@@ -172,9 +184,12 @@ seo-description: Use Maven or Gradle to create a starter application for develop
                     <p>{% t start.container_section_text %}
                         <a href="{{baseURL}}/docs/latest/container-images.html" class="blue_link_light_background_external">{% t start.container_section_link %}</a>
                     </p>
-                    <pre class="code_container">FROM icr.io/appcafe/open-liberty</pre>
-                    <p>
-                        {% t start.find_out %}
+                    <div class="code_block_wrapper" title="Code block">
+                        <div class="copied_confirmation">Copied to clipboard</div>
+                        <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>
+                        <pre class="code_container">FROM icr.io/appcafe/open-liberty</pre>
+                    </div>
+                    <p>{% t start.find_out %}
                         <a href="{{baseURL}}/guides/containerize.html" class="blue_link_light_background_external">{% t start.how_to_use_docker %}</a>
                     </p>
                 </div>
