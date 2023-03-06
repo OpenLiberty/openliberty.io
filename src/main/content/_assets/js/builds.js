@@ -113,23 +113,55 @@ function getAllowedBuilds(build_type, package_locations, liberty_version) {
 }
 
 /**
+ * There are multiple public keys used to sign the Open Liberty driver.
+ * This function is to get the correct public key for the Open Liberty version.
+ * 
+ * @param {String} liberty_version - String in X.X.X.X format where X are numbers. Assumes this version has SIG
+ * and PEM files.
+ */
+function getPublicKeyURL(liberty_version) {
+    if(!liberty_version) {
+        return '';
+    }
+
+    var liberty_versions_using_2021_pem = ["22.0.0.1", "22.0.0.2", "22.0.0.3", "22.0.0.4", "22.0.0.5", "22.0.0.6", 
+    "22.0.0.7", "22.0.0.8", "22.0.0.9", "22.0.0.10", "22.0.0.11", "22.0.0.12", "22.0.0.13", "23.0.0.1"];
+
+    const pem_2021_href =
+    "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_06-02-2021.pem";
+    
+    const pem_2023_href =
+    "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_02-13-2023.pem";
+
+    if(liberty_versions_using_2021_pem.indexOf(liberty_version) > -1) {
+        return pem_2021_href;
+    } else {
+        return pem_2023_href;
+    }
+}
+
+/**
  * Return URL for a DHE signature file
  * 
+ * @param {String} liberty_version - String in X.X.X.X format where X are numbers
  * @param {Array} list - array of Strings that look like key-value pairs
  * @param {String} sig_key - a specific key in the list, e.g. "kernal.sig"
- * @returns returns a URL if key is found, else empty string
+ * @returns returns array of URLs[SIG_URL, PEM_URL] if SIG is found, else empty string
  */
-function getURLForSig(list, sig_key) {
+function getURLsForSigAndPem(liberty_version, list, sig_key) {
     if(!list) {
         // Builds prior to 2022 did not have signature files,
         // so those builds will have not have a list.  If list is empty
         // return an empty string as the result of the URL.
         return '';
     }
+
     for(var e = 0; e < list.length; e++) {
         var keyAndValue = list[e].split('=');
         if(keyAndValue[0].toLowerCase() === sig_key.toLowerCase()) {
-            return keyAndValue[1];
+            var pem_URL = getPublicKeyURL(liberty_version);
+            var sig_URL = keyAndValue[1];
+            return [sig_URL, pem_URL];
         }
     }
     // Could not a key in the list that matches
@@ -282,7 +314,7 @@ function render_builds(builds, parent) {
                         // Assume package_name will always end with .zip and the filename 
                         // has _no_ dots
                         var sig_name = package_name.split('.')[0];
-                        var sig_href = getURLForSig(package_signature_locations, sig_name+'.sig');
+                        var [sig_href, pem_href] = getURLsForSigAndPem(build.version, package_signature_locations, sig_name+'.sig');
                         //========== Get URL for the .sha2 file
                         // TODO: Surface the href when DHE API has this data
                         // See https://github.com/OpenLiberty/openliberty.io/issues/1734
@@ -301,6 +333,8 @@ function render_builds(builds, parent) {
                             '<td headers="'+tableID+'_verification">' +
                             // Optional sig file download button
                             (sig_href ? '<a href="'+sig_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SIG</a>' : '' ) +
+                            // If SIG file is available, then pair the corresponding public key (PEM) with the SIG
+                            (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'PEM</a>' : '' ) +
                             '</td>'
                         );
 
@@ -459,8 +493,8 @@ function render_builds(builds, parent) {
                         // The name has a lot of dots, so have to use lastIndexOf to separate
                         // filename from file extension
                         var beta_sig_name = beta_package_name.substring(0, beta_package_name.lastIndexOf('.'));
-                        var beta_sig_href = 
-                            getURLForSig(beta_package_sig_locs, beta_sig_name+'.sig');
+                        var [beta_sig_href, beta_pem_href] = 
+                            getURLsForSigAndPem(build.version, beta_package_sig_locs, beta_sig_name+'.sig');
                         //========== Get URL for the .sha2 file
                         var beta_sha2_href = ''; // TODO: Surface the href when DHE API has this data
 
@@ -477,6 +511,7 @@ function render_builds(builds, parent) {
                             '<td headers="'+tableID+'_verification">' +
                             // Optional sig file download button
                             (beta_sig_href ? '<a href="'+beta_sig_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SIG</a>' : '' ) +
+                            (beta_sig_href ? '<a href="'+beta_pem_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'PEM</a>' : '' ) +
                             '</td>'
                         );
 
