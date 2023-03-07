@@ -521,11 +521,18 @@ function render_builds(builds, parent) {
                             '<td headers="'+tableID+'_verification">' +
                             // Optional sig file download button
                             (beta_sig_href ? '<a href="'+beta_sig_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SIG</a>' : '' ) +
+                            '</td>'
+                        );
+
+                        var beta_verification_column2 = $(
+                            '<td headers="'+tableID+'_verification">' +
+                            // Optional pem file download button
+                            // If there is a sig, there is a pem
                             (beta_sig_href ? '<a href="'+beta_pem_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'PEM</a>' : '' ) +
                             '</td>'
                         );
 
-                        if (d == 0) {
+                        if (d === 0) {
                             beta_row.append(beta_version_column); // add version column for first item in package_locations
                         }
             
@@ -544,6 +551,10 @@ function render_builds(builds, parent) {
                         beta_row.append(package_column);
                         beta_row.append(beta_download_column);
                         beta_row.append(beta_verification_column);
+                        if(d === 0) {
+                            // Only add the PEM button to the row with Version
+                            beta_row.append(beta_verification_column2);
+                        }
                         parent.append(beta_row);
                     }
                 }
