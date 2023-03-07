@@ -333,14 +333,20 @@ function render_builds(builds, parent) {
                             '<td headers="'+tableID+'_verification">' +
                             // Optional sig file download button
                             (sig_href ? '<a href="'+sig_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'SIG</a>' : '' ) +
-                            // If SIG file is available, then pair the corresponding public key (PEM) with the SIG
+                            '</td>'
+                        );
+
+                        var verification_column2 = $(
+                            '<td headers="' + tableID + '_verification"' + `rowspan="${num_packages}"` + '>' +
+                            // Optional sig file download button
                             (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'PEM</a>' : '' ) +
                             '</td>'
                         );
 
-                        if (k == 0) {
+                        if (k === 0) {
                             row.append(version_column); // add version column for first item in package_locations
-                        }      
+                        }
+
                         var package_column;   
                         var buildVersionYear = parseInt(
                             build.version.substring(
@@ -429,6 +435,10 @@ function render_builds(builds, parent) {
                         row.append(package_column);
                         row.append(download_column);
                         row.append(verification_column);
+                        if (k === 0) {
+                            // Only add the PEM button to the row with Version
+                            row.append(verification_column2);
+                        }
 
                         // checking if version is from the last two years before adding to table
                         var primary = parseInt(build.version.split(".")[0]);
@@ -638,15 +648,44 @@ function render_builds(builds, parent) {
     highlightAlternateRows();
 }
 
+/**
+ * This method will count how many table headers are present and also take into account if a header
+ * spans multiple columns (aka HTML attribute colspan="")
+ * 
+ * @param {String} css_selector - Row containing the table headers
+ */
+function getTotalNumberOfTableColumns(css_selector) {
+    var total_columns = 0;
+    $(css_selector).children().each(function() {
+        var node = $(this);
+        if(node.prop("colSpan")) {
+            total_columns += node.prop("colSpan");
+        } else {
+            total_columns += 1;
+        }
+    });
+    return total_columns;
+}
+
 function highlightAlternateRows() {
+    var total_releases_columns = getTotalNumberOfTableColumns('#runtime_releases_table > thead > tr');
+    var total_beta_columns = getTotalNumberOfTableColumns('#runtime_betas_table > thead > tr');
+
+    // Assumption: The table header indicates the max number of cells in a row. Not all rows will have the
+    // max number of cells. The row containing the version cell should have the max number of cells.
+
+    // 1. Look for all the release Version rows and apply the styling to every other version row
     $("#runtime_releases_table_container .release_table_body tr").filter(function() { 
-        return $(this).children().length == document.getElementById('runtime_releases_table').rows[0].cells.length;
+        return $(this).children().length === total_releases_columns;
     }).filter(':even').addClass('highlight_alternate_rows');
 
+    // 2. Look for all the beta Version rows and apply the styling to every other version row
     $("#runtime_betas_table_container .release_table_body tr").filter(function() { 
-        return $(this).children().length == document.getElementById('runtime_betas_table').rows[0].cells.length;
+        return $(this).children().length === total_beta_columns;
     }).filter(':even').addClass('highlight_alternate_rows');
-      
+
+    // 3. Look for the Version rows that have the styling and apply the styling to the rows that are associated with
+    // the Version row.
     $("tr.highlight_alternate_rows td[rowspan]").each(function() {
         $(this).parent().nextAll().slice(0, this.rowSpan - 1).addClass('highlight_alternate_rows');
     });
