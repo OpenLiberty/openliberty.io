@@ -113,23 +113,55 @@ function getAllowedBuilds(build_type, package_locations, liberty_version) {
 }
 
 /**
+ * There are multiple public keys used to sign the Open Liberty driver.
+ * This function is to get the correct public key for the Open Liberty version.
+ * 
+ * @param {String} liberty_version - String in X.X.X.X format where X are numbers. Assumes this version has SIG
+ * and PEM files.
+ */
+function getPublicKeyURL(liberty_version) {
+    if(!liberty_version) {
+        return '';
+    }
+
+    var liberty_versions_using_2021_pem = ["22.0.0.1", "22.0.0.2", "22.0.0.3", "22.0.0.4", "22.0.0.5", "22.0.0.6", 
+    "22.0.0.7", "22.0.0.8", "22.0.0.9", "22.0.0.10", "22.0.0.11", "22.0.0.12", "22.0.0.13", "23.0.0.1"];
+
+    const pem_2021_href =
+    "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_06-02-2021.pem";
+    
+    const pem_2023_href =
+    "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_02-13-2023.pem";
+
+    if(liberty_versions_using_2021_pem.indexOf(liberty_version) > -1) {
+        return pem_2021_href;
+    } else {
+        return pem_2023_href;
+    }
+}
+
+/**
  * Return URL for a DHE signature file
  * 
+ * @param {String} liberty_version - String in X.X.X.X format where X are numbers
  * @param {Array} list - array of Strings that look like key-value pairs
  * @param {String} sig_key - a specific key in the list, e.g. "kernal.sig"
- * @returns returns a URL if key is found, else empty string
+ * @returns returns array of URLs[SIG_URL, PEM_URL] if SIG is found, else empty string
  */
-function getURLForSig(list, sig_key) {
+function getURLsForSigAndPem(liberty_version, list, sig_key) {
     if(!list) {
         // Builds prior to 2022 did not have signature files,
         // so those builds will have not have a list.  If list is empty
         // return an empty string as the result of the URL.
         return '';
     }
+
     for(var e = 0; e < list.length; e++) {
         var keyAndValue = list[e].split('=');
         if(keyAndValue[0].toLowerCase() === sig_key.toLowerCase()) {
-            return keyAndValue[1];
+            var pem_URL = getPublicKeyURL(liberty_version);
+            var sig_URL = keyAndValue[1];
+            return [sig_URL, pem_URL];
         }
     }
     // Could not a key in the list that matches
@@ -282,7 +314,7 @@ function render_builds(builds, parent) {
                         // Assume package_name will always end with .zip and the filename 
                         // has _no_ dots
                         var sig_name = package_name.split('.')[0];
-                        var sig_href = getURLForSig(package_signature_locations, sig_name+'.sig');
+                        var [sig_href, pem_href] = getURLsForSigAndPem(build.version, package_signature_locations, sig_name+'.sig');
                         //========== Get URL for the .sha2 file
                         // TODO: Surface the href when DHE API has this data
                         // See https://github.com/OpenLiberty/openliberty.io/issues/1734
@@ -304,9 +336,17 @@ function render_builds(builds, parent) {
                             '</td>'
                         );
 
-                        if (k == 0) {
+                        var verification_column2 = $(
+                            '<td headers="' + tableID + '_verification"' + `rowspan="${num_packages}"` + '>' +
+                            // Optional sig file download button
+                            (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'PEM</a>' : '' ) +
+                            '</td>'
+                        );
+
+                        if (k === 0) {
                             row.append(version_column); // add version column for first item in package_locations
-                        }      
+                        }
+
                         var package_column;   
                         var buildVersionYear = parseInt(
                             build.version.substring(
@@ -395,6 +435,10 @@ function render_builds(builds, parent) {
                         row.append(package_column);
                         row.append(download_column);
                         row.append(verification_column);
+                        if (k === 0) {
+                            // Only add the PEM button to the row with Version
+                            row.append(verification_column2);
+                        }
 
                         // checking if version is from the last two years before adding to table
                         var primary = parseInt(build.version.split(".")[0]);
@@ -459,8 +503,8 @@ function render_builds(builds, parent) {
                         // The name has a lot of dots, so have to use lastIndexOf to separate
                         // filename from file extension
                         var beta_sig_name = beta_package_name.substring(0, beta_package_name.lastIndexOf('.'));
-                        var beta_sig_href = 
-                            getURLForSig(beta_package_sig_locs, beta_sig_name+'.sig');
+                        var [beta_sig_href, beta_pem_href] = 
+                            getURLsForSigAndPem(build.version, beta_package_sig_locs, beta_sig_name+'.sig');
                         //========== Get URL for the .sha2 file
                         var beta_sha2_href = ''; // TODO: Surface the href when DHE API has this data
 
@@ -480,7 +524,15 @@ function render_builds(builds, parent) {
                             '</td>'
                         );
 
-                        if (d == 0) {
+                        var beta_verification_column2 = $(
+                            '<td headers="'+tableID+'_verification">' +
+                            // Optional pem file download button
+                            // If there is a sig, there is a pem
+                            (beta_sig_href ? '<a href="'+beta_pem_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'PEM</a>' : '' ) +
+                            '</td>'
+                        );
+
+                        if (d === 0) {
                             beta_row.append(beta_version_column); // add version column for first item in package_locations
                         }
             
@@ -499,6 +551,10 @@ function render_builds(builds, parent) {
                         beta_row.append(package_column);
                         beta_row.append(beta_download_column);
                         beta_row.append(beta_verification_column);
+                        if(d === 0) {
+                            // Only add the PEM button to the row with Version
+                            beta_row.append(beta_verification_column2);
+                        }
                         parent.append(beta_row);
                     }
                 }
@@ -603,15 +659,44 @@ function render_builds(builds, parent) {
     highlightAlternateRows();
 }
 
+/**
+ * This method will count how many table headers are present and also take into account if a header
+ * spans multiple columns (aka HTML attribute colspan="")
+ * 
+ * @param {String} css_selector - Row containing the table headers
+ */
+function getTotalNumberOfTableColumns(css_selector) {
+    var total_columns = 0;
+    $(css_selector).children().each(function() {
+        var node = $(this);
+        if(node.prop("colSpan")) {
+            total_columns += node.prop("colSpan");
+        } else {
+            total_columns += 1;
+        }
+    });
+    return total_columns;
+}
+
 function highlightAlternateRows() {
+    var total_releases_columns = getTotalNumberOfTableColumns('#runtime_releases_table > thead > tr');
+    var total_beta_columns = getTotalNumberOfTableColumns('#runtime_betas_table > thead > tr');
+
+    // Assumption: The table header indicates the max number of cells in a row. Not all rows will have the
+    // max number of cells. The row containing the version cell should have the max number of cells.
+
+    // 1. Look for all the release Version rows and apply the styling to every other version row
     $("#runtime_releases_table_container .release_table_body tr").filter(function() { 
-        return $(this).children().length == document.getElementById('runtime_releases_table').rows[0].cells.length;
+        return $(this).children().length === total_releases_columns;
     }).filter(':even').addClass('highlight_alternate_rows');
 
+    // 2. Look for all the beta Version rows and apply the styling to every other version row
     $("#runtime_betas_table_container .release_table_body tr").filter(function() { 
-        return $(this).children().length == document.getElementById('runtime_betas_table').rows[0].cells.length;
+        return $(this).children().length === total_beta_columns;
     }).filter(':even').addClass('highlight_alternate_rows');
-      
+
+    // 3. Look for the Version rows that have the styling and apply the styling to the rows that are associated with
+    // the Version row.
     $("tr.highlight_alternate_rows td[rowspan]").each(function() {
         $(this).parent().nextAll().slice(0, this.rowSpan - 1).addClass('highlight_alternate_rows');
     });
