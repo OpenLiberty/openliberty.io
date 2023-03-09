@@ -51,7 +51,11 @@ js: post
                             {% endif %}
                         {% endif %}
                         {% assign current = current | plus: 1 %}
-                        <a class="author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }} </a>
+                        {% if author.github %}
+                        	<a class="author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }}</a>
+                        {% else %}
+                        	<span class="author_name">{{ author.name }}</span>
+                        {% endif %}
                     {% endfor %}
                     <span id="post_date">{{ page.date | date: date_format }}</span>
                 </div>
