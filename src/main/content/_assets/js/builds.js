@@ -131,7 +131,7 @@ function getPublicKeyURL(liberty_version) {
     "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_06-02-2021.pem";
     
     const pem_2023_href =
-    "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_02-13-2023.pem";
+    "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/OpenLiberty_02-13-2023.pem";
 
     if(liberty_versions_using_2021_pem.indexOf(liberty_version) > -1) {
         return pem_2021_href;
