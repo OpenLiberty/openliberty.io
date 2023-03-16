@@ -499,7 +499,7 @@ $(document).ready(function () {
           }
         }
         tag_name = tag.name + search_terms_string;
-
+        var dep = false;
         $(".guide_item").each(function (j, guide_item) {
           project_id = $(this)
           .attr("href")
@@ -518,7 +518,7 @@ $(document).ready(function () {
             }
             if (tag.visible == "true") {
               //add "RUN IN CLOUD" orange pill to applicable guides
-              if (tag_name.toLowerCase() == "run in cloud") {
+              if (tag_name.toLowerCase() == "run in cloud" && !dep) {
                 //add to last child element in .guide_item element
                 if ($(this).children().last().hasClass("new_guide_container")) {
                   //add before "NEW" orange pill so "NEW" pill shows first because float: right; reverses element order
@@ -527,6 +527,18 @@ $(document).ready(function () {
                   $('<div class="guide_run_in_cloud_container"><span class="guide_run_in_cloud">Run in cloud</span></div>').insertAfter($(this).children().last());
                 }
               }
+            }
+            if(tag_name.toLowerCase() === "deprecated"){
+              dep = true;
+              if ($(this).has(".guide_run_in_cloud_container").length) {
+                //add before "NEW" orange pill so "NEW" pill shows first because float: right; reverses element order
+                $(this).children(".guide_run_in_cloud_container").remove();
+              }
+              if ($(this).has(".new_guide_container").length) {
+                //add before "NEW" orange pill so "NEW" pill shows first because float: right; reverses element order
+                $(this).children(".new_guide_container").remove();
+              }
+              $('<div class="guide_deprecated_container"><span class="guide_run_in_cloud">Deprecated</span></div>').insertAfter($(this).children().last());
             }
           }
         });
