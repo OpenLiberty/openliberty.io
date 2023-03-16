@@ -516,7 +516,15 @@ $(document).ready(function () {
             } else {
               $(this).data("tags", tag_name.toLowerCase());
             }
-            if (tag.visible == "true") {
+            if(tag.name === "deprecated"){
+              if ($(this).children().last().hasClass("guide_run_in_cloud")) {
+                //add before "NEW" orange pill so "NEW" pill shows first because float: right; reverses element order
+                $('<div class="guide_run_in_cloud_container"><span class="guide_run_in_cloud">Deprecated</span></div>').insertBefore($(this).children().last());
+              } else {
+                $('<div class="guide_run_in_cloud_container"><span class="guide_run_in_cloud">Deprecated</span></div>').insertAfter($(this).children().last());
+              }
+            }
+            else if (tag.visible == "true") {
               //add "RUN IN CLOUD" orange pill to applicable guides
               if (tag_name.toLowerCase() == "run in cloud") {
                 //add to last child element in .guide_item element
