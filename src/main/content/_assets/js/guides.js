@@ -538,7 +538,7 @@ $(document).ready(function () {
                 //add before "NEW" orange pill so "NEW" pill shows first because float: right; reverses element order
                 $(this).children(".new_guide_container").remove();
               }
-              $('<div class="guide_deprecated_container"><span class="guide_run_in_cloud">Deprecated</span></div>').insertAfter($(this).children().last());
+              $('<div class="guide_deprecated_container"><span class="guide_deprecated">Deprecated</span></div>').insertAfter($(this).children().last());
             }
           }
         });
