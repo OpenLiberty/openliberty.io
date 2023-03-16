@@ -417,10 +417,10 @@ function getTags(callback) {
     $.getJSON("../../guides/guides-common/guide_tags.json", function (data) {
         $.each(data.guide_tags, function (i, tag) {
             // Check if tag is visible before adding it
+            var project_id = window.location.pathname
+                .replace("/guides/", "")
+                .replace(".html", "");
             if (tag.visible == "true") {
-                project_id = window.location.pathname
-                    .replace("/guides/", "")
-                    .replace(".html", "");
                 // Add tag to tags_container if the guide's project id is in the array for that tag
                 if (tag.guides.indexOf(project_id) > -1) {
                     tag_html =
@@ -430,6 +430,14 @@ function getTags(callback) {
                         tag.name +
                         "</a>";
                     $("#tags_container").append(tag_html);
+                }
+            }
+            else if(tag.name === "deprecated"){
+                for(var i = 0; i < tag.redirects.length; i++){
+                    if(tag.redirects[i].old === project_id){
+                        $("header").append('<div id="deprecated_notification"><input type="image" class="notification_x" src="/img/toc_close_navy.svg" /><p>This guide is now deprecated and will be removed from the Open Liberty website in the future. The new version of this guide can be found <a href="/guides/'+tag.redirects[i].new+'.html">here.</a></p></div>');
+                        $("#code_column").css("top", "110px")
+                    }
                 }
             }
             else {
@@ -740,6 +748,11 @@ $(document).ready(function () {
             }
         }
     });
+    
+    $(document).on("click", ".notification_x", function(){
+        $(this).parent().parent().siblings("main").find("#code_column").css("top", "60px");
+        $(this).parent().remove();
+    })
 });
 
 function addGuideRatingsListener() {
@@ -764,6 +777,7 @@ $(window).on("load", function () {
             $(this).find("code").contents().unwrap();
             newPlacement.prepend($(this));
         });
+    
     $.ready.then(function () {
         // Both ready and loaded
         addGuideRatingsListener();
