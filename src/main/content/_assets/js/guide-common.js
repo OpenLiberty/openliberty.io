@@ -433,9 +433,9 @@ function getTags(callback) {
                 }
             }
             else if(tag.name === "deprecated"){
-                for(var i = 0; i < tag.redirects.length; i++){
-                    if(tag.redirects[i].old === project_id){
-                        $("header").append('<div id="deprecated_notification"><input type="image" class="notification_x" src="/img/toc_close_navy.svg" /><p>This guide is now deprecated and will be removed from the Open Liberty website in the future. The new version of this guide can be found <a href="/guides/'+tag.redirects[i].new+'.html">here.</a></p></div>');
+                for(var i = 0; i < tag.details.length; i++){
+                    if(tag.details[i].old === project_id){
+                        $("header").append('<div id="deprecated_notification"><input type="image" class="notification_x" src="/img/toc_close_navy.svg" /><p>This guide is now deprecated and will be removed from the Open Liberty website in the future. The new version of this guide can be found <a href="/guides/'+tag.details[i].new+'.html">here.</a></p></div>');
                         $("#code_column").css("top", "110px")
                     }
                 }
