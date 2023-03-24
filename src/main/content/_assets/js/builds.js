@@ -219,7 +219,7 @@ function hideOlderVersionsOfDownloadPackages(package_names) {
             }
         }
         if (package_names.includes("webProfile10")) {
-            var k_index = package_names[i].indexOf("webprofile9");
+            var k_index = package_names[i].indexOf("webProfile9");
             if (k_index > -1) {
                 builds[i].package_locations.splice(k_index, 1);
                 builds[i].package_signature_locations.splice(k_index, 1);
