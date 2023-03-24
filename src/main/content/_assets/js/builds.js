@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2022 IBM Corporation and others.
+ * Copyright (c) 2017, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,6 +64,7 @@ var allowed_builds = {
         'microProfile4.zip',
         'microProfile3.zip',
         'openliberty.zip',
+        'webProfile10.zip',
         'webProfile9.zip',
         'webProfile8.zip'
     ],
@@ -390,6 +391,11 @@ function render_builds(builds, parent) {
                                     tableID +
                                     '_package\'>Java EE 8</td>';
                             }
+                        } else if (package_name.indexOf('webprofile10') > -1) {
+                            package_column =
+                                '<td headers=\'' +
+                                tableID +
+                                '_package\'>Web Profile 10</td>';
                         } else if (package_name.indexOf('webprofile9') > -1) {
                             package_column =
                                 '<td headers=\'' +
