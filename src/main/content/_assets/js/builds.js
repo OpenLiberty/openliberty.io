@@ -197,7 +197,7 @@ function startAnimation() {
  * To be clear, this method should not be necessary if the files are managed correctly on DHE. 
  * However, it has been shown the code needs to be defensive on how it handles this code flow.
  * 
- * @params {} package_names - list of all packages for a particular Open Liberty version
+ * @param {Array} package_names - list of all packages for a particular Open Liberty version
  */
 function hideOlderVersionsOfDownloadPackages(package_names) {
     // if MicroProfile 5 and 6 are present, remove MicroProfile 5
