@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2022 IBM Corporation and others.
+ * Copyright (c) 2017, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,6 +64,7 @@ var allowed_builds = {
         'microProfile4.zip',
         'microProfile3.zip',
         'openliberty.zip',
+        'webProfile10.zip',
         'webProfile9.zip',
         'webProfile8.zip'
     ],
@@ -187,6 +188,46 @@ function startAnimation() {
     $('#cowshadow').css('animation', 'shadow_resizing 4.5s 3');
 }
 
+/**
+ * This is a helper method to hide older versions of a download package if a newer version is available
+ * for downloading by users.
+ * 
+ * For example: Hide Jakarta EE 9 if Jakarta EE 10 is available
+ * 
+ * To be clear, this method should not be necessary if the files are managed correctly on DHE. 
+ * However, it has been shown the code needs to be defensive on how it handles this code flow.
+ * 
+ * @param {Array} package_names - list of all packages for a particular Open Liberty version
+ */
+function hideOlderVersionsOfDownloadPackages(package_names) {
+    // if MicroProfile 5 and 6 are present, remove MicroProfile 5
+    // if Jakarta EE 9 and 10 are present, remove Jakarta EE 9
+    // If Web Profile 9 and 10 are present, remove Web Profile 9
+    for (var i = 0; i < builds.length; i++) {
+        if (package_names[i].includes("microProfile6")) {
+            var m_index = package_names[i].indexOf("microProfile5");
+            if (m_index > -1) {
+                builds[i].package_locations.splice(m_index, 1);
+                builds[i].package_signature_locations.splice(m_index, 1);
+            }
+        }
+        if (package_names.includes("jakartaee10")) {
+            var j_index = package_names[i].indexOf("jakartaee9");
+            if (j_index > -1) {
+                builds[i].package_locations.splice(j_index, 1);
+                builds[i].package_signature_locations.splice(j_index, 1);
+            }
+        }
+        if (package_names.includes("webProfile10")) {
+            var k_index = package_names[i].indexOf("webProfile9");
+            if (k_index > -1) {
+                builds[i].package_locations.splice(k_index, 1);
+                builds[i].package_signature_locations.splice(k_index, 1);
+            }
+        }
+    }
+}
+
 function render_builds(builds, parent) {
     parent.empty();
 
@@ -227,30 +268,13 @@ function render_builds(builds, parent) {
 
     if (parent.parent().data('builds-id') == 'runtime_releases') {
         // get packages names for each build
-        var names = builds.map(function(x){
+        var package_names = builds.map(function(x){
             return x.package_locations.map(function(y){
                 return y.split(".")[0];
             })
         })
         
-        // if MicroProfile 5 and 6 are present, remove MicroProfile 5
-        // if Jakarta EE 9 and 10 are present, remove Jakarta EE 9
-        for(var i = 0; i < builds.length; i++){
-            if(names[i].includes("microProfile6")){
-                var mInd = names[i].indexOf("microProfile5");
-                if(mInd > -1){
-                    builds[i].package_locations.splice(mInd, 1);
-                    builds[i].package_signature_locations.splice(mInd, 1);
-                }
-            }
-            if(names[i].includes("jakartaee10")){
-                var jInd = names[i].indexOf("jakartaee9");
-                if(jInd > -1){
-                    builds[i].package_locations.splice(jInd, 1);
-                    builds[i].package_signature_locations.splice(jInd, 1);
-                }
-            }
-        }
+        hideOlderVersionsOfDownloadPackages(package_names);
     }
 
     builds.forEach(function (build) {
@@ -390,6 +414,11 @@ function render_builds(builds, parent) {
                                     tableID +
                                     '_package\'>Java EE 8</td>';
                             }
+                        } else if (package_name.indexOf('webprofile10') > -1) {
+                            package_column =
+                                '<td headers=\'' +
+                                tableID +
+                                '_package\'>Web Profile 10</td>';
                         } else if (package_name.indexOf('webprofile9') > -1) {
                             package_column =
                                 '<td headers=\'' +
