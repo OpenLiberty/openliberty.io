@@ -27,6 +27,7 @@ var starter_domain =
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 var failed_builds_request = false;
+var info_tooltip_html = '<img class="info_tooltip" src="/img/information_downloads_table.svg" /> <p class="hide_tooltip tooltip_text" style="display:none;">Our Jakarta EE packages include MicroProfile.</p>'
 
 // Controls what build zips are exposed on openliberty.io.  This will need to be updated
 // if there is a new zip version published on DHE.  The intent of this allow_builds list is to
@@ -127,10 +128,10 @@ function getPublicKeyURL(liberty_version) {
     var liberty_versions_using_2021_pem = ["22.0.0.1", "22.0.0.2", "22.0.0.3", "22.0.0.4", "22.0.0.5", "22.0.0.6", 
     "22.0.0.7", "22.0.0.8", "22.0.0.9", "22.0.0.10", "22.0.0.11", "22.0.0.12", "22.0.0.13", "23.0.0.1"];
 
-    const pem_2021_href =
+    var pem_2021_href =
     "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_06-02-2021.pem";
     
-    const pem_2023_href =
+    var pem_2023_href =
     "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/OpenLiberty_02-13-2023.pem";
 
     if(liberty_versions_using_2021_pem.indexOf(liberty_version) > -1) {
@@ -314,7 +315,8 @@ function render_builds(builds, parent) {
                         // Assume package_name will always end with .zip and the filename 
                         // has _no_ dots
                         var sig_name = package_name.split('.')[0];
-                        var [sig_href, pem_href] = getURLsForSigAndPem(build.version, package_signature_locations, sig_name+'.sig');
+                        var sig_href = getURLsForSigAndPem(build.version, package_signature_locations, sig_name+'.sig')[0];
+                        var pem_href = getURLsForSigAndPem(build.version, package_signature_locations, sig_name+'.sig')[1];
                         //========== Get URL for the .sha2 file
                         // TODO: Surface the href when DHE API has this data
                         // See https://github.com/OpenLiberty/openliberty.io/issues/1734
@@ -337,7 +339,7 @@ function render_builds(builds, parent) {
                         );
 
                         var verification_column2 = $(
-                            '<td headers="' + tableID + '_verification"' + `rowspan="${num_packages}"` + '>' +
+                            '<td headers="' + tableID + '_verification"' + 'rowspan="'+num_packages+'"' + '>' +
                             // Optional sig file download button
                             (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'PEM</a>' : '' ) +
                             '</td>'
@@ -366,13 +368,13 @@ function render_builds(builds, parent) {
                             package_column =
                                     '<td headers=\'' +
                                     tableID +
-                                    '_package\'>Jakarta EE 10</td>';
+                                    '_package\'>Jakarta EE 10 '+info_tooltip_html+'</td>';
                         } else if (package_name.indexOf('jakartaee9') > -1) {
                             // 21.0.0.12 to 23.0.0.2 should be labled "Jakarta EE 9"
                             package_column =
                                     '<td headers=\'' +
                                     tableID +
-                                    '_package\'>Jakarta EE 9</td>';
+                                    '_package\'>Jakarta EE 9 '+info_tooltip_html+'</td>';
                         } else if (package_name.indexOf('java') > -1) {                            
                             // 19.0.0.6 and higher should be labeled "Jakarta EE 8", and anything before should be "Java EE 8"                            
                             if (
@@ -503,8 +505,9 @@ function render_builds(builds, parent) {
                         // The name has a lot of dots, so have to use lastIndexOf to separate
                         // filename from file extension
                         var beta_sig_name = beta_package_name.substring(0, beta_package_name.lastIndexOf('.'));
-                        var [beta_sig_href, beta_pem_href] = 
-                            getURLsForSigAndPem(build.version, beta_package_sig_locs, beta_sig_name+'.sig');
+                        var beta_sig_href = 
+                            getURLsForSigAndPem(build.version, beta_package_sig_locs, beta_sig_name+'.sig')[0];
+                        var beta_pem_href = getURLsForSigAndPem(build.version, beta_package_sig_locs, beta_sig_name+'.sig')[1];
                         //========== Get URL for the .sha2 file
                         var beta_sha2_href = ''; // TODO: Surface the href when DHE API has this data
 
@@ -1545,6 +1548,11 @@ $(document).ready(function () {
                 $(activeTab).focus();
             });
         });
+
+    // look into moving the text to the row instead of the cell
+    $(document).on("mouseenter mouseleave", ".info_tooltip", function(e){
+        $(this).siblings(".tooltip_text").toggle("slow");
+    })
 
     $(window).on('scroll', function (event) {
         // start animation if images are in viewport
