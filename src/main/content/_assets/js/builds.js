@@ -27,7 +27,7 @@ var starter_domain =
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 var failed_builds_request = false;
-var info_tooltip_html = '<img class="info_tooltip" src="/img/information_downloads_table.svg" /> <p class="hide_tooltip tooltip_text" style="display:none;">Our Jakarta EE packages include MicroProfile.</p>'
+var info_tooltip_html = '<img class="info_tooltip" src="/img/information_downloads_table.svg" /> <p class="tooltip_text hide_tooltip" style="display:none;">Our Jakarta EE packages include MicroProfile.</p>'
 
 // Controls what build zips are exposed on openliberty.io.  This will need to be updated
 // if there is a new zip version published on DHE.  The intent of this allow_builds list is to
@@ -1550,8 +1550,15 @@ $(document).ready(function () {
         });
 
     // look into moving the text to the row instead of the cell
-    $(document).on("mouseenter mouseleave", ".info_tooltip", function(e){
-        $(this).siblings(".tooltip_text").toggle("slow");
+    $("#runtime_releases_table").on("mouseenter mouseleave", ".info_tooltip", function(e){
+        var focus = $(this).siblings(".tooltip_text");
+        if($(focus).css('display') === "none"){
+            $(focus).show();
+        }
+        else{
+            $(focus).hide();
+        }
+        // console.log($(this).position());
     })
 
     $(window).on('scroll', function (event) {
