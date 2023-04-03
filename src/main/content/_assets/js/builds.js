@@ -274,7 +274,7 @@ function render_builds(builds, parent) {
             })
         })
         
-        hideOlderVersionsOfDownloadPackages(package_names);
+        // hideOlderVersionsOfDownloadPackages(package_names);
     }
 
     builds.forEach(function (build) {
