@@ -814,6 +814,7 @@ function sortBetaLocations(package_locations_param) {
     app_priority_array = [
       "jakartaee10",
       "jakartaee9",
+      "webProfile10",
       "webProfile9",
       "microProfile6",
       "microProfile5",
