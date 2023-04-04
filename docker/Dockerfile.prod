@@ -68,4 +68,5 @@ COPY --from=war --chown=1001:0 target/openliberty-website-1.0-SNAPSHOT /config/a
 # This script will add the requested server configurations, apply any interim fixes and populate caches to
 # optimize runtime
 ARG VERBOSE=true
+ENV OPENJ9_SCC=false
 RUN configure.sh
