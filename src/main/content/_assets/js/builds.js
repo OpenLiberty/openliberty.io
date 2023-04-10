@@ -27,7 +27,6 @@ var starter_domain =
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 var failed_builds_request = false;
-var info_tooltip_html = '<img class="info_tooltip" src="/img/information_downloads_table.svg" alt="For convenience, this package also includes features that enable MicroProfile 6"/> <p class="tooltip_text" style="display:none;">For convenience, this package also includes features that enable MicroProfile 6.</p>'
 
 // Controls what build zips are exposed on openliberty.io.  This will need to be updated
 // if there is a new zip version published on DHE.  The intent of this allow_builds list is to
@@ -362,13 +361,13 @@ function render_builds(builds, parent) {
                                 build.version.lastIndexOf('.') + 1
                             ),
                             10
-                        );  
+                        );
                         if (package_name.indexOf('jakartaee10') > -1) {
                             // 23.0.0.3 and higher should hav EE10 instead of EE9
                             package_column =
                                     '<td headers=\'' +
                                     tableID +
-                                    '_package\'>Jakarta EE 10 '+info_tooltip_html+'</td>';
+                                    '_package\'>Jakarta EE 10 <img class="info_tooltip" src="/img/information_downloads_table.svg" alt="For convenience, this package also includes features that enable MicroProfile 6"/> <p class="tooltip_text" style="display:none;">For convenience, this package also includes features that enable MicroProfile 6.</p></td>';
                                     console.log(build.version);
                         } else if (package_name.indexOf('jakartaee9') > -1) {
                             // 21.0.0.12 to 23.0.0.3 should be labled "Jakarta EE 9"
@@ -386,7 +385,8 @@ function render_builds(builds, parent) {
                                 package_column =
                                     '<td headers=\'' +
                                     tableID +
-                                    '_package\'>Jakarta EE 8'+(((buildVersionYear === 23 && buildVersionMonth >=3 ) || (buildVersionYear > 23)) ? ' '+info_tooltip_html :'') +'</td>';
+                                    '_package\'>Jakarta EE 8 '
+                                    +(((buildVersionYear === 23 && buildVersionMonth >=3 ) || (buildVersionYear > 23)) ? '<img class="info_tooltip" src="/img/information_downloads_table.svg" alt="For convenience, this package also includes features that enable MicroProfile 4"/> <p class="tooltip_text" style="display:none;">For convenience, this package also includes features that enable MicroProfile 4.</p>' :'') +'</td>';
                             } else {
                                 package_column =
                                     '<td headers=\'' +
