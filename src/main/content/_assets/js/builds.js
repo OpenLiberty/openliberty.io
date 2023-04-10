@@ -27,7 +27,7 @@ var starter_domain =
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 var failed_builds_request = false;
-var info_tooltip_html = '<img class="info_tooltip" src="/img/information_downloads_table.svg" alt="This package also includes MicroProfile features"/> <p class="tooltip_text" style="display:none;">This package includes MicroProfile features.</p>'
+var info_tooltip_html = '<img class="info_tooltip" src="/img/information_downloads_table.svg" alt="For convenience, this package also includes  features that enable MicroProfile 6"/> <p class="tooltip_text" style="display:none;">For convenience, this package also includes features that enable MicroProfile 6.</p>'
 
 // Controls what build zips are exposed on openliberty.io.  This will need to be updated
 // if there is a new zip version published on DHE.  The intent of this allow_builds list is to
