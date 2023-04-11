@@ -435,7 +435,7 @@ function getTags(callback) {
             else if(tag.name === "deprecated"){
                 for(var i = 0; i < tag.details.length; i++){
                     if(tag.details[i].old === project_id){
-                        $("header").append('<div id="deprecated_notification"><input type="image" class="notification_x" src="/img/toc_close_navy.svg" /><p>This guide is now <em>deprecated</em> and will be <em>removed</em> from the Open Liberty website '+(tag.details[i].date ? 'on '+tag.details[i].date : 'in the future')+'. The new version of this guide can be found <a href="/guides/'+tag.details[i].new+'.html">here.</a></p></div>');
+                        $("header").append('<div id="deprecated_notification"><input type="image" class="notification_x" src="/img/toc_close_navy.svg" /><p>This guide is now <em>deprecated</em> and will be <em>removed</em> from the Open Liberty website '+(tag.details[i].date ? 'on '+tag.details[i].date : 'in the future')+'. Check out <a href="/guides/'+tag.details[i].new+'.html">this alternative guide</a> that covers the same objectives, but uses more up-to-date technology.</p></div>');
                         $("#code_column").css("top", "110px")
                     }
                 }
