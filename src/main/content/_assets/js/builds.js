@@ -128,10 +128,10 @@ function getPublicKeyURL(liberty_version) {
     var liberty_versions_using_2021_pem = ["22.0.0.1", "22.0.0.2", "22.0.0.3", "22.0.0.4", "22.0.0.5", "22.0.0.6", 
     "22.0.0.7", "22.0.0.8", "22.0.0.9", "22.0.0.10", "22.0.0.11", "22.0.0.12", "22.0.0.13", "23.0.0.1"];
 
-    const pem_2021_href =
+    var pem_2021_href =
     "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/WebSphereLiberty_06-02-2021.pem";
     
-    const pem_2023_href =
+    var pem_2023_href =
     "https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/sign/public_keys/OpenLiberty_02-13-2023.pem";
 
     if(liberty_versions_using_2021_pem.indexOf(liberty_version) > -1) {
@@ -338,7 +338,8 @@ function render_builds(builds, parent) {
                         // Assume package_name will always end with .zip and the filename 
                         // has _no_ dots
                         var sig_name = package_name.split('.')[0];
-                        var [sig_href, pem_href] = getURLsForSigAndPem(build.version, package_signature_locations, sig_name+'.sig');
+                        var sig_href = getURLsForSigAndPem(build.version, package_signature_locations, sig_name+'.sig')[0];
+                        var pem_href = getURLsForSigAndPem(build.version, package_signature_locations, sig_name+'.sig')[1];
                         //========== Get URL for the .sha2 file
                         // TODO: Surface the href when DHE API has this data
                         // See https://github.com/OpenLiberty/openliberty.io/issues/1734
@@ -361,7 +362,7 @@ function render_builds(builds, parent) {
                         );
 
                         var verification_column2 = $(
-                            '<td headers="' + tableID + '_verification"' + `rowspan="${num_packages}"` + '>' +
+                            '<td headers="' + tableID + '_verification"' + 'rowspan="'+num_packages+'"' + '>' +
                             // Optional sig file download button
                             (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'PEM</a>' : '' ) +
                             '</td>'
@@ -384,15 +385,16 @@ function render_builds(builds, parent) {
                                 build.version.lastIndexOf('.') + 1
                             ),
                             10
-                        );  
+                        );
                         if (package_name.indexOf('jakartaee10') > -1) {
-                            // 23.0.0.2 and higher should hav EE10 instead of EE9
+                            // 23.0.0.3 and higher should have EE10 instead of EE9
                             package_column =
                                     '<td headers=\'' +
                                     tableID +
-                                    '_package\'>Jakarta EE 10</td>';
+                                    '_package\'>Jakarta EE 10 <img class="info_tooltip" src="/img/information_downloads_table.svg" alt="For convenience, this package also includes features that enable MicroProfile 6"/> '+
+                                    '<p class="tooltip_text" style="display:none;">For convenience, this package also includes features that enable MicroProfile 6.</p></td>';
                         } else if (package_name.indexOf('jakartaee9') > -1) {
-                            // 21.0.0.12 to 23.0.0.2 should be labled "Jakarta EE 9"
+                            // 21.0.0.12 to 23.0.0.3 should be labled "Jakarta EE 9"
                             package_column =
                                     '<td headers=\'' +
                                     tableID +
@@ -407,7 +409,9 @@ function render_builds(builds, parent) {
                                 package_column =
                                     '<td headers=\'' +
                                     tableID +
-                                    '_package\'>Jakarta EE 8</td>';
+                                    '_package\'>Jakarta EE 8 '
+                                    +(((buildVersionYear === 23 && buildVersionMonth >=3 ) || (buildVersionYear > 23)) ? '<img class="info_tooltip" src="/img/information_downloads_table.svg" alt="For convenience, this package also includes features that enable MicroProfile 4"/> <p class="tooltip_text" style="display:none;">For convenience, this package also includes features that enable MicroProfile 4.</p>' :'') 
+                                    +'</td>';
                             } else {
                                 package_column =
                                     '<td headers=\'' +
@@ -532,8 +536,9 @@ function render_builds(builds, parent) {
                         // The name has a lot of dots, so have to use lastIndexOf to separate
                         // filename from file extension
                         var beta_sig_name = beta_package_name.substring(0, beta_package_name.lastIndexOf('.'));
-                        var [beta_sig_href, beta_pem_href] = 
-                            getURLsForSigAndPem(build.version, beta_package_sig_locs, beta_sig_name+'.sig');
+                        var beta_sig_href = 
+                            getURLsForSigAndPem(build.version, beta_package_sig_locs, beta_sig_name+'.sig')[0];
+                        var beta_pem_href = getURLsForSigAndPem(build.version, beta_package_sig_locs, beta_sig_name+'.sig')[1];
                         //========== Get URL for the .sha2 file
                         var beta_sha2_href = ''; // TODO: Surface the href when DHE API has this data
 
@@ -1575,6 +1580,17 @@ $(document).ready(function () {
                 $(activeTab).focus();
             });
         });
+
+    // look into moving the text to the row instead of the cell
+    $("#runtime_releases_table").on("mouseenter mouseleave", ".info_tooltip", function(e){
+        var focus = $(this).siblings(".tooltip_text");
+        if($(focus).css('display') === "none"){
+            $(focus).show();
+        }
+        else{
+            $(focus).hide();
+        }
+    })
 
     $(window).on('scroll', function (event) {
         // start animation if images are in viewport
