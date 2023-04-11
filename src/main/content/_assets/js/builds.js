@@ -394,7 +394,7 @@ function render_builds(builds, parent) {
                                     '_package\'>Jakarta EE 10 <img class="info_tooltip" src="/img/information_downloads_table.svg" alt="For convenience, this package also includes features that enable MicroProfile 6"/> '+
                                     '<p class="tooltip_text" style="display:none;">For convenience, this package also includes features that enable MicroProfile 6.</p></td>';
                         } else if (package_name.indexOf('jakartaee9') > -1) {
-                            // 21.0.0.12 to 23.0.0.3 should be labled "Jakarta EE 9"
+                            // 21.0.0.12 to 23.0.0.2 should be labled "Jakarta EE 9"
                             package_column =
                                     '<td headers=\'' +
                                     tableID +
