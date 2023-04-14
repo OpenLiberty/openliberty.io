@@ -432,10 +432,11 @@ function getTags(callback) {
                     $("#tags_container").append(tag_html);
                 }
             }
+            // if guide is deprecated, add notification under navigation
             else if(tag.name === "deprecated"){
                 for(var i = 0; i < tag.details.length; i++){
                     if(tag.details[i].old === project_id){
-                        $("header").append('<div id="deprecated_notification"><input type="image" class="notification_x" src="/img/toc_close_navy.svg" /><p>This guide is now <em>deprecated</em> and will be <em>removed</em> from the Open Liberty website '+(tag.details[i].date ? 'in '+tag.details[i].date : 'in the future')+'. Check out <a href="/guides/'+tag.details[i].new+'.html">this alternative guide</a>, which uses more up-to-date technology.</p></div>');
+                        $("header").append('<div id="deprecated_notification"><p>This guide is now <em>deprecated</em> and will be <em>removed</em> from the Open Liberty website '+(tag.details[i].date ? 'in '+tag.details[i].date : 'in the future')+'. Check out <a href="/guides/'+tag.details[i].new+'.html">this alternative guide</a>, which uses more up-to-date technology.</p><input type="image" class="notification_x" src="/img/toc_close_navy.svg" alt="Close notification"/></div>');
                         $("#code_column").css("top", "110px")
                     }
                 }
@@ -749,6 +750,7 @@ $(document).ready(function () {
         }
     });
     
+    // adjust css when deprecation notification is closed
     $(document).on("click", ".notification_x", function(){
         $(this).parent().parent().siblings("main").find("#code_column").css("top", "60px");
         $(this).parent().remove();
