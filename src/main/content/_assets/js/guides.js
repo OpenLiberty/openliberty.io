@@ -517,7 +517,7 @@ $(document).ready(function () {
               $(this).data("tags", tag_name.toLowerCase());
             }
             if (tag.visible == "true") {
-              //add "RUN IN CLOUD" orange pill to applicable guides
+              //add "RUN IN CLOUD" orange pill to applicable guides if the guide is not deprecated
               if (tag_name.toLowerCase() == "run in cloud" && !dep) {
                 //add to last child element in .guide_item element
                 if ($(this).children().last().hasClass("new_guide_container")) {
@@ -528,14 +528,16 @@ $(document).ready(function () {
                 }
               }
             }
+            // deprecated pill label should be prioritized over others
+            // we want users to use the up-to-date guide
             if(tag_name.toLowerCase() === "deprecated"){
               dep = true;
               if ($(this).has(".guide_run_in_cloud_container").length) {
-                //add before "NEW" orange pill so "NEW" pill shows first because float: right; reverses element order
+                //remove additional pills
                 $(this).children(".guide_run_in_cloud_container").remove();
               }
               if ($(this).has(".new_guide_container").length) {
-                //add before "NEW" orange pill so "NEW" pill shows first because float: right; reverses element order
+                //remove additional pills
                 $(this).children(".new_guide_container").remove();
               }
               $('<div class="guide_deprecated_container"><span class="guide_deprecated">Deprecated</span></div>').insertAfter($(this).children().last());
