@@ -539,7 +539,6 @@ function setPackageContainerHeight() {
 function setIFrameContent(iframeName, href) {
   window.onpopstate = (e) => {
     popStateOrPageRefresh();
-
   };
   if(iFrameClicked == false) {
     popStateOrPageRefresh();
@@ -782,13 +781,16 @@ function setFramelessQueryParams(){
   var isFrameless = mainFrame.contents().find('iframe').length === 0;
   if(isFrameless){
     var alocation = mainFrame.contents().attr('location').href;
-    var newURL = new URL(window.location.href);
-    var queryParams = newURL.searchParams;
-    queryParams.set('javadocPath', alocation);
-    var search = window.location.search;
-    var hash = window.location.hash;
-    var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
-    window.history.pushState({}, null, newURL);
+    // parse package and class
+    
+    // var queryParams = setQueryParams(href, paramKey);
+    // var newURL = new URL(window.location.href);
+    // var queryParams = newURL.searchParams;
+    // queryParams.set('javadocPath', alocation);
+    // var search = window.location.search;
+    // var hash = window.location.hash;
+    // var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
+    // window.history.pushState({}, null, newURL);
   }
 }
 
@@ -800,6 +802,7 @@ function loadJavadocFromUrl(){
     var search = window.location.search;
     if(!search) return;
     var params = new URLSearchParams(search);
+    var old_query_params = parseQueryParams();
     var javadocPath = encodeURI(params.get('javadocPath'));
     if(!(javadocPath === null || javadocPath === "null" || javadocPath === "")){
       if (mainFrame[0].contentWindow.location.href !== javadocPath) {
@@ -868,7 +871,9 @@ $(document).ready(function() {
       .contents()
       .find(".leftTop iframe")
       .ready(function() {
-        if($("#javadoc_container").contents().find(".leftTop iframe").length > 0){
+        var mainFrame = $('#javadoc_container');
+        var isFrameless = mainFrame.contents().find('iframe').length === 0;
+        if(!isFrameless){
           modifyPackageTopLinks();
         }       
       });
