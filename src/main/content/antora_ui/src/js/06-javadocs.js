@@ -781,16 +781,15 @@ function setFramelessQueryParams(){
   var isFrameless = mainFrame.contents().find('iframe').length === 0;
   if(isFrameless){
     var alocation = mainFrame.contents().attr('location').href;
-    // parse package and class
-    
-    // var queryParams = setQueryParams(href, paramKey);
-    // var newURL = new URL(window.location.href);
-    // var queryParams = newURL.searchParams;
-    // queryParams.set('javadocPath', alocation);
-    // var search = window.location.search;
-    // var hash = window.location.hash;
-    // var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
-    // window.history.pushState({}, null, newURL);
+    // parse package and class    
+    var queryParams = setQueryParams(href, paramKey);
+    var newURL = new URL(window.location.href);
+    var queryParams = newURL.searchParams;
+    queryParams.set('javadocPath', alocation);
+    var search = window.location.search;
+    var hash = window.location.hash;
+    var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
+    window.history.pushState({}, null, newURL);
   }
 }
 
@@ -800,7 +799,6 @@ function loadJavadocFromUrl(){
   var isFrameless = mainFrame.contents().find('iframe').length === 0;
   if(isFrameless){
     var search = window.location.search;
-    if(!search) return;
     var params = new URLSearchParams(search);
     var old_query_params = parseQueryParams();
     var javadocPath = encodeURI(params.get('javadocPath'));
