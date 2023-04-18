@@ -782,7 +782,8 @@ function setFramelessQueryParams(){
   if(isFrameless){
     var alocation = mainFrame.contents().attr('location').href;
     // parse package and class    
-    var queryParams = setQueryParams(href, paramKey);
+    setQueryParams(alocation, PACKAGE_PARAM);
+    var old_query_params = setQueryParams(alocation, CLASS_PARAM);
     var newURL = new URL(window.location.href);
     var queryParams = newURL.searchParams;
     queryParams.set('javadocPath', alocation);
