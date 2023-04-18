@@ -12,6 +12,7 @@
 var backgroundSizeAdjustment = 200;
 var twoColumnBreakpoint = 1170;
 var threeColumnBreakpoint = 1440;
+var dep = false;
 
 // update twoColumnBreakpoint for the only single pane guide
 if (window.location.href.indexOf("cloud-ibm") > -1) {
@@ -436,8 +437,9 @@ function getTags(callback) {
             else if(tag.name === "deprecated"){
                 for(var i = 0; i < tag.details.length; i++){
                     if(tag.details[i].old === project_id){
-                        $("header").append('<div id="deprecated_notification"><p>This guide is now <em>deprecated</em> and will be <em>removed</em> from the Open Liberty website '+(tag.details[i].date ? 'in '+tag.details[i].date : 'in the future')+'. Check out <a href="/guides/'+tag.details[i].new+'.html">this alternative guide</a>, which uses more up-to-date technology.</p><input type="image" class="notification_x" src="/img/toc_close_navy.svg" alt="Close notification"/></div>');
+                        $("#background_container").prepend('<div id="deprecated_notification"><p>This guide is now <em>deprecated</em> and will be <em>removed</em> from the Open Liberty website '+(tag.details[i].date ? 'in '+tag.details[i].date : 'in the future')+'. Check out <a href="/guides/'+tag.details[i].new+'.html">this alternative guide</a>, which uses more up-to-date technology.</p><input type="image" class="notification_x" src="/img/toc_close_navy.svg" alt="Close notification"/></div>');
                         $("#code_column").css("top", "110px")
+                        dep = true;
                     }
                 }
             }
@@ -471,6 +473,14 @@ $(document).ready(function () {
         $(this).prepend('<div class="copied_confirmation">Copied to clipboard</div><input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
     });
 
+    if($("#nav_bar").hasClass("fixed_top")){
+        $("#deprecated_notification").css("top", "60px");
+        $("#toc_inner").css("top", "60px");
+    } else{
+        $("#deprecated_notification").css("top", "0");
+        $("#toc_inner").css("top", "0");
+    }
+
     $(window).on("resize", function () {
         if (!inSingleColumnView()){
             $("#code_column").css("top", "0px");
@@ -485,7 +495,12 @@ $(document).ready(function () {
         //handles where the top of the code column should be
         if (!inSingleColumnView()) {
             //at the top of the browser window in multi-column view
-            $("#code_column").css({"position":"fixed", "top":"0px"})
+            if(dep){
+                var t = $("#deprecated_notification").outerHeight();
+                $("#code_column").css({"position":"fixed", "top": t+"px"})
+            } else{
+                $("#code_column").css({"position":"fixed", "top":"0px"})
+            }
         } else {
             //below the hotspot in single column view
             $("#code_column").css("position", "fixed");
@@ -494,6 +509,13 @@ $(document).ready(function () {
         handleStickyHeader();
         handleFloatingTableOfContent();
         handleFloatingCodeColumn();
+        if($("#nav_bar").hasClass("fixed_top")){
+            $("#deprecated_notification").css("top", "60px");
+            $("#toc_inner").css("top", "60px");
+        } else{
+            $("#deprecated_notification").css("top", "0");
+            $("#toc_inner").css("top", "0");
+        }
     });
 
     window.addEventListener("hashchange", function (e) {

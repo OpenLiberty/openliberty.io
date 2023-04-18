@@ -360,7 +360,7 @@
   min-height: 600px;
   background-repeat: no-repeat;
   margin-bottom: 100px;
-  overflow: hidden;
+  // overflow: hidden;
 }
 
 #toc_inner {
@@ -532,10 +532,12 @@
 // deprecated guide css
 #deprecated_notification{
   background: #E6EDA8;
-  height: 50px;
+  height: auto;
   width: 100%;
-  position: relative;
-  z-index: 8;
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  transition: top .3s ease-in-out;
   padding-top: 10px;
   border-bottom: 2px solid #96BC32;
   border-top: 2px solid #96BC32;
