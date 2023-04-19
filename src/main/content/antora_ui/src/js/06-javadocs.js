@@ -823,6 +823,7 @@ function setFramelessQueryParams(){
     var package_pattern = /(io\.openliberty\.[^\/]+-javadoc\/com\/ibm\/websphere\/[^\/]+)/;
     var class_pattern = /([a-zA-Z-]+\.html)/;
     var package_match = alocation.match(package_pattern);
+    var class_match = alocation.match(class_pattern);
     if(package_match){
       updateQueryParams(alocation, PACKAGE_PARAM);
     }
