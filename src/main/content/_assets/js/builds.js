@@ -188,46 +188,6 @@ function startAnimation() {
     $('#cowshadow').css('animation', 'shadow_resizing 4.5s 3');
 }
 
-/**
- * This is a helper method to hide older versions of a download package if a newer version is available
- * for downloading by users.
- * 
- * For example: Hide Jakarta EE 9 if Jakarta EE 10 is available
- * 
- * To be clear, this method should not be necessary if the files are managed correctly on DHE. 
- * However, it has been shown the code needs to be defensive on how it handles this code flow.
- * 
- * @param {Array} package_names - list of all packages for a particular Open Liberty version
- */
-function hideOlderVersionsOfDownloadPackages(package_names) {
-    // if MicroProfile 5 and 6 are present, remove MicroProfile 5
-    // if Jakarta EE 9 and 10 are present, remove Jakarta EE 9
-    // If Web Profile 9 and 10 are present, remove Web Profile 9
-    for (var i = 0; i < builds.length; i++) {
-        if (package_names[i].includes("microProfile6")) {
-            var m_index = package_names[i].indexOf("microProfile5");
-            if (m_index > -1) {
-                builds[i].package_locations.splice(m_index, 1);
-                builds[i].package_signature_locations.splice(m_index, 1);
-            }
-        }
-        if (package_names.includes("jakartaee10")) {
-            var j_index = package_names[i].indexOf("jakartaee9");
-            if (j_index > -1) {
-                builds[i].package_locations.splice(j_index, 1);
-                builds[i].package_signature_locations.splice(j_index, 1);
-            }
-        }
-        if (package_names.includes("webProfile10")) {
-            var k_index = package_names[i].indexOf("webProfile9");
-            if (k_index > -1) {
-                builds[i].package_locations.splice(k_index, 1);
-                builds[i].package_signature_locations.splice(k_index, 1);
-            }
-        }
-    }
-}
-
 function render_builds(builds, parent) {
     parent.empty();
 
