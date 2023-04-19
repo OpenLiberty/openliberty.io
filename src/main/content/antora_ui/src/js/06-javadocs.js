@@ -439,6 +439,40 @@ function addClickListeners() {
   });
 }
 
+function updateQueryParams(href, paramKey){
+   var queryParams = setQueryParams(href, paramKey);
+   // provide state data to be used by the popstate event to render the frame contents
+   var state = {};
+   state[iframeName] = href;
+   var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey);
+   testObject = otherQueryParamsContent;
+   for (key in otherQueryParamsContent) {
+     var otherStateKey = CLASS_FRAME;
+     if (otherQueryParamsContent.hasOwnProperty(key)){
+       if (key === PACKAGE_PARAM) {
+         otherStateKey = PACKAGE_FRAME;
+       }
+       var value = otherQueryParamsContent[key];
+       state[otherStateKey] = defaultHtmlRootPath + decodeURIComponent(value);
+     }
+   }
+
+   var search = window.location.search;
+   var hash = window.location.hash;      
+   // Removing old search and hash, otherwise it adds duplicate query parameters and hashes.
+   var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
+   window.history.pushState(state, null, newURL);
+
+   replaceCanonicalUrl(newURL);
+
+   var package;
+   if(queryParams.has(PACKAGE_PARAM)){
+     queryParams.delete(PACKAGE_PARAM);
+   }
+
+   updateTitle(package);
+}
+
 function addClickListener(contents) {
   contents.on("click", function(e) {
     var handlingClick = true;
@@ -781,16 +815,28 @@ function setFramelessQueryParams(){
   var isFrameless = mainFrame.contents().find('iframe').length === 0;
   if(isFrameless){
     var alocation = mainFrame.contents().attr('location').href;
-    // parse package and class    
-    setQueryParams(alocation, PACKAGE_PARAM);
-    var old_query_params = setQueryParams(alocation, CLASS_PARAM);
-    var newURL = new URL(window.location.href);
-    var queryParams = newURL.searchParams;
-    queryParams.set('javadocPath', alocation);
-    var search = window.location.search;
-    var hash = window.location.hash;
-    var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
-    window.history.pushState({}, null, newURL);
+    var origin = window.location.origin;
+    alocation = alocation.substring(origin.length);
+    // remove /docs/modules/reference/
+    if(alocation.indexOf('/docs/modules/reference') === 0){
+      alocation = alocation.substring(23);
+    }
+    var package_pattern = /(io\.openliberty\.[^\/]+-javadoc\/com\/ibm\/websphere\/[^\/]+)/;
+    var class_pattern = /([a-zA-Z-]+\.html)/;
+    var package_match = alocation.match(package_pattern);
+    if(package_match){
+      updateQueryParams(alocation, PACKAGE_PARAM);
+    }
+    if(class_match){
+      updateQueryParams(alocation, CLASS_PARAM);
+    }    
+    // var newURL = new URL(window.location.href);
+    // var queryParams = newURL.searchParams;
+    // queryParams.set('javadocPath', alocation);
+    // var search = window.location.search;
+    // var hash = window.location.hash;
+    // var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
+    // window.history.pushState({}, null, newURL);
   }
 }
 
