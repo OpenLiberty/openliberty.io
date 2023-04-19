@@ -32,7 +32,7 @@ var openliberty = (function() {
                 }
             }
             else {
-                $("#code_column").css({"position": "absolute", "top": ""});
+                // $("#code_column").css({"position": "absolute", "top": ""});
                 $(".toolbar").css({"position": "static", "top": ""});
                 $(".nav").css("top", "");
             }
@@ -82,7 +82,7 @@ var openliberty = (function() {
             $("#toc_inner").css("margin-top", nav_height + "px");
         }
         $("#toc_indicator").css("margin-top", nav_height + "px");
-        $("#code_column").css({"position": "fixed", "top": nav_height + "px"});
+        // $("#code_column").css({"position": "fixed", "top": nav_height + "px"});
 
         // add margin-top to body so page doesn't jump when nav slides into view
         $('body').css("margin-top", nav_height + "px");

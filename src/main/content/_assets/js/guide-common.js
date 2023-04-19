@@ -457,6 +457,23 @@ $(document).ready(function () {
     getTags(function () {
         // If there are no tags for the guide, hide the tags title
         $("#tags_container:empty").prev().hide();
+        if(!($("#nav_bar").hasClass("hide_nav"))){
+            if(dep){
+                $("#deprecated_notification").css("top", "60px");
+                $("#toc_inner").css("top", "110px");
+                $("#code_column").css("top", "110px");
+                console.log(4)
+            } else{
+                $("#toc_inner").css("top", "60px");
+                $("#code_column").css("top", "60px");
+                console.log(5)
+            }
+        } else{
+            $("#deprecated_notification").css("top", "0");
+            $("#toc_inner").css("top", "50px");
+            $("#code_column").css("top", "50px");
+            console.log(6)
+        }
     });
 
     $("#feedback_ratings img").on("mouseenter", function (event) {
@@ -473,13 +490,7 @@ $(document).ready(function () {
         $(this).prepend('<div class="copied_confirmation">Copied to clipboard</div><input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
     });
 
-    if($("#nav_bar").hasClass("fixed_top")){
-        $("#deprecated_notification").css("top", "60px");
-        $("#toc_inner").css("top", "60px");
-    } else{
-        $("#deprecated_notification").css("top", "0");
-        $("#toc_inner").css("top", "0");
-    }
+    // look for way to check when nav is on screen
 
     $(window).on("resize", function () {
         if (!inSingleColumnView()){
@@ -495,26 +506,36 @@ $(document).ready(function () {
         //handles where the top of the code column should be
         if (!inSingleColumnView()) {
             //at the top of the browser window in multi-column view
-            if(dep){
-                var t = $("#deprecated_notification").outerHeight();
-                $("#code_column").css({"position":"fixed", "top": t+"px"})
-            } else{
-                $("#code_column").css({"position":"fixed", "top":"0px"})
-            }
+            // if(dep){
+            //     var t = $("#deprecated_notification").outerHeight();
+            //     $("#code_column").css({"position":"fixed", "top": t+"px"})
+            // } else{
+            //     $("#code_column").css({"position":"fixed", "top":"0px"})
+            // }
         } else {
             //below the hotspot in single column view
-            $("#code_column").css("position", "fixed");
+            // $("#code_column").css("position", "fixed");
         } 
         handleFloatingTOCAccordion();
         handleStickyHeader();
         handleFloatingTableOfContent();
         handleFloatingCodeColumn();
-        if($("#nav_bar").hasClass("fixed_top")){
-            $("#deprecated_notification").css("top", "60px");
-            $("#toc_inner").css("top", "60px");
+        if(!($("#nav_bar").hasClass("hide_nav"))){
+            if(dep){
+                $("#deprecated_notification").css("top", "60px");
+                $("#toc_inner").css("top", "110px");
+                $("#code_column").css({"position":"fixed", "top": "110px"})
+                console.log(1)
+            } else{
+                $("#toc_inner").css("top", "60px");
+                $("#code_column").css({"position":"fixed", "top": "60px"})
+                console.log(2)
+            }
         } else{
             $("#deprecated_notification").css("top", "0");
-            $("#toc_inner").css("top", "0");
+            $("#toc_inner").css("top", "50px");
+            $("#code_column").css({"position":"fixed", "top": "50px"})
+            console.log(3)
         }
     });
 
@@ -776,6 +797,13 @@ $(document).ready(function () {
     $(document).on("click", ".notification_x", function(){
         $(this).parent().parent().siblings("main").find("#code_column").css("top", "60px");
         $(this).parent().remove();
+        dep = false;
+        if($("#nav_bar").hasClass("fixed_top")){
+            $("#toc_inner").css("top", "60px");
+        } else{
+            $("#toc_inner").css("top", "0");
+        }
+    
     })
 });
 
