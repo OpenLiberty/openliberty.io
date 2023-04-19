@@ -825,10 +825,10 @@ function setFramelessQueryParams(){
     var package_match = alocation.match(package_pattern);
     var class_match = alocation.match(class_pattern);
     if(package_match){
-      updateQueryParams(alocation, PACKAGE_PARAM);
+      updateQueryParams(package_match, PACKAGE_PARAM);
     }
     if(class_match){
-      updateQueryParams(alocation, CLASS_PARAM);
+      updateQueryParams(class_match, CLASS_PARAM);
     }    
     // var newURL = new URL(window.location.href);
     // var queryParams = newURL.searchParams;
