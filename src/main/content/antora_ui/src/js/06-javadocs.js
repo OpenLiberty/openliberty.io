@@ -443,7 +443,6 @@ function updateQueryParams(href, paramKey){
    var queryParams = setQueryParams(href, paramKey);
    // provide state data to be used by the popstate event to render the frame contents
    var state = {};
-   state[iframeName] = href;
    var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey);
    testObject = otherQueryParamsContent;
    for (key in otherQueryParamsContent) {
