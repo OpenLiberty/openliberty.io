@@ -226,17 +226,6 @@ function render_builds(builds, parent) {
         }
     });
 
-    if (parent.parent().data('builds-id') == 'runtime_releases') {
-        // get packages names for each build
-        var package_names = builds.map(function(x){
-            return x.package_locations.map(function(y){
-                return y.split(".")[0];
-            })
-        })
-        
-        // hideOlderVersionsOfDownloadPackages(package_names);
-    }
-
     builds.forEach(function (build) {
         if (parent.hasClass('release_table_body')) {
             if (build.version.indexOf('-RC') > -1) {
