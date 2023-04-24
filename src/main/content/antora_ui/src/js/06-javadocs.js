@@ -430,11 +430,12 @@ function updateTitle(currentPage) {
 }
 
 function addClickListeners() {
-  var iframes = $("#javadoc_container")
+  var main_frame = $("#javadoc_container");
+  var iframes = main_frame
     .contents()
     .find("iframe");
 
-  $(iframes).each(function() {
+  $(main_frame, iframes).each(function() {
     addClickListener($(this).contents());
   });
 }
