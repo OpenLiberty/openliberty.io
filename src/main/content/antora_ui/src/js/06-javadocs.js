@@ -406,7 +406,7 @@ function setDynamicIframeContent() {
   }
 
   var targetPage = parseQueryParams();
-  if (targetPage.package) {
+  if (targetPage.package) { // steven might block this
     setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + targetPage.package);
   }
   if (targetPage.class) {
@@ -878,7 +878,7 @@ $(document).ready(function() {
     addClickListeners();
     addiPadScrolling();
     highlightTOC(".leftTop iframe");    
-    setFramelessQueryParams();    
+    // setFramelessQueryParams();    
 
     $("#javadoc_container")
       .contents()
