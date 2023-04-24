@@ -626,6 +626,7 @@ function popStateOrPageRefresh() {
 
 // If package is provided as paramName, then return the class param. Otherwise return the package param.
 function getRemainingQueryParam(queryParams, paramName) {
+  console.error(queryParams.getAll());
   var lookForParam = PACKAGE_PARAM;
   var returnParams = {};
   if (paramName === PACKAGE_PARAM) {
