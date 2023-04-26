@@ -398,6 +398,7 @@ function setDynamicIframeContent() {
     var alocation;
     if(isFrameless){
       alocation = container.contents().attr('location');
+      console.error('alocation: ' + alocation);
     } else {
       alocation = container
       .contents()
@@ -409,6 +410,7 @@ function setDynamicIframeContent() {
       defaultHtmlRootPath = getJavaDocHtmlPath(alocation.href, true);
       defaultPackageHtml = defaultHtmlRootPath + DEFAULT_PACKAGE_HTML;
       defaultClassHtml = defaultHtmlRootPath + DEFAULT_CLASS_HTML;
+      console.error('defaultHtmlRootPath: ' + defaultHtmlRootPath);
     }    
   }
 
