@@ -394,7 +394,7 @@ function setDynamicIframeContent() {
   // setup the default html path
   if (defaultPackageHtml === "") {
     var container = $("#javadoc_container");
-    var isFrameless = mainFrame.contents().find('iframe').length === 0;
+    var isFrameless = container.contents().find('iframe').length === 0;
     var alocation;
     if(isFrameless){
       alocation = container.contents().attr('location');
