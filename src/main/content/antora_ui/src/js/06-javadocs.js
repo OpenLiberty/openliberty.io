@@ -398,12 +398,13 @@ function setDynamicIframeContent() {
     var alocation;
     if(isFrameless){
       alocation = container.contents().attr('location');
-    }
-    alocation = container
+    } else {
+      alocation = container
       .contents()
       .find(".leftTop iframe")
       .contents()
       .attr("location");
+    }    
     if(alocation){
       defaultHtmlRootPath = getJavaDocHtmlPath(alocation.href, true);
       defaultPackageHtml = defaultHtmlRootPath + DEFAULT_PACKAGE_HTML;
