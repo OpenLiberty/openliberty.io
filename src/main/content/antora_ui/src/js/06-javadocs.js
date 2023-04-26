@@ -393,7 +393,13 @@ function parseQueryParams() {
 function setDynamicIframeContent() {
   // setup the default html path
   if (defaultPackageHtml === "") {
-    var alocation = $("#javadoc_container")
+    var container = $("#javadoc_container");
+    var isFrameless = mainFrame.contents().find('iframe').length === 0;
+    var alocation;
+    if(isFrameless){
+      alocation = container.contents().attr('location');
+    }
+    alocation = container
       .contents()
       .find(".leftTop iframe")
       .contents()
@@ -865,7 +871,7 @@ $(document).ready(function() {
     resizeJavaDocWindow();
   });
   
-  loadJavadocFromUrl();
+  // loadJavadocFromUrl();
 
   $("#javadoc_container").on("load", function() {
     resizeJavaDocWindow();
