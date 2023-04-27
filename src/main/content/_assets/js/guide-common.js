@@ -457,38 +457,27 @@ $(document).ready(function () {
     getTags(function () {
         // If there are no tags for the guide, hide the tags title
         $("#tags_container:empty").prev().hide();
-        if(!window.location.hash){
+        if(window.location.hash && dep){
+            console.log(window.location.hash)
+            $(window).trigger("scroll")
+        } else if(!window.location.hash){
             $("#deprecated_notification").css("top", "60px");
             $("#toc_inner").css("top", "110px");
             $("#code_column").css("top", "110px");
+        } else if(($("#nav_bar").hasClass("fixed_top"))){
+            if(dep){
+                $("#deprecated_notification").css("top", "60px");
+                $("#toc_inner").css("top", "110px");
+                $("#code_column").css("top", "110px");
+            } else{
+                $("#toc_inner").css("top", "60px");
+                $("#code_column").css("top", "60px");
+            }
         } else{
-            $(window).trigger("scroll")
+            $("#deprecated_notification").css("top", "0");
+            $("#toc_inner").css("top", "60px");
+            $("#code_column").css("top", "60px");
         }
-        // if(window.location.hash && dep){
-        //     console.log(window.location.hash)
-        //     $(window).trigger("scroll")
-        //     // $("#nav_bar").addClass("hide_nav")
-        //     // $("#deprecated_notification").css("top", "0");
-        //     // $("#toc_inner").css({"position":"fixed", "top":"60px"})
-        //     // $("#code_column").css("top", "60px");
-        // }
-        // else if(($("#nav_bar").hasClass("fixed_top"))){
-        //     if(dep){
-        //         $("#deprecated_notification").css("top", "60px");
-        //         $("#toc_inner").css("top", "110px");
-        //         $("#code_column").css("top", "110px");
-        //         console.log(4)
-        //     } else{
-        //         $("#toc_inner").css("top", "60px");
-        //         $("#code_column").css("top", "60px");
-        //         console.log(5)
-        //     }
-        // } else{
-        //     $("#deprecated_notification").css("top", "0");
-        //     $("#toc_inner").css("top", "60px");
-        //     $("#code_column").css("top", "60px");
-        //     console.log(6)
-        // }
     });
 
     $("#feedback_ratings img").on("mouseenter", function (event) {
@@ -508,9 +497,9 @@ $(document).ready(function () {
     // look for way to check when nav is on screen
 
     $(window).on("resize", function () {
-        // if (!inSingleColumnView()){
-        //     $("#code_column").css("top", "0px");
-        // }
+        if (!inSingleColumnView()){
+            $("#code_column").css("top", "0px");
+        }
         handleFloatingTableOfContent(); // Handle table of content view changes.
         handleFloatingTOCAccordion();
         resizeGuideSections();
@@ -519,17 +508,18 @@ $(document).ready(function () {
 
     $(window).on("scroll", function () {
         //handles where the top of the code column should be
+        debugger;
         if (!inSingleColumnView()) {
             //at the top of the browser window in multi-column view
-            // if(dep){
-            //     // var t = $("#deprecated_notification").outerHeight();
-            //     $("#code_column").css({"position":"fixed", "top": "60px"})
-            //     $("#toc_inner").css({"position":"fixed", "top": "60px"})
+            if(dep){
+                // var t = $("#deprecated_notification").outerHeight();
+                $("#code_column").css({"position":"fixed", "top": "60px"})
+                $("#toc_inner").css({"position":"fixed", "top": "60px"})
 
-            // } else{
-            //     $("#code_column").css({"position":"fixed", "top":"0px"})
-            //     $("#toc_inner").css({"position":"fixed", "top":"0px"})
-            // }
+            } else{
+                $("#code_column").css({"position":"fixed", "top":"0px"})
+                $("#toc_inner").css({"position":"fixed", "top":"0px"})
+            }
         } else {
             // below the hotspot in single column view
             $("#code_column").css("position", "fixed");
@@ -543,18 +533,15 @@ $(document).ready(function () {
                 $("#deprecated_notification").css("top", "60px");
                 $("#toc_inner").css("top", "110px");
                 $("#code_column").css({"position":"fixed", "top": "110px"})
-                console.log(1)
             } else {
                 $("#toc_inner").css("top", "60px");
                 $("#code_column").css({"position":"fixed", "top": "60px"})
-                console.log(2)
             }
         } else{
             if(dep){
                 $("#deprecated_notification").css("top", "0");
                 $("#toc_inner").css("top", "50px");
                 $("#code_column").css({"position":"fixed", "top": "50px"})
-                console.log(3)
             } 
         }
     });
@@ -815,21 +802,17 @@ $(document).ready(function () {
     
     // adjust css when deprecation notification is closed
     $(document).on("click", ".notification_x", function(e){
-        // $(this).parent().parent().siblings("main").find("#code_column").css("top", "60px");
-        // e.stopPropagation()
         dep = false;
-        console.log("here")
-        if($("#nav_bar").hasClass("fixed_top")){
-        $(this).parent().parent().find("#toc_inner").css("top", "60px");
-        $(this).parent().parent().find("#code_column").css("top", "60px");
-        } else{
-            $(this).parent().parent().find("#toc_inner").css("top", "0");
-            $(this).parent().parent().find("#code_column").css("top", "0");
-        }
+        // if($("#nav_bar").hasClass("fixed_top")){
+        //     $(this).parent().parent().find("#toc_inner").css("top", "60px");
+        //     $(this).parent().parent().find("#code_column").css("top", "60px");
+        // } else {
+        //     $(this).parent().parent().find("#toc_inner").css("top", "0");
+        //     $(this).parent().parent().find("#code_column").css("top", "0");
+        // }
         //scroll to position after close to realign columns
         $(this).parent().remove();
-        // $(sel).get(0).scrollIntoView({behavior: 'smooth'});
-    
+        $(window).trigger("scroll");
     })
 
 });
