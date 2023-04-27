@@ -11,6 +11,7 @@
 
 // make TOC indicator fixed once nav bar scrolls off screen
 $(window).on('scroll', function(event) {
+    console.log("toc")
     var nav_bottom = $('#nav_bar').outerHeight(true);
     if ($(this).scrollTop() > nav_bottom){
         $('#toc_indicator').css({'position': 'fixed', 'top': '0px'});
@@ -33,7 +34,7 @@ function handleFloatingTableOfContent() {
             // The entire viewport is filled with the background, so
             // do not need to worry about the TOC flowing out of the background.
             if ($(window).scrollTop() > 60) {
-                enableFloatingTOC();
+                // enableFloatingTOC();
             }
             expandTOCIndicator();
         }
