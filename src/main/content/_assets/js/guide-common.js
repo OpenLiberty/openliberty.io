@@ -456,6 +456,15 @@ function getTags(callback) {
 $(document).ready(function () {
     getTags(function () {
         // If there are no tags for the guide, hide the tags title
+        var sections = $(
+            ".sect1:not(#guide_meta):not(#related-guides), .sect2"
+        );
+        sections.each(function(i){
+            if($(this).has("h2")){
+                console.log("main")
+                console.log($(this).find("h2").attr("id"))
+            }
+        })
         $("#tags_container:empty").prev().hide();
         if(window.location.hash && dep){
             console.log(window.location.hash)
