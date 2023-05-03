@@ -695,8 +695,8 @@ function getJavaDocHtmlPath(href, returnBase) {
     } else {
       javaDocPath = groups[2];
     }
-  } catch (e) {}
-  console.log(javadocPath);
+    console.log(javadocPath);
+  } catch (e) {}  
   return javaDocPath;
 }
 
