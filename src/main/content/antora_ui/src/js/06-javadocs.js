@@ -529,7 +529,7 @@ function addClickListener(contents) {
       queryParams.forEach((value, key) => {
         console.log(`${key}: ${value}`);
       });
-      var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey);
+      var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey); // steven
       testObject = otherQueryParamsContent;
       for (key in otherQueryParamsContent) {
         var otherStateKey = CLASS_FRAME;
@@ -696,6 +696,7 @@ function getJavaDocHtmlPath(href, returnBase) {
       javaDocPath = groups[2];
     }
   } catch (e) {}
+  console.log(javadocPath);
   return javaDocPath;
 }
 
