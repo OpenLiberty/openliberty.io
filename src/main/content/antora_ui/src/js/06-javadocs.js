@@ -526,6 +526,9 @@ function addClickListener(contents) {
       // provide state data to be used by the popstate event to render the frame contents
       var state = {};
       state[iframeName] = href;
+      queryParams.forEach((value, key) => {
+        console.log(`${key}: ${value}`);
+      });
       var otherQueryParamsContent = getRemainingQueryParam(queryParams, paramKey);
       testObject = otherQueryParamsContent;
       for (key in otherQueryParamsContent) {
