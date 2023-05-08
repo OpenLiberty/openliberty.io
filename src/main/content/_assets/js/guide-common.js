@@ -349,7 +349,7 @@ function shiftWindow() {
 function accessContentsFromHash(hash, callback) {
     var currentScrollTop = $(document).scrollTop();
     var $focusSection = $(hash);
-
+    debugger;
     // If section is found, scroll to it
     if ($focusSection.length > 0) {
         // Update the TOC
@@ -367,6 +367,9 @@ function accessContentsFromHash(hash, callback) {
         // if new scroll spot is above current scroll position, subtract nav bar height from scroll spot
         if (scrollSpot < currentScrollTop) {
             scrollSpot -= $("#nav_bar").outerHeight();
+        }
+        if(dep){
+            scrollSpot -= $("#deprecated_notification").outerHeight();
         }
         $("body").data("scrolling", true); // Prevent the default window scroll from triggering until the animation is done.
         $("html, body").animate({ scrollTop: scrollSpot }, 400, function () {
@@ -455,20 +458,9 @@ function getTags(callback) {
 
 $(document).ready(function () {
     getTags(function () {
-        // If there are no tags for the guide, hide the tags title
-        var sections = $(
-            ".sect1:not(#guide_meta):not(#related-guides), .sect2"
-        );
-        sections.each(function(i){
-            if($(this).has("h2")){
-                console.log("main")
-                console.log($(this).find("h2").attr("id"))
-            }
-        })
         $("#tags_container:empty").prev().hide();
         if(window.location.hash && dep){
-            console.log(window.location.hash)
-            $(window).trigger("scroll")
+            accessContentsFromHash(window.location.hash)
         } else if(!window.location.hash){
             $("#deprecated_notification").css("top", "60px");
             $("#toc_inner").css("top", "110px");
@@ -517,7 +509,6 @@ $(document).ready(function () {
 
     $(window).on("scroll", function () {
         //handles where the top of the code column should be
-        debugger;
         if (!inSingleColumnView()) {
             //at the top of the browser window in multi-column view
             if(dep){
@@ -812,18 +803,9 @@ $(document).ready(function () {
     // adjust css when deprecation notification is closed
     $(document).on("click", ".notification_x", function(e){
         dep = false;
-        // if($("#nav_bar").hasClass("fixed_top")){
-        //     $(this).parent().parent().find("#toc_inner").css("top", "60px");
-        //     $(this).parent().parent().find("#code_column").css("top", "60px");
-        // } else {
-        //     $(this).parent().parent().find("#toc_inner").css("top", "0");
-        //     $(this).parent().parent().find("#code_column").css("top", "0");
-        // }
-        //scroll to position after close to realign columns
         $(this).parent().remove();
         $(window).trigger("scroll");
     })
-
 });
 
 function addGuideRatingsListener() {
