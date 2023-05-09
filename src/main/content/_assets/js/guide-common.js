@@ -13,6 +13,7 @@ var backgroundSizeAdjustment = 200;
 var twoColumnBreakpoint = 1170;
 var threeColumnBreakpoint = 1440;
 var dep = false;
+var dep_closed = false;
 
 // update twoColumnBreakpoint for the only single pane guide
 if (window.location.href.indexOf("cloud-ibm") > -1) {
@@ -509,12 +510,15 @@ $(document).ready(function () {
 
     $(window).on("scroll", function () {
         //handles where the top of the code column should be
+        var notif_height = $("#deprecated_notification").height();
+        console.log(notif_height)
+        var nav_height = $("#nav_bar").height();
+        console.log(nav_height);
         if (!inSingleColumnView()) {
             //at the top of the browser window in multi-column view
             if(dep){
-                // var t = $("#deprecated_notification").outerHeight();
-                $("#code_column").css({"position":"fixed", "top": "60px"})
-                $("#toc_inner").css({"position":"fixed", "top": "60px"})
+                $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
+                $("#toc_inner").css({"position":"fixed", "top": nav_height+"px"})
 
             } else{
                 $("#code_column").css({"position":"fixed", "top":"0px"})
@@ -542,7 +546,11 @@ $(document).ready(function () {
                 $("#deprecated_notification").css("top", "0");
                 $("#toc_inner").css("top", "50px");
                 $("#code_column").css({"position":"fixed", "top": "50px"})
-            } 
+            } else if (dep_closed){
+                $("#code_column").css({"position":"fixed", "top": "60px"})
+                $("#toc_inner").css("top", "60px")
+                dep_closed = false;
+            }
         }
     });
 
@@ -800,11 +808,16 @@ $(document).ready(function () {
         }
     });
     
-    // adjust css when deprecation notification is closed
+    // remove notification when X is clicked, dep should no longer be true
+    // if the page is refreshed, dep will become true again and the notification will appear
     $(document).on("click", ".notification_x", function(e){
         dep = false;
+        dep_closed = true;
         $(this).parent().remove();
-        $(window).trigger("scroll");
+        if($(window).scrollTop() <= 60 || !($("#nav_bar").hasClass("hide_nav"))){
+            $("#code_column").css({"position":"fixed", "top": "60px"})
+            $("#toc_inner").css("top", "60px")
+        }
     })
 });
 
