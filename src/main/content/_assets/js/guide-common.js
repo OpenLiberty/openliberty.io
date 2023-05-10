@@ -514,7 +514,10 @@ $(document).ready(function () {
         resizeGuideSections();
         handleFloatingCodeColumn();
         if(dep){
-            $("#deprecated_notification").css("top", "0");
+            // var h = $("#deprecated_notification").outerHeight();
+            // $("#deprecated_notification").css("top", "0");
+            // $("#code_column").css("top", h+"px");
+            $(window).trigger("scroll");
         }
     });
 
