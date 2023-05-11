@@ -488,6 +488,7 @@ function addClickListener(contents) {
     var iframeName = CLASS_FRAME;
     var paramKey = CLASS_PARAM;
     var href = e.target.href;
+    console.error('href is: ' + href);
     if (e.target.target === undefined) {
       // handling
       // <a href ...>
