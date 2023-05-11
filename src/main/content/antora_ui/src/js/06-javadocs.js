@@ -499,7 +499,7 @@ function addClickListener(contents) {
       //   <code> ... </code>
       // </a>
       if (e.target.parentNode.localName === "a") {
-        href = e.target.parentNode.href;
+        href = e.target.parentNode.href; // This is when a click happens in the contents instead of one of the tabs in the javadoc.
         if (e.target.parentNode.target === "packageFrame") {
           iframeName = PACKAGE_FRAME;
           paramKey = PACKAGE_PARAM;
@@ -594,7 +594,7 @@ function setIFrameContent(iframeName, href) {
     .contents()
     .find(iframeName)
     .contents();
-  if(iframeContent.length === 0) return;
+  // if(iframeContent.length === 0) return;
   var errorhref = "/docs/ref/javadocs/doc-404.html";
   // get current version to create path to all classes frame
   var path = window.top.location.pathname;
