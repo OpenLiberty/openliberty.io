@@ -411,6 +411,8 @@ function setDynamicIframeContent() {
       defaultPackageHtml = defaultHtmlRootPath + DEFAULT_PACKAGE_HTML;
       defaultClassHtml = defaultHtmlRootPath + DEFAULT_CLASS_HTML;
       console.error('defaultHtmlRootPath: ' + defaultHtmlRootPath);
+      console.error('defaultPackageHtml: ' + defaultPackageHtml);
+      console.error('defaultClassHtml: ' + defaultClassHtml);
     }    
   }
 
@@ -590,10 +592,17 @@ function setIFrameContent(iframeName, href) {
   if(iFrameClicked == false) {
     popStateOrPageRefresh();
   }
-  var iframeContent = $("#javadoc_container")
+  var iframeContent;
+  var main_frame = $("#javadoc_container");
+  var isFrameless = main_frame.contents().find('iframe').length === 0;
+  if(isFrameless){
+    iframeContent = main_frame.contents();
+  } else {
+    iframeContent = main_frame
     .contents()
     .find(iframeName)
     .contents();
+  }
   // if(iframeContent.length === 0) return;
   var errorhref = "/docs/ref/javadocs/doc-404.html";
   // get current version to create path to all classes frame
@@ -604,12 +613,15 @@ function setIFrameContent(iframeName, href) {
       "/javadocs/microprofile-" +
       currentVersion +
       "-javadoc/allclasses-frame.html";
-  } else {
+  } else if (path.includes("liberty-javaee")){
     var currentVersion = path.slice(-2, -1);
     var allClassesHref =
       "/javadocs/liberty-javaee" +
       currentVersion +
       "-javadoc/allclasses-frame.html";
+  } else {
+    // Steven
+    var allClassesHref = defaultHtmlRootPath;
   }
 
   // check if href results in 404 and redirect to doc-404.html if it does
