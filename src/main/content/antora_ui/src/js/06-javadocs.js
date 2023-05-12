@@ -621,7 +621,7 @@ function setIFrameContent(iframeName, href) {
       "-javadoc/allclasses-frame.html";
   } else {
     // Steven
-    var allClassesHref = defaultHtmlRootPath;
+    var allClassesHref = defaultPackageHtml;
   }
 
   // check if href results in 404 and redirect to doc-404.html if it does
