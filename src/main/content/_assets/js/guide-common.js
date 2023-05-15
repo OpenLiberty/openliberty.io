@@ -517,7 +517,10 @@ $(document).ready(function () {
             // var h = $("#deprecated_notification").outerHeight();
             // $("#deprecated_notification").css("top", "0");
             // $("#code_column").css("top", h+"px");
-            $(window).trigger("scroll");
+            $(window).trigger("scroll")
+            var notif_height = $("#deprecated_notification").outerHeight();
+            var nav_height = $("#nav_bar").outerHeight();
+            $("#toc_indicator").css({'position': 'fixed', 'top': notif_height+nav_height+'px'})
         }
     });
 
@@ -550,18 +553,30 @@ $(document).ready(function () {
         // handle positioning on scroll based on dep and visibility of nav bar
         if(($("#nav_bar").hasClass("fixed_top"))){
             if(dep){
-                $("#deprecated_notification").css("top", nav_height+"px");
-                $("#toc_inner").css("top", (nav_height + notif_height)+"px");
-                $("#code_column").css({"position":"fixed", "top": (nav_height + notif_height)+"px"})
+                if (inSingleColumnView()) {
+                    $("#deprecated_notification").css("top", nav_height+"px");
+                    $("#toc_column").css("top", (nav_height + notif_height)+"px");
+                    $("#code_column").css({"position":"fixed", "top": (nav_height + notif_height)+"px"})
+                } else {
+                    $("#deprecated_notification").css("top", nav_height+"px");
+                    $("#toc_inner").css("top", (nav_height + notif_height)+"px");
+                    $("#code_column").css({"position":"fixed", "top": (nav_height + notif_height)+"px"})
+                }
             } else {
                 $("#toc_inner").css("top", nav_height+"px");
                 $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
             }
         } else{
             if(dep){
-                $("#deprecated_notification").css("top", "0");
-                $("#toc_inner").css("top", notif_height+"px");
-                $("#code_column").css({"position":"fixed", "top": notif_height+"px"})
+                if(inSingleColumnView()){
+                    $("#deprecated_notification").css("top", "0");
+                    $("#toc_column").css("top", notif_height+"px");
+                    $("#code_column").css({"position":"fixed", "top": notif_height+"px"})
+                } else {
+                    $("#deprecated_notification").css("top", "0");
+                    $("#toc_column").css("top", notif_height+"px");
+                    $("#code_column").css({"position":"fixed", "top": notif_height+"px"})
+                }
             } else if (dep_closed){
                 $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
                 $("#toc_inner").css("top", nav_height+"px")

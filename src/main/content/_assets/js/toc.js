@@ -16,8 +16,20 @@ $(window).on('scroll', function(event) {
         $('#toc_indicator').css({'position': 'fixed', 'top': '0px'});
 
         if (window.innerWidth < 1440) {
-            $('#toc_column').css({'position': 'fixed', 'top': '0px'});
+            if($("#deprecated_notification").length){
+                var h = $("#deprecated_notification").outerHeight();
+                $('#toc_column').css({'position': 'fixed', 'top': h+'px'});
+
+            } else {
+                $('#toc_column').css({'position': 'fixed', 'top': '0px'});
+            }
         }
+    }
+    var scroller_anchor = $(".scroller_anchor").offset().top;
+    if ($("#mobile_toc_accordion_container").hasClass("fixed_toc_accordion") && $("#deprecated_notification").length && $(window).scrollTop() > scroller_anchor) {
+        $("#mobile_toc_accordion_container").css("top", $("#deprecated_notification").outerHeight() + "px");
+        $("#mobile_toc_accordion_container").css("z-index", "5");
+        event.stopImmediatePropogation();
     }
 });
 
@@ -130,7 +142,11 @@ function handleFloatingTOCAccordion() {
           //mobile_toc_accordion blocks the top part of the TOC column, need to add margin so that 'X' in TOC is visible
           var tocDistanceFromTop = $('#toc_column').offset().top;
           if ($(this).scrollTop() >= tocDistanceFromTop) {
-            $('#toc_column').css('margin-top', '40px');
+            if($("#deprecated_notification").length){
+                $('#toc_column').css('margin-top', $("#deprecated_notification").outerHeight()+'px');
+            } else {
+                $('#toc_column').css('margin-top', '40px');
+            }
           }
         }
     }
@@ -409,6 +425,10 @@ $(document).ready(function() {
         // in guides, if mobile toc accodion is fixed to top of screen, move toc accordion below fixed nav bar
         if ($("#mobile_toc_accordion_container").hasClass("fixed_toc_accordion")  && $("#nav_bar").hasClass("fixed_top")) {
             $("#mobile_toc_accordion_container").css("top", $("#nav_bar").outerHeight() + "px");
+        }
+
+        if ($("#mobile_toc_accordion_container").hasClass("fixed_toc_accordion")  && $("#deprecated_notification").length) {
+            $("#mobile_toc_accordion_container").css("top", $("#deprecated_notification").outerHeight() + "px");
         }
 
         // update width with new width after resizing
