@@ -1,28 +1,103 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+// Common methods called from the scripts to select the java, jakarta(ee) and microprofile levels
+// and dowload the created zip files for all of them 
+// It will build either the gradle or maven version of the zipfile based on the passed in
+// parameter to downloadZipFiles
+
+// NOTE - Right now, all possible combinations are allowed by the ui so we go ahead and create the
+// invalid zip files for java 8 with EE 10 or mp 6 but the github actions that will try to 
+// test the zips files skip these - when the ui is fixed to prevent those combinations, this
+// code will need to change
+
+
+
+// used for file naming
+const convertNum2Str = {
+    '8': '8',
+    '11': '11',
+    '17': '17',
+    '10': '10',
+    '9.1': '91',
+    '8.0': '8',
+    '7.0': '7',
+    '6.0': '6',
+    '5.0': '5',
+    '4.1': '41',
+    '3.3': '33',
+    '2.2': '22',
+    '1.4': '14',
+    None: 'None'
+};
+
+// must define all possible valid combinations of jakarta and mp
+// keep in mind not all java versions work with all of these for ex. ee10, mp6 cannot use java 8
+
+let jakarta_mp_versions = [
+    {
+      jakarta: "10",
+      mp: "6.0"
+    },
+    {
+      jakarta: "10",
+      mp: "None"
+    },
+    {
+      jakarta: "9.1",
+      mp: "5.0"
+    },
+    {
+      jakarta: "9.1",
+      mp: "None"
+    },
+    {
+      jakarta: "8.0",
+      mp: "4.1"
+    },
+    {
+      jakarta: "8.0",
+      mp: "3.3"
+    },
+    {
+      jakarta: "8.0",
+      mp: "2.2"
+    },
+    {
+      jakarta: "8.0",
+      mp: "None"
+    },
+    {
+      jakarta: "7.0",
+      mp: "1.4"
+    },
+    {
+      jakarta: "7.0",
+      mp: "None"
+    },
+    {
+      jakarta: "None",
+      mp: "6.0"
+    },
+    {
+      jakarta: "None",
+      mp: "5.0"
+    },
+    {
+      jakarta: "None",
+      mp: "4.1"
+    },
+    {
+      jakarta: "None",
+      mp: "3.3"
+    },
+    {
+      jakarta: "None",
+      mp: "2.2"
+    },
+    {
+      jakarta: "None",
+      mp: "1.4"
+    }
+]
+
 
 var websiteUrl = Cypress.env('website_url') || Cypress.env('default_website_url');
 const path = require("path");
@@ -140,8 +215,9 @@ Cypress.Commands.add('runMVNWLibertyDev', (appname, javahome, waitTime) => {
     cy.exec(`ps -eaf | grep java | grep defaultServer | awk '{ print $2 }' | xargs kill -9`, { failOnNonZeroExit: false });
 
     cy.log(`run mvnw liberty:dev inside directory ${downloadsFolder}/${appname} with JAVA_HOME=${javahome}`);
-    const options = { failOnNonZeroExit: true, env: { JAVA_HOME: javahome } };
-    cy.exec(`scripts/buildMaven.sh ${downloadsFolder}/${appname}`, options).then((result) => {
+   
+    const options = { failOnNonZeroExit: true };
+    cy.exec(`scripts/buildMaven.sh ${downloadsFolder}/${appname} ${javahome}`, options).then((result) => {
         cy.log('Displaying output');
         cy.log(result.stdout);
         cy.log(result.code);
@@ -168,8 +244,8 @@ Cypress.Commands.add('runGradlewLibertyDev', (appname, javahome, waitTime) => {
     cy.exec(`ps -eaf | grep java | grep GradleDaemon | awk '{ print $2 }' | xargs kill -9`, { failOnNonZeroExit: false });
 
     cy.log(`run gradlew libertyDev inside directory ${downloadsFolder}/${appname} with JAVA_HOME=${javahome}`);
-    const execOptions = { failOnNonZeroExit: true, env: { JAVA_HOME: javahome } };
-    cy.exec(`scripts/buildGradle.sh ${downloadsFolder}/${appname}`, execOptions).then((result) => {
+    const execOptions = { failOnNonZeroExit: true};
+    cy.exec(`scripts/buildGradle.sh ${downloadsFolder}/${appname}  ${javahome}`, execOptions).then((result) => {
         cy.log('Displaying output');
         cy.log(result.stdout);
         cy.log(result.code);

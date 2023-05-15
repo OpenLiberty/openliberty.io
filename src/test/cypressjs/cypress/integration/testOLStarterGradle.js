@@ -1,5 +1,5 @@
 
-describe('Test Open Liberty Starter - Gradle', () => {
+describe('Test Open Liberty Starter - Gradle Default EE and MP', () => {
     const downloadsFolder = Cypress.config('downloadsFolder');
     // Allow users to specify URL via cypress environment variable
     // For example:
@@ -8,14 +8,12 @@ describe('Test Open Liberty Starter - Gradle', () => {
     // java home path for jdk17, jdk11, jdk8 can be change via cypress.env.json base on user env var
     const javase_javahome = {
         17: Cypress.env('jdk_17_home'),
-        11: Cypress.env('jdk_11_home'),
-        8: Cypress.env('jdk_8_home')
+        11: Cypress.env('jdk_11_home')
     };
 
     const javase_appname = {
         17: "app-name-g-jdkseventeen",
-        11: "app-name-g-jdkeleven",
-        8: "app-name-g-jdkeight"
+        11: "app-name-g-jdkeleven"
     };
 
     // tests
@@ -26,8 +24,8 @@ describe('Test Open Liberty Starter - Gradle', () => {
         cy.get('#build_system_gradle').click();
         cy.get("#starter_section input[type=radio]:checked").should("have.value", "gradle");
         cy.get("#Starter_Java_Version").should("have.value", "11");
-        cy.get("#Starter_Jakarta_Version").should("have.value", "9.1");
-        cy.get("#Starter_MicroProfile_Version").should("have.value", "5.0");
+        cy.get("#Starter_Jakarta_Version").should("have.value", "10");
+        cy.get("#Starter_MicroProfile_Version").should("have.value", "6.0");
     });
 
     it('Test zip file is downloaded with default values', () => {
@@ -43,7 +41,7 @@ describe('Test Open Liberty Starter - Gradle', () => {
         }
     });
 
-    it('Test Open Liberty Starter - JDK17 Jarkata 9.1, MP 5.0', () => {
+    it('Test Open Liberty Starter - JDK17 Jarkata 10, MP 6.0', () => {
         const appname = javase_appname[17];
         const javahome = javase_javahome[17];
         cy.log('appname ' + appname);
@@ -52,13 +50,13 @@ describe('Test Open Liberty Starter - Gradle', () => {
         cy.runGradlewLibertyDev(appname, javahome);
     });
 
-    // Note: for this gradle test Jakarta 9.1 & MP 5.0, separate calls to check local splash page & run gradlew libertyStop
+    // Note: for this gradle test Jakarta 10 & MP 6.0, separate calls to check local splash page & run gradlew libertyStop
     // to prevent the re-run of runGradlewLibertyDev twice - idk why cypress does this
-    it('Check local Splashpage - JDK17 Jarkata 9.1, MP 5.0', () => {
+    it('Check local Splashpage - JDK17 Jarkata 10, MP 6.0', () => {
         cy.checkLocalSplashPage();
     });
 
-    it('Run gradlew libertyStop - JDK17 Jarkata 9.1, MP 5.0', () => {
+    it('Run gradlew libertyStop - JDK17 Jarkata 10, MP 6.0', () => {
         const appname = javase_appname[17];
         const javahome = javase_javahome[17];
         cy.log('javahome ' + javahome);
@@ -67,7 +65,7 @@ describe('Test Open Liberty Starter - Gradle', () => {
         cy.runGradlewLibertyStop(appname, javahome);
     });
 
-    it('Test Open Liberty Starter - JDK11 Jarkata 9.1, MP 5.0', () => {
+    it('Test Open Liberty Starter - JDK11 Jarkata 10, MP 6.0', () => {
         const appname = javase_appname[11];
         const javahome = javase_javahome[11];
         cy.log('javahome ' + javahome);
@@ -76,35 +74,13 @@ describe('Test Open Liberty Starter - Gradle', () => {
         cy.runGradlewLibertyDev(appname, javahome);
     });
 
-    it('Check local Splashpage - JDK11 Jarkata 9.1, MP 5.0', () => {
+    it('Check local Splashpage - JDK11 Jarkata 10, MP 6.0', () => {
         cy.checkLocalSplashPage();
     });
 
-    it('Run gradlew libertyStop - JDK11 Jarkata 9.1, MP 5.0', () => {
+    it('Run gradlew libertyStop - JDK11 Jarkata 10, MP 6.0', () => {
         const appname = javase_appname[11];
         const javahome = javase_javahome[11];
-        cy.log('javahome ' + javahome);
-        cy.log('appname ' + appname);
-
-        cy.runGradlewLibertyStop(appname, javahome);
-    });
-
-    it('Test Open Liberty Starter - JDK8 Jarkata 9.1, MP 5.0', () => {
-        const appname = javase_appname[8];
-        const javahome = javase_javahome[8];
-        cy.log('appname ' + appname);
-        cy.log('javahome ' + javahome);
-
-        cy.runGradlewLibertyDev(appname, javahome);
-    });
-
-    it('Check local Splashpage - JDK8 Jarkata 9.1, MP 5.0', () => {
-        cy.checkLocalSplashPage();
-    });
-
-    it('Run gradlew libertyStop - JDK8 Jarkata 9.1, MP 5.0', () => {
-        const appname = javase_appname[8];
-        const javahome = javase_javahome[8];
         cy.log('javahome ' + javahome);
         cy.log('appname ' + appname);
 
