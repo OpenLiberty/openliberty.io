@@ -417,7 +417,7 @@ function setDynamicIframeContent() {
   }
 
   var targetPage = parseQueryParams();
-  if (targetPage.package) { // steven might block this
+  if (targetPage.package) {
     setIFrameContent(PACKAGE_FRAME, defaultHtmlRootPath + targetPage.package);
   }
   if (targetPage.class) {
@@ -593,17 +593,20 @@ function setIFrameContent(iframeName, href) {
     popStateOrPageRefresh();
   }
   var iframeContent;
-  var main_frame = $("#javadoc_container");
-  var isFrameless = main_frame.contents().find('iframe').length === 0;
-  if(isFrameless){
-    iframeContent = main_frame.contents();
-  } else {
-    iframeContent = main_frame
-    .contents()
+  // var main_frame = $("#javadoc_container");
+  // var isFrameless = main_frame.contents().find('iframe').length === 0;
+  // if(isFrameless){
+  //   iframeContent = main_frame.contents();
+  // } else {
+  //   iframeContent = main_frame
+  //   .contents()
+  //   .find(iframeName)
+  //   .contents();
+  // }
+  var iframeContent = $("#javadoc_container").contents()
     .find(iframeName)
     .contents();
-  }
-  // if(iframeContent.length === 0) return;
+  if(iframeContent.length === 0) return;
   var errorhref = "/docs/ref/javadocs/doc-404.html";
   // get current version to create path to all classes frame
   var path = window.top.location.pathname;
