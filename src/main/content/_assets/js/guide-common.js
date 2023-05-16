@@ -514,9 +514,6 @@ $(document).ready(function () {
         resizeGuideSections();
         handleFloatingCodeColumn();
         if(dep){
-            // var h = $("#deprecated_notification").outerHeight();
-            // $("#deprecated_notification").css("top", "0");
-            // $("#code_column").css("top", h+"px");
             $(window).trigger("scroll")
             var notif_height = $("#deprecated_notification").outerHeight();
             var nav_height = $("#nav_bar").outerHeight();
@@ -531,32 +528,31 @@ $(document).ready(function () {
             notif_height = $("#deprecated_notification").outerHeight();
         }
         var nav_height = $("#nav_bar").outerHeight();
-        if (!inSingleColumnView()) {
-            // at the top of the browser window in multi-column view
-            if(dep){
-                $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
-                $("#toc_inner").css({"position":"fixed", "top": nav_height+"px"})
-
-            } else{
-                $("#code_column").css({"position":"fixed", "top":"0px"})
-                $("#toc_inner").css({"position":"fixed", "top":"0px"})
-            }
-        } else {
-            // below the hotspot in single column view
-            $("#code_column").css("position", "fixed");
-        } 
         handleFloatingTOCAccordion();
         handleStickyHeader();
-        handleFloatingTableOfContent();
         handleFloatingCodeColumn();
 
         // handle positioning on scroll based on dep and visibility of nav bar
-        if(($("#nav_bar").hasClass("fixed_top"))){
+        if(!($("#nav_bar").hasClass("hide_nav"))){
             if(dep){
                 if (inSingleColumnView()) {
                     $("#deprecated_notification").css("top", nav_height+"px");
-                    $("#toc_column").css("top", (nav_height + notif_height)+"px");
-                    $("#code_column").css({"position":"fixed", "top": (nav_height + notif_height)+"px"})
+                    $("#toc_column").css("top", "40px");
+                    if($(window).scrollTop() > $(".scroller_anchor").offset().top){
+                        $("#mobile_toc_accordion_container").css("margin-top", notif_height +"px");
+                        $("#mobile_toc_accordion_container").css("z-index", "5");
+                    } else {
+                        $("#mobile_toc_accordion_container").css("margin-top", "0px");
+                    }
+                    
+                    if($(window).scrollTop() === 0){
+                        $("#toc_column").css("margin-top", "0px");
+                    }
+                    else if($(window).scrollTop() < $(".scroller_anchor").offset().top){
+                        $("#toc_column").css("margin-top", notif_height+"px");
+                    } else {
+                        $("#toc_column").css("margin-top", 40+notif_height+"px");
+                    }
                 } else {
                     $("#deprecated_notification").css("top", nav_height+"px");
                     $("#toc_inner").css("top", (nav_height + notif_height)+"px");
@@ -570,11 +566,26 @@ $(document).ready(function () {
             if(dep){
                 if(inSingleColumnView()){
                     $("#deprecated_notification").css("top", "0");
-                    $("#toc_column").css("top", notif_height+"px");
-                    $("#code_column").css({"position":"fixed", "top": notif_height+"px"})
+                    $("#toc_inner").css("top", notif_height+40+"px");
+                    // $("#code_column").css({"position":"fixed", "top": notif_height+"px"})
+                    if($(window).scrollTop() > $(".scroller_anchor").offset().top){
+                        $("#mobile_toc_accordion_container").css("margin-top", notif_height +"px");
+                        $("#mobile_toc_accordion_container").css("z-index", "5");
+                    } else {
+                        $("#mobile_toc_accordion_container").css("margin-top", "0px");
+                    }
+                    
+                    if($(window).scrollTop() === 0){
+                        $("#toc_column").css("margin-top", "0px");
+                    }
+                    else if($(window).scrollTop() < $(".scroller_anchor").offset().top){
+                        $("#toc_column").css("margin-top", notif_height+"px");
+                    } else {
+                        $("#toc_column").css("margin-top", 40+notif_height+"px");
+                    }
                 } else {
                     $("#deprecated_notification").css("top", "0");
-                    $("#toc_column").css("top", notif_height+"px");
+                    $("#toc_inner").css("top", notif_height+"px");
                     $("#code_column").css({"position":"fixed", "top": notif_height+"px"})
                 }
             } else if (dep_closed){
@@ -852,7 +863,6 @@ $(document).ready(function () {
         else if($(window).scrollTop() <= 60){
             var nav_height = $("#nav_bar").outerHeight();
             $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
-            $("#toc_inner").css("top", nav_height+"px")
         }
         return false;
     })
