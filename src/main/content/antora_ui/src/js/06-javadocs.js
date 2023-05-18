@@ -446,7 +446,8 @@ function addClickListeners() {
     .contents()
     .find("iframe");
 
-  $(main_frame, iframes).each(function() {
+  //$(main_frame, iframes).each(function() {
+  $(iframes).each(function() {
     addClickListener($(this).contents());
   });
 }
@@ -592,7 +593,7 @@ function setIFrameContent(iframeName, href) {
   if(iFrameClicked == false) {
     popStateOrPageRefresh();
   }
-  var iframeContent;
+  // var iframeContent;
   // var main_frame = $("#javadoc_container");
   // var isFrameless = main_frame.contents().find('iframe').length === 0;
   // if(isFrameless){
@@ -610,6 +611,7 @@ function setIFrameContent(iframeName, href) {
   var errorhref = "/docs/ref/javadocs/doc-404.html";
   // get current version to create path to all classes frame
   var path = window.top.location.pathname;
+  console.log("AAA path " + path);
   if (path.includes("microprofile")) {
     var currentVersion = path.slice(-4, -1);
     var allClassesHref =
@@ -624,8 +626,10 @@ function setIFrameContent(iframeName, href) {
       "-javadoc/allclasses-frame.html";
   } else {
     // Steven
+    console.log("AA defaultPackageHtml " + defaultPackageHtml);
     var allClassesHref = defaultPackageHtml;
   }
+  console.log("AAA allClassesHref " + allClassesHref);
 
   // check if href results in 404 and redirect to doc-404.html if it does
   var http = new XMLHttpRequest();
@@ -844,29 +848,31 @@ function setFramelessQueryParams(){
   var isFrameless = mainFrame.contents().find('iframe').length === 0;
   if(isFrameless){
     var alocation = mainFrame.contents().attr('location').href;
-    var origin = window.location.origin;
-    alocation = alocation.substring(origin.length);
+    
+    //var origin = window.location.origin;
+    //alocation = alocation.substring(origin.length);
     // remove /docs/modules/reference/
-    if(alocation.indexOf('/docs/modules/reference') === 0){
-      alocation = alocation.substring(23);
-    }
-    var package_pattern = /(io\.openliberty\.[^\/]+-javadoc\/com\/ibm\/websphere\/[^\/]+)/;
-    var class_pattern = /([a-zA-Z-]+\.html)/;
-    var package_match = alocation.match(package_pattern);
-    var class_match = alocation.match(class_pattern);
-    if(package_match){
-      updateQueryParams(package_match[1], PACKAGE_PARAM);
-    }
-    if(class_match){
-      updateQueryParams(class_match[1], CLASS_PARAM);
-    }    
-    // var newURL = new URL(window.location.href);
-    // var queryParams = newURL.searchParams;
-    // queryParams.set('javadocPath', alocation);
-    // var search = window.location.search;
-    // var hash = window.location.hash;
-    // var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
-    // window.history.pushState({}, null, newURL);
+    //if(alocation.indexOf('/docs/modules/reference') === 0){
+    //  alocation = alocation.substring(23);
+    //}
+    //var package_pattern = /(io\.openliberty\.[^\/]+-javadoc\/com\/ibm\/websphere\/[^\/]+)/;
+    //var class_pattern = /([a-zA-Z-]+\.html)/;
+    //var package_match = alocation.match(package_pattern);
+    //var class_match = alocation.match(class_pattern);
+    //if(package_match){
+    //  updateQueryParams(package_match[1], PACKAGE_PARAM);
+    //}
+    //if(class_match){
+    //  updateQueryParams(class_match[1], CLASS_PARAM);
+    //}
+
+    var newURL = new URL(window.location.href);
+    var queryParams = newURL.searchParams;
+    queryParams.set('javadocPath', alocation);
+    var search = window.location.search;
+    var hash = window.location.hash;
+    var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
+    window.history.pushState({}, null, newURL);
   }
 }
 
@@ -878,6 +884,7 @@ function loadJavadocFromUrl(){
     var search = window.location.search;
     var params = new URLSearchParams(search);
     var old_query_params = parseQueryParams();
+    console.log("old query params " + old_query_params);
     var javadocPath = encodeURI(params.get('javadocPath'));
     if(!(javadocPath === null || javadocPath === "null" || javadocPath === "")){
       if (mainFrame[0].contentWindow.location.href !== javadocPath) {
@@ -894,7 +901,7 @@ $(document).ready(function() {
     resizeJavaDocWindow();
   });
   
-  // loadJavadocFromUrl();
+  loadJavadocFromUrl(); //uncomment out on latest
 
   $("#javadoc_container").on("load", function() {
     resizeJavaDocWindow();
@@ -907,7 +914,7 @@ $(document).ready(function() {
     addClickListeners();
     addiPadScrolling();
     highlightTOC(".leftTop iframe");    
-    // setFramelessQueryParams();    
+    setFramelessQueryParams();    //uncomment out on latest
 
     $("#javadoc_container")
       .contents()
