@@ -98,115 +98,157 @@ let jakarta_mp_versions = [
     }
 ]
 
+// java home path for jdk17, jdk11, jdk8 can be change via cypress.env.json base 
+const javase_javahome = {
+  17: Cypress.env('jdk_17_home'),
+  11: Cypress.env('jdk_11_home'),
+   8: Cypress.env('jdk_8_home')
+};
 
+var jdkVer = Cypress.env('default_jdk');
+var javahome = javase_javahome[Cypress.env('default_jdk')];
 var websiteUrl = Cypress.env('website_url') || Cypress.env('default_website_url');
-const path = require("path");
 const downloadsFolder = Cypress.config('downloadsFolder');
 
 Cypress.Commands.add('goToBlogs', () => { 
     cy.visit(websiteUrl + '/blog/');
-})
+});
 
 Cypress.Commands.add('goToFeatureDocs', () => {
     cy.visit(websiteUrl + "/docs/latest/reference/feature/feature-overview.html")
-})
+});
 
 Cypress.Commands.add('goToOpenLibertyStarter', () => {
     cy.visit(websiteUrl + '/start/');
-})
+});
 
 Cypress.Commands.add('goToLocalSplashPage', () => {
-    cy.visit('https://localhost:9443', { failOnStatusCode: true });
-})
+    cy.origin('https://localhost:9443');
+});
 
 Cypress.Commands.add('checkLocalSplashPage', () => {
     cy.log(`Check the local OL splash page is running`);
     cy.goToLocalSplashPage();
     cy.get('h3').should('contain', 'Welcome to');
     cy.get('#inner-hero__title').should('have.attr', 'src', '/img/open_liberty_title.png');
-})
+});
 
-// helper functions
-Cypress.Commands.add('checkDownloadFile', () => {
-    // checking for download zip file
+// Loop through all possible combinations of jakarta and microprofile to create the starter zip files
+// gOrM - values are g or m for gradle or maven
+
+Cypress.Commands.add('downloadAndUnzipAllFiles',(gOrM) => {
+  // first remove existing files in downloads folder
+  cy.exec(`rm -r ${downloadsFolder}`,{failOnNonZeroExit: false}); 
+  for (let i = 0; i < jakarta_mp_versions.length; i++) {
+          const version = jakarta_mp_versions[i];
+          const jktVer = version.jakarta;
+          cy.log(`jakarta version ` + jktVer);
+          const mpVer = version.mp;
+          cy.log(`mp version ` + mpVer);
+        
+          const appname = 'appzip-jdk' + convertNum2Str[jdkVer] + '-ee' + convertNum2Str[jktVer] + '-mp' + convertNum2Str[mpVer];
+          cy.log(`appname ` + appname);
+          cy.downloadAndUnzipFile(appname, jktVer, mpVer, gOrM); 
+  }
+});
+
+
+// Method that actually interacts with the website to download the zip
+// and unzip it and remove the zip file
+// appname - for building the downloaded filename  appzip-jdk?-ee?-mp?.zip
+// jktVer - which jakarta version to pick
+// mpVer - which microprofile version to pick
+// gOrM - gradle or maven, g or m
+
+Cypress.Commands.add('downloadAndUnzipFile', (appname, jktVer, mpVer, gOrM) => {
+  cy.log('appname ' + appname);
+  cy.log('jdkVer ' + jdkVer);
+  const downloadsFolder = Cypress.config('downloadsFolder');
+  const path = require("path");
+
+  // select gradle or maven
+  if (gOrM == 'g') {
+     cy.get('#build_system_gradle',{ timeout:10000 }).click();
+  } else {
+      cy.get('#build_system_maven',{ timeout:10000 }).click(); 
+  }
+
+  // select jdk version, jakarta version, mp version
+  if (jktVer) {
+    cy.log('jktVer ' + jktVer);
+    cy.get('#Starter_Jakarta_Version').select(jktVer);
+  }
+  if (mpVer) {
+    cy.log('mpVer ' + mpVer);
+    cy.get('#Starter_MicroProfile_Version').select(mpVer);
+    // because this is broken right now - we have to go back and reselect None
+    if (jktVer == "None") {
+        cy.log('jktVer had to be reselected now');
+        cy.get('#Starter_Jakarta_Version').select(jktVer);  
+    }
+  }
+  cy.get("#starter_submit").click({force: true});
+
+  // for some unknown reason have to add the wait along with click force true to close the modal
+  cy.wait(10000);
+  cy.get('.modal-dialog',{ timeout:10000 }).should('be.visible');
+  if (gOrM == 'g') {    
+      cy.get('#cmd_to_run').contains('gradlew libertyDev');
+  } else {
+         cy.get('#cmd_to_run').contains('mvnw liberty:dev');
+  }  
+  cy.get('#gen_proj_popup_button').click({force: true}).then(() => {
+    // need to make this synchronous because it can do the move and keep going in the loop before
+    // the click for the popup happens
+         
     cy.readFile(path.join(downloadsFolder, `app-name.zip`)).should("exist");
-    cy.exec(`which unzip`).then((result) => {
-        cy.log(result.stdout);
-    });
-})
-
-Cypress.Commands.add('unzipDownloadFile', (appname) => {
+ 
     // rename app-name.zip to ${appname}.zip
     cy.log(`mv app-name.zip to ${downloadsFolder}/${appname}`);
-    cy.exec(`mv ${downloadsFolder}/app-name.zip ${downloadsFolder}/${appname}.zip`).its('stderr').should('be.empty');
+    cy.exec(`mv ${downloadsFolder}/app-name.zip ${downloadsFolder}/${appname}.zip`).its('stderr').should('be.empty'); 
 
     // unzip ${appname}.zip
     cy.log(`unzip ${appname}.zip to directory ${downloadsFolder}/${appname}`);
     cy.exec(`unzip ${downloadsFolder}/${appname}.zip -d ${downloadsFolder}/${appname}`).its('stderr').should('be.empty');
-})
-
-Cypress.Commands.add('downloadAndUnZipFileMaven', (appname, jdkVer, jktVer, mpVer) => {
-    cy.log('appname ' + appname);
-    cy.log('jdkVer ' + jdkVer);  
-
-    // input appname does not always work in cypress for some reason
-    // work around is to download the app-name.zip and rename zip to ${appname}.zip
-
-    // select jdk version, jakarta version, mp version
-    if (jdkVer) {
-        cy.get('#Starter_Java_Version').select(jdkVer);
-    }
-    if (jktVer) {
-        cy.log('jktVer ' + jktVer);
-        cy.get('#Starter_Jakarta_Version').select(jktVer);
-    }
-    if (mpVer) {
-        cy.log('mpVer ' + mpVer);
-        cy.get('#Starter_MicroProfile_Version').select(mpVer);
-    }
-    cy.get("#starter_submit").click({force: true});
-
-    // for some unknown reason have to add the wait along with click force true to close the modal
-    cy.wait(5000);
-    cy.get('.modal-dialog').should('be.visible');
-    cy.get('#cmd_to_run').contains('mvnw liberty:dev');
-    cy.get('#gen_proj_popup_button').click({force: true}); // clear modal
-
-    cy.checkDownloadFile();
-    cy.unzipDownloadFile(appname);
+    // remove zip file 
+    cy.exec(`rm ${downloadsFolder}/${appname}.zip`); 
+  })   
 });
 
-Cypress.Commands.add('downloadAndUnZipFileGradle', (appname, jdkVer, jktVer, mpVer) => {
-    cy.log('appname ' + appname);
-    cy.log('jdkVer ' + jdkVer);
+// Loop through all the unzipped starter apps and executes the correct build (maven or gradle)
+// and then verifies the url for the created server
+// gOrM - values are g or m for gradle or maven
 
-    // input appname does not always work in cypress for some reason
-    // work around is to download the app-name.zip and rename zip to ${appname}.zip
+Cypress.Commands.add('buildAllAppsAndVerify',(gOrM) => {
+  for (let i = 0; i < jakarta_mp_versions.length; i++) {
+          const version = jakarta_mp_versions[i];
+          const jktVer = version.jakarta;
+          cy.log(`jakarta version ` + jktVer);
+          const mpVer = version.mp;
+          cy.log(`mp version ` + mpVer);
+        
+          const appname = 'appzip-jdk' + convertNum2Str[jdkVer] + '-ee' + convertNum2Str[jktVer] + '-mp' + convertNum2Str[mpVer];
+          cy.log(`appname ` + appname);
+          if (gOrM == 'g') {
+             cy.runGradlewLibertyDev(appname,javahome);
+             cy.checkLocalSplashPage();
+             cy.runGradlewLibertyStop(appname, javahome);
+          } else {
+             cy.runMVNWLibertyDev(appname,javahome);
+             cy.checkLocalSplashPage();
+             cy.runMVNWLibertyStop(appname, javahome);
+          }
+  }
+});
 
-    // select gradle
-    cy.get('#build_system_gradle').click();
-    // select jdk version, jakarta version, mp version
-    if (jdkVer) {
-        cy.get('#Starter_Java_Version').select(jdkVer);
-    }
-    if (jktVer) {
-        cy.log('jktVer ' + jktVer);
-        cy.get('#Starter_Jakarta_Version').select(jktVer);
-    }
-    if (mpVer) {
-        cy.log('mpVer ' + mpVer);
-        cy.get('#Starter_MicroProfile_Version').select(mpVer);
-    }
-    cy.get("#starter_submit").click({force: true});
 
-    // for some unknown reason have to add the wait along with click force true to close the modal
-    cy.wait(5000);
-    cy.get('.modal-dialog').should('be.visible');
-    cy.get('#cmd_to_run').contains('gradlew libertyDev');
-    cy.get('#gen_proj_popup_button').click({force: true}); // clear modal
-
-    cy.checkDownloadFile();
-    cy.unzipDownloadFile(appname);
+Cypress.Commands.add('runGradlewLibertyStop', (appname, javahome) => {
+  cy.log(`run gradlew libertyStop with JAVA_HOME=${javahome}`);
+  cy.exec(`cd ${downloadsFolder}/${appname} && ./gradlew libertyStop`, {env: { JAVA_HOME: javahome }}).then((result) => {
+      cy.log(result.stdout);
+      cy.log(result.stderr);
+  });
+  cy.exec(`ps -eaf | grep java | grep GradleDaemon | awk '{ print $2 }' | xargs kill -9`, { failOnNonZeroExit: false });
 });
 
 Cypress.Commands.add('runMVNWLibertyDev', (appname, javahome, waitTime) => {
@@ -256,11 +298,5 @@ Cypress.Commands.add('runGradlewLibertyDev', (appname, javahome, waitTime) => {
       .should('contain', 'CWWKF0011I: The defaultServer server is ready to run a smarter planet');
 });
 
-Cypress.Commands.add('runGradlewLibertyStop', (appname, javahome) => {
-    cy.log(`run gradlew libertyStop with JAVA_HOME=${javahome}`);
-    cy.exec(`cd ${downloadsFolder}/${appname} && ./gradlew libertyStop`, {env: { JAVA_HOME: javahome }}).then((result) => {
-        cy.log(result.stdout);
-        cy.log(result.stderr);
-    });
-    cy.exec(`ps -eaf | grep java | grep GradleDaemon | awk '{ print $2 }' | xargs kill -9`, { failOnNonZeroExit: false });
-});
+
+

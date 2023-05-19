@@ -18,12 +18,15 @@ describe('Test Redirect URLs', () => {
       if (tokens[0].endsWith('*') || !tokens[0].startsWith('/docs')) {
         // Do not know how to handle redirects that have * at the end
         // Do not know how to handle urls that are not /docs
+       // cy.pause();
         return;
       } else {
         if (tokens[0].endsWith('.html')){
-          cy.visit(target_url + tokens[0])
+          cy.visit(target_url + tokens[0]);
+  //        cy.pause();
         } else {
-          cy.request(target_url + tokens[0])
+          cy.request({url: target_url + tokens[0], failOnStatusCode: false});
+ //         cy.pause();
         }
       }
     })

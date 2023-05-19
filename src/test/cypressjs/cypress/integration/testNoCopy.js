@@ -11,6 +11,7 @@ describe('Test No Copy attribute on code blocks', () => {
         cy.get('#copy_to_clipboard').should('not.exist');
 
         cy.get('pre').first().trigger('mouseover');
+        cy.pause();
         cy.get('#copy_to_clipboard').should('be.visible');
     })
   });
