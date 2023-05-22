@@ -17,11 +17,7 @@ var latest_releases = [];
 var runtime_releases = [];
 var runtime_development_builds = [];
 var runtime_betas = [];
-var developer_tools_releases = [];
-var developer_tools_development_builds = [];
 var versArr = [];
-// var developer_tools_releases = [];
-// var developer_tools_development_builds = [];
 
 var builds_url = '/api/builds/data';
 var starter_domain = 
