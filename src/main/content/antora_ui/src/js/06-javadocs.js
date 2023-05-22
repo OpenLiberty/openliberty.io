@@ -366,7 +366,8 @@ function addNavHoverListener() {
 // Returns a json object with the package and class from the url
 function parseQueryParams() {
   var targetPage = {};
-  var queryParams = window.location.search;  
+  var queryParams = window.location.search;
+  console.log("queryParams " + queryParams);
   if (queryParams && queryParams !== undefined) {
     queryParams = queryParams.substring(1); // Remove the '?'
     var splitQueryParams = queryParams.split("&");
@@ -374,6 +375,7 @@ function parseQueryParams() {
       var queryParam = splitQueryParams[i].trim();
       if (queryParam.indexOf(PACKAGE_PARAM) === 0) {
         targetPage.package = queryParam.substring(PACKAGE_PARAM.length + 1);
+        console.log("targetPage.package " + targetPage.package);
       } else {
         var tmpClassPage = queryParam;
         if (queryParam.indexOf(CLASS_PARAM) === 0) {
@@ -384,9 +386,11 @@ function parseQueryParams() {
         if (tmpClassPage !== "") {
           targetPage.class = tmpClassPage;
         }
+        console.log("tmpClassPage " + tmpClassPage);
       }
     }
   }
+
   return targetPage;
 }
 
@@ -398,21 +402,22 @@ function setDynamicIframeContent() {
     var alocation;
     if(isFrameless){
       alocation = container.contents().attr('location');
-      console.error('alocation: ' + alocation);
+      console.log('frameless alocation: ' + alocation);
     } else {
       alocation = container
       .contents()
       .find(".leftTop iframe")
       .contents()
       .attr("location");
-    }    
+    }
+    console.log('alocation: ' + alocation);
     if(alocation){
       defaultHtmlRootPath = getJavaDocHtmlPath(alocation.href, true);
       defaultPackageHtml = defaultHtmlRootPath + DEFAULT_PACKAGE_HTML;
       defaultClassHtml = defaultHtmlRootPath + DEFAULT_CLASS_HTML;
-      console.error('defaultHtmlRootPath: ' + defaultHtmlRootPath);
-      console.error('defaultPackageHtml: ' + defaultPackageHtml);
-      console.error('defaultClassHtml: ' + defaultClassHtml);
+      console.log('defaultHtmlRootPath: ' + defaultHtmlRootPath);
+      console.log('defaultPackageHtml: ' + defaultPackageHtml);
+      console.log('defaultClassHtml: ' + defaultClassHtml);
     }    
   }
 
@@ -491,7 +496,7 @@ function addClickListener(contents) {
     var iframeName = CLASS_FRAME;
     var paramKey = CLASS_PARAM;
     var href = e.target.href;
-    console.error('href is: ' + href);
+    console.log('href is: ' + href);
     if (e.target.target === undefined) {
       // handling
       // <a href ...>
@@ -716,7 +721,8 @@ function getJavaDocHtmlPath(href, returnBase) {
       javaDocPath = groups[2];
     }
     console.log(javadocPath);
-  } catch (e) {}  
+  } catch (e) {}
+  console.log("javaDocPath " + javaDocPath);
   return javaDocPath;
 }
 
@@ -848,7 +854,7 @@ function setFramelessQueryParams(){
   var isFrameless = mainFrame.contents().find('iframe').length === 0;
   if(isFrameless){
     var alocation = mainFrame.contents().attr('location').href;
-    
+    console.log("alocation " + alocation);
     //var origin = window.location.origin;
     //alocation = alocation.substring(origin.length);
     // remove /docs/modules/reference/
@@ -871,7 +877,9 @@ function setFramelessQueryParams(){
     queryParams.set('javadocPath', alocation);
     var search = window.location.search;
     var hash = window.location.hash;
+    console.log("hash " + hash);
     var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
+    console.log("newURL " + newURL);
     window.history.pushState({}, null, newURL);
   }
 }
@@ -883,12 +891,11 @@ function loadJavadocFromUrl(){
   if(isFrameless){
     var search = window.location.search;
     var params = new URLSearchParams(search);
-    var old_query_params = parseQueryParams();
-    console.log("old query params " + old_query_params);
+    //var old_query_params = parseQueryParams();
     var javadocPath = encodeURI(params.get('javadocPath'));
     if(!(javadocPath === null || javadocPath === "null" || javadocPath === "")){
       if (mainFrame[0].contentWindow.location.href !== javadocPath) {
-        console.error('setting the iframe location to ' + javadocPath + '.');
+        console.log('setting the iframe location to ' + javadocPath + '.');
         mainFrame[0].src = javadocPath;
       }
     }       
