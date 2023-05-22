@@ -11,16 +11,34 @@
 
 // make TOC indicator fixed once nav bar scrolls off screen
 $(window).on('scroll', function(event) {
+    $.fn.isInViewport = function () {
+        var elementTop = $(this).offset().top;
+        var elementBottom = elementTop + $(this).outerHeight();
+    
+        var viewportTop = $(window).scrollTop();
+        var viewportBottom = viewportTop + $(window).height();
+    
+        return elementBottom > viewportTop && elementTop < viewportBottom;
+    };
     var nav_bottom = $('#nav_bar').outerHeight(true);
     if ($(this).scrollTop() > nav_bottom){
         if($("#deprecated_notification").length){
             $('#toc_indicator').css({'position': 'fixed', 'top': $("#deprecated_notification").outerHeight()+'px'});
+            // $('#toc_line').css({'position': 'fixed', 'top': $("#deprecated_notification").outerHeight()+'px', 'height':$("#end_of_guide").offset().top});
         } else {
             $('#toc_indicator').css({'position': 'fixed', 'top': '0px'});
         }
 
         if (window.innerWidth < 1440) {
             $('#toc_column').css({'position': 'fixed', 'top': '0px'});
+        }
+
+        if(!($("#end_of_guide").isInViewport())){
+            $('#toc_line').css({
+                "position": "absolute",
+                "top": "0px",
+                "height": calculateTOCHeight()
+            })
         }
     }
 });
@@ -50,7 +68,7 @@ function disableFloatingTOC() {
 }
 
 function calculateTOCHeight(){
-    var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
+    var endOfGuidePosition = $("#end_of_guide").offset().top;
     return endOfGuidePosition;
 }
 

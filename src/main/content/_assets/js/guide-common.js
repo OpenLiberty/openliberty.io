@@ -856,14 +856,15 @@ $(document).ready(function () {
         dep = false;
         dep_closed = true;      // used in scroll event to reposition columns
         $(this).parent().remove();
-        if($("#nav_bar").hasClass("hide_nav")){
-            $("#code_column").css({"position":"fixed", "top": "0"})
-            $("#toc_inner").css("top", "0")
-        }
-        else if($(window).scrollTop() <= 60){
-            var nav_height = $("#nav_bar").outerHeight();
-            $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
-        }
+        $(window).trigger("scroll")
+        // if($("#nav_bar").hasClass("hide_nav")){
+        //     $("#code_column").css({"position":"fixed", "top": "0"})
+        //     $("#toc_inner").css("top", "0")
+        // }
+        // else if($(window).scrollTop() <= 60){
+        //     var nav_height = $("#nav_bar").outerHeight();
+        //     $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
+        // }
         return false;
     })
 });
