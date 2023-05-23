@@ -567,7 +567,6 @@ $(document).ready(function () {
                 if(inSingleColumnView()){
                     $("#deprecated_notification").css("top", "0");
                     $("#toc_inner").css("top", notif_height+40+"px");
-                    // $("#code_column").css({"position":"fixed", "top": notif_height+"px"})
                     if($(window).scrollTop() > $(".scroller_anchor").offset().top){
                         $("#mobile_toc_accordion_container").css("margin-top", notif_height +"px");
                         $("#mobile_toc_accordion_container").css("z-index", "5");
@@ -592,6 +591,9 @@ $(document).ready(function () {
                 $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
                 $("#toc_inner").css("top", nav_height+"px")
                 dep_closed = false;
+            } else {
+                $("#code_column").css({"position":"fixed", "top": "0px"})
+                $("#toc_inner").css("top", "0px")
             }
         }
     });

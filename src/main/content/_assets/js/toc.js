@@ -39,6 +39,7 @@ $(window).on('scroll', function(event) {
                 "top": "0px",
                 "height": calculateTOCHeight()
             })
+            $('#mobile_toc_accordion_container').css({'position':'', 'top':'0px'})
         }
     }
 });
