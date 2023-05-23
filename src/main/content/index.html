@@ -220,8 +220,8 @@ css:
                 {% for post in site.posts limit:1 %}
                     {% if post.redirect_link %}
                         <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link">{{ post.title | escape }}</a>
-                            <a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link">
-                            <span class="continued_text">
+                          <a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link">  
+                          <span class="continued_text">
                                 {% assign continue_text = ' [Continued on ' %}
                                 {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
                                 {{ continue_text | append: domain_name }}
