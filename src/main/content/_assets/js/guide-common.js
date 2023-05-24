@@ -528,7 +528,7 @@ $(document).ready(function () {
             notif_height = $("#deprecated_notification").outerHeight();
         }
         var nav_height = $("#nav_bar").outerHeight();
-        handleFloatingTOCAccordion();
+        // handleFloatingTOCAccordion();
         handleStickyHeader();
         handleFloatingCodeColumn();
 
