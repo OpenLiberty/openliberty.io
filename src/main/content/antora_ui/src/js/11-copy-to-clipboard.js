@@ -18,6 +18,12 @@ $(document).ready(function () {
         $(this).prepend('<div class="copied_confirmation">Copied to clipboard</div><input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
     });
 
+    $(code_blocks_with_copy_to_clipboard).each(function(){
+        if($(this).height() >= 500){
+            $(this).siblings(".copy_to_clipboard").css("right", "25px")
+        }
+    })
+
     // Copy target element and show copied confirmation when copy to clipboard button clicked
     $(document).on("click", ".copy_to_clipboard", function(event) {
         event.preventDefault();
