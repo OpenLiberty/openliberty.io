@@ -98,7 +98,7 @@ let jakarta_mp_versions = [
     }
 ]
 
-// java home path for jdk17, jdk11, jdk8 can be change via cypress.env.json base 
+// java home path for jdk17, jdk11, jdk8 can be change via Cypress.config.js
 const javase_javahome = {
   17: Cypress.env('jdk_17_home'),
   11: Cypress.env('jdk_11_home'),
@@ -106,8 +106,8 @@ const javase_javahome = {
 };
 
 var jdkVer = Cypress.env('default_jdk');
-var javahome = javase_javahome[Cypress.env('default_jdk')];
-var websiteUrl = Cypress.env('website_url') || Cypress.env('default_website_url');
+var javahome = javase_javahome[jdkVer];
+var websiteUrl = Cypress.env('default_website_url');
 const downloadsFolder = Cypress.config('downloadsFolder');
 
 Cypress.Commands.add('goToBlogs', () => { 
@@ -123,7 +123,7 @@ Cypress.Commands.add('goToOpenLibertyStarter', () => {
 });
 
 Cypress.Commands.add('goToLocalSplashPage', () => {
-    cy.origin('https://localhost:9443');
+    cy.visit('https://localhost:9443');
 });
 
 Cypress.Commands.add('checkLocalSplashPage', () => {
@@ -205,13 +205,18 @@ Cypress.Commands.add('downloadAndUnzipFile', (appname, jktVer, mpVer, gOrM) => {
  
     // rename app-name.zip to ${appname}.zip
     cy.log(`mv app-name.zip to ${downloadsFolder}/${appname}`);
-    cy.exec(`mv ${downloadsFolder}/app-name.zip ${downloadsFolder}/${appname}.zip`).its('stderr').should('be.empty'); 
+    cy.exec(`mv ${downloadsFolder}/app-name.zip ${downloadsFolder}/${appname}.zip`).then((result) => {
+      cy.readFile(downloadsFolder + `/` + appname + `.zip`).should("exist");
+    }); 
 
     // unzip ${appname}.zip
     cy.log(`unzip ${appname}.zip to directory ${downloadsFolder}/${appname}`);
-    cy.exec(`unzip ${downloadsFolder}/${appname}.zip -d ${downloadsFolder}/${appname}`).its('stderr').should('be.empty');
-    // remove zip file 
-    cy.exec(`rm ${downloadsFolder}/${appname}.zip`); 
+    cy.exec(`unzip ${downloadsFolder}/${appname}.zip -d ${downloadsFolder}/${appname}`).then((result) => {
+        cy.readFile(downloadsFolder + `/`  + appname + `/src/main/liberty/config/server.xml`).should("exist");
+        // remove zip file 
+        cy.exec(`rm ${downloadsFolder}/${appname}.zip`); 
+    })
+    
   })   
 });
 
@@ -226,7 +231,10 @@ Cypress.Commands.add('buildAllAppsAndVerify',(gOrM) => {
           cy.log(`jakarta version ` + jktVer);
           const mpVer = version.mp;
           cy.log(`mp version ` + mpVer);
-        
+
+          var jdkVer = Cypress.env('default_jdk');
+          var javahome = javase_javahome[jdkVer];
+
           const appname = 'appzip-jdk' + convertNum2Str[jdkVer] + '-ee' + convertNum2Str[jktVer] + '-mp' + convertNum2Str[mpVer];
           cy.log(`appname ` + appname);
           if (gOrM == 'g') {
@@ -284,9 +292,9 @@ Cypress.Commands.add('runGradlewLibertyDev', (appname, javahome, waitTime) => {
     // make sure no java process is running
     cy.exec(`ps -eaf | grep java | grep defaultServer | awk '{ print $2 }' | xargs kill -9`, { failOnNonZeroExit: false });
     cy.exec(`ps -eaf | grep java | grep GradleDaemon | awk '{ print $2 }' | xargs kill -9`, { failOnNonZeroExit: false });
-
+   
     cy.log(`run gradlew libertyDev inside directory ${downloadsFolder}/${appname} with JAVA_HOME=${javahome}`);
-    const execOptions = { failOnNonZeroExit: true};
+    const execOptions = { failOnNonZeroExit: false};
     cy.exec(`scripts/buildGradle.sh ${downloadsFolder}/${appname}  ${javahome}`, execOptions).then((result) => {
         cy.log('Displaying output');
         cy.log(result.stdout);

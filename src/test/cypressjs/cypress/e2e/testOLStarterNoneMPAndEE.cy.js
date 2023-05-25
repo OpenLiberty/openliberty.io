@@ -1,9 +1,9 @@
 describe('Test Open Liberty Starter -  Java EE/Jakarta EE/Microprofile if version selected as None', () => {
     // If we select None for MicroProfile, should have zero influence on the Java EE/Jakarta EE value and
     // If we select None for Java EE/Jakarta EE, it should have zero influence on the MicroProfile
-    // Previously when we select None for MicroProfile it automatically sets Java EE/Jakarta EE default value 9.1 and 
-    // when we select None for Java EE/Jakarta EE it automatically sets MicroProfile default value 5.0 with message banner
-    // Now no message banner should be shown if we select None for Java EE/Jakarta EE/Microprofile
+    
+    // TODO need to figure out what the correct behavior here is, there is currently an open issue
+    // to determin this https://github.com/OpenLiberty/openliberty.io/issues/3117
     
     let jakarta_mp_versions = [
       {
