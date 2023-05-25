@@ -11,7 +11,11 @@
 
 NOTE - do not check in the cypress.config.js file with any changes for your local environment   
 
-## Step 3:  Launch the Cypress test runner
+## Step 3:  Launch the Cypress test runner or run headless
 
-- `npx cypress open`
+- `npx cypress open` to run in the ui
+- `npx cypress run --spec "cypress/e2e/???.cy.js"` to run headless
+
+NOTE - the testOLStarterAllGradle.cy.js and cypress/e2e/testOLMavenAllGradle.cy.js tests use a 
+lot of system memory and run more reliably headless
 
