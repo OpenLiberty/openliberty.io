@@ -4,8 +4,8 @@ describe('Test Open Liberty Starter - Gradle', () => {
     
     it('Test zip files are downloaded for gradle', () => {
         cy.log(`starterURL =  ` + starterURL);
-    //    cy.visit(starterURL + '/start/');
-     //   cy.downloadAndUnzipAllFiles('g');       
+        cy.visit(starterURL + '/start/');
+        cy.downloadAndUnzipAllFiles('g');       
         cy.buildAllAppsAndVerify('g');
     });
 
