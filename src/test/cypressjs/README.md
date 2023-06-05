@@ -4,13 +4,17 @@
 - Run `npm install` in the directory containing this `README.md`
 - `node_modules` is created containing Cypress and its dependencies.
 
-## Step 2: Setup URL you want the to test (2 options)
-  - **Choose one of the options: 1 or 2** 
-  - **Option 1:** Update the value for `default_website_url` in `cypress.env.json` with target URL
-  - **Option 2**: Supply a command line variable when launching cypress instead of changing `cypress.env.json`.  Option 2 is preferred to avoid changing a file tracked by `git`.
+## Step 2: Setup URL you want the to test and the default java (2 options)
+  Update the value for `default_website_url` in `cypress.config.js` with target URL, update
+  the default_jdk with which java you want to test for tests that only test one, update the
+  locations of the java levels on your local machine
 
-## Step 3:  Launch the Cypress test runner
-- **Option 1 from step 2** using `cypress.env.json`
-  - `npx cypress open`
-- **Option 2 from step 2** using CLI variable instead of `cypress.env.json`
-  - `npx cypress open --env website_url=https://openliberty.io`
+NOTE - do not check in the cypress.config.js file with any changes for your local environment   
+
+## Step 3:  Launch the Cypress test runner or run headless
+
+- `npx cypress open` to run in the ui
+- `npx cypress run --spec "cypress/e2e/???.cy.js"` to run headless
+
+NOTE - the testOLStarterAllGradle.cy.js and cypress/e2e/testOLMavenAllGradle.cy.js tests use a 
+lot of system memory and run more reliably headless
