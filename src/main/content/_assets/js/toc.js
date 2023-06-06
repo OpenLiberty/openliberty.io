@@ -24,7 +24,6 @@ $(window).on('scroll', function(event) {
     if ($(this).scrollTop() > nav_bottom){
         if($("#deprecated_notification").length){
             $('#toc_indicator').css({'position': 'fixed', 'top': $("#deprecated_notification").outerHeight()+'px'});
-            // $('#toc_line').css({'position': 'fixed', 'top': $("#deprecated_notification").outerHeight()+'px', 'height':$("#end_of_guide").offset().top});
         } else {
             $('#toc_indicator').css({'position': 'fixed', 'top': '0px'});
         }
@@ -122,7 +121,6 @@ function handleFloatingTOCAccordion() {
         accordion.removeClass('fixed_toc_accordion');
         $('.scroller_anchor').css('height', 0);
         // Restore toc location.
-        // $('#toc_column').css('margin-top', '0px');
     };
     var disableFloatingTOCAccordion = function(){
         // Change the height of the scroller_anchor to that of the accordion

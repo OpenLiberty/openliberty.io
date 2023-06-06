@@ -503,8 +503,6 @@ $(document).ready(function () {
         $(this).prepend('<div class="copied_confirmation">Copied to clipboard</div><input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
     });
 
-    // look for way to check when nav is on screen
-
     $(window).on("resize", function () {
         if (!inSingleColumnView()){
             $("#code_column").css("top", "0px");
