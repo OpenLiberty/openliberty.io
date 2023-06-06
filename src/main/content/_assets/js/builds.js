@@ -1040,7 +1040,7 @@ function validate_starter_inputs(event) {
         if ((prev_selected_ee_version !== "None") && (newMPVersion !== "None")) {
            
             found = false;
-            i = 0;  // 0th element is "None"
+            i = 0;  
            
 
             for (var starter_key in starter_dependencies) {
