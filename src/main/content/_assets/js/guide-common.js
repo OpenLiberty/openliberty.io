@@ -534,12 +534,18 @@ $(document).ready(function () {
 
         // handle positioning on scroll based on dep and visibility of nav bar
         if(!($("#nav_bar").hasClass("hide_nav"))){
+            // if the top navigation bar is showing
             if(dep){
                 if (inSingleColumnView()) {
-                    if($(window).scrollTop() > $(".scroller_anchor").offset().top){
+                    if($(window).scrollTop() > $(".scroller_anchor").offset().top && (($("#background_container").offset().top + $("#background_container").outerHeight()) > $(window).scrollTop())){
+                         // if above the first section of the guide
                         $("#mobile_toc_accordion_container").css("margin-top", (notif_height + nav_height)+"px");
                         $("#mobile_toc_accordion_container").css("z-index", "5");
-                    } else {
+                    } else if((($("#background_container").offset().top + $("#background_container").outerHeight()) < $(window).scrollTop())){
+                         // if below the last section of the guide
+                        $("#mobile_toc_accordion_container").css("margin-top", nav_height+"px");
+                    }
+                    else {
                         $("#mobile_toc_accordion_container").css("margin-top", "0px");
                     }
                 }
@@ -550,16 +556,27 @@ $(document).ready(function () {
                 $("#toc_inner").css("top", nav_height+"px");
                 $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
                 if(inSingleColumnView()){
-                    $("#mobile_toc_accordion_container").css("margin-top", nav_height+"px");
+                    if((($("#background_container").offset().top + $("#background_container").outerHeight()) < $(window).scrollTop())){
+                        $("#mobile_toc_accordion_container").css("margin-top", "0px");
+                    }else {
+                        $("#mobile_toc_accordion_container").css("margin-top", nav_height+"px");
+                    }
                 }
             }
         } else{
+            // if the top navigation bar is hidden
             if(dep){
+                // if the guide is deprecated
                 if(inSingleColumnView()){
-                    if($(window).scrollTop() > $(".scroller_anchor").offset().top){
+                    if($(window).scrollTop() > $(".scroller_anchor").offset().top && (($("#background_container").offset().top + $("#background_container").outerHeight()) > $(window).scrollTop())){
+                        // if above the first section of the guide
                         $("#mobile_toc_accordion_container").css("margin-top", notif_height +"px");
                         $("#mobile_toc_accordion_container").css("z-index", "5");
-                    } else {
+                    } else if(($("#background_container").offset().top + $("#background_container").outerHeight() < $(window).scrollTop())){
+                        // if below the last section of the guide
+                        $("#mobile_toc_accordion_container").css("margin-top", "0px");
+                    }
+                    else {
                         $("#mobile_toc_accordion_container").css("margin-top", "0px");
                     }
                 }
@@ -570,7 +587,12 @@ $(document).ready(function () {
                 $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
                 $("#toc_inner").css("top", nav_height+"px")
                 if (inSingleColumnView()) {
-                    $("#mobile_toc_accordion_container").css("margin-top", nav_height+"px");
+                    if(($("#background_container").offset().top + $("#background_container").outerHeight() < $(window).scrollTop())){
+                        // if below the last section of the guide
+                        $("#mobile_toc_accordion_container").css("margin-top", "0px");
+                    } else {
+                        $("#mobile_toc_accordion_container").css("margin-top", nav_height+"px");
+                    }
                 }
                 dep_closed = false;
             } else {
