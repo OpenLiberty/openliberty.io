@@ -533,8 +533,8 @@ $(document).ready(function () {
         handleFloatingCodeColumn();
 
         // handle positioning on scroll based on dep and visibility of nav bar
+        // if the top navigation bar is showing
         if(!($("#nav_bar").hasClass("hide_nav"))){
-            // if the top navigation bar is showing
             if(dep){
                 if (inSingleColumnView()) {
                     if($(window).scrollTop() > $(".scroller_anchor").offset().top && (($("#background_container").offset().top + $("#background_container").outerHeight()) > $(window).scrollTop())){
@@ -556,11 +556,7 @@ $(document).ready(function () {
                 $("#toc_inner").css("top", nav_height+"px");
                 $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
                 if(inSingleColumnView()){
-                    if((($("#background_container").offset().top + $("#background_container").outerHeight()) < $(window).scrollTop())){
-                        $("#mobile_toc_accordion_container").css("margin-top", "0px");
-                    }else {
-                        $("#mobile_toc_accordion_container").css("margin-top", nav_height+"px");
-                    }
+                    $("#mobile_toc_accordion_container").css("margin-top", "0px");
                 }
             }
         } else{
@@ -584,6 +580,7 @@ $(document).ready(function () {
                 $("#toc_inner").css("top", notif_height+"px");
                 $("#code_column").css({"position":"fixed", "top": notif_height+"px"});
             } else if (dep_closed){
+                // if the deprecated notification was closed
                 $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
                 $("#toc_inner").css("top", nav_height+"px")
                 if (inSingleColumnView()) {
@@ -866,14 +863,6 @@ $(document).ready(function () {
         dep_closed = true;      // used in scroll event to reposition columns
         $(this).parent().remove();
         $(window).trigger("scroll");
-        // if($("#nav_bar").hasClass("hide_nav")){
-        //     $("#code_column").css({"position":"fixed", "top": "0"})
-        //     $("#toc_inner").css("top", "0")
-        // }
-        // else if($(window).scrollTop() <= 60){
-        //     var nav_height = $("#nav_bar").outerHeight();
-        //     $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
-        // }
         return false;
     })
 });
