@@ -85,11 +85,6 @@ var openliberty = (function() {
         // add margin-top to body so page doesn't jump when nav slides into view
         $('body').css("margin-top", nav_height + "px");
 
-        // in guides, if mobile toc accodion is fixed to top of screen, move toc accordion below fixed nav bar
-        // if ($("#mobile_toc_accordion_container").hasClass("fixed_toc_accordion")) {
-        //     $("#mobile_toc_accordion_container").css("top", nav_height + "px");
-        // }
-
         // on /guides, if tablet toc accordion is fixed to top of screen, move toc accordion below fixed nav bar
         if ($("#tablet_toc_accordion_container").css("position") === "fixed") {
             $("#tablet_toc_accordion_container").css("top", nav_height + "px");
@@ -126,7 +121,6 @@ var openliberty = (function() {
         $('body').css("margin-top", "0px");
 
         // fix mobile and tablet toc accordion to top of screen again
-        // $("#mobile_toc_accordion_container").css("top", "0px");
         $("#tablet_toc_accordion_container").css("top", "0px");
 
         // adjust docs toolbar and nav position
