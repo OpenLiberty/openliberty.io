@@ -10,6 +10,7 @@
 
 
 
+// used for file naming
 const convertNum2Str = {
     '8': '8',
     '11': '11',
@@ -95,6 +96,7 @@ let jakarta_mp_versions = [
       mp: "1.4"
     }
 ]
+
 // java home path for jdk17, jdk11, jdk8 can be change via Cypress.config.js
 const javase_javahome = {
   17: Cypress.env('jdk_17_home'),
@@ -302,3 +304,4 @@ Cypress.Commands.add('runGradlewLibertyDev', (appname, javahome, waitTime) => {
     cy.readFile(downloadsFolder + `/${appname}/output.txt`, { timeout: waitTime ? waitTime : defaultWaitTime })
       .should('contain', 'CWWKF0011I: The defaultServer server is ready to run a smarter planet');
 });
+
