@@ -17,7 +17,8 @@ const convertNum2Str = {
     '17': '17',
     '10': '10',
     '9.1': '91',
-    '7': '7',
+    '8.0': '8',
+    '7.0': '7',
     '6.0': '6',
     '5.0': '5',
     '4.1': '41',
@@ -48,27 +49,27 @@ let jakarta_mp_versions = [
       mp: "None"
     },
     {
-      jakarta: "8",
+      jakarta: "8.0",
       mp: "4.1"
     },
     {
-      jakarta: "8",
+      jakarta: "8.0",
       mp: "3.3"
     },
     {
-      jakarta: "8",
+      jakarta: "8.0",
       mp: "2.2"
     },
     {
-      jakarta: "8",
+      jakarta: "8.0",
       mp: "None"
     },
     {
-      jakarta: "7",
+      jakarta: "7.0",
       mp: "1.4"
     },
     {
-      jakarta: "7",
+      jakarta: "7.0",
       mp: "None"
     },
     {
@@ -304,4 +305,3 @@ Cypress.Commands.add('runGradlewLibertyDev', (appname, javahome, waitTime) => {
     cy.readFile(downloadsFolder + `/${appname}/output.txt`, { timeout: waitTime ? waitTime : defaultWaitTime })
       .should('contain', 'CWWKF0011I: The defaultServer server is ready to run a smarter planet');
 });
-
