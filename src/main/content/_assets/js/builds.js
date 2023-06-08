@@ -1040,7 +1040,7 @@ function validate_starter_inputs(event) {
         if ((prev_selected_ee_version !== "None") && (newMPVersion !== "None")) {
            
             found = false;
-            i = 0;  
+            i = 1;  // 0th element is "None"
            
 
             for (var starter_key in starter_dependencies) {
@@ -1051,16 +1051,13 @@ function validate_starter_inputs(event) {
                 var dependencies = versions[keys[i]];
                 // if we found the newMPVersion under this newEEVersion key we're done
                  if (dependencies['m'].indexOf(newMPVersion) !== -1) {
-                    // don't want to make the EE version None 
-                      if (keys[i] !== "None") {
-                         newEEVersion = keys[i];
-                         if (newEEVersion === prev_selected_ee_version) {
-                          valid = true;
-                         } else {
-                           valid = false;
-                         }
-                         found = true;
-                     }   
+                      newEEVersion = keys[i];
+                      if (newEEVersion === prev_selected_ee_version) {
+                        valid = true;
+                      } else {
+                        valid = false;
+                      }
+                      found = true;
                  }
                  i++;
             } while ((i < keys.length) && !found);
