@@ -915,7 +915,7 @@ function validate_java_eeAndmp_levels() {
     )
     .find(':selected')
     .text(); 
-    if ((mpVersion === '6.0') || (eeVersion == '10')) {
+    if ((mpVersion === '6.0') || (eeVersion == '10.0')) {
         javaVersion = $(
             '.starter_field[data-starter-field=\'j\'] select'
         )
