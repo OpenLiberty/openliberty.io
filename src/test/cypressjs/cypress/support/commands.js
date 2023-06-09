@@ -206,6 +206,14 @@ Cypress.Commands.add('downloadAndUnzipFile', (appname, jktVer, mpVer, gOrM) => {
        // rename app-name.zip to ${appname}.zip
        cy.log(`mv app-name.zip to ${downloadsFolder}/${appname}`);
        cy.exec(`mv ${downloadsFolder}/app-name.zip ${downloadsFolder}/${appname}.zip`).its('stderr').should('be.empty'); 
+
+       // unzip ${appname}.zip
+       cy.log(`unzip ${appname}.zip to directory ${downloadsFolder}/${appname}`);
+       cy.exec(`unzip ${downloadsFolder}/${appname}.zip -d ${downloadsFolder}/${appname}`).then((result) => {
+           cy.readFile(downloadsFolder + `/`  + appname + `/src/main/liberty/config/server.xml`).should("exist");
+           // remove zip file 
+           cy.exec(`rm ${downloadsFolder}/${appname}.zip`); 
+       })
     });  
   }
 });
