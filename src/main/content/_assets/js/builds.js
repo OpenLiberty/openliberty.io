@@ -930,7 +930,7 @@ function validate_java_eeAndmp_levels() {
          var message = $(
          '<p> MicroProfile Version 6.0 and Java EE/Jakarta EE Version 10 require a minimum of Java SE Version 11.</p>' 
          );
-         displayMessage(message);
+         displayMessage(message,true);
          valid = true;
         }
      }
@@ -1119,23 +1119,32 @@ function validate_starter_inputs(event) {
     }
 }
 
-function displayMessage(message) {
+function displayMessage(message,javaMsg = false) {
     // Display a message when MP/Jakarta EE Version get changed.
     var close_icon = $(
         '<img src=\'/img/x_white.svg\' id=\'invalid_message_close_icon\' alt=\'Close\' tabindex=\'0\' />'
     );
+    var classNameIs;
+    if (javaMsg) {
+        classNameIs = 'ind_starter_java_warning';
+    } else {
+        classNameIs = 'ind_starter_warning';
+    }
     close_icon.on('click', function () {
-        $('#starter_warnings').empty();
+        $('.' + classNameIs).empty();
     });
     close_icon.on('keydown', function (event) {
         if ( event.which === 13 || event.which === 32 ) { // Enter key or spacebar
             $(this).click();
         }
     });
-    $('#starter_warnings')
+   
+    $('#starter_warnings').append("<div class='" + classNameIs +"'>");
+ 
+    $('.' + classNameIs)
     .append(message)
-    .append(close_icon);                                  
-}
+    .append(close_icon);  
+} 
 
 
 $(document).ready(function () {
