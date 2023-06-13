@@ -7,7 +7,7 @@ describe('Test Open Liberty Starter - Maven Default EE and MP', () => {
     const default_javahome = Cypress.env('jdk_11_home');
     const appname = "app-name-m-default";
     const downloadsFolder = Cypress.config('downloadsFolder');
-    const eeDefault = "10";
+    const eeDefault = "10.0";
     const mpDefault = "6.0"
     const javaDefault = Cypress.env('default_jdk');
 
