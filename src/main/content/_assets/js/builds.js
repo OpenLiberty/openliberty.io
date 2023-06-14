@@ -928,7 +928,7 @@ function validate_java_eeAndmp_levels() {
          );
          $(javaOptions[1]).prop('selected', true);
          var message = $(
-         '<p> MicroProfile Version 6.0 and Java EE/Jakarta EE Version 10 require a minimum of Java SE Version 11.</p>' 
+         '<p> MicroProfile Version 6.0 and Java EE/Jakarta EE Version 10.0 require a minimum of Java SE Version 11.</p>' 
          );
          displayMessage(message,true);
          valid = true;
