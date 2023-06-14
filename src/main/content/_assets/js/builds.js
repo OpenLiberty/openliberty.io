@@ -903,183 +903,248 @@ function validate_application_name() {
     return valid;
 }
 
-var disableGenProjButton = false;
+// Force mp 6.0 and EE 10 to use at least java 11
+function validate_java_eeAndmp_levels() {
+    mpVersion = $(
+        '.starter_field[data-starter-field=\'m\'] select'
+    )
+    .find(':selected')
+    .text();
+    eeVersion = $(
+        '.starter_field[data-starter-field=\'e\'] select'
+    )
+    .find(':selected')
+    .text(); 
+    if ((mpVersion === '6.0') || (eeVersion == '10.0')) {
+        javaVersion = $(
+            '.starter_field[data-starter-field=\'j\'] select'
+        )
+        .find(':selected')
+        .text();
+ 
+        if (javaVersion === '8') {
+         var javaOptions = $(
+             '.starter_field[data-starter-field=\'j\'] select option'
+         );
+         $(javaOptions[1]).prop('selected', true);
+         var message = $(
+         '<p> MicroProfile Version 6.0 and Java EE/Jakarta EE Version 10.0 require a minimum of Java SE Version 11.</p>' 
+         );
+         displayMessage(message,true);
+         valid = true;
+        }
+     }
+}
+
+// validates the combinations of java/EE/MP on the starter page
 function validate_starter_inputs(event) {
     var valid = true;
+    var disableGenProjButton = false;
+    var versions = starter_dependencies['e'].versions;
+    var keys;
+    var newEEVersion;
+    var newMPVersion;
+    var found;
+    var i;
     $('#starter_warnings').empty();
     $('#starter_submit').addClass('disabled');
 
     var group_name_valid = validate_group_name();
     var app_name_valid = validate_application_name();
+
+    // Here user is setting the EE version
     if((event) && (event.target.id === "Starter_Jakarta_Version")) {
-        for (var starter_key in starter_dependencies) {
-            var versions = starter_dependencies[starter_key].versions;
-            var EEVersionValue = $(
-                '.starter_field[data-starter-field=\'' +
-                    starter_key +
-                    '\'] select'
-            )
-            .find(':selected')
-            .text();
-            var dependencies = versions[EEVersionValue];
-            for (var d in dependencies) {
-                var dependency_value = $(
-                    '.starter_field[data-starter-field=\'' + d + '\'] select'
-                )
-                .find(':selected')
-                .text();
-                if (dependencies[d].indexOf(dependency_value) === -1) {
-                    valid = false;
-                }
-                var options = $(
-                    '.starter_field[data-starter-field=\'' +
-                    d +
-                    '\'] select option'
-                );
-                var curr_selected_mp_version;
-                var valuetoSelect;
-                if(EEVersionValue !== "None") {
-                    curr_selected_mp_version = valuetoSelect = dependencies[d][dependencies[d].length - 1];
-                }
-                var prev_selected_mp_version = options
-                .filter(':selected')
-                .text();
-                if ((EEVersionValue === "None") && (prev_selected_mp_version === "None")) {
+        // mpOptions is all the possible mp versions in dropdown
+        var mpOptions = $(
+            '.starter_field[data-starter-field=\'m\'] select option'
+        );
+        var prev_selected_mp_version = mpOptions
+            .filter(':selected')
+            .text();   
+
+        newEEVersion = $(
+            '.starter_field[data-starter-field=\'e\'] select'
+        )
+        .find(':selected')
+        .text();
+
+        // if the previous MP wasn't None and the new EE version isn't None we need to find a good MP
+        if ((prev_selected_mp_version !== "None") && (newEEVersion !== "None")) {
+            var dependencies = versions[newEEVersion];             
+            if (dependencies['m'].indexOf(prev_selected_mp_version) === -1) {
+                newMPVersion = dependencies['m'][dependencies['m'].length - 1];
+                valid = false;
+            } 
+        } else {
+            if (newEEVersion === "None") {
+                if (prev_selected_mp_version === "None") {
+                    // both None is invalid
                     disableGenProjButton = true;
-                }
-                else {
+                } else {
+                    // none for EE means anything other than none for mp is fine
                     disableGenProjButton = false;
+                    valid = true;
                 }
-                for(var i=0; i<options.length; i++) {
-                    var value = options[i].value;
-                    if(value === valuetoSelect) {
-                        $(options[i]).prop('selected', true);
-                        if((prev_selected_mp_version !== "None") && (EEVersionValue !== "None") && (prev_selected_mp_version !== curr_selected_mp_version)) {
-                            var message = $(
-                                '<p>' +
-                                starter_info[d].name +
-                                ' has been automatically updated from ' +
-                                prev_selected_mp_version +
-                                ' to ' +
-                                curr_selected_mp_version +
-                                ' for compatibility with ' +
-                                starter_info[starter_key].name +
-                                '.</p>'
-                            );
-                        }
-                        else if((prev_selected_mp_version === "None") && (EEVersionValue !== "None")) {
-                            var message = $(
-                                '<p>' +
-                                starter_info[d].name +
-                                ' has been automatically updated to ' +
-                                curr_selected_mp_version +
-                                ' for compatibility with ' +
-                                starter_info[starter_key].name +
-                                '.</p>'
-                            );
-                        }
-                        displayMessage(message);
-                        valid = true;
-                    }
-                }
+            } else {
+                // EE version isn't none but mp version is None
+                disableGenProjButton = false;
+                valid = true;
             }
         }
+
+        // if we have an invalid combination other than both set to none, pick a valid newMPVersion
+        if(!valid && !disableGenProjButton) { 
+            found = false;
+            i = 0;
+            while ((i<mpOptions.length) && !found) {
+                if(mpOptions[i].value === newMPVersion) {
+                    $(mpOptions[i]).prop('selected', true);
+                    found = true;
+                } else {
+                    i++;
+                }
+            }  
+            // message for an updated newMPVersion to match the selected EE version
+            if (newMPVersion !== prev_selected_mp_version) {
+                var message = $(
+                    '<p>' +
+                    starter_info['m'].name +
+                    ' has been automatically updated from ' +
+                    prev_selected_mp_version +
+                    ' to ' +
+                    newMPVersion +
+                    ' for compatibility with ' +
+                    starter_info['e'].name +
+                    '.</p>'
+                );
+            }
+            displayMessage(message);
+            valid = true; 
+        }       
     }
+    //  we are setting the MicroProfile Version
     else if((event)&&(event.target.id === "Starter_MicroProfile_Version")) {
-        var versions;
-        var keys;
-        var EEVersion;
-        var mpVersionValue = $(
+       
+        var eeOptions = $(
+            '.starter_field[data-starter-field=\'e\'] select option'
+        );
+        var prev_selected_ee_version = eeOptions
+            .filter(':selected')
+            .text();   
+        newMPVersion = $(
             '.starter_field[data-starter-field=\'m\'] select'
         )
         .find(':selected')
         .text();
-        for (var starter_key in starter_dependencies) {
-            versions = starter_dependencies[starter_key].versions;
-            keys = Object.keys(versions);
-        }
-        for(var i=0; i<keys.length; i++) {
-            if(keys[i] !== "None") {
+        // if the previous EE wasn't None and the new mp version isn't None we need to find a good EE
+        if ((prev_selected_ee_version !== "None") && (newMPVersion !== "None")) {
+           
+            found = false;
+            i = 0;
+           
+
+            for (var starter_key in starter_dependencies) {
+                keys = Object.keys(versions);
+            }
+                
+            do {
                 var dependencies = versions[keys[i]];
-                for (var d in dependencies) {
-                    if (dependencies[d].indexOf(mpVersionValue) !== -1) {
-                        EEVersion = keys[i];
-                        valid = false;
-                    }
-                }
-            }
+                // if we found the newMPVersion under this newEEVersion key we're done
+                 if (dependencies['m'].indexOf(newMPVersion) !== -1) {
+                      // don't want to make the EE version None 
+                      if (keys[i] !== "None") {
+                        newEEVersion = keys[i];
+                        if (newEEVersion === prev_selected_ee_version) {
+                         valid = true;
+                        } else {
+                          valid = false;
+                        }
+                        found = true;
+                    } 
+                 }
+                 i++;
+            } while ((i < keys.length) && !found);
+        } else {
+            if (newMPVersion == "None"){
+                  if (prev_selected_ee_version == "None") {
+                    // both have been set to None which is invalid
+                    valid = false;
+                    disableGenProjButton = true;
+                  } else {
+                    // mp version is none and ee version is anything but none
+                    valid = true;
+                    disableGenProjButton = false;
+                  }
+            } else {
+                // new mpVersion isn't none but ee version is none
+                valid = true;
+                disableGenProjButton = false;
+            }  
         }
-        var options = $(
-            '.starter_field[data-starter-field=\'e\'] select option'
-        );
-        if(!valid){
-            var prev_selected_ee_version = options
-            .filter(':selected')
-            .text();
-            for(var i=0; i<options.length; i++) {
-                if(options[i].value === EEVersion) {
-                    if(mpVersionValue !== "None") {
-                        $(options[i]).prop('selected', true);
-                    }
-                    if((mpVersionValue === "None") && (prev_selected_ee_version === "None")) {
-                        disableGenProjButton = true;
-                    }
-                    else {
-                        disableGenProjButton = false;
-                    }
+        // if we had an invalid combination other than both set to none, pick the valid newEEVersion
+        if(!valid && !disableGenProjButton){ 
+            found = false;
+            i = 0;
+            while ((i<eeOptions.length) && !found) {
+                if(eeOptions[i].value === newEEVersion) {
+                    $(eeOptions[i]).prop('selected', true);
+                    found = true;
+                } else {
+                    i++;
                 }
-            }
-            if((mpVersionValue !== "None") && (prev_selected_ee_version !== "None") && (EEVersion !== prev_selected_ee_version)) {
-                var message = $(
-                '<p>' +
-                starter_info['e'].name +
-                ' has been automatically updated from ' +
-                prev_selected_ee_version +
-                ' to ' +
-                EEVersion +
-                ' for compatibility with ' +
-                starter_info['m'].name +
-                '.</p>'
-                );
-            }
-            else if((prev_selected_ee_version === "None") && (mpVersionValue !== "None")) {
-                var message = $(
-                '<p>' +
-                starter_info['e'].name +
-                ' has been automatically updated to ' +
-                EEVersion +
-                ' for compatibility with ' +
-                starter_info['m'].name +
-                '.</p>'
-                );
-            }
+            }         
+            // message for an updated newEEVersion to match the selected mp version 
+            var message = $(
+            '<p>' +
+            starter_info['e'].name +
+            ' has been automatically updated from ' +
+            prev_selected_ee_version +
+            ' to ' +
+            newEEVersion +
+            ' for compatibility with ' +
+            starter_info['m'].name +
+            '.</p>'
+            );
             displayMessage(message);
             valid = true;
         }
     }
+
+    // Now we need to validate that if EE 10 or MP 6.0 is selected, the Java is not 8
+    validate_java_eeAndmp_levels();
+
     valid = valid && group_name_valid && app_name_valid && !disableGenProjButton;
     if (valid) {
         $('#starter_submit').removeClass('disabled');
     }
 }
 
-function displayMessage(message) {
+function displayMessage(message,javaMsg = false) {
     // Display a message when MP/Jakarta EE Version get changed.
     var close_icon = $(
         '<img src=\'/img/x_white.svg\' id=\'invalid_message_close_icon\' alt=\'Close\' tabindex=\'0\' />'
     );
+    var classNameIs;
+    if (javaMsg) {
+        classNameIs = 'ind_starter_java_warning';
+    } else {
+        classNameIs = 'ind_starter_warning';
+    }
     close_icon.on('click', function () {
-        $('#starter_warnings').empty();
+        $('.' + classNameIs).empty();
     });
     close_icon.on('keydown', function (event) {
         if ( event.which === 13 || event.which === 32 ) { // Enter key or spacebar
             $(this).click();
         }
     });
-    $('#starter_warnings')
+   
+    $('#starter_warnings').append("<div class='" + classNameIs +"'>");
+ 
+    $('.' + classNameIs)
     .append(message)
-    .append(close_icon);                                  
-}
+    .append(close_icon);  
+} 
 
 
 $(document).ready(function () {
