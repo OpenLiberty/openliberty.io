@@ -198,40 +198,6 @@ seo-description: Use Maven or Gradle to create a starter application for develop
     </div>
 </div>
 
-<!-- IDE TOOLS -->
-<div id="ide_tools_section" class="container">
-    <h2 class="section_title">{% t start.ide_tools.section_title %}</h2>
-    <p class="ide_tools_text1">
-        {% t start.ide_tools.section_text1 %}
-    </p>
-    <p class="ide_tools_text">
-        {% t start.ide_tools.section_text2 %}
-        <a href="{{baseURL}}/docs/latest/develop-liberty-tools.html" class="blue_link_light_background_external">{% t start.ide_tools.docs_link %}</a>
-    </p>
-    <div id="ide_link_container" class="row">
-        <div class="column">
-            <a id="liberty_tools_for_eclipse_link" href="https://marketplace.eclipse.org/content/liberty-tools">
-                {% t start.ide_tools.eclipse_link %}
-                <img src="/img/launch_white.svg" class="launch_icon" >
-            </a>
-            <a id="liberty_tools_for_intellij_link" href="https://plugins.jetbrains.com/plugin/14856-liberty-tools">
-                {% t start.ide_tools.intellij_link %} 
-                <img src="/img/launch_white.svg" class="launch_icon" >
-            </a>
-            <a id="liberty_tools_for_vs_code_link" href="https://marketplace.visualstudio.com/items?itemName=Open-Liberty.liberty-dev-vscode-ext">
-                {% t start.ide_tools.vscode_link %}
-                <img src="/img/launch_white.svg" class="launch_icon" >
-            </a>
-        </div>
-    </div>
-    <p>
-        {% t start.ide_tools.section_text3 %}
-        <a class="orange_link_light_background" href="https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/tools/release/?C=N;O=D" >{% t start.ide_tools.public_dhe_link %}</a>
-        {% t start.ide_tools.section_text4 %} 
-        <a href="https://github.com/OpenLiberty/open-liberty-tools" class="orange_link_light_background">{% t start.ide_tools.github_link %}</a>
-    </p>
-</div>
-
 
 
 <!-- DOWNLOADS TABLE TABS -->
@@ -248,6 +214,9 @@ seo-description: Use Maven or Gradle to create a starter application for develop
             </li>
             <li class="nav-item" role="presentation">
                 <a id="downloads-devbuilds" class="nav-link" aria-controls="development_builds" href="#development_builds" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false">{% t start.download_package_section.nightly_builds %}</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a id="downloads-eclipse-devtools" class="nav-link" aria-controls="eclipse_developer_tools" href="#eclipse_developer_tools" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false">{% t start.download_package_section.eclipse_developer_tools %}</a>
             </li>
         </ul>
     </div>
@@ -338,6 +307,49 @@ seo-description: Use Maven or Gradle to create a starter application for develop
                                         <th id="runtime_development_builds_tests" class="tests_passed_column"><a href="" data-key="test_passed" data-descending="false" class="functional_link sort_link">{% t start.download_package_section.table_header.tests %}<span class="table_header_arrow" aria-hidden="true"></span></a></th>
                                         <th id="runtime_development_builds_logs" class="view_logs_column">{% t start.download_package_section.table_header.logs %}</th>
                                         <th id="runtime_development_builds_download" class="download_button_column">{% t start.download_package_section.table_header.download %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ECLIPSE DEVELOPER TOOLS -->
+            <div id="eclipse_developer_tools" class="container builds_container tab-pane fade" role="tabpanel" aria-labelledby="downloads-eclipse-devtools">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p class="download_sentence">
+                            {% t start.download_package_section.eclipse_developer_tools_content1 %}
+                            <a href="https://github.com/OpenLiberty/open-liberty-tools" target="_blank" rel="noopener" class="orange_link_light_background">{% t start.download_package_section.eclipse_developer_tools_content2 %}</a>
+                        </p>
+                        <div class="clearfix">
+                            <h3 class="eclipse_development_tools_title pull-left">{% t start.download_package_section.releases %}</h3>
+                        </div>
+                        <div id="eclipse_development_tools_releases_table_container" class="narrow_table_container">
+                            <table class="build_table releases_table white_table" data-builds-id="developer_tools_releases">
+                                <thead>
+                                    <tr>
+                                        <th id="developer_tools_releases_version" class="date_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">{% t start.download_package_section.table_header.version %}</a></th>
+                                        <th id="developer_tools_releases_download" class="download_button_column">{% t start.download_package_section.table_header.download %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="release_table_body">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clearfix">
+                            <h3 class="eclipse_development_tools_title pull-left">{% t start.download_package_section.development_builds %}</h3>
+                        </div>
+                        <div id="eclipse_development_tools_development_builds_table_container" class="table_container">
+                            <table class="build_table development_builds_table white_table" data-builds-id="developer_tools_development_builds">
+                                <thead>
+                                    <tr>
+                                        <th id="developer_tools_development_builds_date" class="date_column"><a href="" data-key="date" data-descending="true" class="functional_link sort_link">{% t start.download_package_section.table_header.version %}</a></th>
+                                        <th id="developer_tools_development_builds_tests" class="tests_passed_column"><a href="" data-key="test_passed" data-descending="false" class="functional_link sort_link">{% t start.download_package_section.table_header.tests %}<span class="table_header_arrow" aria-hidden="true"></span></a></th>
+                                        <th id="developer_tools_development_builds_logs" class="view_logs_column">{% t start.download_package_section.table_header.logs %}</th>
+                                        <th id="developer_tools_development_builds_download" class="download_button_column">{% t start.download_package_section.table_header.download %}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
