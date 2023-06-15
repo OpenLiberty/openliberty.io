@@ -17,6 +17,8 @@ var latest_releases = [];
 var runtime_releases = [];
 var runtime_development_builds = [];
 var runtime_betas = [];
+var developer_tools_releases = [];
+var developer_tools_development_builds = [];
 var versArr = [];
 
 var builds_url = '/api/builds/data';
@@ -75,6 +77,10 @@ var allowed_builds = {
     },
     // runtime_nightly_builds not intended for used, here for completeness
     runtime_nightly_builds: undefined,
+    // tools_releases not intended for used, here for completeness
+    tools_releases: undefined,
+    // tools_nightly_builds not intended for used, here for completeness
+    tools_nightly_builds: undefined, // based on "driver_location" /api/builds/data
 };
 
 var site_lang = document.getElementsByTagName('html')[0].getAttribute('lang');
@@ -536,6 +542,32 @@ function render_builds(builds, parent) {
                     }
                 }
             }
+
+            // eclipse developer tools releases only
+            else {
+                var row = $('<tr></tr>');
+                var version_column = $(
+                    '<td headers="' +
+                        tableID +
+                        '_version">' +
+                        build.version +
+                        '</td>'
+                );
+                var download_column = $(
+                    '<td headers="' +
+                        tableID +
+                        '_download"><a href="' +
+                        build.driver_location +
+                        '" class="' +
+                        analytics_class_name +
+                        '" rel="noopener">' +
+                        download_arrow +
+                        'ZIP</a></td>'
+                );
+                row.append(version_column);
+                row.append(download_column);
+                parent.append(row);
+            }
         }
 
         // ol development builds and eclipse development builds
@@ -834,7 +866,7 @@ function add_invalid_message(field_id, valid) {
                 );
             } else if (field_id == 'g') {
                 message = $(
-                    '<p class=\'invalid_field_message\'>Valid characters include a-z separated by \'.\'</p>'
+                    '<p class=\'invalid_field_message\'>Valid characters for the first package name include a-z. Subpackages also allow A-Z, \'_\' and 0-9. Packages must be separated by \'.\' </p>'
                 );
             }
             div.append(warning_icon).append(message);
@@ -855,7 +887,9 @@ function add_invalid_message(field_id, valid) {
 
 // Base package name
 function validate_group_name() {
-    var valid_syntax = /^([a-z]+\.)*[a-z]+$/g; // Starts with a lowercase char and only contains letters and periods.
+    // Starts with a package of all lowercase char string and then contains letters (either lower or uppercase),   
+    // numbers, underscores in other subpackages all separated by periods Eg: com.Acme.my_widget.v2
+    var valid_syntax = /^[a-z]+(\.[A-Za-z]\w*)+$/g;
     var value = $('.starter_field[data-starter-field=\'g\'] input').val();
     var valid = value == '' ? false : valid_syntax.test(value);
     add_invalid_message('g', valid);
@@ -1377,6 +1411,19 @@ $(document).ready(function () {
                     );
                 }
             }
+            if (latest_releases.tools) {
+                if (latest_releases.tools.version) {
+                    $(
+                        '#eclipse_developer_tools_download_link_version_text'
+                    ).text(latest_releases.tools.version);
+                }
+                if (latest_releases.tools.driver_location) {
+                    $('#eclipse_developer_tools_download_link').attr(
+                        'href',
+                        latest_releases.tools.driver_location
+                    );
+                }
+            }
         }
 
         function formatBuilds(builds_from_response) {
@@ -1402,6 +1449,17 @@ $(document).ready(function () {
                 render_builds(
                     runtime_releases,
                     $('table[data-builds-id="runtime_releases"] tbody')
+                );
+            }
+            if (data.builds.tools_releases) {
+                developer_tools_releases = formatBuilds(
+                    data.builds.tools_releases
+                );
+                builds['developer_tools_releases'] = developer_tools_releases;
+                sort_builds(developer_tools_releases, 'date', true);
+                render_builds(
+                    developer_tools_releases,
+                    $('table[data-builds-id="developer_tools_releases"] tbody')
                 );
             }
             if (data.builds.runtime_betas) {
@@ -1430,6 +1488,20 @@ $(document).ready(function () {
                     runtime_development_builds,
                     $(
                         'table[data-builds-id="runtime_development_builds"] tbody'
+                    )
+                );
+            }
+            if (data.builds.tools_nightly_builds) {
+                developer_tools_development_builds = formatBuilds(
+                    data.builds.tools_nightly_builds
+                );
+                builds['developer_tools_development_builds'] =
+                    developer_tools_development_builds;
+                sort_builds(developer_tools_development_builds, 'date', true);
+                render_builds(
+                    developer_tools_development_builds,
+                    $(
+                        'table[data-builds-id="developer_tools_development_builds"] tbody'
                     )
                 );
             }
