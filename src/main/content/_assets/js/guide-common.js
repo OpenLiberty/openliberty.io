@@ -460,33 +460,7 @@ function getTags(callback) {
 $(document).ready(function () {
     getTags(function () {
         $("#tags_container:empty").prev().hide();
-
-        // handle positioning of guide sections
-        var notif_height = 0;
-        if(dep){
-            notif_height = $("#deprecated_notification").outerHeight();
-        }
-        var nav_height = $("#nav_bar").outerHeight();
-        if(window.location.hash && dep){
-            accessContentsFromHash(window.location.hash)
-        } else if(!window.location.hash){
-            $("#deprecated_notification").css("top", nav_height+"px");
-            $("#toc_inner").css("top", (nav_height+notif_height)+"px");
-            $("#code_column").css("top", (nav_height+notif_height)+"px");
-        } else if(($("#nav_bar").hasClass("fixed_top"))){
-            if(dep){
-                $("#deprecated_notification").css("top", nav_height+"px");
-                $("#toc_inner").css("top", (nav_height+notif_height)+"px");
-                $("#code_column").css("top", (nav_height+notif_height)+"px");
-            } else{
-                $("#toc_inner").css("top", nav_height+"px");
-                $("#code_column").css("top", nav_height+"px");
-            }
-        } else{
-            $("#deprecated_notification").css("top", "0");
-            $("#toc_inner").css("top", nav_height+"px");
-            $("#code_column").css("top", nav_height+"px");
-        }
+        $(window).trigger("scroll");
     });
 
     $("#feedback_ratings img").on("mouseenter", function (event) {
