@@ -554,7 +554,11 @@ $(document).ready(function () {
                 $("#toc_inner").css("top", nav_height+"px");
                 $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
                 if(inSingleColumnView()){
-                    $("#mobile_toc_accordion_container").css("margin-top", "0px");
+                    if($("#mobile_toc_accordion_container").css("position") !== "fixed"){
+                        $("#mobile_toc_accordion_container").css("margin-top", "0px");
+                    } else {
+                        $("#mobile_toc_accordion_container").css("margin-top", nav_height+"px");
+                    }
                 }
             }
         } else{
@@ -860,6 +864,9 @@ $(document).ready(function () {
         dep = false;
         dep_closed = true;      // used in scroll event to reposition columns
         $(this).parent().remove();
+        if(inSingleColumnView()){
+            $("#mobile_toc_accordion_container").css("margin-top", nav_height+"px");
+        }
         $(window).trigger("scroll");
         return false;
     })
