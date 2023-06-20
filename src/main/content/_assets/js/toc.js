@@ -420,11 +420,6 @@ $(document).ready(function() {
             $("#toc_indicator").css("margin-top", $("#nav_bar").outerHeight());
         }
 
-        // in guides, if mobile toc accodion is fixed to top of screen, move toc accordion below fixed nav bar
-        if ($("#mobile_toc_accordion_container").hasClass("fixed_toc_accordion")  && $("#nav_bar").hasClass("fixed_top")) {
-            $("#mobile_toc_accordion_container").css("top", $("#nav_bar").outerHeight() + "px");
-        }
-
         // update width with new width after resizing
         if ($(this).innerWidth() != width) {
             width = $(this).innerWidth();
