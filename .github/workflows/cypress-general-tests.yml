@@ -1,7 +1,7 @@
 # This workflow will run the cypress tests that are unrelated to the downloading and
 # testing of the starter zip files
 
-name: Test Feature Versions RedirectURls and Runtime Release Versions
+name: General Starter and Redirect Tests
 on:
   workflow_dispatch:
 
@@ -62,4 +62,24 @@ jobs:
             with:
                 name: cypress-videos
                 path: /__w/start.openliberty.io/start.openliberty.io/cypress/videos/testRedirectURLs.cy.js.mp4
+
+      use-cypress-test-StarterDefaults:
+        runs-on: ubuntu-latest
+        container: cypress/included:12.5.1
+        steps: 
+          - uses: actions/checkout@v3.3.0
+          - run: cypress run --browser chrome --env JDK_VERSION="${{ inputs.java_version }}"  --config-file /__w/start.openliberty.io/start.openliberty.io/src/test/cypressjs/cypress.config.js --spec /__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/e2e/testOLStarterDefaults.cy.js
+          
+          - uses: actions/upload-artifact@v3
+            if: failure()
+            with:
+               name: cypress-screenshots
+               path: /__w/start.openliberty.io/start.openliberty.io/cypress/screenshots/testOLStarterDefaults.cy.js
+
+          - uses: actions/upload-artifact@v3
+            if: failure()
+            with:
+                name: cypress-videos
+                path: /__w/start.openliberty.io/start.openliberty.io/cypress/videos/testOLStarterDefaults.cy.js.mp4
+
 
