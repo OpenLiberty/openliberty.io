@@ -1,4 +1,4 @@
-# How to run [Cypress.io](https://www.cypress.io/) automated UI tests Locallly
+# How to run [Cypress.io](https://www.cypress.io/) automated UI tests Locally
 
 ## Step 1: First time setting up local environment with Cypress
 - Run `npm install` in the directory containing this `README.md`
