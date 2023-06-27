@@ -870,7 +870,7 @@ function setFramelessQueryParams(){
     var search = window.location.search;
     var hash = window.location.hash;
     var newURL = window.location.href.replace(search, '').replace(hash, '') + '?' + decodeURIComponent(queryParams.toString());
-    window.history.pushState({}, null, newURL);       
+    window.history.pushState({}, null, newURL);
   }
 }
 
@@ -882,7 +882,7 @@ function loadJavadocFromUrl(){
     var search = window.location.search;
     var params = new URLSearchParams(search);
     //var old_query_params = parseQueryParams();
-    var javadocPath = encodeURI(params.get('javadocPath'));
+    var javadocPath = encodeURI(params.get('path'));
     var tempJavadocPath = javadocPath;
     // add back /docs/modules/reference/
     if (!javadocPath.startsWith('/docs/modules/reference/')) {
