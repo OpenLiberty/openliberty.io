@@ -1,27 +1,30 @@
 var blog = function(){
     var tag_names = [];
+    var translations = {};
 
     // Read tags from json file and add tag to class
     function getTags(callback) {
-        if(document.documentElement.lang !== 'en') {
-            // Temporarily disable tags for non-English posts until there is a design in place on how the
-            // code should manage tags for a post in different languages.
-            return;
-        }
         $.getJSON( "../../blog_tags.json", function(data) {
             $.each(data.blog_tags, function(j, tag) {
                 var tag_class = tag.name.replace(" ", "_");
                 tag_names.push(tag_class.toLowerCase());
+                var tn = tag.name;
+                var lang = document.documentElement.lang;
+                // check if this tag should be translated and if it has a translation available
+                if(lang !== "en" && tag.translation && lang in tag.translation){
+                    tn = tag.translation[lang];
+                    translations[tag.name]=tn;
+                }
                 // get featured tags from json
                 if (tag.featured) {
-                    featured_tags_html = '<p tabindex="0" role="listitem" class="featured_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');" onkeypress="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tag.name + '</p>' + '<span>, </span>';
+                    featured_tags_html = '<p tabindex="0" role="listitem" class="featured_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');" onkeypress="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tn + '</p>' + '<span>, </span>';
                     $('#featured_tags_list').append(featured_tags_html);
                 }
                 $(".blog_post_title_link").each(function(i, link) {
                     var post_name = getPostName(this);
                     var tags_html = "";
                     if (tag.posts.indexOf(post_name) > -1) {
-                        tags_html = '<p tabindex="0" role="listitem" class="blog_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');" onkeypress="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tag.name + '</p>' + '<span>, </span>';
+                        tags_html = '<p tabindex="0" role="listitem" class="blog_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');" onkeypress="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tn + '</p>' + '<span>, </span>';
                         
                         $(".blog_post_content:eq(" + i + ")").addClass(tag_class.toLowerCase());
                         $(".blog_tags_container:eq(" + i + ")").append(tags_html);
@@ -93,8 +96,13 @@ var blog = function(){
                 excludeList.push(tagList[i].tag.toLowerCase());
                 excludeStr = excludeStr + tagList[i].tag.replace("_", " ") + ", ";
             } else {
-                includeStr = includeStr + ("." + tagList[i].tag.toLowerCase());
-                filterStr = filterStr + tagList[i].tag.replace("_", " ") + ", ";
+                if(translations[tagList[i].tag.replace("_", " ").toLowerCase()]){
+                    includeStr = includeStr + ("." + tagList[i].tag.toLowerCase());
+                    filterStr = filterStr + translations[tagList[i].tag.replace("_", " ")] + ", ";
+                } else {
+                    includeStr = includeStr + ("." + tagList[i].tag.toLowerCase());
+                    filterStr = filterStr + tagList[i].tag.replace("_", " ") + ", ";
+                }
             }
         }
 

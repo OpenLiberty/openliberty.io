@@ -10,19 +10,40 @@
  *******************************************************************************/
 
 // Read tags from json file and add tag to class
-$.getJSON( "../../../../blog_tags.json", function(data) {
-    var path = $(location).attr('pathname');
-    var post_name = getPostName(path)
-
-    var tags_html = "";
-    $.each(data.blog_tags, function(j, tag) {
-        if (tag.posts.indexOf(post_name) > -1) {
-            tags_html = '<a href="/blog/?search=' + tag.name.replace(" ", "_") + '" class="post_tag blue_link_light_background">' + tag.name + '</a>' + '<span>, </span>';
-            $(".post_tags_container").append(tags_html);
-        }
+if(document.documentElement.lang !== "en"){
+    $.getJSON( "../../../../../blog_tags.json", function(data) {
+        var path = $(location).attr('pathname');
+        var post_name = getPostName(path)
+        var lang = document.documentElement.lang;
+    
+        var tags_html = "";
+        $.each(data.blog_tags, function(j, tag) {
+            if (tag.posts.indexOf(post_name) > -1) {
+                if(tag.translation && lang in tag.translation){
+                    tags_html = '<a href="/'+lang+'/blog/?search=' + tag.name.replace(" ", "_") + '" class="post_tag blue_link_light_background">' + tag.translation[lang] + '</a>' + '<span>, </span>';
+                } else {
+                    tags_html = '<a href="/'+lang+'/blog/?search=' + tag.name.replace(" ", "_") + '" class="post_tag blue_link_light_background">' + tag.name + '</a>' + '<span>, </span>';
+                }
+                $(".post_tags_container").append(tags_html);
+            }
+        });
+    
     });
-
-});
+} else {
+    $.getJSON( "../../../../blog_tags.json", function(data) {
+        var path = $(location).attr('pathname');
+        var post_name = getPostName(path)
+    
+        var tags_html = "";
+        $.each(data.blog_tags, function(j, tag) {
+            if (tag.posts.indexOf(post_name) > -1) {
+                tags_html = '<a href="/blog/?search=' + tag.name.replace(" ", "_") + '" class="post_tag blue_link_light_background">' + tag.name + '</a>' + '<span>, </span>';
+                $(".post_tags_container").append(tags_html);
+            }
+        });
+    
+    });
+}
 
 function getPostName(path) {
     var filename = getFilename(path);
