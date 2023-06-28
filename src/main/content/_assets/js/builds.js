@@ -839,7 +839,7 @@ function add_invalid_message(field_id, valid) {
                 );
             } else if (field_id == 'g') {
                 message = $(
-                    '<p class=\'invalid_field_message\'>Valid characters for package names include a-z, A-Z, \'_\' and 0-9. Packages must be separated by \'.\' </p>'   
+                    '<p class=\'invalid_field_message\'>Valid characters include a-z separated by \'.\'</p>'
                 );
             }
             div.append(warning_icon).append(message);
@@ -860,9 +860,7 @@ function add_invalid_message(field_id, valid) {
 
 // Base package name
 function validate_group_name() {
-    // Each group name package can contain letters (either lower or uppercase),   
-    // numbers and underscores all separated by periods Eg: com.Acme.my_widget.v2
-    var valid_syntax = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]*)+$/g;
+    var valid_syntax = /^([a-z]+\.)*[a-z]+$/g; // Starts with a lowercase char and only contains letters and periods.
     var value = $('.starter_field[data-starter-field=\'g\'] input').val();
     var valid = value == '' ? false : valid_syntax.test(value);
     add_invalid_message('g', valid);
