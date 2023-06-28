@@ -77,9 +77,6 @@ var openliberty = (function() {
 
         // push toc column, toc indicator and code column down below nav bar
         $("#toc_column").css("top", nav_height + "px");
-        if (window.innerWidth > 1440) {
-            $("#toc_inner").css("margin-top", nav_height + "px");
-        }
         $("#toc_indicator").css("margin-top", nav_height + "px");
 
         // add margin-top to body so page doesn't jump when nav slides into view
@@ -112,9 +109,6 @@ var openliberty = (function() {
         
         // reset toc column, toc indicator and code column position
         $("#toc_column").css("top", "0px");
-        if (window.innerWidth > 1440) {
-            $("#toc_inner").css("margin-top", "0px");
-        }
         $("#toc_indicator").css("margin-top", "0px");
 
         // reset body margin-top
