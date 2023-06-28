@@ -860,8 +860,8 @@ function add_invalid_message(field_id, valid) {
 
 // Base package name
 function validate_group_name() {
-    // Each group name package can contain letters (either lower or uppercase),   
-    // numbers and underscores all separated by periods Eg: com.Acme.my_widget.v2
+    // Starts with a package of all lowercase char string and then contains letters (either lower or uppercase),   
+    // numbers, underscores in other subpackages all separated by periods Eg: com.Acme.my_widget.v2
     var valid_syntax = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]*)+$/g;
     var value = $('.starter_field[data-starter-field=\'g\'] input').val();
     var valid = value == '' ? false : valid_syntax.test(value);
