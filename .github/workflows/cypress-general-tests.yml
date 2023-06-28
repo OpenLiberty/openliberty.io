@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  use-cypress-test-FeatureVersions:
-       runs-on: ubuntu-latest
-       container: cypress/included:12.5.1
-       steps: 
+    use-cypress-test-FeatureVersions:
+        runs-on: ubuntu-latest
+        container: cypress/included:12.5.1
+        steps: 
           - uses: actions/checkout@v3.3.0
           - run: cypress run --browser chrome --env JDK_VERSION="${{ inputs.java_version }}"  --config-file /__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress.config.js --spec /__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/e2e/testFeatureVersions.cy.js
           
@@ -25,10 +25,10 @@ jobs:
                 name: cypress-videos
                 path: /__w/openliberty.io/openliberty.io/cypress/videos/testFeatureVersions.cy.js.mp4
                 
-  use-cypress-test-RuntimeReleaseVersions:
-       runs-on: ubuntu-latest
-       container: cypress/included:12.5.1
-       steps: 
+    use-cypress-test-RuntimeReleaseVersions:
+        runs-on: ubuntu-latest
+        container: cypress/included:12.5.1
+        steps: 
           - uses: actions/checkout@v3.3.0
           - run: cypress run --browser chrome --env JDK_VERSION="${{ inputs.java_version }}"  --config-file /__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress.config.js --spec /__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/e2e/testRuntimeReleaseVersions.cy.js
           
@@ -44,10 +44,10 @@ jobs:
                 name: cypress-videos
                 path: /__w/openliberty.io/openliberty.io/cypress/videos/testRuntimeReleaseVersions.cy.js.mp4
 
-  use-cypress-test-RedirectURLS:
-       runs-on: ubuntu-latest
-       container: cypress/included:12.5.1
-       steps: 
+    use-cypress-test-RedirectURLS:
+        runs-on: ubuntu-latest
+        container: cypress/included:12.5.1
+        steps: 
           - uses: actions/checkout@v3.3.0
           - run: cypress run --browser chrome --env JDK_VERSION="${{ inputs.java_version }}"  --config-file /__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress.config.js --spec /__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/e2e/testRedirectURLs.cy.js
           
@@ -63,10 +63,10 @@ jobs:
                 name: cypress-videos
                 path: /__w/openliberty.io/openliberty.io/cypress/videos/testRedirectURLs.cy.js.mp4
 
-  use-cypress-test-StarterDefaults:
-       runs-on: ubuntu-latest
-       container: cypress/included:12.5.1
-       steps: 
+      use-cypress-test-StarterDefaults:
+        runs-on: ubuntu-latest
+        container: cypress/included:12.5.1
+        steps: 
           - uses: actions/checkout@v3.3.0
           - run: cypress run --browser chrome --env JDK_VERSION="${{ inputs.java_version }}"  --config-file /__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress.config.js --spec /__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/e2e/testOLStarterDefaults.cy.js
           
