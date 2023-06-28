@@ -96,11 +96,10 @@ var blog = function(){
                 excludeList.push(tagList[i].tag.toLowerCase());
                 excludeStr = excludeStr + tagList[i].tag.replace("_", " ") + ", ";
             } else {
+                includeStr = includeStr + ("." + tagList[i].tag.toLowerCase());
                 if(translations[tagList[i].tag.replace("_", " ").toLowerCase()]){
-                    includeStr = includeStr + ("." + tagList[i].tag.toLowerCase());
                     filterStr = filterStr + translations[tagList[i].tag.replace("_", " ")] + ", ";
                 } else {
-                    includeStr = includeStr + ("." + tagList[i].tag.toLowerCase());
                     filterStr = filterStr + tagList[i].tag.replace("_", " ") + ", ";
                 }
             }
