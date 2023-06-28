@@ -32,7 +32,6 @@ var openliberty = (function() {
                 }
             }
             else {
-                $("#code_column").css({"position": "absolute", "top": ""});
                 $(".toolbar").css({"position": "static", "top": ""});
                 $(".nav").css("top", "");
             }
@@ -78,19 +77,10 @@ var openliberty = (function() {
 
         // push toc column, toc indicator and code column down below nav bar
         $("#toc_column").css("top", nav_height + "px");
-        if (window.innerWidth > 1440) {
-            $("#toc_inner").css("margin-top", nav_height + "px");
-        }
         $("#toc_indicator").css("margin-top", nav_height + "px");
-        $("#code_column").css({"position": "fixed", "top": nav_height + "px"});
 
         // add margin-top to body so page doesn't jump when nav slides into view
         $('body').css("margin-top", nav_height + "px");
-
-        // in guides, if mobile toc accodion is fixed to top of screen, move toc accordion below fixed nav bar
-        if ($("#mobile_toc_accordion_container").hasClass("fixed_toc_accordion")) {
-            $("#mobile_toc_accordion_container").css("top", nav_height + "px");
-        }
 
         // on /guides, if tablet toc accordion is fixed to top of screen, move toc accordion below fixed nav bar
         if ($("#tablet_toc_accordion_container").css("position") === "fixed") {
@@ -119,16 +109,12 @@ var openliberty = (function() {
         
         // reset toc column, toc indicator and code column position
         $("#toc_column").css("top", "0px");
-        if (window.innerWidth > 1440) {
-            $("#toc_inner").css("margin-top", "0px");
-        }
         $("#toc_indicator").css("margin-top", "0px");
 
         // reset body margin-top
         $('body').css("margin-top", "0px");
 
         // fix mobile and tablet toc accordion to top of screen again
-        $("#mobile_toc_accordion_container").css("top", "0px");
         $("#tablet_toc_accordion_container").css("top", "0px");
 
         // adjust docs toolbar and nav position

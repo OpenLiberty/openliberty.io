@@ -21,7 +21,7 @@ var versArr = [];
 
 var builds_url = '/api/builds/data';
 var starter_domain = 
-    isStagingSite() ? 'https://starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud' : 'https://start.openliberty.io';
+    isNotProdSite() ? 'https://starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud' : 'https://start.openliberty.io';
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 var failed_builds_request = false;
@@ -83,9 +83,14 @@ if (site_lang != 'en') {
     baseURL = '/'+site_lang;
 }
 
-function isStagingSite() {
+function isNotProdSite() {
+    // both staging and draft will point to the staging branch of the starter repo
     var host = window.location.hostname;
-    return host.indexOf('staging') > -1;
+    if ((host.indexOf('staging') > -1) || (host.indexOf('draft') > -1)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /**
@@ -834,7 +839,8 @@ function add_invalid_message(field_id, valid) {
                 );
             } else if (field_id == 'g') {
                 message = $(
-                    '<p class=\'invalid_field_message\'>Valid characters for package names include a-z, A-Z, \'_\' and 0-9. Packages must be separated by \'.\' </p>'                );
+                    '<p class=\'invalid_field_message\'>Valid characters for package names include a-z, A-Z, \'_\' and 0-9. Packages must be separated by \'.\' </p>'   
+                );
             }
             div.append(warning_icon).append(message);
             $('.starter_field[data-starter-field=\'' + field_id + '\']').append(
