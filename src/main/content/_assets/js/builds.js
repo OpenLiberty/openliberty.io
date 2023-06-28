@@ -21,7 +21,7 @@ var versArr = [];
 
 var builds_url = '/api/builds/data';
 var starter_domain = 
-    isNotProdSite() ? 'https://starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud' : 'https://start.openliberty.io';
+    isStagingSite() ? 'https://starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud' : 'https://start.openliberty.io';
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 var failed_builds_request = false;
@@ -83,14 +83,9 @@ if (site_lang != 'en') {
     baseURL = '/'+site_lang;
 }
 
-function isNotProdSite() {
-    // both staging and draft will point to the staging branch of the starter repo
+function isStagingSite() {
     var host = window.location.hostname;
-    if ((host.indexOf('staging') > -1) || (host.indexOf('draft') > -1)) {
-        return true;
-    } else {
-        return false;
-    }
+    return host.indexOf('staging') > -1;
 }
 
 /**
@@ -839,7 +834,7 @@ function add_invalid_message(field_id, valid) {
                 );
             } else if (field_id == 'g') {
                 message = $(
-                    '<p class=\'invalid_field_message\'>Valid characters for package names include a-z, A-Z, \'_\' and 0-9. Packages must be separated by \'.\' </p>'
+                    '<p class=\'invalid_field_message\'>Valid characters for the first package name include a-z. Subpackages also allow A-Z, \'_\' and 0-9. Packages must be separated by \'.\' </p>'
                 );
             }
             div.append(warning_icon).append(message);
@@ -860,9 +855,9 @@ function add_invalid_message(field_id, valid) {
 
 // Base package name
 function validate_group_name() {
-    // Each group name package can contain letters (either lower or uppercase),   
-    // numbers and underscores all separated by periods Eg: com.Acme.my_widget.v2
-    var valid_syntax = /^[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]*)+$/g;
+    // Starts with a package of all lowercase char string and then contains letters (either lower or uppercase),   
+    // numbers, underscores in other subpackages all separated by periods Eg: com.Acme.my_widget.v2
+    var valid_syntax = /^[a-z]+(\.[A-Za-z]\w*)+$/g;
     var value = $('.starter_field[data-starter-field=\'g\'] input').val();
     var valid = value == '' ? false : valid_syntax.test(value);
     add_invalid_message('g', valid);
