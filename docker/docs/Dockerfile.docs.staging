@@ -54,7 +54,7 @@ RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 package
 #
 #
 #
-FROM icr.io/appcafe/open-liberty:23.0.0.2-kernel-slim-java8-openj9-ubi as runtime
+FROM icr.io/appcafe/open-liberty:23.0.0.5-kernel-slim-java8-openj9-ubi as runtime
 ENV SEC_TLS_TRUSTDEFAULTCERTS true
 
 COPY src/main/wlp/server.xml /config/server.xml
