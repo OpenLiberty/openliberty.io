@@ -17,7 +17,7 @@ var blog = function(){
                 }
                 // get featured tags from json
                 if (tag.featured) {
-                    featured_tags_html = '<p tabindex="0" role="listitem" class="featured_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');" onkeypress="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tn + '</p>' + '<span>, </span>';
+                    featured_tags_html = '<p tabindex="0" role="listitem" class="featured_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');" onkeypress="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">{% t guides.tag.' + tag.name + '%}</p>' + '<span>, </span>';
                     $('#featured_tags_list').append(featured_tags_html);
                 }
                 $(".blog_post_title_link").each(function(i, link) {
