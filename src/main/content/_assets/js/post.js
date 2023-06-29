@@ -15,6 +15,7 @@ if(document.documentElement.lang !== "en"){
         var path = $(location).attr('pathname');
         var post_name = getPostName(path)
         var lang = document.documentElement.lang;
+        console.log(translated_tags);
     
         var tags_html = "";
         $.each(data.blog_tags, function(j, tag) {
