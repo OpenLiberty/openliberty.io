@@ -9,7 +9,7 @@ module.exports = defineConfig({
   },
 
   env: {
-    default_website_url: 'https://staging-openlibertyio.mqj6zf7jocq.us-south.codeengine.appdomain.cloud',
+    default_website_url: 'http://openlibertyio',
     default_jdk: '11',
     jdk_17_home: '/Library/Java/JavaVirtualMachines/ibm-semeru-open-17.jdk/Contents/Home',
     jdk_11_home: '/Library/Java/JavaVirtualMachines/ibm-semeru-certified-11.jdk/Contents/Home',
