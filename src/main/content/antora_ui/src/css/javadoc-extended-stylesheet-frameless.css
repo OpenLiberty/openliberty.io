@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020 IBM Corporation and others.
+ * Copyright (c) 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,13 +36,17 @@ h1 {
 h2 {
   font-family: BunueloBold, Arial Narrow, Helvetica, Arial; }
 
-th[scope='col'] {
+.table-header {
   font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
   font-size: 11px; }
 
 th > a {
   font-weight: 500;
   font-size: 14px; }
+
+main {
+  padding-left: 0px;
+  padding-top: 96px }
 
 .bar a, .bar a:link, .bar a:visited, .bar a:active {
   color: black;
@@ -132,104 +136,69 @@ ul.nav-list-search li label, ul.nav-list-search li span {
 ul.block-list ul.block-list ul.block-list li.block-list h3 {
   background-color: #C8CCD8; }
 
-.contentContainer, .sourceContainer, .classUseContainer, .serializedFormContainer, .constant-values-container {
-  padding: 10px 0px; }
-
-.indexContainer {
-  margin: 0px; }
-
-.indexContainer h2,
-.indexContainer h2[title="Packages"] {
-  padding: 0 0 0 8px;
-  font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
-  text-transform: uppercase;
-  font-size: 14px;
-  color: #313653; }
-
-.indexContainer h2[title="Packages"] {
-  padding-top: 30px;
-  margin-right: 10px;
-  margin-bottom: 5px; }
-
-.indexContainer ul li {
-  font-weight: 300;
-  color: #5D6A8E;
-  font-size: 14px;
-  min-height: 30px;
-  border-left: 8px solid transparent;
-  padding-left: 19px;
-  padding-top: 0px;
-  word-wrap: break-word; }
-  .indexContainer ul li.selected, .indexContainer ul li:hover, .indexContainer ul li:focus {
-    background: #fdf2ea;
-    border-left: 8px solid #f4914d;
-    font-weight: 500; }
-
-.overviewSummary tr:nth-child(1):not(.altColor) {
+#all-packages-table tr:nth-child(1):not(.even-row-color) {
   font-family: BunueloBold, Arial Narrow, Helvetica, Arial; }
 
-.overviewSummary caption span, .memberSummary caption span, .typeSummary caption span,
-.useSummary caption span, .constantsSummary caption span, .deprecatedSummary caption span,
-.requiresSummary caption span, .packagesSummary caption span, .providesSummary caption span,
-.usesSummary caption span {
+/*
+#all-packages-table .summary-table .table-header {
+  padding-top: 20px;
+  padding-bottom: 0px; }*/
+
+#all-packages-table .caption span, #class-summary .caption span, .field-summary .caption span, #related-package-summary .caption span, .details .caption span, #interface .caption span, #field .caption span, #method .caption span, .constructor-summary .caption span, .nested-class-summary .caption span,
+.caption span,
+div.table-tabs > button {
   background-color: #D6D9E4;
   font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
   font-size: 35px;
   height: auto; }
 
-.memberSummary caption span.active-table-tab span, .packagesSummary caption span.active-table-tab span {
+#method-summary-table .table-tabs {
+  padding-top: 0px;
+}
+
+.table-tabs button.active-table-tab {
   background-color: #D6D9E4;
   height: auto; }
 
-.memberSummary caption span.table-tab span, .packagesSummary caption span.table-tab span {
+.table-tabs button.table-tab {
   height: auto; }
 
-.overviewSummary .tabEnd, .memberSummary .tabEnd, .typeSummary .tabEnd,
-.useSummary .tabEnd, .constantsSummary .tabEnd, .deprecatedSummary .tabEnd,
-.requiresSummary .tabEnd, .packagesSummary .tabEnd, .providesSummary .tabEnd, .usesSummary .tabEnd,
-.memberSummary .active-table-tab .tabEnd, .packagesSummary .active-table-tab .tabEnd {
+div.table-tabs > button.active-table-tab {
   background-color: #D6D9E4; }
 
-th.col-first, th.col-second, th.col-last, th.col-constructor-name, .useSummary th, .constantsSummary th, .packagesSummary th,
-td.col-first, td.col-second, td.col-last, .useSummary td, .constantsSummary td {
+.table-header.col-first, .table-header.col-second, .table-header.col-last, .col-constructor-name,
+.col-first, .col-second, .col-last {
   vertical-align: middle;
   /* override top in the original css */ }
 
-th.col-first, th.col-second, th.col-last, th.col-constructor-name, .constantsSummary th, .packagesSummary th {
+.col-first, .col-second, .col-last, .col-constructor-name {
   background: #C8CCD8;
   padding: 0px 3px 0px 7px; }
 
-td.col-first, th.col-first {
+.col-first, .table-header.col-first {
   font-size: 14px; }
 
 /* Has to provide the same font-size here as the original otherwise th[scope='col'] will override the font-size */
-td.col-second, th.col-second, td.col-last, th.col-constructor-name, th.col-last {
+.col-second, .table-header.col-second, .col-last, .col-constructor-name, .table-header.col-last {
   font-size: 13px; }
 
 .constantsSummary th, .packagesSummary th {
   font-size: 13px; }
 
-.providesSummary th.col-first, .providesSummary th.col-last, .providesSummary td.col-first,
-.providesSummary td.col-last {
-  font-size: 13px; }
-
-.overviewSummary td.col-first, .overviewSummary th.col-first,
-.requiresSummary td.col-first, .requiresSummary th.col-first,
-.packagesSummary td.col-first, .packagesSummary td.col-second, .packagesSummary th.col-first, .packagesSummary th,
-.usesSummary td.col-first, .usesSummary th.col-first,
-.providesSummary td.col-first, .providesSummary th.col-first,
-.memberSummary td.col-first, .memberSummary th.col-first,
-.memberSummary td.col-second, .memberSummary th.col-second, .memberSummary th.col-constructor-name,
-.typeSummary td.col-first {
+#all-packages-table .col-first,  #all-packages-table .col-second, #all-packages-table .col-last {
+/*#method-summary-table .col-first, #method-summary-table .col-second, #method-summary-table .col-last, #method-summary-table .col-constructor-name,
+.constructor-summary .col-first, .constructor-summary .col-second, .constructor-summary .col-last, .constructor-summary .ol-constructor-name  {*/
   height: 45px;
   padding-left: 49px;
+  padding-top: 20px;
+  padding-bottom: 0px;
   vertical-align: middle; }
 
 /* has to copy over this styling from the original css, otherwise th.col-first background is picked up */
-.altColor, .altColor th {
+.even-row-color, .even-row-color th {
   background-color: #FFFFFF; }
 
-.rowColor, .rowColor th {
+.odd-row-color, .odd-row-color th {
   background-color: #EEEFF3; }
 
 div.block {
@@ -271,28 +240,6 @@ div.block {
   /* This value will be replaced with the same border-top from the frame during scrolling */
   z-index: -1; }
 
-/*
-  Mobile styles for the 3 frames
-*/
-/* @media only screen and (max-device-width: 767px) {    */
-@media (max-width: 767.98px) {
-  .overviewSummary td.col-first, .overviewSummary th.col-first, .requiresSummary td.col-first, .requiresSummary th.col-first, .packagesSummary td.col-first, .packagesSummary td.col-second, .packagesSummary th.col-first, .packagesSummary th, .usesSummary td.col-first, .usesSummary th.col-first, .providesSummary td.col-first, .providesSummary th.col-first, .memberSummary td.col-first, .memberSummary th.col-first, .memberSummary td.col-second, .memberSummary th.col-second, .memberSummary th.col-constructor-name, .typeSummary td.col-first {
-    padding-left: 7px; }
-  .leftContainer, .leftTop, .leftBottom {
-    display: none; }
-  .rightContainer {
-    position: relative;
-    left: 0; }
-  .top-nav {
-    overflow-x: auto; }
-  #navbar\.top, #navbar\.top\.firstrow {
-    display: none; } }
-
-/* Allow scrolling in mobile view */
-@media only screen and (max-device-width: 767.98px) {
-  .rightContainer {
-    overflow: auto; } }
-
 ul.ui-autocomplete {
   font-family: Asap; }
 
@@ -330,4 +277,5 @@ label {
   /* Overrides the inline float left */ }
 
 .header {
-  margin: 0; }
+  margin: 0;
+}

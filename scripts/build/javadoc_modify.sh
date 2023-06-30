@@ -7,7 +7,7 @@ modifyStylesheet () {
     sed '1 i\
     @import url("https://fonts.googleapis.com/css?family=Asap:300,400,500");
     ' "$1" > newstylesheet.css
-    
+
     mv newstylesheet.css "$1"
 }
 
@@ -37,6 +37,7 @@ modifyRedirect () {
 }
 
 export -f modifyStylesheet
+export -f modifyStylesheetFrameless
 export -f modifySearch
 export -f modifyRedirect
 
