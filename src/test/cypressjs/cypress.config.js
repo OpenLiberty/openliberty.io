@@ -19,8 +19,8 @@ module.exports = defineConfig({
  
   viewportWidth: 1280,
   e2e: {
-    downloadsFolder: 'cypress/downloads',
-    supportFile: 'cypress/support/e2e.js',
-    specPattern: 'cypress/e2e/*.cy.js',
+    supportFile: '/__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/support/e2e.js',
+    specPattern: '/__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/e2e/*.cy.js',
+    downloadsFolder: '__w/openliberty.io/openliberty.io/src/test/cypressjs/cypress/downloads',
   },
 })
