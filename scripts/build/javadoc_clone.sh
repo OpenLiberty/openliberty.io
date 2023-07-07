@@ -23,11 +23,6 @@ pushd src/main/content
 rm -rf docs-javadoc
 git clone https://github.com/OpenLiberty/docs-javadoc.git --branch $BRANCH_NAME
 
-BRANCH_NAME="v23.0.0.6" # vNext
-echo "Cloning the $BRANCH_NAME branch of docs-generated repository..."
-rm -rf docs-generated
-git clone https://github.com/OpenLiberty/docs-generated.git --branch $BRANCH_NAME
-
 echo "git version"
 git --version
 
