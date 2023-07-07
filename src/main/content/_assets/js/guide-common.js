@@ -438,7 +438,7 @@ function getTags(callback) {
                 }
             }
             // if guide is deprecated, add notification under navigation
-            else if(tag.name === "deprecated"){
+            else if(tag.name === "deprecated" && tag.guides.includes(project_id)){
                 if(tag.alt_links[project_id]){
                     $("#background_container").prepend('<div id="deprecated_notification"><p>This guide is now <em>deprecated</em> and will be <em>removed</em> from the Open Liberty website in the future. Check out <a href="/guides/'+tag.alt_links[project_id]+'.html">this alternative guide</a>, which uses more up-to-date technology.</p><input type="image" class="notification_x" src="/img/toc_close_navy.svg" alt="Close notification"/></div>');
                 }
