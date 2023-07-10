@@ -256,4 +256,5 @@ $(document).ready(function() {
     blog.getTags(function () {
         blog.init();
     });
+    console.log(translations_from_jekyll)
 });
