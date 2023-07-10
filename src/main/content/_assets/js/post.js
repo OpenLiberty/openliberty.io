@@ -47,4 +47,15 @@ $(document).ready(function () {
     $('.code_block_wrapper').each(function (){
         $(this).prepend('<div class="copied_confirmation">Copied to clipboard</div><input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block"/>');
     });
+
+    $('#article_body a').each(function() {
+        var link = $(this);
+        if (link.prop('hostname') === window.location.hostname) {
+         void(0);
+        } else {
+          link.addClass('external');
+        }
+      });
 })
+
+
