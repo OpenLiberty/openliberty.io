@@ -438,14 +438,15 @@ function getTags(callback) {
                 }
             }
             // if guide is deprecated, add notification under navigation
-            else if(tag.name === "deprecated"){
-                for(var i = 0; i < tag.details.length; i++){
-                    if(tag.details[i].old === project_id){
-                        $("#background_container").prepend('<div id="deprecated_notification"><p>This guide is now <em>deprecated</em> and will be <em>removed</em> from the Open Liberty website '+(tag.details[i].date ? 'in '+tag.details[i].date : 'in the future')+'. Check out <a href="/guides/'+tag.details[i].new+'.html">this alternative guide</a>, which uses more up-to-date technology.</p><input type="image" class="notification_x" src="/img/toc_close_navy.svg" alt="Close notification"/></div>');
-                        $("#code_column").css("top", "110px")
-                        dep = true;
-                    }
+            else if(tag.name === "deprecated" && tag.guides.includes(project_id)){
+                if(tag.alt_links[project_id]){
+                    $("#background_container").prepend('<div id="deprecated_notification"><p>This guide is now <em>deprecated</em> and will be <em>removed</em> from the Open Liberty website in the future. Check out <a href="/guides/'+tag.alt_links[project_id]+'.html">this alternative guide</a>, which uses more up-to-date technology.</p><input type="image" class="notification_x" src="/img/toc_close_navy.svg" alt="Close notification"/></div>');
                 }
+                else {
+                    $("#background_container").prepend('<div id="deprecated_notification"><p>This guide is now <em>deprecated</em> and will be <em>removed</em> from the Open Liberty website in the future. Check out our other guides, which use more up-to-date technology.</p><input type="image" class="notification_x" src="/img/toc_close_navy.svg" alt="Close notification"/></div>');
+                }
+                $("#code_column").css("top", "110px")
+                dep = true;
             }
             else {
                 if (tag.visible == "false") {
