@@ -1,0 +1,281 @@
+/*******************************************************************************
+ * Copyright (c) 2023 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+/* 
+ * Since this is a separate section to override the existing or adding new stylings to javadoc, it is sometimes
+ * necessary to put in existing styling again here so that the intended styling would not be overriden by the ones 
+ * provided in this section.
+ *
+ * A combined css file will be created using the original stylesheet.css + this css with the extended styling
+ * appended to the end of the combined file.
+ */
+body {
+  background-color: white;
+  font-family: Asap, 'DejaVu Sans', Arial, Helvetica, sans-serif; }
+
+#javadoc_container {
+  height: 100%; }
+
+a[target="packageFrame"],
+a[target="classFrame"] {
+  font-size: 14px;
+  color: #5d6a8e;
+  letter-spacing: 0;
+  line-height: 24px; }
+
+h1 {
+  font-family: BunueloLight, Arial Narrow, Helvetica, Arial; }
+
+h2 {
+  font-family: BunueloBold, Arial Narrow, Helvetica, Arial; }
+
+.table-header {
+  font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+  font-size: 11px; }
+
+th > a {
+  font-weight: 500;
+  font-size: 14px; }
+
+main {
+  padding-left: 0px;
+  padding-top: 96px }
+
+.bar a, .bar a:link, .bar a:visited, .bar a:active {
+  color: black;
+  text-transform: none; }
+
+.bar {
+  border-top: 1px solid #D4D7E3;
+  padding: 20px 0px 0px 8px;
+  margin: 20px 10px 5px 0px;
+  font-family: BunueloBold, Arial Narrow, Helvetica, Arial;
+  font-size: 14px;
+  color: #313653;
+  text-transform: uppercase;
+  background-color: white; }
+
+.top-nav {
+  background-color: #f1f4fe;
+  color: #5E6B8D;
+  height: 52px;
+  font-size: 16px;
+  padding-top: 0px; }
+
+/* open a standalone with no frame to check the top and bottom: All Classes is displayed but nothing else */
+.bottom-nav {
+  display: none; }
+
+.sub-nav {
+  background-color: unset;
+  float: unset;
+  overflow: unset;
+  width: unset;
+  font-size: unset; }
+
+/* this is used in the header of the right frame too - Start of Top navbar */
+.sub-nav .nav-list {
+  display: none; }
+
+.sub-nav .nav-list:nth-of-type(2) {
+  display: none; }
+
+.sub-nav div {
+  display: none;
+  /* Hide the Summary sub-nav filters from javadoc */ }
+
+/* used in Start of Top NavBar with display: none */
+ul.nav-list, ul.sub-nav-list {
+  display: table;
+  height: 100%; }
+
+/* All Classes at the top in a standalone with no frame */
+ul.nav-list li {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0px 22px;
+  font-size: 16px;
+  font-weight: 500;
+  float: none; }
+
+/* doesn't seem to pick up this on focus */
+.clickableNavListTab, ul.nav-list li:focus {
+  background-color: #D6D9E4;
+  color: #253441; }
+
+.clickableNavListTab:hover {
+  cursor: pointer; }
+
+ul.nav-list li > a:hover {
+  color: inherit; }
+
+ul.nav-list-search {
+  margin: 5px 14px 0 0; }
+
+ul.nav-list-search li label, ul.nav-list-search li span {
+  display: none; }
+
+.top-nav a:link, .top-nav a:active, .top-nav a:visited, .bottom-nav a:link, .bottom-nav a:active, .bottom-nav a:visited {
+  color: #5E6B8D;
+  font-weight: 500; }
+
+.nav-bar-cell1-rev {
+  background-color: #D6D9E4; }
+
+.indexNav {
+  display: none; }
+
+ul.block-list ul.block-list ul.block-list li.block-list h3 {
+  background-color: #C8CCD8; }
+
+#all-packages-table tr:nth-child(1):not(.even-row-color) {
+  font-family: BunueloBold, Arial Narrow, Helvetica, Arial; }
+
+/*
+#all-packages-table .summary-table .table-header {
+  padding-top: 20px;
+  padding-bottom: 0px; }*/
+
+#all-packages-table .caption span, #class-summary .caption span, .field-summary .caption span, #related-package-summary .caption span, .details .caption span, #interface .caption span, #field .caption span, #method .caption span, .constructor-summary .caption span, .nested-class-summary .caption span,
+.caption span,
+div.table-tabs > button {
+  background-color: #D6D9E4;
+  font-family: BunueloLight, Arial Narrow, Helvetica, Arial;
+  font-size: 35px;
+  height: auto; }
+
+#method-summary-table .table-tabs {
+  padding-top: 0px;
+}
+
+.table-tabs button.active-table-tab {
+  background-color: #D6D9E4;
+  height: auto; }
+
+.table-tabs button.table-tab {
+  height: auto; }
+
+div.table-tabs > button.active-table-tab {
+  background-color: #D6D9E4; }
+
+.table-header.col-first, .table-header.col-second, .table-header.col-last, .col-constructor-name,
+.col-first, .col-second, .col-last {
+  vertical-align: middle;
+  /* override top in the original css */ }
+
+.col-first, .col-second, .col-last, .col-constructor-name {
+  background: #C8CCD8;
+  padding: 0px 3px 0px 7px; }
+
+.col-first, .table-header.col-first {
+  font-size: 14px; }
+
+/* Has to provide the same font-size here as the original otherwise th[scope='col'] will override the font-size */
+.col-second, .table-header.col-second, .col-last, .col-constructor-name, .table-header.col-last {
+  font-size: 13px; }
+
+.constantsSummary th, .packagesSummary th {
+  font-size: 13px; }
+
+#all-packages-table .col-first,  #all-packages-table .col-second, #all-packages-table .col-last {
+/*#method-summary-table .col-first, #method-summary-table .col-second, #method-summary-table .col-last, #method-summary-table .col-constructor-name,
+.constructor-summary .col-first, .constructor-summary .col-second, .constructor-summary .col-last, .constructor-summary .ol-constructor-name  {*/
+  height: 45px;
+  padding-left: 49px;
+  padding-top: 20px;
+  padding-bottom: 0px;
+  vertical-align: middle; }
+
+/* has to copy over this styling from the original css, otherwise th.col-first background is picked up */
+.even-row-color, .even-row-color th {
+  background-color: #FFFFFF; }
+
+.odd-row-color, .odd-row-color th {
+  background-color: #EEEFF3; }
+
+div.block {
+  font-family: Asap, 'DejaVu Serif', Georgia, "Times New Roman", Times, serif; }
+
+.leftTop {
+  height: 45%;
+  transition: height 0.5s;
+  border-right: none;
+  border-bottom: none; }
+
+.leftBottom {
+  height: 55%;
+  transition: height 0.5s;
+  border-right: none;
+  border-top: none; }
+
+.rightContainer {
+  border-left: none; }
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: white;
+  z-index: 1;
+  margin-top: 0px;
+  /* get rid of the user agent stylesheet margin temporarily */ }
+
+.sticky::before {
+  content: ' ';
+  position: absolute;
+  top: 20px;
+  /* This value will be replaced with a calculated value during scrolling */
+  left: 0px;
+  right: 00px;
+  bottom: 0px;
+  border-top: 0px solid transparent;
+  /* This value will be replaced with the same border-top from the frame during scrolling */
+  z-index: -1; }
+
+ul.ui-autocomplete {
+  font-family: Asap; }
+
+#search {
+  background-position: 2px 5px;
+  padding: 5px 5px 5px 20px; }
+
+#reset {
+  left: -5px; }
+
+.leftFrameHeaderStyling {
+  border-top: 3px solid #d9d9d9;
+  padding-top: 30px; }
+
+/* Custom expand/collapse button */
+div.toggle {
+  width: 11px;
+  margin-right: 10px;
+  margin-top: -1px;
+  float: left; }
+
+/* Minus toggle svg */
+div.toggle[collapsed='false'] {
+  margin-top: -5px; }
+
+div.toggle:hover {
+  cursor: pointer; }
+
+input[type='checkbox'] {
+  display: none; }
+
+label {
+  cursor: pointer;
+  float: left !important;
+  /* Overrides the inline float left */ }
+
+.header {
+  margin: 0;
+}
