@@ -51,7 +51,7 @@ $(document).ready(function () {
     $('#article_body a').each(function() {
         var link = $(this);
         if (link.prop('hostname') === window.location.hostname) {
-         void(0);
+         return;
         } else {
           link.addClass('external');
         }
