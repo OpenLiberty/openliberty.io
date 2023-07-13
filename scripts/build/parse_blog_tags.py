@@ -36,35 +36,37 @@ def addLeadingZero(date,index,addZero):
 for tag in tags:
     tag_name = tag['name']
     posts = tag['posts']
+    lang_list = ["en", "ja", "zh-Hans"]
     for post_name in posts:
-        for file_name in os.listdir("src/main/content/_i18n/en/_posts/"):            
-            if os.path.isfile("src/main/content/_i18n/en/_posts/" + file_name) and file_name.endswith(post_name + '.adoc'):
-                f_post = open("src/main/content/_i18n/en/_posts/" + file_name)
-                data = f_post.readlines()
-                if tag_name == "release":
-                    if file_name.endswith(post_name + '.adoc') and "beta" not in post_name:
-                        release_posts.append(file_name.replace(".adoc", ".html"))
-                if tag_name == "beta":
-                    if file_name.endswith(post_name + '.adoc'):
-                        beta_posts.append(file_name.replace(".adoc", ".html"))
-                # Check if there is already a tags front-matter from a previous tag
-                line_num = 0
-                tags_line = -1
-                for line in data:
-                    if line.startswith('tags: '):
-                        tags_line = line_num
-                        break
-                    line_num += 1
-                if tags_line != -1:
-                    data[tags_line] = data[tags_line].replace(']', '').rstrip('\n') # Remove end bracket and initial newline
-                    data[tags_line] = data[tags_line] + ', "' + tag_name + '"]\n'
-                else:
-                    # Otherwise, add the tags after the first line of front-matter
-                    data[2] = 'tags: ["' + tag_name + '"]\n' + data[2] 
+        for lang in lang_list:
+            for file_name in os.listdir("src/main/content/_i18n/"+lang+"/_posts/"):            
+                if os.path.isfile("src/main/content/_i18n/"+lang+"/_posts/" + file_name) and file_name.endswith(post_name + '.adoc'):
+                    f_post = open("src/main/content/_i18n/"+lang+"/_posts/" + file_name)
+                    data = f_post.readlines()
+                    if tag_name == "release":
+                        if file_name.endswith(post_name + '.adoc') and "beta" not in post_name:
+                            release_posts.append(file_name.replace(".adoc", ".html"))
+                    if tag_name == "beta":
+                        if file_name.endswith(post_name + '.adoc'):
+                            beta_posts.append(file_name.replace(".adoc", ".html"))
+                    # Check if there is already a tags front-matter from a previous tag
+                    line_num = 0
+                    tags_line = -1
+                    for line in data:
+                        if line.startswith('tags: '):
+                            tags_line = line_num
+                            break
+                        line_num += 1
+                    if tags_line != -1:
+                        data[tags_line] = data[tags_line].replace(']', '').rstrip('\n') # Remove end bracket and initial newline
+                        data[tags_line] = data[tags_line] + ', "' + tag_name + '"]\n'
+                    else:
+                        # Otherwise, add the tags after the first line of front-matter
+                        data[2] = 'tags: ["' + tag_name + '"]\n' + data[2] 
 
-                with open("src/main/content/_i18n/en/_posts/" + file_name, 'w') as f_write:
-                    f_write.writelines(data)
-                    f_write.close()
+                    with open("src/main/content/_i18n/"+lang+"/_posts/" + file_name, 'w') as f_write:
+                        f_write.writelines(data)
+                        f_write.close()
     if tag_name == "release":
         release_posts.sort(reverse = True)
         after_format_release_links = format_links_and_remove_duplicates(release_posts)

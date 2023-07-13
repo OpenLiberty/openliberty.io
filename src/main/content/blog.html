@@ -14,6 +14,8 @@ i18n-seo-description: seo.blogs
     {% assign baseURL = '/' | append: site.lang %}
 {% endif %}
 
+{% assign post_tags = site.tags["Jakarta EE"] | map: "url" %}
+
 <!-- BLOG -->
 <div id="background_container">
     <img id="right_cloud_back" class="d-none d-xl-block" src="/img/blog_cloud_back.svg" alt="cloud">
@@ -103,6 +105,11 @@ i18n-seo-description: seo.blogs
                     {% for author in post.additional_authors %}
                         {% assign additional_author_count = additional_author_count | plus: 1 %}
                     {% endfor %}
+                    {% capture tag_class_str -%}
+                        {%- for tag in post.tags %}
+                            {{ tag | downcase | replace: " ", "_" }} 
+                        {%- endfor -%}
+                    {% endcapture %}
 
                     <div class="row blog_post_row">
                         <div class="blog_post_column">
@@ -110,7 +117,7 @@ i18n-seo-description: seo.blogs
                             <p class="green_bar">{% t blog.latest_posts %}</p>
                             {% endif %}
                             {% if count <= latest_posts_count %}
-                                    <div class="blog_post_content">
+                                    <div class="blog_post_content {{ tag_class_str }}">
                                     {% if post.redirect_link %}
                                         <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" data-path="{{ post.path | relative_url }}" target="_blank" rel="noopener" class="blog_post_title_link">{{ post.title | escape }}</a>
                                           <a href="{{ post.redirect_link }}" data-path="{{ post.path | relative_url }}" target="_blank" rel="noopener" class="blog_post_title_link">
@@ -158,7 +165,12 @@ i18n-seo-description: seo.blogs
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div role="list" class="blog_tags_container col-md-7"></div>
+                                        <div role="list" class="blog_tags_container col-md-7">
+                                            {% for tag in post.tags -%}
+                                                {%- assign tag_name = tag | replace: " ", "_" -%}
+                                                <p tabindex="0" role="listitem" class="blog_tag" onclick="blog.filterPosts('{{tag_name}}'); blog.updateSearchUrl('{{tag_name}}');" onkeypress="blog.filterPosts('{{tag_name}}'); blog.updateSearchUrl('{{tag_name}}');">{%- t blog.tags.{{tag_name}} -%}</p><span>,</span>
+                                            {% endfor %}
+                                        </div>
                                         <div class="read_more_link_container col-sm-12 col-md-5">
                                         {% if post.redirect_link %}
                                             <a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="read_more_link read_more_link_external">{% t global.readmore %}</a>

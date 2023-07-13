@@ -59,7 +59,14 @@ js: post
                     {% endfor %}
                     <span id="post_date">{{ page.date | date: date_format }}</span>
                 </div>
-                <div class="post_tags_container"></div>
+                <div class="post_tags_container">
+                    {% for tag in page.tags %}
+                        {% assign tag_name = tag | replace: " ", "_" %}
+                        <a href="/blog/?search={{ tag_name }}" class="post_tag blue_link_light_background">{% t blog.tags.{{tag_name}} %}</a>
+                        <span class="comma">,</span>
+                    {% endfor %}
+                </div>
+                <!-- <div>{{ page.url }} {{ post_tags }} {{ page.tags }}</div> -->
                 <div class="language_container">
                     <span class="lang_text">{% t blog.post_in_other_lang %}:</span>
                     {% for i18n in page.blog-available-in-languages %}
