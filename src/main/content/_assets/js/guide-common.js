@@ -12,6 +12,8 @@
 var backgroundSizeAdjustment = 200;
 var twoColumnBreakpoint = 1170;
 var threeColumnBreakpoint = 1440;
+var dep = false;
+var dep_closed = false;
 
 // update twoColumnBreakpoint for the only single pane guide
 if (window.location.href.indexOf("cloud-ibm") > -1) {
@@ -348,7 +350,6 @@ function shiftWindow() {
 function accessContentsFromHash(hash, callback) {
     var currentScrollTop = $(document).scrollTop();
     var $focusSection = $(hash);
-
     // If section is found, scroll to it
     if ($focusSection.length > 0) {
         // Update the TOC
@@ -366,6 +367,10 @@ function accessContentsFromHash(hash, callback) {
         // if new scroll spot is above current scroll position, subtract nav bar height from scroll spot
         if (scrollSpot < currentScrollTop) {
             scrollSpot -= $("#nav_bar").outerHeight();
+        }
+        // if guide is deprecated, subtract dep notif height from scroll spot
+        if(dep){
+            scrollSpot -= $("#deprecated_notification").outerHeight();
         }
         $("body").data("scrolling", true); // Prevent the default window scroll from triggering until the animation is done.
         $("html, body").animate({ scrollTop: scrollSpot }, 400, function () {
@@ -417,10 +422,10 @@ function getTags(callback) {
     $.getJSON("../../guides/guides-common/guide_tags.json", function (data) {
         $.each(data.guide_tags, function (i, tag) {
             // Check if tag is visible before adding it
+            var project_id = window.location.pathname
+                .replace("/guides/", "")
+                .replace(".html", "");
             if (tag.visible == "true") {
-                project_id = window.location.pathname
-                    .replace("/guides/", "")
-                    .replace(".html", "");
                 // Add tag to tags_container if the guide's project id is in the array for that tag
                 if (tag.guides.indexOf(project_id) > -1) {
                     tag_html =
@@ -431,6 +436,17 @@ function getTags(callback) {
                         "</a>";
                     $("#tags_container").append(tag_html);
                 }
+            }
+            // if guide is deprecated, add notification under navigation
+            else if(tag.name === "deprecated" && tag.guides.includes(project_id)){
+                if(tag.alt_links[project_id]){
+                    $("#background_container").prepend('<div id="deprecated_notification"><p>This guide is now <em>deprecated</em> and will be <em>removed</em> from the Open Liberty website in the future. Check out <a href="/guides/'+tag.alt_links[project_id]+'.html">this alternative guide</a>, which uses more up-to-date technology.</p><input type="image" class="notification_x" src="/img/toc_close_navy.svg" alt="Close notification"/></div>');
+                }
+                else {
+                    $("#background_container").prepend('<div id="deprecated_notification"><p>This guide is now <em>deprecated</em> and will be <em>removed</em> from the Open Liberty website in the future. Check out our other guides, which use more up-to-date technology.</p><input type="image" class="notification_x" src="/img/toc_close_navy.svg" alt="Close notification"/></div>');
+                }
+                $("#code_column").css("top", "110px")
+                dep = true;
             }
             else {
                 if (tag.visible == "false") {
@@ -444,8 +460,8 @@ function getTags(callback) {
 
 $(document).ready(function () {
     getTags(function () {
-        // If there are no tags for the guide, hide the tags title
         $("#tags_container:empty").prev().hide();
+        $(window).trigger("scroll");
     });
 
     $("#feedback_ratings img").on("mouseenter", function (event) {
@@ -470,21 +486,97 @@ $(document).ready(function () {
         handleFloatingTOCAccordion();
         resizeGuideSections();
         handleFloatingCodeColumn();
+        if(dep){
+            $(window).trigger("scroll")
+            var notif_height = $("#deprecated_notification").outerHeight();
+            var nav_height = $("#nav_bar").outerHeight();
+            $("#toc_indicator").css({'position': 'fixed', 'top': notif_height+nav_height+'px'})
+        }
     });
 
     $(window).on("scroll", function () {
         //handles where the top of the code column should be
-        if (!inSingleColumnView()) {
-            //at the top of the browser window in multi-column view
-            $("#code_column").css({"position":"fixed", "top":"0px"})
-        } else {
-            //below the hotspot in single column view
-            $("#code_column").css("position", "fixed");
-        } 
+        var notif_height = 0;
+        if(dep){
+            notif_height = $("#deprecated_notification").outerHeight();
+        }
+        var nav_height = $("#nav_bar").outerHeight();
         handleFloatingTOCAccordion();
         handleStickyHeader();
-        handleFloatingTableOfContent();
         handleFloatingCodeColumn();
+
+        // handle positioning on scroll based on dep and visibility of nav bar
+        // if the top navigation bar is showing
+        if(!($("#nav_bar").hasClass("hide_nav"))){
+            if(dep){
+                if (inSingleColumnView()) {
+                    if($(window).scrollTop() > $(".scroller_anchor").offset().top && (($("#background_container").offset().top + $("#background_container").outerHeight()) > $(window).scrollTop())){
+                         // if above the first section of the guide
+                        $("#mobile_toc_accordion_container").css("margin-top", (notif_height + nav_height)+"px");
+                        $("#mobile_toc_accordion_container").css("z-index", "5");
+                    } else if((($("#background_container").offset().top + $("#background_container").outerHeight()) < $(window).scrollTop())){
+                         // if below the last section of the guide
+                        $("#mobile_toc_accordion_container").css("margin-top", nav_height+"px");
+                    }
+                    else {
+                        $("#mobile_toc_accordion_container").css("margin-top", "0px");
+                    }
+                }
+                $("#deprecated_notification").css("top", nav_height+"px");
+                $("#toc_inner").css("top", (nav_height + notif_height)+"px");
+                $("#code_column").css({"position":"fixed", "top": (nav_height + notif_height)+"px"})
+            } else {
+                $("#toc_inner").css("top", nav_height+"px");
+                $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
+                if(inSingleColumnView()){
+                    if($("#mobile_toc_accordion_container").css("position") !== "fixed"){
+                        $("#mobile_toc_accordion_container").css("margin-top", "0px");
+                    } else {
+                        $("#mobile_toc_accordion_container").css("margin-top", nav_height+"px");
+                    }
+                }
+            }
+        } else{
+            // if the top navigation bar is hidden
+            if(dep){
+                // if the guide is deprecated
+                if(inSingleColumnView()){
+                    if($(window).scrollTop() > $(".scroller_anchor").offset().top && (($("#background_container").offset().top + $("#background_container").outerHeight()) > $(window).scrollTop())){
+                        // if above the first section of the guide
+                        $("#mobile_toc_accordion_container").css("margin-top", notif_height +"px");
+                        $("#mobile_toc_accordion_container").css("z-index", "5");
+                    } else if(($("#background_container").offset().top + $("#background_container").outerHeight() < $(window).scrollTop())){
+                        // if below the last section of the guide
+                        $("#mobile_toc_accordion_container").css("margin-top", "0px");
+                    }
+                    else {
+                        $("#mobile_toc_accordion_container").css("margin-top", "0px");
+                    }
+                }
+                $("#deprecated_notification").css("top", "0");
+                $("#toc_inner").css("top", notif_height+"px");
+                $("#code_column").css({"position":"fixed", "top": notif_height+"px"});
+            } else if (dep_closed){
+                // if the deprecated notification was closed
+                $("#code_column").css({"position":"fixed", "top": nav_height+"px"})
+                $("#toc_inner").css("top", nav_height+"px")
+                if (inSingleColumnView()) {
+                    if(($("#background_container").offset().top + $("#background_container").outerHeight() < $(window).scrollTop())){
+                        // if below the last section of the guide
+                        $("#mobile_toc_accordion_container").css("margin-top", "0px");
+                    } else {
+                        $("#mobile_toc_accordion_container").css("margin-top", nav_height+"px");
+                    }
+                }
+                dep_closed = false;
+            } else {
+                $("#code_column").css({"position":"fixed", "top": "0px"})
+                $("#toc_inner").css("top", "0px")
+                if(inSingleColumnView()){
+                    $("#mobile_toc_accordion_container").css("margin-top", "0px");
+                }
+            }
+        }
     });
 
     window.addEventListener("hashchange", function (e) {
@@ -740,6 +832,19 @@ $(document).ready(function () {
             }
         }
     });
+    
+    // remove notification when X is clicked, dep should no longer be true
+    // if the page is refreshed, dep will become true again and the notification will appear
+    $(document).on("click", ".notification_x", function(e){
+        dep = false;
+        dep_closed = true;      // used in scroll event to reposition columns
+        $(this).parent().remove();
+        if(inSingleColumnView()){
+            $("#mobile_toc_accordion_container").css("margin-top", nav_height+"px");
+        }
+        $(window).trigger("scroll");
+        return false;
+    })
 });
 
 function addGuideRatingsListener() {
@@ -764,6 +869,7 @@ $(window).on("load", function () {
             $(this).find("code").contents().unwrap();
             newPlacement.prepend($(this));
         });
+    
     $.ready.then(function () {
         // Both ready and loaded
         addGuideRatingsListener();

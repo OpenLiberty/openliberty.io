@@ -11,12 +11,33 @@
 
 // make TOC indicator fixed once nav bar scrolls off screen
 $(window).on('scroll', function(event) {
+    $.fn.isInViewport = function () {
+        var elementTop = $(this).offset().top;
+        var elementBottom = elementTop + $(this).outerHeight();
+    
+        var viewportTop = $(window).scrollTop();
+        var viewportBottom = viewportTop + $(window).height();
+    
+        return elementBottom > viewportTop && elementTop < viewportBottom;
+    };
     var nav_bottom = $('#nav_bar').outerHeight(true);
     if ($(this).scrollTop() > nav_bottom){
-        $('#toc_indicator').css({'position': 'fixed', 'top': '0px'});
+        if($("#deprecated_notification").length){
+            $('#toc_indicator').css({'position': 'fixed', 'top': $("#deprecated_notification").outerHeight()+'px'});
+        } else {
+            $('#toc_indicator').css({'position': 'fixed', 'top': '0px'});
+        }
 
         if (window.innerWidth < 1440) {
             $('#toc_column').css({'position': 'fixed', 'top': '0px'});
+        }
+
+        if(!($("#end_of_guide").isInViewport())){
+            $('#toc_line').css({
+                "position": "absolute",
+                "top": "0px",
+                "height": calculateTOCHeight()
+            })
         }
     }
 });
@@ -32,9 +53,6 @@ function handleFloatingTableOfContent() {
         } else {
             // The entire viewport is filled with the background, so
             // do not need to worry about the TOC flowing out of the background.
-            if ($(window).scrollTop() > 60) {
-                enableFloatingTOC();
-            }
             expandTOCIndicator();
         }
     } else {
@@ -48,12 +66,8 @@ function disableFloatingTOC() {
     $('#toc_inner').width("").css({"position": "", "top": ""});
 }
 
-function enableFloatingTOC() {
-    $('#toc_inner').css({"position":"fixed", "top":"0px"});
-}
-
 function calculateTOCHeight(){
-    var endOfGuidePosition = $("#end_of_guide")[0].getClientRects()[0].top;
+    var endOfGuidePosition = $("#end_of_guide").offset().top;
     return endOfGuidePosition;
 }
 
@@ -107,7 +121,6 @@ function handleFloatingTOCAccordion() {
         accordion.removeClass('fixed_toc_accordion');
         $('.scroller_anchor').css('height', 0);
         // Restore toc location.
-        $('#toc_column').css('margin-top', '0px');
     };
     var disableFloatingTOCAccordion = function(){
         // Change the height of the scroller_anchor to that of the accordion
@@ -133,15 +146,9 @@ function handleFloatingTOCAccordion() {
             // When the user scrolls back up past the scroller_anchor, put the
             // accordion back into the page and remove the scroller_anchor <div>.
             enableFloatingTOCAccordion();
-        } else {
-          //mobile_toc_accordion blocks the top part of the TOC column, need to add margin so that 'X' in TOC is visible
-          var tocDistanceFromTop = $('#toc_column').offset().top;
-          if ($(this).scrollTop() >= tocDistanceFromTop) {
-            $('#toc_column').css('margin-top', '40px');
-          }
         }
     }
-    else{
+    else {
         enableFloatingTOCAccordion();
     }
 }
@@ -411,11 +418,6 @@ $(document).ready(function() {
         // if toc indicator visible and nav bar fixed to top of page, position toc indiciator below nav bar
         if ($("#toc_indicator").css("display") == "block" && $("#nav_bar").hasClass("fixed_top")) {
             $("#toc_indicator").css("margin-top", $("#nav_bar").outerHeight());
-        }
-
-        // in guides, if mobile toc accodion is fixed to top of screen, move toc accordion below fixed nav bar
-        if ($("#mobile_toc_accordion_container").hasClass("fixed_toc_accordion")  && $("#nav_bar").hasClass("fixed_top")) {
-            $("#mobile_toc_accordion_container").css("top", $("#nav_bar").outerHeight() + "px");
         }
 
         // update width with new width after resizing
