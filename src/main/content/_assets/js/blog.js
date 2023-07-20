@@ -55,7 +55,7 @@ var blog = function(){
     function updateSearchUrl(tag) {
         if (!tag) {
             // Remove query string because search text is empty
-            search_value = [location.protocol, '//', location.host, "/blog/"].join('');
+            search_value = [location.protocol, '//', location.host, location.pathname].join('');
             history.pushState(null, "", search_value);
         } else {
             // Handle various search functions
@@ -94,7 +94,11 @@ var blog = function(){
                 excludeStr = excludeStr + tagList[i].tag.replace("_", " ") + ", ";
             } else {
                 includeStr = includeStr + ("." + tagList[i].tag.toLowerCase());
-                filterStr = filterStr + tagList[i].tag.replace("_", " ") + ", ";
+                if(tagList[i].translation){
+                    filterStr = filterStr + tagList[i].translation + ", ";
+                } else {
+                    filterStr = filterStr + tagList[i].tag.replace("_", " ") + ", ";
+                }
             }
         }
 
@@ -117,14 +121,15 @@ var blog = function(){
         // excluded tags are removed from filtered include results
         if(excludeList.length > 0){
             if(includeStr.length > 0){
-                $("#excluded_tags").addClass("exclude_tags")
+                $("#excluded_tags").show();
+                $("#excluded_tags").addClass("exclude_tags");
                 $("#multifilter_break").show();
             }
             // hide posts that have tag on exclude list
             for(var i = 0; i < excludeList.length; i++){
                 $("." + excludeList[i].toLowerCase()).hide();
             }
-            $('#exclude_filter_tag').text("Excluded tags: "+excludeStr.substring(0, excludeStr.length-2));
+            $('#exclude_filter_tag').text(excludeStr.substring(0, excludeStr.length-2));
         }
         
         $('#final_post').show();
@@ -137,7 +142,8 @@ var blog = function(){
         $('#include_filter_tag').text("");
         $('#filter_message').hide();
         $("#multifilter_break").hide();
-        $("#excluded_tags").removeClass("exclude_tags")
+        $("#excluded_tags").removeClass("exclude_tags");
+        $("#excluded_tags").hide();
         $('.blog_post_content').show();
         $('#older_posts').show();
         adjustWhiteBackground();
@@ -169,6 +175,7 @@ var blog = function(){
         var query_string = location.search;
         var ex = false;
         var ret = {};
+        var translate = false;
 
         if(query_string === ""){
             return tagList;
@@ -177,6 +184,11 @@ var blog = function(){
         // Process the url parameters for searching
         if (query_string.length > 0) {
             var query_params = query_string.substring(1).split('&');
+            for(var i = 0; i < query_params.length; i++){
+                if(query_params[i].indexOf("translation=true") === 0){
+                    translate = true;
+                }
+            }
             for(var i = 0; i < query_params.length; i++){
                 if(query_params[i].indexOf('search=') === 0 || query_params[i].indexOf('search!=') === 0) {
                     var tag_name;
@@ -189,15 +201,18 @@ var blog = function(){
                         ex = false;
                     }
                     // Check if the tag search query is in the list of supported tags before filtering
-                    if(tag_names.indexOf(tag_name.toLowerCase()) > -1){
-                        ret['tag'] = tag_name;
-                        ret['exclude'] = ex;
-                        tagList.push(ret);
-                        ret = {};
+                    // if(tag_names.indexOf(tag_name.toLowerCase()) > -1){
+                    ret['tag'] = tag_name;
+                    ret['exclude'] = ex;
+                    if(translate){
+                        ret["translation"] = ($("#blog_container").find('[data-tag-id="'+tag_name+'"]').text());
                     }
-                    else {
-                        showNoResultsMessage();
-                    }                
+                    tagList.push(ret);
+                    ret = {};
+                    // }
+                    // else {
+                    //     showNoResultsMessage();
+                    // }                
                     
                 }
             }        
@@ -249,4 +264,9 @@ $(document).ready(function() {
     // blog.getTags(function () {
     //     blog.init();
     // });
+    blog.init();
+    $(document).on("click keypress", ".blog_tag, .blog_tags_container > p", function(){
+        blog.filterPosts($(this).attr("data-tag-id"), $(this).text())
+        blog.updateSearchUrl($(this).attr("data-tag-id"))
+    })
 });
