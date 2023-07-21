@@ -64,7 +64,7 @@ var blog = function(){
         }
     }
 
-    function filterPosts(tagList) {
+    function filterPosts(tagList, strTranslation) {
         var filterStr = "";
         var includeStr = "";
         var excludeList = [];
@@ -79,6 +79,9 @@ var blog = function(){
             var temp = {};
             temp["tag"] = tagList;
             temp["exclude"] = false;
+            if(strTranslation){
+                temp["translation"] = strTranslation;
+            }
             tagList = [temp];
         }
         
@@ -205,15 +208,21 @@ var blog = function(){
                     ret['tag'] = tag_name;
                     ret['exclude'] = ex;
                     if(translate){
-                        ret["translation"] = ($("#blog_container").find('[data-tag-id="'+tag_name+'"]').text());
+                        if($("#blog_container").find('p[data-tag-id="'+tag_name+'"]:first').length > 0)
+                        {
+                            ret['translation'] = $("#blog_container").find('p[data-tag-id="'+tag_name+'"]:first').text()
+                        } 
+                        else {
+                            showNoResultsMessage();
+                            return [];
+                        }
                     }
                     tagList.push(ret);
                     ret = {};
-                    // }
-                    // else {
-                    //     showNoResultsMessage();
-                    // }                
-                    
+                    }
+                else {
+                    showNoResultsMessage();
+                    return [];         
                 }
             }        
         }
