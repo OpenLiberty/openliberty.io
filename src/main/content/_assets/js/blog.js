@@ -1,57 +1,4 @@
 var blog = function(){
-    var tag_names = [];
-
-    // Read tags from json file and add tag to class
-    function getTags(callback) {
-        if(document.documentElement.lang !== 'en') {
-            // Temporarily disable tags for non-English posts until there is a design in place on how the
-            // code should manage tags for a post in different languages.
-            return;
-        }
-        $.getJSON( "../../blog_tags.json", function(data) {
-            $.each(data.blog_tags, function(j, tag) {
-                var tag_class = tag.name.replace(" ", "_");
-                tag_names.push(tag_class.toLowerCase());
-                // get featured tags from json
-                if (tag.featured) {
-                    featured_tags_html = '<p tabindex="0" role="listitem" class="featured_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');" onkeypress="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tag.name + '</p>' + '<span>, </span>';
-                    $('#featured_tags_list').append(featured_tags_html);
-                }
-                $(".blog_post_title_link").each(function(i, link) {
-                    var post_name = getPostName(this);
-                    var tags_html = "";
-                    if (tag.posts.indexOf(post_name) > -1) {
-                        tags_html = '<p tabindex="0" role="listitem" class="blog_tag" onclick="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');" onkeypress="blog.filterPosts(' + "'" + tag_class + "'" + '); blog.updateSearchUrl(' + "'" + tag_class + "'" + ');">' + tag.name + '</p>' + '<span>, </span>';
-                        
-                        $(".blog_post_content:eq(" + i + ")").addClass(tag_class.toLowerCase());
-                        $(".blog_tags_container:eq(" + i + ")").append(tags_html);
-                    }
-                });
-            });
-            callback();
-        });
-    }
-
-    function getPostName(e) {
-        var path = "";
-        if (e.hasAttribute('data-path')) {
-            path = e.getAttribute('data-path');
-        } else {
-            path = e.getAttribute('href');
-        }
-        var filename = getFilename(path);
-        var post_name = removeFileExtension(filename);
-        return post_name;
-    }
-
-    function getFilename(uri) {
-        return uri.replace(/\d{4}-\d{2}-\d{2}-/, "").split('/').pop(); // Remove the date from external blogs and then remove all of the previous file folders from uri.
-    }
-
-    function removeFileExtension(filename) {
-        return filename.substring(0, filename.lastIndexOf('.')) || filename
-    }
-
     function updateSearchUrl(tag) {
         if (!tag) {
             // Remove query string because search text is empty
@@ -166,7 +113,6 @@ var blog = function(){
     }
 
     $(window).on('popstate', function(){
-        removeFilter();
         var tagList = getTagFromUrl();
         if (tagList.length > 0) {
             filterPosts(tagList);
@@ -178,7 +124,7 @@ var blog = function(){
         var query_string = location.search;
         var ex = false;
         var ret = {};
-        var translate = false;
+        var translate = !((window.location.pathname).substring(1, 5) === "blog");
 
         if(query_string === ""){
             return tagList;
@@ -187,11 +133,6 @@ var blog = function(){
         // Process the url parameters for searching
         if (query_string.length > 0) {
             var query_params = query_string.substring(1).split('&');
-            for(var i = 0; i < query_params.length; i++){
-                if(query_params[i].indexOf("translation=true") === 0){
-                    translate = true;
-                }
-            }
             for(var i = 0; i < query_params.length; i++){
                 if(query_params[i].indexOf('search=') === 0 || query_params[i].indexOf('search!=') === 0) {
                     var tag_name;
@@ -203,26 +144,21 @@ var blog = function(){
                         tag_name = query_params[i].substring(7);
                         ex = false;
                     }
-                    // Check if the tag search query is in the list of supported tags before filtering
-                    // if(tag_names.indexOf(tag_name.toLowerCase()) > -1){
                     ret['tag'] = tag_name;
                     ret['exclude'] = ex;
                     if(translate){
-                        if($("#blog_container").find('p[data-tag-id="'+tag_name+'"]:first').length > 0)
+                        if($('[data-tag-id="'+tag_name+'"]').length > 0)
                         {
-                            ret['translation'] = $("#blog_container").find('p[data-tag-id="'+tag_name+'"]:first').text()
+                            ret['translation'] = $("#blog_container").find('[data-tag-id="'+tag_name+'"]').eq(0).text()
                         } 
                         else {
                             showNoResultsMessage();
-                            return [];
                         }
                     }
                     tagList.push(ret);
                     ret = {};
-                    }
-                else {
-                    showNoResultsMessage();
-                    return [];         
+                } else {
+                    showNoResultsMessage();    
                 }
             }        
         }
@@ -255,7 +191,6 @@ var blog = function(){
         });
     }
     return {
-        getTags: getTags,
         updateSearchUrl: updateSearchUrl,    
         filterPosts: filterPosts,
         removeFilter: removeFilter,
@@ -270,9 +205,6 @@ $(window).on('resize', function(){
 
 $(document).ready(function() {
     blog.adjustWhiteBackground();
-    // blog.getTags(function () {
-    //     blog.init();
-    // });
     blog.init();
     $(document).on("click keypress", ".blog_tag, .blog_tags_container > p", function(){
         blog.filterPosts($(this).attr("data-tag-id"), $(this).text())

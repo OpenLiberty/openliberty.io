@@ -9,9 +9,6 @@ js: post
 {% assign baseURL = '' %}
 {% if site.lang != 'en' %}
     {% assign baseURL = '/' | append: site.lang %}
-    {% assign translation = true %}
-{% else %}
-    {% assign translation = false %}
 {% endif %}
 {% if site.lang == "ja" or site.lang == "zh-Hans" %}
     {% assign date_format = "%Y年%-m月%e日" %}
@@ -68,7 +65,7 @@ js: post
                         {% capture translation_txt %}
                             {% t blog.tags.{{tag_name}} %}
                         {% endcapture %}
-                        <a href="{{baseURL}}/blog/?search={{ tag_name }}&translation={{translation}}" class="post_tag blue_link_light_background">{{translation_txt}}</a>
+                        <a href="{{baseURL}}/blog/?search={{ tag_name }}" class="post_tag blue_link_light_background">{{translation_txt}}</a>
                         <span class="comma">,</span>
                     {% endfor %}
                 </div>

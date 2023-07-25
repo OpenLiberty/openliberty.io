@@ -9,35 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-// Read tags from json file and add tag to class
-// $.getJSON( "../../../../blog_tags.json", function(data) {
-//     var path = $(location).attr('pathname');
-//     var post_name = getPostName(path)
-
-//     var tags_html = "";
-//     $.each(data.blog_tags, function(j, tag) {
-//         if (tag.posts.indexOf(post_name) > -1) {
-//             tags_html = '<a href="/blog/?search=' + tag.name.replace(" ", "_") + '" class="post_tag blue_link_light_background">' + tag.name + '</a>' + '<span>, </span>';
-//             $(".post_tags_container").append(tags_html);
-//         }
-//     });
-
-// });
-
-function getPostName(path) {
-    var filename = getFilename(path);
-    var post_name = removeFileExtension(filename);
-    return post_name;
-}
-
-function getFilename(uri) {
-    return uri.split('/').pop();
-}
-
-function removeFileExtension(filename) {
-    return filename.substring(0, filename.lastIndexOf('.')) || filename
-}
-
 // set up html for copy code block accessibility
 var code_blocks_with_copy_to_clipboard = 'pre:not(.no_copy pre)'; // CSS Selector
 $(document).ready(function () {
