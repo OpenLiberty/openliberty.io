@@ -32,7 +32,7 @@ import java.io.FileNotFoundException;
  * happens when using dev mode
  * </p>
  */
-public class TLSFilter implements Filter {
+public class SecurityFilter implements Filter {
     FilterConfig cfg;
 
     public void destroy() {
