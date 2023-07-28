@@ -37,6 +37,7 @@ featured-tags: []
                 <p class="blog_subtext">{% t blog.be_sure_to_follow %} <a class="green_link" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@openliberty.io</a> {% t blog.twitter_or_subscribe %} <a class="green_link" href="{{ "/feed.xml" | relative_url }}" target="_blank" rel="noopener">RSS </a>{% t blog.feed %}</p>
                 <h2 class="blog_subtitle">{% t blog.featured_tags %}</h2>
                 <div role="list" id="featured_tags_list">
+                    {{ page.featured-tags | array_to_sentence_string }}
                 </div>
                 <h2 class="blog_subtitle">{% t blog.posts_in_other_languages %}</h2>
                 <div role="list" id="language_list">
