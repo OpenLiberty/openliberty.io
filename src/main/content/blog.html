@@ -37,7 +37,6 @@ featured-tags: []
                 <p class="blog_subtext">{% t blog.be_sure_to_follow %} <a class="green_link" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@openliberty.io</a> {% t blog.twitter_or_subscribe %} <a class="green_link" href='{{ "/feed.xml" | relative_url }}'' target="_blank" rel="noopener">RSS </a>{% t blog.feed %}</p>
                 <h2 class="blog_subtitle">{% t blog.featured_tags %}</h2>
                 <div role="list" id="featured_tags_list">
-                    {{ page.featured-tags | array_to_sentence_string }}
                 </div>
                 <h2 class="blog_subtitle">{% t blog.posts_in_other_languages %}</h2>
                 <div role="list" id="language_list">
@@ -143,7 +142,7 @@ featured-tags: []
                                     <div class="row">
                                         <div class="blog_post_author_data_container">
                                             <div class="author_images_container">
-                                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture" />
                                                 {% for author in post.additional_authors %}
                                                     <img src="{{ author.image }}" class="blog_post_author_image" alt="image of author">
                                                 {% endfor %}
@@ -203,7 +202,7 @@ featured-tags: []
                                     <div class="row">
                                         <div class="blog_post_author_data_container">
                                             <div class="author_images_container">
-                                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
+                                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture" />
                                                 {% for author in post.additional_authors %}
                                                     <img src="{{ author.image }}" class="blog_post_author_image" alt="image of author">
                                                 {% endfor %}
