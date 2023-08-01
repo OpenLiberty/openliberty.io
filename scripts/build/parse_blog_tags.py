@@ -1,3 +1,5 @@
+from html.parser import HTMLParser
+from bs4 import BeautifulSoup
 import json
 import os
 
@@ -8,6 +10,7 @@ strip_character = "-"
 f = open("src/main/content/blog_tags.json", "r")
 content = json.loads(f.read())
 tags = content['blog_tags']
+featured_tags = []
 
 def format_links_and_remove_duplicates(_posts):
     final_output = []
@@ -35,6 +38,7 @@ def addLeadingZero(date,index,addZero):
 
 for tag in tags:
     tag_name = tag['name']
+    tag_featured = tag.get('featured')
     posts = tag['posts']
     lang_list = ["en", "ja", "zh-Hans"]
     for post_name in posts:
@@ -75,6 +79,24 @@ for tag in tags:
         beta_posts.sort(reverse = True)
         after_format_beta_links = format_links_and_remove_duplicates(beta_posts)
         tag["beta_post_links"] = after_format_beta_links
+    if tag_featured != None:
+        featured_tags.append(tag_name)
+with open("src/main/content/blog.html", "r+", encoding='utf-8') as blog_html_file:
+    # try to add this information in another area of the code
+    # possibly the config yaml to access via site variables
+    featured_str_list = list(map(lambda x:"{% t blog.tags."+x.replace(" ", "_")+" %}", featured_tags))
+    featured_str = ", ".join(featured_str_list)
+    data = BeautifulSoup(blog_html_file, 'lxml', from_encoding='utf-8')
+    data.p.unwrap()
+    data.body.unwrap()
+    data.html.unwrap()
+    print(featured_str)
+    featured_tags_element = data.find("div", id="featured_tags_list")
+    featured_tags_element.string.replace_with(featured_str)
+    blog_html_file.seek(0)
+    blog_html_file.truncate()
+    blog_html_file.write(str(data.prettify()))
+    blog_html_file.close()
 with open("src/main/content/blog_tags.json", 'w') as json_out_file:
     json.dump(content, json_out_file)
 f.close()
