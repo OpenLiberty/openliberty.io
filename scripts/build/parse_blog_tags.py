@@ -1,4 +1,3 @@
-from html.parser import HTMLParser
 from bs4 import BeautifulSoup
 import json
 import os
@@ -82,17 +81,25 @@ for tag in tags:
     if tag_featured != None:
         featured_tags.append(tag_name)
 with open("src/main/content/blog.html", "r+", encoding='utf-8') as blog_html_file:
-    # try to add this information in another area of the code
-    # possibly the config yaml to access via site variables
-    featured_str_list = list(map(lambda x:"{% t blog.tags."+x.replace(" ", "_")+" %}", featured_tags))
-    featured_str = ", ".join(featured_str_list)
+    # featured_str = ", ".join(featured_str_list)
     data = BeautifulSoup(blog_html_file, 'lxml', from_encoding='utf-8')
     data.p.unwrap()
     data.body.unwrap()
     data.html.unwrap()
-    print(featured_str)
     featured_tags_element = data.find("div", id="featured_tags_list")
-    featured_tags_element.string.replace_with(featured_str)
+    featured_tags_element.clear()
+    for t in featured_tags:
+        name = t.replace(" ", "_")
+        ft_link = data.new_tag("p")
+        comma = data.new_tag("span")
+        comma.string = ","
+        ft_link["tabindex"] = "0"
+        ft_link["role"] = "listitem"
+        ft_link["class"] = "featured_tag"
+        ft_link["data-tag-id"] = name
+        ft_link.string = "{% t blog.tags."+name+" %}"
+        featured_tags_element.append(ft_link)
+        ft_link.insert_after(comma)
     blog_html_file.seek(0)
     blog_html_file.truncate()
     blog_html_file.write(str(data.prettify()))
