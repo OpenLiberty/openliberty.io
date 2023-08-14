@@ -30,7 +30,9 @@ $(window).on("load", function() {
           preceed1 === "feature" ||
           preceed1 === "javadoc" ||
           preceed1 === "config" ||
-          preceed1 === "command"
+          preceed1 === "command" ||
+          preceed1 === "api" ||
+          preceed1 === "spi"
         ) {
           folder = "reference";
           dir = "/" + preceed1;
