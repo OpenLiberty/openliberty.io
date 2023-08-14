@@ -81,12 +81,12 @@ i18n-seo-description: seo.blogs
                     {% assign date_now = 'now' | date:'%s' %}
                     {% assign date_difference = date_now | minus: date_published %}
 
-                    {% if date_difference < 2592000 %}
+                    {% if date_difference &lt; 2592000 %}
                         {% assign past_month_count = past_month_count | plus: 1 %}
                     {% endif %}
 
                     {% assign latest_posts_count = 3 %}
-                    {% if past_month_count > 3 %}
+                    {% if past_month_count &gt; 3 %}
                         {% assign latest_posts_count = past_month_count %}
                     {% endif %}
 
