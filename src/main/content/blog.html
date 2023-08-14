@@ -228,7 +228,7 @@ i18n-seo-description: seo.blogs
                                         <div role="list" class="blog_tags_container col-md-7">
                                             {%- for tag in post.tags -%}
                                                 {%- assign tag_name = tag | replace: " ", "_" -%}
-                                                <p tabindex="0" role="listitem" class="blog_tag" data-tag-id="{{tag_name}}"">{%- t blog.tags.{{tag_name}} -%}</p><span class="comma">, </span>
+                                                <p tabindex="0" role="listitem" class="blog_tag" data-tag-id="{{tag_name}}" onclick="blog.filterPosts('{{tag_name}}', '{%- t blog.tags.{{tag_name}} -%}')" onfocus="blog.filterPosts('{{tag_name}}', '{%- t blog.tags.{{tag_name}} -%}')">{%- t blog.tags.{{tag_name}} -%}</p><span class="comma">, </span>
                                             {%- endfor -%}
                                         </div>
                                         <div class="read_more_link_container col-sm-12 col-md-5">
