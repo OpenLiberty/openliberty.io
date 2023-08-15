@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import json
 import os
+import re
 
 release_posts = []
 beta_posts = []
@@ -82,7 +83,7 @@ for tag in tags:
         featured_tags.append(tag_name)
 with open("src/main/content/blog.html", "r+", encoding='utf-8') as blog_html_file:
     # featured_str = ", ".join(featured_str_list)
-    data = BeautifulSoup(blog_html_file, 'lxml', from_encoding='utf-8')
+    data = BeautifulSoup(blog_html_file, 'lxml')
     data.p.unwrap()
     data.body.unwrap()
     data.html.unwrap()
@@ -100,9 +101,14 @@ with open("src/main/content/blog.html", "r+", encoding='utf-8') as blog_html_fil
         ft_link.string = "{% t blog.tags."+name+" %}"
         featured_tags_element.append(ft_link)
         ft_link.insert_after(comma)
+    greater_than_symbols = data.find_all(text=re.compile("&gt;"))
+    # less_than_symbols = data.find_all(text=re.compile("&lt;"))
+    for g in greater_than_symbols:
+       new_text = g.replace("&gt;", ">")
+       g.replace_with(new_text)
     blog_html_file.seek(0)
     blog_html_file.truncate()
-    blog_html_file.write(str(data.prettify()))
+    blog_html_file.write(str(data.prettify()).replace("&gt;", ">").replace("&lt;", "<"))
     blog_html_file.close()
 with open("src/main/content/blog_tags.json", 'w') as json_out_file:
     json.dump(content, json_out_file)
