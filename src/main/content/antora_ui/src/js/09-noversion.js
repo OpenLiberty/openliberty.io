@@ -23,6 +23,9 @@ $(window).on("load", function() {
 
       var preceed1 = attempted.substring(0, attempted.lastIndexOf("/"));
       preceed1 = preceed1.substring(preceed1.lastIndexOf("/") + 1);
+      if(preceed1 === "api" || preceed1 === "spi"){
+        preceed1 = "javadoc/" + preceed1;
+      }
       if (preceed1 === "reference") {
         folder = "reference";
       } else {
@@ -30,7 +33,9 @@ $(window).on("load", function() {
           preceed1 === "feature" ||
           preceed1 === "javadoc" ||
           preceed1 === "config" ||
-          preceed1 === "command"
+          preceed1 === "command" ||
+          preceed1 === "javadoc/api" ||
+          preceed1 === "javadoc/spi"
         ) {
           folder = "reference";
           dir = "/" + preceed1;
