@@ -316,6 +316,20 @@ function render_builds(builds, parent) {
                             '</td>'
                         );
 
+                        var tests_column = $(
+                            '<td headers="' +
+                                tableID +
+                                '_tests"><a href="' +
+                                build.tests_log +
+                                '" class="' +
+                                analytics_class_name +
+                                ' tests_passed_link" rel="noopener">' +
+                                build.test_passed +
+                                ' / ' +
+                                build.total_tests +
+                                '</a></td>'
+                        );
+
                         if (k === 0) {
                             row.append(version_column); // add version column for first item in package_locations
                         }
@@ -415,10 +429,11 @@ function render_builds(builds, parent) {
                     
                         row.append(package_column);
                         row.append(download_column);
+                        row.append(tests_column);
                         row.append(verification_column);
                         if (k === 0) {
                             // Only add the PEM button to the row with Version
-                            row.append(verification_column2);
+                            row.append(verification_column2);                            
                         }
 
                         // checking if version is from the last two years before adding to table
