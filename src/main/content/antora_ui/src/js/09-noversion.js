@@ -34,8 +34,8 @@ $(window).on("load", function() {
           preceed1 === "javadoc" ||
           preceed1 === "config" ||
           preceed1 === "command" ||
-          preceed1 === "api" ||
-          preceed1 === "spi"
+          preceed1 === "javadoc/api" ||
+          preceed1 === "javadoc/spi"
         ) {
           folder = "reference";
           dir = "/" + preceed1;
