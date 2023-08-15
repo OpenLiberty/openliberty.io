@@ -217,54 +217,78 @@ css:
     <div class="row">
         <div class="col-xs-12 col-lg-6">
             <div id="blog_post">
-                {% for post in site.posts limit:1 %}
-                    {% if post.redirect_link %}
-                        <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link">{{ post.title | escape }}</a>
-                          <a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link">  
-                          <span class="continued_text">
-                                {% assign continue_text = ' [Continued on ' %}
-                                {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
-                                {{ continue_text | append: domain_name }}
-                            </span>
-                            </a>
-                        </h2>
-                    {% else %}
-                        <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
+                {% assign break_loop = false %}
+                <!-- Find the most recent release post -->
+                {% for post in site.posts limit:25 %}
+                {{ post | inspect }}
+                    <!-- Skips the logic if we found the first release post -->
+                    {% if break_loop %}
+                        {% continue %}
                     {% endif %}
-
-                    {% assign additional_author_count = 0 %}
-                    {% for author in post.additional_authors %}
-                        {% assign additional_author_count = additional_author_count | plus: 1 %}
-                    {% endfor %}
-                    <div class="blog_post_author_data_container">
-                        <div class="author_images_container">
-                            <img class="blog_post_author_image" src="{{ post.author_picture }}" alt="Blog author picture">
-                            {% for author in post.additional_authors %}
-                                <img class="blog_post_author_image" src="{{ author.image }}" alt="Image of author">
-                            {% endfor %}
-                        </div>
-                        <a class="blog_post_author_name" href="{{ post.author_github }}" target="_blank" rel="noopener">{{ post.author }}</a>
-                        {% for author in post.additional_authors %}
-                            {% if additional_author_count == 1 %}
-                                <span>and </span>
-                                <a class="blog_post_author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }}</a>
-                            {% else %}
-                                <span>and {{ additional_author_count }} others</span>
-                                {% break %}
-                            {% endif %}
-                        {% endfor %}
-                        {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
-                        <span class="blog_post_date" title="{{ post.date | date: date_format }}">on {{ post.date | date: date_format }}</span>
-                    </div>
-
-                    <p class="blog_post_paragraph">
-                        {% if post.blog_description %}
-                            {{ post.blog_description }}
-                        {% else %}
-                            {{ post.content | strip_html | truncatewords: 60 }}
-                        {% endif %}
-                    </p>
+                    {% if post.tags contains 'release_post' %}
+                        {% assign latest_release_post = post %}
+                        {% assign break_loop = true %}
+                    {% endif %}
                 {% endfor %}
+                {% assign break_loop = false %}
+                <!-- Find the most recent non-release post -->
+                {% for post in site.posts limit:25 %}
+                    <!-- Skips the logic if we found the first release post -->
+                    {% if break_loop %}
+                        {% continue %}
+                    {% endif %}
+                    <!-- Equivalent to !contains in liquid syntax -->
+                    {% unless post.tags contains 'release_post' %}
+                        {% assign latest_normal_post = post %}
+                        {% assign break_loop = true %}
+                    {% endunless %}
+                {% endfor %}                
+                {% if latest_release_post.redirect_link %}
+                    <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link">{{ latest_release_post.title | escape }}</a>
+                        <a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="blog_post_title_link">  
+                        <span class="continued_text">
+                            {% assign continue_text = ' [Continued on ' %}
+                            {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
+                            {{ continue_text | append: domain_name }}
+                        </span>
+                        </a>
+                    </h2>
+                {% else %}
+                    <h2 class="blog_post_title"><a href="{{ latest_release_post.url | relative_url }}" class="blog_post_title_link">{{ latest_release_post.title | escape }}</a></h2>
+                {% endif %}
+
+                {% assign additional_author_count = 0 %}
+                {% for author in latest_release_post.additional_authors %}
+                    {% assign additional_author_count = additional_author_count | plus: 1 %}
+                {% endfor %}
+                <div class="blog_post_author_data_container">
+                    <div class="author_images_container">
+                        <img class="blog_post_author_image" src="{{ latest_release_post.author_picture }}" alt="Blog author picture">
+                        {% for author in post.additional_authors %}
+                            <img class="blog_post_author_image" src="{{ author.image }}" alt="Image of author">
+                        {% endfor %}
+                    </div>
+                    <a class="blog_post_author_name" href="{{ latest_release_post.author_github }}" target="_blank" rel="noopener">{{ latest_release_post.author }}</a>
+                    {% for author in post.additional_authors %}
+                        {% if additional_author_count == 1 %}
+                            <span>and </span>
+                            <a class="blog_post_author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }}</a>
+                        {% else %}
+                            <span>and {{ additional_author_count }} others</span>
+                            {% break %}
+                        {% endif %}
+                    {% endfor %}
+                    {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
+                    <span class="blog_post_date" title="{{ latest_release_post.date | date: date_format }}">on {{ latest_release_post.date | date: date_format }}</span>
+                </div>
+
+                <p class="blog_post_paragraph">
+                    {% if latest_release_post.blog_description %}
+                        {{ latest_release_post.blog_description }}
+                    {% else %}
+                        {{ latest_release_post.content | strip_html | truncatewords: 60 }}
+                    {% endif %}
+                </p>
                 <a id="blog_link" href="{{baseURL}}/blog/">{% t home.link_to_blog_post %}</a>
             </div>
         </div>
