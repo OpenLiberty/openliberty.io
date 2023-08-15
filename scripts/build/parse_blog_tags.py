@@ -101,11 +101,6 @@ with open("src/main/content/blog.html", "r+", encoding='utf-8') as blog_html_fil
         ft_link.string = "{% t blog.tags."+name+" %}"
         featured_tags_element.append(ft_link)
         ft_link.insert_after(comma)
-    greater_than_symbols = data.find_all(text=re.compile("&gt;"))
-    # less_than_symbols = data.find_all(text=re.compile("&lt;"))
-    for g in greater_than_symbols:
-       new_text = g.replace("&gt;", ">")
-       g.replace_with(new_text)
     blog_html_file.seek(0)
     blog_html_file.truncate()
     blog_html_file.write(str(data.prettify()).replace("&gt;", ">").replace("&lt;", "<"))
