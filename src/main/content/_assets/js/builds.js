@@ -428,12 +428,12 @@ function render_builds(builds, parent) {
                         }
                     
                         row.append(package_column);
-                        row.append(download_column);
-                        row.append(tests_column);
+                        row.append(download_column);                        
                         row.append(verification_column);
                         if (k === 0) {
-                            // Only add the PEM button to the row with Version
-                            row.append(verification_column2);                            
+                            // Only add the PEM button and tests column to the row with Version
+                            row.append(verification_column2);  
+                            row.append(tests_column);                          
                         }
 
                         // checking if version is from the last two years before adding to table
@@ -658,7 +658,7 @@ function highlightAlternateRows() {
 
     // 1. Look for all the release Version rows and apply the styling to every other version row
     $("#runtime_releases_table_container .release_table_body tr").filter(function() { 
-        return $(this).children().length === total_releases_columns;
+        return $(this).children().length === total_releases_columns; 
     }).filter(':even').addClass('highlight_alternate_rows');
 
     // 2. Look for all the beta Version rows and apply the styling to every other version row
