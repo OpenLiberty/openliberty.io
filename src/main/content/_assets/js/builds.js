@@ -319,7 +319,9 @@ function render_builds(builds, parent) {
                         var tests_column = $(
                             '<td headers="' +
                                 tableID +
-                                '_tests"><a href="' +
+                                '_tests" rowspan="' +
+                                num_packages + 
+                                '"><a href="' +
                                 build.tests_log +
                                 '" class="' +
                                 analytics_class_name +
