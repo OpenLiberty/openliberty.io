@@ -58,7 +58,7 @@ i18n-seo-description: seo.blogs
             </div>
             <div id="right_column" class="col-md-12 col-lg-8 offset-lg-4">
                 <div id="filter">
-                    <img tabindex="0" id="x_button" src="/img/blog_x_button.svg" onclick="blog.removeFilter();" onkeypress="blog.removeFilter();" alt="Remove tag filter">
+                    <img tabindex="0" id="x_button" src="/img/blog_x_button.svg" onclick="blog.removeFilter(true);" onkeypress="blog.removeFilter(true);" alt="Remove tag filter">
                     <span id="no_results_message">{% t blog.no_results_found %} {% t blog.see %}
                       <a class="orange_link_light_background" href="{{baseURL}}/blog/">{% t blog.all_blogs %}</a>
                     </span>
@@ -167,7 +167,7 @@ i18n-seo-description: seo.blogs
                                         <div role="list" class="blog_tags_container col-md-7">
                                             {%- for tag in post.tags -%}
                                                 {%- assign tag_name = tag | replace: " ", "_" -%}
-                                                <p tabindex="0" role="listitem" class="blog_tag" data-tag-id="{{tag_name}}" onclick="blog.filterPosts('{{tag_name}}', '{%- t blog.tags.{{tag_name}} -%}')" onfocus="blog.filterPosts('{{tag_name}}', '{%- t blog.tags.{{tag_name}} -%}')">
+                                                <p tabindex="0" role="listitem" class="blog_tag" data-tag-id="{{tag_name}}">
                                                     {%- t blog.tags.{{tag_name}} -%}
                                                 </p><span class="comma">, </span>
                                             {%- endfor -%}
@@ -228,7 +228,7 @@ i18n-seo-description: seo.blogs
                                         <div role="list" class="blog_tags_container col-md-7">
                                             {%- for tag in post.tags -%}
                                                 {%- assign tag_name = tag | replace: " ", "_" -%}
-                                                <p tabindex="0" role="listitem" class="blog_tag" data-tag-id="{{tag_name}}" onclick="blog.filterPosts('{{tag_name}}', '{%- t blog.tags.{{tag_name}} -%}')" onfocus="blog.filterPosts('{{tag_name}}', '{%- t blog.tags.{{tag_name}} -%}')">{%- t blog.tags.{{tag_name}} -%}</p><span class="comma">, </span>
+                                                <p tabindex="0" role="listitem" class="blog_tag" data-tag-id="{{tag_name}}">{%- t blog.tags.{{tag_name}} -%}</p><span class="comma">, </span>
                                             {%- endfor -%}
                                         </div>
                                         <div class="read_more_link_container col-sm-12 col-md-5">
