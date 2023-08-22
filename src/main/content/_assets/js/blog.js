@@ -1,5 +1,7 @@
 var blog = function(){
-    function filterPosts(tagList, strTranslation, rmvFilter) {
+
+    // filter posts based on provided tag list
+    function filterPosts(tagList, strTranslation, addToBrowserHistory) {
         var filterStr = "";
         var includeStr = "";
         var excludeList = [];
@@ -73,8 +75,8 @@ var blog = function(){
         $('#final_post').show();
         adjustWhiteBackground();
 
-        //update search URL
-        if(rmvFilter){
+        // update browser history if needed
+        if(addToBrowserHistory){
             var search_value = [location.protocol, '//', location.host, location.pathname, "?"].join('');
             for(var i = 0; i < tagList.length; i++){
                 search_value += "search=" + ((tagList[i].exclude) ? "!" : "") + tagList[i].tag;
@@ -98,7 +100,7 @@ var blog = function(){
         $('#older_posts').show();
         adjustWhiteBackground();
 
-        //update search URL
+        //update browser history if needed
         if(updateURL){
             var search_value = [location.protocol, '//', location.host, location.pathname].join('');
             history.pushState(null, "", search_value);
@@ -195,8 +197,7 @@ var blog = function(){
         filterPosts: filterPosts,
         removeFilter: removeFilter,
         adjustWhiteBackground: adjustWhiteBackground,   
-        init: init,
-        getTagFromUrl: getTagFromUrl
+        init: init
     };
 }();
 
@@ -208,7 +209,6 @@ $(window).on('resize', function(){
 $(window).on('popstate', function(){
     blog.init();
 });
-
 
 $(document).ready(function() {
     blog.adjustWhiteBackground();
