@@ -1,12 +1,12 @@
 var blog = function(){
-    function filterPosts(tagList, strTranslation) {
+    function filterPosts(tagList, strTranslation, rmvFilter) {
         var filterStr = "";
         var includeStr = "";
         var excludeList = [];
         var excludeStr = "";
         
         // remove any curent filters
-        removeFilter();
+        removeFilter(false);
 
         // check type, if string, align with obj list
         // or create diff process for arrays
@@ -74,17 +74,19 @@ var blog = function(){
         adjustWhiteBackground();
 
         //update search URL
-        var search_value = "?";
-        for(var i = 0; i < tagList.length; i++){
-            search_value += "search=" + ((tagList[i].exclude) ? "!" : "") + tagList[i].tag;
-            if(i !== tagList.length - 1){
-                search_value += "&"
+        if(rmvFilter){
+            var search_value = [location.protocol, '//', location.host, location.pathname, "?"].join('');
+            for(var i = 0; i < tagList.length; i++){
+                search_value += "search=" + ((tagList[i].exclude) ? "!" : "") + tagList[i].tag;
+                if(i !== tagList.length - 1){
+                    search_value += "&"
+                }
             }
+            history.pushState(null, "", search_value);
         }
-        history.pushState(null, "", search_value);
     }
 
-    function removeFilter() {
+    function removeFilter(updateURL) {
         $('#filter').hide();
         $('#exclude_filter_tag').text("");
         $('#include_filter_tag').text("");
@@ -97,8 +99,10 @@ var blog = function(){
         adjustWhiteBackground();
 
         //update search URL
-        var search_value = [location.protocol, '//', location.host, location.pathname].join('');
-        history.pushState(null, "", search_value);
+        if(updateURL){
+            var search_value = [location.protocol, '//', location.host, location.pathname].join('');
+            history.pushState(null, "", search_value);
+        }
     }
 
     function showNoResultsMessage(){
@@ -113,13 +117,6 @@ var blog = function(){
         
         adjustWhiteBackground();
     }
-
-    $(window).on('popstate', function(){
-        var tagList = getTagFromUrl();
-        if (tagList.length > 0) {
-            filterPosts(tagList);
-        }
-    });
 
     function getTagFromUrl(){
         var tagList = [];
@@ -180,7 +177,9 @@ var blog = function(){
     function init() {
         var tagList = getTagFromUrl();
         if(tagList.length > 0){
-            filterPosts(tagList);
+            filterPosts(tagList, null, false);
+        } else {
+            removeFilter(false)
         }
         // if blog post has no tags, add col-md-7 class so that text doesn't overlap
         $('.blog_tags_container').each(function() {
@@ -191,22 +190,31 @@ var blog = function(){
             }
         });
     }
+
     return {
         filterPosts: filterPosts,
         removeFilter: removeFilter,
         adjustWhiteBackground: adjustWhiteBackground,   
-        init: init
+        init: init,
+        getTagFromUrl: getTagFromUrl
     };
 }();
+
 
 $(window).on('resize', function(){
     blog.adjustWhiteBackground();
 });
 
+$(window).on('popstate', function(){
+    blog.init();
+});
+
+
 $(document).ready(function() {
     blog.adjustWhiteBackground();
     blog.init();
-    $(document).on("click keypress", ".featured_tag", function(){
-        blog.filterPosts($(this).attr("data-tag-id"), $(this).text())
+    $(document).on("click keypress", ".featured_tag, .blog_tag, .blog_tags_container > p", function(e){
+        e.preventDefault();
+        blog.filterPosts($(this).attr("data-tag-id"), $(this).text(), true)
     })
 });
