@@ -137,7 +137,6 @@ var blog = function(){
             for(var i = 0; i < query_params.length; i++){
                 if(query_params[i].indexOf('search=') === 0 || query_params[i].indexOf('search!=') === 0) {
                     var tag_name;
-                    debugger;
                     if(query_params[i].indexOf('!') > -1){
                         tag_name = query_params[i].substring(8);
                         ex = true;
