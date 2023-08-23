@@ -429,13 +429,16 @@ function render_builds(builds, parent) {
                                 '_package">All GA Features</td>';
                         }
                     
+                        if (k === 0) {
+                            // Only add the tests column to the row with Version
+                            row.append(tests_column);                          
+                        }
                         row.append(package_column);
                         row.append(download_column);                        
                         row.append(verification_column);
                         if (k === 0) {
-                            // Only add the PEM button and tests column to the row with Version
-                            row.append(verification_column2);  
-                            row.append(tests_column);                          
+                            // Only add the PEM button to the row with Version
+                            row.append(verification_column2);              
                         }
 
                         // checking if version is from the last two years before adding to table
