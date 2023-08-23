@@ -54,6 +54,10 @@ ENV SEC_TLS_TRUSTDEFAULTCERTS true
 
 COPY src/main/wlp/server.xml /config/server.xml
 
+RUN apt-get update && \
+    apt-get install -y git && \
+    apt-get clean
+
 # This script will add the requested XML snippets to enable Liberty features and grow image to be fit-for-purpose 
 # using featureUtility. 
 # Only available in 'kernel-slim'. The 'full' tag already includes all features for convenience.
