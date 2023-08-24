@@ -13,67 +13,122 @@ i18n-seo-description: seo.blogs
 {% if site.lang != 'en' %}
     {% assign baseURL = '/' | append: site.lang %}
 {% endif %}
-
 <!-- BLOG -->
 <div id="background_container">
-    <img id="right_cloud_back" class="d-none d-xl-block" src="/img/blog_cloud_back.svg" alt="cloud">
-    <img id="right_cloud_front" class="d-none d-xl-block" src="/img/blog_cloud_front.svg" alt="cloud">
-    <div id="blog_container" class="container-fluid">
-        <div class="row">
-            <div id="left_column" class="col-md-12 col-lg-4">
-                {% if site.lang != 'en' %}
-                    <div id="blog_title_i18n">{% t pages.blog %}</div>
-                {% else %}
-                    <img id="blog_title" src="{{ "/img/blog_page_title.svg" | relative }}" class="img-fluid d-none d-md-block" alt="Blog">
-                {% endif %}
-                <span id="star1" class="star d-none d-md-block"></span>
-                <span id="star2" class="star d-none d-md-block"></span>
-                <span id="star3" class="star d-none d-md-block"></span>
-                <span id="star4" class="star d-none d-md-block"></span>
-                <span id="star5" class="star d-none d-md-block"></span>
-                <span id="star6" class="star d-none d-md-block"></span>
-                <h2 class="blog_subtitle">{% t blog.never_miss_a_post %}</h2>
-                <p class="blog_subtext">{% t blog.be_sure_to_follow %} <a class="green_link" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@openliberty.io</a> {% t blog.twitter_or_subscribe %} <a class="green_link" href="{{ "/feed.xml" | relative_url }}" target="_blank" rel="noopener">RSS </a>{% t blog.feed %}</p>
-                <h2 class="blog_subtitle">{% t blog.featured_tags %}</h2>
-                <div role="list" id="featured_tags_list">
-                </div>
-                <h2 class="blog_subtitle">{% t blog.posts_in_other_languages %}</h2>
-                <div role="list" id="language_list">
-                    {% for current_lang in site.languages %}
-                    <!-- Make sure to exclude the currently selected language from the language picker -->
-                    {% if current_lang != site.lang %}
+ <img alt="cloud" class="d-none d-xl-block" id="right_cloud_back" src="/img/blog_cloud_back.svg"/>
+ <img alt="cloud" class="d-none d-xl-block" id="right_cloud_front" src="/img/blog_cloud_front.svg"/>
+ <div class="container-fluid" id="blog_container">
+  <div class="row">
+   <div class="col-md-12 col-lg-4" id="left_column">
+    {% if site.lang != 'en' %}
+    <div id="blog_title_i18n">
+     {% t pages.blog %}
+    </div>
+    {% else %}
+    <img alt="Blog" class="img-fluid d-none d-md-block" id="blog_title" src='{{ "/img/blog_page_title.svg" | relative }}'/>
+    {% endif %}
+    <span class="star d-none d-md-block" id="star1">
+    </span>
+    <span class="star d-none d-md-block" id="star2">
+    </span>
+    <span class="star d-none d-md-block" id="star3">
+    </span>
+    <span class="star d-none d-md-block" id="star4">
+    </span>
+    <span class="star d-none d-md-block" id="star5">
+    </span>
+    <span class="star d-none d-md-block" id="star6">
+    </span>
+    <h2 class="blog_subtitle">
+     {% t blog.never_miss_a_post %}
+    </h2>
+    <p class="blog_subtext">
+     {% t blog.be_sure_to_follow %}
+     <a class="green_link" href="https://twitter.com/OpenLibertyIO" rel="noopener" target="_blank">
+      @openliberty.io
+     </a>
+     {% t blog.twitter_or_subscribe %}
+     <a class="green_link" href='{{ "/feed.xml" | relative_url }}' rel="noopener" target="_blank">
+      RSS
+     </a>
+     {% t blog.feed %}
+    </p>
+    <h2 class="blog_subtitle">
+     {% t blog.featured_tags %}
+    </h2>
+    <div id="featured_tags_list" role="list">
+     <p class="featured_tag" data-tag-id="announcements" role="listitem" tabindex="0">
+      {% t blog.tags.announcements %}
+     </p>
+     <span>
+      ,
+     </span>
+     <p class="featured_tag" data-tag-id="MicroProfile" role="listitem" tabindex="0">
+      {% t blog.tags.MicroProfile %}
+     </p>
+     <span>
+      ,
+     </span>
+     <p class="featured_tag" data-tag-id="Jakarta_EE" role="listitem" tabindex="0">
+      {% t blog.tags.Jakarta_EE %}
+     </p>
+     <span>
+      ,
+     </span>
+    </div>
+    <h2 class="blog_subtitle">
+     {% t blog.posts_in_other_languages %}
+    </h2>
+    <div id="language_list" role="list">
+     {% for current_lang in site.languages %}
+     <!-- Make sure to exclude the currently selected language from the language picker -->
+     {% if current_lang != site.lang %}
                         {% if 'en' == current_lang %}
-                            <!-- Special case: `en` URLs do not have /en/blogs but rather just /blogs -->
-                            {% assign href_lang = page.permalink %}
+     <!-- Special case: `en` URLs do not have /en/blogs but rather just /blogs -->
+     {% assign href_lang = page.permalink %}
                         {% else %}
                             {% assign href_lang = '/' | append: current_lang | append: page.permalink %}
                         {% endif %}
-                        <a class="blog_lang" href="{{href_lang}}">{% t langs.{{current_lang}} %}</a>
-                        <span class="comma">,</span>
-                    {% endif %}
+     <a class="blog_lang" href="{{href_lang}}">
+      {% t langs.{{current_lang}} %}
+     </a>
+     <span class="comma">
+      ,
+     </span>
+     {% endif %}
                     {% endfor %}
-                </div>
-                <img id="ufo_images_desktop" class="d-none d-lg-block" src="/img/blog_images_desktop.svg" alt="ufo and clouds">
-                <img id="ufo_images_tablet" class="d-none d-md-block d-lg-none" src="/img/blog_images_tablet.svg" alt="ufo and clouds">
-            </div>
-            <div id="right_column" class="col-md-12 col-lg-8 offset-lg-4">
-                <div id="filter">
-                    <img tabindex="0" id="x_button" src="/img/blog_x_button.svg" onclick="blog.removeFilter(); blog.updateSearchUrl();" onkeypress="blog.removeFilter(); blog.updateSearchUrl();" alt="Remove tag filter">
-                    <span id="no_results_message">{% t blog.no_results_found %} {% t blog.see %}
-                      <a class="orange_link_light_background" href="{{baseURL}}/blog/">{% t blog.all_blogs %}</a>
-                    </span>
-                    <span id="filter_message">
-                        <span>{% t blog.filtered_by_tag %}: </span>
-                        <span id="include_filter_tag"></span>
-                    </span>        
-                    <br id="multifilter_break" />            
-                    <span id="excluded_tags" class="exclude_tags">
-                        <span id="exclude_filter_tag"></span>
-                    </span>         
-                </div>
-                <!-- Show blog posts from the past 30 days as Latest Posts unless there are less than 3
+    </div>
+    <img alt="ufo and clouds" class="d-none d-lg-block" id="ufo_images_desktop" src="/img/blog_images_desktop.svg"/>
+    <img alt="ufo and clouds" class="d-none d-md-block d-lg-none" id="ufo_images_tablet" src="/img/blog_images_tablet.svg"/>
+   </div>
+   <div class="col-md-12 col-lg-8 offset-lg-4" id="right_column">
+    <div id="filter">
+     <img alt="Remove tag filter" id="x_button" onclick="blog.removeFilter(true);" onkeypress="blog.removeFilter(true);" src="/img/blog_x_button.svg" tabindex="0"/>
+     <span id="no_results_message">
+      {% t blog.no_results_found %} {% t blog.see %}
+      <a class="orange_link_light_background" href="{{baseURL}}/blog/">
+       {% t blog.all_blogs %}
+      </a>
+     </span>
+     <span id="filter_message">
+      <span>
+       {% t blog.filtered_by_tag %}:
+      </span>
+      <span id="include_filter_tag">
+      </span>
+     </span>
+     <br id="multifilter_break"/>
+     <span id="excluded_tags">
+      <span>
+       {% t blog.excluded_tags %}:
+      </span>
+      <span id="exclude_filter_tag">
+      </span>
+     </span>
+    </div>
+    <!-- Show blog posts from the past 30 days as Latest Posts unless there are less than 3
                      2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
-                {% assign past_month_count = 0 %}
+    {% assign past_month_count = 0 %}
                 {% for post in site.posts %}
 
                     {% assign date_published = post.date | date:'%s' %}
@@ -103,141 +158,229 @@ i18n-seo-description: seo.blogs
                     {% for author in post.additional_authors %}
                         {% assign additional_author_count = additional_author_count | plus: 1 %}
                     {% endfor %}
-
-                    <div class="row blog_post_row">
-                        <div class="blog_post_column">
-                            {% if count == 1 %}
-                            <p class="green_bar">{% t blog.latest_posts %}</p>
-                            {% endif %}
+                    {% capture tag_class_str -%}
+                        {%- for tag in post.tags %}
+                            {{ tag | downcase | replace: " ", "_" }} 
+                        {%- endfor -%}
+                    {% endcapture %}
+    <div class="row blog_post_row">
+     <div class="blog_post_column">
+      {% if count == 1 %}
+      <p class="green_bar">
+       {% t blog.latest_posts %}
+      </p>
+      {% endif %}
                             {% if count <= latest_posts_count %}
-                                    <div class="blog_post_content">
-                                    {% if post.redirect_link %}
-                                        <h2 class="blog_post_title"><a href="{{ post.redirect_link }}" data-path="{{ post.path | relative_url }}" target="_blank" rel="noopener" class="blog_post_title_link">{{ post.title | escape }}</a>
-                                          <a href="{{ post.redirect_link }}" data-path="{{ post.path | relative_url }}" target="_blank" rel="noopener" class="blog_post_title_link">
-                                            <span class="continued_text">
-                                                {% assign continue_text = ' [Continued on ' %}
+      <div class="blog_post_content {{ tag_class_str }}">
+       {% if post.redirect_link %}
+       <h2 class="blog_post_title">
+        <a class="blog_post_title_link" data-path="{{ post.path | relative_url }}" href="{{ post.redirect_link }}" rel="noopener" target="_blank">
+         {{ post.title | escape }}
+        </a>
+        <a class="blog_post_title_link" data-path="{{ post.path | relative_url }}" href="{{ post.redirect_link }}" rel="noopener" target="_blank">
+         <span class="continued_text">
+          {% assign continue_text = ' [Continued on ' %}
                                                 {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
                                                 {{ continue_text | append: domain_name }}
-                                            </span>
-                                            </a>
-                                        </h2>
-                                    {% else %}
-                                        <h2 class="blog_post_title"><a href="{{ post.url | relative_url }}" class="blog_post_title_link">{{ post.title | escape }}</a></h2>
-                                    {% endif %}
-                                    <p class="blog_post_date_mobile d-sm-block d-md-none">{{ post.date | date: date_format }}</p>
-                                    <p class="blog_post_paragraph">
-                                        {% if post.blog_description %}
+         </span>
+        </a>
+       </h2>
+       {% else %}
+       <h2 class="blog_post_title">
+        <a class="blog_post_title_link" href="{{ post.url | relative_url }}">
+         {{ post.title | escape }}
+        </a>
+       </h2>
+       {% endif %}
+       <p class="blog_post_date_mobile d-sm-block d-md-none">
+        {{ post.date | date: date_format }}
+       </p>
+       <p class="blog_post_paragraph">
+        {% if post.blog_description %}
                                             {{ post.blog_description }}
                                         {% else %}
                                             {{ post.content | strip_html | truncatewords: 60 }}
                                         {% endif %}
-                                    </p>
-                                    <div class="row">
-                                        <div class="blog_post_author_data_container">
-                                            <div class="author_images_container">
-                                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
-                                                {% for author in post.additional_authors %}
-                                                    <img src="{{ author.image }}" class="blog_post_author_image" alt="image of author">
-                                                {% endfor %}
-                                            </div>
-                                            <a class="blog_post_author_name" href="{{ post.author_github }}" target="_blank" rel="noopener">{{ post.author }}</a>
-                                            {% for author in post.additional_authors %}
+       </p>
+       <div class="row">
+        <div class="blog_post_author_data_container">
+         <div class="author_images_container">
+          <img alt="Blog author picture" class="blog_post_author_image" src="{{ post.author_picture }}"/>
+          {% for author in post.additional_authors %}
+          <img alt="image of author" class="blog_post_author_image" src="{{ author.image }}"/>
+          {% endfor %}
+         </div>
+         <a class="blog_post_author_name" href="{{ post.author_github }}" rel="noopener" target="_blank">
+          {{ post.author }}
+         </a>
+         {% for author in post.additional_authors %}
                                                 {% if additional_author_count == 1 %}
-                                                    <span>and </span>
-                                                    {% if author.github %}
-                                                    	<a class="blog_post_author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }}</a>
-                                                    {% else %}
-                                                    	<span class="blog_post_author_name">{{ author.name }}</span>
-                                                    {% endif %}
+         <span>
+          and
+         </span>
+         {% if author.github %}
+         <a class="blog_post_author_name" href="{{ author.github }}" rel="noopener" target="_blank">
+          {{ author.name }}
+         </a>
+         {% else %}
+         <span class="blog_post_author_name">
+          {{ author.name }}
+         </span>
+         {% endif %}
                                                 {% else %}
-                                                    <span>and {{ additional_author_count }} others</span>
-                                                    {% break %}
+         <span>
+          and {{ additional_author_count }} others
+         </span>
+         {% break %}
                                                 {% endif %}
                                             {% endfor %}
-                                            <span class="blog_post_date" title="{{ post.date | date: date_format }}">{{ post.date | date: date_format }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div role="list" class="blog_tags_container col-md-7"></div>
-                                        <div class="read_more_link_container col-sm-12 col-md-5">
-                                        {% if post.redirect_link %}
-                                            <a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="read_more_link read_more_link_external">{% t global.readmore %}</a>
-                                        {% else %}
-                                            <a href="{{ post.url | relative_url }}" class="read_more_link">{% t global.readmore %}</a>
-                                        {% endif %}
-                                        </div>
-                                    </div>
-                                    <div class="bottom_border"></div>
-                                </div>
-                            {% if count == latest_posts_count %}
-                                <p id="older_posts" class="green_bar">{% t blog.older_posts %}</p>
-                            {% endif %}
+         <span class="blog_post_date" title="{{ post.date | date: date_format }}">
+          {{ post.date | date: date_format }}
+         </span>
+        </div>
+       </div>
+       <div class="row">
+        <div class="blog_tags_container col-md-7" role="list">
+         {%- for tag in post.tags -%}
+                                                {%- assign tag_name = tag | replace: " ", "_" -%}
+         <p class="blog_tag" data-tag-id="{{tag_name}}" role="listitem" tabindex="0">
+          {%- t blog.tags.{{tag_name}} -%}
+         </p>
+         <span class="comma">
+          ,
+         </span>
+         {%- endfor -%}
+        </div>
+        <div class="read_more_link_container col-sm-12 col-md-5">
+         {% if post.redirect_link %}
+         <a class="read_more_link read_more_link_external" href="{{ post.redirect_link }}" rel="noopener" target="_blank">
+          {% t global.readmore %}
+         </a>
+         {% else %}
+         <a class="read_more_link" href="{{ post.url | relative_url }}">
+          {% t global.readmore %}
+         </a>
+         {% endif %}
+        </div>
+       </div>
+       <div class="bottom_border">
+       </div>
+      </div>
+      {% if count == latest_posts_count %}
+      <p class="green_bar" id="older_posts">
+       {% t blog.older_posts %}
+      </p>
+      {% endif %}
                             {% else %}
-                                <div class="blog_post_content">
-                                    {% if post.redirect_link %}
-                                        <h2 class="blog_post_title_condensed"><a href="{{ post.redirect_link }}" data-path="{{ post.path | relative_url }}" target="_blank" rel="noopener" class="blog_post_title_link blog_post_title_link_condensed">{{ post.title | escape }}</a>
-                                           <a href="{{ post.redirect_link }}" data-path="{{ post.path | relative_url }}" target="_blank" rel="noopener" class="blog_post_title_link blog_post_title_link_condensed">                                            <span class="continued_text">
-                                                {% assign continue_text = ' [Continued on ' %}
+      <div class="blog_post_content {{ tag_class_str }}">
+       {% if post.redirect_link %}
+       <h2 class="blog_post_title_condensed">
+        <a class="blog_post_title_link blog_post_title_link_condensed" data-path="{{ post.path | relative_url }}" href="{{ post.redirect_link }}" rel="noopener" target="_blank">
+         {{ post.title | escape }}
+        </a>
+        <a class="blog_post_title_link blog_post_title_link_condensed" data-path="{{ post.path | relative_url }}" href="{{ post.redirect_link }}" rel="noopener" target="_blank">
+         <span class="continued_text">
+          {% assign continue_text = ' [Continued on ' %}
                                                 {% assign domain_name = post.redirect_link | remove: "https://" | remove: "http://" | remove: "www." | append: "]" %}
                                                 {{ continue_text | append: domain_name }}
-                                            </span>
-                                            </a>
-                                        </h2>
-                                    {% else %}
-                                        <h2 class="blog_post_title_condensed"><a href="{{ post.url | relative_url }}" class="blog_post_title_link blog_post_title_link_condensed">{{ post.title | escape }}</a></h2>
-                                    {% endif %}
-                                    <p class="blog_post_date_mobile d-sm-block d-md-none">{{ post.date | date: date_format }}</p>
-                                    <div class="row">
-                                        <div class="blog_post_author_data_container">
-                                            <div class="author_images_container">
-                                                <img src="{{ post.author_picture }}" class="blog_post_author_image" alt="Blog author picture">
-                                                {% for author in post.additional_authors %}
-                                                    <img src="{{ author.image }}" class="blog_post_author_image" alt="image of author">
-                                                {% endfor %}
-                                            </div>
-                                            <a class="blog_post_author_name" href="{{ post.author_github }}" target="_blank" rel="noopener">{{ post.author }}</a>
-
-
-                                            {% for author in post.additional_authors %}
+         </span>
+        </a>
+       </h2>
+       {% else %}
+       <h2 class="blog_post_title_condensed">
+        <a class="blog_post_title_link blog_post_title_link_condensed" href="{{ post.url | relative_url }}">
+         {{ post.title | escape }}
+        </a>
+       </h2>
+       {% endif %}
+       <p class="blog_post_date_mobile d-sm-block d-md-none">
+        {{ post.date | date: date_format }}
+       </p>
+       <div class="row">
+        <div class="blog_post_author_data_container">
+         <div class="author_images_container">
+          <img alt="Blog author picture" class="blog_post_author_image" src="{{ post.author_picture }}"/>
+          {% for author in post.additional_authors %}
+          <img alt="image of author" class="blog_post_author_image" src="{{ author.image }}"/>
+          {% endfor %}
+         </div>
+         <a class="blog_post_author_name" href="{{ post.author_github }}" rel="noopener" target="_blank">
+          {{ post.author }}
+         </a>
+         {% for author in post.additional_authors %}
                                                 {% if additional_author_count == 1 %}
-                                                    <span>and </span>
-                                                    <a class="blog_post_author_name" href="{{ author.github }}" target="_blank" rel="noopener">{{ author.name }}</a>
-                                                {% else %}
-                                                    <span>and {{ additional_author_count }} others</span>
-                                                    {% break %}
+         <span>
+          and
+         </span>
+         <a class="blog_post_author_name" href="{{ author.github }}" rel="noopener" target="_blank">
+          {{ author.name }}
+         </a>
+         {% else %}
+         <span>
+          and {{ additional_author_count }} others
+         </span>
+         {% break %}
                                                 {% endif %}
                                             {% endfor %}
-
-                                            <span class="blog_post_date" title="{{ post.date | date: date_format }}">{{ post.date | date: date_format }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div role="list" class="blog_tags_container col-md-7"></div>
-                                        <div class="read_more_link_container col-sm-12 col-md-5">
-                                        {% if post.redirect_link %}
-                                            <a href="{{ post.redirect_link }}" target="_blank" rel="noopener" class="read_more_link read_more_link_external">{% t global.readmore %}</a>
-                                        {% else %}
-                                            <a href="{{ post.url | relative_url }}" class="read_more_link">{% t global.readmore %}</a>
-                                        {% endif %}
-                                        </div>
-                                    </div>
-                                    <div class="bottom_border"></div>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% assign count = count | plus: 1 %}
-                {% endfor %}
-                <div class="row blog_post_row">
-                    <div id="final_post" class="blog_post_content">
-                        <p id="final_post_title">{% t blog.stay_light_years_ahead %}</p>
-                        <p>{% t blog.follow.part1 %} <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener">@openliberty.io</a> {% t blog.follow.part2 %} <a class="orange_link_light_background" href="{{ "/feed.xml" | relative_url }}" target="_blank" rel="noopener">RSS</a> {% t blog.follow.part3 %}</p>
-                    </div>
-                </div>
-            </div>
+         <span class="blog_post_date" title="{{ post.date | date: date_format }}">
+          {{ post.date | date: date_format }}
+         </span>
         </div>
+       </div>
+       <div class="row">
+        <div class="blog_tags_container col-md-7" role="list">
+         {%- for tag in post.tags -%}
+                                                {%- assign tag_name = tag | replace: " ", "_" -%}
+         <p class="blog_tag" data-tag-id="{{tag_name}}" role="listitem" tabindex="0">
+          {%- t blog.tags.{{tag_name}} -%}
+         </p>
+         <span class="comma">
+          ,
+         </span>
+         {%- endfor -%}
+        </div>
+        <div class="read_more_link_container col-sm-12 col-md-5">
+         {% if post.redirect_link %}
+         <a class="read_more_link read_more_link_external" href="{{ post.redirect_link }}" rel="noopener" target="_blank">
+          {% t global.readmore %}
+         </a>
+         {% else %}
+         <a class="read_more_link" href="{{ post.url | relative_url }}">
+          {% t global.readmore %}
+         </a>
+         {% endif %}
+        </div>
+       </div>
+       <div class="bottom_border">
+       </div>
+      </div>
+      {% endif %}
+     </div>
     </div>
-    <div id="ufo_images_mobile_container">
-        <img id="ufo_images_mobile" class="d-block d-md-none img-fluid" src="/img/blog_images_mobile.svg" alt="ufo and clouds">
+    {% assign count = count | plus: 1 %}
+                {% endfor %}
+    <div class="row blog_post_row">
+     <div class="blog_post_content" id="final_post">
+      <p id="final_post_title">
+       {% t blog.stay_light_years_ahead %}
+      </p>
+      <p>
+       {% t blog.follow.part1 %}
+       <a class="orange_link_light_background" href="https://twitter.com/OpenLibertyIO" rel="noopener" target="_blank">
+        @openliberty.io
+       </a>
+       {% t blog.follow.part2 %}
+       <a class="orange_link_light_background" href='{{ "/feed.xml" | relative_url }}' rel="noopener" target="_blank">
+        RSS
+       </a>
+       {% t blog.follow.part3 %}
+      </p>
+     </div>
     </div>
+   </div>
+  </div>
+ </div>
+ <div id="ufo_images_mobile_container">
+  <img alt="ufo and clouds" class="d-block d-md-none img-fluid" id="ufo_images_mobile" src="/img/blog_images_mobile.svg"/>
+ </div>
 </div>
