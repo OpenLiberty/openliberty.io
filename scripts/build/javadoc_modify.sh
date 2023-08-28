@@ -41,12 +41,12 @@ export -f modifyStylesheetFrameless
 export -f modifySearch
 export -f modifyRedirect
 
-find target/jekyll-webapp/docs -path "*microprofile*/stylesheet.css" -exec bash -c 'modifyStylesheet {}' \;
-find target/jekyll-webapp/docs -path "*liberty-*/stylesheet.css" -exec bash -c 'modifyStylesheet {}' \;
-find target/jekyll-webapp/docs -path "*io.openliberty*/stylesheet.css" -exec bash -c 'modifyStylesheetFrameless {}' \;
-find target/jekyll-webapp/docs -path "*com.ibm.websphere.appserver*/stylesheet.css" -exec bash -c 'modifyStylesheetFrameless {}' \;
-find target/jekyll-webapp/docs -name search.js  -exec bash -c 'modifySearch {}' \;
-find target/jekyll-webapp/docs -name script.js  -exec bash -c 'modifyRedirect {}' \;
+find src/main/content/docs-javadoc/modules -path "*microprofile*/stylesheet.css" -exec bash -c 'modifyStylesheet {}' \;
+find src/main/content/docs-javadoc/modules -path "*liberty-*/stylesheet.css" -exec bash -c 'modifyStylesheet {}' \;
+find src/main/content/docs-javadoc/modules -path "*io.openliberty*/stylesheet.css" -exec bash -c 'modifyStylesheetFrameless {}' \;
+find src/main/content/docs-javadoc/modules -path "*com.ibm.websphere.appserver*/stylesheet.css" -exec bash -c 'modifyStylesheetFrameless {}' \;
+find src/main/content/docs-javadoc/modules -name search.js  -exec bash -c 'modifySearch {}' \;
+find src/main/content/docs-javadoc/modules -name script.js  -exec bash -c 'modifyRedirect {}' \;
 
 timer_end=$(date +%s)
 echo "Total execution time for modifying the javadoc: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
