@@ -260,7 +260,7 @@ function render_builds(builds, parent) {
                         for (var i = 0; i < max - num_packages; i++) {
                             parent.append('<tr></tr>');
                         }
-                    }
+                    }                    
                     
                     var version_column = $(
                         '<td headers="' +
@@ -269,7 +269,12 @@ function render_builds(builds, parent) {
                             num_packages +
                             '">' +
                             build.version +
-                            (releaseBuild.releasePostLink ? '<a class="blog_release_notes" href="'+baseURL+'/blog/'+releaseBuild.releasePostLink+'">'+release_blog+'</a>' : '') +
+                            (releaseBuild.releasePostLink ? '<a class="version_sublink" href="'+baseURL+'/blog/'+releaseBuild.releasePostLink+'">'+release_blog+'</a>' : '') +
+                            (releaseBuild.tests_log ? 
+                                '<a class="version_sublink" ' +
+                                'href="'+releaseBuild.tests_log + '" ' +
+                                'title="' + releaseBuild.test_passed + '/' + releaseBuild.total_tests + ' tests passing"' +
+                                '>Test results</a>' : '') +
                             '</td>'
                     );
 
@@ -314,7 +319,7 @@ function render_builds(builds, parent) {
                             // Optional sig file download button
                             (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'PEM</a>' : '' ) +
                             '</td>'
-                        );
+                        );     
 
                         if (k === 0) {
                             row.append(version_column); // add version column for first item in package_locations
@@ -412,13 +417,12 @@ function render_builds(builds, parent) {
                                 tableID +
                                 '_package">All GA Features</td>';
                         }
-                    
                         row.append(package_column);
-                        row.append(download_column);
+                        row.append(download_column);                        
                         row.append(verification_column);
                         if (k === 0) {
                             // Only add the PEM button to the row with Version
-                            row.append(verification_column2);
+                            row.append(verification_column2);              
                         }
 
                         // checking if version is from the last two years before adding to table
@@ -468,7 +472,7 @@ function render_builds(builds, parent) {
                             num_beta_packages +
                             '">' +
                             build.version +
-                            (betaBuild.betaPostLink ? '<a class="blog_release_notes" href="'+baseURL+'/blog/'+betaBuild.betaPostLink+'">'+release_blog+'</a>' : '') +
+                            (betaBuild.betaPostLink ? '<a class="version_sublink" href="'+baseURL+'/blog/'+betaBuild.betaPostLink+'">'+release_blog+'</a>' : '') +
                             '</td>'
                     );
             
@@ -643,7 +647,7 @@ function highlightAlternateRows() {
 
     // 1. Look for all the release Version rows and apply the styling to every other version row
     $("#runtime_releases_table_container .release_table_body tr").filter(function() { 
-        return $(this).children().length === total_releases_columns;
+        return $(this).children().length === total_releases_columns; 
     }).filter(':even').addClass('highlight_alternate_rows');
 
     // 2. Look for all the beta Version rows and apply the styling to every other version row
