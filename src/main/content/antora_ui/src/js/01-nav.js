@@ -1,64 +1,62 @@
 var navigation = (function(){
   'use strict';
   var init = function(){
-    var navContainer = document.querySelector('.nav-container');
-    var navToggle = document.querySelector('.nav-toggle');
+    var $navContainer = $('.nav-container');
+    var $navToggle = $('.nav-toggle');
 
-    if (!navContainer) return;
+    if ($navContainer.length <= 0) return;
 
-    navToggle.addEventListener('click', showNav);
-    navContainer.addEventListener('click', handlePageClick);
+    $navToggle.on('click', showNav);
+    $navContainer.on('click', handlePageClick);
 
-    var menuPanel = navContainer.querySelector('[data-panel=menu]');
-    if (!menuPanel) return;
+    var $menuPanel = $navContainer.find('[data-panel=menu]').eq(0);
+    if ($menuPanel.length <= 0) return;
 
     // Expand all first level doc categories
     $(".nav-menu > .nav-list > .nav-item").addClass('is-active');
 
-    var currentPageItem = menuPanel.querySelector('.is-current-page');
-    if (currentPageItem) {
-      activateCurrentPath(currentPageItem);
-      scrollItemToMidpoint(currentPageItem.querySelector('.nav-link'));
+    var $currentPageItem = $menuPanel.find('.is-current-page').eq(0);
+    if ($currentPageItem.length > 0) {
+      activateCurrentPath($currentPageItem);
+      scrollItemToMidpoint($currentPageItem.find('.nav-link').eq(0));
     } else {
-      menuPanel.scrollTop = 0;
+      $menuPanel.scrollTop(0);
     }
 
-    find(menuPanel, '.nav-item-toggle').forEach(function (btn) {
-      var li = btn.parentElement;
-      btn.addEventListener('click', toggleActive.bind(li));
-      var navItemSpan = findNextElement(btn, '.nav-text');
-      if (navItemSpan) {
-        navItemSpan.style.cursor = 'pointer';
-        navItemSpan.addEventListener('click', toggleActive.bind(li));
-      }
-    });
+    $($menuPanel).on("click", ".nav-item-toggle", function (){
+      $(this).parent().toggleClass('is-active');
+    })
+
+    $($menuPanel).on("click", ".nav-text", function (){
+      $(this).parent().toggleClass('is-active');
+    })
 
     if($('.components .version').length === 1){
       $('.nav-panel-explore .context .version').addClass('hide-after');
       $('.nav-panel-explore .context').css('pointer-events', 'none');
     }
 
-    document.querySelector('.nav-container .nav .context').addEventListener('click', function () {
-      var currentPanel = document.querySelector('.nav .is-active[data-panel]');
-      var activatePanel = currentPanel.dataset.panel === 'menu' ? 'explore' : 'menu';
-      currentPanel.classList.toggle('is-active');
-      document.querySelector('.nav [data-panel=' + activatePanel + ']').classList.toggle('is-active');
+    $('.nav-container .nav .context').on('click', function () {
+      var $currentPanel = $('.nav .is-active[data-panel]');
+      var activatePanel = $currentPanel[0].dataset.panel === 'menu' ? 'explore' : 'menu';
+      $currentPanel.toggleClass('is-active');
+      $('.nav [data-panel=' + activatePanel + ']').toggleClass('is-active');
     });
 
-    document.addEventListener('click', handlePageClick);
+    $(document).on('click', handlePageClick);
 
     $('.nav-menu > .nav-list').on('scroll', function(e){
       concealEvent(e);
     });
 
-    document.addEventListener('keydown', function(e){
+    $(document).on('keydown', function(e){
         if(e.which === 27){
           closeVersionPicker();
         }
     });
 
     // NOTE prevent text from being selected by double click
-    menuPanel.addEventListener('mousedown', function (e) {
+    $menuPanel.on('mousedown', function (e) {
       if (e.detail > 1) e.preventDefault();
     });
 
@@ -77,10 +75,6 @@ var navigation = (function(){
     anchor.click();
   });
 
-  function find (from, selector) {
-    return [].slice.call(from.querySelectorAll(selector))
-  }
-
   function findNextElement (from, selector) {
     var el;
     if ('nextElementSibling' in from) {
@@ -93,19 +87,18 @@ var navigation = (function(){
   }
 
   function activateCurrentPath (navItem) {
-    var ancestorClasses;
-    var ancestor = navItem.parentNode;
-    while (!(ancestorClasses = ancestor.classList).contains('nav-menu')) {
-      if (ancestor.tagName === 'LI' && ancestorClasses.contains('nav-item')) {
-        ancestorClasses.add('is-active', 'is-current-path');
+    var ancestor = navItem.parent();
+    while (!(ancestor.hasClass('nav-menu'))) {
+      if (ancestor.prop('tagName') === 'LI' && ancestor.hasClass('nav-item')) {
+        ancestor.addClass('is-active is-current-path');
       }
-      ancestor = ancestor.parentNode;
+      ancestor = ancestor.parent();
     }
-    navItem.classList.add('is-active', 'is-current-page');
+    navItem.addClass('is-active is-current-page');
   }
 
   function toggleActive () {
-    this.classList.toggle('is-active');
+    $(this).toggleClass('is-active');
   }
 
   // Detect if the version switcher is open to close it when clicking somewhere else.
@@ -130,25 +123,19 @@ var navigation = (function(){
   }
 
   function showNav (e) {
-    var navToggle = document.querySelector('.nav-toggle');
-    var navContainer = document.querySelector('.nav-container');
-    if (navToggle.classList.contains('is-active')) return hideNav(e)
-    var html = document.documentElement;
-    html.classList.add('is-clipped--nav');
-    navToggle.classList.add('is-active');
-    navContainer.classList.add('is-active');
-    html.addEventListener('click', hideNav);
+    if ($('.nav-toggle').hasClass('is-active')) return hideNav(e);
+    $('html').addClass('is-clipped--nav');
+    $('.nav-toggle').addClass('is-active');
+    $('.nav-container').addClass('is-active');
+    $('html').on('click', hideNav);
     concealEvent(e);
   }
 
   function hideNav (e) {
-    var navToggle = document.querySelector('.nav-toggle');
-    var navContainer = document.querySelector('.nav-container');
-    var html = document.documentElement;
-    html.classList.remove('is-clipped--nav');
-    navToggle.classList.remove('is-active');
-    navContainer.classList.remove('is-active');
-    html.removeEventListener('click', hideNav);
+    $('.nav-toggle').removeClass('is-active');
+    $('.nav-container').removeClass('is-active');
+    $('html').removeClass('is-clipped--nav');
+    $('html').off('click', hideNav);
     concealEvent(e);
   }
 
@@ -158,21 +145,20 @@ var navigation = (function(){
   }
 
   function scrollItemToMidpoint (el) {
-    var nav = document.querySelector('.nav-container nav');
-    var panel = document.querySelector('.nav-container [data-panel=menu]');
-    var rect = panel.getBoundingClientRect();
+    var $nav = $('.nav-container nav');
+    var $panel = $('.nav-container [data-panel=menu]');
+    var rect = $panel[0].getBoundingClientRect();
     var effectiveHeight = rect.height;
-    var navStyle = window.getComputedStyle(nav);
-    if (navStyle.position === 'sticky') effectiveHeight -= rect.top - parseFloat(navStyle.top);
+    if ($nav.css("position") === 'sticky') effectiveHeight -= rect.top - parseFloat($nav.css("top"));
 
-    var elementHeight = el.getBoundingClientRect().height;
-    if ((el.offsetTop + elementHeight) > effectiveHeight) {
+    var elementHeight = el[0].getBoundingClientRect().height;
+    if ((el.offset().top + elementHeight) > effectiveHeight) {
       // If you must scroll to see the TOC element, then move TOC so that the element
       // is displayed about the middle of the TOC.
-      panel.scrollTop = Math.max(0, (elementHeight - effectiveHeight) * 0.5 + el.offsetTop);
+      $panel.scrollTop(Math.max(0, (elementHeight - effectiveHeight) * 0.5 + el.offsetTop));
     } else {
       // Else, just leave the user on the initial TOC (at the top) with the element highlighted.
-      panel.scrollTop = 0;
+      $panel.scrollTop(0);
     }
   }
 
