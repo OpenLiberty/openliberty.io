@@ -46,7 +46,7 @@ var navigation = (function(){
     $(document).on('click', handlePageClick);
 
     $('.nav-menu > .nav-list').on('scroll', function(e){
-      concealEvent(e);
+      e.stopPropagation();
     });
 
     $(document).on('keydown', function(e){
@@ -75,17 +75,6 @@ var navigation = (function(){
     anchor.click();
   });
 
-  function findNextElement (from, selector) {
-    var el;
-    if ('nextElementSibling' in from) {
-      el = from.nextElementSibling;
-    } else {
-      el = from;
-      while ((el = el.nextSibling) && el.nodeType !== 1);
-    }
-    return el && selector ? el[el.matches ? 'matches' : 'msMatchesSelector'](selector) && el : el;
-  }
-
   function activateCurrentPath (navItem) {
     var ancestor = navItem.parent();
     while (!(ancestor.hasClass('nav-menu'))) {
@@ -97,13 +86,9 @@ var navigation = (function(){
     navItem.addClass('is-active is-current-page');
   }
 
-  function toggleActive () {
-    $(this).toggleClass('is-active');
-  }
-
   // Detect if the version switcher is open to close it when clicking somewhere else.
   function handlePageClick (e) {
-    concealEvent(e);
+    e.stopPropagation();
     if($('.context')[0].contains(e.target)){
       return;
     }
@@ -128,7 +113,7 @@ var navigation = (function(){
     $('.nav-toggle').addClass('is-active');
     $('.nav-container').addClass('is-active');
     $('html').on('click', hideNav);
-    concealEvent(e);
+    e.stopPropagation();
   }
 
   function hideNav (e) {
@@ -136,11 +121,6 @@ var navigation = (function(){
     $('.nav-container').removeClass('is-active');
     $('html').removeClass('is-clipped--nav');
     $('html').off('click', hideNav);
-    concealEvent(e);
-  }
-
-  // NOTE don't let event get picked up by window click listener
-  function concealEvent (e) {
     e.stopPropagation();
   }
 
