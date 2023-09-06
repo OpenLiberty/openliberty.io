@@ -13,8 +13,10 @@ echo "npm analysis during build"
 npm ls -g --depth=0
 
 #comment out this below two line in local during build
+if [ "$LOCAL_BUILD" = false ]; then
 ln -s "$(which node)" /usr/bin/node
 ln -s "$(which npm)" /usr/bin/npm
+fi
 
 #Antora Portion of Docs
 echo "Begin building of Antora portion of docs"
