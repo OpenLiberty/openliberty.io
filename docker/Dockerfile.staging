@@ -62,8 +62,6 @@ RUN features.sh
 
 COPY --from=war --chown=1001:0 target/openliberty-website-1.0-SNAPSHOT /config/apps/openliberty.war
 
-COPY --from=docs --chown=1001:0 src/main/content/docs-javadoc/modules /config/apps/openliberty.war/docs
-
 # This script will add the requested server configurations, apply any interim fixes and populate caches to
 # optimize runtime
 ARG VERBOSE=true
