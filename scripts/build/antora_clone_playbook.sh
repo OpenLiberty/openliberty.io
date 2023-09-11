@@ -4,18 +4,18 @@
 # Remove the docs playbook repository
 rm -rf docs-playbook
 
-BRANCH_NAME="prod"
+BRANCH_NAME="demo2-nb-tests"
 # Development environments with draft content
-if [[ "$STAGING_SITE" == "true" || "$DOCS_STAGING_SITE" == "true" ]]; then
-    echo "Cloning the staging branch of docs-playbook"
-    BRANCH_NAME="staging"
-elif [[ "$DRAFT_SITE" == "true" || "$DOCS_DRAFT_SITE" == "true" ]]; then
-    echo "Cloning the draft branch of docs-playbook"
-    BRANCH_NAME="draft"
-elif [ "$NOT_PROD_SITE" == "true" ]; then
-    echo "Not cloning any branch from docs-playbook (aka, skipping building docs-playbook, and therefore all docs)"
-    exit 0
-fi
+# if [[ "$STAGING_SITE" == "true" || "$DOCS_STAGING_SITE" == "true" ]]; then
+#     echo "Cloning the staging branch of docs-playbook"
+#     BRANCH_NAME="staging"
+# elif [[ "$DRAFT_SITE" == "true" || "$DOCS_DRAFT_SITE" == "true" ]]; then
+#     echo "Cloning the draft branch of docs-playbook"
+#     BRANCH_NAME="draft"
+# elif [ "$NOT_PROD_SITE" == "true" ]; then
+#     echo "Not cloning any branch from docs-playbook (aka, skipping building docs-playbook, and therefore all docs)"
+#     exit 0
+# fi
 
 echo "Cloning the $BRANCH_NAME Antora playbook branch"
 
