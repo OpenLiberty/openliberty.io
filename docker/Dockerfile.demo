@@ -46,6 +46,8 @@ COPY --from=docs --chown=1001:0 /src /src
 COPY --from=docs --chown=1001:0 /target /target
 RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 compile war:exploded
 
+COPY --from=docs --chown=1001:0 src/main/content/docs-javadoc/modules /config/apps/openliberty.war/docs
+
 #
 #
 #
