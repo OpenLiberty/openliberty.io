@@ -18,7 +18,6 @@ cp -r src/main/content/docs-javadoc/modules target/jekyll-webapp/docs
 timer_end=$(date +%s)
 echo "Total execution time for copying javadoc to webapp: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
-
 # Special handling for javadocs
 $BUILD_SCRIPTS_DIR/javadoc_modify.sh
 
