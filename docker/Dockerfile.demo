@@ -39,6 +39,9 @@ RUN $BUILD_SCRIPTS_DIR/gzip.sh
 #
 FROM icr.io/appcafe/open-liberty-devfile-stack:22.0.0.1 as war
 
+# Give 2GB memory to Maven
+ENV MAVEN_OPTS="-Xmx2g"
+
 COPY mvnw /
 COPY .mvn /.mvn
 COPY pom.xml /
