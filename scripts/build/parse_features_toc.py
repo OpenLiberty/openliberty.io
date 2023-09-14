@@ -63,7 +63,10 @@ def sort_versions_for(feature, high_to_low=True):
 timerStart = time.time()
 
 # Get all of the Antora versions
-featurePath = 'target/jekyll-webapp/docs/'
+# featurePath = 'target/jekyll-webapp/docs/'
+# new path src/main/content/docs/build/site/
+featurePath = 'srcmain/content/docs/build/site/docs/'
+
 
 versions = []
 for version in os.listdir(featurePath):
