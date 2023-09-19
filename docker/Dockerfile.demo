@@ -26,17 +26,6 @@ RUN $BUILD_SCRIPTS_DIR/jekyll.sh
 #
 #
 #
-FROM jekyll as docs
-
-RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh
-
-RUN $BUILD_SCRIPTS_DIR/docs_part_2.sh
-
-RUN $BUILD_SCRIPTS_DIR/gzip.sh
-
-#
-#
-#
 FROM icr.io/appcafe/open-liberty-devfile-stack:22.0.0.1 as war
 
 # Give 2GB memory to Maven
@@ -45,12 +34,21 @@ ENV MAVEN_OPTS="-Xmx2g"
 COPY mvnw /
 COPY .mvn /.mvn
 COPY pom.xml /
-COPY --from=docs --chown=1001:0 /src /src
-COPY --from=docs --chown=1001:0 /target /target
+COPY --from=jekyll --chown=1001:0 /src /src
+COPY --from=jekyll --chown=1001:0 /target /target
 RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 compile war:exploded
 
-COPY --from=docs --chown=1001:0 src/main/content/docs/build/site/docs/* /config/apps/openliberty.war/docs
-COPY --from=docs --chown=1001:0 src/main/content/docs-javadoc/modules /config/apps/openliberty.war/docs
+
+FROM war as docs
+
+RUN $BUILD_SCRIPTS_DIR/docs_part_1.sh
+
+RUN $BUILD_SCRIPTS_DIR/docs_part_2.sh
+
+RUN $BUILD_SCRIPTS_DIR/gzip.sh
+
+COPY src/main/content/docs/build/site/docs/* /config/apps/openliberty.war/docs
+COPY src/main/content/docs-javadoc/modules /config/apps/openliberty.war/docs
 
 #
 #
@@ -65,7 +63,7 @@ COPY src/main/wlp/server.xml /config/server.xml
 # Only available in 'kernel-slim'. The 'full' tag already includes all features for convenience.
 RUN features.sh
 
-COPY --from=war --chown=1001:0 target/openliberty-website-1.0-SNAPSHOT /config/apps/openliberty.war
+COPY --from=docs --chown=1001:0 target/openliberty-website-1.0-SNAPSHOT /config/apps/openliberty.war
 
 # This script will add the requested server configurations, apply any interim fixes and populate caches to
 # optimize runtime
