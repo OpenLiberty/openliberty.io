@@ -2,8 +2,10 @@
 
 timer_start=$(date +%s)
 echo "Update packages & prep environment"
+if [ "$LOCAL_BUILD" = false ]; then
 sudo apt-get update
 sudo apt-get install nodejs python3-bs4 libgdbm-dev libncurses5-dev automake libtool bison libffi-dev python3-lxml -y
+fi
 
 export BUILD_SCRIPTS_DIR=$(dirname $0)
 
