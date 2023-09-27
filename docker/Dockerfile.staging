@@ -45,7 +45,7 @@ COPY .mvn /.mvn
 COPY pom.xml /
 COPY --from=docs --chown=1001:0 /src /src
 COPY --from=docs --chown=1001:0 /target /target
-RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 compile -DargLine="-Xmx4096m -XX:MaxPermSize=512m" war:exploded
+RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 compile -DargLine="-Xms4g -Xmx4g -XX:MaxDirectMemorySize=2g" war:exploded
 
 #
 #
