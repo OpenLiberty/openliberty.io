@@ -79,6 +79,12 @@
 			<version>5.5.4</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>3.11.0</version>
+			<type>maven-plugin</type>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -92,8 +98,9 @@
 						<source>1.8</source>
 						<target>1.8</target>
 						<fork>true</fork>
-						<meminitial>2048m</meminitial>
-						<maxmem>3000m</maxmem>
+						<meminitial>1024m</meminitial>
+						<maxmem>2048m</maxmem>
+						<executable>${JAVA_HOME}/bin/javac</executable>
 					</configuration>
 				</plugin>
 				<plugin>
