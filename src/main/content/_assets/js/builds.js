@@ -21,7 +21,7 @@ var versArr = [];
 
 var builds_url = '/api/builds/data';
 var starter_domain = 
-    isNotProdSite() ? 'https://starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud' : 'https://start.openliberty.io';
+    isNotProdSite() ? 'https://starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud' : 'https://localhost:9443';
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 var failed_builds_request = false;
@@ -905,7 +905,7 @@ function validate_java_eeAndmp_levels() {
          var javaOptions = $(
              '.starter_field[data-starter-field=\'j\'] select option'
          );
-         $(javaOptions[1]).prop('selected', true);
+         $(javaOptions[2]).prop('selected', true);
          var message = $(
          '<p> MicroProfile Version 6.0 and Java EE/Jakarta EE Version 10.0 require a minimum of Java SE Version 11.</p>' 
          );
