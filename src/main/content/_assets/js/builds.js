@@ -902,10 +902,11 @@ function validate_java_eeAndmp_levels() {
         .text();
  
         if (javaVersion === '8') {
-         var javaOptions = $(
-             '.starter_field[data-starter-field=\'j\'] select option'
-         );
-         $(javaOptions[2]).prop('selected', true);
+            
+         var javaOptions = $('.starter_field[data-starter-field=\'j\'] select option').filter(function(){
+            return this.text == "11"
+           });
+         $(javaOptions).prop('selected', true);
          var message = $(
          '<p> MicroProfile Version 6.0 and Java EE/Jakarta EE Version 10.0 require a minimum of Java SE Version 11.</p>' 
          );
