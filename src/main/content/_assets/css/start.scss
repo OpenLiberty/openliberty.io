@@ -321,6 +321,32 @@ html, body {
     }
 }
 
+.section_title .anchor {
+    position: absolute;
+    text-decoration: none;
+    width: 1.75ex;
+    margin-left: -1.5ex;
+    visibility: hidden;
+    font-size: 0.8em;
+    font-weight: normal;
+    padding-top: 0.2em;
+  }
+  
+  .section_title .anchor::before {
+    content: "\00a7";
+  }
+  
+  .section_title:hover .anchor {
+    visibility: visible;
+  }
+  
+  @media screen and (max-width: 580px){
+     .section_title .anchor{
+      font-size: 0.8em;
+      margin-left: -1ex;
+     } 
+  }
+
 .code_container {
     background-color: #F1F4FE;
     color: #24243B;
