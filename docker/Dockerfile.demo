@@ -35,6 +35,9 @@ RUN $BUILD_SCRIPTS_DIR/docs_part_2.sh
 
 RUN $BUILD_SCRIPTS_DIR/gzip.sh
 
+RUN mkdir /temp-docs
+RUN mv /target/jekyll-webapp/docs /temp-docs
+
 #
 #
 #
@@ -45,7 +48,13 @@ COPY .mvn /.mvn
 COPY pom.xml /
 COPY --from=docs --chown=1001:0 /src /src
 COPY --from=docs --chown=1001:0 /target /target
+RUN ls /target
 RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 compile war:exploded
+RUN ls /target
+RUN ls target/openliberty-website-1.0-SNAPSHOT
+RUN mkdir target/openliberty-website-1.0-SNAPSHOT/docs
+COPY --from=docs --chown=1001:0 /temp-docs/docs /target/openliberty-website-1.0-SNAPSHOT/docs
+
 
 #
 #
