@@ -19,7 +19,7 @@ fi
 
 echo "Cloning the $BRANCH_NAME Antora playbook branch"
 
-git clone https://github.com/OpenLiberty/docs-playbook.git --branch $BRANCH_NAME
+git clone https://github.com/OpenLiberty/docs-playbook.git --branch demo2-nb-tests
 
 echo "git version"
 git --version
