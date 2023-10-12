@@ -890,6 +890,7 @@ $(document).ready(function () {
             $("#code_section_copied_confirmation")
                 .css({
                     top: position.top + 42,
+                    right: 25,
                 })
                 .stop()
                 .fadeIn()

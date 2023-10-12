@@ -2,9 +2,7 @@
 timer_start=$(date +%s)
 
 echo "Install Ruby & required packages/gems"
-if [ "$LOCAL_BUILD" = false ]; then
 sudo apt-get -y install gnupg build-essential
-fi
 
 cat $BUILD_SCRIPTS_DIR/../gpg/mpapis.asc | gpg --import -
 cat $BUILD_SCRIPTS_DIR/../gpg/pkuczynski.asc | gpg --import -
