@@ -4,7 +4,7 @@
 # Remove the docs playbook repository
 rm -rf docs-playbook
 
-BRANCH_NAME="demo2-nb-tests"
+BRANCH_NAME="reduce-antora-logs"
 # Development environments with draft content
 # if [[ "$STAGING_SITE" == "true" || "$DOCS_STAGING_SITE" == "true" ]]; then
 #     echo "Cloning the staging branch of docs-playbook"
