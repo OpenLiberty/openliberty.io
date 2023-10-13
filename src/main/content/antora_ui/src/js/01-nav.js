@@ -17,7 +17,6 @@ var navigation = (function(){
 
     var $currentPageItem = $menuPanel.find('.is-current-page').eq(0);
     if ($currentPageItem.length > 0) {
-      console.log(0)
       activateCurrentPath($currentPageItem);
       scrollItemToMidpoint($currentPageItem.find('.nav-link').eq(0));
     } else {
@@ -132,16 +131,13 @@ var navigation = (function(){
     var effectiveHeight = rect.height;
     if ($nav.css("position") === 'sticky') effectiveHeight -= rect.top - parseFloat($nav.css("top"));
 
-    console.log("here")
     var elementHeight = el[0].getBoundingClientRect().height;
     if ((el.offset().top + elementHeight) > effectiveHeight) {
       // If you must scroll to see the TOC element, then move TOC so that the element
       // is displayed about the middle of the TOC.
-      console.log(1)
       $panel.scrollTop(Math.max(0, (elementHeight - effectiveHeight) * 0.5 + el.offset().top));
     } else {
       // Else, just leave the user on the initial TOC (at the top) with the element highlighted.
-      console.log(2)
       $panel.scrollTop(0);
     }
   }
