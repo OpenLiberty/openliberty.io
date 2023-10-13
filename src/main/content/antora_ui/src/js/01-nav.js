@@ -135,7 +135,7 @@ var navigation = (function(){
     if ((el.offset().top + elementHeight) > effectiveHeight) {
       // If you must scroll to see the TOC element, then move TOC so that the element
       // is displayed about the middle of the TOC.
-      $panel.scrollTop(Math.max(0, (elementHeight - effectiveHeight) * 0.5 + el.offsetTop));
+      $panel.scrollTop(Math.max(0, (elementHeight - effectiveHeight) * 0.5 + el.offset().top));
     } else {
       // Else, just leave the user on the initial TOC (at the top) with the element highlighted.
       $panel.scrollTop(0);
