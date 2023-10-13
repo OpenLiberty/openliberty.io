@@ -49,11 +49,11 @@ COPY .mvn /.mvn
 COPY pom.xml /
 COPY --from=docs --chown=1001:0 /src /src
 COPY --from=docs --chown=1001:0 /target /target
-RUN find . -type f -path '/src/*'
+# RUN find . -type f -path '/src/*'
 RUN ls /target
 RUN ls /target/jekyll-webapp
 RUN rm -rf /target/jekyll-webapp/docs
-RUN find . -type f -path '/target/jekyll-webapp/*'
+# RUN find . -type f -path '/target/jekyll-webapp/*'
 RUN ./mvnw -B -Dhttps.protocols=TLSv1.2 compile war:exploded
 RUN ls /target
 RUN ls target/openliberty-website-1.0-SNAPSHOT
