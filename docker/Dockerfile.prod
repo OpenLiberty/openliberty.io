@@ -38,6 +38,10 @@ RUN $BUILD_SCRIPTS_DIR/docs_part_2.sh
 
 RUN $BUILD_SCRIPTS_DIR/gzip.sh
 
+RUN mkdir /temp-docs
+RUN mv /target/jekyll-webapp/docs /temp-docs
+RUN ls /target/jekyll-webapp
+
 #
 #
 #
