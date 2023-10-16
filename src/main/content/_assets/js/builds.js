@@ -199,14 +199,6 @@ function render_builds(builds, parent) {
 
     // update maven and gradle commands to use latest version
     if (parent.parent().data('builds-id') == 'runtime_releases') {
-        var latest_version = latest_releases.runtime.version.trim();
-
-        // check that latest version matches x.x.x.x before updating
-        var re = /^\d+\.\d\.\d\.\d+/;
-        if (re.test(latest_version)) {
-            $('.latest_version').html(latest_version);
-        }
-
         // get the newest release version
         // used to only add builds from the last two years to the runtime release table
         versArr = JSON.parse(JSON.stringify(builds));
