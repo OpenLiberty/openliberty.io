@@ -199,14 +199,6 @@ function render_builds(builds, parent) {
 
     // update maven and gradle commands to use latest version
     if (parent.parent().data('builds-id') == 'runtime_releases') {
-        var latest_version = latest_releases.runtime.version.trim();
-
-        // check that latest version matches x.x.x.x before updating
-        var re = /^\d+\.\d\.\d\.\d+/;
-        if (re.test(latest_version)) {
-            $('.latest_version').html(latest_version);
-        }
-
         // get the newest release version
         // used to only add builds from the last two years to the runtime release table
         versArr = JSON.parse(JSON.stringify(builds));
@@ -902,10 +894,11 @@ function validate_java_eeAndmp_levels() {
         .text();
  
         if (javaVersion === '8') {
-         var javaOptions = $(
-             '.starter_field[data-starter-field=\'j\'] select option'
-         );
-         $(javaOptions[1]).prop('selected', true);
+            
+         var javaOptions = $('.starter_field[data-starter-field=\'j\'] select option').filter(function(){
+            return this.text == "11"
+           });
+         $(javaOptions).prop('selected', true);
          var message = $(
          '<p> MicroProfile Version 6.0 and Java EE/Jakarta EE Version 10.0 require a minimum of Java SE Version 11.</p>' 
          );
