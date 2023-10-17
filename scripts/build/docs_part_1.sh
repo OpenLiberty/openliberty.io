@@ -36,7 +36,6 @@ echo "Moving the Antora docs to the jekyll webapp"
 timer_start=$(date +%s)
 mkdir -p target/jekyll-webapp/docs/
 cp -r src/main/content/docs/build/site/. target/jekyll-webapp/
-rm -rf src/main/content/docs/build
 timer_end=$(date +%s)
 echo "Total execution time for copying Antora docs to webapp: '$(date -u --date @$(( $timer_end - $timer_start )) +%H:%M:%S)'"
 
