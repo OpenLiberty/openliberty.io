@@ -309,7 +309,7 @@ function render_builds(builds, parent) {
                         var verification_column2 = $(
                             '<td headers="' + tableID + '_verification"' + 'rowspan="'+num_packages+'"' + '>' +
                             // Optional sig file download button
-                            (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener" target="_blank">' + download_arrow +'PEM</a>' : '' ) +
+                            (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'PEM</a>' : '' ) +
                             '</td>'
                         );     
 
@@ -1091,10 +1091,7 @@ function validate_starter_inputs(event) {
     }
 }
 
-function displayMessage(message,javaMsg) {
-    if(!javaMsg){
-        javaMsg = false;
-    }
+function displayMessage(message,javaMsg = false) {
     // Display a message when MP/Jakarta EE Version get changed.
     var close_icon = $(
         '<img src=\'/img/x_white.svg\' id=\'invalid_message_close_icon\' alt=\'Close\' tabindex=\'0\' />'
