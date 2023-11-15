@@ -91,7 +91,7 @@ function selectTOC() {
   if (featureToc.length > 0) {
     var li = featureToc.parent()[0];
     var anchor = li.querySelector(".nav-link");
-    navigation.activateCurrentPath($(li));
+    navigation.activateCurrentPath(li);
     navigation.scrollItemToMidpoint(anchor);
   }
 }
