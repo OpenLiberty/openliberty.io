@@ -45,9 +45,9 @@ var openliberty = (function() {
 
             // make toc scroll off of screen at Nice Work section in guides
             if (typeof isBackgroundBottomVisible === "function") {
-                if(isBackgroundBottomVisible()) {
+                setTimeout( () => { if(isBackgroundBottomVisible()) {
                     handleTOCScrolling();
-                }
+                } }, 2000);
             }
 
             prevScrollTop = currScrollTop;
