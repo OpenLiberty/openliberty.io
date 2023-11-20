@@ -9,6 +9,9 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
+//set tabindex of pre tags to 0
+$('pre').attr('tabindex', '0');
+
 // set up html for copy code block accessibility
 var code_blocks_with_copy_to_clipboard = 'pre:not(.no_copy pre)'; // CSS Selector
 $(document).ready(function () {
