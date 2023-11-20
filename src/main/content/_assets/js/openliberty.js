@@ -8,7 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-var openliberty = (function() {
+setTimeout(() => {
+     var openliberty = (function() {
     $(document).ready(function() {
         var scrollAllowed = true;
         var prevScrollTop = 0;
@@ -45,9 +46,9 @@ var openliberty = (function() {
 
             // make toc scroll off of screen at Nice Work section in guides
             if (typeof isBackgroundBottomVisible === "function") {
-                setTimeout( () => { if(isBackgroundBottomVisible()) {
+                 if(isBackgroundBottomVisible()) {
                     handleTOCScrolling();
-                } }, 2000);
+                } 
             }
 
             prevScrollTop = currScrollTop;
@@ -179,4 +180,4 @@ var openliberty = (function() {
         allowScrolling: allowScrolling,
         copy_element_to_clipboard: copy_element_to_clipboard
     };
-})();
+})() },1000);
