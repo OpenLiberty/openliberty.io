@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+    version="3.1">
+    <display-name>Liberty Project</display-name>
+
+    <!--Create secrets using this tool: https://www.base64encode.org/
+        Default algorithm is DES, so the secret needs to be 8 characters
+        long, then Base64 encoded-->
+    <context-param>
+        <param-name>org.apache.myfaces.SECRET</param-name>
+        <param-value>c3R1ZmZhbmQ=</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>org.apache.myfaces.MAC_SECRET</param-name>
+        <param-value>bW9yZXN0dWY=</param-value>
+    </context-param>
+
+    <context-param>
+      <param-name>org.apache.myfaces.SERIALIZE_STATE_IN_SESSION</param-name>
+      <param-value>false</param-value>
+    </context-param>
+
+<!--
+  Copyright (c) 2018 IBM Corp.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+    <!-- WebAppJSF: Faces Servlet -->
+<servlet>
+  <servlet-name>Faces Servlet</servlet-name>
+  <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
+  <load-on-startup>1</load-on-startup>
+</servlet>
+
+<!-- WebAppJSF: Faces Servlet Mapping -->
+<servlet-mapping>
+  <servlet-name>Faces Servlet</servlet-name>
+  <url-pattern>*.jsf</url-pattern>
+</servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.jsf</welcome-file>
+    </welcome-file-list>
+
+
+    <!-- SECURITY ROLES -->
+  <security-role>
+    <role-name>admin</role-name>
+  </security-role>
+
+  <security-role>
+    <role-name>user</role-name>
+  </security-role>
+
+<!-- SECURITY CONSTRAINTS -->
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>ViewProperties</web-resource-name>
+      <url-pattern>/application.jsf</url-pattern>
+      <http-method>GET</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>user</role-name>
+    </auth-constraint>
+  </security-constraint>
+
+  <login-config id="LoginConfig">
+    <auth-method>FORM</auth-method>
+    <realm-name>WebRealm</realm-name>
+    <form-login-config id="FormLoginConfig_1">
+      <form-login-page>/login.jsf</form-login-page>
+      <form-error-page>/error.jsf</form-error-page>
+    </form-login-config>
+  </login-config>
+
+
+</web-app>

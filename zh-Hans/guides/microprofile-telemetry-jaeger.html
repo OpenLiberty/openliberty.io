@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Enabling distributed tracing in Java microservices using MicroProfile Telemetry and the Jaeger distributed tracing system.
+    
+  </title>
+  <meta name="description" content="A getting started tutorial and an example on how to enable distributed tracing in Java microservices to easily trace request flows that span multiple resources by using MicroProfile Telemetry and Jaeger distributed tracing system.​">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/microprofile-telemetry-jaeger">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Enabling distributed tracing in Java microservices using MicroProfile Telemetry and the Jaeger distributed tracing system." />
+  <meta name="twitter:description" content="A getting started tutorial and an example on how to enable distributed tracing in Java microservices to easily trace request flows that span multiple resources by using MicroProfile Telemetry and Jaeger distributed tracing system.​" />
+
+  <meta property='og:title' content="Enabling distributed tracing in Java microservices using MicroProfile Telemetry and the Jaeger distributed tracing system." />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial and an example on how to enable distributed tracing in Java microservices to easily trace request flows that span multiple resources by using MicroProfile Telemetry and Jaeger distributed tracing system.​" />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/microprofile-telemetry-jaeger" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li><a href="#building-the-application">Building the application</a></li>
+<li><a href="#enabling-telemetry-implementation">Enabling Telemetry implementation</a></li>
+<li>
+<a href="#enabling-explicit-distributed-tracing">Enabling explicit distributed tracing</a>
+<ul class="sectlevel2">
+<li><a href="#enabling-opentelemetry-apis">Enabling OpenTelemetry APIs</a></li>
+<li><a href="#enabling-tracing-in-jakarta-cdi-beans">Enabling tracing in Jakarta CDI beans</a></li>
+<li><a href="#injecting-a-custom-tracer-object">Injecting a custom Tracer object</a></li>
+</ul>
+</li>
+<li>
+<a href="#testing-the-application">Testing the application</a>
+<ul class="sectlevel2">
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Enabling distributed tracing in microservices with OpenTelemetry and Jaeger</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">20 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <div class="new_guide_container">
+            <span class="guide_new">New</span>
+          </div>
+          
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/microprofile-telemetry-jaeger.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Distributed tracing helps teams keep track of requests between microservices. MicroProfile Telemetry adopts OpenTelemetry tracing, so you can observe requests across your distributed systems.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The complexity of microservices architecture can make it more difficult to understand how services depend on or affect each other and to identify sources of latency or inaccuracies.</p>
+</div>
+<div class="paragraph">
+<p>One way to increase the observability of an application is by emitting traces. <a href="https://opentelemetry.io/" target="_blank" rel="noopener noreferrer">OpenTelemetry</a> is a set of APIs, SDKs, tooling, and integrations designed to create and manage telemetry data such as traces, metrics, and logs. MicroProfile Telemetry adopts OpenTelemetry so your Java applications can benefit from both manual and automatic traces.</p>
+</div>
+<div class="paragraph">
+<p>Traces represent requests, which can contain multiple operations or spans. Each span comprises a name, time-related data, log messages, and metadata that describe what occurred during a transaction. Spans are associated with a context, which identifies the request within which the span occurred. Developers can then follow a single request between services through a potentially complex distributed system. Exporters send the data that MicroProfile Telemetry collects to Jaeger so you can visualize and monitor the generated spans.</p>
+</div>
+<div class="paragraph">
+<p>The diagram shows multiple services, which is where distributed tracing is valuable. However, for simplicity, in this guide, you’ll configure only the <code>system</code> and <code>inventory</code> services to use <a href="https://www.jaegertracing.io/" target="_blank" rel="noopener noreferrer">Jaeger</a> for distributed tracing with MicroProfile Telemetry. You’ll run these services in two separate JVMs made of two Open Liberty instances to demonstrate tracing in a distributed environment.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/architecture_diagram.png" alt="Application architecture">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you begin, deploy the Jaeger all-in-one executable file to start the Jaeger tracing system. The Jaeger all-in-one executable file is configured for quick local testing. Jaeger 1.46 or later is recommended. You can find information about the Jaeger server and instructions for starting the all-in-one executable file in the <a href="https://www.jaegertracing.io/docs/latest/getting-started" target="_blank" rel="noopener noreferrer">Jaeger documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>Before you proceed, make sure that your Jaeger server is up and running by visiting the <a href="http://localhost:16686" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:16686</a> URL.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-microprofile-telemetry-jaeger.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-microprofile-telemetry-jaeger.git
+cd guide-microprofile-telemetry-jaeger</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>Open a command-line session and navigate to the <code>finish/system</code> directory. Run the following Maven goal to build the <code>system</code> service and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn liberty:run</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Open another command-line session and navigate to the <code>finish/inventory</code> directory. Run the following Maven goal to build the <code>inventory</code> service and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn liberty:run</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message in both command-line sessions, both of your services are ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>The defaultServer server is ready to run a smarter planet.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make sure that your Jaeger server is running and navigate your browser to the <a href="http://localhost:9081/inventory/systems/localhost" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9081/inventory/systems/localhost</a> URL.</p>
+</div>
+<div class="paragraph">
+<p>When you visit this endpoint, you make two GET HTTP requests, one to the <code>system</code> service and another to the <code>inventory</code> service. Both of these requests are configured to be traced, so a new trace is recorded in Jaeger. To view the traces, go to the <a href="http://localhost:16686" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:16686</a> URL.</p>
+</div>
+<div class="paragraph">
+<p>You can view the traces for the <code>system</code> or <code>inventory</code> services under the <strong>Search</strong> tab. If you see only the <strong>jaeger-query</strong> option in the drop-down menu, wait a little longer and refresh the page to see the application services.</p>
+</div>
+<div class="paragraph">
+<p>Select the services in the <strong>Select A Service</strong> menu and click the <strong>Find Traces</strong> button at the end of the section. You will see the following result:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/inventory_service_spans.png" alt="Get traces for the inventory service">
+</div>
+</div>
+<div class="paragraph">
+<p>The trace has five spans, four from the <code>inventory</code> service and one from the <code>system</code> service. Click the trace to view its details. Under <strong>Service &amp; Operation</strong>, you see the spans in this trace. You can inspect each span by clicking it to reveal more detailed information, such as the times that a request was received and a response was sent.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/inventory_details_spans.png" alt="Inventory details spans">
+</div>
+</div>
+<div class="paragraph">
+<p>After you’re finished reviewing the application, stop the Open Liberty instances by pressing <code>CTRL+C</code> in the command-line sessions where you ran the <code>system</code> and <code>inventory</code> services. Alternatively, you can run the following goals from the <code>finish</code> directory in another command-line session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre> mvn -pl system liberty:stop
+ mvn -pl inventory liberty:stop</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-the-application">Building the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You need to start the services to see basic traces appear in Jaeger.</p>
+</div>
+<div class="paragraph">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change.</p>
+</div>
+<div class="paragraph">
+<p>Open a command-line session and navigate to the <code>start/system</code> directory. Run the following Maven goal to start the <code>system</code> service in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn liberty:dev</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Open a command-line session and navigate to the <code>start/inventory</code> directory. Run the following Maven goal to start the <code>inventory</code> service in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn liberty:dev</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>When the runtime instances start, you can find the <code>system</code> and <code>inventory</code> services at the following URLs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://localhost:9080/system/properties" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080/system/properties</a></p>
+</li>
+<li>
+<p><a href="http://localhost:9081/inventory/systems" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9081/inventory/systems</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="enabling-telemetry-implementation">Enabling Telemetry implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph">
+<p>MicroProfile Telemetry allows you to observe traces without modifying the source code in your Jakarta RESTful applications. You can enable the <code>mpTelemetry</code> feature in the <code>server.xml</code> configuration file.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the <code>server.xml</code> file of the system service:</mark>
+<code>system/src/main/liberty/config/server.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>system/server.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">system service</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>    <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>        <span class="tag">&lt;feature&gt;</span>cdi-4.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 5</span>        <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>        <span class="tag">&lt;feature&gt;</span>jsonp-2.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 7</span>        <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 8</span>        <span class="comment">&lt;!-- tag::mpTelemetry[] --&gt;</span>
+<span class="line-numbers"> 9</span>        <span class="tag">&lt;feature&gt;</span>mpTelemetry-1.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">10</span>        <span class="comment">&lt;!-- end::mpTelemetry[] --&gt;</span>
+<span class="line-numbers">11</span>    <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">12</span>
+<span class="line-numbers">13</span>    <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">14</span>                  <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">15</span>                  <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span>    <span class="tag">&lt;webApplication</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-microprofile-telemetry-system.war</span><span class="delimiter">"</span></span>
+<span class="line-numbers">18</span>                    <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=mpTelemetry file=0">mpTelemetry</code> feature is now enabled in the <code>server.xml</code> of the <code>system</code> service.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Replace the <code>server.xml</code> file of the inventory service:</mark>
+<code>inventory/src/main/liberty/config/server.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>inventory/server.xml</p>
+</div>
+<div class="listingblock code_column hide_tags=thirdPartyComment,thirdParty">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">inventory service</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>    <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>        <span class="tag">&lt;feature&gt;</span>cdi-4.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 5</span>        <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>        <span class="tag">&lt;feature&gt;</span>jsonp-2.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 7</span>        <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 8</span>        <span class="tag">&lt;feature&gt;</span>mpConfig-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 9</span>        <span class="comment">&lt;!-- tag::mpTelemetry[] --&gt;</span>
+<span class="line-numbers">10</span>        <span class="tag">&lt;feature&gt;</span>mpTelemetry-1.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">11</span>        <span class="comment">&lt;!-- end::mpTelemetry[] --&gt;</span>
+<span class="line-numbers">12</span>    <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span>    <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">15</span>                  <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">16</span>                  <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">17</span>
+<span class="line-numbers">18</span>    <span class="tag">&lt;webApplication</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-microprofile-telemetry-inventory.war</span><span class="delimiter">"</span></span>
+<span class="line-numbers">19</span>                    <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">20</span>        <span class="comment">&lt;!-- tag::thirdPartyComment[] --&gt;</span>
+<span class="line-numbers">21</span>        <span class="comment">&lt;!-- enable visibility to third party apis --&gt;</span>
+<span class="line-numbers">22</span>        <span class="comment">&lt;!-- end::thirdPartyComment[] --&gt;</span>
+<span class="line-numbers">23</span>        <span class="comment">&lt;!-- tag::thirdParty[] --&gt;</span>
+<span class="line-numbers">24</span>        <span class="tag">&lt;classloader</span> <span class="attribute-name">apiTypeVisibility</span>=<span class="string"><span class="delimiter">"</span><span class="content">+third-party</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">25</span>        <span class="comment">&lt;!-- end::thirdParty[] --&gt;</span>
+<span class="line-numbers">26</span>    <span class="tag">&lt;/webApplication&gt;</span>
+<span class="line-numbers">27</span>
+<span class="line-numbers">28</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=mpTelemetry file=1">mpTelemetry</code> feature is now enabled in the <code>server.xml</code> of the <code>inventory</code> service.</p>
+</div>
+<div class="paragraph">
+<p>By default, MicroProfile Telemetry tracing is off. To enable any tracing aspects, specify the <code>otel</code> properties in the MicroProfile configuration file.</p>
+</div>
+<div class="listingblock code_command hotspot file=2">
+<div class="content">
+<pre><mark>Create the <code>microprofile-config.properties</code> file of the system service:</mark>
+<code>system/src/main/resources/META-INF/microprofile-config.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>system/microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Text"><span class="line-numbers">1</span># tag::service[]
+<span class="line-numbers">2</span>otel.service.name=system
+<span class="line-numbers">3</span># end::service[]
+<span class="line-numbers">4</span># tag::disabled[]
+<span class="line-numbers">5</span>otel.sdk.disabled=false
+<span class="line-numbers">6</span># end::disabled[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The MicroProfile properties file sets the <code class="hotspot=service file=2">otel.service.name</code> property with the <code>system</code> service name and sets the <code class="hotspot=disabled file=2">otel.sdk.disabled</code> property to <code>false</code> to enable tracing.</p>
+</div>
+<div class="listingblock code_command hotspot file=3">
+<div class="content">
+<pre><mark>Create the <code>microprofile-config.properties</code> file of the inventory service:</mark>
+<code>inventory/src/main/resources/META-INF/microprofile-config.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>inventory/microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Text"><span class="line-numbers">1</span># tag::otel[]
+<span class="line-numbers">2</span>otel.service.name=inventory
+<span class="line-numbers">3</span>otel.sdk.disabled=false
+<span class="line-numbers">4</span># end::otel[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Similarly, specify the <code class="hotspot=otel file=3">otel</code> properties for the <code>inventory</code> service.</p>
+</div>
+<div class="paragraph">
+<p>For more information about these and other Telemetry properties, see the <a href="https://openliberty.io/docs/latest/microprofile-config-properties.html#telemetry" target="_blank" rel="noopener">MicroProfile Config properties for MicroProfile Telemetry</a> documentation.</p>
+</div>
+<div class="paragraph">
+<p>To run the <code>system</code> and <code>inventory</code> services, simply navigate your browser to the <a href="http://localhost:9081/inventory/systems/localhost" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9081/inventory/systems/localhost</a> URL. To view the traces, go to the <a href="http://localhost:16686" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:16686</a> URL.</p>
+</div>
+<div class="paragraph">
+<p>You can view the traces for the <code>system</code> or <code>inventory</code> services under the <strong>Search</strong> tab. Select the services in the <strong>Select A Service</strong> menu and click the <strong>Find Traces</strong> button at the end of the section. You’ll see the result as:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/default_spans.png" alt="Default spans">
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that there are two spans from the <code>inventory</code> service and one span from the <code>system</code> service. Click the trace to view its details.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/details_default_spans.png" alt="Details default spans">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="enabling-explicit-distributed-tracing">Enabling explicit distributed tracing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Automatic instrumentation only instruments Jakarta RESTful web services and MicroProfile REST clients. To get further spans on other operations, such as database calls, you can add manual instrumentation to the source code.</p>
+</div>
+<div class="sect2">
+<h3 id="enabling-opentelemetry-apis">Enabling OpenTelemetry APIs</h3>
+<div class="paragraph">
+<p>The MicroProfile Telemetry feature has been enabled to trace all REST endpoints by default in the previous section. To further control and customize traces, use the <code>@WithSpan</code> annotation to enable particular methods. You can also inject a <code>Tracer</code> object to create and customize spans.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the <code>pom.xml</code> Maven project file of the inventory service:</mark>
+<code>inventory/pom.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>pom.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version='1.0' encoding='utf-8'?&gt;</span>
+<span class="line-numbers">  2</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 </span></span>
+<span class="line-numbers">  3</span><span class="string"><span class="content">http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  4</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  5</span>
+<span class="line-numbers">  6</span>    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">  7</span>    <span class="tag">&lt;artifactId&gt;</span>guide-microprofile-telemetry-inventory<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">  8</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">  9</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers"> 10</span>
+<span class="line-numbers"> 11</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 12</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 13</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 14</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>11<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 15</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>11<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 16</span>
+<span class="line-numbers"> 17</span>        <span class="comment">&lt;!-- OpenLiberty runtime --&gt;</span>
+<span class="line-numbers"> 18</span>        <span class="tag">&lt;liberty.var.system.http.port&gt;</span>9080<span class="tag">&lt;/liberty.var.system.http.port&gt;</span>
+<span class="line-numbers"> 19</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9081<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers"> 20</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9444<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers"> 21</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 22</span>
+<span class="line-numbers"> 23</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 24</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers"> 25</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 26</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 27</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 28</span>            <span class="tag">&lt;version&gt;</span>10.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 29</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 30</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 31</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 32</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 33</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 34</span>            <span class="tag">&lt;version&gt;</span>6.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 35</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 36</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 37</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 38</span>        <span class="comment">&lt;!-- tag::opentelemetry[] --&gt;</span>
+<span class="line-numbers"> 39</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 40</span>            <span class="tag">&lt;groupId&gt;</span>io.opentelemetry<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 41</span>            <span class="tag">&lt;artifactId&gt;</span>opentelemetry-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 42</span>            <span class="tag">&lt;version&gt;</span>1.26.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 43</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 44</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 45</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 46</span>            <span class="tag">&lt;groupId&gt;</span>io.opentelemetry.instrumentation<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 47</span>            <span class="tag">&lt;artifactId&gt;</span>opentelemetry-instrumentation-annotations<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 48</span>            <span class="tag">&lt;version&gt;</span>1.26.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 49</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 50</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 51</span>        <span class="comment">&lt;!-- end::opentelemetry[] --&gt;</span>
+<span class="line-numbers"> 52</span>        <span class="comment">&lt;!-- For tests --&gt;</span>
+<span class="line-numbers"> 53</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 54</span>            <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 55</span>            <span class="tag">&lt;artifactId&gt;</span>junit-jupiter<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 56</span>            <span class="tag">&lt;version&gt;</span>5.9.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 57</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 58</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 59</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 60</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 61</span>            <span class="tag">&lt;artifactId&gt;</span>resteasy-client<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 62</span>            <span class="tag">&lt;version&gt;</span>6.0.0.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 63</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 64</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 65</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 66</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 67</span>            <span class="tag">&lt;artifactId&gt;</span>resteasy-json-binding-provider<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 68</span>            <span class="tag">&lt;version&gt;</span>6.0.0.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 69</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 70</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 71</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 72</span>            <span class="tag">&lt;groupId&gt;</span>org.glassfish<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 73</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.json<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 74</span>            <span class="tag">&lt;version&gt;</span>2.0.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 75</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 76</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 77</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 78</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 79</span>            <span class="tag">&lt;artifactId&gt;</span>yasson<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 80</span>            <span class="tag">&lt;version&gt;</span>2.0.4<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 81</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 82</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 83</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers"> 84</span>
+<span class="line-numbers"> 85</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers"> 86</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers"> 87</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers"> 88</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 89</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 90</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 91</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 92</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 93</span>
+<span class="line-numbers"> 94</span>            <span class="comment">&lt;!-- Liberty plugin --&gt;</span>
+<span class="line-numbers"> 95</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 96</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 97</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 98</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 99</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">100</span>
+<span class="line-numbers">101</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">102</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">103</span>                <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">104</span>                <span class="tag">&lt;version&gt;</span>2.22.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">105</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">106</span>                    <span class="tag">&lt;systemPropertyVariables&gt;</span>
+<span class="line-numbers">107</span>                        <span class="tag">&lt;sys.http.port&gt;</span>${liberty.var.system.http.port}<span class="tag">&lt;/sys.http.port&gt;</span>
+<span class="line-numbers">108</span>                        <span class="tag">&lt;inv.http.port&gt;</span>${liberty.var.default.http.port}<span class="tag">&lt;/inv.http.port&gt;</span>
+<span class="line-numbers">109</span>                    <span class="tag">&lt;/systemPropertyVariables&gt;</span>
+<span class="line-numbers">110</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">111</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">112</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">113</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">114</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The OpenTelemetry API and OpenTelemetry Instrumentation Annotations must be provided as dependencies to your build path. The <code>pom.xml</code> now includes two <code class="hotspot=opentelemetry file=0">io.opentelemetry</code> dependencies.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Replace the <code>server.xml</code> file of the inventory service:</mark>
+<code>inventory/src/main/liberty/config/server.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>inventory/server.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">inventory service</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>    <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>        <span class="tag">&lt;feature&gt;</span>cdi-4.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 5</span>        <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>        <span class="tag">&lt;feature&gt;</span>jsonp-2.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 7</span>        <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 8</span>        <span class="tag">&lt;feature&gt;</span>mpConfig-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 9</span>        <span class="comment">&lt;!-- tag::mpTelemetry[] --&gt;</span>
+<span class="line-numbers">10</span>        <span class="tag">&lt;feature&gt;</span>mpTelemetry-1.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">11</span>        <span class="comment">&lt;!-- end::mpTelemetry[] --&gt;</span>
+<span class="line-numbers">12</span>    <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span>    <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">15</span>                  <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">16</span>                  <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">17</span>
+<span class="line-numbers">18</span>    <span class="tag">&lt;webApplication</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-microprofile-telemetry-inventory.war</span><span class="delimiter">"</span></span>
+<span class="line-numbers">19</span>                    <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">20</span>        <span class="comment">&lt;!-- tag::thirdPartyComment[] --&gt;</span>
+<span class="line-numbers">21</span>        <span class="comment">&lt;!-- enable visibility to third party apis --&gt;</span>
+<span class="line-numbers">22</span>        <span class="comment">&lt;!-- end::thirdPartyComment[] --&gt;</span>
+<span class="line-numbers">23</span>        <span class="comment">&lt;!-- tag::thirdParty[] --&gt;</span>
+<span class="line-numbers">24</span>        <span class="tag">&lt;classloader</span> <span class="attribute-name">apiTypeVisibility</span>=<span class="string"><span class="delimiter">"</span><span class="content">+third-party</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">25</span>        <span class="comment">&lt;!-- end::thirdParty[] --&gt;</span>
+<span class="line-numbers">26</span>    <span class="tag">&lt;/webApplication&gt;</span>
+<span class="line-numbers">27</span>
+<span class="line-numbers">28</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The OpenTelemetry APIs are exposed as third-party APIs in Open Liberty. To add the visibility of OpenTelemetry APIs to the application, add <code>third-party</code> to the types of API packages that this class loader supports. Instead of explicitly configuring a list of API packages that includes <code>third-party</code>, set the <code>+third-party</code> value to the <code class="hotspot=thirdParty file=1">apiTypeVisibility</code> attribute in the <code class="hotspot=thirdParty file=1">classLoader</code> configuration. This configuration adds <code>third-party</code> to the default list of API package types that are supported.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="enabling-tracing-in-jakarta-cdi-beans">Enabling tracing in Jakarta CDI beans</h3>
+<div class="paragraph">
+<p>You can trace your Jakarta CDI beans by annotating their methods with a <code>@WithSpan</code> annotation.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the <code>InventoryManager</code> class:</mark>
+<code>inventory/src/main/java/io/openliberty/guides/inventory/InventoryManager.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryManager.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.ArrayList</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">17</span>
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">io.opentelemetry.instrumentation.annotations.WithSpan</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">io.opentelemetry.instrumentation.annotations.SpanAttribute</span>;
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.SystemClient</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.SystemData</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">java.util.Collections</span>;
+<span class="line-numbers">28</span>
+<span class="line-numbers">29</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers">30</span>
+<span class="line-numbers">31</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">32</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryManager</span> {
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers">35</span>    <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">system.http.port</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">36</span>    <span class="directive">private</span> <span class="type">int</span> SYSTEM_PORT;
+<span class="line-numbers">37</span>
+<span class="line-numbers">38</span>    <span class="directive">private</span> <span class="predefined-type">List</span>&lt;SystemData&gt; systems = <span class="predefined-type">Collections</span>.synchronizedList(<span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;&gt;());
+<span class="line-numbers">39</span>    <span class="directive">private</span> SystemClient systemClient = <span class="keyword">new</span> SystemClient();
+<span class="line-numbers">40</span>
+<span class="line-numbers">41</span>    <span class="directive">public</span> <span class="predefined-type">Properties</span> get(<span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">42</span>        systemClient.init(hostname, SYSTEM_PORT);
+<span class="line-numbers">43</span>        <span class="predefined-type">Properties</span> properties = systemClient.getProperties();
+<span class="line-numbers">44</span>        <span class="keyword">return</span> properties;
+<span class="line-numbers">45</span>    }
+<span class="line-numbers">46</span>
+<span class="line-numbers">47</span>    <span class="comment">// tag::addWithSpan[]</span>
+<span class="line-numbers">48</span>    <span class="annotation">@WithSpan</span>
+<span class="line-numbers">49</span>    <span class="comment">// end::addWithSpan[]</span>
+<span class="line-numbers">50</span>    <span class="comment">// tag::addMethod[]</span>
+<span class="line-numbers">51</span>    <span class="comment">// tag::spanAttribute[]</span>
+<span class="line-numbers">52</span>    <span class="directive">public</span> <span class="type">void</span> add(<span class="annotation">@SpanAttribute</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> host,
+<span class="line-numbers">53</span>    <span class="comment">// end::spanAttribute[]</span>
+<span class="line-numbers">54</span>                    <span class="predefined-type">Properties</span> systemProps) {
+<span class="line-numbers">55</span>        <span class="predefined-type">Properties</span> props = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+<span class="line-numbers">56</span>        props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">57</span>        props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">58</span>        SystemData system = <span class="keyword">new</span> SystemData(host, props);
+<span class="line-numbers">59</span>        <span class="keyword">if</span> (!systems.contains(system)) {
+<span class="line-numbers">60</span>            systems.add(system);
+<span class="line-numbers">61</span>        }
+<span class="line-numbers">62</span>    }
+<span class="line-numbers">63</span>    <span class="comment">// end::addMethod[]</span>
+<span class="line-numbers">64</span>
+<span class="line-numbers">65</span>    <span class="comment">// tag::listWithSpan[]</span>
+<span class="line-numbers">66</span>    <span class="annotation">@WithSpan</span>
+<span class="line-numbers">67</span>    <span class="comment">// end::listWithSpan[]</span>
+<span class="line-numbers">68</span>    <span class="comment">// tag::listMethod[]</span>
+<span class="line-numbers">69</span>    <span class="directive">public</span> InventoryList list() {
+<span class="line-numbers">70</span>        <span class="keyword">return</span> <span class="keyword">new</span> InventoryList(systems);
+<span class="line-numbers">71</span>    }
+<span class="line-numbers">72</span>    <span class="comment">// end::listMethod[]</span>
+<span class="line-numbers">73</span>
+<span class="line-numbers">74</span>    <span class="type">int</span> clear() {
+<span class="line-numbers">75</span>        <span class="type">int</span> propertiesClearedCount = systems.size();
+<span class="line-numbers">76</span>        systems.clear();
+<span class="line-numbers">77</span>        <span class="keyword">return</span> propertiesClearedCount;
+<span class="line-numbers">78</span>    }
+<span class="line-numbers">79</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=addMethod file=0">add()</code> and <code class="hotspot=listMethod file=0">list()</code> methods are annotated with the <code class="hotspot=addWithSpan hotspot=listWithSpan file=0">@WithSpan</code> annotation. The OpenTelemetry instrumentation provides a new span for each method. You can now collect and trace the spans across different services. After creating a span, you have the option to include desired parameters with their values in the span by using the <code class="hotspot=spanAttribute file=0">@SpanAttribute</code> annotation. For example, the <code class="hotspot=spanAttribute file=0">host</code> parameter is assigned <code class="hotspot=spanAttribute file=0">hostname</code> as its attribute name using the <code class="hotspot=spanAttribute file=0">@SpanAttribute</code> annotation, which gives the benefit of tracing the parameters within the <code class="hotspot=addMethod file=0">add</code> span.</p>
+</div>
+<div class="paragraph">
+<p>To learn more about how to use OpenTelemetry annotations to instrument code, see the <a href="https://opentelemetry.io/docs/instrumentation/java/automatic/annotations/" target="_blank" rel="noopener noreferrer">OpenTelemetry Annotations</a> documentation.</p>
+</div>
+<div class="paragraph">
+<p>Now, you can check out the traces that are generated by the <code>@WithSpan</code> annotation. Visit the <a href="http://localhost:9081/inventory/systems" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9081/inventory/systems</a> URL and then your Jaeger server at the <a href="http://localhost:16686" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:16686</a> URL.</p>
+</div>
+<div class="paragraph">
+<p>Select the <code>inventory</code> service and click the <strong>Find Traces</strong> button at the end of the section. You’ll see the result as:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/inventory_manager_span.png" alt="Inventory Manager span">
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that there are two spans from the <code>inventory</code> service. Click the trace to view its details. You’ll see the <code>InventoryManager.list</code> span that is created by the <code>@WithSpan</code> annotation.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/inventory_manager_list_span.png" alt="Inventory Manager list span">
+</div>
+</div>
+<div class="paragraph">
+<p><br></p>
+</div>
+<div class="paragraph">
+<p>To check out the information generated by the <code>@SpanAttribute</code> annotation, visit the <a href="http://localhost:9081/inventory/systems/localhost" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9081/inventory/systems/localhost</a> URL and then your Jaeger server at the <a href="http://localhost:16686" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:16686</a> URL.</p>
+</div>
+<div class="paragraph">
+<p>Select the <code>inventory</code> service and click the <strong>Find Traces</strong> button at the end of the section. You will see the following result:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/inventory_service_4_spans.png" alt="Get traces for the inventory service">
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that there are three spans from the <code>inventory</code> service and one span from the <code>system</code> service. Click the trace to view its details.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/inventory_details_4_spans.png" alt="Inventory details spans">
+</div>
+</div>
+<div class="paragraph">
+<p>Click the <code>InventoryManager.add</code> span and its <code>Tags</code>. You can see the <code>hostname</code> tag with the <code>localhost</code> value that is created by the <code>@SpanAttribute</code> annotation.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/inventory_manager_add_span.png" alt="Inventory Manager add span">
+</div>
+</div>
+<div class="paragraph">
+<p><br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="injecting-a-custom-tracer-object">Injecting a custom Tracer object</h3>
+<div class="paragraph">
+<p>The MicroProfile Telemetry specification makes the underlying OpenTelemetry Tracer instance available. The configured Tracer is accessed by injecting it into a bean. You can use it to instrument your code to create traces.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the <code>InventoryResource</code> class:</mark>
+<code>inventory/src/main/java/io/openliberty/guides/inventory/InventoryResource.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2023 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers"> 15</span>
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">io.opentelemetry.api.trace.Tracer</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">io.opentelemetry.api.trace.Span</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">io.opentelemetry.context.Scope</span>;
+<span class="line-numbers"> 19</span>
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.DELETE</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 30</span>
+<span class="line-numbers"> 31</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers"> 32</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 33</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers"> 34</span>
+<span class="line-numbers"> 35</span>    <span class="comment">// tag::manager[]</span>
+<span class="line-numbers"> 36</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers"> 37</span>    <span class="directive">private</span> InventoryManager manager;
+<span class="line-numbers"> 38</span>    <span class="comment">// end::manager[]</span>
+<span class="line-numbers"> 39</span>
+<span class="line-numbers"> 40</span>    <span class="comment">// tag::inject[]</span>
+<span class="line-numbers"> 41</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers"> 42</span>    <span class="directive">private</span> Tracer tracer;
+<span class="line-numbers"> 43</span>    <span class="comment">// end::inject[]</span>
+<span class="line-numbers"> 44</span>
+<span class="line-numbers"> 45</span>    <span class="annotation">@GET</span>
+<span class="line-numbers"> 46</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 47</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 48</span>    <span class="directive">public</span> Response getPropertiesForHost(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers"> 49</span>        <span class="comment">// tag::getPropertiesSpan[]</span>
+<span class="line-numbers"> 50</span>        Span getPropertiesSpan = tracer.spanBuilder(<span class="string"><span class="delimiter">"</span><span class="content">GettingProperties</span><span class="delimiter">"</span></span>).startSpan();
+<span class="line-numbers"> 51</span>        <span class="comment">// end::getPropertiesSpan[]</span>
+<span class="line-numbers"> 52</span>        <span class="comment">// tag::try[]</span>
+<span class="line-numbers"> 53</span>        <span class="predefined-type">Properties</span> props = <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 54</span>        <span class="comment">// tag::scope[]</span>
+<span class="line-numbers"> 55</span>        <span class="keyword">try</span> (Scope scope = getPropertiesSpan.makeCurrent()) {
+<span class="line-numbers"> 56</span>        <span class="comment">// end::scope[]</span>
+<span class="line-numbers"> 57</span>            <span class="comment">// tag::getSystem[]</span>
+<span class="line-numbers"> 58</span>            props = manager.get(hostname);
+<span class="line-numbers"> 59</span>            <span class="comment">// end::getSystem[]</span>
+<span class="line-numbers"> 60</span>            <span class="keyword">if</span> (props == <span class="predefined-constant">null</span>) {
+<span class="line-numbers"> 61</span>                <span class="comment">// tag::addEvent1[]</span>
+<span class="line-numbers"> 62</span>                getPropertiesSpan.addEvent(<span class="string"><span class="delimiter">"</span><span class="content">Cannot get properties</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 63</span>                <span class="comment">// end::addEvent1[]</span>
+<span class="line-numbers"> 64</span>                <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers"> 65</span>                         .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Unknown hostname or the system </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 66</span>                               + <span class="string"><span class="delimiter">"</span><span class="content">service may not be running on </span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 67</span>                         .build();
+<span class="line-numbers"> 68</span>            }
+<span class="line-numbers"> 69</span>            <span class="comment">// tag::addEvent2[]</span>
+<span class="line-numbers"> 70</span>            getPropertiesSpan.addEvent(<span class="string"><span class="delimiter">"</span><span class="content">Received properties</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 71</span>            <span class="comment">// end::addEvent2[]</span>
+<span class="line-numbers"> 72</span>            manager.add(hostname, props);
+<span class="line-numbers"> 73</span>        } <span class="keyword">finally</span> {
+<span class="line-numbers"> 74</span>            <span class="comment">// tag::end[]</span>
+<span class="line-numbers"> 75</span>            getPropertiesSpan.end();
+<span class="line-numbers"> 76</span>            <span class="comment">// end::end[]</span>
+<span class="line-numbers"> 77</span>        }
+<span class="line-numbers"> 78</span>        <span class="comment">// end::try[]</span>
+<span class="line-numbers"> 79</span>        <span class="keyword">return</span> Response.ok(props).build();
+<span class="line-numbers"> 80</span>
+<span class="line-numbers"> 81</span>    }
+<span class="line-numbers"> 82</span>
+<span class="line-numbers"> 83</span>    <span class="annotation">@GET</span>
+<span class="line-numbers"> 84</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 85</span>    <span class="directive">public</span> InventoryList listContents() {
+<span class="line-numbers"> 86</span>        <span class="keyword">return</span> manager.list();
+<span class="line-numbers"> 87</span>    }
+<span class="line-numbers"> 88</span>
+<span class="line-numbers"> 89</span>    <span class="annotation">@DELETE</span>
+<span class="line-numbers"> 90</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 91</span>    <span class="directive">public</span> Response clearContents() {
+<span class="line-numbers"> 92</span>        <span class="type">int</span> cleared = manager.clear();
+<span class="line-numbers"> 93</span>
+<span class="line-numbers"> 94</span>        <span class="keyword">if</span> (cleared == <span class="integer">0</span>) {
+<span class="line-numbers"> 95</span>            <span class="keyword">return</span> Response.status(Response.Status.NOT_MODIFIED)
+<span class="line-numbers"> 96</span>                           .build();
+<span class="line-numbers"> 97</span>        }
+<span class="line-numbers"> 98</span>        <span class="keyword">return</span> Response.status(Response.Status.OK)
+<span class="line-numbers"> 99</span>                       .build();
+<span class="line-numbers">100</span>    }
+<span class="line-numbers">101</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To access the Tracer, the <code class="hotspot=inject file=0">@Inject</code> annotation from the Contexts and Dependency Injections API injects the Tracer into a bean.</p>
+</div>
+<div class="paragraph">
+<p>Before the <code class="hotspot=manager hotspot=getSystem file=0">InventoryManager</code> calls the <code>system</code> service, it creates and starts a span called the <code class="hotspot=getPropertiesSpan file=0">GettingProperties</code> by using the <code>spanBuilder()</code> and <code>startSpan()</code> Tracer APIs.</p>
+</div>
+<div class="paragraph">
+<p>When you start a span, you must also end it by calling <code class="hotspot=end file=0">end()</code> on the span. If you don’t end a span, it won’t be recorded at all and won’t show up in Jaeger. This code ensures that <code class="hotspot=end file=0">end()</code> is always called by including it in a <code>finally</code> block.</p>
+</div>
+<div class="paragraph">
+<p>After you start the span, make it current with the <code class="hotspot=scope file=0">makeCurrent()</code> call. Making a span current means that any new spans created in the same thread, either automatically by Open Liberty or manually by calling the API, will use this span as their parent span.</p>
+</div>
+<div class="paragraph">
+<p>The <code>makeCurrent()</code> call returns a <code>Scope</code>. Make sure to always close the <code>Scope</code>, which stops the span from being current and makes the previous span current again. Use a <code class="hotspot=try file=0">try-with-resources</code> block, which automatically closes the <code>Scope</code> at the end of the block.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code class="hotspot=addEvent1 hotspot=addEvent2 file=0">addEvent()</code> Span API to create an event when the properties are received and an event when it fails to get the properties from the <code class="hotspot=manager hotspot=getSystem file=0">system</code> service. Use the <code class="hotspot=end file=0">end()</code> Span API to mark the <code>GettingProperties</code> span as completed.</p>
+</div>
+<div class="paragraph">
+<p>To check out the traces that contain the <code>GettingProperties</code> span, visit the <a href="http://localhost:9081/inventory/systems/localhost" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9081/inventory/systems/localhost</a> URL and then your Jaeger server at the <a href="http://localhost:16686" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:16686</a> URL.</p>
+</div>
+<div class="paragraph">
+<p>Select the <code>inventory</code> service and click the <strong>Find Traces</strong> button at the end of the section. You’ll see the result:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/inventory_service_spans.png" alt="Get traces for the inventory service">
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that there are four spans from the <code>inventory</code> service and one span from the <code>system</code> service. Click the trace to view its details. You’ll see the <code>GettingProperties</code> span.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/inventory_details_spans.png" alt="Inventory details spans">
+</div>
+</div>
+<div class="paragraph">
+<p><br></p>
+</div>
+<div class="paragraph">
+<p>To check out the event adding to the <code>GettingProperties</code> span, visit the <a href="http://localhost:9081/inventory/systems/unknown" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9081/inventory/systems/unknown</a> URL and then your Jaeger server at the <a href="http://localhost:16686" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:16686</a> URL.</p>
+</div>
+<div class="paragraph">
+<p>Select the <code>inventory</code> service and click the <strong>Find Traces</strong> button at the end of the section. You will see the following result:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/inventory_service_unknown_spans.png" alt="Get traces for unknown hostname">
+</div>
+</div>
+<div class="paragraph">
+<p>There are two spans from the <code>inventory</code> service. Click the trace to view its details. You’ll see the <code>GettingProperties</code> span. Click the <code>GettingProperties</code> span and its <code>Logs</code>. You can see the <code>Cannot get properties</code> message.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-telemetry-jaeger/logs_at_gettingProperties.png" alt="Logs at GettingProperties span">
+</div>
+</div>
+<div class="paragraph">
+<p><br></p>
+</div>
+<div class="paragraph">
+<p>To learn more about how to use OpenTelemetry APIs to instrument code, see the <a href="https://opentelemetry.io/docs/instrumentation/java/manual/" target="_blank" rel="noopener noreferrer">OpenTelemetry Manual Instrumentation</a> documentation.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-application">Testing the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Manually verify the traces by inspecting them on the Jaeger server. You will find some tests included to test the basic functionality of the services. If any of the tests fail, you might have introduced a bug into the code.</p>
+</div>
+<div class="sect2">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Since you started Open Liberty in dev mode, run the tests for the <code>system</code> and <code>inventory</code> services by pressing the <code>enter/return</code> key in the command-line sessions where you started the services.</p>
+</div>
+<div class="paragraph">
+<p>When you are done checking out the services, exit dev mode by pressing <code>CTRL+C</code> in the shell sessions where you ran the <code>system</code> and <code>inventory</code> services, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+<div class="paragraph">
+<p>Finally, stop the <code>Jaeger</code> service that you started in the <strong>Additional prerequisites</strong> section.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You just used MicroProfile Telemetry in Open Liberty to customize how and which traces are delivered to Jaeger.</p>
+</div>
+<div class="paragraph">
+<p>Try out one of the related MicroProfile guides. These guides demonstrate more technologies that you can learn to expand on what you built in this guide.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Enabling distributed tracing in microservices with OpenTelemetry and Jaeger <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-microprofile-telemetry-jaeger/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-telemetry-jaeger/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-telemetry-jaeger/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

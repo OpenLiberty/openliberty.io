@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+# tag::deployment[]
+kind: Deployment
+# end::deployment[]
+metadata:
+  name: system-deployment
+  labels:
+    app: system
+spec:
+  selector:
+    matchLabels:
+      app: system
+  template:
+    metadata:
+      labels:
+        app: system
+    spec:
+# tag::container[]
+      containers:
+      - name: system-container
+        # tag::image[]
+        image: [image-link]
+        # end::image[]
+        ports:
+        - containerPort: 9080
+# end::container[]
+# tag::everythingButSystemDeployment[]
+# tag::systemService[]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: system-service
+spec:
+  selector:
+    app: system
+  ports:
+  - protocol: TCP
+    port: 9080
+# end::systemService[]
+# tag::everythingButSystemDeploymentAndService[]
+# tag::systemRoute[]
+---
+apiVersion: v1
+kind: Route
+metadata:
+  name: system-route
+spec:
+  to:
+    kind: Service
+    name: system-service
+# end::systemRoute[]
+# tag::inventoryResources[]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-deployment
+  labels:
+    app: inventory
+spec:
+  selector:
+    matchLabels:
+      app: inventory
+  template:
+    metadata:
+      labels:
+        app: inventory
+    spec:
+      containers:
+      - name: inventory-container
+        # tag::inventoryImage[]
+        image: [image-link]
+        # end::inventoryImage[]
+        ports:
+        - containerPort: 9080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory-service
+spec:
+  selector:
+    app: inventory
+  ports:
+  - protocol: TCP
+    port: 9080
+---
+apiVersion: v1
+kind: Route
+metadata:
+  name: inventory-route
+spec:
+  to:
+    kind: Service
+    name: inventory-service
+# end::inventoryResources[]
+# end::everythingButSystemDeploymentAndService[]
+# end::everythingButSystemDeployment[]

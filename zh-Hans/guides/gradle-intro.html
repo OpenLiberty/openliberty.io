@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Building a Java web application using Gradle
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples of how to build and test a Java web application with a Gradle build configuration script using the Gradle War plug-in and Open Liberty Gradle plug-in.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/gradle-intro">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Building a Java web application using Gradle" />
+  <meta name="twitter:description" content="A getting started tutorial with examples of how to build and test a Java web application with a Gradle build configuration script using the Gradle War plug-in and Open Liberty Gradle plug-in." />
+
+  <meta property='og:title' content="Building a Java web application using Gradle" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples of how to build and test a Java web application with a Gradle build configuration script using the Gradle War plug-in and Open Liberty Gradle plug-in." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/gradle-intro" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#creating-the-application">Creating the application</a></li>
+<li><a href="#testing-gradle">Testing Gradle</a></li>
+<li><a href="#configure-your-project">Configure your project</a></li>
+<li><a href="#running-the-application">Running the application</a></li>
+<li>
+<a href="#testing-the-web-application">Testing the web application</a>
+<ul class="sectlevel2">
+<li><a href="#a-few-more-pieces">A few more pieces</a></li>
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Building a web application with Gradle</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">15 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/gradle-intro.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to build and test a simple web application using Gradle and Open Liberty.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to build and test a simple web servlet application using the Gradle <code>war</code>
+plug-in and the Liberty Gradle plug-in. The <code>war</code> plug-in compiles and builds the application
+code. The <a href="https://github.com/WASdev/ci.gradle/blob/main/README.md" target="_blank" rel="noopener noreferrer"><code>liberty</code> Gradle plug-in</a>
+installs the Open Liberty runtime, creates an instance, and installs the application to run and test.
+The application displays a simple web page with a link. When you click that link, the application
+calls the servlet to return a simple response of <code>Hello! Is Gradle working for you?</code>.</p>
+</div>
+<div class="paragraph">
+<p>One benefit of using a build tool like Gradle is that you can define the details of the project and any dependencies it has, and Gradle automatically downloads and installs the dependencies.
+Another benefit of using Gradle is that it can run repeatable, automated tests on the application.
+You can, of course, test your application manually by starting a Liberty instance and pointing a web browser at the application URL.
+However, automated tests are a much better approach because you can easily rerun the same tests each time the application is built.
+If the tests don’t pass after you change the application, the build fails, and you know that you introduced a regression that requires a fix to your code.</p>
+</div>
+<div class="paragraph">
+<p>Choosing a build tool often comes down to personal or organizational preference, but you might choose to use Gradle for several reasons.
+Gradle defines its builds by using <a href="https://docs.gradle.org/current/userguide/writing_build_scripts.html" target="_blank" rel="noopener noreferrer">Groovy build scripts</a>, which gives you a lot of control and customization in your builds.
+Gradle also uses a build cache that rebuilds only the parts of your application that changed, which saves build time in larger projects.
+So Gradle can be a good choice in larger, more complex projects.</p>
+</div>
+<div class="paragraph">
+<p>Using this guide, you will create a Gradle build definition file (<code>build.gradle</code>) for the
+web application project, and use it to build the application. You will then create a simple,
+automated test, and configure Gradle to run it after building the application.</p>
+</div>
+<div class="paragraph">
+<p>Learn more about Gradle on the <a href="https://docs.gradle.org/current/userguide/userguide.html" target="_blank" rel="noopener noreferrer">official Gradle website</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-gradle-intro.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-gradle-intro.git
+cd guide-gradle-intro</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-application">Creating the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The web application that you will build using Gradle and Open Liberty is provided for you
+in the <code>start</code> directory so that you can focus on learning about Gradle. The application uses
+the standard Gradle directory structure. Using this directory structure saves you from
+customizing the <code>build.gradle</code> file later.</p>
+</div>
+<div class="paragraph">
+<p>All the application source code, including the Open Liberty <code>server.xml</code> configuration file,
+is in the <code>start/src</code> directory:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>└── src
+    └── main
+        └── java
+        └── liberty
+            └── config
+        └── webapp
+            └── WEB-INF</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-gradle">Testing Gradle</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you do not have Gradle installed, make sure that the <code>JAVA_HOME</code> environment variable is set, or that the Java application can run. Running the Gradle Wrapper automatically installs Gradle. To learn more about the Gradle Wrapper, see the <a href="https://docs.gradle.org/current/userguide/gradle_wrapper.html" target="_blank" rel="noopener noreferrer">Gradle Wrapper documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>Run the following commands to navigate to the <code>start</code> directory and verify that Gradle was installed correctly:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre>cd start
+gradlew.bat -v</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre>cd start
+./gradlew -v</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see information about the Gradle installation similar to this example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>------------------------------------------------------------
+Gradle 7.6
+------------------------------------------------------------
+
+Build time:   2022-11-25 13:35:10 UTC
+Revision:     daece9dbc5b79370cc8e4fd6fe4b2cd400e150a8
+
+Kotlin:       1.7.10
+Groovy:       3.0.13
+Ant:          Apache Ant(TM) version 1.10.11 compiled on July 10 2021
+JVM:          11.0.12 (Eclipse OpenJ9 openj9-0.27.0)
+OS:           Mac OS X 12.6.3 x86_64</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configure-your-project">Configure your project</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>settings.gradle</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="gradle"><span class="line-numbers">1</span>rootProject.name = 'GradleSample'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>build.gradle</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="gradle"><span class="line-numbers">  1</span>// tag::war[]
+<span class="line-numbers">  2</span>apply plugin: 'war'
+<span class="line-numbers">  3</span>// end::war[]
+<span class="line-numbers">  4</span>// tag::liberty[]
+<span class="line-numbers">  5</span>apply plugin: 'liberty'
+<span class="line-numbers">  6</span>// end::liberty[]
+<span class="line-numbers">  7</span>
+<span class="line-numbers">  8</span>sourceCompatibility = 11
+<span class="line-numbers">  9</span>targetCompatibility = 11
+<span class="line-numbers"> 10</span>tasks.withType(JavaCompile) {
+<span class="line-numbers"> 11</span>    options.encoding = 'UTF-8'
+<span class="line-numbers"> 12</span>}
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span>// configure liberty-gradle-plugin 
+<span class="line-numbers"> 15</span>// tag::buildscript[]
+<span class="line-numbers"> 16</span>buildscript {
+<span class="line-numbers"> 17</span>    repositories {
+<span class="line-numbers"> 18</span>        // tag::buildmaven[]
+<span class="line-numbers"> 19</span>        mavenCentral()
+<span class="line-numbers"> 20</span>        // end::buildmaven[]
+<span class="line-numbers"> 21</span>    }
+<span class="line-numbers"> 22</span>    dependencies {
+<span class="line-numbers"> 23</span>        // tag::liberty-dependency[]
+<span class="line-numbers"> 24</span>        classpath 'io.openliberty.tools:liberty-gradle-plugin:3.5.2'
+<span class="line-numbers"> 25</span>        // end::liberty-dependency[]
+<span class="line-numbers"> 26</span>    }
+<span class="line-numbers"> 27</span>}
+<span class="line-numbers"> 28</span>// end::buildscript[]
+<span class="line-numbers"> 29</span>
+<span class="line-numbers"> 30</span>// tag::repositories[]
+<span class="line-numbers"> 31</span>repositories {
+<span class="line-numbers"> 32</span>    // tag::maven[]
+<span class="line-numbers"> 33</span>    mavenCentral()
+<span class="line-numbers"> 34</span>    // end::maven[]
+<span class="line-numbers"> 35</span>}
+<span class="line-numbers"> 36</span>// end::repositories[]
+<span class="line-numbers"> 37</span>
+<span class="line-numbers"> 38</span>// tag::dependencies[]
+<span class="line-numbers"> 39</span>dependencies {
+<span class="line-numbers"> 40</span>    // provided dependencies
+<span class="line-numbers"> 41</span>    // tag::providedcompile[]
+<span class="line-numbers"> 42</span>    providedCompile 'jakarta.platform:jakarta.jakartaee-api:10.0.0'
+<span class="line-numbers"> 43</span>    providedCompile 'org.eclipse.microprofile:microprofile:6.0'
+<span class="line-numbers"> 44</span>    // end::providedcompile[]
+<span class="line-numbers"> 45</span>
+<span class="line-numbers"> 46</span>    // test dependencies
+<span class="line-numbers"> 47</span>    // tag::testimplementation[]
+<span class="line-numbers"> 48</span>    // tag::junit[]
+<span class="line-numbers"> 49</span>    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+<span class="line-numbers"> 50</span>    // end::junit[]
+<span class="line-numbers"> 51</span>    // tag::commons[]
+<span class="line-numbers"> 52</span>    testImplementation 'org.apache.httpcomponents:httpclient:4.5.14'
+<span class="line-numbers"> 53</span>    // end::commons[]
+<span class="line-numbers"> 54</span>    // end::testimplementation[]
+<span class="line-numbers"> 55</span>}
+<span class="line-numbers"> 56</span>// end::dependencies[]
+<span class="line-numbers"> 57</span>
+<span class="line-numbers"> 58</span>// tag::ext[]
+<span class="line-numbers"> 59</span>ext  {
+<span class="line-numbers"> 60</span>    liberty.server.var.'default.http.port' = '9080'
+<span class="line-numbers"> 61</span>    liberty.server.var.'default.https.port' = '9443'
+<span class="line-numbers"> 62</span>    liberty.server.var.'app.context.root' = project.name
+<span class="line-numbers"> 63</span>}
+<span class="line-numbers"> 64</span>// end::ext[]
+<span class="line-numbers"> 65</span>
+<span class="line-numbers"> 66</span>// tag::openbrowser[]
+<span class="line-numbers"> 67</span>task openBrowser {
+<span class="line-numbers"> 68</span>    description = 'Open browser to the running application'
+<span class="line-numbers"> 69</span>    doLast {
+<span class="line-numbers"> 70</span>        String port = liberty.server.var.'default.http.port'
+<span class="line-numbers"> 71</span>        String context = liberty.server.var.'app.context.root'
+<span class="line-numbers"> 72</span>        String URL = "http://localhost:" + port + "/" + context + "/" + "servlet"
+<span class="line-numbers"> 73</span>        java.awt.Desktop.desktop.browse URL.toURI()
+<span class="line-numbers"> 74</span>        java.awt.Desktop.desktop.browse file("$buildDir/reports/tests/test/index.html").toURI()
+<span class="line-numbers"> 75</span>    }
+<span class="line-numbers"> 76</span>}
+<span class="line-numbers"> 77</span>// end::openbrowser[]
+<span class="line-numbers"> 78</span>
+<span class="line-numbers"> 79</span>// tag::tests[]
+<span class="line-numbers"> 80</span>test {
+<span class="line-numbers"> 81</span>    // tag::junitplatform[]
+<span class="line-numbers"> 82</span>    useJUnitPlatform()
+<span class="line-numbers"> 83</span>    // end::junitplatform[]
+<span class="line-numbers"> 84</span>    testLogging {
+<span class="line-numbers"> 85</span>        events 'passed', 'skipped', 'failed', 'standardOut'
+<span class="line-numbers"> 86</span>        exceptionFormat 'full'
+<span class="line-numbers"> 87</span>    }
+<span class="line-numbers"> 88</span>    // tag::systemproperty[]
+<span class="line-numbers"> 89</span>    // tag::httpport[]
+<span class="line-numbers"> 90</span>    systemProperty 'http.port', liberty.server.var.'default.http.port'
+<span class="line-numbers"> 91</span>    // end::httpport[]
+<span class="line-numbers"> 92</span>    // tag::contextroot[]
+<span class="line-numbers"> 93</span>    systemProperty 'context.root',  liberty.server.var.'app.context.root'
+<span class="line-numbers"> 94</span>    // end::contextroot[]
+<span class="line-numbers"> 95</span>    // end::systemproperty[]
+<span class="line-numbers"> 96</span>}
+<span class="line-numbers"> 97</span>// end::tests[]
+<span class="line-numbers"> 98</span>
+<span class="line-numbers"> 99</span>// tag::depends[]
+<span class="line-numbers">100</span>test.dependsOn 'libertyStart'
+<span class="line-numbers">101</span>test.finalizedBy(openBrowser)
+<span class="line-numbers">102</span>clean.dependsOn 'libertyStop'
+<span class="line-numbers">103</span>// end::depends[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The project configuration is defined in the Gradle settings and build files.
+You will create these project configurations one section at a time.</p>
+</div>
+<div class="paragraph">
+<p>Gradle <a href="https://docs.gradle.org/current/dsl/org.gradle.api.initialization.Settings.html" target="_blank" rel="noopener noreferrer">settings</a>
+are used to instantiate and configure the project. This sample uses the <code class="hotspot file=0">settings.gradle</code>
+to name the project <code>GradleSample</code>.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the Gradle settings file in the <code>start</code> directory.</mark>
+<code>settings.gradle</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This <code class="hotspot file=0">settings.gradle</code> file isn’t required for a single-module Gradle project.
+Without this definition, by default, the project name is set as the name of the folder in
+which it is contained (<code>start</code> for this example).</p>
+</div>
+<div class="paragraph">
+<p>Let’s go through the <code class="hotspot file=1">build.gradle</code>
+file so that you understand each part.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Configuration</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Purpose</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Plug-ins used</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The first part of the build file specifies the plug-ins required to
+                            build the project and some basic project configuration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">buildscript</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where to find plug-ins for download.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">repositories</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where to find dependencies for download.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dependencies</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java dependencies that are required for compiling, testing,
+                            and running the application are included here.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ext</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gradle extra properties extension for project level properties.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">test</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unit test and integration test configuration.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the build file in the <code>start</code> directory.</mark>
+<code>build.gradle</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first section of code defines the <code class="hotspot=war file=1">war</code> and <code class="hotspot=liberty file=1">liberty</code> plug-ins
+that you want to use. The <code class="hotspot=war file=1">war</code> plug-in contains all the tasks to compile
+Java files, build the WAR file structure, and assemble the archive. The <code class="hotspot=liberty file=1">liberty</code>
+plug-in contains the tasks used to install the Liberty runtime and create and manage
+the associated Liberty instances. The compatibility and encoding settings are for Java.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=buildscript file=1">buildscript</code> section defines plug-in versions to use in the
+build and where to find them. This guide uses the <code class="hotspot=liberty-dependency file=1">liberty</code> plug-in,
+which is available from the <code class="hotspot=buildmaven file=1">Maven Central Repository</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=repositories file=1">repositories</code> section defines where to find the dependencies
+that you are using in the build. For this build, everything you need is in <code class="hotspot=maven file=1">Maven Central</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=dependencies file=1">dependencies</code> section defines what is needed to compile and
+test the code. This section also defines how to run the application. The
+<code class="hotspot=providedcompile file=1">providedCompile</code> dependencies are APIs that are needed to compile the
+application, but they do not need to be packaged with the application because Open Liberty
+provides their implementation at run time. The <code class="hotspot=testimplementation file=1">testImplementation</code> dependencies
+are needed to compile and run tests.</p>
+</div>
+<div class="paragraph">
+<p>The Gradle <code class="hotspot=ext file=1">extra properties</code> extension allows you to add properties to a Gradle project.
+If you use a value more than once in your build file, you can simplify updates by defining
+it as a variable here and referring to the variable later in the build file.
+This project defines variables for the application ports and the context-root.</p>
+</div>
+<div class="paragraph">
+<p>You can view the default and Liberty tasks available by running the following command:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>gradlew.bat tasks</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>./gradlew tasks</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-the-application">Running the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Start Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, which starts the Open Liberty instance and listens for file changes:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>./gradlew libertyDev</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**********************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The dev mode holds your command prompt to listen for file changes.
+You need to open another command prompt to continue, or simply open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>Navigate your browser to the <a href="http://localhost:9080/GradleSample/servlet" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080/GradleSample/servlet</a> URL to access the application.
+The servlet returns a simple response of <code>Hello! Is Gradle working for you?</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-web-application">Testing the web application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>EndpointIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.hello.it</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="comment">// tag::import[]</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
+<span class="line-numbers">17</span>
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">java.io.BufferedReader</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">java.io.InputStreamReader</span>;
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.apache.http.HttpStatus</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">org.apache.http.client.methods.CloseableHttpResponse</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">org.apache.http.client.methods.HttpGet</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.apache.http.impl.client.CloseableHttpClient</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">org.apache.http.impl.client.HttpClientBuilder</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeAll</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers">28</span><span class="comment">// end::import[]</span>
+<span class="line-numbers">29</span>
+<span class="line-numbers">30</span><span class="comment">// tag::endpointit[]</span>
+<span class="line-numbers">31</span><span class="directive">public</span> <span class="type">class</span> <span class="class">EndpointIT</span> {
+<span class="line-numbers">32</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> webURL;
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="annotation">@BeforeAll</span>
+<span class="line-numbers">35</span>    <span class="comment">// tag::init[]</span>
+<span class="line-numbers">36</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> init() {
+<span class="line-numbers">37</span>        <span class="predefined-type">String</span> port = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">http.port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">38</span>        <span class="predefined-type">String</span> context = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">context.root</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">39</span>        webURL = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:</span><span class="delimiter">"</span></span> + port + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span> + context + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span> + <span class="string"><span class="delimiter">"</span><span class="content">servlet</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">40</span>        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">"</span><span class="content">URL: </span><span class="delimiter">"</span></span> + webURL);
+<span class="line-numbers">41</span>    }
+<span class="line-numbers">42</span>    <span class="comment">// end::init[]</span>
+<span class="line-numbers">43</span>
+<span class="line-numbers">44</span>    <span class="comment">// tag::test[]</span>
+<span class="line-numbers">45</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">46</span>    <span class="comment">// end::test[]</span>
+<span class="line-numbers">47</span>    <span class="directive">public</span> <span class="type">void</span> testServlet() <span class="directive">throws</span> <span class="exception">Exception</span> {
+<span class="line-numbers">48</span>
+<span class="line-numbers">49</span>        CloseableHttpClient client = HttpClientBuilder.create().build();
+<span class="line-numbers">50</span>        HttpGet httpGet = <span class="keyword">new</span> HttpGet(webURL);
+<span class="line-numbers">51</span>        CloseableHttpResponse response = <span class="predefined-constant">null</span>;
+<span class="line-numbers">52</span>
+<span class="line-numbers">53</span>        <span class="comment">// tag::try[]</span>
+<span class="line-numbers">54</span>        <span class="keyword">try</span> {
+<span class="line-numbers">55</span>            response = client.execute(httpGet);
+<span class="line-numbers">56</span>
+<span class="line-numbers">57</span>            <span class="type">int</span> statusCode = response.getStatusLine().getStatusCode();
+<span class="line-numbers">58</span>            assertEquals(HttpStatus.SC_OK, statusCode, <span class="string"><span class="delimiter">"</span><span class="content">HTTP GET failed</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">59</span>
+<span class="line-numbers">60</span>            <span class="predefined-type">BufferedReader</span> reader = <span class="keyword">new</span> <span class="predefined-type">BufferedReader</span>(<span class="keyword">new</span> <span class="predefined-type">InputStreamReader</span>(
+<span class="line-numbers">61</span>                                        response.getEntity().getContent()));
+<span class="line-numbers">62</span>            <span class="predefined-type">String</span> line;
+<span class="line-numbers">63</span>            <span class="predefined-type">StringBuffer</span> buffer = <span class="keyword">new</span> <span class="predefined-type">StringBuffer</span>();
+<span class="line-numbers">64</span>            <span class="keyword">while</span> ((line = reader.readLine()) != <span class="predefined-constant">null</span>) {
+<span class="line-numbers">65</span>                buffer.append(line);
+<span class="line-numbers">66</span>            }
+<span class="line-numbers">67</span>            reader.close();
+<span class="line-numbers">68</span>            assertTrue(buffer.toString().contains(<span class="string"><span class="delimiter">"</span><span class="content">Hello! Is Gradle working for you?</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">69</span>                <span class="string"><span class="delimiter">"</span><span class="content">Unexpected response body: </span><span class="delimiter">"</span></span> + buffer.toString());
+<span class="line-numbers">70</span>        } <span class="keyword">finally</span> {
+<span class="line-numbers">71</span>            response.close();
+<span class="line-numbers">72</span>            httpGet.releaseConnection();
+<span class="line-numbers">73</span>        }
+<span class="line-numbers">74</span>        <span class="comment">// end::try[]</span>
+<span class="line-numbers">75</span>    }
+<span class="line-numbers">76</span>}
+<span class="line-numbers">77</span><span class="comment">//end::endpointit[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>build.gradle</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="line-numbers">  1</span><span class="comment">// tag::war[]</span>
+<span class="line-numbers">  2</span>apply <span class="key">plugin</span>: <span class="string"><span class="delimiter">'</span><span class="content">war</span><span class="delimiter">'</span></span>
+<span class="line-numbers">  3</span><span class="comment">// end::war[]</span>
+<span class="line-numbers">  4</span><span class="comment">// tag::liberty[]</span>
+<span class="line-numbers">  5</span>apply <span class="key">plugin</span>: <span class="string"><span class="delimiter">'</span><span class="content">liberty</span><span class="delimiter">'</span></span>
+<span class="line-numbers">  6</span><span class="comment">// end::liberty[]</span>
+<span class="line-numbers">  7</span>
+<span class="line-numbers">  8</span>sourceCompatibility = <span class="integer">11</span>
+<span class="line-numbers">  9</span>targetCompatibility = <span class="integer">11</span>
+<span class="line-numbers"> 10</span>tasks.withType(JavaCompile) {
+<span class="line-numbers"> 11</span>    options.encoding = <span class="string"><span class="delimiter">'</span><span class="content">UTF-8</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 12</span>}
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="comment">// configure liberty-gradle-plugin </span>
+<span class="line-numbers"> 15</span><span class="comment">// tag::buildscript[]</span>
+<span class="line-numbers"> 16</span>buildscript {
+<span class="line-numbers"> 17</span>    repositories {
+<span class="line-numbers"> 18</span>        <span class="comment">// tag::buildmaven[]</span>
+<span class="line-numbers"> 19</span>        mavenCentral()
+<span class="line-numbers"> 20</span>        <span class="comment">// end::buildmaven[]</span>
+<span class="line-numbers"> 21</span>    }
+<span class="line-numbers"> 22</span>    dependencies {
+<span class="line-numbers"> 23</span>        <span class="comment">// tag::liberty-dependency[]</span>
+<span class="line-numbers"> 24</span>        classpath <span class="string"><span class="delimiter">'</span><span class="content">io.openliberty.tools:liberty-gradle-plugin:3.5.2</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 25</span>        <span class="comment">// end::liberty-dependency[]</span>
+<span class="line-numbers"> 26</span>    }
+<span class="line-numbers"> 27</span>}
+<span class="line-numbers"> 28</span><span class="comment">// end::buildscript[]</span>
+<span class="line-numbers"> 29</span>
+<span class="line-numbers"> 30</span><span class="comment">// tag::repositories[]</span>
+<span class="line-numbers"> 31</span>repositories {
+<span class="line-numbers"> 32</span>    <span class="comment">// tag::maven[]</span>
+<span class="line-numbers"> 33</span>    mavenCentral()
+<span class="line-numbers"> 34</span>    <span class="comment">// end::maven[]</span>
+<span class="line-numbers"> 35</span>}
+<span class="line-numbers"> 36</span><span class="comment">// end::repositories[]</span>
+<span class="line-numbers"> 37</span>
+<span class="line-numbers"> 38</span><span class="comment">// tag::dependencies[]</span>
+<span class="line-numbers"> 39</span>dependencies {
+<span class="line-numbers"> 40</span>    <span class="comment">// provided dependencies</span>
+<span class="line-numbers"> 41</span>    <span class="comment">// tag::providedcompile[]</span>
+<span class="line-numbers"> 42</span>    providedCompile <span class="string"><span class="delimiter">'</span><span class="content">jakarta.platform:jakarta.jakartaee-api:10.0.0</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 43</span>    providedCompile <span class="string"><span class="delimiter">'</span><span class="content">org.eclipse.microprofile:microprofile:6.0</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 44</span>    <span class="comment">// end::providedcompile[]</span>
+<span class="line-numbers"> 45</span>
+<span class="line-numbers"> 46</span>    <span class="comment">// test dependencies</span>
+<span class="line-numbers"> 47</span>    <span class="comment">// tag::testimplementation[]</span>
+<span class="line-numbers"> 48</span>    <span class="comment">// tag::junit[]</span>
+<span class="line-numbers"> 49</span>    testImplementation <span class="string"><span class="delimiter">'</span><span class="content">org.junit.jupiter:junit-jupiter:5.9.2</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 50</span>    <span class="comment">// end::junit[]</span>
+<span class="line-numbers"> 51</span>    <span class="comment">// tag::commons[]</span>
+<span class="line-numbers"> 52</span>    testImplementation <span class="string"><span class="delimiter">'</span><span class="content">org.apache.httpcomponents:httpclient:4.5.14</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 53</span>    <span class="comment">// end::commons[]</span>
+<span class="line-numbers"> 54</span>    <span class="comment">// end::testimplementation[]</span>
+<span class="line-numbers"> 55</span>}
+<span class="line-numbers"> 56</span><span class="comment">// end::dependencies[]</span>
+<span class="line-numbers"> 57</span>
+<span class="line-numbers"> 58</span><span class="comment">// tag::ext[]</span>
+<span class="line-numbers"> 59</span>ext  {
+<span class="line-numbers"> 60</span>    liberty.server.var.<span class="string"><span class="delimiter">'</span><span class="content">default.http.port</span><span class="delimiter">'</span></span> = <span class="string"><span class="delimiter">'</span><span class="content">9080</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 61</span>    liberty.server.var.<span class="string"><span class="delimiter">'</span><span class="content">default.https.port</span><span class="delimiter">'</span></span> = <span class="string"><span class="delimiter">'</span><span class="content">9443</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 62</span>    liberty.server.var.<span class="string"><span class="delimiter">'</span><span class="content">app.context.root</span><span class="delimiter">'</span></span> = project.name
+<span class="line-numbers"> 63</span>}
+<span class="line-numbers"> 64</span><span class="comment">// end::ext[]</span>
+<span class="line-numbers"> 65</span>
+<span class="line-numbers"> 66</span><span class="comment">// tag::openbrowser[]</span>
+<span class="line-numbers"> 67</span>task openBrowser {
+<span class="line-numbers"> 68</span>    description = <span class="string"><span class="delimiter">'</span><span class="content">Open browser to the running application</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 69</span>    doLast {
+<span class="line-numbers"> 70</span>        <span class="predefined-type">String</span> port = liberty.server.var.<span class="string"><span class="delimiter">'</span><span class="content">default.http.port</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 71</span>        <span class="predefined-type">String</span> context = liberty.server.var.<span class="string"><span class="delimiter">'</span><span class="content">app.context.root</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 72</span>        <span class="predefined-type">String</span> <span class="predefined-type">URL</span> = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:</span><span class="delimiter">"</span></span> + port + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span> + context + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span> + <span class="string"><span class="delimiter">"</span><span class="content">servlet</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 73</span>        java.awt.Desktop.desktop.browse <span class="predefined-type">URL</span>.toURI()
+<span class="line-numbers"> 74</span>        java.awt.Desktop.desktop.browse file(<span class="string"><span class="delimiter">"</span><span class="inline"><span class="inline-delimiter">$</span>buildDir</span><span class="content">/reports/tests/test/index.html</span><span class="delimiter">"</span></span>).toURI()
+<span class="line-numbers"> 75</span>    }
+<span class="line-numbers"> 76</span>}
+<span class="line-numbers"> 77</span><span class="comment">// end::openbrowser[]</span>
+<span class="line-numbers"> 78</span>
+<span class="line-numbers"> 79</span><span class="comment">// tag::tests[]</span>
+<span class="line-numbers"> 80</span>test {
+<span class="line-numbers"> 81</span>    <span class="comment">// tag::junitplatform[]</span>
+<span class="line-numbers"> 82</span>    useJUnitPlatform()
+<span class="line-numbers"> 83</span>    <span class="comment">// end::junitplatform[]</span>
+<span class="line-numbers"> 84</span>    testLogging {
+<span class="line-numbers"> 85</span>        events <span class="string"><span class="delimiter">'</span><span class="content">passed</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">skipped</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">failed</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">standardOut</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 86</span>        exceptionFormat <span class="string"><span class="delimiter">'</span><span class="content">full</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 87</span>    }
+<span class="line-numbers"> 88</span>    <span class="comment">// tag::systemproperty[]</span>
+<span class="line-numbers"> 89</span>    <span class="comment">// tag::httpport[]</span>
+<span class="line-numbers"> 90</span>    systemProperty <span class="string"><span class="delimiter">'</span><span class="content">http.port</span><span class="delimiter">'</span></span>, liberty.server.var.<span class="string"><span class="delimiter">'</span><span class="content">default.http.port</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 91</span>    <span class="comment">// end::httpport[]</span>
+<span class="line-numbers"> 92</span>    <span class="comment">// tag::contextroot[]</span>
+<span class="line-numbers"> 93</span>    systemProperty <span class="string"><span class="delimiter">'</span><span class="content">context.root</span><span class="delimiter">'</span></span>,  liberty.server.var.<span class="string"><span class="delimiter">'</span><span class="content">app.context.root</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 94</span>    <span class="comment">// end::contextroot[]</span>
+<span class="line-numbers"> 95</span>    <span class="comment">// end::systemproperty[]</span>
+<span class="line-numbers"> 96</span>}
+<span class="line-numbers"> 97</span><span class="comment">// end::tests[]</span>
+<span class="line-numbers"> 98</span>
+<span class="line-numbers"> 99</span><span class="comment">// tag::depends[]</span>
+<span class="line-numbers">100</span>test.dependsOn <span class="string"><span class="delimiter">'</span><span class="content">libertyStart</span><span class="delimiter">'</span></span>
+<span class="line-numbers">101</span>test.finalizedBy(openBrowser)
+<span class="line-numbers">102</span>clean.dependsOn <span class="string"><span class="delimiter">'</span><span class="content">libertyStop</span><span class="delimiter">'</span></span>
+<span class="line-numbers">103</span><span class="comment">// end::depends[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>HelloServlet.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.hello</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.io.IOException</span>;
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.servlet.ServletException</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.servlet.annotation.WebServlet</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.servlet.http.HttpServlet</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.servlet.http.HttpServletRequest</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.servlet.http.HttpServletResponse</span>;
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span><span class="annotation">@WebServlet</span>(urlPatterns = <span class="string"><span class="delimiter">"</span><span class="content">/servlet</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">23</span><span class="directive">public</span> <span class="type">class</span> <span class="class">HelloServlet</span> <span class="directive">extends</span> HttpServlet {
+<span class="line-numbers">24</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">long</span> serialVersionUID = <span class="integer">1L</span>;
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span>    <span class="directive">protected</span> <span class="type">void</span> doGet(HttpServletRequest request, HttpServletResponse response)
+<span class="line-numbers">27</span>        <span class="directive">throws</span> ServletException, <span class="exception">IOException</span> {
+<span class="line-numbers">28</span>        <span class="comment">// tag::responsestring[]</span>
+<span class="line-numbers">29</span>        response.getWriter().append(<span class="string"><span class="delimiter">"</span><span class="content">Hello! Is Gradle working for you?</span><span class="char">\n</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">30</span>        <span class="comment">// end::responsestring[]</span>
+<span class="line-numbers">31</span>    }
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span>    <span class="directive">protected</span> <span class="type">void</span> doPost(HttpServletRequest request, HttpServletResponse response)
+<span class="line-numbers">34</span>        <span class="directive">throws</span> ServletException, <span class="exception">IOException</span> {
+<span class="line-numbers">35</span>        doGet(request, response);
+<span class="line-numbers">36</span>    }
+<span class="line-numbers">37</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>One of the benefits of building an application with a build system like Gradle is that
+it can be configured to run a set of automated tests. The <code class="hotspot=war file=1">war</code>
+plug-in extends the <a href="https://docs.gradle.org/current/userguide/java_plugin.html" target="_blank" rel="noopener noreferrer">Java plug-in</a>,
+which provides test tasks. You can write tests for the individual units of code outside
+of a running Liberty instance (unit tests), or you can write them to call the application
+that runs on the Liberty instance (integration tests). In this example, you will create a simple
+integration test that checks that the web page opens and that the correct response is
+returned when the link is clicked.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>EndpointIT</code> test class.</mark>
+<code>src/test/java/io/openliberty/guides/hello/it/EndpointIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The test class name ends in <code>IT</code> to indicate that it contains an integration test.
+The integration tests are put in the <code>it</code> folder by convention.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=tests file=1">test</code> section in your build file is added by the Java plug-in, and the
+<code class="hotspot=junitplatform file=1">useJUnitPlatform()</code> line configures Gradle to add JUnit 5 support.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=systemproperty file=1">systemProperty</code> configuration  defines some variables needed by
+the test class. While the port number and context-root information can be
+hardcoded in the test class, it is better to specify it in a single place like the Gradle
+<code class="hotspot file=1">build.gradle</code> file, in case they need to change.
+The <code class="hotspot=systemproperty file=1">systemProperty</code> lines passes these details to the test JVMs
+as a series of system properties, resolving the <code class="hotspot=httpport file=1">http.port</code>
+and <code class="hotspot=contextroot file=1">context.root</code> variables.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=init file=0">init()</code> method in the <code>EndpointIT.java</code> test class uses these
+system variables to build the URL of the application.</p>
+</div>
+<div class="paragraph">
+<p>In the test class, after defining how to build the application URL, the <code class="hotspot=test file=0">@Test</code>
+annotation indicates the start of the test method.</p>
+</div>
+<div class="paragraph">
+<p>In the <code class="hotspot=try file=0">try</code> block of the test method, an HTTP <code>GET</code> request to the
+URL of the application returns a status code. If the response to the request includes the
+string <code>Hello! Is Gradle working for you?</code>, the test passes. If that string is not in the
+response, the test fails. The HTTP client then disconnects from the application.</p>
+</div>
+<div class="paragraph">
+<p>In the <code class="hotspot=import file=0">import</code> statements of this test class, you’ll notice that the
+test has some new dependencies. Earlier you added some <code class="hotspot=testimplementation file=1">testImplementation</code>
+dependencies. The Apache <code class="hotspot=commons file=1">httpclient</code> and <code class="hotspot=junit file=1">org.junit.jupiter</code>
+dependencies are needed to compile and run the integration test <code class="hotspot=endpointit file=0">EndpointIT</code>
+class.</p>
+</div>
+<div class="paragraph">
+<p>The scope for each of the dependencies is set to <code class="hotspot=testimplementation file=1">testImplementation</code>
+because the libraries are needed only during the Gradle test phase and do not need to be
+packaged with the application.</p>
+</div>
+<div class="paragraph">
+<p>Now, the created WAR file contains the web application, and dev mode can run any integration
+test classes that it finds. Integration test classes are classes with names that end in <code>IT</code>.</p>
+</div>
+<div class="paragraph">
+<p>The directory structure of the project in the <code>start</code> folder should now look like this
+example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>└── build.gradle
+├── settings.gradle
+└── src
+    ├── main
+    │    ├── java
+    │    ├── liberty
+    │    │    └── config
+    │    └── webapp
+    │         └── WEB_INF
+    └── test
+         └── java</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="a-few-more-pieces">A few more pieces</h3>
+<div class="paragraph">
+<p>We show a few more Gradle tricks in this example with the <code class="hotspot=openbrowser file=1">openBrowser</code> task.
+This task displays your application and the test report in the default browser.</p>
+</div>
+<div class="paragraph">
+<p>The final Gradle magic to add is the task dependency directives.
+The <code class="hotspot=depends file=1">dependency directives</code> organizes task execution.
+In this case, the test task is set to run after the Liberty instance is started, and the
+<code class="hotspot=openbrowser file=1">openBrowser</code> task is executed after the test task is finalized.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Because you started Open Liberty in dev mode at the start of the guide, press the <code>enter/return</code>
+key from the command-line session where you started dev mode to run the tests.
+You will see that the browser opened up the test summary page, which ran one successful test.</p>
+</div>
+<div class="paragraph">
+<p>To see whether the test detects a failure, change the <code class="hotspot=responsestring file=2">response string</code> in the
+<code class="hotspot file=2">src/main/java/io/openliberty/guides/hello/HelloServlet.java</code> file
+so that it doesn’t match the string that the test is looking for. Then rerun the Gradle
+test to automatically restart and retest your application to check to see if the test fails.</p>
+</div>
+<div class="paragraph command">
+<p>When you are done checking out the service, exit dev mode by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You built and tested a web application project running on an Open Liberty instance using Gradle.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Building a web application with Gradle <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-gradle-intro/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-gradle-intro/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-gradle-intro/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/maven-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Building a web application with Maven</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">15 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

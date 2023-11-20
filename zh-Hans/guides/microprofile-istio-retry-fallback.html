@@ -1,0 +1,3184 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Building resilient Java microservices using Eclipse MicroProfile and Istio Fault Tolerance
+    
+  </title>
+  <meta name="description" content="A tutorial on Eclipse MicroProfile Fault Tolerance integrated with Istio Fault Tolerance. Includes an example on how to develop fault-tolerant Java microservices using Istio&#39;s Retry policy and MicroProfile Fault Tolerance&#39;s Fallback mechanism.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/microprofile-istio-retry-fallback">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Building resilient Java microservices using Eclipse MicroProfile and Istio Fault Tolerance" />
+  <meta name="twitter:description" content="A tutorial on Eclipse MicroProfile Fault Tolerance integrated with Istio Fault Tolerance. Includes an example on how to develop fault-tolerant Java microservices using Istio&#39;s Retry policy and MicroProfile Fault Tolerance&#39;s Fallback mechanism." />
+
+  <meta property='og:title' content="Building resilient Java microservices using Eclipse MicroProfile and Istio Fault Tolerance" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A tutorial on Eclipse MicroProfile Fault Tolerance integrated with Istio Fault Tolerance. Includes an example on how to develop fault-tolerant Java microservices using Istio&#39;s Retry policy and MicroProfile Fault Tolerance&#39;s Fallback mechanism." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/microprofile-istio-retry-fallback" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#starting-and-preparing-your-cluster-for-deployment">Starting and preparing your cluster for deployment</a></li>
+<li><a href="#deploying-istio">Deploying Istio</a></li>
+<li>
+<a href="#enabling-microprofile-fault-tolerance">Enabling MicroProfile Fault Tolerance</a>
+<ul class="sectlevel2">
+<li><a href="#adding-the-microprofile-retry-annotation">Adding the MicroProfile @Retry annotation</a></li>
+<li><a href="#building-and-running-the-application">Building and running the application</a></li>
+</ul>
+</li>
+<li><a href="#enabling-istio-fault-tolerance">Enabling Istio Fault Tolerance</a></li>
+<li><a href="#turning-off-microprofile-fault-tolerance">Turning off MicroProfile Fault Tolerance</a></li>
+<li><a href="#using-microprofile-fallback">Using MicroProfile Fallback</a></li>
+<li><a href="#tearing-down-your-environment">Tearing down your environment</a></li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Developing fault-tolerant microservices with Istio Retry and MicroProfile Fallback</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">30 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/microprofile-istio-retry-fallback.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Explore how to manage the impact of failures by using MicroProfile and Istio Fault Tolerance to add retry and fallback behaviours to microservices.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to combine <a href="https://download.eclipse.org/microprofile/microprofile-fault-tolerance-2.0/microprofile-fault-tolerance-spec.html#retry" target="_blank" rel="noopener noreferrer">MicroProfile Retry</a>
+and <a href="https://download.eclipse.org/microprofile/microprofile-fault-tolerance-2.0/microprofile-fault-tolerance-spec.html#fallback" target="_blank" rel="noopener noreferrer">Fallback</a>
+policies with <a href="https://istio.io/docs/concepts/traffic-management/#timeouts-and-retries" target="_blank" rel="noopener noreferrer">Istio Retry</a>
+to make your microservices more resilient to common failures, such as network problems.</p>
+</div>
+<div class="paragraph">
+<p>Microservices that are created using Eclipse MicroProfile can be freely deployed in a service mesh to reduce the complexity
+associated with managing microservices. Istio is a service mesh, meaning that it’s a platform for managing how microservices interact with each other and the outside world.
+Istio consists of a control plane and sidecars that are injected into application pods. The sidecars contain
+the <a href="https://www.envoyproxy.io/" target="_blank" rel="noopener noreferrer">Envoy</a> proxy. You can think of Envoy as a sidecar that intercepts
+and controls all the HTTP and TCP traffic to and from your container.
+If you would like to learn more about Istio, check out the <a href="https://openliberty.io/guides/istio-intro.html" target="_blank" rel="noopener">Managing microservice traffic using Istio</a> guide.</p>
+</div>
+<div class="paragraph">
+<p>MicroProfile and Istio both provide simple and flexible solutions to build fault-tolerant microservices.
+Fault tolerance provides different strategies for building robust behaviour to cope with unexpected failures.
+A few fault tolerance policies that MicroProfile can offer include Retry, Timeout, Circuit Breaker, Bulkhead, and Fallback.
+There is some overlap that exists between MicroProfile and Istio Fault Tolerance, such as the Retry policy.
+However, Istio does not offer any fallback capabilities.
+To view the available fault tolerance policies in MicroProfile and Istio, refer to the
+<a href="https://www.eclipse.org/community/eclipse_newsletter/2018/september/MicroProfile_istio.php#faulttolerance" target="_blank" rel="noopener noreferrer">comparison between MicroProfile and Istio fault handling</a>.</p>
+</div>
+<div class="paragraph">
+<p>Use retry policies to fail quickly and recover from brief intermittent issues.
+An application might experience these transient failures when a microservice is undeployed, a database is overloaded by queries,
+the network connection becomes unstable, or the site host has a brief downtime. In these cases, rather than failing quickly on these transient failures,
+a retry policy provides another chance for the request to succeed.
+Simply retrying the request might be all you need to do to make it succeed.</p>
+</div>
+<div class="paragraph">
+<p>Fallback offers an alternative execution path when an execution does not complete successfully.
+You will use the <code>@Fallback</code> annotation from the MicroProfile Fault Tolerance specification to define criteria
+for when to provide an alternative solution for a failed execution.</p>
+</div>
+<div class="paragraph">
+<p>You will develop microservices that demonstrate MicroProfile Fault Tolerance with Istio fault handling.
+Both MicroProfile and Istio can be used when you want your microservices to have a service mesh architecture with Istio,
+and use MicroProfile to provide the extra fault tolerance policies that do not exist within Istio.</p>
+</div>
+<div class="paragraph">
+<p>The application that you will be working with is an <code>inventory</code> service, which collects, stores, and returns the system properties.
+It uses the <code>system</code> service to retrieve the system properties for a particular host.
+You will add fault tolerance to the <code>inventory</code> service so that it reacts accordingly when the <code>system</code> service is unavailable.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you begin, you need a containerization software for building containers. Kubernetes supports various container runtimes. You will use <code>Docker</code> in this guide. For Docker installation instructions, refer to the official <a href="https://docs.docker.com/install/" target="_blank" rel="noopener noreferrer">Docker documentation</a>.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="paragraph">
+<p>Use Docker Desktop, where a local Kubernetes environment is pre-installed and enabled. If you do not see the <em>Kubernetes</em> tab, then upgrade to the latest version of Docker Desktop.</p>
+</div>
+<div class="paragraph">
+<p>Complete the setup for your operating system:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set up  <a href="https://docs.docker.com/docker-for-windows/#kubernetes" target="_blank" rel="noopener noreferrer">Docker for Windows</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>After you complete the Docker setup instructions for your operating system, ensure that Kubernetes (not Swarm) is selected as the orchestrator in Docker Preferences.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section">
+<div class="content">
+<div class="paragraph">
+<p>Use Docker Desktop, where a local Kubernetes environment is pre-installed and enabled. If you do not see the <em>Kubernetes</em> tab, then upgrade to the latest version of Docker Desktop.</p>
+</div>
+<div class="paragraph">
+<p>Complete the setup for your operating system:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set up <a href="https://docs.docker.com/docker-for-mac/#kubernetes" target="_blank" rel="noopener noreferrer">Docker for Mac</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>After you complete the Docker setup instructions for your operating system, ensure that Kubernetes (not Swarm) is selected as the orchestrator in Docker Preferences.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>You will use <code>Minikube</code> as a single-node Kubernetes cluster that runs locally in a virtual machine.
+Make sure you have <code>kubectl</code> installed. If you need to install <code>kubectl</code>, see the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-on-linux" target="_blank" rel="noopener noreferrer">kubectl installation instructions</a>.
+For Minikube installation instructions, see the <a href="https://github.com/kubernetes/minikube#installation" target="_blank" rel="noopener noreferrer">Minikube documentation</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-microprofile-istio-retry-fallback.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-microprofile-istio-retry-fallback.git
+cd guide-microprofile-istio-retry-fallback</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="starting-and-preparing-your-cluster-for-deployment">Starting and preparing your cluster for deployment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Start your Kubernetes cluster.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="paragraph">
+<p>Start your Docker Desktop environment.</p>
+</div>
+<div class="paragraph">
+<p>Ensure that you have enough memory allocated to your Docker Desktop enviornment. 8GB is recommended but 4GB should be adequate if you don’t have enough RAM.</p>
+</div>
+<div class="paragraph">
+<p>Ensure that Kubernetes is running on Docker Desktop and that the context is set to <code>docker-desktop</code>.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>Run the following command from a command-line session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>minikube start --memory=8192 --cpus=4 --kubernetes-version=v1.19.0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>The memory flag allocates 8GB of memory to your Minikube cluster. If you don’t have enough RAM, then 4GB should be adequate.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, validate that you have a healthy Kubernetes environment by running the following command from the active command-line session.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get nodes</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command should return a <code>Ready</code> status for the master node.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="paragraph">
+<p>You do not need to do any other step.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>Run the following command to configure the Docker CLI to use Minikube’s Docker daemon.
+After you run this command, you will be able to interact with Minikube’s Docker daemon and build new
+images directly to it from your host machine:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>eval $(minikube docker-env)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-istio">Deploying Istio</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Install Istio by following the instructions in the official <a href="https://istio.io/latest/docs/setup/getting-started" target="_blank" rel="noopener noreferrer">Istio Getting started documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>Run the following command to verify that the <code>istioctl</code> path was set successfully:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>istioctl version</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output will be similar to the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>no running Istio pods in "istio-system"
+1.7.3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the following command to configure the Istio profile on Kubernetes:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>istioctl install --set profile=demo</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following output appears when the installation is complete:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>✔ Istio core installed
+✔ Istiod installed
+✔ Egress gateways installed
+✔ Ingress gateways installed
+✔ Installation complete</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that Istio was successfully deployed by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get deployments -n istio-system</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All the values in the <code>AVAILABLE</code> column will have a value of <code>1</code> after
+the deployment is complete.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+istio-egressgateway      1/1     1            1           2m48s
+istio-ingressgateway     1/1     1            1           2m48s
+istiod                   1/1     1            1           2m48s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ensure that the Istio deployments are all available before you continue. The deployments might take a few minutes to become available. If the deployments aren’t available after a few minutes, then increase the amount of memory available to your Kubernetes cluster. On Docker Desktop, you can increase the memory from your Docker preferences. On Minikube, you can increase the memory by using the <code>--memory</code> flag.</p>
+</div>
+<div class="paragraph">
+<p>Finally, create the <code>istio-injection</code> label and set its value to <code>enabled</code>:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl label namespace default istio-injection=enabled</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Adding this label enables automatic Istio sidecar injection. Automatic injection means that sidecars are automatically injected into your pods when you deploy your application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="enabling-microprofile-fault-tolerance">Enabling MicroProfile Fault Tolerance</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Navigate to the <code>guide-microprofile-istio-retry-fallback/start</code> directory to begin.</p>
+</div>
+<div class="paragraph">
+<p>The MicroProfile Fault Tolerance API is included in the MicroProfile dependency that is specified in your <code>pom.xml</code> file.
+Look for the dependency with the <code class="hotspot=microprofile file=0">microprofile</code> artifact ID.
+This dependency provides a library that allows you to use the fault tolerance policies in your microservices.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot file=1">InventoryResource.java</code> file
+makes a request to the <code>system</code> service through the MicroProfile Rest Client API.
+If you want to learn more about MicroProfile Rest Client,
+you can follow the <a href="https://openliberty.io/guides/microprofile-rest-client.html" target="_blank" rel="noopener">Consuming RESTful services with template interfaces</a> guide.</p>
+</div>
+<div class="paragraph">
+<p>pom.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="preprocessor">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="line-numbers"> 2</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 3</span>
+<span class="line-numbers"> 4</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers"> 5</span>
+<span class="line-numbers"> 6</span>    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 7</span>    <span class="tag">&lt;artifactId&gt;</span>guide-microprofile-istio-retry-fallback-inventory<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 8</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 9</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers">10</span>
+<span class="line-numbers">11</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers">12</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers">13</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers">14</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>11<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers">15</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>11<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers">16</span>        <span class="comment">&lt;!-- Liberty configuration --&gt;</span>
+<span class="line-numbers">17</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9081<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers">18</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9444<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers">19</span>        <span class="tag">&lt;liberty.var.system.http.port&gt;</span>9080<span class="tag">&lt;/liberty.var.system.http.port&gt;</span>
+<span class="line-numbers">20</span>        <span class="tag">&lt;liberty.var.system.https.port&gt;</span>9443<span class="tag">&lt;/liberty.var.system.https.port&gt;</span>
+<span class="line-numbers">21</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers">24</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers">25</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers">26</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">27</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">28</span>            <span class="tag">&lt;version&gt;</span>10.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">29</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers">30</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers">31</span>        <span class="comment">&lt;!-- tag::microprofile[] --&gt;</span>
+<span class="line-numbers">32</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers">33</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">34</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">35</span>            <span class="tag">&lt;version&gt;</span>6.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">36</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers">37</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers">38</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers">39</span>        <span class="comment">&lt;!-- end::microprofile[] --&gt;</span>
+<span class="line-numbers">40</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers">41</span>
+<span class="line-numbers">42</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers">43</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers">44</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers">45</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">46</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">47</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">48</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">49</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">50</span>            <span class="comment">&lt;!-- Enable liberty-maven plugin --&gt;</span>
+<span class="line-numbers">51</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">52</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">53</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">54</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">55</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">56</span>            <span class="comment">&lt;!-- Plugin to run unit tests --&gt;</span>
+<span class="line-numbers">57</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">58</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">59</span>                <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">60</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">61</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">62</span>            <span class="comment">&lt;!-- Plugin to run functional tests --&gt;</span>
+<span class="line-numbers">63</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">64</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">65</span>                <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">66</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">67</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">68</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">69</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">70</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright,mpRetry,fallback,fallbackMethod">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2019, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.net.MalformedURLException</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">java.net.URL</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.POST</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.ProcessingException</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.WebApplicationException</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 29</span>
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.faulttolerance.Fallback</span>;
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.faulttolerance.Retry</span>;
+<span class="line-numbers"> 32</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.RestClientBuilder</span>;
+<span class="line-numbers"> 33</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers"> 34</span>
+<span class="line-numbers"> 35</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.SystemClient</span>;
+<span class="line-numbers"> 36</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.UnknownUrlException</span>;
+<span class="line-numbers"> 37</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.UnknownUrlExceptionMapper</span>;
+<span class="line-numbers"> 38</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers"> 39</span>
+<span class="line-numbers"> 40</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers"> 41</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 42</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers"> 43</span>
+<span class="line-numbers"> 44</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers"> 45</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">system.http.port</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 46</span>  <span class="predefined-type">String</span> SYS_HTTP_PORT;
+<span class="line-numbers"> 47</span>
+<span class="line-numbers"> 48</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers"> 49</span>  InventoryManager manager;
+<span class="line-numbers"> 50</span>
+<span class="line-numbers"> 51</span>  <span class="annotation">@GET</span>
+<span class="line-numbers"> 52</span>  <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 53</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 54</span>  <span class="comment">// tag::fallback[]</span>
+<span class="line-numbers"> 55</span>  <span class="annotation">@Fallback</span>(fallbackMethod = <span class="string"><span class="delimiter">"</span><span class="content">getPropertiesFallback</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 56</span>  <span class="comment">// end::fallback[]</span>
+<span class="line-numbers"> 57</span>  <span class="comment">// tag::mpRetry[]</span>
+<span class="line-numbers"> 58</span>  <span class="annotation">@Retry</span>(maxRetries = <span class="integer">3</span>, retryOn = WebApplicationException.class)
+<span class="line-numbers"> 59</span>  <span class="comment">// end::mpRetry[]</span>
+<span class="line-numbers"> 60</span>  <span class="comment">// tag::getPropertiesForHost[]</span>
+<span class="line-numbers"> 61</span>  <span class="directive">public</span> Response getPropertiesForHost(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname)
+<span class="line-numbers"> 62</span>        <span class="comment">// tag::webApplicationException[]</span>
+<span class="line-numbers"> 63</span>        <span class="directive">throws</span> WebApplicationException, ProcessingException, UnknownUrlException {
+<span class="line-numbers"> 64</span>        <span class="comment">// end::webApplicationException[]</span>
+<span class="line-numbers"> 65</span>  <span class="comment">// end::getPropertiesForHost[]</span>
+<span class="line-numbers"> 66</span>
+<span class="line-numbers"> 67</span>    <span class="predefined-type">String</span> customURLString = <span class="string"><span class="delimiter">"</span><span class="content">http://</span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="content">:</span><span class="delimiter">"</span></span> + SYS_HTTP_PORT + <span class="string"><span class="delimiter">"</span><span class="content">/system</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 68</span>    <span class="predefined-type">URL</span> customURL = <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 69</span>    <span class="predefined-type">Properties</span> props = <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 70</span>    <span class="keyword">try</span> {
+<span class="line-numbers"> 71</span>        customURL = <span class="keyword">new</span> <span class="predefined-type">URL</span>(customURLString);
+<span class="line-numbers"> 72</span>        SystemClient systemClient = RestClientBuilder.newBuilder()
+<span class="line-numbers"> 73</span>                .baseUrl(customURL)
+<span class="line-numbers"> 74</span>                .register(UnknownUrlExceptionMapper.class)
+<span class="line-numbers"> 75</span>                .build(SystemClient.class);
+<span class="line-numbers"> 76</span>        <span class="comment">// tag::getProperties[]</span>
+<span class="line-numbers"> 77</span>        props = systemClient.getProperties();
+<span class="line-numbers"> 78</span>        <span class="comment">// end::getProperties[]</span>
+<span class="line-numbers"> 79</span>    } <span class="keyword">catch</span> (<span class="exception">MalformedURLException</span> e) {
+<span class="line-numbers"> 80</span>      <span class="predefined-type">System</span>.err.println(<span class="string"><span class="delimiter">"</span><span class="content">The given URL is not formatted correctly: </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 81</span>                         + customURLString);
+<span class="line-numbers"> 82</span>    }
+<span class="line-numbers"> 83</span>
+<span class="line-numbers"> 84</span>    <span class="keyword">if</span> (props == <span class="predefined-constant">null</span>) {
+<span class="line-numbers"> 85</span>      <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers"> 86</span>                     .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Unknown hostname</span><span class="delimiter">"</span></span> + hostname
+<span class="line-numbers"> 87</span>                             + <span class="string"><span class="delimiter">"</span><span class="content"> or the resource may not be running on the</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 88</span>                             + <span class="string"><span class="delimiter">"</span><span class="content"> host machine</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 89</span>                     .build();
+<span class="line-numbers"> 90</span>    }
+<span class="line-numbers"> 91</span>
+<span class="line-numbers"> 92</span>    manager.add(hostname, props);
+<span class="line-numbers"> 93</span>    <span class="keyword">return</span> Response.ok(props).build();
+<span class="line-numbers"> 94</span>  }
+<span class="line-numbers"> 95</span>
+<span class="line-numbers"> 96</span>  <span class="comment">// tag::fallbackMethod[]</span>
+<span class="line-numbers"> 97</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 98</span>  <span class="directive">public</span> Response getPropertiesFallback(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers"> 99</span>      <span class="predefined-type">Properties</span> props = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+<span class="line-numbers">100</span>      props.put(<span class="string"><span class="delimiter">"</span><span class="content">error</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">Unknown hostname or the system service may not be running.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">101</span>        <span class="keyword">return</span> Response.ok(props)
+<span class="line-numbers">102</span>                  .header(<span class="string"><span class="delimiter">"</span><span class="content">X-From-Fallback</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">yes</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">103</span>                  .build();
+<span class="line-numbers">104</span>  }
+<span class="line-numbers">105</span>  <span class="comment">// end::fallbackMethod[]</span>
+<span class="line-numbers">106</span>
+<span class="line-numbers">107</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">108</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">109</span>  <span class="directive">public</span> InventoryList listContents() {
+<span class="line-numbers">110</span>    <span class="keyword">return</span> manager.list();
+<span class="line-numbers">111</span>  }
+<span class="line-numbers">112</span>
+<span class="line-numbers">113</span>  <span class="annotation">@POST</span>
+<span class="line-numbers">114</span>  <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/reset</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">115</span>  <span class="directive">public</span> <span class="type">void</span> reset() {
+<span class="line-numbers">116</span>    manager.reset();
+<span class="line-numbers">117</span>  }
+<span class="line-numbers">118</span>}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-the-microprofile-retry-annotation">Adding the MicroProfile @Retry annotation</h3>
+<div class="paragraph">
+<p>To simulate that your <code>system</code> service is temporarily down due to brief intermittent issues, you will pause the pod that is associated
+with your <code>system</code> service, then try to send requests to the service. When the <code>system</code> pod is paused, requests to the service return a <code>503</code> status code,
+and the <code class="hotspot=getProperties file=0">systemClient.getProperties()</code> in <code class="hotspot file=0">InventoryResource.java</code> throws a <code>WebApplicationException</code>.</p>
+</div>
+<div class="paragraph">
+<p>To retry the requests to your <code>system</code> service after a <code>WebApplicationException</code> has occurred, add the <code>@Retry</code> annotation.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Update the <code>InventoryResource.java</code> file.</mark>
+<code>inventory/src/main/java/io/openliberty/guides/inventory/InventoryResource.java</code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>To retry the service request a maximum of 3 times, only when a <code class="hotspot=webApplicationException file=0">WebApplicationException</code> occurs,
+add the <code class="hotspot=mpRetry file=0">@Retry</code> annotation before the <code class="hotspot=getPropertiesForHost file=0">getPropertiesForHost()</code> method.</p>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright,fallback,fallbackMethod">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2019, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.net.MalformedURLException</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">java.net.URL</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.POST</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.ProcessingException</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.WebApplicationException</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 29</span>
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.faulttolerance.Fallback</span>;
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.faulttolerance.Retry</span>;
+<span class="line-numbers"> 32</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.RestClientBuilder</span>;
+<span class="line-numbers"> 33</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers"> 34</span>
+<span class="line-numbers"> 35</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.SystemClient</span>;
+<span class="line-numbers"> 36</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.UnknownUrlException</span>;
+<span class="line-numbers"> 37</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.UnknownUrlExceptionMapper</span>;
+<span class="line-numbers"> 38</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers"> 39</span>
+<span class="line-numbers"> 40</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers"> 41</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 42</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers"> 43</span>
+<span class="line-numbers"> 44</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers"> 45</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">system.http.port</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 46</span>  <span class="predefined-type">String</span> SYS_HTTP_PORT;
+<span class="line-numbers"> 47</span>
+<span class="line-numbers"> 48</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers"> 49</span>  InventoryManager manager;
+<span class="line-numbers"> 50</span>
+<span class="line-numbers"> 51</span>  <span class="annotation">@GET</span>
+<span class="line-numbers"> 52</span>  <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 53</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 54</span>  <span class="comment">// tag::fallback[]</span>
+<span class="line-numbers"> 55</span>  <span class="annotation">@Fallback</span>(fallbackMethod = <span class="string"><span class="delimiter">"</span><span class="content">getPropertiesFallback</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 56</span>  <span class="comment">// end::fallback[]</span>
+<span class="line-numbers"> 57</span>  <span class="comment">// tag::mpRetry[]</span>
+<span class="line-numbers"> 58</span>  <span class="annotation">@Retry</span>(maxRetries = <span class="integer">3</span>, retryOn = WebApplicationException.class)
+<span class="line-numbers"> 59</span>  <span class="comment">// end::mpRetry[]</span>
+<span class="line-numbers"> 60</span>  <span class="comment">// tag::getPropertiesForHost[]</span>
+<span class="line-numbers"> 61</span>  <span class="directive">public</span> Response getPropertiesForHost(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname)
+<span class="line-numbers"> 62</span>        <span class="comment">// tag::webApplicationException[]</span>
+<span class="line-numbers"> 63</span>        <span class="directive">throws</span> WebApplicationException, ProcessingException, UnknownUrlException {
+<span class="line-numbers"> 64</span>        <span class="comment">// end::webApplicationException[]</span>
+<span class="line-numbers"> 65</span>  <span class="comment">// end::getPropertiesForHost[]</span>
+<span class="line-numbers"> 66</span>
+<span class="line-numbers"> 67</span>    <span class="predefined-type">String</span> customURLString = <span class="string"><span class="delimiter">"</span><span class="content">http://</span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="content">:</span><span class="delimiter">"</span></span> + SYS_HTTP_PORT + <span class="string"><span class="delimiter">"</span><span class="content">/system</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 68</span>    <span class="predefined-type">URL</span> customURL = <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 69</span>    <span class="predefined-type">Properties</span> props = <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 70</span>    <span class="keyword">try</span> {
+<span class="line-numbers"> 71</span>        customURL = <span class="keyword">new</span> <span class="predefined-type">URL</span>(customURLString);
+<span class="line-numbers"> 72</span>        SystemClient systemClient = RestClientBuilder.newBuilder()
+<span class="line-numbers"> 73</span>                .baseUrl(customURL)
+<span class="line-numbers"> 74</span>                .register(UnknownUrlExceptionMapper.class)
+<span class="line-numbers"> 75</span>                .build(SystemClient.class);
+<span class="line-numbers"> 76</span>        <span class="comment">// tag::getProperties[]</span>
+<span class="line-numbers"> 77</span>        props = systemClient.getProperties();
+<span class="line-numbers"> 78</span>        <span class="comment">// end::getProperties[]</span>
+<span class="line-numbers"> 79</span>    } <span class="keyword">catch</span> (<span class="exception">MalformedURLException</span> e) {
+<span class="line-numbers"> 80</span>      <span class="predefined-type">System</span>.err.println(<span class="string"><span class="delimiter">"</span><span class="content">The given URL is not formatted correctly: </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 81</span>                         + customURLString);
+<span class="line-numbers"> 82</span>    }
+<span class="line-numbers"> 83</span>
+<span class="line-numbers"> 84</span>    <span class="keyword">if</span> (props == <span class="predefined-constant">null</span>) {
+<span class="line-numbers"> 85</span>      <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers"> 86</span>                     .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Unknown hostname</span><span class="delimiter">"</span></span> + hostname
+<span class="line-numbers"> 87</span>                             + <span class="string"><span class="delimiter">"</span><span class="content"> or the resource may not be running on the</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 88</span>                             + <span class="string"><span class="delimiter">"</span><span class="content"> host machine</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 89</span>                     .build();
+<span class="line-numbers"> 90</span>    }
+<span class="line-numbers"> 91</span>
+<span class="line-numbers"> 92</span>    manager.add(hostname, props);
+<span class="line-numbers"> 93</span>    <span class="keyword">return</span> Response.ok(props).build();
+<span class="line-numbers"> 94</span>  }
+<span class="line-numbers"> 95</span>
+<span class="line-numbers"> 96</span>  <span class="comment">// tag::fallbackMethod[]</span>
+<span class="line-numbers"> 97</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 98</span>  <span class="directive">public</span> Response getPropertiesFallback(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers"> 99</span>      <span class="predefined-type">Properties</span> props = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+<span class="line-numbers">100</span>      props.put(<span class="string"><span class="delimiter">"</span><span class="content">error</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">Unknown hostname or the system service may not be running.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">101</span>        <span class="keyword">return</span> Response.ok(props)
+<span class="line-numbers">102</span>                  .header(<span class="string"><span class="delimiter">"</span><span class="content">X-From-Fallback</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">yes</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">103</span>                  .build();
+<span class="line-numbers">104</span>  }
+<span class="line-numbers">105</span>  <span class="comment">// end::fallbackMethod[]</span>
+<span class="line-numbers">106</span>
+<span class="line-numbers">107</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">108</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">109</span>  <span class="directive">public</span> InventoryList listContents() {
+<span class="line-numbers">110</span>    <span class="keyword">return</span> manager.list();
+<span class="line-numbers">111</span>  }
+<span class="line-numbers">112</span>
+<span class="line-numbers">113</span>  <span class="annotation">@POST</span>
+<span class="line-numbers">114</span>  <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/reset</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">115</span>  <span class="directive">public</span> <span class="type">void</span> reset() {
+<span class="line-numbers">116</span>    manager.reset();
+<span class="line-numbers">117</span>  }
+<span class="line-numbers">118</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A request to a service might fail for many different reasons. The default Retry policy initiates a retry for every <code>java.lang.Exception</code>.
+However, you can base a Retry policy on a specific exception by using the <code>retryOn</code> parameter. You can identify more than one exception
+as an array of values. For example, <code>@Retry(retryOn = {RuntimeException.class, TimeoutException.class})</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can set limits on the number of retry attempts to avoid overloading a busy service with retry requests.
+The <code>@Retry</code> annotation has the <code>maxRetries</code> parameter to limit the number of retry attempts. The default number for <code>maxRetries</code> is 3 requests.
+The integer value must be greater than or equal to -1. A value of -1 indicates to continue retrying indefinitely.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="building-and-running-the-application">Building and running the application</h3>
+<div class="paragraph">
+<p>Navigate to the <code>guide-microprofile-istio-retry-fallback/start</code> directory and run the following command to build your application and integrate the Retry policy into your microservices:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, run the <code>docker build</code> commands to build container images for your application:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker build -t system:1.0-SNAPSHOT system/.
+docker build -t inventory:1.0-SNAPSHOT inventory/.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>-t</code> flag in the <code>docker build</code> command allows the Docker image to be labeled (tagged) in the <code>name[:tag]</code> format.
+The tag for an image describes the specific image version. If the optional <code>[:tag]</code> tag is not specified, the <code>latest</code> tag is created by default.</p>
+</div>
+<div class="paragraph">
+<p>To verify that the images for your <code>system</code> and <code>inventory</code> microservices are built, run the <code>docker images</code> command to list all local Docker images.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker images</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Your two images <code>system</code> and <code>inventory</code> should appear in the list of all Docker images:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>REPOSITORY         TAG
+inventory          1.0-SNAPSHOT
+system             1.0-SNAPSHOT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To deploy your microservices to the Kubernetes cluster, use the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl apply -f services.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see an output similar to the following:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>gateway.networking.istio.io/sys-app-gateway created
+service/system-service created
+service/inventory-service created
+deployment.apps/system-deployment created
+deployment.apps/inventory-deployment created</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot file=1">traffic.yaml</code> file contains two virtual services. A virtual service defines how requests are routed to your applications.</p>
+</div>
+<div class="paragraph">
+<p>Deploy the resources defined in the <code class="hotspot file=1">traffic.yaml</code> file:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl apply -f traffic.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the following command to check the status of your pods:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get pods</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If all the pods are healthy and running, you will see an output similar to the following:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                                    READY     STATUS    RESTARTS   AGE
+inventory-deployment-645767664f-nbtd9   2/2       Running   0          30s
+system-deployment-6bd97d9bf6-4ccds      2/2       Running   0          30s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Check that all of the deployments are available. You need to wait until all of your deployments are
+ready and available before making requests to your microservices.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get deployments</code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                     READY     UP-TO-DATE   AVAILABLE   AGE
+inventory-deployment     1/1       1            1           1m
+system-deployment        1/1       1            1           1m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will make a request to the <code>system</code> service from the <code>inventory</code> service to access the
+JVM system properties of your running container. The Istio <code class="hotspot=gateway file=0">gateway</code> is the entry point for HTTP requests to the cluster.
+As defined in the <code class="hotspot file=0">services.yaml</code> file, the gateway is expecting the
+<code>Host</code> header of your <code>system</code> service and <code>inventory</code> service to be <code>system.example.com</code> and <code>inventory.example.com</code>, respectively.
+However, requests to <code>system.example.com</code> and <code>inventory.example.com</code> won’t be routed to the appropriate IP address.
+To ensure that the gateway routes your requests appropriately, ensure that the <code>Host</code> header is set appropriately.
+You can set the <code>Host</code> header with the <code>-H</code> option of the <code>curl</code> command.</p>
+</div>
+<div class="paragraph">
+<p>services.yaml</p>
+</div>
+<div class="listingblock code_column hide_tags=invConfig,configHide">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers">  1</span><span class="comment"># tag::gateway[]</span>
+<span class="line-numbers">  2</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers">  3</span><span class="key">kind</span>: <span class="string"><span class="content">Gateway</span></span>
+<span class="line-numbers">  4</span><span class="key">metadata</span>:
+<span class="line-numbers">  5</span>  <span class="key">name</span>: <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers">  6</span><span class="key">spec</span>:
+<span class="line-numbers">  7</span>  <span class="key">selector</span>:
+<span class="line-numbers">  8</span>    <span class="key">istio</span>: <span class="string"><span class="content">ingressgateway</span></span>
+<span class="line-numbers">  9</span>  <span class="key">servers</span>:
+<span class="line-numbers"> 10</span>  - <span class="string"><span class="content">port:</span><span class="content"></span></span>
+<span class="line-numbers"> 11</span><span class="string"><span class="content">      number: 80</span></span>
+<span class="line-numbers"> 12</span><span class="string"><span class="content">      name: http</span></span>
+<span class="line-numbers"> 13</span><span class="string"><span class="content">      protocol: HTTP</span></span>
+<span class="line-numbers"> 14</span>    <span class="key">hosts</span>:
+<span class="line-numbers"> 15</span>    - <span class="string"><span class="delimiter">"</span><span class="content">system.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 16</span>    - <span class="string"><span class="delimiter">"</span><span class="content">inventory.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 17</span><span class="comment"># end::gateway[]</span>
+<span class="line-numbers"> 18</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 19</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers"> 20</span><span class="key">kind</span>: <span class="string"><span class="content">Service</span></span>
+<span class="line-numbers"> 21</span><span class="key">metadata</span>:
+<span class="line-numbers"> 22</span>  <span class="key">name</span>: <span class="string"><span class="content">system-service</span></span>
+<span class="line-numbers"> 23</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 24</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 25</span><span class="key">spec</span>:
+<span class="line-numbers"> 26</span>  <span class="key">ports</span>:
+<span class="line-numbers"> 27</span>  - <span class="string"><span class="content">port: 9080</span></span>
+<span class="line-numbers"> 28</span>    <span class="key">name</span>: <span class="string"><span class="content">http</span></span>
+<span class="line-numbers"> 29</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 30</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 31</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 32</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers"> 33</span><span class="key">kind</span>: <span class="string"><span class="content">Service</span></span>
+<span class="line-numbers"> 34</span><span class="key">metadata</span>:
+<span class="line-numbers"> 35</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-service</span></span>
+<span class="line-numbers"> 36</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 37</span>    <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 38</span><span class="key">spec</span>:
+<span class="line-numbers"> 39</span>  <span class="key">ports</span>:
+<span class="line-numbers"> 40</span>  - <span class="string"><span class="content">port: 9081</span></span>
+<span class="line-numbers"> 41</span>    <span class="key">name</span>: <span class="string"><span class="content">http</span></span>
+<span class="line-numbers"> 42</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 43</span>    <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 44</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 45</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="line-numbers"> 46</span><span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="line-numbers"> 47</span><span class="key">metadata</span>:
+<span class="line-numbers"> 48</span>  <span class="key">name</span>: <span class="string"><span class="content">system-deployment</span></span>
+<span class="line-numbers"> 49</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 50</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 51</span><span class="key">spec</span>:
+<span class="line-numbers"> 52</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 53</span>    <span class="key">matchLabels</span>:
+<span class="line-numbers"> 54</span>      <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 55</span>  <span class="key">template</span>:
+<span class="line-numbers"> 56</span>    <span class="key">metadata</span>:
+<span class="line-numbers"> 57</span>      <span class="key">labels</span>:
+<span class="line-numbers"> 58</span>        <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 59</span>    <span class="key">spec</span>:
+<span class="line-numbers"> 60</span>      <span class="key">containers</span>:
+<span class="line-numbers"> 61</span>      - <span class="string"><span class="content">name: system-container</span></span>
+<span class="line-numbers"> 62</span>        <span class="key">image</span>: <span class="string"><span class="content">system:1.0-SNAPSHOT</span></span>
+<span class="line-numbers"> 63</span>        <span class="key">ports</span>:
+<span class="line-numbers"> 64</span>        - <span class="string"><span class="content">containerPort: 9080</span></span>
+<span class="line-numbers"> 65</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 66</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="line-numbers"> 67</span><span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="line-numbers"> 68</span><span class="key">metadata</span>:
+<span class="line-numbers"> 69</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-deployment</span></span>
+<span class="line-numbers"> 70</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 71</span>    <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 72</span><span class="key">spec</span>:
+<span class="line-numbers"> 73</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 74</span>    <span class="key">matchLabels</span>:
+<span class="line-numbers"> 75</span>      <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 76</span>  <span class="key">template</span>:
+<span class="line-numbers"> 77</span>    <span class="key">metadata</span>:
+<span class="line-numbers"> 78</span>      <span class="key">labels</span>:
+<span class="line-numbers"> 79</span>        <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 80</span>    <span class="key">spec</span>:
+<span class="line-numbers"> 81</span>      <span class="key">containers</span>:
+<span class="line-numbers"> 82</span>      - <span class="string"><span class="content">name: inventory-container</span></span>
+<span class="line-numbers"> 83</span>        <span class="comment"># tag::invImage[]</span>
+<span class="line-numbers"> 84</span>        <span class="key">image</span>: <span class="string"><span class="content">inventory:1.0-SNAPSHOT</span></span>
+<span class="line-numbers"> 85</span>        <span class="comment"># end::invImage[]</span>
+<span class="line-numbers"> 86</span>        <span class="key">ports</span>:
+<span class="line-numbers"> 87</span>        - <span class="string"><span class="content">containerPort: 9081</span></span>
+<span class="line-numbers"> 88</span>        <span class="comment"># tag::invConfig[]</span>
+<span class="line-numbers"> 89</span>        <span class="key">envFrom</span>:
+<span class="line-numbers"> 90</span>        - <span class="string"><span class="content">configMapRef:</span><span class="content"></span></span>
+<span class="line-numbers"> 91</span><span class="string"><span class="content">            # tag::configName2[]</span></span>
+<span class="line-numbers"> 92</span><span class="string"><span class="content">            name: inventory-config</span></span>
+<span class="line-numbers"> 93</span><span class="string"><span class="content">            # end::configName2[]</span></span>
+<span class="line-numbers"> 94</span>        <span class="comment"># end::invConfig[]</span>
+<span class="line-numbers"> 95</span><span class="comment"># tag::configHide[]</span>
+<span class="line-numbers"> 96</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 97</span><span class="comment"># tag::configMap[]</span>
+<span class="line-numbers"> 98</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers"> 99</span><span class="key">kind</span>: <span class="string"><span class="content">ConfigMap</span></span>
+<span class="line-numbers">100</span><span class="key">metadata</span>:
+<span class="line-numbers">101</span>  <span class="comment"># tag::configName[]</span>
+<span class="line-numbers">102</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-config</span></span>
+<span class="line-numbers">103</span>  <span class="comment"># end::configName[]</span>
+<span class="line-numbers">104</span><span class="key">data</span>:
+<span class="line-numbers">105</span>  <span class="comment"># tag::nonFallback[]</span>
+<span class="line-numbers">106</span>  <span class="key">MP_Fault_Tolerance_NonFallback_Enabled</span>: <span class="string"><span class="delimiter">"</span><span class="content">false</span><span class="delimiter">"</span></span>
+<span class="line-numbers">107</span>  <span class="comment"># end::nonFallback[]</span>
+<span class="line-numbers">108</span><span class="comment"># end::configMap[]</span>
+<span class="line-numbers">109</span><span class="comment"># end::configHide[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>traffic.yaml</p>
+</div>
+<div class="listingblock code_column hide_tags=istioRetry">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers"> 1</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers"> 2</span><span class="key">kind</span>: <span class="string"><span class="content">VirtualService</span></span>
+<span class="line-numbers"> 3</span><span class="key">metadata</span>:
+<span class="line-numbers"> 4</span>  <span class="key">name</span>: <span class="string"><span class="content">system-virtual-service</span></span>
+<span class="line-numbers"> 5</span><span class="key">spec</span>:
+<span class="line-numbers"> 6</span>  <span class="key">hosts</span>:
+<span class="line-numbers"> 7</span>  - <span class="string"><span class="delimiter">"</span><span class="content">system.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 8</span>  <span class="key">gateways</span>:
+<span class="line-numbers"> 9</span>  - <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers">10</span>  <span class="key">http</span>:
+<span class="line-numbers">11</span>  - <span class="string"><span class="content">route:</span></span>
+<span class="line-numbers">12</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">13</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">14</span><span class="string"><span class="content">          number: 9080</span></span>
+<span class="line-numbers">15</span><span class="string"><span class="content">        host: system-service</span></span>
+<span class="line-numbers">16</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">17</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers">18</span><span class="key">kind</span>: <span class="string"><span class="content">VirtualService</span></span>
+<span class="line-numbers">19</span><span class="key">metadata</span>:
+<span class="line-numbers">20</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-virtual-service</span></span>
+<span class="line-numbers">21</span><span class="key">spec</span>:
+<span class="line-numbers">22</span>  <span class="key">hosts</span>:
+<span class="line-numbers">23</span>  - <span class="string"><span class="delimiter">"</span><span class="content">inventory.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers">24</span>  <span class="key">gateways</span>:
+<span class="line-numbers">25</span>  - <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers">26</span>  <span class="key">http</span>:
+<span class="line-numbers">27</span>  <span class="comment"># tag::route[]</span>
+<span class="line-numbers">28</span>  - <span class="string"><span class="content">route:</span></span>
+<span class="line-numbers">29</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">30</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">31</span><span class="string"><span class="content">          number: 9081</span></span>
+<span class="line-numbers">32</span><span class="string"><span class="content">        host: inventory-service</span></span>
+<span class="line-numbers">33</span>    <span class="comment"># tag::istioRetry[]</span>
+<span class="line-numbers">34</span>    <span class="key">retries</span>:
+<span class="line-numbers">35</span>      <span class="comment"># tag::attempts[]</span>
+<span class="line-numbers">36</span>      <span class="key">attempts</span>: <span class="string"><span class="content">4</span></span>
+<span class="line-numbers">37</span>      <span class="comment"># end::attempts[]</span>
+<span class="line-numbers">38</span>      <span class="comment"># tag::retryOn[]</span>
+<span class="line-numbers">39</span>      <span class="key">retryOn</span>: <span class="string"><span class="content">5xx</span></span>
+<span class="line-numbers">40</span>      <span class="comment"># end::retryOn[]</span>
+<span class="line-numbers">41</span>    <span class="comment"># end::istioRetry[]</span>
+<span class="line-numbers">42</span>  <span class="comment"># end::route[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make a request to the service by using <code>curl</code>:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H Host:inventory.example.com http://localhost/inventory/systems/system-service -I</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the <code>curl</code> command is unavailable, then use <a href="https://www.getpostman.com/" target="_blank" rel="noopener noreferrer">Postman</a>. Postman enables you
+to make requests using a graphical interface. To make a request with Postman, enter <code>http://localhost/inventory/systems/system-service</code>
+into the URL bar. Next, switch to the <code>Headers</code> tab and add a header with key of <code>Host</code> and value of <code>inventory.example.com</code>.
+Finally, click the blue <code>Send</code> button to make the request.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H Host:inventory.example.com http://`minikube ip`:31380/inventory/systems/system-service -I</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>HTTP/1.1 200 OK
+x-powered-by: Servlet/4.0
+content-type: application/json
+date: Mon, 19 Aug 2019 19:49:47 GMT
+content-language: en-US
+x-envoy-upstream-service-time: 4242
+server: istio-envoy
+transfer-encoding: chunked</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because the <code>system</code> service is available, the request to the service is successful and returns a <code>200</code> response code.</p>
+</div>
+<div class="paragraph">
+<p>To see the number of times that the <code>system</code> service was called, check the logs of the <code>system</code> pod by using the <code>kubectl logs</code> command.
+Replace <code>[system-pod-name]</code> with the pod name associated with
+your <code>system</code> service, which you previously saw when running the <code>kubectl get pods</code> command.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content mac_section linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl logs [system-pod-name] -c istio-proxy | grep -c system-service:9080</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl logs [system-pod-name] -c istio-proxy | find /C "system-service:9080"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see that the <code>kubectl logs</code> command returns a value of 1, meaning that 1 request is made to the <code>system</code> service:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now you will make the <code>system</code> service unavailable and observe that MicroProfile’s Retry policy will take effect.</p>
+</div>
+<div class="paragraph">
+<p>Pause the <code>system</code> service pod to simulate that the service is unavailable.
+Remember to replace <code>[system-pod-name]</code> with the pod name that is associated with your <code>system</code> service.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl exec -it [system-pod-name] -- /opt/ol/wlp/bin/server pause</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Pausing the defaultServer server.
+Pausing the defaultServer server completed.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make a request to the service by using <code>curl</code>:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H Host:inventory.example.com http://localhost/inventory/systems/system-service -I</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the <code>curl</code> command is unavailable, then use <a href="https://www.getpostman.com/" target="_blank" rel="noopener noreferrer">Postman</a>.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H Host:inventory.example.com http://`minikube ip`:31380/inventory/systems/system-service -I</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>HTTP/1.1 503 Service Unavailable
+x-powered-by: Servlet/4.0
+content-length: 91
+content-type: text/plain
+date: Thu, 15 Aug 2019 13:21:57 GMT
+server: istio-envoy
+x-envoy-upstream-service-time: 2929
+content-language: en-US</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because the the <code>system</code> service is unavailable, the request returns a <code>503</code> response code.
+However, the request retried several times, as specified by the MicroProfile <code>@Retry</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>See the number of times that the service was retried:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content mac_section linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl logs [system-pod-name] -c istio-proxy | grep -c system-service:9080</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl logs [system-pod-name] -c istio-proxy | find /C "system-service:9080"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>37</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above command returns 37, because there was a total of 37 requests made to the <code>system</code> service.
+By default, Istio will retry 2 times to resolve any issues with a <code>503</code> response code.
+Including the initial requests and the retries, the requests made by Istio are multiplied by the requests made by MicroProfile.
+Hence, the 3 requests from the <code>system</code> service, the 3 requests from the <code>inventory</code> service, and the 4 MicroProfile requests are multiplied together,
+giving a total of 36 requests. Including the succesful request that you made before you paused the <code>system</code> service, there was a total of 37 requests.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="enabling-istio-fault-tolerance">Enabling Istio Fault Tolerance</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Previously, you implemented the Retry policy to retry requests to your <code>system</code> service by using MicroProfile Fault Tolerance.
+This Retry policy can also be implemented with Istio Fault Tolerance.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Update the <code>traffic.yaml</code> file.</mark>
+<code>traffic.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>traffic.yaml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers"> 1</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers"> 2</span><span class="key">kind</span>: <span class="string"><span class="content">VirtualService</span></span>
+<span class="line-numbers"> 3</span><span class="key">metadata</span>:
+<span class="line-numbers"> 4</span>  <span class="key">name</span>: <span class="string"><span class="content">system-virtual-service</span></span>
+<span class="line-numbers"> 5</span><span class="key">spec</span>:
+<span class="line-numbers"> 6</span>  <span class="key">hosts</span>:
+<span class="line-numbers"> 7</span>  - <span class="string"><span class="delimiter">"</span><span class="content">system.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 8</span>  <span class="key">gateways</span>:
+<span class="line-numbers"> 9</span>  - <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers">10</span>  <span class="key">http</span>:
+<span class="line-numbers">11</span>  - <span class="string"><span class="content">route:</span></span>
+<span class="line-numbers">12</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">13</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">14</span><span class="string"><span class="content">          number: 9080</span></span>
+<span class="line-numbers">15</span><span class="string"><span class="content">        host: system-service</span></span>
+<span class="line-numbers">16</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">17</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers">18</span><span class="key">kind</span>: <span class="string"><span class="content">VirtualService</span></span>
+<span class="line-numbers">19</span><span class="key">metadata</span>:
+<span class="line-numbers">20</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-virtual-service</span></span>
+<span class="line-numbers">21</span><span class="key">spec</span>:
+<span class="line-numbers">22</span>  <span class="key">hosts</span>:
+<span class="line-numbers">23</span>  - <span class="string"><span class="delimiter">"</span><span class="content">inventory.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers">24</span>  <span class="key">gateways</span>:
+<span class="line-numbers">25</span>  - <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers">26</span>  <span class="key">http</span>:
+<span class="line-numbers">27</span>  <span class="comment"># tag::route[]</span>
+<span class="line-numbers">28</span>  - <span class="string"><span class="content">route:</span></span>
+<span class="line-numbers">29</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">30</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">31</span><span class="string"><span class="content">          number: 9081</span></span>
+<span class="line-numbers">32</span><span class="string"><span class="content">        host: inventory-service</span></span>
+<span class="line-numbers">33</span>    <span class="comment"># tag::istioRetry[]</span>
+<span class="line-numbers">34</span>    <span class="key">retries</span>:
+<span class="line-numbers">35</span>      <span class="comment"># tag::attempts[]</span>
+<span class="line-numbers">36</span>      <span class="key">attempts</span>: <span class="string"><span class="content">4</span></span>
+<span class="line-numbers">37</span>      <span class="comment"># end::attempts[]</span>
+<span class="line-numbers">38</span>      <span class="comment"># tag::retryOn[]</span>
+<span class="line-numbers">39</span>      <span class="key">retryOn</span>: <span class="string"><span class="content">5xx</span></span>
+<span class="line-numbers">40</span>      <span class="comment"># end::retryOn[]</span>
+<span class="line-numbers">41</span>    <span class="comment"># end::istioRetry[]</span>
+<span class="line-numbers">42</span>  <span class="comment"># end::route[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>Add the <code class="hotspot=istioRetry file=0">retries</code> field under the <code class="hotspot=route file=0">route</code> specification in the <code class="hotspot file=0">traffic.yaml</code> file.
+This tells Istio to retry requests a maximum of 4 times when the request returns any <code>5xx</code> response code.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=attempts file=0">attempts</code> field is required in the configuration of the
+<a href="https://istio.io/docs/reference/config/networking/v1alpha3/virtual-service/#HTTPRetry" target="_blank" rel="noopener noreferrer">Istio Retry</a> policy. This field specifies the
+maximum number of retries that will be attempted for a given request. To retry a request on specific conditions, use the
+<code class="hotspot=retryOn file=0">retryOn</code> field. Because your paused <code>system</code> service responds with a <code>503</code> response code,
+you set <code class="hotspot=retryOn file=0">retryOn</code> to be <code>5xx</code>.
+Other <a href="https://www.envoyproxy.io/docs/envoy/latest/configuration/http/http_filters/router_filter#x-envoy-retry-on" target="_blank" rel="noopener noreferrer">retry conditions</a>
+can also be specified in <code class="hotspot=retryOn file=0">retryOn</code>. Optionally, the <code>perTryTimeout</code> field can be added to Istio’s Retry policy
+to specify the amount of time that is allocated to each retry attempt.</p>
+</div>
+<div class="paragraph">
+<p>After you configure the number of retries that Istio performs, deploy your microservices again:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl replace --force -f services.yaml
+kubectl replace --force -f traffic.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait until all of your deployments are ready and available.
+The <code>[system-pod-name]</code> will be regenerated and is different than the one you used previously.
+Run the <code>kubectl get pods</code> command to get the new <code>[system-pod-name]</code>.
+Pause the <code>system</code> service pod to simulate that the service is unavailable.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl exec -it [system-pod-name] -- /opt/ol/wlp/bin/server pause</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make a request to the service by using <code>curl</code>:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H Host:inventory.example.com http://localhost/inventory/systems/system-service -I</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the <code>curl</code> command is unavailable, then use <a href="https://www.getpostman.com/" target="_blank" rel="noopener noreferrer">Postman</a>.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H Host:inventory.example.com http://`minikube ip`:31380/inventory/systems/system-service -I</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Because the <code>system</code> service is unavailable, the request still returns a <code>503</code> response code.
+This time, however, Istio retried the request several more times before failing.</p>
+</div>
+<div class="paragraph">
+<p>See the number of times that the service was retried:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content mac_section linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl logs [system-pod-name] -c istio-proxy | grep -c system-service:9080</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl logs [system-pod-name] -c istio-proxy | find /C "system-service:9080"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>60</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above command returns a value of 60, indicating that a total of 60 requests are made to the <code>system</code> service.
+The 3 default Istio requests for the <code>system</code> service, the 5 requests for the <code>inventory</code> service
+that you enabled in the <code class="hotspot file=0">traffic.yaml</code> file, and the 4 requests sent by MicroProfile are multiplied together.</p>
+</div>
+<div class="paragraph">
+<p>Next, you will disable some MicroProfile Fault Tolerance capabilities, so that your <code>system</code> service retries with only Istio’s Retry policy.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="turning-off-microprofile-fault-tolerance">Turning off MicroProfile Fault Tolerance</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When both MicroProfile and Istio Fault Tolerance capabilities are enabled, there is a compounding effect that may be unexpected.
+If both MicroProfile and Istio set their own Retry policies on a service,
+the maximum number of retries that occur is not equivalent to either of the number of retries specified in MicroProfile or Istio.
+The number of retries set by MicroProfile and Istio are actually multiplied.</p>
+</div>
+<div class="paragraph">
+<p>If you want to use Istio as your service mesh and only its fault tolerance capabilities,
+you can turn off MicroProfile Fault Tolerance by adding a property. This configuration avoids any overlap in behaviours.</p>
+</div>
+<div class="paragraph">
+<p>MicroProfile Fault Tolerance offers a config property <code>MP_Fault_Tolerance_NonFallback_Enabled</code> that disables all
+MicroProfile Fault Tolerance capabilities except fallback. If <code>MP_Fault_Tolerance_NonFallback_Enabled</code> is set to false, only
+the <code>@Fallback</code> behaviour is enabled. The other behaviours specified by the MicroProfile Fault Tolerance annotations,
+including <code>@Retry</code>, won’t take effect.</p>
+</div>
+<div class="paragraph">
+<p>You will define the <code>MP_Fault_Tolerance_NonFallback_Enabled</code> config property in a ConfigMap.
+ConfigMaps store configuration settings about a Kubernetes pod. This configuration is loaded into the pod as an environment variable that is
+used by the pod’s containers. The environment variables are defined in the pod’s specification by using the <code>envFrom</code> field. To learn more about ConfigMaps,
+check out the <a href="https://openliberty.io/guides/kubernetes-microprofile-config.html" target="_blank" rel="noopener">Configuring microservices running in Kubernetes</a> guide.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>MP_Fault_Tolerance_NonFallback_Enabled</code> config property to disable the retries performed by MicroProfile,
+so that only Istio performs retries.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Update the <code>services.yaml</code> file.</mark>
+<code>services.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>services.yaml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers">  1</span><span class="comment"># tag::gateway[]</span>
+<span class="line-numbers">  2</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers">  3</span><span class="key">kind</span>: <span class="string"><span class="content">Gateway</span></span>
+<span class="line-numbers">  4</span><span class="key">metadata</span>:
+<span class="line-numbers">  5</span>  <span class="key">name</span>: <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers">  6</span><span class="key">spec</span>:
+<span class="line-numbers">  7</span>  <span class="key">selector</span>:
+<span class="line-numbers">  8</span>    <span class="key">istio</span>: <span class="string"><span class="content">ingressgateway</span></span>
+<span class="line-numbers">  9</span>  <span class="key">servers</span>:
+<span class="line-numbers"> 10</span>  - <span class="string"><span class="content">port:</span><span class="content"></span></span>
+<span class="line-numbers"> 11</span><span class="string"><span class="content">      number: 80</span></span>
+<span class="line-numbers"> 12</span><span class="string"><span class="content">      name: http</span></span>
+<span class="line-numbers"> 13</span><span class="string"><span class="content">      protocol: HTTP</span></span>
+<span class="line-numbers"> 14</span>    <span class="key">hosts</span>:
+<span class="line-numbers"> 15</span>    - <span class="string"><span class="delimiter">"</span><span class="content">system.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 16</span>    - <span class="string"><span class="delimiter">"</span><span class="content">inventory.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 17</span><span class="comment"># end::gateway[]</span>
+<span class="line-numbers"> 18</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 19</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers"> 20</span><span class="key">kind</span>: <span class="string"><span class="content">Service</span></span>
+<span class="line-numbers"> 21</span><span class="key">metadata</span>:
+<span class="line-numbers"> 22</span>  <span class="key">name</span>: <span class="string"><span class="content">system-service</span></span>
+<span class="line-numbers"> 23</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 24</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 25</span><span class="key">spec</span>:
+<span class="line-numbers"> 26</span>  <span class="key">ports</span>:
+<span class="line-numbers"> 27</span>  - <span class="string"><span class="content">port: 9080</span></span>
+<span class="line-numbers"> 28</span>    <span class="key">name</span>: <span class="string"><span class="content">http</span></span>
+<span class="line-numbers"> 29</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 30</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 31</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 32</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers"> 33</span><span class="key">kind</span>: <span class="string"><span class="content">Service</span></span>
+<span class="line-numbers"> 34</span><span class="key">metadata</span>:
+<span class="line-numbers"> 35</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-service</span></span>
+<span class="line-numbers"> 36</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 37</span>    <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 38</span><span class="key">spec</span>:
+<span class="line-numbers"> 39</span>  <span class="key">ports</span>:
+<span class="line-numbers"> 40</span>  - <span class="string"><span class="content">port: 9081</span></span>
+<span class="line-numbers"> 41</span>    <span class="key">name</span>: <span class="string"><span class="content">http</span></span>
+<span class="line-numbers"> 42</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 43</span>    <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 44</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 45</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="line-numbers"> 46</span><span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="line-numbers"> 47</span><span class="key">metadata</span>:
+<span class="line-numbers"> 48</span>  <span class="key">name</span>: <span class="string"><span class="content">system-deployment</span></span>
+<span class="line-numbers"> 49</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 50</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 51</span><span class="key">spec</span>:
+<span class="line-numbers"> 52</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 53</span>    <span class="key">matchLabels</span>:
+<span class="line-numbers"> 54</span>      <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 55</span>  <span class="key">template</span>:
+<span class="line-numbers"> 56</span>    <span class="key">metadata</span>:
+<span class="line-numbers"> 57</span>      <span class="key">labels</span>:
+<span class="line-numbers"> 58</span>        <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 59</span>    <span class="key">spec</span>:
+<span class="line-numbers"> 60</span>      <span class="key">containers</span>:
+<span class="line-numbers"> 61</span>      - <span class="string"><span class="content">name: system-container</span></span>
+<span class="line-numbers"> 62</span>        <span class="key">image</span>: <span class="string"><span class="content">system:1.0-SNAPSHOT</span></span>
+<span class="line-numbers"> 63</span>        <span class="key">ports</span>:
+<span class="line-numbers"> 64</span>        - <span class="string"><span class="content">containerPort: 9080</span></span>
+<span class="line-numbers"> 65</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 66</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="line-numbers"> 67</span><span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="line-numbers"> 68</span><span class="key">metadata</span>:
+<span class="line-numbers"> 69</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-deployment</span></span>
+<span class="line-numbers"> 70</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 71</span>    <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 72</span><span class="key">spec</span>:
+<span class="line-numbers"> 73</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 74</span>    <span class="key">matchLabels</span>:
+<span class="line-numbers"> 75</span>      <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 76</span>  <span class="key">template</span>:
+<span class="line-numbers"> 77</span>    <span class="key">metadata</span>:
+<span class="line-numbers"> 78</span>      <span class="key">labels</span>:
+<span class="line-numbers"> 79</span>        <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 80</span>    <span class="key">spec</span>:
+<span class="line-numbers"> 81</span>      <span class="key">containers</span>:
+<span class="line-numbers"> 82</span>      - <span class="string"><span class="content">name: inventory-container</span></span>
+<span class="line-numbers"> 83</span>        <span class="comment"># tag::invImage[]</span>
+<span class="line-numbers"> 84</span>        <span class="key">image</span>: <span class="string"><span class="content">inventory:1.0-SNAPSHOT</span></span>
+<span class="line-numbers"> 85</span>        <span class="comment"># end::invImage[]</span>
+<span class="line-numbers"> 86</span>        <span class="key">ports</span>:
+<span class="line-numbers"> 87</span>        - <span class="string"><span class="content">containerPort: 9081</span></span>
+<span class="line-numbers"> 88</span>        <span class="comment"># tag::invConfig[]</span>
+<span class="line-numbers"> 89</span>        <span class="key">envFrom</span>:
+<span class="line-numbers"> 90</span>        - <span class="string"><span class="content">configMapRef:</span><span class="content"></span></span>
+<span class="line-numbers"> 91</span><span class="string"><span class="content">            # tag::configName2[]</span></span>
+<span class="line-numbers"> 92</span><span class="string"><span class="content">            name: inventory-config</span></span>
+<span class="line-numbers"> 93</span><span class="string"><span class="content">            # end::configName2[]</span></span>
+<span class="line-numbers"> 94</span>        <span class="comment"># end::invConfig[]</span>
+<span class="line-numbers"> 95</span><span class="comment"># tag::configHide[]</span>
+<span class="line-numbers"> 96</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 97</span><span class="comment"># tag::configMap[]</span>
+<span class="line-numbers"> 98</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers"> 99</span><span class="key">kind</span>: <span class="string"><span class="content">ConfigMap</span></span>
+<span class="line-numbers">100</span><span class="key">metadata</span>:
+<span class="line-numbers">101</span>  <span class="comment"># tag::configName[]</span>
+<span class="line-numbers">102</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-config</span></span>
+<span class="line-numbers">103</span>  <span class="comment"># end::configName[]</span>
+<span class="line-numbers">104</span><span class="key">data</span>:
+<span class="line-numbers">105</span>  <span class="comment"># tag::nonFallback[]</span>
+<span class="line-numbers">106</span>  <span class="key">MP_Fault_Tolerance_NonFallback_Enabled</span>: <span class="string"><span class="delimiter">"</span><span class="content">false</span><span class="delimiter">"</span></span>
+<span class="line-numbers">107</span>  <span class="comment"># end::nonFallback[]</span>
+<span class="line-numbers">108</span><span class="comment"># end::configMap[]</span>
+<span class="line-numbers">109</span><span class="comment"># end::configHide[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>Add a <code class="hotspot=configMap file=0">ConfigMap</code> into the <code class="hotspot file=0">services.yaml</code> file, and
+set the <code class="hotspot=nonFallback file=0">MP_Fault_Tolerance_NonFallback_Enabled</code> config property to false.
+Add the <code class="hotspot=invConfig file=0">envFrom</code> field
+to inject the <code class="hotspot=configMap file=0">ConfigMap</code> with the <code class="hotspot=nonFallback file=0">MP_Fault_Tolerance_NonFallback_Enabled</code> property into your pods.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=configName file=0">name</code> of the <code class="hotspot=configMap file=0">ConfigMap</code>, which is <code class="hotspot=configName file=0">inventory-config</code>,
+becomes the environment variable <code class="hotspot=configName2 file=0">name</code> that is specified in the <code class="hotspot=invConfig file=0">envFrom</code> field.</p>
+</div>
+<div class="paragraph">
+<p>Deploy your microservices again to turn off all MicroProfile Fault Tolerance capabilities, except fallback:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl replace --force -f services.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait until all of your deployments are ready and available.
+Run the <code>kubectl get pods</code> command to get the new <code>[system-pod-name]</code>.
+Pause the <code>system</code> service pod to simulate that the service is unavailable:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl exec -it [system-pod-name] -- /opt/ol/wlp/bin/server pause</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make a request to the service by using <code>curl</code>:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H Host:inventory.example.com http://localhost/inventory/systems/system-service -I</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the <code>curl</code> command is unavailable, then use <a href="https://www.getpostman.com/" target="_blank" rel="noopener noreferrer">Postman</a>.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H Host:inventory.example.com http://`minikube ip`:31380/inventory/systems/system-service -I</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Because the <code>system</code> service is unavailable, the request still returns a <code>503</code> response code.
+This time, however, the request was retried several times with Istio, without any retries from MicroProfile.</p>
+</div>
+<div class="paragraph">
+<p>See the number of times that the service was retried:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content mac_section linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl logs [system-pod-name] -c istio-proxy | grep -c system-service:9080</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl logs [system-pod-name] -c istio-proxy | find /C "system-service:9080"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>15</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above command returns 15, indicating that a total of 15 requests are made to the <code>system</code> service.
+Because MicroProfile’s Retry policy is disabled, only Istio’s retries are performed.</p>
+</div>
+<div class="paragraph">
+<p>traffic.yaml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers"> 1</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers"> 2</span><span class="key">kind</span>: <span class="string"><span class="content">VirtualService</span></span>
+<span class="line-numbers"> 3</span><span class="key">metadata</span>:
+<span class="line-numbers"> 4</span>  <span class="key">name</span>: <span class="string"><span class="content">system-virtual-service</span></span>
+<span class="line-numbers"> 5</span><span class="key">spec</span>:
+<span class="line-numbers"> 6</span>  <span class="key">hosts</span>:
+<span class="line-numbers"> 7</span>  - <span class="string"><span class="delimiter">"</span><span class="content">system.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 8</span>  <span class="key">gateways</span>:
+<span class="line-numbers"> 9</span>  - <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers">10</span>  <span class="key">http</span>:
+<span class="line-numbers">11</span>  - <span class="string"><span class="content">route:</span></span>
+<span class="line-numbers">12</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">13</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">14</span><span class="string"><span class="content">          number: 9080</span></span>
+<span class="line-numbers">15</span><span class="string"><span class="content">        host: system-service</span></span>
+<span class="line-numbers">16</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">17</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers">18</span><span class="key">kind</span>: <span class="string"><span class="content">VirtualService</span></span>
+<span class="line-numbers">19</span><span class="key">metadata</span>:
+<span class="line-numbers">20</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-virtual-service</span></span>
+<span class="line-numbers">21</span><span class="key">spec</span>:
+<span class="line-numbers">22</span>  <span class="key">hosts</span>:
+<span class="line-numbers">23</span>  - <span class="string"><span class="delimiter">"</span><span class="content">inventory.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers">24</span>  <span class="key">gateways</span>:
+<span class="line-numbers">25</span>  - <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers">26</span>  <span class="key">http</span>:
+<span class="line-numbers">27</span>  <span class="comment"># tag::route[]</span>
+<span class="line-numbers">28</span>  - <span class="string"><span class="content">route:</span></span>
+<span class="line-numbers">29</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">30</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">31</span><span class="string"><span class="content">          number: 9081</span></span>
+<span class="line-numbers">32</span><span class="string"><span class="content">        host: inventory-service</span></span>
+<span class="line-numbers">33</span>    <span class="comment"># tag::istioRetry[]</span>
+<span class="line-numbers">34</span>    <span class="key">retries</span>:
+<span class="line-numbers">35</span>      <span class="comment"># tag::attempts[]</span>
+<span class="line-numbers">36</span>      <span class="key">attempts</span>: <span class="string"><span class="content">4</span></span>
+<span class="line-numbers">37</span>      <span class="comment"># end::attempts[]</span>
+<span class="line-numbers">38</span>      <span class="comment"># tag::retryOn[]</span>
+<span class="line-numbers">39</span>      <span class="key">retryOn</span>: <span class="string"><span class="content">5xx</span></span>
+<span class="line-numbers">40</span>      <span class="comment"># end::retryOn[]</span>
+<span class="line-numbers">41</span>    <span class="comment"># end::istioRetry[]</span>
+<span class="line-numbers">42</span>  <span class="comment"># end::route[]</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-microprofile-fallback">Using MicroProfile Fallback</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>services.yaml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers">  1</span><span class="comment"># tag::gateway[]</span>
+<span class="line-numbers">  2</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers">  3</span><span class="key">kind</span>: <span class="string"><span class="content">Gateway</span></span>
+<span class="line-numbers">  4</span><span class="key">metadata</span>:
+<span class="line-numbers">  5</span>  <span class="key">name</span>: <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers">  6</span><span class="key">spec</span>:
+<span class="line-numbers">  7</span>  <span class="key">selector</span>:
+<span class="line-numbers">  8</span>    <span class="key">istio</span>: <span class="string"><span class="content">ingressgateway</span></span>
+<span class="line-numbers">  9</span>  <span class="key">servers</span>:
+<span class="line-numbers"> 10</span>  - <span class="string"><span class="content">port:</span><span class="content"></span></span>
+<span class="line-numbers"> 11</span><span class="string"><span class="content">      number: 80</span></span>
+<span class="line-numbers"> 12</span><span class="string"><span class="content">      name: http</span></span>
+<span class="line-numbers"> 13</span><span class="string"><span class="content">      protocol: HTTP</span></span>
+<span class="line-numbers"> 14</span>    <span class="key">hosts</span>:
+<span class="line-numbers"> 15</span>    - <span class="string"><span class="delimiter">"</span><span class="content">system.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 16</span>    - <span class="string"><span class="delimiter">"</span><span class="content">inventory.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 17</span><span class="comment"># end::gateway[]</span>
+<span class="line-numbers"> 18</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 19</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers"> 20</span><span class="key">kind</span>: <span class="string"><span class="content">Service</span></span>
+<span class="line-numbers"> 21</span><span class="key">metadata</span>:
+<span class="line-numbers"> 22</span>  <span class="key">name</span>: <span class="string"><span class="content">system-service</span></span>
+<span class="line-numbers"> 23</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 24</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 25</span><span class="key">spec</span>:
+<span class="line-numbers"> 26</span>  <span class="key">ports</span>:
+<span class="line-numbers"> 27</span>  - <span class="string"><span class="content">port: 9080</span></span>
+<span class="line-numbers"> 28</span>    <span class="key">name</span>: <span class="string"><span class="content">http</span></span>
+<span class="line-numbers"> 29</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 30</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 31</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 32</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers"> 33</span><span class="key">kind</span>: <span class="string"><span class="content">Service</span></span>
+<span class="line-numbers"> 34</span><span class="key">metadata</span>:
+<span class="line-numbers"> 35</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-service</span></span>
+<span class="line-numbers"> 36</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 37</span>    <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 38</span><span class="key">spec</span>:
+<span class="line-numbers"> 39</span>  <span class="key">ports</span>:
+<span class="line-numbers"> 40</span>  - <span class="string"><span class="content">port: 9081</span></span>
+<span class="line-numbers"> 41</span>    <span class="key">name</span>: <span class="string"><span class="content">http</span></span>
+<span class="line-numbers"> 42</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 43</span>    <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 44</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 45</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="line-numbers"> 46</span><span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="line-numbers"> 47</span><span class="key">metadata</span>:
+<span class="line-numbers"> 48</span>  <span class="key">name</span>: <span class="string"><span class="content">system-deployment</span></span>
+<span class="line-numbers"> 49</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 50</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 51</span><span class="key">spec</span>:
+<span class="line-numbers"> 52</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 53</span>    <span class="key">matchLabels</span>:
+<span class="line-numbers"> 54</span>      <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 55</span>  <span class="key">template</span>:
+<span class="line-numbers"> 56</span>    <span class="key">metadata</span>:
+<span class="line-numbers"> 57</span>      <span class="key">labels</span>:
+<span class="line-numbers"> 58</span>        <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 59</span>    <span class="key">spec</span>:
+<span class="line-numbers"> 60</span>      <span class="key">containers</span>:
+<span class="line-numbers"> 61</span>      - <span class="string"><span class="content">name: system-container</span></span>
+<span class="line-numbers"> 62</span>        <span class="key">image</span>: <span class="string"><span class="content">system:1.0-SNAPSHOT</span></span>
+<span class="line-numbers"> 63</span>        <span class="key">ports</span>:
+<span class="line-numbers"> 64</span>        - <span class="string"><span class="content">containerPort: 9080</span></span>
+<span class="line-numbers"> 65</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 66</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="line-numbers"> 67</span><span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="line-numbers"> 68</span><span class="key">metadata</span>:
+<span class="line-numbers"> 69</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-deployment</span></span>
+<span class="line-numbers"> 70</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 71</span>    <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 72</span><span class="key">spec</span>:
+<span class="line-numbers"> 73</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 74</span>    <span class="key">matchLabels</span>:
+<span class="line-numbers"> 75</span>      <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 76</span>  <span class="key">template</span>:
+<span class="line-numbers"> 77</span>    <span class="key">metadata</span>:
+<span class="line-numbers"> 78</span>      <span class="key">labels</span>:
+<span class="line-numbers"> 79</span>        <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 80</span>    <span class="key">spec</span>:
+<span class="line-numbers"> 81</span>      <span class="key">containers</span>:
+<span class="line-numbers"> 82</span>      - <span class="string"><span class="content">name: inventory-container</span></span>
+<span class="line-numbers"> 83</span>        <span class="comment"># tag::invImage[]</span>
+<span class="line-numbers"> 84</span>        <span class="key">image</span>: <span class="string"><span class="content">inventory:1.0-SNAPSHOT</span></span>
+<span class="line-numbers"> 85</span>        <span class="comment"># end::invImage[]</span>
+<span class="line-numbers"> 86</span>        <span class="key">ports</span>:
+<span class="line-numbers"> 87</span>        - <span class="string"><span class="content">containerPort: 9081</span></span>
+<span class="line-numbers"> 88</span>        <span class="comment"># tag::invConfig[]</span>
+<span class="line-numbers"> 89</span>        <span class="key">envFrom</span>:
+<span class="line-numbers"> 90</span>        - <span class="string"><span class="content">configMapRef:</span><span class="content"></span></span>
+<span class="line-numbers"> 91</span><span class="string"><span class="content">            # tag::configName2[]</span></span>
+<span class="line-numbers"> 92</span><span class="string"><span class="content">            name: inventory-config</span></span>
+<span class="line-numbers"> 93</span><span class="string"><span class="content">            # end::configName2[]</span></span>
+<span class="line-numbers"> 94</span>        <span class="comment"># end::invConfig[]</span>
+<span class="line-numbers"> 95</span><span class="comment"># tag::configHide[]</span>
+<span class="line-numbers"> 96</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 97</span><span class="comment"># tag::configMap[]</span>
+<span class="line-numbers"> 98</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers"> 99</span><span class="key">kind</span>: <span class="string"><span class="content">ConfigMap</span></span>
+<span class="line-numbers">100</span><span class="key">metadata</span>:
+<span class="line-numbers">101</span>  <span class="comment"># tag::configName[]</span>
+<span class="line-numbers">102</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-config</span></span>
+<span class="line-numbers">103</span>  <span class="comment"># end::configName[]</span>
+<span class="line-numbers">104</span><span class="key">data</span>:
+<span class="line-numbers">105</span>  <span class="comment"># tag::nonFallback[]</span>
+<span class="line-numbers">106</span>  <span class="key">MP_Fault_Tolerance_NonFallback_Enabled</span>: <span class="string"><span class="delimiter">"</span><span class="content">false</span><span class="delimiter">"</span></span>
+<span class="line-numbers">107</span>  <span class="comment"># end::nonFallback[]</span>
+<span class="line-numbers">108</span><span class="comment"># end::configMap[]</span>
+<span class="line-numbers">109</span><span class="comment"># end::configHide[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since retrying the requests to the <code>system</code> service still does not succeed, you need a "fall back" plan.
+You will create a fallback method as an alternative solution for when retry requests to the <code>system</code> service have failed.</p>
+</div>
+<div class="paragraph">
+<p>Although you disabled MicroProfile <code>@Retry</code> and other MicroProfile Fault Tolerance policies using the
+<code class="hotspot=nonFallback file=0">MP_Fault_Tolerance_NonFallback_Enabled</code> config property, the fallback policy is still available.
+As mentioned before, Istio does not offer any fallback capabilities, so the MicroProfile Fallback capability can be used to complement it.</p>
+</div>
+<div class="paragraph">
+<p>The <code>@Fallback</code> annotation dictates a method to call when the original method encounters a failed execution.
+If your microservices have a Retry policy specified, then the fallback occurs after all of the retries have failed.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Update the <code>InventoryResource.java</code> file.</mark>
+<code>inventory/src/main/java/io/openliberty/guides/inventory/InventoryResource.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2019, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.net.MalformedURLException</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">java.net.URL</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.POST</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.ProcessingException</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.WebApplicationException</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 29</span>
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.faulttolerance.Fallback</span>;
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.faulttolerance.Retry</span>;
+<span class="line-numbers"> 32</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.RestClientBuilder</span>;
+<span class="line-numbers"> 33</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers"> 34</span>
+<span class="line-numbers"> 35</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.SystemClient</span>;
+<span class="line-numbers"> 36</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.UnknownUrlException</span>;
+<span class="line-numbers"> 37</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.UnknownUrlExceptionMapper</span>;
+<span class="line-numbers"> 38</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers"> 39</span>
+<span class="line-numbers"> 40</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers"> 41</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 42</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers"> 43</span>
+<span class="line-numbers"> 44</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers"> 45</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">system.http.port</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 46</span>  <span class="predefined-type">String</span> SYS_HTTP_PORT;
+<span class="line-numbers"> 47</span>
+<span class="line-numbers"> 48</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers"> 49</span>  InventoryManager manager;
+<span class="line-numbers"> 50</span>
+<span class="line-numbers"> 51</span>  <span class="annotation">@GET</span>
+<span class="line-numbers"> 52</span>  <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 53</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 54</span>  <span class="comment">// tag::fallback[]</span>
+<span class="line-numbers"> 55</span>  <span class="annotation">@Fallback</span>(fallbackMethod = <span class="string"><span class="delimiter">"</span><span class="content">getPropertiesFallback</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 56</span>  <span class="comment">// end::fallback[]</span>
+<span class="line-numbers"> 57</span>  <span class="comment">// tag::mpRetry[]</span>
+<span class="line-numbers"> 58</span>  <span class="annotation">@Retry</span>(maxRetries = <span class="integer">3</span>, retryOn = WebApplicationException.class)
+<span class="line-numbers"> 59</span>  <span class="comment">// end::mpRetry[]</span>
+<span class="line-numbers"> 60</span>  <span class="comment">// tag::getPropertiesForHost[]</span>
+<span class="line-numbers"> 61</span>  <span class="directive">public</span> Response getPropertiesForHost(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname)
+<span class="line-numbers"> 62</span>        <span class="comment">// tag::webApplicationException[]</span>
+<span class="line-numbers"> 63</span>        <span class="directive">throws</span> WebApplicationException, ProcessingException, UnknownUrlException {
+<span class="line-numbers"> 64</span>        <span class="comment">// end::webApplicationException[]</span>
+<span class="line-numbers"> 65</span>  <span class="comment">// end::getPropertiesForHost[]</span>
+<span class="line-numbers"> 66</span>
+<span class="line-numbers"> 67</span>    <span class="predefined-type">String</span> customURLString = <span class="string"><span class="delimiter">"</span><span class="content">http://</span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="content">:</span><span class="delimiter">"</span></span> + SYS_HTTP_PORT + <span class="string"><span class="delimiter">"</span><span class="content">/system</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 68</span>    <span class="predefined-type">URL</span> customURL = <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 69</span>    <span class="predefined-type">Properties</span> props = <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 70</span>    <span class="keyword">try</span> {
+<span class="line-numbers"> 71</span>        customURL = <span class="keyword">new</span> <span class="predefined-type">URL</span>(customURLString);
+<span class="line-numbers"> 72</span>        SystemClient systemClient = RestClientBuilder.newBuilder()
+<span class="line-numbers"> 73</span>                .baseUrl(customURL)
+<span class="line-numbers"> 74</span>                .register(UnknownUrlExceptionMapper.class)
+<span class="line-numbers"> 75</span>                .build(SystemClient.class);
+<span class="line-numbers"> 76</span>        <span class="comment">// tag::getProperties[]</span>
+<span class="line-numbers"> 77</span>        props = systemClient.getProperties();
+<span class="line-numbers"> 78</span>        <span class="comment">// end::getProperties[]</span>
+<span class="line-numbers"> 79</span>    } <span class="keyword">catch</span> (<span class="exception">MalformedURLException</span> e) {
+<span class="line-numbers"> 80</span>      <span class="predefined-type">System</span>.err.println(<span class="string"><span class="delimiter">"</span><span class="content">The given URL is not formatted correctly: </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 81</span>                         + customURLString);
+<span class="line-numbers"> 82</span>    }
+<span class="line-numbers"> 83</span>
+<span class="line-numbers"> 84</span>    <span class="keyword">if</span> (props == <span class="predefined-constant">null</span>) {
+<span class="line-numbers"> 85</span>      <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers"> 86</span>                     .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Unknown hostname</span><span class="delimiter">"</span></span> + hostname
+<span class="line-numbers"> 87</span>                             + <span class="string"><span class="delimiter">"</span><span class="content"> or the resource may not be running on the</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 88</span>                             + <span class="string"><span class="delimiter">"</span><span class="content"> host machine</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 89</span>                     .build();
+<span class="line-numbers"> 90</span>    }
+<span class="line-numbers"> 91</span>
+<span class="line-numbers"> 92</span>    manager.add(hostname, props);
+<span class="line-numbers"> 93</span>    <span class="keyword">return</span> Response.ok(props).build();
+<span class="line-numbers"> 94</span>  }
+<span class="line-numbers"> 95</span>
+<span class="line-numbers"> 96</span>  <span class="comment">// tag::fallbackMethod[]</span>
+<span class="line-numbers"> 97</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 98</span>  <span class="directive">public</span> Response getPropertiesFallback(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers"> 99</span>      <span class="predefined-type">Properties</span> props = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+<span class="line-numbers">100</span>      props.put(<span class="string"><span class="delimiter">"</span><span class="content">error</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">Unknown hostname or the system service may not be running.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">101</span>        <span class="keyword">return</span> Response.ok(props)
+<span class="line-numbers">102</span>                  .header(<span class="string"><span class="delimiter">"</span><span class="content">X-From-Fallback</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">yes</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">103</span>                  .build();
+<span class="line-numbers">104</span>  }
+<span class="line-numbers">105</span>  <span class="comment">// end::fallbackMethod[]</span>
+<span class="line-numbers">106</span>
+<span class="line-numbers">107</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">108</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">109</span>  <span class="directive">public</span> InventoryList listContents() {
+<span class="line-numbers">110</span>    <span class="keyword">return</span> manager.list();
+<span class="line-numbers">111</span>  }
+<span class="line-numbers">112</span>
+<span class="line-numbers">113</span>  <span class="annotation">@POST</span>
+<span class="line-numbers">114</span>  <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/reset</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">115</span>  <span class="directive">public</span> <span class="type">void</span> reset() {
+<span class="line-numbers">116</span>    manager.reset();
+<span class="line-numbers">117</span>  }
+<span class="line-numbers">118</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>Create the <code class="hotspot=fallbackMethod file=1">getPropertiesFallback()</code> method.
+Add the <code class="hotspot=fallback file=1">@Fallback</code> annotation before the <code class="hotspot=getPropertiesForHost file=1">getPropertiesForHost()</code> method,
+to call the <code class="hotspot=fallbackMethod file=1">getPropertiesFallback()</code> method when a failure occurs.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=fallbackMethod file=1">getPropertiesFallback()</code> method, which is the designated fallback method for the original
+<code class="hotspot=getPropertiesForHost file=1">getPropertiesForHost()</code> method, prints out a warning message in the browser that says
+the <code>system</code> service may not be running.</p>
+</div>
+<div class="paragraph">
+<p>Rebuild your application to add fallback behaviour to your microservices:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, run the <code>docker build</code> commands to rebuild the container images for your application:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker build -t inventory:1.0-SNAPSHOT inventory/.
+docker build -t system:1.0-SNAPSHOT system/.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Deploy your microservices again to turn off all MicroProfile Fault Tolerance capabilities, except fallback:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl replace --force -f services.yaml
+kubectl replace --force -f traffic.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait until all of your deployments are ready and available.
+Run the <code>kubectl get pods</code> command to get the new <code>[system-pod-name]</code>.
+Pause the <code>system</code> service pod to simulate that the service is unavailable:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl exec -it [system-pod-name] -- /opt/ol/wlp/bin/server pause</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make a request to the service by using <code>curl</code>:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H Host:inventory.example.com http://localhost/inventory/systems/system-service -I</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the <code>curl</code> command is unavailable, then use <a href="https://www.getpostman.com/" target="_blank" rel="noopener noreferrer">Postman</a>.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H Host:inventory.example.com http://`minikube ip`:31380/inventory/systems/system-service -I</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>HTTP/1.1 200 OK
+x-powered-by: Servlet/4.0
+x-from-fallback: yes
+content-type: application/json
+date: Mon, 19 Aug 2019 19:49:47 GMT
+content-language: en-US
+x-envoy-upstream-service-time: 4242
+server: istio-envoy
+transfer-encoding: chunked</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can see that the request is now successful and returns a <code>200</code> response code, with a header called
+<code>x-from-fallback</code>, indicating that the fallback method is called when the <code>system</code> service is not available.</p>
+</div>
+<div class="paragraph">
+<p>See the number of times that the service is retried before the fallback method is called:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content mac_section linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl logs [system-pod-name] -c istio-proxy | grep -c system-service:9080</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl logs [system-pod-name] -c istio-proxy | find /C "system-service:9080"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above command returns 3, indicating that a total of 3 requests are made to the <code>system</code> service.
+The Istio retries that you enabled on the <code>inventory</code> service are not performed, because the Fallback policy is enabled.
+However, the 3 default requests by Istio on the server end are still performed.
+Because all of these requests failed, the <code class="hotspot=fallbackMethod file=1">getPropertiesFallback()</code> fallback method is called.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tearing-down-your-environment">Tearing down your environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you are done checking out the MicroProfile and Istio Fault Tolerance features,
+you might want to tear down all the deployed resources as a cleanup step.</p>
+</div>
+<div class="paragraph">
+<p>Delete your resources from the cluster:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl delete -f services.yaml
+kubectl delete -f traffic.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Delete the <code>istio-injection</code> label from the default namespace. The hyphen immediately
+after the label name indicates that the label should be deleted.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl label namespace default istio-injection-</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Navigate to the directory where you extracted Istio and delete the Istio resources from the cluster:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl delete -f install/kubernetes/istio-demo.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Delete all Istio resources from the cluster:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>istioctl x uninstall --purge</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>istioctl x uninstall --purge</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>istioctl x uninstall --purge</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Perform the following steps to return your environment to a clean state.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Point the Docker daemon back to your local machine:</p>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>eval $(minikube docker-env -u)</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Stop and delete your Minikube cluster:</p>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>minikube stop
+minikube delete</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You learned how to build resilient microservices by using Istio Retry and MicroProfile Fallback.
+You also observed how MicroProfile Fault Tolerance integrates with and complements Istio Fault Tolerance.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Developing fault-tolerant microservices with Istio Retry and MicroProfile Fallback <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-microprofile-istio-retry-fallback/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-istio-retry-fallback/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-istio-retry-fallback/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

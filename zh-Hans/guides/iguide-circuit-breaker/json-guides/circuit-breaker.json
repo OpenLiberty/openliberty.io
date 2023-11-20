@@ -1,0 +1,862 @@
+{
+    "name": "CircuitBreaker",
+    "title": "@CircuitBreaker for Fault Tolerance",
+    "description": "Build a fault-tolerant microservice ...",
+    "duration": "10 minutes",
+    "audience": "developer",
+    "repo": "https://github.com/OpenLiberty/iguide-circuit-breaker",
+    "defaultWidgets": [
+        {
+            "displayType": "webBrowser",
+            "url": "https://global-ebank.openliberty.io/welcome",
+            "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+            "enable": false
+        },
+        {
+            "displayType": "tabbedEditor",
+            "enable": false,
+            "editorList": [
+                {
+                   "displayType": "fileEditor",
+                   "fileName": "server.xml",
+                   "preload": [
+                   "<?xml version=\"1.0\"?>",
+                   "<server description=\"Sample Liberty server\">",
+                   "   <featureManager>",
+                   "      <feature>cdi-2.0</feature>",
+                   "   </featureManager>",
+                   "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"{default.http.port}\"/>",
+                   "</server>"
+                   ]
+                }
+            ]
+        }
+    ],
+    "configWidgets": [
+        {
+            "displayType": "webBrowser",
+            "height": "300px"
+        },
+        {
+            "displayType": "pod",
+            "height": "150px"
+        },
+        {
+            "displayType": "tabbedEditor",
+            "height": "400px"
+        }
+    ],
+    "steps": [
+        {
+            "name": "Intro",
+            "title": "What you'll learn",
+            "guide_duration" : "25 minutes",
+            "description": [
+              "Explore how to build fault-tolerant microservices so that you can reduce the impact from failure and ensure continued operation of services. <a href='https://microprofile.io/' target='_blank' rel='noopener noreferrer'>MicroProfile</a> makes building fault-tolerant microservices easy with its <a href='https://github.com/eclipse/microprofile-fault-tolerance' target='_blank' rel='noopener noreferrer'>Fault Tolerance feature</a>.",
+              "You'll start with a sample bank scenario and see how it fails when no Fault Tolerance feature is in the example code. You'll then add the <code>mpFaultTolerance-3.0</code> feature to the <code>server.xml</code> file to use the MicroProfile Fault Tolerance feature. Next, you'll include the <code>@CircuitBreaker</code> annotation so that your microservice fails immediately to prevent repeated calls that are likely to fail.  You will explore and modify the parameters in the <code>@CircuitBreaker</code> annotation and simulate successful or failed requests to the microservice to see how the circuit state changes.  Finally, you will add a fallback service so you can see how to invoke an alternate method for a failing service."
+            ],
+            "sections" : [
+              {
+                "name": "backgroundConcepts",
+                "title": "Background Concepts",
+                "description": [
+                  "We are using the MicroProfile <b><i>CircuitBreaker</i></b> and <b><i>Fallback</i></b> policies for our fault tolerance implementation.",
+                  "<b><i>Microservice</i></b> is an architecture that structures an application loosely from other services so it is independent and modular.",
+                  "<h4>Circuit Breaker</h4>",
+                  "The circuit breaker design pattern allows your microservice to fail immediately to prevent repeated calls that are likely to fail.",
+                  "<div style='margin-top: -30px;'><div class=\"backgroundConcepts\"><img src=\"/guides/iguide-circuit-breaker/html/images/closed_labelled.svg\" alt=\"Closed circuit\"><img src=\"/guides/iguide-circuit-breaker/html/images/open_labelled.svg\" alt=\"Open circuit\"></div><p>The software circuit breaker operates much like an electrical circuit breaker. A <b><i>closed</i></b> circuit represents a fully functional system, and an <b><i>open</i></b> circuit represents an incomplete system. If a failure occurs, the circuit breaker triggers to open the circuit, removing the point of failure from the system.</p></div>",
+                  "<div style='margin-top: -60px;margin-bottom: -30px;'><div class=\"backgroundConcepts\"> <img src=\"/guides/iguide-circuit-breaker/html/images/half_labelled.svg\" alt=\"Half open circuit\"></div><p>In a software circuit breaker, an additional <b><i>half-open</i></b> state exists. After the circuit is opened, it periodically changes to the half-open state, where it checks whether the failed component is restored and closes the circuit after it is considered safe and functional.</p></div>",
+                  "<h4>Fallback</h4>",
+                  "A fallback service runs when the main service fails. It can provide graceful failure or continued or partial operation of the original service.",
+                  "In our example, we use a fallback service with a CircuitBreaker policy. When the circuit breaker opens, subsequent requests for the service are immediately routed to the fallback service until the main service is restored."
+                ]
+              }
+            ]
+        },
+        {
+          "name": "BankScenario",
+          "title": "Example: Bank Scenario",
+          "description": [
+            "Imagine that your online banking application has many different microservices:",
+            "<ul><li>A service for checking your balance<li>A service for transferring money<li>A service for depositing money<li>A balance snapshot service that is used as a backup of data</ul>",
+            "<div class='bankScenarioImg'><img src='/guides/iguide-circuit-breaker/html/images/bank_1.svg' alt='Online Banking Microservices'></div>",
+            "Visit your bank's website to check your current balance."          ],
+          "instruction": [
+            "Click <action title='Open page' onclick=\"circuitBreakerCallBack.enterButtonURLCheckBalance(event, 'BankScenario')\">Open page</action> or enter the following URL into the sample browser: https://global-ebank.openliberty.io/checkBalance"
+          ],
+          "content":[
+            {
+              "displayType":"webBrowser",
+              "url": "https://global-ebank.openliberty.io/welcome",
+              "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+              "callback": "(function test(webBrowser) {circuitBreakerCallBack.listenToBrowserForFailBalance(webBrowser); })",
+              "active": true
+            },
+            {
+                "displayType":"pod",
+                "hidden": true
+            },
+            {
+                "displayType": "tabbedEditor",
+                "enable": false,
+                "editorList": [
+                    {
+                       "displayType": "fileEditor",
+                       "fileName": "server.xml",
+                       "preload": [
+                       "<?xml version=\"1.0\"?>",
+                       "<server description=\"Sample Liberty server\">",
+                       "   <featureManager>",
+                       "      <feature>cdi-2.0</feature>",
+                       "   </featureManager>",
+                       "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"{default.http.port}\"/>",
+                       "</server>"
+                       ]
+                    }
+                ]
+            }
+          ]
+        },
+        {
+            "name": "AddLibertyMPFaultTolerance",
+            "title": "Enabling MicroProfile Fault Tolerance in Open Liberty",
+            "description": [
+                "Microprofile fault tolerance is a way for microservices to handle the unavailability of a service by using different policies such as CircuitBreaker and Fallback to guide the execution and result of some logic.  The MicroProfile Fault Tolerance feature provides an environment to support resilient microservices through patterns that include circuit breakers and fallbacks.  Enable the MicroProfile Fault Tolerance 2.1 feature in the <code>server.xml</code> file of the Open Liberty server where the Check Balance microservice runs."
+            ],
+            "instruction": [
+                "In the editor, add the following element declaration to the <code>featureManager</code> element that is in the <code>server.xml</code> file.<br><codeblock>&lt;feature>mpFaultTolerance-3.0&lt;/feature&gt;</codeblock><br>Alternatively, click <action title='Add MicroProfile Fault Tolerance' onclick=\"circuitBreakerCallBack.addMicroProfileFaultToleranceFeatureButton(event, 'AddLibertyMPFaultTolerance')\">Add</action>.<br>Then, click <action title='Run' onclick=\"circuitBreakerCallBack.saveServerXMLButton(event, 'AddLibertyMPFaultTolerance')\">Run</action> on the editor menu pane."
+            ],
+            "content": [
+            {
+                "displayType": "webBrowser",
+                "enable": false,
+                "url": "https://global-ebank.openliberty.io/checkBalance",
+                "browserContent": "/guides/iguide-circuit-breaker/html/check-balance-fail.html"
+            },
+            {
+                "displayType": "tabbedEditor",
+                "active": true,
+                "editorList": [
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "server.xml",
+                        "preload": [
+                        "<?xml version=\"1.0\"?>",
+                        "<server description=\"Sample Liberty server\">",
+                        "   <featureManager>",
+                        "      <feature>cdi-2.0</feature>",
+                        "   </featureManager>",
+                        "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                        "</server>"
+                        ],
+                        "readonly": [
+                            {
+                                "from": "1",
+                                "to": "3"
+                            },
+                            {
+                                "from": "5",
+                                "to": "7"
+                            }
+                        ],
+                        "writable": [
+                            {
+                                "from": "4",
+                                "to": "4"
+                            }
+                        ],
+                        "callback": "(function test(editor) {circuitBreakerCallBack.listenToEditorForFeatureInServerXML(editor); })"
+                    }
+                ]
+            }
+            ]
+        } ,
+        {
+            "name": "AfterAddCircuitBreakerAnnotation",
+            "title": "Adding the @CircuitBreaker annotation",
+            "description": [
+                "After you modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance-in-open-liberty'>include the fault tolerance feature</a>, add the default CircuitBreaker policy to the Check Balance microservice to prevent repeated request failures from overloading the system."
+            ],
+            "instruction": [
+                "Add the <code>@CircuitBreaker</code> annotation on line 12, before the checkBalance method.<br><codeblock>@CircuitBreaker()</codeblock><br>Alternatively, click <action title='Add @CircuitBreaker annotation' onclick=\"circuitBreakerCallBack.addCircuitBreakerAnnotationButton(event, 'AfterAddCircuitBreakerAnnotation')\">Add</action>.<br>Then, click <action title='Run' onclick=\"circuitBreakerCallBack.saveButtonEditorButton(event, 'AfterAddCircuitBreakerAnnotation')\">Run</action> on the editor menu pane."
+            ],
+            "content":[
+            {
+                "displayType": "webBrowser",
+                "enable": false,
+                "url": "https://global-ebank.openliberty.io/checkBalance",
+                "browserContent": "/guides/iguide-circuit-breaker/html/check-balance-fail.html"
+            },
+            {
+                "displayType":"pod",
+                "content": "<div class='transitionalPicInPod'><img src='/guides/iguide-circuit-breaker/html/images/circuitbreaker_added.svg' alt='Check Balance microservice with circuit breaker' class='picInPod transitionalPic'><img src='/guides/iguide-circuit-breaker/html/images/without_circuitbreaker.svg' alt='Check Balance microservice' class='picInPod transitionalPic'></div>"
+            },
+            {
+                "displayType": "tabbedEditor",
+                "active": true,
+                "editorList": [
+                    {
+                        "displayType":"fileEditor",
+                        "fileName": "BankService.java",
+                        "preload": [
+                            "package io.openliberty.guides.circuitbreaker.global.eBank.microservices;",
+                            "",
+                            "import javax.enterprise.context.ApplicationScoped;",
+                            "",
+                            "import org.eclipse.microprofile.faulttolerance.CircuitBreaker;",
+                            "import org.eclipse.microprofile.faulttolerance.Fallback;",
+                            "",
+                            "import io.openliberty.guides.circuitbreaker.global.eBank.exceptions.ConnectException;",
+                            "",
+                            "@ApplicationScoped",
+                            "public class BankService {",
+                            "",
+                            "    public Service checkBalance() {",
+                            "        counterForInvokingBankingService++;",
+                            "        return checkBalanceService();",
+                            "    }",
+                            "}"
+                        ],
+                        "readonly": [
+                            {
+                                "from": "1",
+                                "to": "11"
+                            },
+                            {
+                                "from": "13",
+                                "to": "17"
+                            }
+                        ],
+                        "writable": [
+                            {
+                                "from": "12",
+                                "to": "12"
+                            }
+                        ],
+                        "callback": "(function test(editor) {circuitBreakerCallBack.listenToEditorForCircuitBreakerAnnotation(editor); })"
+                    },
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "server.xml",
+                        "preload": [
+                            "<?xml version=\"1.0\"?>",
+                            "<server description=\"Sample Liberty server\">",
+                            "   <featureManager>",
+                            "      <feature>cdi-2.0</feature>",
+                            "      <feature>mpFaultTolerance-3.0</feature>",
+                            "   </featureManager>",
+                            "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"{default.http.port}\"/>",
+                            "</server>"
+                        ],
+                        "readonly": true
+                    }
+                ]
+            }
+            ]
+        },
+        {
+          "name": "ConfigureFailureThresholdParams",
+          "title": "Configuring the failure threshold",
+          "TOCIndent": 1,
+          "browserContent": "/guides/iguide-circuit-breaker/html/check-balance-fail.html",
+          "description":
+          [
+            "The CircuitBreaker policy opens the circuit when the failure threshold is met. When the circuit is open, calls to the failing service fail immediately with a <code>CircuitBreakerOpenException</code>. To determine the failure threshold, the policy monitors a <b>rolling window</b>, a specified number of the most recent consecutive requests made to the service. You can modify the failure threshold by using these two parameters:",
+            "<ul><li><b>requestVolumeThreshold:</b> The minimum number of requests that must be made to the service before the circuit breaker policy determines whether the circuit should trip.  The parameter also specifies the size of the rolling window. The default is <code>20</code> requests.",
+            "<li><b>failureRatio:</b> The minimum failure ratio in the rolling window that triggers the circuit breaker. The default ratio is <code>0.5</code>.",
+            "</ul>",
+            "To determine the minimum number of failure requests necessary within a rolling window to trip the circuit, multiply the requestVolumeThreshold parameter by the failureRatio parameter.  The total requests must be at least the size of the rolling window before the circuit breaker can trigger.",
+            "",
+            "For example, when the requestVolumeThreshold parameter is set to a value of <code>20</code> and the failureRatio parameter is set to a value of <code>0.5</code>, the circuit breaker requires a minimum of 20 total requests with at least 10 failures in the latest 20 requests to open the circuit."
+          ],
+          "instruction": [
+            "Change the <code>@CircuitBreaker</code> annotation on line 13 to the following code.<br><codeblock>@CircuitBreaker\n(<span class='actionAddedText'>requestVolumeThreshold=2, failureRatio=0.5</span>)</codeblock><br>Alternatively, click <action title='Change circuit breaker annotation to add failure threshold parameters' onclick=\"circuitBreakerCallBack.addCircuitBreakerAnnotationButton(event, 'ConfigureFailureThresholdParams')\">Change</action>.<br>Then, click <action title='Run' onclick=\"circuitBreakerCallBack.saveButtonEditorButton(event, 'ConfigureFailureThresholdParams')\">Run</action> on the editor menu pane.",
+            "Click <action title='Refresh' onclick=\"circuitBreakerCallBack.refreshButtonBrowser(event, 'ConfigureFailureThresholdParams')\">Refresh</action> in the browser to see the first Check Balance call fail in the closed circuit state.",
+            "Click <action title='Refresh' onclick=\"circuitBreakerCallBack.refreshButtonBrowser(event, 'ConfigureFailureThresholdParams')\">Refresh</action> again in the browser to see the second call fail which changes the circuit to the open state.",
+            "Click <action title='Configure it - failure threshold parameters' onclick=\"circuitBreakerCallBack.configureItButton(event, 'ConfigureFailureThresholdParams')\">Configure it</action> to simulate successful or failed requests to the microservice. <br>You can modify the <code>@CircuitBreaker</code> annotation parameters in the editor to configure your circuit breaker, then click <b>Run</b> in the editor to see how the circuit state changes."
+          ],
+          "content":
+          [
+            {
+                "displayType": "webBrowser",
+                "url": "https://global-ebank.openliberty.io/checkBalance",
+                "browserContent": "/guides/iguide-circuit-breaker/html/check-balance-fail.html",
+                "callback": "(function test(webBrowser) {circuitBreakerCallBack.listenToBrowserForFailBalance(webBrowser); })"
+            },
+            {
+                "displayType": "pod",
+                "content": "<div class='centerPicInPod'><img src='/guides/iguide-circuit-breaker/html/images/closed_norm.svg' alt='Check Balance microservice with closed circuit breaker' class='picInPod'></div>"
+            },
+            {
+                "displayType": "tabbedEditor",
+                "active": true,
+                "editorList": [
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "BankService.java",
+                        "preload": [
+                            "package io.openliberty.guides.circuitbreaker.global.eBank.microservices;",
+                            "",
+                            "import javax.enterprise.context.ApplicationScoped;",
+                            "",
+                            "import org.eclipse.microprofile.faulttolerance.CircuitBreaker;",
+                            "import org.eclipse.microprofile.faulttolerance.Fallback;",
+                            "",
+                            "import io.openliberty.guides.circuitbreaker.global.eBank.exceptions.ConnectException;",
+                            "",
+                            "@ApplicationScoped",
+                            "public class BankService {",
+                            "",
+                            "    @CircuitBreaker()",
+                            "    public Service checkBalance() {",
+                            "        counterForInvokingBankingService++;",
+                            "        return checkBalanceService();",
+                            "    }",
+                            "}"
+                        ],
+                        "readonly": [
+                            {
+                                "from": "1",
+                                "to": "12"
+                            },
+                            {
+                                "from": "14",
+                                "to": "18"
+                            }
+                        ],
+                        "writable": [
+                            {
+                                "from": "13",
+                                "to": "13"
+                            }
+                        ],
+                        "callback": "(function test(editor) {circuitBreakerCallBack.listenToEditorForAnnotationParamChange(editor); })"
+                    },
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "server.xml",
+                        "preload": [
+                            "<?xml version=\"1.0\"?>",
+                            "<server description=\"Sample Liberty server\">",
+                            "   <featureManager>",
+                            "      <feature>cdi-2.0</feature>",
+                            "      <feature>mpFaultTolerance-3.0</feature>",
+                            "   </featureManager>",
+                            "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"{default.http.port}\"/>",
+                            "</server>"
+                        ],
+                        "readonly": true
+                    }
+                ]
+            }
+          ]
+        },
+        {
+          "name": "ConfigureDelayParams",
+          "title": "Configuring a delay",
+          "TOCIndent": 1,
+          "description": [
+            "You can configure the number of milliseconds the circuit remains open with the delay parameter. During the period that the circuit remains open, all requests to the main service are blocked and fail immediately. At the end of this period, the circuit changes to the half-open state. This half-open state is a temporary state where further requests to the main microservice are allowed through and checked for success or failure.",
+            "<ul><li><b>delay:</b> The delay in milliseconds after the circuit opens until the circuit breaker policy checks the availability of the main service.  The default is <code>5000</code> ms.</li></ul>"
+          ],
+          "instruction": [
+              "Change the <code>@CircuitBreaker</code> annotation on lines 13 and 14 to the following code.<br><codeblock>@CircuitBreaker\n(requestVolumeThreshold=2, failureRatio=0.5, <span class='actionAddedText'>delay=5000</span>)</codeblock><br>Alternatively, click <action title='Change circuit breaker annotation to add delay parameter' onclick=\"circuitBreakerCallBack.addCircuitBreakerAnnotationButton(event, 'ConfigureDelayParams')\">Change</action>.<br><br> Then, click <action title='Run' onclick=\"circuitBreakerCallBack.saveButtonEditorButton(event, 'ConfigureDelayParams')\">Run</action>.",
+              "Click <action title='Refresh' onclick=\"circuitBreakerCallBack.refreshButtonBrowser(event, 'ConfigureDelayParams')\">Refresh</action> in the browser to see how the annotation affects the Check Balance call.",
+              "Click <action title='Configure it - delay parameters' onclick=\"circuitBreakerCallBack.configureItButton(event, 'ConfigureDelayParams')\">Configure it</action> to simulate successful or failed requests to the microservice. <br>You can modify the <code>@CircuitBreaker</code> annotation parameters in the editor to configure your circuit breaker, then click <b>Run</b> in the editor to see how the circuit state changes."
+          ],
+          "content": [
+            {
+                "displayType": "webBrowser",
+                "url": "https://global-ebank.openliberty.io/checkBalance",
+                "browserContent": "/guides/iguide-circuit-breaker/html/check-balance-fail.html",
+                "callback": "(function test(webBrowser) {circuitBreakerCallBack.listenToBrowserForFailBalance(webBrowser); })"
+            },
+            {
+                "displayType": "pod",
+                "content": "<div class='centerPicInPod'><img src='/guides/iguide-circuit-breaker/html/images/open_norm.svg' alt='Check Balance microservice with open circuit breaker' class='picInPod'></div>"
+            },
+            {
+                "displayType": "tabbedEditor",
+                "active": true,
+                "editorList": [
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "BankService.java",
+                        "preload": [
+                            "package io.openliberty.guides.circuitbreaker.global.eBank.microservices;",
+                            "",
+                            "import javax.enterprise.context.ApplicationScoped;",
+                            "",
+                            "import org.eclipse.microprofile.faulttolerance.CircuitBreaker;",
+                            "import org.eclipse.microprofile.faulttolerance.Fallback;",
+                            "",
+                            "import io.openliberty.guides.circuitbreaker.global.eBank.exceptions.ConnectException;",
+                            "",
+                            "@ApplicationScoped",
+                            "public class BankService {",
+                            "",
+                            "    @CircuitBreaker(requestVolumeThreshold=2,",
+                            "                    failureRatio=0.5)",
+                            "    public Service checkBalance() {",
+                            "        counterForInvokingBankingService++;",
+                            "        return checkBalanceService();",
+                            "    }",
+                            "}"
+                        ],
+                        "readonly": [
+                            {
+                                "from": "1",
+                                "to": "12"
+                            },
+                            {
+                                "from": "15",
+                                "to": "19"
+                            }
+                        ],
+                        "writable": [
+                            {
+                                "from": "13",
+                                "to": "14"
+                            }
+                        ],
+                        "callback": "(function test(editor) {circuitBreakerCallBack.listenToEditorForAnnotationParamChange(editor); })"
+                    },
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "server.xml",
+                        "preload": [
+                            "<?xml version=\"1.0\"?>",
+                            "<server description=\"Sample Liberty server\">",
+                            "   <featureManager>",
+                            "      <feature>cdi-2.0</feature>",
+                            "      <feature>mpFaultTolerance-3.0</feature>",
+                            "   </featureManager>",
+                            "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"{default.http.port}\"/>",
+                            "</server>"
+                        ],
+                        "readonly": true
+                    }
+                ]
+
+            }
+          ]
+        },
+        {
+          "name": "ConfigureSuccessThresholdParams",
+          "title": "Configuring the success threshold",
+          "TOCIndent": 1,
+          "description": [
+              "When the circuit is half-open, requests to the microservice are allowed through. However, if a request fails while the circuit is half-open, it immediately returns and the circuit reverts to an open state. Otherwise, if a specified number of consecutive requests succeed while the circuit is in a half-open state, the microservice is deemed healthy and the circuit closes.",
+              "<ul><li><b>successThreshold:</b> The number of consecutive successful invocations of the service that are required before the circuit is closed.  The default is <code>1</code> request.</ul>"
+          ],
+          "instruction": [
+              "Change the <code>@CircuitBreaker</code> annotation on lines 13 - 15 to the following code.<br><codeblock>@CircuitBreaker\n(requestVolumeThreshold=2, failureRatio=0.5, delay=5000, <span class='actionAddedText'>successThreshold=2</span>)</codeblock><br>Alternatively, click <action title='Change circuit breaker annotation to add success threshold parameter' onclick=\"circuitBreakerCallBack.addCircuitBreakerAnnotationButton(event, 'ConfigureSuccessThresholdParams')\">Change</action>.<br>Then, click <action title='Run' aria-label='Run' onclick=\"circuitBreakerCallBack.saveButtonEditorButton(event, 'ConfigureSuccessThresholdParams')\">Run</action>.",
+              "Click <action title='Refresh' onclick=\"circuitBreakerCallBack.refreshButtonBrowser(event, 'ConfigureSuccessThresholdParams')\">Refresh</action> in the browser to see the first Check Balance call succeed in the half-open circuit state.<br>",
+              "Click <action title='Refresh' onclick=\"circuitBreakerCallBack.refreshButtonBrowser(event, 'ConfigureSuccessThresholdParams')\"><b>Refresh</b></action> in the browser again. This second successful call meets our success threshold parameter value and closes the circuit.",
+              "Click <action title='Configure it - success threshold parameters' onclick=\"circuitBreakerCallBack.configureItButton(event, 'ConfigureSuccessThresholdParams')\">Configure it</action> to simulate successful or failed requests to the microservice. <br>You can modify the <code>@CircuitBreaker</code> annotation parameters in the editor to configure your circuit breaker, then click <b>Run</b> in the editor to see how the circuit state changes."
+          ],
+          "content":[
+            {
+                "displayType": "webBrowser",
+                "url": "https://global-ebank.openliberty.io/checkBalance",
+                "browserContent": "/guides/iguide-circuit-breaker/html/check-balance-fail.html",
+                "callback": "(function test(webBrowser) {circuitBreakerCallBack.listenToBrowserFromHalfOpenCircuit(webBrowser); })"
+            },
+            {
+                "displayType": "pod",
+                "content": "<div class='centerPicInPod'><img src='/guides/iguide-circuit-breaker/html/images/half_norm.svg' alt='Check Balance microservice with half open circuit breaker' class='picInPod'></div>"
+            },
+            {
+                "displayType": "tabbedEditor",
+                "active": true,
+                "editorList": [
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "BankService.java",
+                        "preload": [
+                            "package io.openliberty.guides.circuitbreaker.global.eBank.microservices;",
+                            "",
+                            "import javax.enterprise.context.ApplicationScoped;",
+                            "",
+                            "import org.eclipse.microprofile.faulttolerance.CircuitBreaker;",
+                            "import org.eclipse.microprofile.faulttolerance.Fallback;",
+                            "",
+                            "import io.openliberty.guides.circuitbreaker.global.eBank.exceptions.ConnectException;",
+                            "",
+                            "@ApplicationScoped",
+                            "public class BankService {",
+                            "",
+                            "    @CircuitBreaker(requestVolumeThreshold=2,",
+                            "                    failureRatio=0.5,",
+                            "                    delay=5000)",
+                            "    public Service checkBalance() {",
+                            "        counterForInvokingBankingService++;",
+                            "        return checkBalanceService();",
+                            "    }",
+                            "}"
+                        ],
+                        "readonly": [
+                            {
+                                "from": "1",
+                                "to": "12"
+                            },
+                            {
+                                "from": "16",
+                                "to": "20"
+                            }
+                        ],
+                        "writable": [
+                            {
+                                "from": "13",
+                                "to": "15"
+                            }
+                        ],
+                        "callback": "(function test(editor) {circuitBreakerCallBack.listenToEditorForAnnotationParamChange(editor); })"
+                    },
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "server.xml",
+                        "preload": [
+                            "<?xml version=\"1.0\"?>",
+                            "<server description=\"Sample Liberty server\">",
+                            "   <featureManager>",
+                            "      <feature>cdi-2.0</feature>",
+                            "      <feature>mpFaultTolerance-3.0</feature>",
+                            "   </featureManager>",
+                            "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"{default.http.port}\"/>",
+                            "</server>"
+                        ],
+                        "readonly": true
+                    }
+
+                ]
+
+            }
+          ]
+        },
+        {
+          "name": "ConfigurefailOnskipOn",
+          "title": "Configuring which exceptions are considered failures",
+          "TOCIndent": 1,
+          "description": [
+              "By default, the circuit breaker logic applies to any exception that can be thrown.  However, using the <code>failOn</code> and <code>skipOn</code> parameters, you can restrict which exceptions are considered failures in determining if the circuit breaker should open.",
+              "<ul><li><b>failOn:</b> Specifies an exception class that is considered a failure.  The method call is considered a failure by the circuit breaker if it throws an exception assignable to the listed exception class. The default is anything that can be thrown.</li><li><b>skipOn:</b> Specifies an exception class that is considered a success.  The method call is considered a success by the circuit breaker, even if it should fail, if it throws an exception assignable to the listed exception class. Use the <code>skipOn</code> parameter to identify subclasses of the <code>failOn</code> exceptions that should not be considered failures when determining whether the circuit breaker should open. There is no default value.</li></ul>",
+              "Identify more than one exception classes as an array of values.  For example, <br><span style='margin-left: 10px;'><code>@CircuitBreaker(failOn = {IOException.class, Concurrent­Modification­Exception.class}, skipOn = {FileNotFoundException.class, E­O­F­Exception.class})</code></span><br>where <code>FileNotFoundException</code> and <code>EOFException</code> are subclasses of <code>IOException</code>.",
+              "Exceptions listed in the <code>skipOn</code> parameter take priority over those listed for the <code>failOn</code> parameter."
+          ],
+          "instruction": [
+              "This bank has defined its own <code>ConnectException</code>, a subclass of <code>IOException</code>, and wants the circuit breaker to trigger only when a <code>ConnectException</code> occurs. Change the <code>@CircuitBreaker</code> annotation on lines 13 - 16 to the following code.<br><codeblock>@CircuitBreaker\n(requestVolumeThreshold=2, failureRatio=0.5, delay=5000, successThreshold=2, <span class='actionAddedText'>failOn=ConnectException.class</span>)</codeblock><br>Alternatively, click <action title='Change circuit breaker annotation to add failOn parameter' onclick=\"circuitBreakerCallBack.addCircuitBreakerAnnotationButton(event, 'ConfigurefailOnskipOn')\">Change</action>.<br>Then, click <action title='Run' aria-label='Run' onclick=\"circuitBreakerCallBack.saveButtonEditorButton(event, 'ConfigurefailOnskipOn')\">Run</action>.",
+              "The Circuit Breaker now functions as it has been except that it will only be triggered when a <code>ConnectException</code> is returned by the service.  The policy monitors a rolling window of 2 requests (requestVolumeThreshold) and if a <code>ConnectException</code> (requestVolumeThreshold(2) X failureRatio(0.50) = 1 exception) occurs within the rolling window the circuit will trip and enter the open state.  It will remain open for 5 seconds (delay).  Any requests during this time will immediately fail with a <code>CircuitBreakerOpenException</code>.  After the delay period, the circuit enters the half-open state. As long as the next 2 requests (successThreshold) are successful or fail with other than a <code>ConnectException</code>, the circuit will close and continue to monitor the rolling window for any <code>ConnectExceptions</code>. However, if the next request returns a <code>ConnectException</code> the circuit will again enter into an open state for 5 seconds (delay)."
+          ],
+          "content":[
+            {
+                "displayType": "webBrowser",
+                "url": "https://global-ebank.openliberty.io/checkBalance",
+                "browserContent": "/guides/iguide-circuit-breaker/html/check-balance-success.html",
+                "callback": "(function test(webBrowser) {circuitBreakerCallBack.listenToBrowserFromHalfOpenCircuit(webBrowser); })"
+            },
+            {
+                "displayType": "pod",
+                "content": "<div class='centerPicInPod'><img src='/guides/iguide-circuit-breaker/html/images/closed_norm.svg' alt='Check Balance microservice with closed circuit breaker' class='picInPod'></div>"
+            },
+            {
+                "displayType": "tabbedEditor",
+                "active": true,
+                "editorList": [
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "BankService.java",
+                        "preload": [
+                            "package io.openliberty.guides.circuitbreaker.global.eBank.microservices;",
+                            "",
+                            "import javax.enterprise.context.ApplicationScoped;",
+                            "",
+                            "import org.eclipse.microprofile.faulttolerance.CircuitBreaker;",
+                            "import org.eclipse.microprofile.faulttolerance.Fallback;",
+                            "",
+                            "import io.openliberty.guides.circuitbreaker.global.eBank.exceptions.ConnectException;",
+                            "",
+                            "@ApplicationScoped",
+                            "public class BankService {",
+                            "",
+                            "    @CircuitBreaker(requestVolumeThreshold=2,",
+                            "                    failureRatio=0.5,",
+                            "                    delay=5000,",
+                            "                    successThreshold=2)",
+                            "    public Service checkBalance() {",
+                            "        counterForInvokingBankingService++;",
+                            "        return checkBalanceService();",
+                            "    }",
+                            "}"
+                        ],
+                        "readonly": [
+                            {
+                                "from": "1",
+                                "to": "12"
+                            },
+                            {
+                                "from": "17",
+                                "to": "21"
+                            }
+                        ],
+                        "writable": [
+                            {
+                                "from": "13",
+                                "to": "16"
+                            }
+                        ],
+                        "callback": "(function test(editor) {circuitBreakerCallBack.listenToEditorForAnnotationParamChange(editor); })"
+                    },
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "ConnectException.java",
+                        "preload": [
+                            "package io.openliberty.guides.circuitbreaker.global.eBank.exceptions;",
+                            "",
+                            "import java.io.IOException;",
+                            "",
+                            "public class ConnectException extends IOException {",
+                            "",
+                            "    public ConnectException(String message) {",
+                            "         super(message);",
+                            "    }",
+                            "",
+                            "}"
+                        ],
+                        "readonly": true
+                    },
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "server.xml",
+                        "preload": [
+                            "<?xml version=\"1.0\"?>",
+                            "<server description=\"Sample Liberty server\">",
+                            "   <featureManager>",
+                            "      <feature>cdi-2.0</feature>",
+                            "      <feature>mpFaultTolerance-3.0</feature>",
+                            "   </featureManager>",
+                            "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"{default.http.port}\"/>",
+                            "</server>"
+                        ],
+                        "readonly": true
+                    }
+                ]
+            }
+          ]
+        },
+        {
+            "name": "AddFallBack",
+            "title": "Adding the @Fallback annotation",
+            "description": [
+                "A Fallback provides an alternative method to run if the annotated method throws an exception.  There are two ways to specify a Fallback:",
+                "<ul><li>As a fallbackMethod</li><li>As a FallbackHandler class</li></ul>",
+                "The <code>@Fallback</code> annotation has additional parameters for limiting when the fallback method will run.",
+                "<ul><li><b>applyOn:</b> Specifies an exception class. If the annotated method throws an exception assignable to the listed exception class the fallback will be invoked. By default the fallback runs on every exception that can be thrown.</li><li><b>skipOn:</b> Specifies an exception class that will be rethrown if the annotated method throws an exception assignable to the listed exception class. Use the <code>skipOn</code> parameter to identify subclasses of an exception listed for <code>applyOn</code> that should not invoke the fallback method but instead be rethrown. There is no default value.</li></ul>",
+                "Identify more than one exception classes as an array of values.  For example, <br><span style='margin-left: 10px;'><code>@Fallback(fallbackMethod = \"myFallback\", applyOn = {IOException.class, CircuitBreakerOpenException.class}, skipOn = {FileNotFoundException.class, E­O­F­Exception.class})</code></span><br>where <code>FileNotFoundException</code> and <code>EOFException</code> are subclasses of <code>IOException</code>.",
+                "With your <code>server.xml</code> file modified to <a href='#enabling-microprofile-fault-tolerance-in-open-liberty'>include the fault tolerance feature</a>, use the <code>@Fallback</code> annotation to identify a method that runs when the Check Balance microservice fails. Our fallback method calls the bank's Balance Snapshot microservice to return a cached value of the user's balance. For more information on using the <code>@Fallback</code> annotation to identify a FallbackHandler class, see the <a href='https://openliberty.io/guides/bulkhead.html#adding-the-fallback-annotation' target='_blank' rel='noopener noreferrer'>MicroProfile Bulkhead </a>guide."
+            ],
+            "instruction": [
+              "To identify the fallback method, add the following annotation to line 13 before the <code>@CircuitBreaker</code> annotation in the editor.  Indicate that the Fallback should run when either the bank's own <code>ConnectException</code>, a subclass of <code>IOException</code>, is thrown or when the Circuit Breaker is open.<br><codeblock>@Fallback (fallbackMethod = \"fallbackService\", applyOn={ConnectException.class, CircuitBreakerOpenException.class})</codeblock><br>Alternatively, click <action title='Add Fallback annotation' onclick=\"circuitBreakerCallBack.addFallbackAnnotationButton(event, 'AddFallBack')\">Add</action>.<br><br> Add the fallback method to the end of the class.<br><codeblock>private Service fallbackService() {\n      return balanceSnapshotService();\n}</codeblock><br>Alternatively, click <action title='Add Fallback method' onclick=\"circuitBreakerCallBack.addFallbackMethodButton(event, 'AddFallBack')\">Add</action>.<br><note>Note: The fallback method must accept the same arguments and have the same return type as the original method.</note><br/>Click <action title='Run' aria-label='Run' onclick=\"circuitBreakerCallBack.saveButtonEditorButton(event, 'AddFallBack')\">Run</action> on the editor menu pane.",
+              "When the circuit is in an open or half-open state, the next failed attempt to the bank's Check Balance microservice fails right away and the fallback service runs. <br>Click <action title='Refresh' onclick=\"circuitBreakerCallBack.refreshButtonBrowser(event, 'AddFallBack')\">Refresh</action> in the browser to see the fallback method is immediately called when the circuit is opened."
+            ],
+            "content":[
+            {
+                "displayType":"webBrowser",
+                "url": "https://global-ebank.openliberty.io/checkBalance",
+                "browserContent": "/guides/iguide-circuit-breaker/html/check-balance-fail.html",
+                "callback": "(function test(webBrowser) {circuitBreakerCallBack.listenToBrowserForFallbackSuccessBalance(webBrowser); })"
+            },
+            {
+                "displayType":"pod",
+                "content": "<div class='transitionalPicInPod'><img src='/guides/iguide-circuit-breaker/html/images/fallback_called.svg' alt='Check Balance microservice in half-open circuit with fallback' class='picInPod transitionalPic'><img src='/guides/iguide-circuit-breaker/html/images/addFB_afterRun.svg' alt='Check Balance microservice with circuit breaker and fallback' class='picInPod transitionalPic'><img src='/guides/iguide-circuit-breaker/html/images/half_norm.svg' alt='Check Balance microservice with half-open circuit breaker' class='picInPod transitionalPic'></div>"
+            },
+            {
+                "displayType": "tabbedEditor",
+                "active": true,
+                "editorList": [
+                    {
+                        "displayType":"fileEditor",
+                        "fileName": "BankService.java",
+                        "preload": [
+                            "package io.openliberty.guides.circuitbreaker.global.eBank.microservices;",
+                            "",
+                            "import javax.enterprise.context.ApplicationScoped;",
+                            "",
+                            "import org.eclipse.microprofile.faulttolerance.CircuitBreaker;",
+                            "import org.eclipse.microprofile.faulttolerance.Fallback;",
+                            "import org.eclipse.microprofile.faulttolerance.exceptions.CircuitBreakerOpenException;",
+                            "",
+                            "import io.openliberty.guides.circuitbreaker.global.eBank.exceptions.ConnectException;",
+                            "",
+                            "@ApplicationScoped",
+                            "public class BankService {",
+                            "",
+                            "    @CircuitBreaker(requestVolumeThreshold=2,",
+                            "                    failureRatio=0.5,",
+                            "                    delay=5000,",
+                            "                    successThreshold=2",
+                            "                    failOn=ConnectException.class)",
+                            "    public Service checkBalance() {",
+                            "        counterForInvokingBankingService++;",
+                            "        return checkBalanceService();",
+                            "    }",
+                            "",
+                            "}"
+                        ],
+                        "readonly": [
+                            {
+                                "from": "1",
+                                "to": "12"
+                            },
+                            {
+                                "from": "14",
+                                "to": "22"
+                            },
+                            {
+                                "from": "24",
+                                "to": "24"
+                            }
+                        ],
+                        "writable": [
+                            {
+                                "from": "13",
+                                "to": "13"
+                            },
+                            {
+                                "from": "23",
+                                "to": "23"
+                            }
+                        ],
+                        "callback": "(function test(editor) {circuitBreakerCallBack.listenToEditorForFallbackAnnotation(editor); })"
+                    },
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "ConnectException.java",
+                        "preload": [
+                            "package io.openliberty.guides.circuitbreaker.global.eBank.exceptions;",
+                            "",
+                            "import java.io.IOException;",
+                            "",
+                            "public class ConnectException extends IOException {",
+                            "",
+                            "    public ConnectException(String message) {",
+                            "         super(message);",
+                            "    }",
+                            "",
+                            "}"
+                        ],
+                        "readonly": true
+                    },
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "server.xml",
+                        "preload": [
+                            "<?xml version=\"1.0\"?>",
+                            "<server description=\"Sample Liberty server\">",
+                            "   <featureManager>",
+                            "      <feature>cdi-2.0</feature>",
+                            "      <feature>mpFaultTolerance-3.0</feature>",
+                            "   </featureManager>",
+                            "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"{default.http.port}\"/>",
+                            "</server>"
+                        ],
+                        "readonly": true
+                    }
+                ]
+            }
+            ]
+        },
+        {
+            "name": "playground",
+            "title": "Interactive circuit breaker playground",
+            "description": [
+              "Now that you learned about circuit breakers and fallbacks, you can explore the parameters in the <code>@CircuitBreaker</code> annotation and see the circuit in action.",
+              "You learned about the following parameters:",
+              "<ul>",
+              "<li><b>requestVolumeThreshold</b>: The minimum number of requests that must be made to the service before the circuit breaker policy determines whether the circuit should trip. The parameter also specifies the size of the rolling window. The default is <code>20</code> requests.",
+              "<li><b>failureRatio</b>: The minimum failure ratio in the rolling window to trigger the circuit breaker. The default ratio is <code>0.5</code>.",
+              "<li><b>delay</b>: The delay in milliseconds after the circuit opens until the circuit breaker policy checks the availability of the main service. The default is <code>5000</code> ms.",
+              "<li><b>successThreshold</b>: The number of consecutive successful invocations of the service that are required before the circuit is closed. The default is <code>1</code> request.",
+              "<li><b>failOn, skipOn</b>: Restrict which exceptions are considered failures in determining if the circuit breaker should open.",
+              "</ul>",
+              "You can simulate successful or failed requests to the microservice to see how the circuit state changes."
+            ],
+            "instruction": [
+              "Modify the parameters for the <code>@CircuitBreaker</code> annotation in the editor, then click <b>Run</b> to see how the circuit state changes.  This simulation does not support the <code>failOn</code> or <code>skipOn</code> parameters. The <code>failOn</code> parameter defaults to <code>java.lang.Exception.class</code> to include all exceptions and cannot be altered. Repeat the process as many times as you like. <br><br>Click <b>Success</b> for successful requests or <b>Failure</b> for failed requests and observe the simulation."
+            ],
+            "content":[
+            {
+                "displayType":"pod",
+                "content": "/guides/iguide-circuit-breaker/html/circuit-breaker-playground.html",
+                "callback": "(function(pod) {circuitBreakerCallBack.createCircuitBreaker(pod, 'playground', 2, 0.5, 5000, 2)})"
+            },
+            {
+                "displayType": "tabbedEditor",
+                "active": true,
+                "editorList": [
+                    {
+                        "displayType":"fileEditor",
+                        "fileName": "BankService.java",
+                        "preload": [
+                            "package io.openliberty.guides.circuitbreaker.global.eBank.microservices;",
+                            "",
+                            "import javax.enterprise.context.ApplicationScoped;",
+                            "",
+                            "import org.eclipse.microprofile.faulttolerance.CircuitBreaker;",
+                            "import org.eclipse.microprofile.faulttolerance.Fallback;",
+                            "",
+                            "import io.openliberty.guides.circuitbreaker.global.eBank.exceptions.ConnectException;",
+                            "",
+                            "@ApplicationScoped",
+                            "public class BankService {",
+                            "",
+                            "    @CircuitBreaker(requestVolumeThreshold=2,",
+                            "                    failureRatio=0.5,",
+                            "                    delay=5000,",
+                            "                    successThreshold=2)",
+                            "    public Service checkBalance() {",
+                            "        counterForInvokingBankingService++;",
+                            "        return BankingService();",
+                            "    }",
+                            "}"
+                        ],
+                        "readonly": [
+                            {
+                                "from": "1",
+                                "to": "12"
+                            },
+                            {
+                                "from": "17",
+                                "to": "21"
+                            }
+                        ],
+                        "writable": [
+                            {
+                                "from": "13",
+                                "to": "16"
+                            }
+                        ],
+                        "callback": "(function test(editor) {circuitBreakerCallBack.listenToEditorForCircuitBreakerAnnotationChanges(editor); })"
+                    }
+                ]
+            }
+            ]
+        },
+        {
+            "name": "WhatNext",
+            "title": "Great work!  You're done!",
+            "description": ["You learned how to use a circuit breaker and provide a fallback to make your microservice fault tolerant."
+                           ]
+        },
+        {
+            "name": "RelatedLinks",
+            "title": "Related links",
+            "description": ["Learn more about <b>MicroProfile</b>.",
+                            "<p> <a target='_blank' rel='noopener noreferrer' href='http://microprofile.io/' >See the MicroProfile specs.</a></p>",
+                            "<p> <a target='_blank' rel='noopener noreferrer' href='https://openliberty.io/docs/ref/microprofile/' >View MicroProfile API.</a></p>"
+                           ]
+        }
+    ]
+}
+
+

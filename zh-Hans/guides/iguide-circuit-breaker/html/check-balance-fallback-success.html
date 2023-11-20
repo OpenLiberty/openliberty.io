@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2018, 2021 IBM Corporation and others.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+
+  Contributors:
+      IBM Corporation - initial API and implementation
+-->
+ <html lang="en">
+
+ <head>
+    <title>Get last known balance using Fallback</title>
+    <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
+    <link rel="stylesheet" href="/guides/iguides-common/css/interactive-guides/bankApp.css">
+    <link rel="stylesheet" href="/guides/iguide-circuit-breaker/css/circuit-breaker/checkBalance.css">
+    <style>
+        #fallbackSuccess {
+            display: none;  /** Initially the spinner is showing so hide this div **/
+        }
+    </style>
+
+    <script type="text/javascript">
+        var script = document.createElement('script');
+
+        script.onload = function() {
+            var guideRootDir = "/guides/iguide-circuit-breaker/js/nls/circuit-breaker/"
+            retrieveExternalizedStrings(guideRootDir);
+        };
+        script.src = '/guides/iguides-common/js/interactive-guides/externalized-string.js';
+        document.getElementsByTagName('head')[0].appendChild(script);
+
+        function timeout() {
+            setTimeout(
+                function displaySystemDown() {
+                    document.getElementById("loader").style.display = "none";
+                    document.getElementById("fallbackSuccess").style.display = "flex";
+                }, 500);
+        }
+    </script>
+ </head>
+ <body>
+    <div class="bankHeadingBlockFlexContainer">
+        <div class="bankHeading" data-externalizedString="YOUR_ACCOUNT"></div>
+        <span>
+            <img src="/guides/iguides-common/img/interactive-guides/bank-info.svg" data-externalizedAlt="ABOUT">
+            <img src="/guides/iguides-common/img/interactive-guides/bank-user.svg" data-externalizedAlt="USER">
+        </span>
+    </div>
+    <main>
+        <div id="loader" class="loader"></div>
+        <div id="fallbackSuccess" class="checkBalanceFlexContainer">
+            <span class="displayBalance">
+                <p class="balanceTitle" data-externalizedString="LAST_KNOWN_BALANCE"></p>
+                <p class="balance dimBalance">$1,029.00</p>
+            </span>
+            <span class="otherServices">
+                <p class="verticalLine"></p>
+                <ul class="serviceButtons">
+                    <span class="serviceButtonsTitle" data-externalizedString="MORE_ACTIONS"></span>
+                    <li data-externalizedString="VIEW_STMT"></li>
+                    <li data-externalizedString="TRANSFER_MONEY"></li>
+                    <li data-externalizedString="APPLY_LOANS"></li>
+                </ul>
+            </span>
+        </div>
+    </main>
+
+    <script type="text/javascript">
+        timeout();
+    </script>
+</body>
+</html>

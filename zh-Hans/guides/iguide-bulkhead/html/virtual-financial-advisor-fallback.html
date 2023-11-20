@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2018, 2021 IBM Corporation and others.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+
+  Contributors:
+      IBM Corporation - initial API and implementation
+-->
+<html style="height: 100%;" lang="en">
+<head>
+    <title>Schedule time with advisor</title>
+    <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
+    <link rel="stylesheet" href="/guides/iguide-bulkhead/css/bulkhead/chat.css">
+    <link rel="stylesheet" href="/guides/iguides-common/css/interactive-guides/bankApp.css">
+
+    <script type="text/javascript">
+        var script = document.createElement('script');
+
+        script.onload = function() {
+            var guideRootDir = "/guides/iguide-bulkhead/js/nls/bulkhead/"
+            retrieveExternalizedStrings(guideRootDir);
+        };
+        script.src = '/guides/iguides-common/js/interactive-guides/externalized-string.js';
+        document.getElementsByTagName('head')[0].appendChild(script);
+
+        function timeCheck(value) {
+            document.getElementById("scheduleSubmitButton").disabled = false;
+        }
+
+        function submitSchedule() {
+            document.getElementById("formContent").style.display = "none";
+            document.getElementById("formResponse").style.display = "flex";
+        }
+    </script>
+</head>
+
+<body style="height: 100%;">
+    <div class="bankHeadingBlockFlexContainer">
+        <div class="bankHeading">Global eBank</div>
+            <span>
+                <img src="/guides/iguides-common/img/interactive-guides/bank-info.svg" data-externalizedAlt="ABOUT">
+                <img src="/guides/iguides-common/img/interactive-guides/bank-user.svg" data-externalizedAlt="USER">
+            </span>
+        </div>
+    </div>
+    <main>
+        <div class="chatIntro">
+            <img class="chatIcon" src="/guides/iguide-bulkhead/html/images/chat-icon.svg" data-externalizedAlt="CHAT_ICON"/>
+            <span class="chatIntroText" data-externalizedString="CHAT_WITH_ADVISOR"></span>
+        </div>
+        <div id="formContent" class="chatIntroText fallbackForm">
+            <p data-externalizedString="BUSY_APPT"></p>
+            <hr>
+            <div id="selectTime" data-externalizedString="SELECT_TIME"></div>
+                <div class="timeChoices" role="radiogroup" aria-labelledby="selectTime">
+                    <input role="radio" type = "radio" name = "aptTime" value = "nine" onclick="timeCheck(this.value)" aria-labelledby="nineAM" /><br> <label id="nineAM" data-externalizedString="NINE_AM"></label>
+                    <input role="radio" type = "radio" name = "aptTime" value = "one" onclick="timeCheck(this.value)" aria-labelledby="onePM" /><br> <label id="onePM" data-externalizedString="ONE_PM"></label>
+                    <input role="radio" type = "radio" name = "aptTime"  value = "twoThirty" onclick="timeCheck(this.value)" aria-labelledby="twoThirtyPM" /> <label id="twoThirtyPM" data-externalizedString="TWO_THIRTY_PM"></label>
+                </div>
+            <div>
+                <button id="scheduleSubmitButton" class="scheduleButton" onclick="submitSchedule()" disabled data-externalizedString="SUBMIT"></button> </button>
+            </div>
+        </div>
+        <div id="formResponse" class="timeResponse">
+            <p data-externalizedString="THANKS"></p>
+        </div>
+    </main>
+</body>
+</html>

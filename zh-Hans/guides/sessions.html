@@ -1,0 +1,2233 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Caching HTTP session data using JCache and Hazelcast
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples on how to create, use, and cache HTTP session data for an enterprise Java application on a Kubernetes cluster by using Java Caching (JCache).">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/sessions">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Caching HTTP session data using JCache and Hazelcast" />
+  <meta name="twitter:description" content="A getting started tutorial with examples on how to create, use, and cache HTTP session data for an enterprise Java application on a Kubernetes cluster by using Java Caching (JCache)." />
+
+  <meta property='og:title' content="Caching HTTP session data using JCache and Hazelcast" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples on how to create, use, and cache HTTP session data for an enterprise Java application on a Kubernetes cluster by using Java Caching (JCache)." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/sessions" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li>
+<a href="#what-youll-learn">What you’ll learn</a>
+<ul class="sectlevel2">
+<li><a href="#what-is-a-session">What is a session?</a></li>
+<li><a href="#what-is-session-persistence">What is session persistence?</a></li>
+</ul>
+</li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#creating-the-application">Creating the application</a></li>
+<li>
+<a href="#configuring-session-persistence">Configuring session persistence</a>
+<ul class="sectlevel2">
+<li><a href="#using-client-server-vs-peer-to-peer-model">Using client-server vs peer-to-peer model</a></li>
+<li><a href="#configuring-session-persistence-with-jcache-in-open-liberty">Configuring session persistence with JCache in Open Liberty</a></li>
+<li><a href="#configuring-hazelcast">Configuring Hazelcast</a></li>
+</ul>
+</li>
+<li><a href="#running-the-application">Running the application</a></li>
+<li><a href="#starting-and-preparing-your-cluster-for-deployment">Starting and preparing your cluster for deployment</a></li>
+<li><a href="#containerizing-the-application">Containerizing the application</a></li>
+<li><a href="#deploying-and-running-the-application-in-kubernetes">Deploying and running the application in Kubernetes</a></li>
+<li><a href="#tearing-down-the-environment">Tearing down the environment</a></li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Caching HTTP session data using JCache and Hazelcast</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">25 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Learn how to create, use, and cache HTTP session data for your application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="what-is-a-session">What is a session?</h3>
+<div class="paragraph">
+<p>On the internet, a web server doesn’t know who you are or what you do
+because it’s processing stateless HTTP requests. An HTTP session provides a way to store
+information to be used across multiple requests.
+Session variables store user information like user name or items in a shopping cart.
+By default, session variables will timeout after 30 minutes of being unused.
+Cookies, which also store user information, are maintained on a client’s computer,
+whereas session variables are maintained on a web server. For security reasons,
+an HTTP session is preferred over cookies when used with sensitive data.
+A session hides data from users.
+Cookies can be manipulated by a savvy user to make fake requests to your site.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="what-is-session-persistence">What is session persistence?</h3>
+<div class="paragraph">
+<p>High traffic websites must support thousands of users in a fast and reliable way.
+Load balancing requires running several instances of the same application in parallel
+so that traffic can be routed to different instances to maximize speed and reliability.
+Unless a user is tied to a particular instance, running multiple instances of the same
+application can pose an out-of-sync problem when each instance keeps an isolated copy of its
+session data. HTTP session data caching can solve this problem by allowing all
+instances of the application to share caches among each other.
+Sharing caches among instances eliminates the need to route a user to the same instance
+and helps in failover situations by distributing the cache.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/img/guide/sessions/sessionCache.png" alt="Session Cache" width="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>You will learn how to build an application that creates and uses HTTP session data.
+You will also learn how to use Open Liberty’s <code>sessionCache</code> feature to persist HTTP sessions
+by using Java Caching (JCache), the standard caching API for Java.</p>
+</div>
+<div class="paragraph">
+<p>You will containerize and deploy the application to a local Kubernetes cluster.
+You will then replicate the application in multiple pods and see that the session data is cached and
+shared among all instances of the application. Even if an instance is unavailable, the other instances
+are able to take over and handle requests from the same user by using the cached session data.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you begin, you need a containerization software for building containers. Kubernetes supports various container runtimes. You will use <code>Docker</code> in this guide. For Docker installation instructions, refer to the official <a href="https://docs.docker.com/install/" target="_blank" rel="noopener noreferrer">Docker documentation</a>.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="paragraph">
+<p>Use Docker Desktop, where a local Kubernetes environment is pre-installed and enabled. If you do not see the <em>Kubernetes</em> tab, then upgrade to the latest version of Docker Desktop.</p>
+</div>
+<div class="paragraph">
+<p>Complete the setup for your operating system:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set up  <a href="https://docs.docker.com/docker-for-windows/#kubernetes" target="_blank" rel="noopener noreferrer">Docker for Windows</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>After you complete the Docker setup instructions for your operating system, ensure that Kubernetes (not Swarm) is selected as the orchestrator in Docker Preferences.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section">
+<div class="content">
+<div class="paragraph">
+<p>Use Docker Desktop, where a local Kubernetes environment is pre-installed and enabled. If you do not see the <em>Kubernetes</em> tab, then upgrade to the latest version of Docker Desktop.</p>
+</div>
+<div class="paragraph">
+<p>Complete the setup for your operating system:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set up <a href="https://docs.docker.com/docker-for-mac/#kubernetes" target="_blank" rel="noopener noreferrer">Docker for Mac</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>After you complete the Docker setup instructions for your operating system, ensure that Kubernetes (not Swarm) is selected as the orchestrator in Docker Preferences.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>You will use <code>Minikube</code> as a single-node Kubernetes cluster that runs locally in a virtual machine.
+Make sure you have <code>kubectl</code> installed. If you need to install <code>kubectl</code>, see the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-on-linux" target="_blank" rel="noopener noreferrer">kubectl installation instructions</a>.
+For Minikube installation instructions, see the <a href="https://github.com/kubernetes/minikube#installation" target="_blank" rel="noopener noreferrer">Minikube documentation</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-sessions.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-sessions.git
+cd guide-sessions</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-application">Creating the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The application that you are working with is a shopping cart web service that uses JAX-RS,
+which is a Java API for building RESTful web services.
+You’ll learn how to persist a user’s shopping cart data between Open Liberty instances by using the
+<code>sessionCache</code> feature. The <code>sessionCache</code> feature persists HTTP
+sessions using JCache. You can have high-performance HTTP session persistence
+without using a relational database.</p>
+</div>
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>CartApplication</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/cart/CartApplication.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>CartApplication.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.cart</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.ApplicationPath</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Application</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="annotation">@ApplicationPath</span>(<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">18</span><span class="directive">public</span> <span class="type">class</span> <span class="class">CartApplication</span> <span class="directive">extends</span> Application {
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot file=0">CartApplication</code> class extends the generic JAX-RS application class that is needed to run the
+application.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the <code>CartResource</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/cart/CartResource.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>CartResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2019, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.cart</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.util.Enumeration</span>;
+<span class="line-numbers"> 15</span>
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">jakarta.json.Json</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonArrayBuilder</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObject</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObjectBuilder</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.servlet.http.HttpServletRequest</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.servlet.http.HttpSession</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.POST</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Context</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers"> 29</span>
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.Operation</span>;
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.parameters.Parameter</span>;
+<span class="line-numbers"> 32</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.responses.APIResponse</span>;
+<span class="line-numbers"> 33</span>
+<span class="line-numbers"> 34</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 35</span><span class="directive">public</span> <span class="type">class</span> <span class="class">CartResource</span> {
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span>    <span class="annotation">@POST</span>
+<span class="line-numbers"> 38</span>    <span class="comment">// tag::endpointCartItemPrice[]</span>
+<span class="line-numbers"> 39</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">cart/{item}&amp;{price}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 40</span>    <span class="comment">// end::endpointCartItemPrice[]</span>
+<span class="line-numbers"> 41</span>    <span class="annotation">@Produces</span>(MediaType.TEXT_PLAIN)
+<span class="line-numbers"> 42</span>    <span class="annotation">@APIResponse</span>(responseCode = <span class="string"><span class="delimiter">"</span><span class="content">200</span><span class="delimiter">"</span></span>, description = <span class="string"><span class="delimiter">"</span><span class="content">Item successfully added to cart.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 43</span>    <span class="annotation">@Operation</span>(summary = <span class="string"><span class="delimiter">"</span><span class="content">Add a new item to cart.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 44</span>    <span class="comment">// tag::addToCart[]</span>
+<span class="line-numbers"> 45</span>    <span class="directive">public</span> <span class="predefined-type">String</span> addToCart(<span class="annotation">@Context</span> HttpServletRequest request,
+<span class="line-numbers"> 46</span>                    <span class="annotation">@Parameter</span>(description = <span class="string"><span class="delimiter">"</span><span class="content">Item you need for intergalatic travel.</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 47</span>                               required = <span class="predefined-constant">true</span>)
+<span class="line-numbers"> 48</span>                    <span class="comment">// tag::item[]</span>
+<span class="line-numbers"> 49</span>                    <span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">item</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> item,
+<span class="line-numbers"> 50</span>                    <span class="comment">// end::item[]</span>
+<span class="line-numbers"> 51</span>                    <span class="annotation">@Parameter</span>(description = <span class="string"><span class="delimiter">"</span><span class="content">Price for this item.</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 52</span>                               required = <span class="predefined-constant">true</span>)
+<span class="line-numbers"> 53</span>                    <span class="comment">// tag::price[]</span>
+<span class="line-numbers"> 54</span>                    <span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">price</span><span class="delimiter">"</span></span>) <span class="type">double</span> price) {
+<span class="line-numbers"> 55</span>                    <span class="comment">// end::price[]</span>
+<span class="line-numbers"> 56</span>        <span class="comment">// tag::getSession[]</span>
+<span class="line-numbers"> 57</span>        HttpSession session = request.getSession();
+<span class="line-numbers"> 58</span>        <span class="comment">// end::getSession[]</span>
+<span class="line-numbers"> 59</span>        <span class="comment">// tag::setAttribute[]</span>
+<span class="line-numbers"> 60</span>        session.setAttribute(item, price);
+<span class="line-numbers"> 61</span>        <span class="comment">// end::setAttribute[]</span>
+<span class="line-numbers"> 62</span>        <span class="keyword">return</span> item + <span class="string"><span class="delimiter">"</span><span class="content"> added to your cart and costs $</span><span class="delimiter">"</span></span> + price;
+<span class="line-numbers"> 63</span>    }
+<span class="line-numbers"> 64</span>    <span class="comment">// end::addToCart[]</span>
+<span class="line-numbers"> 65</span>
+<span class="line-numbers"> 66</span>    <span class="annotation">@GET</span>
+<span class="line-numbers"> 67</span>    <span class="comment">// tag::endpointCart[]</span>
+<span class="line-numbers"> 68</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">cart</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 69</span>    <span class="comment">// end::endpointCart[]</span>
+<span class="line-numbers"> 70</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 71</span>    <span class="annotation">@APIResponse</span>(responseCode = <span class="string"><span class="delimiter">"</span><span class="content">200</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 72</span>        description = <span class="string"><span class="delimiter">"</span><span class="content">Items successfully retrieved from your cart.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 73</span>    <span class="annotation">@Operation</span>(summary = <span class="string"><span class="delimiter">"</span><span class="content">Return an JsonObject instance which contains </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 74</span>                        + <span class="string"><span class="delimiter">"</span><span class="content">the items in your cart and the subtotal.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 75</span>    <span class="comment">// tag::getCart[]</span>
+<span class="line-numbers"> 76</span>    <span class="directive">public</span> JsonObject getCart(<span class="annotation">@Context</span> HttpServletRequest request) {
+<span class="line-numbers"> 77</span>        HttpSession session = request.getSession();
+<span class="line-numbers"> 78</span>        <span class="predefined-type">Enumeration</span>&lt;<span class="predefined-type">String</span>&gt; names = session.getAttributeNames();
+<span class="line-numbers"> 79</span>        JsonObjectBuilder builder = Json.createObjectBuilder();
+<span class="line-numbers"> 80</span>        <span class="comment">// tag::podname[]</span>
+<span class="line-numbers"> 81</span>        builder.add(<span class="string"><span class="delimiter">"</span><span class="content">pod-name</span><span class="delimiter">"</span></span>, getHostname());
+<span class="line-numbers"> 82</span>        <span class="comment">// end::podname[]</span>
+<span class="line-numbers"> 83</span>        <span class="comment">// tag::sessionid[]</span>
+<span class="line-numbers"> 84</span>        builder.add(<span class="string"><span class="delimiter">"</span><span class="content">session-id</span><span class="delimiter">"</span></span>, session.getId());
+<span class="line-numbers"> 85</span>        <span class="comment">// end::sessionid[]</span>
+<span class="line-numbers"> 86</span>        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+<span class="line-numbers"> 87</span>        <span class="predefined-type">Double</span> subtotal = <span class="float">0.0</span>;
+<span class="line-numbers"> 88</span>        <span class="keyword">while</span> (names.hasMoreElements()) {
+<span class="line-numbers"> 89</span>            <span class="predefined-type">String</span> name = names.nextElement();
+<span class="line-numbers"> 90</span>            <span class="predefined-type">String</span> price = session.getAttribute(name).toString();
+<span class="line-numbers"> 91</span>            arrayBuilder.add(name + <span class="string"><span class="delimiter">"</span><span class="content"> | $</span><span class="delimiter">"</span></span> + price);
+<span class="line-numbers"> 92</span>            subtotal += <span class="predefined-type">Double</span>.valueOf(price).doubleValue();
+<span class="line-numbers"> 93</span>        }
+<span class="line-numbers"> 94</span>        <span class="comment">// tag::cart[]</span>
+<span class="line-numbers"> 95</span>        builder.add(<span class="string"><span class="delimiter">"</span><span class="content">cart</span><span class="delimiter">"</span></span>, arrayBuilder);
+<span class="line-numbers"> 96</span>        <span class="comment">// end::cart[]</span>
+<span class="line-numbers"> 97</span>        builder.add(<span class="string"><span class="delimiter">"</span><span class="content">subtotal</span><span class="delimiter">"</span></span>, subtotal);
+<span class="line-numbers"> 98</span>        <span class="keyword">return</span> builder.build();
+<span class="line-numbers"> 99</span>    }
+<span class="line-numbers">100</span>    <span class="comment">// end::getCart[]</span>
+<span class="line-numbers">101</span>
+<span class="line-numbers">102</span>    <span class="directive">private</span> <span class="predefined-type">String</span> getHostname() {
+<span class="line-numbers">103</span>        <span class="predefined-type">String</span> hostname = <span class="predefined-type">System</span>.getenv(<span class="string"><span class="delimiter">"</span><span class="content">HOSTNAME</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">104</span>        <span class="keyword">if</span> (hostname == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">105</span>            hostname = <span class="string"><span class="delimiter">"</span><span class="content">localhost</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">106</span>        }
+<span class="line-numbers">107</span>        <span class="keyword">return</span> hostname;
+<span class="line-numbers">108</span>    }
+<span class="line-numbers">109</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot file=1">CartResource</code> class defines the REST endpoints at which a user can make
+an HTTP request.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=addToCart file=1">addToCart</code> and <code class="hotspot=getCart file=1">getCart</code> methods
+have a number of annotations. Most of these annotations are used by the
+MicroProfile OpenAPI and JAX-RS features to document the REST endpoints and map Java objects to web resources.
+More information about these annotations can be found in the
+<a href="https://openliberty.io/guides/microprofile-openapi.html#augmenting-the-existing-jax-rs-annotations-with-openapi-annotations" target="_blank" rel="noopener">Documenting RESTful APIs</a>
+and
+<a href="https://openliberty.io/guides/rest-intro.html#creating-a-jax-rs-application" target="_blank" rel="noopener">Creating a RESTful web service</a>
+guides.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=endpointCartItemPrice file=1">cart/{item}&amp;{price}</code> endpoint demonstrates how to set session data.
+The <code class="hotspot=item hotspot=price file=1">@PathParam</code> annotation injects a custom <code class="hotspot=item file=1">item</code> and
+<code class="hotspot=price file=1">price</code> from the POST request into the method parameter.
+The <code class="hotspot=addToCart file=1">addToCart</code> method gets the current <code class="hotspot=getSession file=1">session</code> and binds
+the <code>{item}:{price}</code> key-value pair into the session by the <code class="hotspot=setAttribute file=1">setAttribute()</code> method.
+A response is then built and returned to confirm that an item was added to your cart and session.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=endpointCart file=1">cart</code> endpoint demonstrates how to get session data.
+The <code class="hotspot=getCart file=1">getCart</code> method gets the current session, iterates through all key-value
+pairs that are stored in the current session, and creates a <code>JsonObject</code> response.
+The <code>JsonObject</code> response is returned to confirm the Liberty instance by
+<code class="hotspot=podname file=1">pod-name</code>, the session by <code class="hotspot=sessionid file=1">session-id</code>,
+and the items in your cart by <code class="hotspot=cart file=1">cart</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-session-persistence">Configuring session persistence</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="using-client-server-vs-peer-to-peer-model">Using client-server vs peer-to-peer model</h3>
+<div class="paragraph">
+<p>Session caching is only valuable when a server is connected to at least
+one other member. There are two different ways session caching can behave in a
+cluster environment:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Client-server model: A Liberty instance can act as the JCache client and connect
+to a dedicated JCache server.</p>
+</li>
+<li>
+<p>Peer-to-peer model: A Liberty instance can connect with other Liberty instances
+that are also running with the session cache and configured to be
+part of the same cluster.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You’ll use the peer-to-peer model in a Kubernetes environment for this guide.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuring-session-persistence-with-jcache-in-open-liberty">Configuring session persistence with JCache in Open Liberty</h3>
+<div class="paragraph">
+<p>JCache, which stands for Java Caching, is an interface
+to standardize distributed caching on the Java platform.
+The <code class="hotspot=sessionCache">sessionCache</code> feature uses JCache, which allows for session
+persistence by providing a common cache of session data between Liberty instances.
+This feature doesn’t include a JCache implementation.
+For this guide, you’ll use Hazelcast as an open source JCache provider.</p>
+</div>
+<div class="paragraph">
+<p>Hazelcast is a JCache provider. Open Liberty needs to be configured to use
+Hazelcast after the <code class="hotspot=sessionCache">sessionCache</code> feature is enabled.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the Liberty <code>server.xml</code> configuration file.</mark>
+<code>src/main/liberty/config/server.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>server.xml</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="comment">&lt;!-- tag::copyright[] --&gt;</span>
+<span class="line-numbers"> 2</span><span class="comment">&lt;!-- </span>
+<span class="line-numbers"> 3</span><span class="comment">     Copyright (c) 2019, 2023 IBM Corporation and others. </span>
+<span class="line-numbers"> 4</span><span class="comment">     All rights reserved. This program and the accompanying materials </span>
+<span class="line-numbers"> 5</span><span class="comment">     are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment">     which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment">     http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment">     </span>
+<span class="line-numbers"> 9</span><span class="comment">     SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment">--&gt;</span>
+<span class="line-numbers">11</span><span class="comment">&lt;!-- end::copyright[] --&gt;</span>
+<span class="line-numbers">12</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">Liberty Server for Sessions Management</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span>    <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers">15</span>        <span class="tag">&lt;feature&gt;</span>servlet-6.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">16</span>        <span class="comment">&lt;!-- tag::sessionCache[] --&gt;</span>
+<span class="line-numbers">17</span>        <span class="tag">&lt;feature&gt;</span>sessionCache-1.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">18</span>        <span class="comment">&lt;!-- end::sessionCache[] --&gt;</span>
+<span class="line-numbers">19</span>        <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">20</span>        <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">21</span>        <span class="tag">&lt;feature&gt;</span>jsonp-2.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">22</span>        <span class="tag">&lt;feature&gt;</span>mpOpenAPI-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">23</span>    <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9080</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">26</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.https.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9443</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">27</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">app.context.root</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-sessions</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">28</span>
+<span class="line-numbers">29</span>    <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span> <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">30</span>        <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">31</span>    <span class="comment">&lt;!-- tag::httpSessionCache[] --&gt;</span>
+<span class="line-numbers">32</span>    <span class="tag">&lt;httpSessionCache</span> <span class="attribute-name">libraryRef</span>=<span class="string"><span class="delimiter">"</span><span class="content">jCacheVendorLib</span><span class="delimiter">"</span></span>
+<span class="line-numbers">33</span>        <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">"</span><span class="content">file:${server.config.dir}/hazelcast-config.xml</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">34</span>    <span class="comment">&lt;!-- end::httpSessionCache[] --&gt;</span>
+<span class="line-numbers">35</span>    <span class="comment">&lt;!-- tag::library[] --&gt;</span>
+<span class="line-numbers">36</span>    <span class="tag">&lt;library</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">jCacheVendorLib</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">37</span>            <span class="comment">&lt;!-- tag::hazelcastjar[] --&gt;</span>
+<span class="line-numbers">38</span>        <span class="tag">&lt;file</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">${shared.resource.dir}/hazelcast-5.3.0.jar</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">39</span>        <span class="comment">&lt;!-- end::hazelcastjar[] --&gt;</span>
+<span class="line-numbers">40</span>    <span class="tag">&lt;/library&gt;</span>
+<span class="line-numbers">41</span>    <span class="comment">&lt;!-- end::library[] --&gt;</span>
+<span class="line-numbers">42</span>
+<span class="line-numbers">43</span>    <span class="tag">&lt;webApplication</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-sessions.war</span><span class="delimiter">"</span></span> <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">${app.context.root}</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">44</span>
+<span class="line-numbers">45</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>pom.xml</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  2</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  3</span>    
+<span class="line-numbers">  4</span>    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">  5</span>    <span class="tag">&lt;artifactId&gt;</span>guide-sessions<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">  6</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">  7</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers">  8</span>
+<span class="line-numbers">  9</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 10</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 11</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 12</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>11<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 13</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>11<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 14</span>        <span class="comment">&lt;!-- Liberty configuration --&gt;</span>
+<span class="line-numbers"> 15</span>        <span class="tag">&lt;hazelcast.path&gt;</span>${user.home}/.m2/repository/com/hazelcast/hazelcast/<span class="tag">&lt;/hazelcast.path&gt;</span>
+<span class="line-numbers"> 16</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9080<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers"> 17</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9443<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers"> 18</span>        <span class="tag">&lt;liberty.var.app.context.root&gt;</span>${project.artifactId}<span class="tag">&lt;/liberty.var.app.context.root&gt;</span>
+<span class="line-numbers"> 19</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 20</span>
+<span class="line-numbers"> 21</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 22</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers"> 23</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 24</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 25</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 26</span>            <span class="tag">&lt;version&gt;</span>10.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 27</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 28</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 29</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 30</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 31</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 32</span>            <span class="tag">&lt;version&gt;</span>6.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 33</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 34</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 35</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 36</span>        
+<span class="line-numbers"> 37</span>        <span class="comment">&lt;!-- Hazelcast Dependency --&gt;</span>
+<span class="line-numbers"> 38</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 39</span>            <span class="tag">&lt;groupId&gt;</span>com.hazelcast<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 40</span>            <span class="tag">&lt;artifactId&gt;</span>hazelcast<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 41</span>            <span class="tag">&lt;version&gt;</span>5.3.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 42</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 43</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 44</span>        
+<span class="line-numbers"> 45</span>        <span class="comment">&lt;!-- For tests --&gt;</span>
+<span class="line-numbers"> 46</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 47</span>            <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 48</span>            <span class="tag">&lt;artifactId&gt;</span>junit-jupiter<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 49</span>            <span class="tag">&lt;version&gt;</span>5.9.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 50</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 51</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 52</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 53</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 54</span>            <span class="tag">&lt;artifactId&gt;</span>resteasy-client<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 55</span>            <span class="tag">&lt;version&gt;</span>6.2.3.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 56</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 57</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 58</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 59</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 60</span>            <span class="tag">&lt;artifactId&gt;</span>resteasy-json-binding-provider<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 61</span>            <span class="tag">&lt;version&gt;</span>6.2.3.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 62</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 63</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 64</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 65</span>            <span class="tag">&lt;groupId&gt;</span>org.glassfish<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 66</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.json<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 67</span>            <span class="tag">&lt;version&gt;</span>2.0.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 68</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 69</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 70</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers"> 71</span>
+<span class="line-numbers"> 72</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers"> 73</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers"> 74</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers"> 75</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 76</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 77</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 78</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 79</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 80</span>            
+<span class="line-numbers"> 81</span>            <span class="comment">&lt;!-- Enable Liberty Maven plugin --&gt;</span>
+<span class="line-numbers"> 82</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 83</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 84</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 85</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 86</span>                <span class="comment">&lt;!-- tag::configuration[] --&gt;</span>
+<span class="line-numbers"> 87</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 88</span>                    <span class="comment">&lt;!-- Copy the hazelcast library --&gt;</span>
+<span class="line-numbers"> 89</span>                    <span class="tag">&lt;copyDependencies&gt;</span>
+<span class="line-numbers"> 90</span>                        <span class="tag">&lt;dependencyGroup&gt;</span>
+<span class="line-numbers"> 91</span>                            <span class="tag">&lt;location&gt;</span>${project.build.directory}/liberty/wlp/usr/shared/resources<span class="tag">&lt;/location&gt;</span>
+<span class="line-numbers"> 92</span>                            <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 93</span>                                <span class="tag">&lt;groupId&gt;</span>com.hazelcast<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 94</span>                                <span class="tag">&lt;artifactId&gt;</span>hazelcast<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 95</span>                                <span class="tag">&lt;version&gt;</span>5.3.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 96</span>                            <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 97</span>                        <span class="tag">&lt;/dependencyGroup&gt;</span>
+<span class="line-numbers"> 98</span>                    <span class="tag">&lt;/copyDependencies&gt;</span>
+<span class="line-numbers"> 99</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">100</span>                <span class="comment">&lt;!-- end::configuration[] --&gt;</span>
+<span class="line-numbers">101</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">102</span>            
+<span class="line-numbers">103</span>            <span class="comment">&lt;!-- Plugin to run unit tests --&gt;</span>
+<span class="line-numbers">104</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">105</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">106</span>                <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">107</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">108</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">109</span>            
+<span class="line-numbers">110</span>            <span class="comment">&lt;!-- Plugin to run functional tests --&gt;</span>
+<span class="line-numbers">111</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">112</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">113</span>                <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">114</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">115</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">116</span>                    <span class="tag">&lt;systemPropertyVariables&gt;</span>
+<span class="line-numbers">117</span>                        <span class="tag">&lt;http.port&gt;</span>${liberty.var.default.http.port}<span class="tag">&lt;/http.port&gt;</span>
+<span class="line-numbers">118</span>                    <span class="tag">&lt;/systemPropertyVariables&gt;</span>
+<span class="line-numbers">119</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">120</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">121</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">122</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">123</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=library file=0">library</code> element includes the library reference that indicates
+to the Liberty where the Hazelcast implementation of JCache is located.
+Your Hazelcast implementation of JCache is a JAR file that resides in the shared resources directory that is defined by the <code class="hotspot=hazelcastjar file=0">file</code> element.
+The <code>hazelcast-*.jar</code> file is downloaded by the Liberty Maven plugin. The <code class="hotspot=configuration file=1">configuration</code> is defined in the provided Maven POM file.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuring-hazelcast">Configuring Hazelcast</h3>
+<div class="paragraph">
+<p>server.xml</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="comment">&lt;!-- tag::copyright[] --&gt;</span>
+<span class="line-numbers"> 2</span><span class="comment">&lt;!-- </span>
+<span class="line-numbers"> 3</span><span class="comment">     Copyright (c) 2019, 2023 IBM Corporation and others. </span>
+<span class="line-numbers"> 4</span><span class="comment">     All rights reserved. This program and the accompanying materials </span>
+<span class="line-numbers"> 5</span><span class="comment">     are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment">     which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment">     http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment">     </span>
+<span class="line-numbers"> 9</span><span class="comment">     SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment">--&gt;</span>
+<span class="line-numbers">11</span><span class="comment">&lt;!-- end::copyright[] --&gt;</span>
+<span class="line-numbers">12</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">Liberty Server for Sessions Management</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span>    <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers">15</span>        <span class="tag">&lt;feature&gt;</span>servlet-6.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">16</span>        <span class="comment">&lt;!-- tag::sessionCache[] --&gt;</span>
+<span class="line-numbers">17</span>        <span class="tag">&lt;feature&gt;</span>sessionCache-1.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">18</span>        <span class="comment">&lt;!-- end::sessionCache[] --&gt;</span>
+<span class="line-numbers">19</span>        <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">20</span>        <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">21</span>        <span class="tag">&lt;feature&gt;</span>jsonp-2.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">22</span>        <span class="tag">&lt;feature&gt;</span>mpOpenAPI-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">23</span>    <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9080</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">26</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.https.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9443</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">27</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">app.context.root</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-sessions</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">28</span>
+<span class="line-numbers">29</span>    <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span> <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">30</span>        <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">31</span>    <span class="comment">&lt;!-- tag::httpSessionCache[] --&gt;</span>
+<span class="line-numbers">32</span>    <span class="tag">&lt;httpSessionCache</span> <span class="attribute-name">libraryRef</span>=<span class="string"><span class="delimiter">"</span><span class="content">jCacheVendorLib</span><span class="delimiter">"</span></span>
+<span class="line-numbers">33</span>        <span class="attribute-name">uri</span>=<span class="string"><span class="delimiter">"</span><span class="content">file:${server.config.dir}/hazelcast-config.xml</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">34</span>    <span class="comment">&lt;!-- end::httpSessionCache[] --&gt;</span>
+<span class="line-numbers">35</span>    <span class="comment">&lt;!-- tag::library[] --&gt;</span>
+<span class="line-numbers">36</span>    <span class="tag">&lt;library</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">jCacheVendorLib</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">37</span>            <span class="comment">&lt;!-- tag::hazelcastjar[] --&gt;</span>
+<span class="line-numbers">38</span>        <span class="tag">&lt;file</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">${shared.resource.dir}/hazelcast-5.3.0.jar</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">39</span>        <span class="comment">&lt;!-- end::hazelcastjar[] --&gt;</span>
+<span class="line-numbers">40</span>    <span class="tag">&lt;/library&gt;</span>
+<span class="line-numbers">41</span>    <span class="comment">&lt;!-- end::library[] --&gt;</span>
+<span class="line-numbers">42</span>
+<span class="line-numbers">43</span>    <span class="tag">&lt;webApplication</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-sessions.war</span><span class="delimiter">"</span></span> <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">${app.context.root}</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">44</span>
+<span class="line-numbers">45</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, all Open Liberty instances that run the <code class="hotspot=sessionCache file=0">sessionCache</code>
+feature and Hazelcast are connected using a peer-to-peer model.</p>
+</div>
+<div class="paragraph">
+<p>You can share the session cache only among certain Hazelcast instances
+by using the <code>cluster-name</code> configuration element in the Hazelcast configuration file.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the <code>hazelcast-config.xml</code> configuration file.</mark>
+<code>src/main/liberty/config/hazelcast-config.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>hazelcast-config.xml</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="comment">&lt;!-- tag::copyright[] --&gt;</span>
+<span class="line-numbers"> 2</span><span class="comment">&lt;!-- </span>
+<span class="line-numbers"> 3</span><span class="comment">     Copyright (c) 2019, 2023 IBM Corporation and others. </span>
+<span class="line-numbers"> 4</span><span class="comment">     All rights reserved. This program and the accompanying materials </span>
+<span class="line-numbers"> 5</span><span class="comment">     are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment">     which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment">     http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment">     </span>
+<span class="line-numbers"> 9</span><span class="comment">     SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment">--&gt;</span>
+<span class="line-numbers">11</span><span class="comment">&lt;!-- end::copyright[] --&gt;</span>
+<span class="line-numbers">12</span><span class="tag">&lt;hazelcast</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.hazelcast.com/schema/config</span><span class="delimiter">"</span></span>
+<span class="line-numbers">13</span>    <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span>
+<span class="line-numbers">14</span>    <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.hazelcast.com/schema/config</span></span>
+<span class="line-numbers">15</span><span class="string">       <span class="content">https://hazelcast.com/schema/config/hazelcast-config-5.3.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span>    <span class="comment">&lt;!-- tag::cartCluster[] --&gt;</span>
+<span class="line-numbers">18</span>    <span class="tag">&lt;cluster-name&gt;</span>CartCluster<span class="tag">&lt;/cluster-name&gt;</span>
+<span class="line-numbers">19</span>    <span class="comment">&lt;!-- end::cartCluster[] --&gt;</span>
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span>    <span class="comment">&lt;!-- tag::network[] --&gt;</span>
+<span class="line-numbers">22</span>    <span class="tag">&lt;network&gt;</span>
+<span class="line-numbers">23</span>        <span class="tag">&lt;join&gt;</span>
+<span class="line-numbers">24</span>           <span class="comment">&lt;!-- tag::multicast[] --&gt;</span>
+<span class="line-numbers">25</span>           <span class="tag">&lt;multicast</span> <span class="attribute-name">enabled</span>=<span class="string"><span class="delimiter">"</span><span class="content">true</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">26</span>           <span class="comment">&lt;!-- end::multicast[] --&gt;</span>
+<span class="line-numbers">27</span>        <span class="tag">&lt;/join&gt;</span>
+<span class="line-numbers">28</span>    <span class="tag">&lt;/network&gt;</span>
+<span class="line-numbers">29</span>    <span class="comment">&lt;!-- end::network[] --&gt;</span>
+<span class="line-numbers">30</span>
+<span class="line-numbers">31</span><span class="tag">&lt;/hazelcast&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=cartCluster file=1">CartCluster</code> cluster name is defined in the <code class="hotspot file=1">hazelcast-config.xml</code> file. To allow Hazelcast cluster members to find each other, enable the <code class="hotspot=multicast file=1">multicast</code> communication in the <code class="hotspot=network file=1">network</code> configuration.</p>
+</div>
+<div class="paragraph">
+<p>In the <code class="hotspot file=0">server.xml</code> configuration file, a reference to the Hazelcast configuration file is made by using
+the <code class="hotspot=httpSessionCache file=0">httpSessionCache</code> tag.</p>
+</div>
+<div class="listingblock code_command hotspot file=2">
+<div class="content">
+<pre><mark>Create the <code>bootstrap.properties</code> file.</mark>
+<code>src/main/liberty/config/bootstrap.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>bootstrap.properties</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text"><span class="line-numbers">1</span>hazelcast.jcache.provider.type=member</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Hazelcast JCache provides the client and member providers. Set <code>hazelcast.jcache.provider.type</code> to <code>member</code> to use the member provider.</p>
+</div>
+<div class="paragraph">
+<p>There are more configuration settings that you can explore in the
+<a href="https://docs.hazelcast.org/docs/latest/manual/html-single/#understanding-configuration" target="_blank" rel="noopener noreferrer">Hazelcast documentation</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-the-application">Running the application</h2>
+<div class="sectionbody">
+<div class="paragraph command">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following goal to start Open Liberty in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>Point your browser to the <a href="http://localhost:9080/openapi/ui/" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080/openapi/ui/</a> URL.
+This URL displays the available REST endpoints.</p>
+</div>
+<div class="paragraph">
+<p>First, make a POST request to the <code>/cart/{item}&amp;{price}</code> endpoint. To make this request, expand the POST
+endpoint on the UI, click the <code>Try it out</code> button, provide an item and a price,
+and then click the <code>Execute</code> button.
+The POST request adds a user-specified item and price to a session
+that represents data in a user’s cart.</p>
+</div>
+<div class="paragraph">
+<p>Next, make a GET request to the <code>/cart</code> endpoint. To make this request, expand the GET
+endpoint on the UI, click the <code>Try it out</code> button,
+and then click the <code>Execute</code> button. The GET request
+returns a pod name, a session ID, and all the items from your session.</p>
+</div>
+<div class="paragraph command">
+<p>When you are done checking out the service, exit dev mode by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="starting-and-preparing-your-cluster-for-deployment">Starting and preparing your cluster for deployment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Start your Kubernetes cluster.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="paragraph">
+<p>Start your Docker Desktop environment.</p>
+</div>
+<div class="paragraph">
+<p>Ensure that Kubernetes is running on Docker Desktop and that the context is set to <code>docker-desktop</code>.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>Run the following command from a command-line session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>minikube start</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+
+</div>
+</div>
+<div class="paragraph">
+<p>Next, validate that you have a healthy Kubernetes environment by running the following command from the active command-line session.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get nodes</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command should return a <code>Ready</code> status for the master node.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="paragraph">
+<p>You do not need to do any other step.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>Run the following command to configure the Docker CLI to use Minikube’s Docker daemon.
+After you run this command, you will be able to interact with Minikube’s Docker daemon and build new
+images directly to it from your host machine:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>eval $(minikube docker-env)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="containerizing-the-application">Containerizing the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you can deploy the application to Kubernetes, you need to containerize it with Docker.</p>
+</div>
+<div class="paragraph">
+<p>Make sure to start your Docker daemon before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>The Dockerfile is provided at the <code>start</code> directory. If you’re unfamiliar with Dockerfile,
+check out the <a href="https://openliberty.io/guides/containerize.html" target="_blank" rel="noopener">Containerizing microservices</a> guide,
+which covers Dockerfile in depth.</p>
+</div>
+<div class="paragraph">
+<p>Run the <code>mvn package</code> command from the <code>start</code> directory so that the <code>.war</code> file resides in the <code>target</code> directory.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To build and containerize the application, run the following Docker build command in the <code>start</code> directory:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker build -t cart-app:1.0-SNAPSHOT .</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the build finishes, run the following command to list all local Docker images:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker images</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that the <code>cart-app:1.0-SNAPSHOT</code> image is listed among the Docker images, for example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>REPOSITORY                     TAG
+cart-app                       1.0-SNAPSHOT
+icr.io/appcafe/open-liberty    kernel-slim-java11-openj9-ubi</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-and-running-the-application-in-kubernetes">Deploying and running the application in Kubernetes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>kubernetes.yaml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers"> 1</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="line-numbers"> 2</span><span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="line-numbers"> 3</span><span class="key">metadata</span>:
+<span class="line-numbers"> 4</span>  <span class="key">name</span>: <span class="string"><span class="content">cart-deployment</span></span>
+<span class="line-numbers"> 5</span><span class="key">spec</span>:
+<span class="line-numbers"> 6</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 7</span>    <span class="key">matchLabels</span>:
+<span class="line-numbers"> 8</span>      <span class="key">app</span>: <span class="string"><span class="content">cart</span></span>
+<span class="line-numbers"> 9</span>  <span class="comment"># tag::replicas[]</span>
+<span class="line-numbers">10</span>  <span class="key">replicas</span>: <span class="string"><span class="content">3</span></span>
+<span class="line-numbers">11</span>  <span class="comment"># end::replicas[]</span>
+<span class="line-numbers">12</span>  <span class="key">template</span>:
+<span class="line-numbers">13</span>    <span class="key">metadata</span>:
+<span class="line-numbers">14</span>      <span class="key">labels</span>:
+<span class="line-numbers">15</span>        <span class="key">app</span>: <span class="string"><span class="content">cart</span></span>
+<span class="line-numbers">16</span>    <span class="key">spec</span>:
+<span class="line-numbers">17</span>      <span class="key">containers</span>:
+<span class="line-numbers">18</span>      - <span class="string"><span class="content">name: cart-container</span></span>
+<span class="line-numbers">19</span>        <span class="key">image</span>: <span class="string"><span class="content">cart-app:1.0-SNAPSHOT</span></span>
+<span class="line-numbers">20</span>        <span class="key">ports</span>:
+<span class="line-numbers">21</span>        - <span class="string"><span class="content">name: http</span></span>
+<span class="line-numbers">22</span>          <span class="key">containerPort</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">23</span>        - <span class="string"><span class="content">name: hazelcast</span></span>
+<span class="line-numbers">24</span>          <span class="key">containerPort</span>: <span class="string"><span class="content">5701</span></span>
+<span class="line-numbers">25</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">26</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers">27</span><span class="key">kind</span>: <span class="string"><span class="content">Service</span></span>
+<span class="line-numbers">28</span><span class="key">metadata</span>:
+<span class="line-numbers">29</span>  <span class="key">name</span>: <span class="string"><span class="content">cart-service</span></span>
+<span class="line-numbers">30</span><span class="key">spec</span>:
+<span class="line-numbers">31</span>  <span class="key">type</span>: <span class="string"><span class="content">NodePort</span></span>
+<span class="line-numbers">32</span>  <span class="key">selector</span>:
+<span class="line-numbers">33</span>    <span class="key">app</span>: <span class="string"><span class="content">cart</span></span>
+<span class="line-numbers">34</span>  <span class="key">ports</span>:
+<span class="line-numbers">35</span>  - <span class="string"><span class="content">protocol: TCP</span></span>
+<span class="line-numbers">36</span>    <span class="key">port</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">37</span>    <span class="key">targetPort</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">38</span>    <span class="key">nodePort</span>: <span class="string"><span class="content">31000</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now that the containerized application is built, deploy it to a local Kubernetes cluster by using
+a Kubernetes resource definition, which is provided in the <code class="hotspot file=0">kubernetes.yaml</code> file
+at the <code>start</code> directory.</p>
+</div>
+<div class="paragraph">
+<p>First, use the <code>ClusterRoleBinding</code> Kubernetes API object to grant Hazelcast members to access the cluster.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl apply -f https://raw.githubusercontent.com/hazelcast/hazelcast/master/kubernetes-rbac.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the following command to deploy the application into <code class="hotspot=replicas file=0">3</code> replicated pods as defined
+in the <code>kubernetes.yaml</code> file:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl apply -f kubernetes.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the application is deployed, run the following command to check the status of your pods:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get pods</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You see an output similar to the following if all the pods are working correctly:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>NAME                             READY  STATUS   RESTARTS  AGE
+cart-deployment-98f4ff789-2xlhs  1/1    Running  0         17s
+cart-deployment-98f4ff789-6rvfj  1/1    Running  0         17s
+cart-deployment-98f4ff789-qrh45  1/1    Running  0         17s</pre>
+</div>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="paragraph">
+<p>Point your browser to the <a href="http://localhost:31000/openapi/ui/" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:31000/openapi/ui/</a> URL.
+This URL displays the available REST endpoints.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>Run the <code>minikube ip</code> command to get the hostname for minikube.
+Then, go to the <code>http://[hostname]:31000/openapi/ui/</code> URL in your browser.
+This URL displays the available REST endpoints.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Make a POST request to the <code>/cart/{item}&amp;{price}</code> endpoint. To make this request, expand the POST
+endpoint on the UI, click the <code>Try it out</code> button, provide an item and a price,
+and then click the <code>Execute</code> button.
+The POST request adds a user-specified item and price to a session
+that represents data in a user’s cart.</p>
+</div>
+<div class="paragraph">
+<p>Next, make a GET request to the <code>/cart</code> endpoint. To make this request, expand the GET
+endpoint on the UI, click the <code>Try it out</code> button, and then click the <code>Execute</code> button.
+The GET request returns a pod name, a session ID, and all the items from your session.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>{
+  "pod-name": "cart-deployment-98f4ff789-2xlhs",
+  "session-id": "RyJKzmka6Yc-ZCMzEA8-uPq",
+  "cart": [
+    "eggs | $2.89"
+  ],
+  "subtotal": 2.89
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace the <code>[pod-name]</code> in the following command, and then run the command to pause
+the pod for the GET request that you just ran:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl exec -it [pod-name] -- /opt/ol/wlp/bin/server pause</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Repeat the GET request. You see the same <code>session-id</code>
+but a different <code>pod-name</code> because the session data is cached but the request
+is served by a different pod (Liberty instance).</p>
+</div>
+<div class="paragraph">
+<p>Verify that the Hazelcast cluster is running by checking the Open Liberty log.
+To check the log, run the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl exec -it [pod-name] -- cat /logs/messages.log</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You see a message similar to the following:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>... [10.1.0.46]:5701 [CartCluster] [5.3.0]
+
+Members {size:3, ver:3} [
+	Member [10.1.0.40]:5701 - 01227d80-501e-4789-ae9d-6fb348d794ea
+	Member [10.1.0.41]:5701 - a68d0ed1-f50e-4a4c-82b0-389f356b8c73 this
+	Member [10.1.0.42]:5701 - b0dfa05a-c110-45ed-9424-adb1b2896a3d
+]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can resume the paused pod by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl exec -it [pod-name] -- /opt/ol/wlp/bin/server resume</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tearing-down-the-environment">Tearing down the environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you no longer need your deployed application, you can delete all Kubernetes resources and disable the Hazelcast members' access to the cluster by running the <code>kubectl delete</code> commands:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl delete -f kubernetes.yaml
+kubectl delete -f https://raw.githubusercontent.com/hazelcast/hazelcast/master/kubernetes-rbac.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph command tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="paragraph">
+<p>Nothing more needs to be done for Docker Desktop.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>Perform the following steps to return your environment to a clean state.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Point the Docker daemon back to your local machine:</p>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>eval $(minikube docker-env -u)</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Stop your Minikube cluster:</p>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>minikube stop</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Delete your cluster:</p>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>minikube delete</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You have created, used, and cached HTTP session data for an application that was running on Open Liberty
+and deployed in a Kubernetes cluster.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Caching HTTP session data using JCache and Hazelcast <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-sessions/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-sessions/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-sessions/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/rest-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Creating a RESTful web service</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">30 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-openapi.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Documenting RESTful APIs</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/kubernetes-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Deploying microservices to Kubernetes</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">25 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

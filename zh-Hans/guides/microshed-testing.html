@@ -1,0 +1,2541 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Testing a MicroProfile or Jakarta EE application using MicroShed Testing with an Open Liberty docker container
+    
+  </title>
+  <meta name="description" content="A tutorial on how to develop tests for a MicroProfile microservice or a Jakarta EE application by using Open Liberty dev mode provided by the Liberty Maven plugin.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/microshed-testing">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Testing a MicroProfile or Jakarta EE application using MicroShed Testing with an Open Liberty docker container" />
+  <meta name="twitter:description" content="A tutorial on how to develop tests for a MicroProfile microservice or a Jakarta EE application by using Open Liberty dev mode provided by the Liberty Maven plugin." />
+
+  <meta property='og:title' content="Testing a MicroProfile or Jakarta EE application using MicroShed Testing with an Open Liberty docker container" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A tutorial on how to develop tests for a MicroProfile microservice or a Jakarta EE application by using Open Liberty dev mode provided by the Liberty Maven plugin." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/microshed-testing" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li>
+<a href="#what-youll-learn">What you’ll learn</a>
+<ul class="sectlevel2">
+<li><a href="#what-is-docker">What is Docker?</a></li>
+</ul>
+</li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li><a href="#bootstrapping-your-application-for-testing">Bootstrapping your application for testing</a></li>
+<li><a href="#talking-to-your-application-with-a-rest-client">Talking to your application with a REST client</a></li>
+<li><a href="#writing-your-first-test">Writing your first test</a></li>
+<li><a href="#testing-outside-of-dev-mode">Testing outside of dev mode</a></li>
+<li>
+<a href="#sharing-configuration-across-multiple-classes">Sharing configuration across multiple classes</a>
+<ul class="sectlevel2">
+<li><a href="#creating-a-common-configuration">Creating a common configuration</a></li>
+<li><a href="#updating-the-personserviceit-class">Updating the PersonServiceIT class</a></li>
+<li><a href="#updating-the-errorpathit-class">Updating the ErrorPathIT class</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#related-links">Related Links</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Testing a MicroProfile or Jakarta EE application</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">20 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/microshed-testing.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to use MicroShed Testing to test a MicroProfile or Jakarta EE application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You’ll start with an existing REST application that runs on Open Liberty and use <a href="https://microshed.org/microshed-testing/" target="_blank" rel="noopener noreferrer">MicroShed Testing</a> to write tests for the application that exercise the application in a Docker container.</p>
+</div>
+<div class="paragraph">
+<p>Sometimes tests might pass in development and testing (dev/test) environments, but fail in production because the application runs differently in production than in dev/test. Fortunately, you can minimize these differences between dev/test and production by testing your application in the same Docker container that you’ll use in production.</p>
+</div>
+<div class="sect2">
+<h3 id="what-is-docker">What is Docker?</h3>
+<div class="paragraph">
+<p>Docker is a tool that you can use to deploy and run applications with containers. You can think of Docker as a virtual machine that runs various applications. However, unlike with a typical virtual machine, you can run these applications simultaneously on a single system and independent of one another.</p>
+</div>
+<div class="paragraph">
+<p>Learn more about Docker on the <a href="https://www.docker.com/what-docker" target="_blank" rel="noopener noreferrer">official Docker website</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you begin, Docker needs to be installed. For installation instructions, refer to the <a href="https://docs.docker.com/get-docker/" target="_blank" rel="noopener noreferrer">official Docker documentation</a>. You’ll test the application in Docker containers.</p>
+</div>
+<div class="paragraph">
+<p>Make sure to start your Docker daemon before you proceed.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-microshed-testing.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-microshed-testing.git
+cd guide-microshed-testing</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>First, review the <code class="hotspot file=0">PersonServiceIT</code> class to see what the tests look like:</p>
+</div>
+<div class="paragraph">
+<p>PersonServiceIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2019, 2021 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers"> 10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers"> 11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.testing</span>;
+<span class="line-numbers"> 14</span>
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertNotNull</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
+<span class="line-numbers"> 18</span>
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">java.util.Collection</span>;
+<span class="line-numbers"> 20</span>
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers"> 22</span><span class="comment">// tag::importSharedContainerConfig[]</span>
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">org.microshed.testing.SharedContainerConfig</span>;
+<span class="line-numbers"> 24</span><span class="comment">// end::importSharedContainerConfig[]</span>
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jaxrs.RESTClient</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jupiter.MicroShedTest</span>;
+<span class="line-numbers"> 27</span>
+<span class="line-numbers"> 28</span><span class="annotation">@MicroShedTest</span>
+<span class="line-numbers"> 29</span><span class="comment">// tag::sharedContainerConfig[]</span>
+<span class="line-numbers"> 30</span><span class="annotation">@SharedContainerConfig</span>(AppDeploymentConfig.class)
+<span class="line-numbers"> 31</span><span class="comment">// end::sharedContainerConfig[]</span>
+<span class="line-numbers"> 32</span><span class="directive">public</span> <span class="type">class</span> <span class="class">PersonServiceIT</span> {
+<span class="line-numbers"> 33</span>
+<span class="line-numbers"> 34</span>    <span class="annotation">@RESTClient</span>
+<span class="line-numbers"> 35</span>    <span class="directive">public</span> <span class="directive">static</span> PersonService personSvc;
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 38</span>    <span class="directive">public</span> <span class="type">void</span> testCreatePerson() {
+<span class="line-numbers"> 39</span>        <span class="predefined-type">Long</span> createId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Hank</span><span class="delimiter">"</span></span>, <span class="integer">42</span>);
+<span class="line-numbers"> 40</span>        assertNotNull(createId);
+<span class="line-numbers"> 41</span>    }
+<span class="line-numbers"> 42</span>
+<span class="line-numbers"> 43</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 44</span>    <span class="directive">public</span> <span class="type">void</span> testMinSizeName() {
+<span class="line-numbers"> 45</span>        <span class="predefined-type">Long</span> minSizeNameId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Ha</span><span class="delimiter">"</span></span>, <span class="integer">42</span>);
+<span class="line-numbers"> 46</span>        assertEquals(<span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Ha</span><span class="delimiter">"</span></span>, <span class="integer">42</span>, minSizeNameId),
+<span class="line-numbers"> 47</span>                     personSvc.getPerson(minSizeNameId));
+<span class="line-numbers"> 48</span>    }
+<span class="line-numbers"> 49</span>
+<span class="line-numbers"> 50</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 51</span>    <span class="directive">public</span> <span class="type">void</span> testMinAge() {
+<span class="line-numbers"> 52</span>        <span class="predefined-type">Long</span> minAgeId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Newborn</span><span class="delimiter">"</span></span>, <span class="integer">0</span>);
+<span class="line-numbers"> 53</span>        assertEquals(<span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Newborn</span><span class="delimiter">"</span></span>, <span class="integer">0</span>, minAgeId),
+<span class="line-numbers"> 54</span>                     personSvc.getPerson(minAgeId));
+<span class="line-numbers"> 55</span>    }
+<span class="line-numbers"> 56</span>
+<span class="line-numbers"> 57</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 58</span>    <span class="directive">public</span> <span class="type">void</span> testGetPerson() {
+<span class="line-numbers"> 59</span>        <span class="predefined-type">Long</span> bobId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Bob</span><span class="delimiter">"</span></span>, <span class="integer">24</span>);
+<span class="line-numbers"> 60</span>        Person bob = personSvc.getPerson(bobId);
+<span class="line-numbers"> 61</span>        assertEquals(<span class="string"><span class="delimiter">"</span><span class="content">Bob</span><span class="delimiter">"</span></span>, bob.name);
+<span class="line-numbers"> 62</span>        assertEquals(<span class="integer">24</span>, bob.age);
+<span class="line-numbers"> 63</span>        assertNotNull(bob.id);
+<span class="line-numbers"> 64</span>    }
+<span class="line-numbers"> 65</span>
+<span class="line-numbers"> 66</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 67</span>    <span class="directive">public</span> <span class="type">void</span> testGetAllPeople() {
+<span class="line-numbers"> 68</span>        <span class="predefined-type">Long</span> person1Id = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Person1</span><span class="delimiter">"</span></span>, <span class="integer">1</span>);
+<span class="line-numbers"> 69</span>        <span class="predefined-type">Long</span> person2Id = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Person2</span><span class="delimiter">"</span></span>, <span class="integer">2</span>);
+<span class="line-numbers"> 70</span>
+<span class="line-numbers"> 71</span>        Person expected1 = <span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Person1</span><span class="delimiter">"</span></span>, <span class="integer">1</span>, person1Id);
+<span class="line-numbers"> 72</span>        Person expected2 = <span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Person2</span><span class="delimiter">"</span></span>, <span class="integer">2</span>, person2Id);
+<span class="line-numbers"> 73</span>
+<span class="line-numbers"> 74</span>        <span class="predefined-type">Collection</span>&lt;Person&gt; allPeople = personSvc.getAllPeople();
+<span class="line-numbers"> 75</span>        assertTrue(allPeople.size() &gt;= <span class="integer">2</span>,
+<span class="line-numbers"> 76</span>            <span class="string"><span class="delimiter">"</span><span class="content">Expected at least 2 people to be registered, but there were only: </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 77</span>            + allPeople);
+<span class="line-numbers"> 78</span>        assertTrue(allPeople.contains(expected1),
+<span class="line-numbers"> 79</span>            <span class="string"><span class="delimiter">"</span><span class="content">Did not find person </span><span class="delimiter">"</span></span> + expected1 + <span class="string"><span class="delimiter">"</span><span class="content"> in all people: </span><span class="delimiter">"</span></span> + allPeople);
+<span class="line-numbers"> 80</span>        assertTrue(allPeople.contains(expected2),
+<span class="line-numbers"> 81</span>            <span class="string"><span class="delimiter">"</span><span class="content">Did not find person </span><span class="delimiter">"</span></span> + expected2 + <span class="string"><span class="delimiter">"</span><span class="content"> in all people: </span><span class="delimiter">"</span></span> + allPeople);
+<span class="line-numbers"> 82</span>    }
+<span class="line-numbers"> 83</span>
+<span class="line-numbers"> 84</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 85</span>    <span class="directive">public</span> <span class="type">void</span> testUpdateAge() {
+<span class="line-numbers"> 86</span>        <span class="predefined-type">Long</span> personId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">newAgePerson</span><span class="delimiter">"</span></span>, <span class="integer">1</span>);
+<span class="line-numbers"> 87</span>
+<span class="line-numbers"> 88</span>        Person originalPerson = personSvc.getPerson(personId);
+<span class="line-numbers"> 89</span>        assertEquals(<span class="string"><span class="delimiter">"</span><span class="content">newAgePerson</span><span class="delimiter">"</span></span>, originalPerson.name);
+<span class="line-numbers"> 90</span>        assertEquals(<span class="integer">1</span>, originalPerson.age);
+<span class="line-numbers"> 91</span>        assertEquals(personId, <span class="predefined-type">Long</span>.valueOf(originalPerson.id));
+<span class="line-numbers"> 92</span>
+<span class="line-numbers"> 93</span>        personSvc.updatePerson(personId,
+<span class="line-numbers"> 94</span>            <span class="keyword">new</span> Person(originalPerson.name, <span class="integer">2</span>, originalPerson.id));
+<span class="line-numbers"> 95</span>        Person updatedPerson = personSvc.getPerson(personId);
+<span class="line-numbers"> 96</span>        assertEquals(<span class="string"><span class="delimiter">"</span><span class="content">newAgePerson</span><span class="delimiter">"</span></span>, updatedPerson.name);
+<span class="line-numbers"> 97</span>        assertEquals(<span class="integer">2</span>, updatedPerson.age);
+<span class="line-numbers"> 98</span>        assertEquals(personId, <span class="predefined-type">Long</span>.valueOf(updatedPerson.id));
+<span class="line-numbers"> 99</span>    }
+<span class="line-numbers">100</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To try out the application, go to the <code>finish</code> directory and run the following Maven goal to build the application and run the integration tests on an Open Liberty server in a container:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd finish
+mvn verify</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command might take some time to run initially because the dependencies and the Docker image for Open Liberty must download. If you run the same command again, it will be faster.</p>
+</div>
+<div class="paragraph">
+<p>The previous example shows how you can run integration tests from a cold start. With Open Liberty dev mode, you can use MicroShed Testing to run tests on an active Open Liberty server. Run the following Maven goal to start Open Liberty in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your application server in dev mode is ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After the Open Liberty server starts and you see the <code>To run tests on demand, press Enter.</code> message, you can press the <code>enter/return</code> key to run the integration tests. After the tests finish, you can press the <code>enter/return</code> key to run the tests again, or you can make code changes to the application or tests. Dev mode automatically recompiles and updates any application or test code changes that you make.</p>
+</div>
+<div class="paragraph">
+<p>After you’re finished running tests, exit dev mode by pressing <code>CTRL+C</code> in the command-line session where you ran the server, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bootstrapping-your-application-for-testing">Bootstrapping your application for testing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph command">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following goal to start Open Liberty in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>Wait for the <code>To run tests on demand, press Enter.</code> message, and then press the <code>enter/return</code> key to run the tests. You see that one test runs:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre> Running integration tests...
+
+ -------------------------------------------------------
+  T E S T S
+ -------------------------------------------------------
+ Running io.openliberty.guides.testing.PersonServiceIT
+ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s - in io.openliberty.guides.testing.PersonServiceIT
+
+ Results:
+
+ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+ Integration tests finished.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To begin bootstrapping, import the <code class="hotspot=importMicroShedTest file=0">MicroShedTest</code> annotation and annotate the <code>PersonServiceIT</code> class with <code class="hotspot=microShedTest file=0">@MicroShedTest</code>. This annotation indicates that the test class uses MicroShed Testing.</p>
+</div>
+<div class="paragraph">
+<p>The <code>PersonServiceIT</code> class outlines some basic information that informs how MicroShed Testing starts the application runtime and at which URL path the application is available:</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the <code>PersonServiceIT</code> class.</mark>
+<code>src/test/java/io/openliberty/guides/testing/PersonServiceIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>PersonServiceIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright,importAssertNotNull,importSharedContainerConfig,sharedContainerConfig,testCreatePerson">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019, 2021 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.testing</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="comment">// tag::importAssertNotNull[]</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertNotNull</span>;
+<span class="line-numbers">17</span><span class="comment">// end::importAssertNotNull[]</span>
+<span class="line-numbers">18</span>
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers">20</span><span class="comment">// tag::importInject[]</span>
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jaxrs.RESTClient</span>;
+<span class="line-numbers">22</span><span class="comment">// end::importInject[]</span>
+<span class="line-numbers">23</span><span class="comment">// tag::importMicroShedTest[]</span>
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jupiter.MicroShedTest</span>;
+<span class="line-numbers">25</span><span class="comment">// end::importMicroShedTest[]</span>
+<span class="line-numbers">26</span><span class="comment">// tag::importSharedContainerConfig[]</span>
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">org.microshed.testing.SharedContainerConfig</span>;
+<span class="line-numbers">28</span><span class="comment">// end::importSharedContainerConfig[]</span>
+<span class="line-numbers">29</span><span class="comment">// tag::importMPApp[]</span>
+<span class="line-numbers">30</span><span class="keyword">import</span> <span class="include">org.microshed.testing.testcontainers.ApplicationContainer</span>;
+<span class="line-numbers">31</span><span class="comment">// end::importMPApp[]</span>
+<span class="line-numbers">32</span><span class="comment">// tag::importContainer[]</span>
+<span class="line-numbers">33</span><span class="keyword">import</span> <span class="include">org.testcontainers.junit.jupiter.Container</span>;
+<span class="line-numbers">34</span><span class="comment">// end::importContainer[]</span>
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span><span class="comment">// tag::microShedTest[]</span>
+<span class="line-numbers">37</span><span class="annotation">@MicroShedTest</span>
+<span class="line-numbers">38</span><span class="comment">// end::microShedTest[]</span>
+<span class="line-numbers">39</span><span class="comment">// tag::sharedContainerConfig[]</span>
+<span class="line-numbers">40</span><span class="annotation">@SharedContainerConfig</span>(AppDeploymentConfig.class)
+<span class="line-numbers">41</span><span class="comment">// end::sharedContainerConfig[]</span>
+<span class="line-numbers">42</span><span class="directive">public</span> <span class="type">class</span> <span class="class">PersonServiceIT</span> {
+<span class="line-numbers">43</span>
+<span class="line-numbers">44</span>    <span class="comment">// tag::inject[]</span>
+<span class="line-numbers">45</span>    <span class="annotation">@RESTClient</span>
+<span class="line-numbers">46</span>    <span class="comment">// end::inject[]</span>
+<span class="line-numbers">47</span>    <span class="comment">// tag::personSvc[]</span>
+<span class="line-numbers">48</span>    <span class="directive">public</span> <span class="directive">static</span> PersonService personSvc;
+<span class="line-numbers">49</span>    <span class="comment">// end::personSvc[]</span>
+<span class="line-numbers">50</span>
+<span class="line-numbers">51</span>    <span class="comment">// tag::container[]</span>
+<span class="line-numbers">52</span>    <span class="annotation">@Container</span>
+<span class="line-numbers">53</span>    <span class="comment">// end::container[]</span>
+<span class="line-numbers">54</span>    <span class="comment">// tag::mpApp[]</span>
+<span class="line-numbers">55</span>    <span class="directive">public</span> <span class="directive">static</span> ApplicationContainer app = <span class="keyword">new</span> ApplicationContainer()
+<span class="line-numbers">56</span>                    <span class="comment">// tag::withAppContextRoot[]</span>
+<span class="line-numbers">57</span>                    .withAppContextRoot(<span class="string"><span class="delimiter">"</span><span class="content">/guide-microshed-testing</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">58</span>                    <span class="comment">// end::withAppContextRoot[]</span>
+<span class="line-numbers">59</span>                    <span class="comment">// tag::withReadinessPath[]</span>
+<span class="line-numbers">60</span>                    .withReadinessPath(<span class="string"><span class="delimiter">"</span><span class="content">/health/ready</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">61</span>                    <span class="comment">// end::withReadinessPath[]</span>
+<span class="line-numbers">62</span>    <span class="comment">// end::mpApp[]</span>
+<span class="line-numbers">63</span>
+<span class="line-numbers">64</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">65</span>    <span class="directive">public</span> <span class="type">void</span> testCreatePerson() {
+<span class="line-numbers">66</span>        <span class="comment">// tag::testCreatePerson[]</span>
+<span class="line-numbers">67</span>        <span class="predefined-type">Long</span> createId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Hank</span><span class="delimiter">"</span></span>, <span class="integer">42</span>);
+<span class="line-numbers">68</span>        assertNotNull(createId);
+<span class="line-numbers">69</span>        <span class="comment">// end::testCreatePerson[]</span>
+<span class="line-numbers">70</span>    }
+<span class="line-numbers">71</span>
+<span class="line-numbers">72</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Import the <code class="hotspot=importMPApp file=0">ApplicationContainer</code> class and the <code class="hotspot=importContainer file=0">Container</code> annotation, create the <code class="hotspot=mpApp file=0">ApplicationContainer</code> application, and annotate the application with <code class="hotspot=container file=0">@Container</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=withAppContextRoot file=0">withAppContextRoot(String)</code> method indicates the base path of the application. The app context root is the portion of the URL after the hostname and port. In this case, the application is deployed at the <code>http://localhost:9080/guide-microshed-testing</code> URL, so the app context root is <code class="hotspot=withAppContextRoot file=0">/guide-microshed-testing</code>.</p>
+</div>
+<div class="paragraph">
+<p>server.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server&gt;</span>
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>    <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>        <span class="tag">&lt;feature&gt;</span>jaxrs-2.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 5</span>        <span class="tag">&lt;feature&gt;</span>jsonb-1.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>        <span class="comment">&lt;!-- tag::mpHealth[] --&gt;</span>
+<span class="line-numbers"> 7</span>        <span class="tag">&lt;feature&gt;</span>mpHealth-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 8</span>        <span class="comment">&lt;!-- end::mpHealth[] --&gt;</span>
+<span class="line-numbers"> 9</span>        <span class="tag">&lt;feature&gt;</span>mpConfig-2.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">10</span>        <span class="tag">&lt;feature&gt;</span>mpRestClient-2.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">11</span>        <span class="tag">&lt;feature&gt;</span>beanValidation-2.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">12</span>        <span class="tag">&lt;feature&gt;</span>cdi-2.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">13</span>    <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">14</span>        
+<span class="line-numbers">15</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=withReadinessPath file=0">withReadinessPath(String)</code> method indicates what path is polled by HTTP to determine application readiness. MicroShed Testing automatically starts the ApplicationContainer application and waits for it to be ready before the tests start running. In this case, you’re using the default application readiness check at the <a href="http://localhost:9080/health/ready" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/health/ready</a> URL, which is enabled by the <code class="hotspot=mpHealth file=1">MicroProfile Health</code> feature in the server.xml configuration file. When the readiness URL returns the <code>HTTP 200</code> message, the application is considered ready and the tests begin running.</p>
+</div>
+<div class="paragraph">
+<p>Save your changes to the <code>PersonServiceIT</code> class and press the <code>enter/return</code> key in your console window to rerun the tests. You still see only one test running, but the output is different. Notice that MicroShed Testing is using a <code>hollow</code> configuration mode. This configuration mode means that MicroShed Testing is reusing an existing application runtime for the test, not starting up a new application instance each time you initiate a test run.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="talking-to-your-application-with-a-rest-client">Talking to your application with a REST client</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With MicroShed Testing, applications are exercised in a black-box fashion. Black-box means the tests can’t access the application internals. Instead, the application is exercised from the outside, usually with HTTP requests. To simplify the HTTP interactions, a REST client is injected into the tests. To do this, you imported the <code class="hotspot=importInject file=0">org.microshed.testing.jaxrs.RESTClient</code> annotation, created a <code class="hotspot=personSvc file=0">PersonService</code> REST client, and annotated the REST client with <code class="hotspot=inject file=0">@RESTClient</code>.</p>
+</div>
+<div class="paragraph">
+<p>In this example, the <code class="hotspot=personSvc file=0">PersonService</code> injected type is the same <code class="hotspot file=1">io.openliberty.guides.testing.PersonService</code> class that is used in your application. However, the <em>instance</em> that gets injected is a REST client proxy. So, if you call <code>personSvc.createPerson("Bob", 42)</code>, the REST client makes an HTTP POST request to the application that is running at <code>http://localhost:9080/guide-microshed-testing/people</code> URL, which triggers the corresponding Java method in the application.</p>
+</div>
+<div class="paragraph">
+<p>PersonServiceIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright,importAssertNotNull,importSharedContainerConfig,sharedContainerConfig,testCreatePerson">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019, 2021 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.testing</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="comment">// tag::importAssertNotNull[]</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertNotNull</span>;
+<span class="line-numbers">17</span><span class="comment">// end::importAssertNotNull[]</span>
+<span class="line-numbers">18</span>
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers">20</span><span class="comment">// tag::importInject[]</span>
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jaxrs.RESTClient</span>;
+<span class="line-numbers">22</span><span class="comment">// end::importInject[]</span>
+<span class="line-numbers">23</span><span class="comment">// tag::importMicroShedTest[]</span>
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jupiter.MicroShedTest</span>;
+<span class="line-numbers">25</span><span class="comment">// end::importMicroShedTest[]</span>
+<span class="line-numbers">26</span><span class="comment">// tag::importSharedContainerConfig[]</span>
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">org.microshed.testing.SharedContainerConfig</span>;
+<span class="line-numbers">28</span><span class="comment">// end::importSharedContainerConfig[]</span>
+<span class="line-numbers">29</span><span class="comment">// tag::importMPApp[]</span>
+<span class="line-numbers">30</span><span class="keyword">import</span> <span class="include">org.microshed.testing.testcontainers.ApplicationContainer</span>;
+<span class="line-numbers">31</span><span class="comment">// end::importMPApp[]</span>
+<span class="line-numbers">32</span><span class="comment">// tag::importContainer[]</span>
+<span class="line-numbers">33</span><span class="keyword">import</span> <span class="include">org.testcontainers.junit.jupiter.Container</span>;
+<span class="line-numbers">34</span><span class="comment">// end::importContainer[]</span>
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span><span class="comment">// tag::microShedTest[]</span>
+<span class="line-numbers">37</span><span class="annotation">@MicroShedTest</span>
+<span class="line-numbers">38</span><span class="comment">// end::microShedTest[]</span>
+<span class="line-numbers">39</span><span class="comment">// tag::sharedContainerConfig[]</span>
+<span class="line-numbers">40</span><span class="annotation">@SharedContainerConfig</span>(AppDeploymentConfig.class)
+<span class="line-numbers">41</span><span class="comment">// end::sharedContainerConfig[]</span>
+<span class="line-numbers">42</span><span class="directive">public</span> <span class="type">class</span> <span class="class">PersonServiceIT</span> {
+<span class="line-numbers">43</span>
+<span class="line-numbers">44</span>    <span class="comment">// tag::inject[]</span>
+<span class="line-numbers">45</span>    <span class="annotation">@RESTClient</span>
+<span class="line-numbers">46</span>    <span class="comment">// end::inject[]</span>
+<span class="line-numbers">47</span>    <span class="comment">// tag::personSvc[]</span>
+<span class="line-numbers">48</span>    <span class="directive">public</span> <span class="directive">static</span> PersonService personSvc;
+<span class="line-numbers">49</span>    <span class="comment">// end::personSvc[]</span>
+<span class="line-numbers">50</span>
+<span class="line-numbers">51</span>    <span class="comment">// tag::container[]</span>
+<span class="line-numbers">52</span>    <span class="annotation">@Container</span>
+<span class="line-numbers">53</span>    <span class="comment">// end::container[]</span>
+<span class="line-numbers">54</span>    <span class="comment">// tag::mpApp[]</span>
+<span class="line-numbers">55</span>    <span class="directive">public</span> <span class="directive">static</span> ApplicationContainer app = <span class="keyword">new</span> ApplicationContainer()
+<span class="line-numbers">56</span>                    <span class="comment">// tag::withAppContextRoot[]</span>
+<span class="line-numbers">57</span>                    .withAppContextRoot(<span class="string"><span class="delimiter">"</span><span class="content">/guide-microshed-testing</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">58</span>                    <span class="comment">// end::withAppContextRoot[]</span>
+<span class="line-numbers">59</span>                    <span class="comment">// tag::withReadinessPath[]</span>
+<span class="line-numbers">60</span>                    .withReadinessPath(<span class="string"><span class="delimiter">"</span><span class="content">/health/ready</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">61</span>                    <span class="comment">// end::withReadinessPath[]</span>
+<span class="line-numbers">62</span>    <span class="comment">// end::mpApp[]</span>
+<span class="line-numbers">63</span>
+<span class="line-numbers">64</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">65</span>    <span class="directive">public</span> <span class="type">void</span> testCreatePerson() {
+<span class="line-numbers">66</span>        <span class="comment">// tag::testCreatePerson[]</span>
+<span class="line-numbers">67</span>        <span class="predefined-type">Long</span> createId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Hank</span><span class="delimiter">"</span></span>, <span class="integer">42</span>);
+<span class="line-numbers">68</span>        assertNotNull(createId);
+<span class="line-numbers">69</span>        <span class="comment">// end::testCreatePerson[]</span>
+<span class="line-numbers">70</span>    }
+<span class="line-numbers">71</span>
+<span class="line-numbers">72</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>PersonService.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019 IBM Corporation and others</span>
+<span class="line-numbers"> 4</span><span class="comment"> *</span>
+<span class="line-numbers"> 5</span><span class="comment"> * See the NOTICE file(s) distributed with this work for additional</span>
+<span class="line-numbers"> 6</span><span class="comment"> * information regarding copyright ownership.</span>
+<span class="line-numbers"> 7</span><span class="comment"> *</span>
+<span class="line-numbers"> 8</span><span class="comment"> * Licensed under the Apache License, Version 2.0 (the "License");</span>
+<span class="line-numbers"> 9</span><span class="comment"> * You may not use this file except in compliance with the License.</span>
+<span class="line-numbers">10</span><span class="comment"> * You may obtain a copy of the License at</span>
+<span class="line-numbers">11</span><span class="comment"> *</span>
+<span class="line-numbers">12</span><span class="comment"> *     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="line-numbers">13</span><span class="comment"> *</span>
+<span class="line-numbers">14</span><span class="comment"> * Unless required by applicable law or agreed to in writing, software</span>
+<span class="line-numbers">15</span><span class="comment"> * distributed under the License is distributed on an "AS IS" BASIS,</span>
+<span class="line-numbers">16</span><span class="comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="line-numbers">17</span><span class="comment"> * See the License for the specific language governing permissions and</span>
+<span class="line-numbers">18</span><span class="comment"> * limitations under the License.</span>
+<span class="line-numbers">19</span><span class="comment"> */</span>
+<span class="line-numbers">20</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">21</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.testing</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">java.util.Collection</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">java.util.HashMap</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">java.util.Map</span>;
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">javax.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">28</span><span class="keyword">import</span> <span class="include">javax.validation.Valid</span>;
+<span class="line-numbers">29</span><span class="keyword">import</span> <span class="include">javax.validation.constraints.NotEmpty</span>;
+<span class="line-numbers">30</span><span class="keyword">import</span> <span class="include">javax.validation.constraints.PositiveOrZero</span>;
+<span class="line-numbers">31</span><span class="keyword">import</span> <span class="include">javax.validation.constraints.Size</span>;
+<span class="line-numbers">32</span><span class="keyword">import</span> <span class="include">javax.ws.rs.Consumes</span>;
+<span class="line-numbers">33</span><span class="keyword">import</span> <span class="include">javax.ws.rs.DELETE</span>;
+<span class="line-numbers">34</span><span class="keyword">import</span> <span class="include">javax.ws.rs.GET</span>;
+<span class="line-numbers">35</span><span class="keyword">import</span> <span class="include">javax.ws.rs.NotFoundException</span>;
+<span class="line-numbers">36</span><span class="keyword">import</span> <span class="include">javax.ws.rs.POST</span>;
+<span class="line-numbers">37</span><span class="keyword">import</span> <span class="include">javax.ws.rs.Path</span>;
+<span class="line-numbers">38</span><span class="keyword">import</span> <span class="include">javax.ws.rs.PathParam</span>;
+<span class="line-numbers">39</span><span class="keyword">import</span> <span class="include">javax.ws.rs.Produces</span>;
+<span class="line-numbers">40</span><span class="keyword">import</span> <span class="include">javax.ws.rs.QueryParam</span>;
+<span class="line-numbers">41</span><span class="keyword">import</span> <span class="include">javax.ws.rs.core.MediaType</span>;
+<span class="line-numbers">42</span>
+<span class="line-numbers">43</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/people</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">44</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">45</span><span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">46</span><span class="annotation">@Consumes</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">47</span><span class="directive">public</span> <span class="type">class</span> <span class="class">PersonService</span> {
+<span class="line-numbers">48</span>
+<span class="line-numbers">49</span>    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">Long</span>, Person&gt; personRepo = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;&gt;();
+<span class="line-numbers">50</span>
+<span class="line-numbers">51</span>    <span class="annotation">@GET</span>
+<span class="line-numbers">52</span>    <span class="directive">public</span> <span class="predefined-type">Collection</span>&lt;Person&gt; getAllPeople() {
+<span class="line-numbers">53</span>        <span class="keyword">return</span> personRepo.values();
+<span class="line-numbers">54</span>    }
+<span class="line-numbers">55</span>
+<span class="line-numbers">56</span>    <span class="annotation">@GET</span>
+<span class="line-numbers">57</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{personId}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">58</span>    <span class="directive">public</span> Person getPerson(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">personId</span><span class="delimiter">"</span></span>) <span class="type">long</span> id) {
+<span class="line-numbers">59</span>        Person foundPerson = personRepo.get(id);
+<span class="line-numbers">60</span>        <span class="keyword">if</span> (foundPerson == <span class="predefined-constant">null</span>)
+<span class="line-numbers">61</span>            personNotFound(id);
+<span class="line-numbers">62</span>        <span class="keyword">return</span> foundPerson;
+<span class="line-numbers">63</span>    }
+<span class="line-numbers">64</span>
+<span class="line-numbers">65</span>    <span class="annotation">@POST</span>
+<span class="line-numbers">66</span>    <span class="directive">public</span> <span class="predefined-type">Long</span> createPerson(<span class="annotation">@QueryParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>) <span class="annotation">@NotEmpty</span> <span class="annotation">@Size</span>(min=<span class="integer">2</span>, max=<span class="integer">50</span>) <span class="predefined-type">String</span> name,
+<span class="line-numbers">67</span>                             <span class="annotation">@QueryParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">age</span><span class="delimiter">"</span></span>) <span class="annotation">@PositiveOrZero</span> <span class="type">int</span> age) {
+<span class="line-numbers">68</span>        Person p = <span class="keyword">new</span> Person(name, age);
+<span class="line-numbers">69</span>        personRepo.put(p.id, p);
+<span class="line-numbers">70</span>        <span class="keyword">return</span> p.id;
+<span class="line-numbers">71</span>    }
+<span class="line-numbers">72</span>
+<span class="line-numbers">73</span>    <span class="annotation">@POST</span>
+<span class="line-numbers">74</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{personId}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">75</span>    <span class="directive">public</span> <span class="type">void</span> updatePerson(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">personId</span><span class="delimiter">"</span></span>) <span class="type">long</span> id, <span class="annotation">@Valid</span> Person p) {
+<span class="line-numbers">76</span>        Person toUpdate = getPerson(id);
+<span class="line-numbers">77</span>        <span class="keyword">if</span> (toUpdate == <span class="predefined-constant">null</span>)
+<span class="line-numbers">78</span>            personNotFound(id);
+<span class="line-numbers">79</span>        personRepo.put(id, p);
+<span class="line-numbers">80</span>    }
+<span class="line-numbers">81</span>
+<span class="line-numbers">82</span>    <span class="annotation">@DELETE</span>
+<span class="line-numbers">83</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{personId}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">84</span>    <span class="directive">public</span> <span class="type">void</span> removePerson(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">personId</span><span class="delimiter">"</span></span>) <span class="type">long</span> id) {
+<span class="line-numbers">85</span>        Person toDelete = personRepo.get(id);
+<span class="line-numbers">86</span>        <span class="keyword">if</span> (toDelete == <span class="predefined-constant">null</span>)
+<span class="line-numbers">87</span>            personNotFound(id);
+<span class="line-numbers">88</span>        personRepo.remove(id);
+<span class="line-numbers">89</span>    }
+<span class="line-numbers">90</span>    
+<span class="line-numbers">91</span>    <span class="directive">private</span> <span class="type">void</span> personNotFound(<span class="type">long</span> id) {
+<span class="line-numbers">92</span>        <span class="keyword">throw</span> <span class="keyword">new</span> NotFoundException(<span class="string"><span class="delimiter">"</span><span class="content">Person with id </span><span class="delimiter">"</span></span> + id + <span class="string"><span class="delimiter">"</span><span class="content"> not found.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">93</span>    }
+<span class="line-numbers">94</span>
+<span class="line-numbers">95</span>}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="writing-your-first-test">Writing your first test</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now that the setup is complete, you can write your first test case. Start by testing the basic "create person" use case for your REST-based application. To test this use case, use the REST client that’s injected by MicroShed Testing to make the HTTP POST request to the application and read the response.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the <code>PersonServiceIT</code> class.</mark>
+<code>src/test/java/io/openliberty/guides/testing/PersonServiceIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>PersonServiceIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright,importSharedContainerConfig,sharedContainerConfig">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019, 2021 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.testing</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="comment">// tag::importAssertNotNull[]</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertNotNull</span>;
+<span class="line-numbers">17</span><span class="comment">// end::importAssertNotNull[]</span>
+<span class="line-numbers">18</span>
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers">20</span><span class="comment">// tag::importInject[]</span>
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jaxrs.RESTClient</span>;
+<span class="line-numbers">22</span><span class="comment">// end::importInject[]</span>
+<span class="line-numbers">23</span><span class="comment">// tag::importMicroShedTest[]</span>
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jupiter.MicroShedTest</span>;
+<span class="line-numbers">25</span><span class="comment">// end::importMicroShedTest[]</span>
+<span class="line-numbers">26</span><span class="comment">// tag::importSharedContainerConfig[]</span>
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">org.microshed.testing.SharedContainerConfig</span>;
+<span class="line-numbers">28</span><span class="comment">// end::importSharedContainerConfig[]</span>
+<span class="line-numbers">29</span><span class="comment">// tag::importMPApp[]</span>
+<span class="line-numbers">30</span><span class="keyword">import</span> <span class="include">org.microshed.testing.testcontainers.ApplicationContainer</span>;
+<span class="line-numbers">31</span><span class="comment">// end::importMPApp[]</span>
+<span class="line-numbers">32</span><span class="comment">// tag::importContainer[]</span>
+<span class="line-numbers">33</span><span class="keyword">import</span> <span class="include">org.testcontainers.junit.jupiter.Container</span>;
+<span class="line-numbers">34</span><span class="comment">// end::importContainer[]</span>
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span><span class="comment">// tag::microShedTest[]</span>
+<span class="line-numbers">37</span><span class="annotation">@MicroShedTest</span>
+<span class="line-numbers">38</span><span class="comment">// end::microShedTest[]</span>
+<span class="line-numbers">39</span><span class="comment">// tag::sharedContainerConfig[]</span>
+<span class="line-numbers">40</span><span class="annotation">@SharedContainerConfig</span>(AppDeploymentConfig.class)
+<span class="line-numbers">41</span><span class="comment">// end::sharedContainerConfig[]</span>
+<span class="line-numbers">42</span><span class="directive">public</span> <span class="type">class</span> <span class="class">PersonServiceIT</span> {
+<span class="line-numbers">43</span>
+<span class="line-numbers">44</span>    <span class="comment">// tag::inject[]</span>
+<span class="line-numbers">45</span>    <span class="annotation">@RESTClient</span>
+<span class="line-numbers">46</span>    <span class="comment">// end::inject[]</span>
+<span class="line-numbers">47</span>    <span class="comment">// tag::personSvc[]</span>
+<span class="line-numbers">48</span>    <span class="directive">public</span> <span class="directive">static</span> PersonService personSvc;
+<span class="line-numbers">49</span>    <span class="comment">// end::personSvc[]</span>
+<span class="line-numbers">50</span>
+<span class="line-numbers">51</span>    <span class="comment">// tag::container[]</span>
+<span class="line-numbers">52</span>    <span class="annotation">@Container</span>
+<span class="line-numbers">53</span>    <span class="comment">// end::container[]</span>
+<span class="line-numbers">54</span>    <span class="comment">// tag::mpApp[]</span>
+<span class="line-numbers">55</span>    <span class="directive">public</span> <span class="directive">static</span> ApplicationContainer app = <span class="keyword">new</span> ApplicationContainer()
+<span class="line-numbers">56</span>                    <span class="comment">// tag::withAppContextRoot[]</span>
+<span class="line-numbers">57</span>                    .withAppContextRoot(<span class="string"><span class="delimiter">"</span><span class="content">/guide-microshed-testing</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">58</span>                    <span class="comment">// end::withAppContextRoot[]</span>
+<span class="line-numbers">59</span>                    <span class="comment">// tag::withReadinessPath[]</span>
+<span class="line-numbers">60</span>                    .withReadinessPath(<span class="string"><span class="delimiter">"</span><span class="content">/health/ready</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">61</span>                    <span class="comment">// end::withReadinessPath[]</span>
+<span class="line-numbers">62</span>    <span class="comment">// end::mpApp[]</span>
+<span class="line-numbers">63</span>
+<span class="line-numbers">64</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">65</span>    <span class="directive">public</span> <span class="type">void</span> testCreatePerson() {
+<span class="line-numbers">66</span>        <span class="comment">// tag::testCreatePerson[]</span>
+<span class="line-numbers">67</span>        <span class="predefined-type">Long</span> createId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Hank</span><span class="delimiter">"</span></span>, <span class="integer">42</span>);
+<span class="line-numbers">68</span>        assertNotNull(createId);
+<span class="line-numbers">69</span>        <span class="comment">// end::testCreatePerson[]</span>
+<span class="line-numbers">70</span>    }
+<span class="line-numbers">71</span>
+<span class="line-numbers">72</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace the <code>PersonServiceIT</code> class to include the <code class="hotspot=importAssertNotNull file=0">assertNotNull</code> static method and write the test logic in the <code class="hotspot=testCreatePerson file=0">testCreatePerson()</code> method.</p>
+</div>
+<div class="paragraph">
+<p>Save the changes. Then, press the <code>enter/return</code> key in your console window to run the test. You see that the test ran again and exercised the REST endpoint of your application, including the response of your application’s endpoint:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>[INFO] Building rest client for class io.openliberty.guides.testing.PersonService with base path: http://localhost:9080/guide-microshed-testing/ and providers: [class org.microshed.testing.jaxrs.JsonBProvider]
+[INFO] Response from server: 1809686877352335426</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, add more tests.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Replace the <code>PersonServiceIT</code> class.</mark>
+<code>src/test/java/io/openliberty/guides/testing/PersonServiceIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>PersonServiceIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2019, 2021 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers"> 10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers"> 11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.testing</span>;
+<span class="line-numbers"> 14</span>
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers"> 16</span><span class="comment">// tag::importAssertNotNull[]</span>
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertNotNull</span>;
+<span class="line-numbers"> 18</span><span class="comment">// end::importAssertNotNull[]</span>
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
+<span class="line-numbers"> 20</span>
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">java.util.Collection</span>;
+<span class="line-numbers"> 22</span>
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jaxrs.RESTClient</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jupiter.MicroShedTest</span>;
+<span class="line-numbers"> 26</span><span class="comment">// tag::importMPApp[]</span>
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">org.microshed.testing.testcontainers.ApplicationContainer</span>;
+<span class="line-numbers"> 28</span><span class="comment">// end::importMPApp[]</span>
+<span class="line-numbers"> 29</span><span class="comment">// tag::importContainer[]</span>
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">org.testcontainers.junit.jupiter.Container</span>;
+<span class="line-numbers"> 31</span><span class="comment">// end::importContainer[]</span>
+<span class="line-numbers"> 32</span>
+<span class="line-numbers"> 33</span><span class="annotation">@MicroShedTest</span>
+<span class="line-numbers"> 34</span><span class="directive">public</span> <span class="type">class</span> <span class="class">PersonServiceIT</span> {
+<span class="line-numbers"> 35</span>
+<span class="line-numbers"> 36</span>    <span class="annotation">@RESTClient</span>
+<span class="line-numbers"> 37</span>    <span class="directive">public</span> <span class="directive">static</span> PersonService personSvc;
+<span class="line-numbers"> 38</span>
+<span class="line-numbers"> 39</span>    <span class="comment">// tag::container[]</span>
+<span class="line-numbers"> 40</span>    <span class="annotation">@Container</span>
+<span class="line-numbers"> 41</span>    <span class="comment">// end::container[]</span>
+<span class="line-numbers"> 42</span>    <span class="comment">// tag::mpApp[]</span>
+<span class="line-numbers"> 43</span>    <span class="directive">public</span> <span class="directive">static</span> ApplicationContainer app = <span class="keyword">new</span> ApplicationContainer()
+<span class="line-numbers"> 44</span>                    .withAppContextRoot(<span class="string"><span class="delimiter">"</span><span class="content">/guide-microshed-testing</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 45</span>                    .withReadinessPath(<span class="string"><span class="delimiter">"</span><span class="content">/health/ready</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 46</span>    <span class="comment">// end::mpApp[]</span>
+<span class="line-numbers"> 47</span>
+<span class="line-numbers"> 48</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 49</span>    <span class="directive">public</span> <span class="type">void</span> testCreatePerson() {
+<span class="line-numbers"> 50</span>        <span class="comment">// tag::testCreatePerson[]</span>
+<span class="line-numbers"> 51</span>        <span class="predefined-type">Long</span> createId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Hank</span><span class="delimiter">"</span></span>, <span class="integer">42</span>);
+<span class="line-numbers"> 52</span>        assertNotNull(createId);
+<span class="line-numbers"> 53</span>        <span class="comment">// end::testCreatePerson[]</span>
+<span class="line-numbers"> 54</span>    }
+<span class="line-numbers"> 55</span>
+<span class="line-numbers"> 56</span>    <span class="comment">// tag::tests[]</span>
+<span class="line-numbers"> 57</span>    <span class="comment">// tag::testMinSizeName[]</span>
+<span class="line-numbers"> 58</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 59</span>    <span class="directive">public</span> <span class="type">void</span> testMinSizeName() {
+<span class="line-numbers"> 60</span>        <span class="predefined-type">Long</span> minSizeNameId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Ha</span><span class="delimiter">"</span></span>, <span class="integer">42</span>);
+<span class="line-numbers"> 61</span>        assertEquals(<span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Ha</span><span class="delimiter">"</span></span>, <span class="integer">42</span>, minSizeNameId),
+<span class="line-numbers"> 62</span>                     personSvc.getPerson(minSizeNameId));
+<span class="line-numbers"> 63</span>    }
+<span class="line-numbers"> 64</span>    <span class="comment">// end::testMinSizeName[]</span>
+<span class="line-numbers"> 65</span>
+<span class="line-numbers"> 66</span>    <span class="comment">// tag::testMinAge[]</span>
+<span class="line-numbers"> 67</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 68</span>    <span class="directive">public</span> <span class="type">void</span> testMinAge() {
+<span class="line-numbers"> 69</span>        <span class="predefined-type">Long</span> minAgeId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Newborn</span><span class="delimiter">"</span></span>, <span class="integer">0</span>);
+<span class="line-numbers"> 70</span>        assertEquals(<span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Newborn</span><span class="delimiter">"</span></span>, <span class="integer">0</span>, minAgeId),
+<span class="line-numbers"> 71</span>                     personSvc.getPerson(minAgeId));
+<span class="line-numbers"> 72</span>    }
+<span class="line-numbers"> 73</span>    <span class="comment">// end::testMinAge[]</span>
+<span class="line-numbers"> 74</span>
+<span class="line-numbers"> 75</span>    <span class="comment">// tag::testGetPerson[]</span>
+<span class="line-numbers"> 76</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 77</span>    <span class="directive">public</span> <span class="type">void</span> testGetPerson() {
+<span class="line-numbers"> 78</span>        <span class="predefined-type">Long</span> bobId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Bob</span><span class="delimiter">"</span></span>, <span class="integer">24</span>);
+<span class="line-numbers"> 79</span>        Person bob = personSvc.getPerson(bobId);
+<span class="line-numbers"> 80</span>        assertEquals(<span class="string"><span class="delimiter">"</span><span class="content">Bob</span><span class="delimiter">"</span></span>, bob.name);
+<span class="line-numbers"> 81</span>        assertEquals(<span class="integer">24</span>, bob.age);
+<span class="line-numbers"> 82</span>        assertNotNull(bob.id);
+<span class="line-numbers"> 83</span>    }
+<span class="line-numbers"> 84</span>    <span class="comment">// end::testGetPerson[]</span>
+<span class="line-numbers"> 85</span>
+<span class="line-numbers"> 86</span>    <span class="comment">// tag::testGetAllPeople[]</span>
+<span class="line-numbers"> 87</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 88</span>    <span class="directive">public</span> <span class="type">void</span> testGetAllPeople() {
+<span class="line-numbers"> 89</span>        <span class="predefined-type">Long</span> person1Id = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Person1</span><span class="delimiter">"</span></span>, <span class="integer">1</span>);
+<span class="line-numbers"> 90</span>        <span class="predefined-type">Long</span> person2Id = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Person2</span><span class="delimiter">"</span></span>, <span class="integer">2</span>);
+<span class="line-numbers"> 91</span>
+<span class="line-numbers"> 92</span>        Person expected1 = <span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Person1</span><span class="delimiter">"</span></span>, <span class="integer">1</span>, person1Id);
+<span class="line-numbers"> 93</span>        Person expected2 = <span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Person2</span><span class="delimiter">"</span></span>, <span class="integer">2</span>, person2Id);
+<span class="line-numbers"> 94</span>
+<span class="line-numbers"> 95</span>        <span class="predefined-type">Collection</span>&lt;Person&gt; allPeople = personSvc.getAllPeople();
+<span class="line-numbers"> 96</span>        assertTrue(allPeople.size() &gt;= <span class="integer">2</span>,
+<span class="line-numbers"> 97</span>            <span class="string"><span class="delimiter">"</span><span class="content">Expected at least 2 people to be registered, but there were only: </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 98</span>            + allPeople);
+<span class="line-numbers"> 99</span>        assertTrue(allPeople.contains(expected1),
+<span class="line-numbers">100</span>            <span class="string"><span class="delimiter">"</span><span class="content">Did not find person </span><span class="delimiter">"</span></span> + expected1 + <span class="string"><span class="delimiter">"</span><span class="content"> in all people: </span><span class="delimiter">"</span></span> + allPeople);
+<span class="line-numbers">101</span>        assertTrue(allPeople.contains(expected2),
+<span class="line-numbers">102</span>            <span class="string"><span class="delimiter">"</span><span class="content">Did not find person </span><span class="delimiter">"</span></span> + expected2 + <span class="string"><span class="delimiter">"</span><span class="content"> in all people: </span><span class="delimiter">"</span></span> + allPeople);
+<span class="line-numbers">103</span>    }
+<span class="line-numbers">104</span>    <span class="comment">// end::testGetAllPeople[]</span>
+<span class="line-numbers">105</span>
+<span class="line-numbers">106</span>    <span class="comment">// tag::testUpdateAge[]</span>
+<span class="line-numbers">107</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">108</span>    <span class="directive">public</span> <span class="type">void</span> testUpdateAge() {
+<span class="line-numbers">109</span>        <span class="predefined-type">Long</span> personId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">newAgePerson</span><span class="delimiter">"</span></span>, <span class="integer">1</span>);
+<span class="line-numbers">110</span>
+<span class="line-numbers">111</span>        Person originalPerson = personSvc.getPerson(personId);
+<span class="line-numbers">112</span>        assertEquals(<span class="string"><span class="delimiter">"</span><span class="content">newAgePerson</span><span class="delimiter">"</span></span>, originalPerson.name);
+<span class="line-numbers">113</span>        assertEquals(<span class="integer">1</span>, originalPerson.age);
+<span class="line-numbers">114</span>        assertEquals(personId, <span class="predefined-type">Long</span>.valueOf(originalPerson.id));
+<span class="line-numbers">115</span>
+<span class="line-numbers">116</span>        personSvc.updatePerson(personId,
+<span class="line-numbers">117</span>            <span class="keyword">new</span> Person(originalPerson.name, <span class="integer">2</span>, originalPerson.id));
+<span class="line-numbers">118</span>        Person updatedPerson = personSvc.getPerson(personId);
+<span class="line-numbers">119</span>        assertEquals(<span class="string"><span class="delimiter">"</span><span class="content">newAgePerson</span><span class="delimiter">"</span></span>, updatedPerson.name);
+<span class="line-numbers">120</span>        assertEquals(<span class="integer">2</span>, updatedPerson.age);
+<span class="line-numbers">121</span>        assertEquals(personId, <span class="predefined-type">Long</span>.valueOf(updatedPerson.id));
+<span class="line-numbers">122</span>    }
+<span class="line-numbers">123</span>    <span class="comment">// end::testUpdateAge[]</span>
+<span class="line-numbers">124</span>    <span class="comment">// end::tests[]</span>
+<span class="line-numbers">125</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following tests are added: <code class="hotspot=testMinSizeName file=1">testMinSizeName()</code>, <code class="hotspot=testMinAge file=1">testMinAge()</code>, <code class="hotspot=testGetPerson file=1">testGetPerson()</code>, <code class="hotspot=testGetAllPeople file=1">testGetAllPeople()</code>, and <code class="hotspot=testUpdateAge file=1">testUpdateAge()</code>.</p>
+</div>
+<div class="paragraph">
+<p>Save the changes, and  press the <code>enter/return</code> key in your console window to run the tests.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-outside-of-dev-mode">Testing outside of dev mode</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Running tests in dev mode is convenient for local development, but it can be tedious to test against a running Open Liberty server in non-development scenarios such as CI/CD pipelines. For this reason, MicroShed Testing can start and stop the application runtime before and after the tests are run. This process is primarily accomplished by using Docker and Testcontainers.</p>
+</div>
+<div class="paragraph">
+<p>To test outside of dev mode, exit dev mode by pressing <code>CTRL+C</code> in the command-line session where you ran the server, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+<div class="paragraph">
+<p>Next, use the following Maven goal to run the tests from a cold start:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn verify</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running tests from a cold start takes a little longer than running tests from dev mode because the application runtime needs to start each time. However, tests that are run from a cold start use a clean instance on each run to ensure consistent results. These tests also automatically hook into existing build pipelines that are set up to run the <code>integration-test</code> phase.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sharing-configuration-across-multiple-classes">Sharing configuration across multiple classes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Typically, projects have multiple test classes that all use the same type of application deployment. For these cases, it’s useful to reuse an existing configuration and application lifecycle across multiple test classes.</p>
+</div>
+<div class="paragraph">
+<p>First, create another test class.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>ErrorPathIT</code> class.</mark>
+<code>src/test/java/io/openliberty/guides/testing/ErrorPathIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ErrorPathIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright,importSharedContainerConfig,sharedContainerConfig">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019, 2021 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.testing</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertThrows</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">javax.ws.rs.BadRequestException</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">javax.ws.rs.NotFoundException</span>;
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jupiter.MicroShedTest</span>;
+<span class="line-numbers">22</span><span class="comment">// tag::importSharedContainerConfig[]</span>
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">org.microshed.testing.SharedContainerConfig</span>;
+<span class="line-numbers">24</span><span class="comment">// end::importSharedContainerConfig[]</span>
+<span class="line-numbers">25</span><span class="comment">// tag::importMPApp[]</span>
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">org.microshed.testing.testcontainers.ApplicationContainer</span>;
+<span class="line-numbers">27</span><span class="comment">// end::importMPApp[]</span>
+<span class="line-numbers">28</span><span class="comment">// tag::importContainer[]</span>
+<span class="line-numbers">29</span><span class="keyword">import</span> <span class="include">org.testcontainers.junit.jupiter.Container</span>;
+<span class="line-numbers">30</span><span class="comment">// end::importContainer[]</span>
+<span class="line-numbers">31</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jaxrs.RESTClient</span>;
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span><span class="annotation">@MicroShedTest</span>
+<span class="line-numbers">34</span><span class="comment">// tag::sharedContainerConfig[]</span>
+<span class="line-numbers">35</span><span class="annotation">@SharedContainerConfig</span>(AppDeploymentConfig.class)
+<span class="line-numbers">36</span><span class="comment">// end::sharedContainerConfig[]</span>
+<span class="line-numbers">37</span><span class="directive">public</span> <span class="type">class</span> <span class="class">ErrorPathIT</span> {
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span>    <span class="comment">// tag::container[]</span>
+<span class="line-numbers">40</span>    <span class="annotation">@Container</span>
+<span class="line-numbers">41</span>    <span class="directive">public</span> <span class="directive">static</span> ApplicationContainer app = <span class="keyword">new</span> ApplicationContainer()
+<span class="line-numbers">42</span>                    .withAppContextRoot(<span class="string"><span class="delimiter">"</span><span class="content">/guide-microshed-testing</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">43</span>                    .withReadinessPath(<span class="string"><span class="delimiter">"</span><span class="content">/health/ready</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">44</span>    <span class="comment">// end::container[]</span>
+<span class="line-numbers">45</span>
+<span class="line-numbers">46</span>    <span class="comment">// tag::personSvc[]</span>
+<span class="line-numbers">47</span>    <span class="annotation">@RESTClient</span>
+<span class="line-numbers">48</span>    <span class="directive">public</span> <span class="directive">static</span> PersonService personSvc;
+<span class="line-numbers">49</span>    <span class="comment">// end::personSvc[]</span>
+<span class="line-numbers">50</span>
+<span class="line-numbers">51</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">52</span>    <span class="directive">public</span> <span class="type">void</span> testGetUnknownPerson() {
+<span class="line-numbers">53</span>        assertThrows(NotFoundException.class, () -&gt; personSvc.getPerson(-<span class="integer">1L</span>));
+<span class="line-numbers">54</span>    }
+<span class="line-numbers">55</span>
+<span class="line-numbers">56</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">57</span>    <span class="directive">public</span> <span class="type">void</span> testCreateBadPersonNullName() {
+<span class="line-numbers">58</span>        assertThrows(BadRequestException.class, () -&gt; personSvc.createPerson(<span class="predefined-constant">null</span>, <span class="integer">5</span>));
+<span class="line-numbers">59</span>    }
+<span class="line-numbers">60</span>
+<span class="line-numbers">61</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">62</span>    <span class="directive">public</span> <span class="type">void</span> testCreateBadPersonNegativeAge() {
+<span class="line-numbers">63</span>        assertThrows(BadRequestException.class, () -&gt;
+<span class="line-numbers">64</span>          personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">NegativeAgePersoN</span><span class="delimiter">"</span></span>, -<span class="integer">1</span>));
+<span class="line-numbers">65</span>    }
+<span class="line-numbers">66</span>
+<span class="line-numbers">67</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">68</span>    <span class="directive">public</span> <span class="type">void</span> testCreateBadPersonNameTooLong() {
+<span class="line-numbers">69</span>        assertThrows(BadRequestException.class, () -&gt;
+<span class="line-numbers">70</span>          personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">NameTooLongPersonNameTooLongPersonNameTooLongPerson</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">71</span>          <span class="integer">5</span>));
+<span class="line-numbers">72</span>    }
+<span class="line-numbers">73</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>ErrorPathIT</code> test class has the same <code class="hotspot=container file=0">@Container</code> configuration and <code class="hotspot=personSvc file=0">PersonService</code> REST client as the <code>PersonServiceIT</code> class.</p>
+</div>
+<div class="paragraph">
+<p>Now, run the tests again outside of dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn verify</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice that tests for both the <code>PersonServiceIT</code> and <code>ErrorPathIT</code> classes run, but a new server starts for each test class, resulting in a longer test runtime.</p>
+</div>
+<div class="sect2">
+<h3 id="creating-a-common-configuration">Creating a common configuration</h3>
+<div class="paragraph">
+<p>To solve this issue, common configuration can be placed in a class that implements <code>SharedContainerConfiguration</code>.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>AppDeploymentConfig</code> class.</mark>
+<code>src/test/java/io/openliberty/guides/testing/AppDeploymentConfig.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>AppDeploymentConfig.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019, 2021 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.testing</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">org.microshed.testing.SharedContainerConfiguration</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">org.microshed.testing.testcontainers.ApplicationContainer</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">org.testcontainers.junit.jupiter.Container</span>;
+<span class="line-numbers">18</span>
+<span class="line-numbers">19</span><span class="directive">public</span> <span class="type">class</span> <span class="class">AppDeploymentConfig</span> <span class="directive">implements</span> SharedContainerConfiguration {
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span>    <span class="annotation">@Container</span>
+<span class="line-numbers">22</span>    <span class="directive">public</span> <span class="directive">static</span> ApplicationContainer app = <span class="keyword">new</span> ApplicationContainer()
+<span class="line-numbers">23</span>                    .withAppContextRoot(<span class="string"><span class="delimiter">"</span><span class="content">/guide-microshed-testing</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">24</span>                    .withReadinessPath(<span class="string"><span class="delimiter">"</span><span class="content">/health/ready</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After the common configuration is created, the test classes can be updated to reference this shared configuration.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="updating-the-personserviceit-class">Updating the PersonServiceIT class</h3>
+<div class="paragraph">
+<p>PersonServiceIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2019, 2021 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers"> 10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers"> 11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.testing</span>;
+<span class="line-numbers"> 14</span>
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers"> 16</span><span class="comment">// tag::importAssertNotNull[]</span>
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertNotNull</span>;
+<span class="line-numbers"> 18</span><span class="comment">// end::importAssertNotNull[]</span>
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
+<span class="line-numbers"> 20</span>
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">java.util.Collection</span>;
+<span class="line-numbers"> 22</span>
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jaxrs.RESTClient</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jupiter.MicroShedTest</span>;
+<span class="line-numbers"> 26</span><span class="comment">// tag::importMPApp[]</span>
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">org.microshed.testing.testcontainers.ApplicationContainer</span>;
+<span class="line-numbers"> 28</span><span class="comment">// end::importMPApp[]</span>
+<span class="line-numbers"> 29</span><span class="comment">// tag::importContainer[]</span>
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">org.testcontainers.junit.jupiter.Container</span>;
+<span class="line-numbers"> 31</span><span class="comment">// end::importContainer[]</span>
+<span class="line-numbers"> 32</span>
+<span class="line-numbers"> 33</span><span class="annotation">@MicroShedTest</span>
+<span class="line-numbers"> 34</span><span class="directive">public</span> <span class="type">class</span> <span class="class">PersonServiceIT</span> {
+<span class="line-numbers"> 35</span>
+<span class="line-numbers"> 36</span>    <span class="annotation">@RESTClient</span>
+<span class="line-numbers"> 37</span>    <span class="directive">public</span> <span class="directive">static</span> PersonService personSvc;
+<span class="line-numbers"> 38</span>
+<span class="line-numbers"> 39</span>    <span class="comment">// tag::container[]</span>
+<span class="line-numbers"> 40</span>    <span class="annotation">@Container</span>
+<span class="line-numbers"> 41</span>    <span class="comment">// end::container[]</span>
+<span class="line-numbers"> 42</span>    <span class="comment">// tag::mpApp[]</span>
+<span class="line-numbers"> 43</span>    <span class="directive">public</span> <span class="directive">static</span> ApplicationContainer app = <span class="keyword">new</span> ApplicationContainer()
+<span class="line-numbers"> 44</span>                    .withAppContextRoot(<span class="string"><span class="delimiter">"</span><span class="content">/guide-microshed-testing</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 45</span>                    .withReadinessPath(<span class="string"><span class="delimiter">"</span><span class="content">/health/ready</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 46</span>    <span class="comment">// end::mpApp[]</span>
+<span class="line-numbers"> 47</span>
+<span class="line-numbers"> 48</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 49</span>    <span class="directive">public</span> <span class="type">void</span> testCreatePerson() {
+<span class="line-numbers"> 50</span>        <span class="comment">// tag::testCreatePerson[]</span>
+<span class="line-numbers"> 51</span>        <span class="predefined-type">Long</span> createId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Hank</span><span class="delimiter">"</span></span>, <span class="integer">42</span>);
+<span class="line-numbers"> 52</span>        assertNotNull(createId);
+<span class="line-numbers"> 53</span>        <span class="comment">// end::testCreatePerson[]</span>
+<span class="line-numbers"> 54</span>    }
+<span class="line-numbers"> 55</span>
+<span class="line-numbers"> 56</span>    <span class="comment">// tag::tests[]</span>
+<span class="line-numbers"> 57</span>    <span class="comment">// tag::testMinSizeName[]</span>
+<span class="line-numbers"> 58</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 59</span>    <span class="directive">public</span> <span class="type">void</span> testMinSizeName() {
+<span class="line-numbers"> 60</span>        <span class="predefined-type">Long</span> minSizeNameId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Ha</span><span class="delimiter">"</span></span>, <span class="integer">42</span>);
+<span class="line-numbers"> 61</span>        assertEquals(<span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Ha</span><span class="delimiter">"</span></span>, <span class="integer">42</span>, minSizeNameId),
+<span class="line-numbers"> 62</span>                     personSvc.getPerson(minSizeNameId));
+<span class="line-numbers"> 63</span>    }
+<span class="line-numbers"> 64</span>    <span class="comment">// end::testMinSizeName[]</span>
+<span class="line-numbers"> 65</span>
+<span class="line-numbers"> 66</span>    <span class="comment">// tag::testMinAge[]</span>
+<span class="line-numbers"> 67</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 68</span>    <span class="directive">public</span> <span class="type">void</span> testMinAge() {
+<span class="line-numbers"> 69</span>        <span class="predefined-type">Long</span> minAgeId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Newborn</span><span class="delimiter">"</span></span>, <span class="integer">0</span>);
+<span class="line-numbers"> 70</span>        assertEquals(<span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Newborn</span><span class="delimiter">"</span></span>, <span class="integer">0</span>, minAgeId),
+<span class="line-numbers"> 71</span>                     personSvc.getPerson(minAgeId));
+<span class="line-numbers"> 72</span>    }
+<span class="line-numbers"> 73</span>    <span class="comment">// end::testMinAge[]</span>
+<span class="line-numbers"> 74</span>
+<span class="line-numbers"> 75</span>    <span class="comment">// tag::testGetPerson[]</span>
+<span class="line-numbers"> 76</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 77</span>    <span class="directive">public</span> <span class="type">void</span> testGetPerson() {
+<span class="line-numbers"> 78</span>        <span class="predefined-type">Long</span> bobId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Bob</span><span class="delimiter">"</span></span>, <span class="integer">24</span>);
+<span class="line-numbers"> 79</span>        Person bob = personSvc.getPerson(bobId);
+<span class="line-numbers"> 80</span>        assertEquals(<span class="string"><span class="delimiter">"</span><span class="content">Bob</span><span class="delimiter">"</span></span>, bob.name);
+<span class="line-numbers"> 81</span>        assertEquals(<span class="integer">24</span>, bob.age);
+<span class="line-numbers"> 82</span>        assertNotNull(bob.id);
+<span class="line-numbers"> 83</span>    }
+<span class="line-numbers"> 84</span>    <span class="comment">// end::testGetPerson[]</span>
+<span class="line-numbers"> 85</span>
+<span class="line-numbers"> 86</span>    <span class="comment">// tag::testGetAllPeople[]</span>
+<span class="line-numbers"> 87</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 88</span>    <span class="directive">public</span> <span class="type">void</span> testGetAllPeople() {
+<span class="line-numbers"> 89</span>        <span class="predefined-type">Long</span> person1Id = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Person1</span><span class="delimiter">"</span></span>, <span class="integer">1</span>);
+<span class="line-numbers"> 90</span>        <span class="predefined-type">Long</span> person2Id = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Person2</span><span class="delimiter">"</span></span>, <span class="integer">2</span>);
+<span class="line-numbers"> 91</span>
+<span class="line-numbers"> 92</span>        Person expected1 = <span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Person1</span><span class="delimiter">"</span></span>, <span class="integer">1</span>, person1Id);
+<span class="line-numbers"> 93</span>        Person expected2 = <span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Person2</span><span class="delimiter">"</span></span>, <span class="integer">2</span>, person2Id);
+<span class="line-numbers"> 94</span>
+<span class="line-numbers"> 95</span>        <span class="predefined-type">Collection</span>&lt;Person&gt; allPeople = personSvc.getAllPeople();
+<span class="line-numbers"> 96</span>        assertTrue(allPeople.size() &gt;= <span class="integer">2</span>,
+<span class="line-numbers"> 97</span>            <span class="string"><span class="delimiter">"</span><span class="content">Expected at least 2 people to be registered, but there were only: </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 98</span>            + allPeople);
+<span class="line-numbers"> 99</span>        assertTrue(allPeople.contains(expected1),
+<span class="line-numbers">100</span>            <span class="string"><span class="delimiter">"</span><span class="content">Did not find person </span><span class="delimiter">"</span></span> + expected1 + <span class="string"><span class="delimiter">"</span><span class="content"> in all people: </span><span class="delimiter">"</span></span> + allPeople);
+<span class="line-numbers">101</span>        assertTrue(allPeople.contains(expected2),
+<span class="line-numbers">102</span>            <span class="string"><span class="delimiter">"</span><span class="content">Did not find person </span><span class="delimiter">"</span></span> + expected2 + <span class="string"><span class="delimiter">"</span><span class="content"> in all people: </span><span class="delimiter">"</span></span> + allPeople);
+<span class="line-numbers">103</span>    }
+<span class="line-numbers">104</span>    <span class="comment">// end::testGetAllPeople[]</span>
+<span class="line-numbers">105</span>
+<span class="line-numbers">106</span>    <span class="comment">// tag::testUpdateAge[]</span>
+<span class="line-numbers">107</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">108</span>    <span class="directive">public</span> <span class="type">void</span> testUpdateAge() {
+<span class="line-numbers">109</span>        <span class="predefined-type">Long</span> personId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">newAgePerson</span><span class="delimiter">"</span></span>, <span class="integer">1</span>);
+<span class="line-numbers">110</span>
+<span class="line-numbers">111</span>        Person originalPerson = personSvc.getPerson(personId);
+<span class="line-numbers">112</span>        assertEquals(<span class="string"><span class="delimiter">"</span><span class="content">newAgePerson</span><span class="delimiter">"</span></span>, originalPerson.name);
+<span class="line-numbers">113</span>        assertEquals(<span class="integer">1</span>, originalPerson.age);
+<span class="line-numbers">114</span>        assertEquals(personId, <span class="predefined-type">Long</span>.valueOf(originalPerson.id));
+<span class="line-numbers">115</span>
+<span class="line-numbers">116</span>        personSvc.updatePerson(personId,
+<span class="line-numbers">117</span>            <span class="keyword">new</span> Person(originalPerson.name, <span class="integer">2</span>, originalPerson.id));
+<span class="line-numbers">118</span>        Person updatedPerson = personSvc.getPerson(personId);
+<span class="line-numbers">119</span>        assertEquals(<span class="string"><span class="delimiter">"</span><span class="content">newAgePerson</span><span class="delimiter">"</span></span>, updatedPerson.name);
+<span class="line-numbers">120</span>        assertEquals(<span class="integer">2</span>, updatedPerson.age);
+<span class="line-numbers">121</span>        assertEquals(personId, <span class="predefined-type">Long</span>.valueOf(updatedPerson.id));
+<span class="line-numbers">122</span>    }
+<span class="line-numbers">123</span>    <span class="comment">// end::testUpdateAge[]</span>
+<span class="line-numbers">124</span>    <span class="comment">// end::tests[]</span>
+<span class="line-numbers">125</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Remove the container code from the <code>PersonServiceIT</code> class. Remove <code class="hotspot=importMPApp hotspot=importContainer file=0">import</code> statements for <code>ApplicationContainer</code> and <code>Container</code> and the <code class="hotspot=container hotspot=mpApp file=0">ApplicationContainer app</code> field.</p>
+</div>
+<div class="paragraph">
+<p>Next, annotate the <code>PersonServiceIT</code> class with the <code>@SharedContainerConfig</code> annotation that references the <code>AppDeploymentConfig</code> shared configuration class.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Replace the <code>PersonServiceIT</code> class.</mark>
+<code>src/test/java/io/openliberty/guides/testing/PersonServiceIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>PersonServiceIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2019, 2021 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers"> 10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers"> 11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.testing</span>;
+<span class="line-numbers"> 14</span>
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertNotNull</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
+<span class="line-numbers"> 18</span>
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">java.util.Collection</span>;
+<span class="line-numbers"> 20</span>
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers"> 22</span><span class="comment">// tag::importSharedContainerConfig[]</span>
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">org.microshed.testing.SharedContainerConfig</span>;
+<span class="line-numbers"> 24</span><span class="comment">// end::importSharedContainerConfig[]</span>
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jaxrs.RESTClient</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jupiter.MicroShedTest</span>;
+<span class="line-numbers"> 27</span>
+<span class="line-numbers"> 28</span><span class="annotation">@MicroShedTest</span>
+<span class="line-numbers"> 29</span><span class="comment">// tag::sharedContainerConfig[]</span>
+<span class="line-numbers"> 30</span><span class="annotation">@SharedContainerConfig</span>(AppDeploymentConfig.class)
+<span class="line-numbers"> 31</span><span class="comment">// end::sharedContainerConfig[]</span>
+<span class="line-numbers"> 32</span><span class="directive">public</span> <span class="type">class</span> <span class="class">PersonServiceIT</span> {
+<span class="line-numbers"> 33</span>
+<span class="line-numbers"> 34</span>    <span class="annotation">@RESTClient</span>
+<span class="line-numbers"> 35</span>    <span class="directive">public</span> <span class="directive">static</span> PersonService personSvc;
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 38</span>    <span class="directive">public</span> <span class="type">void</span> testCreatePerson() {
+<span class="line-numbers"> 39</span>        <span class="predefined-type">Long</span> createId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Hank</span><span class="delimiter">"</span></span>, <span class="integer">42</span>);
+<span class="line-numbers"> 40</span>        assertNotNull(createId);
+<span class="line-numbers"> 41</span>    }
+<span class="line-numbers"> 42</span>
+<span class="line-numbers"> 43</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 44</span>    <span class="directive">public</span> <span class="type">void</span> testMinSizeName() {
+<span class="line-numbers"> 45</span>        <span class="predefined-type">Long</span> minSizeNameId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Ha</span><span class="delimiter">"</span></span>, <span class="integer">42</span>);
+<span class="line-numbers"> 46</span>        assertEquals(<span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Ha</span><span class="delimiter">"</span></span>, <span class="integer">42</span>, minSizeNameId),
+<span class="line-numbers"> 47</span>                     personSvc.getPerson(minSizeNameId));
+<span class="line-numbers"> 48</span>    }
+<span class="line-numbers"> 49</span>
+<span class="line-numbers"> 50</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 51</span>    <span class="directive">public</span> <span class="type">void</span> testMinAge() {
+<span class="line-numbers"> 52</span>        <span class="predefined-type">Long</span> minAgeId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Newborn</span><span class="delimiter">"</span></span>, <span class="integer">0</span>);
+<span class="line-numbers"> 53</span>        assertEquals(<span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Newborn</span><span class="delimiter">"</span></span>, <span class="integer">0</span>, minAgeId),
+<span class="line-numbers"> 54</span>                     personSvc.getPerson(minAgeId));
+<span class="line-numbers"> 55</span>    }
+<span class="line-numbers"> 56</span>
+<span class="line-numbers"> 57</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 58</span>    <span class="directive">public</span> <span class="type">void</span> testGetPerson() {
+<span class="line-numbers"> 59</span>        <span class="predefined-type">Long</span> bobId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Bob</span><span class="delimiter">"</span></span>, <span class="integer">24</span>);
+<span class="line-numbers"> 60</span>        Person bob = personSvc.getPerson(bobId);
+<span class="line-numbers"> 61</span>        assertEquals(<span class="string"><span class="delimiter">"</span><span class="content">Bob</span><span class="delimiter">"</span></span>, bob.name);
+<span class="line-numbers"> 62</span>        assertEquals(<span class="integer">24</span>, bob.age);
+<span class="line-numbers"> 63</span>        assertNotNull(bob.id);
+<span class="line-numbers"> 64</span>    }
+<span class="line-numbers"> 65</span>
+<span class="line-numbers"> 66</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 67</span>    <span class="directive">public</span> <span class="type">void</span> testGetAllPeople() {
+<span class="line-numbers"> 68</span>        <span class="predefined-type">Long</span> person1Id = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Person1</span><span class="delimiter">"</span></span>, <span class="integer">1</span>);
+<span class="line-numbers"> 69</span>        <span class="predefined-type">Long</span> person2Id = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">Person2</span><span class="delimiter">"</span></span>, <span class="integer">2</span>);
+<span class="line-numbers"> 70</span>
+<span class="line-numbers"> 71</span>        Person expected1 = <span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Person1</span><span class="delimiter">"</span></span>, <span class="integer">1</span>, person1Id);
+<span class="line-numbers"> 72</span>        Person expected2 = <span class="keyword">new</span> Person(<span class="string"><span class="delimiter">"</span><span class="content">Person2</span><span class="delimiter">"</span></span>, <span class="integer">2</span>, person2Id);
+<span class="line-numbers"> 73</span>
+<span class="line-numbers"> 74</span>        <span class="predefined-type">Collection</span>&lt;Person&gt; allPeople = personSvc.getAllPeople();
+<span class="line-numbers"> 75</span>        assertTrue(allPeople.size() &gt;= <span class="integer">2</span>,
+<span class="line-numbers"> 76</span>            <span class="string"><span class="delimiter">"</span><span class="content">Expected at least 2 people to be registered, but there were only: </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 77</span>            + allPeople);
+<span class="line-numbers"> 78</span>        assertTrue(allPeople.contains(expected1),
+<span class="line-numbers"> 79</span>            <span class="string"><span class="delimiter">"</span><span class="content">Did not find person </span><span class="delimiter">"</span></span> + expected1 + <span class="string"><span class="delimiter">"</span><span class="content"> in all people: </span><span class="delimiter">"</span></span> + allPeople);
+<span class="line-numbers"> 80</span>        assertTrue(allPeople.contains(expected2),
+<span class="line-numbers"> 81</span>            <span class="string"><span class="delimiter">"</span><span class="content">Did not find person </span><span class="delimiter">"</span></span> + expected2 + <span class="string"><span class="delimiter">"</span><span class="content"> in all people: </span><span class="delimiter">"</span></span> + allPeople);
+<span class="line-numbers"> 82</span>    }
+<span class="line-numbers"> 83</span>
+<span class="line-numbers"> 84</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 85</span>    <span class="directive">public</span> <span class="type">void</span> testUpdateAge() {
+<span class="line-numbers"> 86</span>        <span class="predefined-type">Long</span> personId = personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">newAgePerson</span><span class="delimiter">"</span></span>, <span class="integer">1</span>);
+<span class="line-numbers"> 87</span>
+<span class="line-numbers"> 88</span>        Person originalPerson = personSvc.getPerson(personId);
+<span class="line-numbers"> 89</span>        assertEquals(<span class="string"><span class="delimiter">"</span><span class="content">newAgePerson</span><span class="delimiter">"</span></span>, originalPerson.name);
+<span class="line-numbers"> 90</span>        assertEquals(<span class="integer">1</span>, originalPerson.age);
+<span class="line-numbers"> 91</span>        assertEquals(personId, <span class="predefined-type">Long</span>.valueOf(originalPerson.id));
+<span class="line-numbers"> 92</span>
+<span class="line-numbers"> 93</span>        personSvc.updatePerson(personId,
+<span class="line-numbers"> 94</span>            <span class="keyword">new</span> Person(originalPerson.name, <span class="integer">2</span>, originalPerson.id));
+<span class="line-numbers"> 95</span>        Person updatedPerson = personSvc.getPerson(personId);
+<span class="line-numbers"> 96</span>        assertEquals(<span class="string"><span class="delimiter">"</span><span class="content">newAgePerson</span><span class="delimiter">"</span></span>, updatedPerson.name);
+<span class="line-numbers"> 97</span>        assertEquals(<span class="integer">2</span>, updatedPerson.age);
+<span class="line-numbers"> 98</span>        assertEquals(personId, <span class="predefined-type">Long</span>.valueOf(updatedPerson.id));
+<span class="line-numbers"> 99</span>    }
+<span class="line-numbers">100</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Import the <code class="hotspot=importSharedContainerConfig file=1">SharedContainerConfig</code> annotation and annotate the <code>PersonServiceIT</code> class with <code class="hotspot=sharedContainerConfig file=1">@SharedContainerConfig</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="updating-the-errorpathit-class">Updating the ErrorPathIT class</h3>
+<div class="paragraph">
+<p>ErrorPathIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright,importSharedContainerConfig,sharedContainerConfig">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019, 2021 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.testing</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertThrows</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">javax.ws.rs.BadRequestException</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">javax.ws.rs.NotFoundException</span>;
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jupiter.MicroShedTest</span>;
+<span class="line-numbers">22</span><span class="comment">// tag::importSharedContainerConfig[]</span>
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">org.microshed.testing.SharedContainerConfig</span>;
+<span class="line-numbers">24</span><span class="comment">// end::importSharedContainerConfig[]</span>
+<span class="line-numbers">25</span><span class="comment">// tag::importMPApp[]</span>
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">org.microshed.testing.testcontainers.ApplicationContainer</span>;
+<span class="line-numbers">27</span><span class="comment">// end::importMPApp[]</span>
+<span class="line-numbers">28</span><span class="comment">// tag::importContainer[]</span>
+<span class="line-numbers">29</span><span class="keyword">import</span> <span class="include">org.testcontainers.junit.jupiter.Container</span>;
+<span class="line-numbers">30</span><span class="comment">// end::importContainer[]</span>
+<span class="line-numbers">31</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jaxrs.RESTClient</span>;
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span><span class="annotation">@MicroShedTest</span>
+<span class="line-numbers">34</span><span class="comment">// tag::sharedContainerConfig[]</span>
+<span class="line-numbers">35</span><span class="annotation">@SharedContainerConfig</span>(AppDeploymentConfig.class)
+<span class="line-numbers">36</span><span class="comment">// end::sharedContainerConfig[]</span>
+<span class="line-numbers">37</span><span class="directive">public</span> <span class="type">class</span> <span class="class">ErrorPathIT</span> {
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span>    <span class="comment">// tag::container[]</span>
+<span class="line-numbers">40</span>    <span class="annotation">@Container</span>
+<span class="line-numbers">41</span>    <span class="directive">public</span> <span class="directive">static</span> ApplicationContainer app = <span class="keyword">new</span> ApplicationContainer()
+<span class="line-numbers">42</span>                    .withAppContextRoot(<span class="string"><span class="delimiter">"</span><span class="content">/guide-microshed-testing</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">43</span>                    .withReadinessPath(<span class="string"><span class="delimiter">"</span><span class="content">/health/ready</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">44</span>    <span class="comment">// end::container[]</span>
+<span class="line-numbers">45</span>
+<span class="line-numbers">46</span>    <span class="comment">// tag::personSvc[]</span>
+<span class="line-numbers">47</span>    <span class="annotation">@RESTClient</span>
+<span class="line-numbers">48</span>    <span class="directive">public</span> <span class="directive">static</span> PersonService personSvc;
+<span class="line-numbers">49</span>    <span class="comment">// end::personSvc[]</span>
+<span class="line-numbers">50</span>
+<span class="line-numbers">51</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">52</span>    <span class="directive">public</span> <span class="type">void</span> testGetUnknownPerson() {
+<span class="line-numbers">53</span>        assertThrows(NotFoundException.class, () -&gt; personSvc.getPerson(-<span class="integer">1L</span>));
+<span class="line-numbers">54</span>    }
+<span class="line-numbers">55</span>
+<span class="line-numbers">56</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">57</span>    <span class="directive">public</span> <span class="type">void</span> testCreateBadPersonNullName() {
+<span class="line-numbers">58</span>        assertThrows(BadRequestException.class, () -&gt; personSvc.createPerson(<span class="predefined-constant">null</span>, <span class="integer">5</span>));
+<span class="line-numbers">59</span>    }
+<span class="line-numbers">60</span>
+<span class="line-numbers">61</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">62</span>    <span class="directive">public</span> <span class="type">void</span> testCreateBadPersonNegativeAge() {
+<span class="line-numbers">63</span>        assertThrows(BadRequestException.class, () -&gt;
+<span class="line-numbers">64</span>          personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">NegativeAgePersoN</span><span class="delimiter">"</span></span>, -<span class="integer">1</span>));
+<span class="line-numbers">65</span>    }
+<span class="line-numbers">66</span>
+<span class="line-numbers">67</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">68</span>    <span class="directive">public</span> <span class="type">void</span> testCreateBadPersonNameTooLong() {
+<span class="line-numbers">69</span>        assertThrows(BadRequestException.class, () -&gt;
+<span class="line-numbers">70</span>          personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">NameTooLongPersonNameTooLongPersonNameTooLongPerson</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">71</span>          <span class="integer">5</span>));
+<span class="line-numbers">72</span>    }
+<span class="line-numbers">73</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Similarly, replace the <code>ErrorPathIT</code> class to remove the container code. Remove <code class="hotspot=importMPApp hotspot=importContainer file=0">import</code> statements for <code>ApplicationContainer</code> and <code>Container</code> and the <code class="hotspot=container hotspot=mpApp file=0">ApplicationContainer app</code> field.</p>
+</div>
+<div class="paragraph">
+<p>Next, annotate the <code>ErrorPathIT</code> class with the <code>@SharedContainerConfig</code> annotation.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Replace the <code>ErrorPathIT</code> class.</mark>
+<code>src/test/java/io/openliberty/guides/testing/ErrorPathIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ErrorPathIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019, 2021 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.testing</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertThrows</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">javax.ws.rs.BadRequestException</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">javax.ws.rs.NotFoundException</span>;
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers">21</span><span class="comment">// tag::importSharedContainerConfig[]</span>
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">org.microshed.testing.SharedContainerConfig</span>;
+<span class="line-numbers">23</span><span class="comment">// end::importSharedContainerConfig[]</span>
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jaxrs.RESTClient</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jupiter.MicroShedTest</span>;
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span><span class="annotation">@MicroShedTest</span>
+<span class="line-numbers">28</span><span class="comment">// tag::sharedContainerConfig[]</span>
+<span class="line-numbers">29</span><span class="annotation">@SharedContainerConfig</span>(AppDeploymentConfig.class)
+<span class="line-numbers">30</span><span class="comment">// end::sharedContainerConfig[]</span>
+<span class="line-numbers">31</span><span class="directive">public</span> <span class="type">class</span> <span class="class">ErrorPathIT</span> {
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span>    <span class="annotation">@RESTClient</span>
+<span class="line-numbers">34</span>    <span class="directive">public</span> <span class="directive">static</span> PersonService personSvc;
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">37</span>    <span class="directive">public</span> <span class="type">void</span> testGetUnknownPerson() {
+<span class="line-numbers">38</span>        assertThrows(NotFoundException.class, () -&gt; personSvc.getPerson(-<span class="integer">1L</span>));
+<span class="line-numbers">39</span>    }
+<span class="line-numbers">40</span>
+<span class="line-numbers">41</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">42</span>    <span class="directive">public</span> <span class="type">void</span> testCreateBadPersonNullName() {
+<span class="line-numbers">43</span>        assertThrows(BadRequestException.class, () -&gt; personSvc.createPerson(<span class="predefined-constant">null</span>, <span class="integer">5</span>));
+<span class="line-numbers">44</span>    }
+<span class="line-numbers">45</span>
+<span class="line-numbers">46</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">47</span>    <span class="directive">public</span> <span class="type">void</span> testCreateBadPersonNegativeAge() {
+<span class="line-numbers">48</span>        assertThrows(BadRequestException.class, () -&gt;
+<span class="line-numbers">49</span>          personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">NegativeAgePersoN</span><span class="delimiter">"</span></span>, -<span class="integer">1</span>));
+<span class="line-numbers">50</span>    }
+<span class="line-numbers">51</span>
+<span class="line-numbers">52</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">53</span>    <span class="directive">public</span> <span class="type">void</span> testCreateBadPersonNameTooLong() {
+<span class="line-numbers">54</span>        assertThrows(BadRequestException.class, () -&gt;
+<span class="line-numbers">55</span>           personSvc.createPerson(<span class="string"><span class="delimiter">"</span><span class="content">NameTooLongPersonNameTooLongPersonNameTooLongPerson</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">56</span>           <span class="integer">5</span>));
+<span class="line-numbers">57</span>    }
+<span class="line-numbers">58</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Import the <code class="hotspot=importSharedContainerConfig file=1">SharedContainerConfig</code> annotation and annotate the <code>ErrorPathIT</code> class with <code class="hotspot=sharedContainerConfig file=1">@SharedContainerConfig</code>.</p>
+</div>
+<div class="paragraph">
+<p>If you rerun the tests now, they run in about half the time because the same server instance is being used for both test classes:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn verify</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You developed automated tests for a REST service in Open Liberty by using MicroShed Testing and Open Liberty dev mode.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="related-links">Related Links</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Learn more about MicroShed Testing.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://microshed.org/microshed-testing/" target="_blank" rel="noopener noreferrer">View the MicroShed Testing website</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Testing a MicroProfile or Jakarta EE application <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-microshed-testing/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microshed-testing/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microshed-testing/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/rest-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Creating a RESTful web service</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">30 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/docker.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Using Docker containers to develop microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/rest-client-java.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Consuming a RESTful web service</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">25 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

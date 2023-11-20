@@ -1,0 +1,35 @@
+<!--
+  Copyright (c) 2018 IBM Corporation and others.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+ 
+  Contributors:
+      IBM Corporation - initial API and implementation
+-->
+<html>
+    <head>
+        <link rel="stylesheet" href="/retryTimeoutSample/css/bankApp.css">    
+        <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
+    </head>
+    <body id="body">    
+        <div class="bankHeadingBlockFlexContainer">
+            <div class="bankHeading">Global eBank - Your Account</div>
+            <span>
+                <img src="images/bank-info.svg" alt="About">
+                <img src="images/bank-user.svg" alt="User">
+            </span>    
+        </div>
+        
+        <div id="connecting">
+            <div id="loader" class="loader"></div>
+            <div>
+                <p id="loadingMessage">Loading your transactions.</p>
+            </div>
+        </div>
+        <div id="content"></div>
+        <div id="viewTransactions" onclick='requestTransactions()'></div>   
+    </body>
+    <script src="/retryTimeoutSample/js/retrytimeout.js"></script>
+</html>

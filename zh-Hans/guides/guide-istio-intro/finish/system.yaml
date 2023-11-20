@@ -1,0 +1,86 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: sys-app-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "example.com"
+    - "test.example.com"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: system-service
+  labels:
+    app: system
+spec:
+  ports:
+  - port: 9080
+    name: http
+  selector:
+    app: system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: system-deployment-blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: system
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: system
+        version: blue
+    spec:
+      containers:
+      - name: system-container
+        image: system:1.0-SNAPSHOT
+        ports:
+        - containerPort: 9080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: system-deployment-green
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: system
+      version: green
+  template:
+    metadata:
+      labels:
+        app: system
+        version: green
+    spec:
+      containers:
+      - name: system-container
+        image: system:1.0-SNAPSHOT
+        ports:
+        - containerPort: 9080
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: system-destination-rule
+spec:
+  host: system-service
+  subsets:
+  - name: blue
+    labels:
+      version: blue
+  - name: green
+    labels:
+      version: green

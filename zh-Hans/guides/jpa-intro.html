@@ -1,0 +1,2140 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Accessing and persisting data in Java microservices using Java Persistence API (JPA)
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples of how to implement a Data Access Object (DAO) to access and persist data to a database in a Java EE or Jakarta EE application using the Java Persistence API (JPA).">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/jpa-intro">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Accessing and persisting data in Java microservices using Java Persistence API (JPA)" />
+  <meta name="twitter:description" content="A getting started tutorial with examples of how to implement a Data Access Object (DAO) to access and persist data to a database in a Java EE or Jakarta EE application using the Java Persistence API (JPA)." />
+
+  <meta property='og:title' content="Accessing and persisting data in Java microservices using Java Persistence API (JPA)" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples of how to implement a Data Access Object (DAO) to access and persist data to a database in a Java EE or Jakarta EE application using the Java Persistence API (JPA)." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/jpa-intro" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li><a href="#defining-a-jpa-entity-class">Defining a JPA entity class</a></li>
+<li><a href="#configuring-jpa">Configuring JPA</a></li>
+<li><a href="#performing-crud-operations-using-jpa">Performing CRUD operations using JPA</a></li>
+<li><a href="#running-the-application">Running the application</a></li>
+<li>
+<a href="#testing-the-application">Testing the application</a>
+<ul class="sectlevel2">
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Accessing and persisting data in microservices using Java Persistence API (JPA)</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">20 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/jpa-intro.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to use Java Persistence API (JPA) to access and persist data to a database for your microservices.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to use the Java Persistence API (JPA) to map Java objects to relational database tables and perform create, read, update and delete (CRUD) operations on the data in your microservices.</p>
+</div>
+<div class="paragraph">
+<p>JPA is a Jakarta EE specification for representing relational database table data as Plain Old Java Objects (POJO). JPA simplifies object-relational mapping (ORM) by using annotations to map Java objects to tables in a relational database. In addition to providing an efficient API for performing CRUD operations, JPA also reduces the burden of having to write JDBC and SQL code when performing database operations and takes care of database vendor-specific differences. This capability allows you to focus on the business logic of your application instead of wasting time implementing repetitive CRUD logic.</p>
+</div>
+<div class="paragraph">
+<p>The application that you will be working with is an event manager, which is composed of a UI and an event microservice for creating, retrieving, updating, and deleting events. In this guide, you will be focused on the event microservice. The event microservice consists of a JPA entity class whose fields will be persisted to a database. The database logic is implemented in a Data Access Object (DAO) to isolate the database operations from the rest of the service. This DAO accesses and persists JPA entities to the database and can be injected and consumed by other components in the microservice. An Embedded Derby database is used as a data store for all the events.</p>
+</div>
+<div class="paragraph">
+<p>You will use JPA annotations to define an entity class whose fields are persisted to the database. The interaction between your service and the database is mediated by the persistence context that is managed by an entity manager. In a Jakarta EE environment, you can use an application-managed entity manager or a container-managed entity manager. In this guide, you will use a container-managed entity manager that is injected into the DAO so Liberty manages the opening and closing of the entity manager for you.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-jpa-intro.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-jpa-intro.git
+cd guide-jpa-intro</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>To try out the application, run the following commands to navigate to the <code>finish/frontendUI</code> directory and deploy the <code>frontendUI</code> service to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>cd finish/frontendUI
+mvn liberty:run</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Open another command-line session and run the following commands to navigate to the <code>finish/backendServices</code> directory and deploy the service to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>cd finish/backendServices
+mvn liberty:run</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message in both command-line sessions, both your services are ready.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>The defaultServer server is ready to run a smarter planet.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Point your browser to the <a href="http://localhost:9090/eventmanager.jsf" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9090/eventmanager.jsf</a> URL to view the Event Manager application.
+The event application does not display any events because no events are stored in the database. Go ahead and click <code>Create Event</code>, located in the left navigation bar. After entering an event name, location and time, click <code>Submit</code> to persist your event entity to the database. The event is now stored in the database and is visible in the list of current events.</p>
+</div>
+<div class="paragraph">
+<p>Notice that if you stop the Open Liberty instance and then restart it, the events created are still displayed in the list of current events. Ensure you are in the <code>finish/backendServices</code> directory and run the following Maven goals to stop and then restart the instance:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:stop
+mvn liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The events created are still displayed in the list of current events. The <code>Update</code> action link located beside each event allows you to make modifications to the persisted entity and the <code>Delete</code> action link allows you to remove entities from the database.</p>
+</div>
+<div class="paragraph">
+<p>After you are finished checking out the application, stop the Open Liberty instances by pressing CTRL+C in the command-line sessions where you ran the <code>backendServices</code> and <code>frontendUI</code> services. Alternatively, you can run the <code>liberty:stop</code> goal from the <code>finish</code> directory in another command-line session for the <code>frontendUI</code> and <code>backendServices</code> services:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn -pl frontendUI liberty:stop
+mvn -pl backendServices liberty:stop</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="defining-a-jpa-entity-class">Defining a JPA entity class</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change.</p>
+</div>
+<div class="paragraph">
+<p>Run the following commands to navigate to the <code>frontendUI</code> directory and start the <code>frontendUI</code> service in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>cd frontendUI
+mvn liberty:dev</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Open another command-line session and run the following commands to navigate to the <code>backendServices</code> directory and start the service in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>cd backendServices
+mvn liberty:dev</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command line to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>To store Java objects in a database, you must define a JPA entity class. A JPA entity is a Java object whose non-transient and non-static fields will be persisted to the database. Any Plain Old Java Object (POJO) class can be designated as a JPA entity. However, the class must be annotated with the <code>@Entity</code> annotation, must not be declared final and must have a public or protected non-argument constructor. JPA maps an entity type to a database table and persisted instances will be represented as rows in the table.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=Event">Event</code> class is a data model that represents events in the event microservice and is annotated with JPA annotations.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>Event</code> class.</mark>
+<code>backendServices/src/main/java/io/openliberty/guides/event/models/Event.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Event.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.event.models</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.io.Serializable</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">jakarta.persistence.Entity</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">jakarta.persistence.Table</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">jakarta.persistence.NamedQuery</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.persistence.GeneratedValue</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.persistence.Id</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.persistence.Column</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.persistence.GenerationType</span>;
+<span class="line-numbers"> 22</span>
+<span class="line-numbers"> 23</span><span class="comment">// tag::Entity[]</span>
+<span class="line-numbers"> 24</span><span class="annotation">@Entity</span>
+<span class="line-numbers"> 25</span><span class="comment">// end::Entity[]</span>
+<span class="line-numbers"> 26</span><span class="comment">// tag::Table[]</span>
+<span class="line-numbers"> 27</span><span class="annotation">@Table</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">Event</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 28</span><span class="comment">// end::Table[]</span>
+<span class="line-numbers"> 29</span><span class="comment">// tag::NamedQuery[]</span>
+<span class="line-numbers"> 30</span><span class="annotation">@NamedQuery</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">Event.findAll</span><span class="delimiter">"</span></span>, query = <span class="string"><span class="delimiter">"</span><span class="content">SELECT e FROM Event e</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 31</span><span class="annotation">@NamedQuery</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">Event.findEvent</span><span class="delimiter">"</span></span>, query = <span class="string"><span class="delimiter">"</span><span class="content">SELECT e FROM Event e WHERE </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 32</span>    + <span class="string"><span class="delimiter">"</span><span class="content">e.name = :name AND e.location = :location AND e.time = :time</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 33</span><span class="comment">// end::NamedQuery[]</span>
+<span class="line-numbers"> 34</span><span class="comment">// tag::Event[]</span>
+<span class="line-numbers"> 35</span><span class="directive">public</span> <span class="type">class</span> <span class="class">Event</span> <span class="directive">implements</span> <span class="predefined-type">Serializable</span> {
+<span class="line-numbers"> 36</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">long</span> serialVersionUID = <span class="integer">1L</span>;
+<span class="line-numbers"> 37</span>
+<span class="line-numbers"> 38</span>    <span class="comment">// tag::GeneratedValue[]</span>
+<span class="line-numbers"> 39</span>    <span class="annotation">@GeneratedValue</span>(strategy = GenerationType.AUTO)
+<span class="line-numbers"> 40</span>    <span class="comment">// end::GeneratedValue[]</span>
+<span class="line-numbers"> 41</span>    <span class="comment">// tag::Id[]</span>
+<span class="line-numbers"> 42</span>    <span class="annotation">@Id</span>
+<span class="line-numbers"> 43</span>    <span class="comment">// end::Id[]</span>
+<span class="line-numbers"> 44</span>    <span class="comment">// tag::Column[]</span>
+<span class="line-numbers"> 45</span>    <span class="annotation">@Column</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">eventId</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 46</span>    <span class="comment">// end::Column[]</span>
+<span class="line-numbers"> 47</span>    <span class="directive">private</span> <span class="type">int</span> id;
+<span class="line-numbers"> 48</span>
+<span class="line-numbers"> 49</span>    <span class="annotation">@Column</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">eventLocation</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 50</span>    <span class="directive">private</span> <span class="predefined-type">String</span> location;
+<span class="line-numbers"> 51</span>    <span class="annotation">@Column</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">eventTime</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 52</span>    <span class="directive">private</span> <span class="predefined-type">String</span> time;
+<span class="line-numbers"> 53</span>    <span class="annotation">@Column</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">eventName</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 54</span>    <span class="directive">private</span> <span class="predefined-type">String</span> name;
+<span class="line-numbers"> 55</span>
+<span class="line-numbers"> 56</span>    <span class="directive">public</span> <span class="predefined-type">Event</span>() {
+<span class="line-numbers"> 57</span>    }
+<span class="line-numbers"> 58</span>
+<span class="line-numbers"> 59</span>    <span class="directive">public</span> <span class="predefined-type">Event</span>(<span class="predefined-type">String</span> name, <span class="predefined-type">String</span> location, <span class="predefined-type">String</span> time) {
+<span class="line-numbers"> 60</span>        <span class="local-variable">this</span>.name = name;
+<span class="line-numbers"> 61</span>        <span class="local-variable">this</span>.location = location;
+<span class="line-numbers"> 62</span>        <span class="local-variable">this</span>.time = time;
+<span class="line-numbers"> 63</span>    }
+<span class="line-numbers"> 64</span>
+<span class="line-numbers"> 65</span>    <span class="directive">public</span> <span class="type">int</span> getId() {
+<span class="line-numbers"> 66</span>        <span class="keyword">return</span> id;
+<span class="line-numbers"> 67</span>    }
+<span class="line-numbers"> 68</span>
+<span class="line-numbers"> 69</span>    <span class="directive">public</span> <span class="type">void</span> setId(<span class="type">int</span> id) {
+<span class="line-numbers"> 70</span>        <span class="local-variable">this</span>.id = id;
+<span class="line-numbers"> 71</span>    }
+<span class="line-numbers"> 72</span>
+<span class="line-numbers"> 73</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getLocation() {
+<span class="line-numbers"> 74</span>        <span class="keyword">return</span> location;
+<span class="line-numbers"> 75</span>    }
+<span class="line-numbers"> 76</span>
+<span class="line-numbers"> 77</span>    <span class="directive">public</span> <span class="type">void</span> setLocation(<span class="predefined-type">String</span> location) {
+<span class="line-numbers"> 78</span>        <span class="local-variable">this</span>.location = location;
+<span class="line-numbers"> 79</span>    }
+<span class="line-numbers"> 80</span>
+<span class="line-numbers"> 81</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getTime() {
+<span class="line-numbers"> 82</span>        <span class="keyword">return</span> time;
+<span class="line-numbers"> 83</span>    }
+<span class="line-numbers"> 84</span>
+<span class="line-numbers"> 85</span>    <span class="directive">public</span> <span class="type">void</span> setTime(<span class="predefined-type">String</span> time) {
+<span class="line-numbers"> 86</span>        <span class="local-variable">this</span>.time = time;
+<span class="line-numbers"> 87</span>    }
+<span class="line-numbers"> 88</span>
+<span class="line-numbers"> 89</span>    <span class="directive">public</span> <span class="type">void</span> setName(<span class="predefined-type">String</span> name) {
+<span class="line-numbers"> 90</span>        <span class="local-variable">this</span>.name = name;
+<span class="line-numbers"> 91</span>    }
+<span class="line-numbers"> 92</span>
+<span class="line-numbers"> 93</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getName() {
+<span class="line-numbers"> 94</span>        <span class="keyword">return</span> name;
+<span class="line-numbers"> 95</span>    }
+<span class="line-numbers"> 96</span>
+<span class="line-numbers"> 97</span>    <span class="annotation">@Override</span>
+<span class="line-numbers"> 98</span>    <span class="directive">public</span> <span class="type">int</span> hashCode() {
+<span class="line-numbers"> 99</span>        <span class="directive">final</span> <span class="type">int</span> prime = <span class="integer">31</span>;
+<span class="line-numbers">100</span>        <span class="type">int</span> result = <span class="integer">1</span>;
+<span class="line-numbers">101</span>        result = prime * result + id;
+<span class="line-numbers">102</span>        result = prime * result + ((location == <span class="predefined-constant">null</span>) ? <span class="integer">0</span> : location.hashCode());
+<span class="line-numbers">103</span>        result = prime * result + ((name == <span class="predefined-constant">null</span>) ? <span class="integer">0</span> : name.hashCode());
+<span class="line-numbers">104</span>        result = prime * result
+<span class="line-numbers">105</span>                 + (<span class="type">int</span>) (serialVersionUID ^ (serialVersionUID &gt;&gt;&gt; <span class="integer">32</span>));
+<span class="line-numbers">106</span>        result = prime * result + ((time == <span class="predefined-constant">null</span>) ? <span class="integer">0</span> : time.hashCode());
+<span class="line-numbers">107</span>        <span class="keyword">return</span> result;
+<span class="line-numbers">108</span>    }
+<span class="line-numbers">109</span>
+<span class="line-numbers">110</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">111</span>    <span class="directive">public</span> <span class="type">boolean</span> equals(<span class="predefined-type">Object</span> obj) {
+<span class="line-numbers">112</span>        <span class="keyword">if</span> (<span class="local-variable">this</span> == obj) {
+<span class="line-numbers">113</span>            <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers">114</span>        }
+<span class="line-numbers">115</span>        <span class="keyword">if</span> (obj == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">116</span>            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">117</span>        }
+<span class="line-numbers">118</span>        <span class="keyword">if</span> (getClass() != obj.getClass()) {
+<span class="line-numbers">119</span>            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">120</span>        }
+<span class="line-numbers">121</span>        <span class="predefined-type">Event</span> other = (<span class="predefined-type">Event</span>) obj;
+<span class="line-numbers">122</span>        <span class="keyword">if</span> (location == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">123</span>            <span class="keyword">if</span> (other.location != <span class="predefined-constant">null</span>) {
+<span class="line-numbers">124</span>                <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">125</span>            }
+<span class="line-numbers">126</span>        } <span class="keyword">else</span> <span class="keyword">if</span> (!location.equals(other.location)) {
+<span class="line-numbers">127</span>            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">128</span>        }
+<span class="line-numbers">129</span>        <span class="keyword">if</span> (time == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">130</span>            <span class="keyword">if</span> (other.time != <span class="predefined-constant">null</span>) {
+<span class="line-numbers">131</span>                <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">132</span>            }
+<span class="line-numbers">133</span>        } <span class="keyword">else</span> <span class="keyword">if</span> (!time.equals(other.time)) {
+<span class="line-numbers">134</span>            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">135</span>        }
+<span class="line-numbers">136</span>        <span class="keyword">if</span> (name == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">137</span>            <span class="keyword">if</span> (other.name != <span class="predefined-constant">null</span>) {
+<span class="line-numbers">138</span>                <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">139</span>            }
+<span class="line-numbers">140</span>        } <span class="keyword">else</span> <span class="keyword">if</span> (!name.equals(other.name)) {
+<span class="line-numbers">141</span>            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">142</span>        }
+<span class="line-numbers">143</span>
+<span class="line-numbers">144</span>        <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers">145</span>    }
+<span class="line-numbers">146</span>
+<span class="line-numbers">147</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">148</span>    <span class="directive">public</span> <span class="predefined-type">String</span> toString() {
+<span class="line-numbers">149</span>        <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">Event [name=</span><span class="delimiter">"</span></span> + name + <span class="string"><span class="delimiter">"</span><span class="content">, location=</span><span class="delimiter">"</span></span> + location + <span class="string"><span class="delimiter">"</span><span class="content">, time=</span><span class="delimiter">"</span></span> + time
+<span class="line-numbers">150</span>                + <span class="string"><span class="delimiter">"</span><span class="content">]</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">151</span>    }
+<span class="line-numbers">152</span>}
+<span class="line-numbers">153</span><span class="comment">// end::Event[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following table breaks down the new annotations:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.8936%;">
+<col style="width: 85.1064%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Annotation</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code class="hotspot=Entity">@Entity</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Declares the class as an entity</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code class="hotspot=Table">@Table</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies details of the table such as name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code class="hotspot=NamedQuery">@NamedQuery</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a predefined database query that is run by an <code>EntityManager</code> instance.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code class="hotspot=Id">@Id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Declares the primary key of the entity</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code class="hotspot=GeneratedValue">@GeneratedValue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the strategy used for generating the value of the primary key. The <code>strategy = GenerationType.AUTO</code> code indicates that the generation strategy is automatically selected</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code class="hotspot=Column">@Column</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies that the field is mapped to a column in the database table. The <code>name</code> attribute is optional and indicates the name of the column in the table</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-jpa">Configuring JPA</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code class="hotspot file=0">persistence.xml</code> file is a configuration file that defines a persistence unit. The persistence unit specifies configuration information for the entity manager.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the configuration file.</mark>
+<code>backendServices/src/main/resources/META-INF/persistence.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>persistence.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Xml"><span class="line-numbers"> 1</span><span class="preprocessor">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="line-numbers"> 2</span><span class="tag">&lt;persistence</span> <span class="attribute-name">version</span>=<span class="string"><span class="delimiter">"</span><span class="content">2.2</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 3</span>    <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://xmlns.jcp.org/xml/ns/persistence</span><span class="delimiter">"</span></span> 
+<span class="line-numbers"> 4</span>    <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 5</span>    <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://xmlns.jcp.org/xml/ns/persistence </span></span>
+<span class="line-numbers"> 6</span><span class="string">                        <span class="content">http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 7</span>    <span class="comment">&lt;!-- tag::persistence-unit[] --&gt;</span>
+<span class="line-numbers"> 8</span>    <span class="comment">&lt;!-- tag::transaction-type[] --&gt;</span>
+<span class="line-numbers"> 9</span>    <span class="tag">&lt;persistence-unit</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">jpa-unit</span><span class="delimiter">"</span></span> <span class="attribute-name">transaction-type</span>=<span class="string"><span class="delimiter">"</span><span class="content">JTA</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">10</span>    <span class="comment">&lt;!-- end::transaction-type[] --&gt;</span>
+<span class="line-numbers">11</span>        <span class="comment">&lt;!-- tag::jta-data[] --&gt;</span>
+<span class="line-numbers">12</span>        <span class="tag">&lt;jta-data-source&gt;</span>jdbc/eventjpadatasource<span class="tag">&lt;/jta-data-source&gt;</span>
+<span class="line-numbers">13</span>        <span class="comment">&lt;!-- end::jta-data[] --&gt;</span>
+<span class="line-numbers">14</span>        <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers">15</span>        <span class="comment">&lt;!-- tag::schema-generation[] --&gt;</span>
+<span class="line-numbers">16</span>            <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">jakarta.persistence.schema-generation.database.action</span><span class="delimiter">"</span></span>
+<span class="line-numbers">17</span>                      <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">"</span><span class="content">create</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">18</span>            <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">jakarta.persistence.schema-generation.scripts.action</span><span class="delimiter">"</span></span>
+<span class="line-numbers">19</span>                      <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">"</span><span class="content">create</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">20</span>            <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">jakarta.persistence.schema-generation.scripts.create-target</span><span class="delimiter">"</span></span>
+<span class="line-numbers">21</span>                      <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">"</span><span class="content">createDDL.ddl</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">22</span>        <span class="comment">&lt;!-- end::schema-generation[] --&gt;</span>
+<span class="line-numbers">23</span>        <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers">24</span>    <span class="tag">&lt;/persistence-unit&gt;</span>
+<span class="line-numbers">25</span>    <span class="comment">&lt;!-- end::persistence-unit[] --&gt;</span>
+<span class="line-numbers">26</span><span class="tag">&lt;/persistence&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The persistence unit is defined by the <code class="hotspot=persistence-unit file=0">persistence-unit</code> XML element. The <code class="hotspot=transaction-type file=0">name</code> attribute is required and is used to identify the persistent unit when using the <code>@PersistenceContext</code> annotation to inject the entity manager later in this guide. The <code class="hotspot=transaction-type file=0">transaction-type="JTA"</code> attribute specifies to use Java Transaction API (JTA) transaction management. Because of using a container-managed entity manager, JTA transactions must be used.</p>
+</div>
+<div class="paragraph">
+<p>A JTA transaction type requires a JTA data source to be provided. The <code class="hotspot=jta-data file=0">jta-data-source</code> element specifies the Java Naming and Directory Interface (JNDI) name of the data source that is used. The <code class="hotspot=data-source file=1">data source</code> has already been configured for you in the <code class="hotspot file=1">backendServices/src/main/liberty/config/server.xml</code> file. This data source configuration is where the Java Database Connectivity (JDBC) connection is defined along with some database vendor-specific properties.</p>
+</div>
+<div class="paragraph">
+<p>server.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">Sample Liberty server</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>  <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>    <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 5</span>    <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>    <span class="tag">&lt;feature&gt;</span>jsonp-2.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 7</span>    <span class="tag">&lt;feature&gt;</span>cdi-4.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 8</span>    <span class="tag">&lt;feature&gt;</span>persistence-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 9</span>  <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">10</span>
+<span class="line-numbers">11</span>  <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">5050</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">12</span>  <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.https.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">5051</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span>  <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span> <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">15</span>                <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span>  <span class="tag">&lt;application</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">backendServices.war</span><span class="delimiter">"</span></span> <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">"</span><span class="content">war</span><span class="delimiter">"</span></span> <span class="attribute-name">context-root</span>=<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span><span class="tag">&gt;</span><span class="tag">&lt;/application&gt;</span>
+<span class="line-numbers">18</span>
+<span class="line-numbers">19</span>  <span class="comment">&lt;!-- Derby Library Configuration --&gt;</span>
+<span class="line-numbers">20</span>  <span class="tag">&lt;library</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">derbyJDBCLib</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">21</span>    <span class="tag">&lt;fileset</span> <span class="attribute-name">dir</span>=<span class="string"><span class="delimiter">"</span><span class="content">${shared.resource.dir}/</span><span class="delimiter">"</span></span> <span class="attribute-name">includes</span>=<span class="string"><span class="delimiter">"</span><span class="content">derby*.jar</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">22</span>  <span class="tag">&lt;/library&gt;</span>
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span>  <span class="comment">&lt;!-- Datasource Configuration --&gt;</span>
+<span class="line-numbers">25</span>  <span class="comment">&lt;!-- tag::data-source[] --&gt;</span>
+<span class="line-numbers">26</span>  <span class="tag">&lt;dataSource</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">eventjpadatasource</span><span class="delimiter">"</span></span> <span class="attribute-name">jndiName</span>=<span class="string"><span class="delimiter">"</span><span class="content">jdbc/eventjpadatasource</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">27</span>    <span class="tag">&lt;jdbcDriver</span> <span class="attribute-name">libraryRef</span>=<span class="string"><span class="delimiter">"</span><span class="content">derbyJDBCLib</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">28</span>    <span class="tag">&lt;properties.derby.embedded</span> <span class="attribute-name">databaseName</span>=<span class="string"><span class="delimiter">"</span><span class="content">EventDB</span><span class="delimiter">"</span></span> <span class="attribute-name">createDatabase</span>=<span class="string"><span class="delimiter">"</span><span class="content">create</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">29</span>  <span class="tag">&lt;/dataSource&gt;</span>
+<span class="line-numbers">30</span>  <span class="comment">&lt;!-- end::data-source[] --&gt;</span>
+<span class="line-numbers">31</span>
+<span class="line-numbers">32</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=schema-generation file=0">jakarta.persistence.schema-generation</code> properties are used here so that you aren’t required to manually create a database table to run this sample application. To learn more about the JPA schema generation and available properties, see <a href="https://jakarta.ee/specifications/persistence/3.0/jakarta-persistence-spec-3.0.html#a12917" target="_blank" rel="noopener noreferrer">Schema Generation, Section 9.4 of the JPA Specification</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="performing-crud-operations-using-jpa">Performing CRUD operations using JPA</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The CRUD operations are defined in the DAO. To perform these operations by using JPA, you need an <code class="hotspot=EventDao file=0">EventDao</code> class.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>EventDao</code> class.</mark>
+<code>backendServices/src/main/java/io/openliberty/guides/event/dao/EventDao.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>EventDao.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.event.dao</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.persistence.EntityManager</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.persistence.PersistenceContext</span>;
+<span class="line-numbers">17</span>
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.event.models.Event</span>;
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers">23</span><span class="comment">// tag::EventDao[]</span>
+<span class="line-numbers">24</span><span class="directive">public</span> <span class="type">class</span> <span class="class">EventDao</span> {
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span>    <span class="comment">// tag::PersistenceContext[]</span>
+<span class="line-numbers">27</span>    <span class="annotation">@PersistenceContext</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">jpa-unit</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">28</span>    <span class="comment">// end::PersistenceContext[]</span>
+<span class="line-numbers">29</span>    <span class="directive">private</span> EntityManager em;
+<span class="line-numbers">30</span>
+<span class="line-numbers">31</span>    <span class="comment">// tag::createEvent[]</span>
+<span class="line-numbers">32</span>    <span class="directive">public</span> <span class="type">void</span> createEvent(<span class="predefined-type">Event</span> event) {
+<span class="line-numbers">33</span>        <span class="comment">// tag::Persist[]</span>
+<span class="line-numbers">34</span>        em.persist(event);
+<span class="line-numbers">35</span>        <span class="comment">// end::Persist[]</span>
+<span class="line-numbers">36</span>    }
+<span class="line-numbers">37</span>    <span class="comment">// end::createEvent[]</span>
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span>    <span class="comment">// tag::readEvent[]</span>
+<span class="line-numbers">40</span>    <span class="directive">public</span> <span class="predefined-type">Event</span> readEvent(<span class="type">int</span> eventId) {
+<span class="line-numbers">41</span>        <span class="comment">// tag::Find[]</span>
+<span class="line-numbers">42</span>        <span class="keyword">return</span> em.find(<span class="predefined-type">Event</span>.class, eventId);
+<span class="line-numbers">43</span>        <span class="comment">// end::Find[]</span>
+<span class="line-numbers">44</span>    }
+<span class="line-numbers">45</span>    <span class="comment">// end::readEvent[]</span>
+<span class="line-numbers">46</span>
+<span class="line-numbers">47</span>    <span class="comment">// tag::updateEvent[]</span>
+<span class="line-numbers">48</span>    <span class="directive">public</span> <span class="type">void</span> updateEvent(<span class="predefined-type">Event</span> event) {
+<span class="line-numbers">49</span>        <span class="comment">// tag::Merge[]</span>
+<span class="line-numbers">50</span>        em.merge(event);
+<span class="line-numbers">51</span>        <span class="comment">// end::Merge[]</span>
+<span class="line-numbers">52</span>    }
+<span class="line-numbers">53</span>    <span class="comment">// end::updateEvent[]</span>
+<span class="line-numbers">54</span>
+<span class="line-numbers">55</span>    <span class="comment">// tag::deleteEvent[]</span>
+<span class="line-numbers">56</span>    <span class="directive">public</span> <span class="type">void</span> deleteEvent(<span class="predefined-type">Event</span> event) {
+<span class="line-numbers">57</span>        <span class="comment">// tag::Remove[]</span>
+<span class="line-numbers">58</span>        em.remove(event);
+<span class="line-numbers">59</span>        <span class="comment">// end::Remove[]</span>
+<span class="line-numbers">60</span>    }
+<span class="line-numbers">61</span>    <span class="comment">// end::deleteEvent[]</span>
+<span class="line-numbers">62</span>
+<span class="line-numbers">63</span>    <span class="comment">// tag::readAllEvents[]</span>
+<span class="line-numbers">64</span>    <span class="directive">public</span> <span class="predefined-type">List</span>&lt;<span class="predefined-type">Event</span>&gt; readAllEvents() {
+<span class="line-numbers">65</span>        <span class="keyword">return</span> em.createNamedQuery(<span class="string"><span class="delimiter">"</span><span class="content">Event.findAll</span><span class="delimiter">"</span></span>, <span class="predefined-type">Event</span>.class).getResultList();
+<span class="line-numbers">66</span>    }
+<span class="line-numbers">67</span>    <span class="comment">// end::readAllEvents[]</span>
+<span class="line-numbers">68</span>
+<span class="line-numbers">69</span>    <span class="comment">// tag::findEvent[]</span>
+<span class="line-numbers">70</span>    <span class="directive">public</span> <span class="predefined-type">List</span>&lt;<span class="predefined-type">Event</span>&gt; findEvent(<span class="predefined-type">String</span> name, <span class="predefined-type">String</span> location, <span class="predefined-type">String</span> time) {
+<span class="line-numbers">71</span>        <span class="keyword">return</span> em.createNamedQuery(<span class="string"><span class="delimiter">"</span><span class="content">Event.findEvent</span><span class="delimiter">"</span></span>, <span class="predefined-type">Event</span>.class)
+<span class="line-numbers">72</span>            .setParameter(<span class="string"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>, name)
+<span class="line-numbers">73</span>            .setParameter(<span class="string"><span class="delimiter">"</span><span class="content">location</span><span class="delimiter">"</span></span>, location)
+<span class="line-numbers">74</span>            .setParameter(<span class="string"><span class="delimiter">"</span><span class="content">time</span><span class="delimiter">"</span></span>, time).getResultList();
+<span class="line-numbers">75</span>    }
+<span class="line-numbers">76</span>    <span class="comment">// end::findEvent[]</span>
+<span class="line-numbers">77</span>}
+<span class="line-numbers">78</span><span class="comment">// end::EventDao[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To use the entity manager at runtime, inject it into the CDI bean through the <code class="hotspot=PersistenceContext file=0">@PersistenceContext</code> annotation. The entity manager interacts with the persistence context. Every <code>EntityManager</code> instance is associated with a persistence context. The persistence context manages a set of entities and is aware of the different states that an entity can have. The persistence context synchronizes with the database when a transaction commits.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=EventDao file=0">EventDao</code> class has a method for each CRUD operation, so let’s break them down:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code class="hotspot=createEvent file=0">createEvent()</code> method persists an instance of the <code class="hotspot=Event file=1">Event</code> entity class to the data store by calling the <code class="hotspot=Persist file=0">persist()</code> method on an <code>EntityManager</code> instance. The entity instance becomes managed and changes to it will be tracked by the entity manager.</p>
+</li>
+<li>
+<p>The <code class="hotspot=readEvent file=0">readEvent()</code> method returns an instance of the <code class="hotspot=Event file=1">Event</code> entity class with the specified primary key by calling the <code class="hotspot=Find file=0">find()</code> method on an <code>EntityManager</code> instance. If the event instance is found, it is returned in a managed state, but, if the event instance is not found, <code>null</code> is returned.</p>
+</li>
+<li>
+<p>The <code class="hotspot=readAllEvents file=0">readAllEvents()</code> method demonstrates an alternative way to retrieve event objects from the database. This method returns a list of instances of the <code>Event</code> entity class by using the <code>Event.findAll</code> query specified in the <code class="hotspot=NamedQuery file=1">@NamedQuery</code> annotation on the <code class="hotspot=Event file=1">Event</code> class. Similarly, the <code class="hotspot=findEvent file=0">findEvent()</code> method uses the <code>Event.findEvent</code> named query to find an event with the given name, location and time.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Event.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.event.models</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.io.Serializable</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">jakarta.persistence.Entity</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">jakarta.persistence.Table</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">jakarta.persistence.NamedQuery</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.persistence.GeneratedValue</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.persistence.Id</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.persistence.Column</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.persistence.GenerationType</span>;
+<span class="line-numbers"> 22</span>
+<span class="line-numbers"> 23</span><span class="comment">// tag::Entity[]</span>
+<span class="line-numbers"> 24</span><span class="annotation">@Entity</span>
+<span class="line-numbers"> 25</span><span class="comment">// end::Entity[]</span>
+<span class="line-numbers"> 26</span><span class="comment">// tag::Table[]</span>
+<span class="line-numbers"> 27</span><span class="annotation">@Table</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">Event</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 28</span><span class="comment">// end::Table[]</span>
+<span class="line-numbers"> 29</span><span class="comment">// tag::NamedQuery[]</span>
+<span class="line-numbers"> 30</span><span class="annotation">@NamedQuery</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">Event.findAll</span><span class="delimiter">"</span></span>, query = <span class="string"><span class="delimiter">"</span><span class="content">SELECT e FROM Event e</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 31</span><span class="annotation">@NamedQuery</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">Event.findEvent</span><span class="delimiter">"</span></span>, query = <span class="string"><span class="delimiter">"</span><span class="content">SELECT e FROM Event e WHERE </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 32</span>    + <span class="string"><span class="delimiter">"</span><span class="content">e.name = :name AND e.location = :location AND e.time = :time</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 33</span><span class="comment">// end::NamedQuery[]</span>
+<span class="line-numbers"> 34</span><span class="comment">// tag::Event[]</span>
+<span class="line-numbers"> 35</span><span class="directive">public</span> <span class="type">class</span> <span class="class">Event</span> <span class="directive">implements</span> <span class="predefined-type">Serializable</span> {
+<span class="line-numbers"> 36</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">long</span> serialVersionUID = <span class="integer">1L</span>;
+<span class="line-numbers"> 37</span>
+<span class="line-numbers"> 38</span>    <span class="comment">// tag::GeneratedValue[]</span>
+<span class="line-numbers"> 39</span>    <span class="annotation">@GeneratedValue</span>(strategy = GenerationType.AUTO)
+<span class="line-numbers"> 40</span>    <span class="comment">// end::GeneratedValue[]</span>
+<span class="line-numbers"> 41</span>    <span class="comment">// tag::Id[]</span>
+<span class="line-numbers"> 42</span>    <span class="annotation">@Id</span>
+<span class="line-numbers"> 43</span>    <span class="comment">// end::Id[]</span>
+<span class="line-numbers"> 44</span>    <span class="comment">// tag::Column[]</span>
+<span class="line-numbers"> 45</span>    <span class="annotation">@Column</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">eventId</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 46</span>    <span class="comment">// end::Column[]</span>
+<span class="line-numbers"> 47</span>    <span class="directive">private</span> <span class="type">int</span> id;
+<span class="line-numbers"> 48</span>
+<span class="line-numbers"> 49</span>    <span class="annotation">@Column</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">eventLocation</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 50</span>    <span class="directive">private</span> <span class="predefined-type">String</span> location;
+<span class="line-numbers"> 51</span>    <span class="annotation">@Column</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">eventTime</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 52</span>    <span class="directive">private</span> <span class="predefined-type">String</span> time;
+<span class="line-numbers"> 53</span>    <span class="annotation">@Column</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">eventName</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 54</span>    <span class="directive">private</span> <span class="predefined-type">String</span> name;
+<span class="line-numbers"> 55</span>
+<span class="line-numbers"> 56</span>    <span class="directive">public</span> <span class="predefined-type">Event</span>() {
+<span class="line-numbers"> 57</span>    }
+<span class="line-numbers"> 58</span>
+<span class="line-numbers"> 59</span>    <span class="directive">public</span> <span class="predefined-type">Event</span>(<span class="predefined-type">String</span> name, <span class="predefined-type">String</span> location, <span class="predefined-type">String</span> time) {
+<span class="line-numbers"> 60</span>        <span class="local-variable">this</span>.name = name;
+<span class="line-numbers"> 61</span>        <span class="local-variable">this</span>.location = location;
+<span class="line-numbers"> 62</span>        <span class="local-variable">this</span>.time = time;
+<span class="line-numbers"> 63</span>    }
+<span class="line-numbers"> 64</span>
+<span class="line-numbers"> 65</span>    <span class="directive">public</span> <span class="type">int</span> getId() {
+<span class="line-numbers"> 66</span>        <span class="keyword">return</span> id;
+<span class="line-numbers"> 67</span>    }
+<span class="line-numbers"> 68</span>
+<span class="line-numbers"> 69</span>    <span class="directive">public</span> <span class="type">void</span> setId(<span class="type">int</span> id) {
+<span class="line-numbers"> 70</span>        <span class="local-variable">this</span>.id = id;
+<span class="line-numbers"> 71</span>    }
+<span class="line-numbers"> 72</span>
+<span class="line-numbers"> 73</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getLocation() {
+<span class="line-numbers"> 74</span>        <span class="keyword">return</span> location;
+<span class="line-numbers"> 75</span>    }
+<span class="line-numbers"> 76</span>
+<span class="line-numbers"> 77</span>    <span class="directive">public</span> <span class="type">void</span> setLocation(<span class="predefined-type">String</span> location) {
+<span class="line-numbers"> 78</span>        <span class="local-variable">this</span>.location = location;
+<span class="line-numbers"> 79</span>    }
+<span class="line-numbers"> 80</span>
+<span class="line-numbers"> 81</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getTime() {
+<span class="line-numbers"> 82</span>        <span class="keyword">return</span> time;
+<span class="line-numbers"> 83</span>    }
+<span class="line-numbers"> 84</span>
+<span class="line-numbers"> 85</span>    <span class="directive">public</span> <span class="type">void</span> setTime(<span class="predefined-type">String</span> time) {
+<span class="line-numbers"> 86</span>        <span class="local-variable">this</span>.time = time;
+<span class="line-numbers"> 87</span>    }
+<span class="line-numbers"> 88</span>
+<span class="line-numbers"> 89</span>    <span class="directive">public</span> <span class="type">void</span> setName(<span class="predefined-type">String</span> name) {
+<span class="line-numbers"> 90</span>        <span class="local-variable">this</span>.name = name;
+<span class="line-numbers"> 91</span>    }
+<span class="line-numbers"> 92</span>
+<span class="line-numbers"> 93</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getName() {
+<span class="line-numbers"> 94</span>        <span class="keyword">return</span> name;
+<span class="line-numbers"> 95</span>    }
+<span class="line-numbers"> 96</span>
+<span class="line-numbers"> 97</span>    <span class="annotation">@Override</span>
+<span class="line-numbers"> 98</span>    <span class="directive">public</span> <span class="type">int</span> hashCode() {
+<span class="line-numbers"> 99</span>        <span class="directive">final</span> <span class="type">int</span> prime = <span class="integer">31</span>;
+<span class="line-numbers">100</span>        <span class="type">int</span> result = <span class="integer">1</span>;
+<span class="line-numbers">101</span>        result = prime * result + id;
+<span class="line-numbers">102</span>        result = prime * result + ((location == <span class="predefined-constant">null</span>) ? <span class="integer">0</span> : location.hashCode());
+<span class="line-numbers">103</span>        result = prime * result + ((name == <span class="predefined-constant">null</span>) ? <span class="integer">0</span> : name.hashCode());
+<span class="line-numbers">104</span>        result = prime * result
+<span class="line-numbers">105</span>                 + (<span class="type">int</span>) (serialVersionUID ^ (serialVersionUID &gt;&gt;&gt; <span class="integer">32</span>));
+<span class="line-numbers">106</span>        result = prime * result + ((time == <span class="predefined-constant">null</span>) ? <span class="integer">0</span> : time.hashCode());
+<span class="line-numbers">107</span>        <span class="keyword">return</span> result;
+<span class="line-numbers">108</span>    }
+<span class="line-numbers">109</span>
+<span class="line-numbers">110</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">111</span>    <span class="directive">public</span> <span class="type">boolean</span> equals(<span class="predefined-type">Object</span> obj) {
+<span class="line-numbers">112</span>        <span class="keyword">if</span> (<span class="local-variable">this</span> == obj) {
+<span class="line-numbers">113</span>            <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers">114</span>        }
+<span class="line-numbers">115</span>        <span class="keyword">if</span> (obj == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">116</span>            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">117</span>        }
+<span class="line-numbers">118</span>        <span class="keyword">if</span> (getClass() != obj.getClass()) {
+<span class="line-numbers">119</span>            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">120</span>        }
+<span class="line-numbers">121</span>        <span class="predefined-type">Event</span> other = (<span class="predefined-type">Event</span>) obj;
+<span class="line-numbers">122</span>        <span class="keyword">if</span> (location == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">123</span>            <span class="keyword">if</span> (other.location != <span class="predefined-constant">null</span>) {
+<span class="line-numbers">124</span>                <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">125</span>            }
+<span class="line-numbers">126</span>        } <span class="keyword">else</span> <span class="keyword">if</span> (!location.equals(other.location)) {
+<span class="line-numbers">127</span>            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">128</span>        }
+<span class="line-numbers">129</span>        <span class="keyword">if</span> (time == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">130</span>            <span class="keyword">if</span> (other.time != <span class="predefined-constant">null</span>) {
+<span class="line-numbers">131</span>                <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">132</span>            }
+<span class="line-numbers">133</span>        } <span class="keyword">else</span> <span class="keyword">if</span> (!time.equals(other.time)) {
+<span class="line-numbers">134</span>            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">135</span>        }
+<span class="line-numbers">136</span>        <span class="keyword">if</span> (name == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">137</span>            <span class="keyword">if</span> (other.name != <span class="predefined-constant">null</span>) {
+<span class="line-numbers">138</span>                <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">139</span>            }
+<span class="line-numbers">140</span>        } <span class="keyword">else</span> <span class="keyword">if</span> (!name.equals(other.name)) {
+<span class="line-numbers">141</span>            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">142</span>        }
+<span class="line-numbers">143</span>
+<span class="line-numbers">144</span>        <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers">145</span>    }
+<span class="line-numbers">146</span>
+<span class="line-numbers">147</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">148</span>    <span class="directive">public</span> <span class="predefined-type">String</span> toString() {
+<span class="line-numbers">149</span>        <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">Event [name=</span><span class="delimiter">"</span></span> + name + <span class="string"><span class="delimiter">"</span><span class="content">, location=</span><span class="delimiter">"</span></span> + location + <span class="string"><span class="delimiter">"</span><span class="content">, time=</span><span class="delimiter">"</span></span> + time
+<span class="line-numbers">150</span>                + <span class="string"><span class="delimiter">"</span><span class="content">]</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">151</span>    }
+<span class="line-numbers">152</span>}
+<span class="line-numbers">153</span><span class="comment">// end::Event[]</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code class="hotspot=updateEvent file=0">updateEvent()</code> method creates a managed instance of a detached entity instance. The entity manager automatically tracks all managed entity objects in its persistence context for changes and synchronizes them with the database. However, if an entity becomes detached, you must merge that entity into the persistence context by calling the <code class="hotspot=Merge file=0">merge()</code> method so that changes to loaded fields of the detached entity are tracked.</p>
+</li>
+<li>
+<p>The <code class="hotspot=deleteEvent file=0">deleteEvent()</code> method removes an instance of the <code class="hotspot=Event file=1">Event</code> entity class from the database by calling the <code class="hotspot=Remove file=0">remove()</code> method on an <code>EntityManager</code> instance. The state of the entity is changed to removed and is removed from the database upon transaction commit.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The DAO is injected into the <code class="hotspot=DAO file=2">backendServices/src/main/java/io/openliberty/guides/event/resources/EventResource.java</code> class and used to access and persist data. The <code class="hotspot=Transactional file=2">@Transactional</code> annotation is used in the <code class="hotspot=EventResource file=2">EventResource</code> class to declaratively control the transaction boundaries on the <code class="hotspot=RequestedScoped file=2">@RequestScoped</code> CDI bean. This ensures that the methods run within the boundaries of an active global transaction, which is why it is not necessary to explicitly begin, commit or rollback transactions. At the end of the transactional method invocation, the transaction commits and the persistence context flushes any changes to Event entity instances it is managing to the database.</p>
+</div>
+<div class="paragraph">
+<p>EventResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.event.resources</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">jakarta.json.Json</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonArray</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObject</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonArrayBuilder</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObjectBuilder</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.transaction.Transactional</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Consumes</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.FormParam</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PUT</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.POST</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.DELETE</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers"> 32</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers"> 33</span>
+<span class="line-numbers"> 34</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.event.dao.EventDao</span>;
+<span class="line-numbers"> 35</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.event.models.Event</span>;
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span><span class="comment">// tag::RequestedScoped[]</span>
+<span class="line-numbers"> 38</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers"> 39</span><span class="comment">// end::RequestedScoped[]</span>
+<span class="line-numbers"> 40</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">events</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 41</span><span class="comment">// tag::DAO[]</span>
+<span class="line-numbers"> 42</span><span class="comment">// tag::EventResource[]</span>
+<span class="line-numbers"> 43</span><span class="directive">public</span> <span class="type">class</span> <span class="class">EventResource</span> {
+<span class="line-numbers"> 44</span>
+<span class="line-numbers"> 45</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers"> 46</span>    <span class="directive">private</span> EventDao eventDAO;
+<span class="line-numbers"> 47</span>
+<span class="line-numbers"> 48</span>    <span class="comment">/**</span>
+<span class="line-numbers"> 49</span><span class="comment">     * This method creates a new event from the submitted data (name, time and</span>
+<span class="line-numbers"> 50</span><span class="comment">     * location) by the user.</span>
+<span class="line-numbers"> 51</span><span class="comment">     */</span>
+<span class="line-numbers"> 52</span>    <span class="annotation">@POST</span>
+<span class="line-numbers"> 53</span>    <span class="annotation">@Consumes</span>(MediaType.APPLICATION_FORM_URLENCODED)
+<span class="line-numbers"> 54</span>    <span class="comment">// tag::Transactional[]</span>
+<span class="line-numbers"> 55</span>    <span class="annotation">@Transactional</span>
+<span class="line-numbers"> 56</span>    <span class="comment">// end::Transactional[]</span>
+<span class="line-numbers"> 57</span>    <span class="directive">public</span> Response addNewEvent(<span class="annotation">@FormParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> name,
+<span class="line-numbers"> 58</span>        <span class="annotation">@FormParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">time</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> time, <span class="annotation">@FormParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">location</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> location) {
+<span class="line-numbers"> 59</span>        <span class="predefined-type">Event</span> newEvent = <span class="keyword">new</span> <span class="predefined-type">Event</span>(name, location, time);
+<span class="line-numbers"> 60</span>        <span class="keyword">if</span> (!eventDAO.findEvent(name, location, time).isEmpty()) {
+<span class="line-numbers"> 61</span>            <span class="keyword">return</span> Response.status(Response.Status.BAD_REQUEST)
+<span class="line-numbers"> 62</span>                           .entity(<span class="string"><span class="delimiter">"</span><span class="content">Event already exists</span><span class="delimiter">"</span></span>).build();
+<span class="line-numbers"> 63</span>        }
+<span class="line-numbers"> 64</span>        eventDAO.createEvent(newEvent);
+<span class="line-numbers"> 65</span>        <span class="keyword">return</span> Response.status(Response.Status.NO_CONTENT).build();
+<span class="line-numbers"> 66</span>    }
+<span class="line-numbers"> 67</span>
+<span class="line-numbers"> 68</span>    <span class="comment">/**</span>
+<span class="line-numbers"> 69</span><span class="comment">     * This method updates a new event from the submitted data (name, time and</span>
+<span class="line-numbers"> 70</span><span class="comment">     * location) by the user.</span>
+<span class="line-numbers"> 71</span><span class="comment">     */</span>
+<span class="line-numbers"> 72</span>    <span class="annotation">@PUT</span>
+<span class="line-numbers"> 73</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">{id}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 74</span>    <span class="annotation">@Consumes</span>(MediaType.APPLICATION_FORM_URLENCODED)
+<span class="line-numbers"> 75</span>    <span class="annotation">@Transactional</span>
+<span class="line-numbers"> 76</span>    <span class="directive">public</span> Response updateEvent(<span class="annotation">@FormParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> name,
+<span class="line-numbers"> 77</span>        <span class="annotation">@FormParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">time</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> time, <span class="annotation">@FormParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">location</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> location,
+<span class="line-numbers"> 78</span>        <span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>) <span class="type">int</span> id) {
+<span class="line-numbers"> 79</span>        <span class="predefined-type">Event</span> prevEvent = eventDAO.readEvent(id);
+<span class="line-numbers"> 80</span>        <span class="keyword">if</span> (prevEvent == <span class="predefined-constant">null</span>) {
+<span class="line-numbers"> 81</span>            <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers"> 82</span>                           .entity(<span class="string"><span class="delimiter">"</span><span class="content">Event does not exist</span><span class="delimiter">"</span></span>).build();
+<span class="line-numbers"> 83</span>        }
+<span class="line-numbers"> 84</span>        <span class="keyword">if</span> (!eventDAO.findEvent(name, location, time).isEmpty()) {
+<span class="line-numbers"> 85</span>            <span class="keyword">return</span> Response.status(Response.Status.BAD_REQUEST)
+<span class="line-numbers"> 86</span>                           .entity(<span class="string"><span class="delimiter">"</span><span class="content">Event already exists</span><span class="delimiter">"</span></span>).build();
+<span class="line-numbers"> 87</span>        }
+<span class="line-numbers"> 88</span>        prevEvent.setName(name);
+<span class="line-numbers"> 89</span>        prevEvent.setLocation(location);
+<span class="line-numbers"> 90</span>        prevEvent.setTime(time);
+<span class="line-numbers"> 91</span>
+<span class="line-numbers"> 92</span>        eventDAO.updateEvent(prevEvent);
+<span class="line-numbers"> 93</span>        <span class="keyword">return</span> Response.status(Response.Status.NO_CONTENT).build();
+<span class="line-numbers"> 94</span>    }
+<span class="line-numbers"> 95</span>
+<span class="line-numbers"> 96</span>    <span class="comment">/**</span>
+<span class="line-numbers"> 97</span><span class="comment">     * This method deletes a specific existing/stored event</span>
+<span class="line-numbers"> 98</span><span class="comment">     */</span>
+<span class="line-numbers"> 99</span>    <span class="annotation">@DELETE</span>
+<span class="line-numbers">100</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">{id}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">101</span>    <span class="annotation">@Transactional</span>
+<span class="line-numbers">102</span>    <span class="directive">public</span> Response deleteEvent(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>) <span class="type">int</span> id) {
+<span class="line-numbers">103</span>        <span class="predefined-type">Event</span> event = eventDAO.readEvent(id);
+<span class="line-numbers">104</span>        <span class="keyword">if</span> (event == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">105</span>            <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers">106</span>                           .entity(<span class="string"><span class="delimiter">"</span><span class="content">Event does not exist</span><span class="delimiter">"</span></span>).build();
+<span class="line-numbers">107</span>        }
+<span class="line-numbers">108</span>        eventDAO.deleteEvent(event);
+<span class="line-numbers">109</span>        <span class="keyword">return</span> Response.status(Response.Status.NO_CONTENT).build();
+<span class="line-numbers">110</span>    }
+<span class="line-numbers">111</span>
+<span class="line-numbers">112</span>    <span class="comment">/**</span>
+<span class="line-numbers">113</span><span class="comment">     * This method returns a specific existing/stored event in Json format</span>
+<span class="line-numbers">114</span><span class="comment">     */</span>
+<span class="line-numbers">115</span>    <span class="annotation">@GET</span>
+<span class="line-numbers">116</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">{id}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">117</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">118</span>    <span class="annotation">@Transactional</span>
+<span class="line-numbers">119</span>    <span class="directive">public</span> JsonObject getEvent(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>) <span class="type">int</span> eventId) {
+<span class="line-numbers">120</span>        JsonObjectBuilder builder = Json.createObjectBuilder();
+<span class="line-numbers">121</span>        <span class="predefined-type">Event</span> event = eventDAO.readEvent(eventId);
+<span class="line-numbers">122</span>        <span class="keyword">if</span> (event != <span class="predefined-constant">null</span>) {
+<span class="line-numbers">123</span>            builder.add(<span class="string"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>, event.getName()).add(<span class="string"><span class="delimiter">"</span><span class="content">time</span><span class="delimiter">"</span></span>, event.getTime())
+<span class="line-numbers">124</span>                .add(<span class="string"><span class="delimiter">"</span><span class="content">location</span><span class="delimiter">"</span></span>, event.getLocation()).add(<span class="string"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>, event.getId());
+<span class="line-numbers">125</span>        }
+<span class="line-numbers">126</span>        <span class="keyword">return</span> builder.build();
+<span class="line-numbers">127</span>    }
+<span class="line-numbers">128</span>
+<span class="line-numbers">129</span>    <span class="comment">/**</span>
+<span class="line-numbers">130</span><span class="comment">     * This method returns the existing/stored events in Json format</span>
+<span class="line-numbers">131</span><span class="comment">     */</span>
+<span class="line-numbers">132</span>    <span class="annotation">@GET</span>
+<span class="line-numbers">133</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">134</span>    <span class="annotation">@Transactional</span>
+<span class="line-numbers">135</span>    <span class="directive">public</span> JsonArray getEvents() {
+<span class="line-numbers">136</span>        JsonObjectBuilder builder = Json.createObjectBuilder();
+<span class="line-numbers">137</span>        JsonArrayBuilder finalArray = Json.createArrayBuilder();
+<span class="line-numbers">138</span>        <span class="keyword">for</span> (<span class="predefined-type">Event</span> event : eventDAO.readAllEvents()) {
+<span class="line-numbers">139</span>            builder.add(<span class="string"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>, event.getName()).add(<span class="string"><span class="delimiter">"</span><span class="content">time</span><span class="delimiter">"</span></span>, event.getTime())
+<span class="line-numbers">140</span>                   .add(<span class="string"><span class="delimiter">"</span><span class="content">location</span><span class="delimiter">"</span></span>, event.getLocation()).add(<span class="string"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>, event.getId());
+<span class="line-numbers">141</span>            finalArray.add(builder.build());
+<span class="line-numbers">142</span>        }
+<span class="line-numbers">143</span>        <span class="keyword">return</span> finalArray.build();
+<span class="line-numbers">144</span>    }
+<span class="line-numbers">145</span>}
+<span class="line-numbers">146</span><span class="comment">// end::DAO[]</span>
+<span class="line-numbers">147</span><span class="comment">// end::EventResource[]</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="running-the-application">Running the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You started the Open Liberty in dev mode at the beginning of the guide, so all the changes were automatically picked up.</p>
+</div>
+<div class="paragraph">
+<p>When Liberty is running, go to the <a href="http://localhost:9090/eventmanager.jsf" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9090/eventmanager.jsf</a> URL to view the Event Manager application.</p>
+</div>
+<div class="paragraph">
+<p>Click <code>Create Event</code> in the left navigation bar to create events that are persisted to the database. After you create an event, it is available to view, update, and delete in the <code>Current Events</code> section.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-application">Testing the application</h2>
+<div class="sectionbody">
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>EventEntityIT</code> class.</mark>
+<code>backendServices/src/test/java/it/io/openliberty/guides/event/EventEntityIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>EventEntityIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.event</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers"> 15</span>
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.util.HashMap</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObject</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.ClientBuilder</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Form</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response.Status</span>;
+<span class="line-numbers"> 21</span>
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeAll</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.MethodOrderer.OrderAnnotation</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.event.models.Event</span>;
+<span class="line-numbers"> 28</span>
+<span class="line-numbers"> 29</span><span class="directive">public</span> <span class="type">class</span> <span class="class">EventEntityIT</span> <span class="directive">extends</span> EventIT {
+<span class="line-numbers"> 30</span>
+<span class="line-numbers"> 31</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> JSONFIELD_LOCATION = <span class="string"><span class="delimiter">"</span><span class="content">location</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 32</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> JSONFIELD_NAME = <span class="string"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 33</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> JSONFIELD_TIME = <span class="string"><span class="delimiter">"</span><span class="content">time</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 34</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> EVENT_TIME = <span class="string"><span class="delimiter">"</span><span class="content">12:00 PM, January 1 2018</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 35</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> EVENT_LOCATION = <span class="string"><span class="delimiter">"</span><span class="content">IBM</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 36</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> EVENT_NAME = <span class="string"><span class="delimiter">"</span><span class="content">JPA Guide</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 37</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> UPDATE_EVENT_TIME = <span class="string"><span class="delimiter">"</span><span class="content">12:00 PM, February 1 2018</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 38</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> UPDATE_EVENT_LOCATION = <span class="string"><span class="delimiter">"</span><span class="content">IBM Updated</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 39</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> UPDATE_EVENT_NAME = <span class="string"><span class="delimiter">"</span><span class="content">JPA Guide Updated</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 40</span>
+<span class="line-numbers"> 41</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">int</span> NO_CONTENT_CODE = Status.NO_CONTENT.getStatusCode();
+<span class="line-numbers"> 42</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">int</span> NOT_FOUND_CODE = Status.NOT_FOUND.getStatusCode();
+<span class="line-numbers"> 43</span>
+<span class="line-numbers"> 44</span>    <span class="annotation">@BeforeAll</span>
+<span class="line-numbers"> 45</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> oneTimeSetup() {
+<span class="line-numbers"> 46</span>        port = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">backend.http.port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 47</span>        baseUrl = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:</span><span class="delimiter">"</span></span> + port + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 48</span>    }
+<span class="line-numbers"> 49</span>
+<span class="line-numbers"> 50</span>    <span class="annotation">@BeforeEach</span>
+<span class="line-numbers"> 51</span>    <span class="directive">public</span> <span class="type">void</span> setup() {
+<span class="line-numbers"> 52</span>        form = <span class="keyword">new</span> Form();
+<span class="line-numbers"> 53</span>        client = ClientBuilder.newClient();
+<span class="line-numbers"> 54</span>
+<span class="line-numbers"> 55</span>        eventForm = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt;();
+<span class="line-numbers"> 56</span>
+<span class="line-numbers"> 57</span>        eventForm.put(JSONFIELD_NAME, EVENT_NAME);
+<span class="line-numbers"> 58</span>        eventForm.put(JSONFIELD_LOCATION, EVENT_LOCATION);
+<span class="line-numbers"> 59</span>        eventForm.put(JSONFIELD_TIME, EVENT_TIME);
+<span class="line-numbers"> 60</span>    }
+<span class="line-numbers"> 61</span>
+<span class="line-numbers"> 62</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 63</span>    <span class="comment">// tag::testInvalidRead[]</span>
+<span class="line-numbers"> 64</span>    <span class="directive">public</span> <span class="type">void</span> testInvalidRead() {
+<span class="line-numbers"> 65</span>        assertEquals(<span class="predefined-constant">true</span>, getIndividualEvent(-<span class="integer">1</span>).isEmpty(),
+<span class="line-numbers"> 66</span>          <span class="string"><span class="delimiter">"</span><span class="content">Reading an event that does not exist should return an empty list</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 67</span>    }
+<span class="line-numbers"> 68</span>    <span class="comment">// end::testInvalidRead[]</span>
+<span class="line-numbers"> 69</span>
+<span class="line-numbers"> 70</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 71</span>    <span class="comment">// tag::testInvalidDelete[]</span>
+<span class="line-numbers"> 72</span>    <span class="directive">public</span> <span class="type">void</span> testInvalidDelete() {
+<span class="line-numbers"> 73</span>        <span class="type">int</span> deleteResponse = deleteRequest(-<span class="integer">1</span>);
+<span class="line-numbers"> 74</span>        assertEquals(NOT_FOUND_CODE, deleteResponse,
+<span class="line-numbers"> 75</span>          <span class="string"><span class="delimiter">"</span><span class="content">Trying to delete an event that does not exist should return the </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 76</span>          + <span class="string"><span class="delimiter">"</span><span class="content">HTTP response code </span><span class="delimiter">"</span></span> + NOT_FOUND_CODE);
+<span class="line-numbers"> 77</span>    }
+<span class="line-numbers"> 78</span>    <span class="comment">// end::testInvalidDelete[]</span>
+<span class="line-numbers"> 79</span>
+<span class="line-numbers"> 80</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 81</span>    <span class="comment">// tag::testInvalidUpdate[]</span>
+<span class="line-numbers"> 82</span>    <span class="directive">public</span> <span class="type">void</span> testInvalidUpdate() {
+<span class="line-numbers"> 83</span>        <span class="type">int</span> updateResponse = updateRequest(eventForm, -<span class="integer">1</span>);
+<span class="line-numbers"> 84</span>        assertEquals(NOT_FOUND_CODE, updateResponse,
+<span class="line-numbers"> 85</span>          <span class="string"><span class="delimiter">"</span><span class="content">Trying to update an event that does not exist should return the </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 86</span>          + <span class="string"><span class="delimiter">"</span><span class="content">HTTP response code </span><span class="delimiter">"</span></span> + NOT_FOUND_CODE);
+<span class="line-numbers"> 87</span>    }
+<span class="line-numbers"> 88</span>    <span class="comment">// end::testInvalidUpdate[]</span>
+<span class="line-numbers"> 89</span>
+<span class="line-numbers"> 90</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 91</span>    <span class="comment">// tag::testReadIndividualEvent[]</span>
+<span class="line-numbers"> 92</span>    <span class="directive">public</span> <span class="type">void</span> testReadIndividualEvent() {
+<span class="line-numbers"> 93</span>        <span class="type">int</span> postResponse = postRequest(eventForm);
+<span class="line-numbers"> 94</span>        assertEquals(NO_CONTENT_CODE, postResponse,
+<span class="line-numbers"> 95</span>          <span class="string"><span class="delimiter">"</span><span class="content">Creating an event should return the HTTP reponse code </span><span class="delimiter">"</span></span> + NO_CONTENT_CODE);
+<span class="line-numbers"> 96</span>
+<span class="line-numbers"> 97</span>        <span class="predefined-type">Event</span> e = <span class="keyword">new</span> <span class="predefined-type">Event</span>(EVENT_NAME, EVENT_LOCATION, EVENT_TIME);
+<span class="line-numbers"> 98</span>        JsonObject event = findEvent(e);
+<span class="line-numbers"> 99</span>        event = getIndividualEvent(event.getInt(<span class="string"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">100</span>        assertData(event, EVENT_NAME, EVENT_LOCATION, EVENT_TIME);
+<span class="line-numbers">101</span>
+<span class="line-numbers">102</span>        <span class="type">int</span> deleteResponse = deleteRequest(event.getInt(<span class="string"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">103</span>        assertEquals(NO_CONTENT_CODE, deleteResponse,
+<span class="line-numbers">104</span>          <span class="string"><span class="delimiter">"</span><span class="content">Deleting an event should return the HTTP response code </span><span class="delimiter">"</span></span> + NO_CONTENT_CODE);
+<span class="line-numbers">105</span>    }
+<span class="line-numbers">106</span>    <span class="comment">// end::testReadIndividualEvent[]</span>
+<span class="line-numbers">107</span>
+<span class="line-numbers">108</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">109</span>    <span class="comment">// tag::testCURD[]</span>
+<span class="line-numbers">110</span>    <span class="directive">public</span> <span class="type">void</span> testCRUD() {
+<span class="line-numbers">111</span>        <span class="type">int</span> eventCount = getRequest().size();
+<span class="line-numbers">112</span>        <span class="type">int</span> postResponse = postRequest(eventForm);
+<span class="line-numbers">113</span>        assertEquals(NO_CONTENT_CODE, postResponse,
+<span class="line-numbers">114</span>          <span class="string"><span class="delimiter">"</span><span class="content">Creating an event should return the HTTP reponse code </span><span class="delimiter">"</span></span> + NO_CONTENT_CODE);
+<span class="line-numbers">115</span>
+<span class="line-numbers">116</span>        <span class="predefined-type">Event</span> e = <span class="keyword">new</span> <span class="predefined-type">Event</span>(EVENT_NAME, EVENT_LOCATION, EVENT_TIME);
+<span class="line-numbers">117</span>        JsonObject event = findEvent(e);
+<span class="line-numbers">118</span>        assertData(event, EVENT_NAME, EVENT_LOCATION, EVENT_TIME);
+<span class="line-numbers">119</span>
+<span class="line-numbers">120</span>        eventForm.put(JSONFIELD_NAME, UPDATE_EVENT_NAME);
+<span class="line-numbers">121</span>        eventForm.put(JSONFIELD_LOCATION, UPDATE_EVENT_LOCATION);
+<span class="line-numbers">122</span>        eventForm.put(JSONFIELD_TIME, UPDATE_EVENT_TIME);
+<span class="line-numbers">123</span>        <span class="type">int</span> updateResponse = updateRequest(eventForm, event.getInt(<span class="string"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">124</span>        assertEquals(NO_CONTENT_CODE, updateResponse,
+<span class="line-numbers">125</span>          <span class="string"><span class="delimiter">"</span><span class="content">Updating an event should return the HTTP response code </span><span class="delimiter">"</span></span> + NO_CONTENT_CODE);
+<span class="line-numbers">126</span>
+<span class="line-numbers">127</span>        e = <span class="keyword">new</span> <span class="predefined-type">Event</span>(UPDATE_EVENT_NAME, UPDATE_EVENT_LOCATION, UPDATE_EVENT_TIME);
+<span class="line-numbers">128</span>        event = findEvent(e);
+<span class="line-numbers">129</span>        assertData(event, UPDATE_EVENT_NAME, UPDATE_EVENT_LOCATION, UPDATE_EVENT_TIME);
+<span class="line-numbers">130</span>
+<span class="line-numbers">131</span>        <span class="type">int</span> deleteResponse = deleteRequest(event.getInt(<span class="string"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">132</span>        assertEquals(NO_CONTENT_CODE, deleteResponse,
+<span class="line-numbers">133</span>          <span class="string"><span class="delimiter">"</span><span class="content">Deleting an event should return the HTTP response code </span><span class="delimiter">"</span></span> + NO_CONTENT_CODE);
+<span class="line-numbers">134</span>        assertEquals(eventCount, getRequest().size(),
+<span class="line-numbers">135</span>          <span class="string"><span class="delimiter">"</span><span class="content">Total number of events stored should be the same after testing </span><span class="delimiter">"</span></span>
+<span class="line-numbers">136</span>          + <span class="string"><span class="delimiter">"</span><span class="content">CRUD operations.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">137</span>    }
+<span class="line-numbers">138</span>    <span class="comment">// end::testCURD[]</span>
+<span class="line-numbers">139</span>
+<span class="line-numbers">140</span>    <span class="annotation">@AfterEach</span>
+<span class="line-numbers">141</span>    <span class="directive">public</span> <span class="type">void</span> teardown() {
+<span class="line-numbers">142</span>        response.close();
+<span class="line-numbers">143</span>        client.close();
+<span class="line-numbers">144</span>    }
+<span class="line-numbers">145</span>
+<span class="line-numbers">146</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=testInvalidRead">testInvalidRead()</code>, <code class="hotspot=testInvalidDelete">testInvalidDelete()</code> and <code class="hotspot=testInvalidUpdate">testInvalidUpdate()</code> methods use a primary key that is not in the database to test reading, updating and deleting an event that does not exist, respectively.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=testReadIndividualEvent">testReadIndividualEvent()</code> method persists a test event to the database and retrieves the event object from the database using the primary key of the entity.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=testCURD">testCRUD()</code> method creates a test event and persists it to the database. The event object is then retrieved from the database to verify that the test event was actually persisted. Next, the name, location, and time of the test event are updated. The event object is retrieved from the database to verify that the updated event is stored. Finally, the updated test event is deleted and one final check is done to ensure that the updated test event is no longer stored in the database.</p>
+</div>
+<div class="sect2">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Since you started Open Liberty in dev mode, press the <code>enter/return</code> key in the command-line session where you started the <code>backendServices</code> service to run the tests for the <code>backendServices</code>.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.event.EventEntityIT
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.703 sec - in it.io.openliberty.guides.event.EventEntityIT
+
+Results :
+
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you are done checking out the services, exit dev mode by pressing CTRL+C in the command-line sessions where you ran the <code>frontendUI</code> and <code>backendServices</code> services,  or by typing <code>q</code> and then pressing the <code>enter/return</code> key. Alternatively, you can run the <code>liberty:stop</code> goal from the <code>start</code> directory in another command-line session for the <code>frontendUI</code> and <code>backendServices</code> services:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn -pl frontendUI liberty:stop
+mvn -pl backendServices liberty:stop</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You learned how to map Java objects to database tables by defining a JPA entity class whose instances are represented as rows in the table. You have injected a container-managed entity manager into a DAO and learned how to perform CRUD operations in your microservice in Open Liberty.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Accessing and persisting data in microservices using Java Persistence API (JPA) <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-jpa-intro/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-jpa-intro/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-jpa-intro/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/cdi-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Injecting dependencies into microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">15 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

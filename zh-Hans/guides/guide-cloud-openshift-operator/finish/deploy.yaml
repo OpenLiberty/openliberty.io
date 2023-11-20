@@ -1,0 +1,61 @@
+# tag::system[]
+apiVersion: apps.openliberty.io/v1
+# tag::olapp1[]
+kind: OpenLibertyApplication
+# end::olapp1[]
+metadata:
+  name: system
+  labels:
+    name: system
+spec:
+  # tag::sysImage[]
+  applicationImage: guide/system-imagestream:1.0-SNAPSHOT
+  # end::sysImage[]
+  # tag::replicas[]
+  replicas: 3
+  # end::replicas[]
+  # tag::systemEnv[]
+  env:
+    - name: WLP_LOGGING_MESSAGE_FORMAT
+      value: "json"
+    - name: WLP_LOGGING_MESSAGE_SOURCE
+      value: "message,trace,accessLog,ffdc,audit"
+    - name: MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS
+      # tag::bootstrap[]
+      value: "[kafka-bootstrap-address]"
+      # end::bootstrap[]
+  # end::systemEnv[]
+# end::system[]
+---
+# tag::inventory[]
+apiVersion: apps.openliberty.io/v1
+# tag::olapp2[]
+kind: OpenLibertyApplication
+# end::olapp2[]
+metadata:
+  name: inventory
+  labels:
+    name: inventory
+spec:
+  # tag::invImage[]
+  applicationImage: guide/inventory-imagestream:1.0-SNAPSHOT
+  # end::invImage[]
+  # tag::service[]
+  service:
+    # tag::servicePort[]
+    port: 9448
+    # end::servicePort[]
+  # end::service[]
+  # tag::expose[]
+  expose: true
+  # end::expose[]
+  env:
+    - name: WLP_LOGGING_MESSAGE_FORMAT
+      value: "json"
+    - name: WLP_LOGGING_MESSAGE_SOURCE
+      value: "message,trace,accessLog,ffdc,audit"
+    - name: MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS
+      # tag::bootstrapInv[]
+      value: "[kafka-bootstrap-address]"
+      # end::bootstrapInv[]
+# end::inventory[]

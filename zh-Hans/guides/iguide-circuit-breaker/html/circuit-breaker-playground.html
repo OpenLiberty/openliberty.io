@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2017 IBM Corporation and others.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+ 
+  Contributors:
+      IBM Corporation - initial API and implementation
+-->
+<html>
+  <head>
+      
+    <script type="text/javascript"> 
+              var script = document.createElement('script');
+                     
+              script.onload = function() {
+              var guideRootDir = "/guides/iguide-circuit-breaker/js/nls/circuit-breaker/"
+              retrieveExternalizedStrings(guideRootDir);
+              };
+              script.src = '/guides/iguides-common/js/interactive-guides/externalized-string.js';
+              document.getElementsByTagName('head')[0].appendChild(script);
+    </script>
+  </head>
+                   
+  <body>
+    <div class="circuitBreaker flexWithPic">
+      <div class="circuitBreakerStates flexPicDiv">
+          <img class="closedCircuit picInPod playgroundImg infoShown" src="/guides/iguide-circuit-breaker/html/images/closed_norm.svg" data-externalizedAlt="CLOSED_CIRCUIT" tabindex='0' data-externalizedAriaLabel="CLOSED_CIRCUIT">
+          <img class="openCircuit picInPod playgroundImg" src="/guides/iguide-circuit-breaker/html/images/open_norm.svg" data-externalizedAlt="OPEN_CIRCUIT" tabindex='0' data-externalizedAriaLabel="OPEN_CIRCUIT">
+          <img class="halfOpenCircuit picInPod playgroundImg" src="/guides/iguide-circuit-breaker/html/images/half_norm.svg" data-externalizedAlt="HALF_OPEN_CIRCUIT" tabindex='0' data-externalizedAriaLabel="HALF_OPEN_CIRCUIT">
+      </div>
+      <div class="circuitBreakerContent">
+          <p data-externalizedString="CHOOSE_NEXT_REQUEST"></p>
+          <div class='circuitBreakerPlayground'>
+              <div class="circuitBreakerStateButtons">
+                  <button class="circuitBreakerSuccessRequest btn circuitBreakerButton" data-externalizedTitle="SUCCESS" style="margin-right: 7px;" data-externalizedString="SUCCESS"></button>
+                  <button class="circuitBreakerFailureRequest btn circuitBreakerButton" data-externalizedTitle="FAILURE" data-externalizedString="FAILURE"></button>
+              </div>
+              <div class="circuitBreakerInfo">
+                  <div class="delayCounter delayCounterSuccessThreshold" data-externalizedString="DELAY"></div>
+                  <div class="successCountDiv">
+                    |
+                    <div class="successCount"></div>
+                  </div>
+                  <div class="circuitBreakerRollingWindowDiv" tabindex='0'>
+                    <div class="circuitBreakerConnectionAttempts"></div>
+                  </div>
+              </div>                     
+          </div>
+      </div>
+    </div>
+  </body>
+</html>

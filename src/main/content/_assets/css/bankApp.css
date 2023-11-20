@@ -1,0 +1,121 @@
+/*******************************************************************************
+ * Copyright (c) 2018, 2021 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+ @import url("https://fonts.googleapis.com/css?family=Asap:300,400,500");
+
+body {
+    font-family: Asap;
+    margin: 0 1px;
+    overflow: hidden;
+    height: 100%;
+}
+
+.bankHeadingBlockFlexContainer {
+    height: 36px;
+    background-color: #deedf7;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bankHeading {
+    font-weight: 500;
+    font-size: 16px;
+    color: #5B6888;    /* #5E6B8D; */
+    letter-spacing: 0;
+    text-align: left;
+    padding: 9px 0px 9px 18px;
+}
+
+.bankHeadingBlockFlexContainer > span {
+    margin: auto 10px auto auto;
+}
+
+.bankHeadingBlockFlexContainer > span > img {
+    height: 24px;
+    width: 24px;
+    opacity: 0.41;
+    padding-left: 10px;
+}
+
+.stepIntroText {
+    font-size: 16px;
+    color: #272727;
+    letter-spacing: 0;
+    text-align: left;
+    padding: 17px 0px 15px 18px;
+}
+
+.loader {
+    position: absolute;
+    left: calc(50% - 20px);
+    top: 40%;
+    border: 4px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 4px solid #3498db;
+    width: 40px;
+    height: 40px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+#loadingMessage {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#fail {
+    display: flex;  /** Initially the spinner is showing so hide this div **/
+    height: 90%;
+}
+
+.flexWarningContainer {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: center;
+    margin: 24px;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.flexWarningContainer > div {
+    text-align: center;
+    line-height: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    align-self: center;
+    color: #1B1C34;
+    letter-spacing: 0;
+}
+
+#errorImg {
+    vertical-align: middle;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

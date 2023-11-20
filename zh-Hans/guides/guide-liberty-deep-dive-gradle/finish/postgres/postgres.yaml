@@ -1,0 +1,83 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  namespace: default
+  name: poststarthook
+data:
+  schema.sql: |
+    CREATE TABLE SystemData (
+        id SERIAL,
+        hostname varchar(50),
+        osName varchar(50),
+        javaVersion varchar(50),
+        heapSize bigint,
+        primary key(id)
+    );
+
+    CREATE SEQUENCE systemData_id
+    START 1
+    INCREMENT 1
+    OWNED BY SystemData.id;
+---
+# tag::deployment[]
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+    group: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+        type: db
+    spec:
+      volumes:                             
+        - name: hookvolume
+          configMap:
+            name: poststarthook
+            defaultMode: 0755
+      containers:
+        - name: postgres
+          image: postgres:14.1
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: hookvolume
+              mountPath: /docker-entrypoint-initdb.d
+          # tag::env[]
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: post-app-credentials
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: post-app-credentials
+                  key: password
+          # end::env[]
+# end::deployment[]
+---
+# tag::service[]
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels: 
+    group: db
+spec:
+  type: ClusterIP
+  selector:             
+    app: postgres
+  ports:
+  - protocol: TCP
+    port: 5432
+# tag::service[]

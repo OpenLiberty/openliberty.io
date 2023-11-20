@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Consuming a RESTful Java web service with Angular
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples on how to access a RESTful Java microservice and consume its resources using the Angular framework.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/rest-client-angular">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Consuming a RESTful Java web service with Angular" />
+  <meta name="twitter:description" content="A getting started tutorial with examples on how to access a RESTful Java microservice and consume its resources using the Angular framework." />
+
+  <meta property='og:title' content="Consuming a RESTful Java web service with Angular" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples on how to access a RESTful Java microservice and consume its resources using the Angular framework." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/rest-client-angular" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li><a href="#starting-the-service">Starting the service</a></li>
+<li><a href="#project-configuration">Project configuration</a></li>
+<li><a href="#creating-the-root-angular-module">Creating the root Angular module</a></li>
+<li><a href="#creating-the-angular-service-to-fetch-data">Creating the Angular service to fetch data</a></li>
+<li><a href="#defining-the-component-to-consume-the-service">Defining the component to consume the service</a></li>
+<li><a href="#creating-the-angular-component-template">Creating the Angular component template</a></li>
+<li><a href="#building-the-front-end">Building the front end</a></li>
+<li><a href="#testing-the-angular-client">Testing the Angular client</a></li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Consuming a RESTful web service with Angular</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">20 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/rest-client-angular.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Explore how to access a simple RESTful web service and consume its resources with Angular in OpenLiberty.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://angular.io" target="_blank" rel="noopener noreferrer">Angular</a> is a framework for creating interactive web applications. Angular applications are written in HTML, CSS, and <a href="https://www.typescriptlang.org" target="_blank" rel="noopener noreferrer">TypeScript</a>, a variant of JavaScript. Angular helps you create responsive and intuitive applications that download once and run as a single web page. Consuming REST services with your Angular application allows you to request only the data and operations that you need, minimizing loading times.</p>
+</div>
+<div class="paragraph">
+<p>You will learn how to access a REST service and deserialize the returned JSON that contains a list of artists and their albums by using an Angular service and the Angular HTTP Client. You will then present this data using an Angular component.</p>
+</div>
+<div class="paragraph">
+<p>The REST service that provides the artists and albums resource was written for you in advance and responds with the <code class="hotspot">artists.json</code>.</p>
+</div>
+<div class="paragraph">
+<p>The Angular application was created and configured for you in the <code>frontend</code> directory. It contains the default starter application. There are many files that make up an Angular application, but you only need to edit a few to consume the REST service and display its data.</p>
+</div>
+<div class="paragraph">
+<p>Angular applications must be compiled before they can be used. The Angular compilation step was configured as part of the Maven build. You can use the <code>start</code> folder of this guide as a template for getting started with your own applications built on Angular and Open Liberty.</p>
+</div>
+<div class="paragraph">
+<p>artists.json</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span class="line-numbers"> 1</span>[
+<span class="line-numbers"> 2</span>    {
+<span class="line-numbers"> 3</span>        <span class="key"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">foo</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 4</span>        <span class="key"><span class="delimiter">"</span><span class="content">albums</span><span class="delimiter">"</span></span>: [
+<span class="line-numbers"> 5</span>            {
+<span class="line-numbers"> 6</span>                <span class="key"><span class="delimiter">"</span><span class="content">title</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">album_one</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 7</span>                <span class="key"><span class="delimiter">"</span><span class="content">artist</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">foo</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 8</span>                <span class="key"><span class="delimiter">"</span><span class="content">ntracks</span><span class="delimiter">"</span></span>: <span class="integer">12</span>
+<span class="line-numbers"> 9</span>            },
+<span class="line-numbers">10</span>            {
+<span class="line-numbers">11</span>                <span class="key"><span class="delimiter">"</span><span class="content">title</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">album_two</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">12</span>                <span class="key"><span class="delimiter">"</span><span class="content">artist</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">foo</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">13</span>                <span class="key"><span class="delimiter">"</span><span class="content">ntracks</span><span class="delimiter">"</span></span>: <span class="integer">15</span>
+<span class="line-numbers">14</span>            }
+<span class="line-numbers">15</span>        ]
+<span class="line-numbers">16</span>    }, 
+<span class="line-numbers">17</span>    {
+<span class="line-numbers">18</span>        <span class="key"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">bar</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">19</span>        <span class="key"><span class="delimiter">"</span><span class="content">albums</span><span class="delimiter">"</span></span>: [
+<span class="line-numbers">20</span>            {
+<span class="line-numbers">21</span>                <span class="key"><span class="delimiter">"</span><span class="content">title</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">foo walks into a bar</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">22</span>                <span class="key"><span class="delimiter">"</span><span class="content">artist</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">bar</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">23</span>                <span class="key"><span class="delimiter">"</span><span class="content">ntracks</span><span class="delimiter">"</span></span>: <span class="integer">12</span>
+<span class="line-numbers">24</span>            }
+<span class="line-numbers">25</span>        ]
+<span class="line-numbers">26</span>    }, 
+<span class="line-numbers">27</span>    {
+<span class="line-numbers">28</span>        <span class="key"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">dj</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">29</span>        <span class="key"><span class="delimiter">"</span><span class="content">albums</span><span class="delimiter">"</span></span>: [
+<span class="line-numbers">30</span>        ]
+<span class="line-numbers">31</span>    }
+<span class="line-numbers">32</span>]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will implement an Angular client that consumes this JSON and displays its contents
+at the <code>http://localhost:9080/app</code> URL.</p>
+</div>
+<div class="paragraph">
+<p>To learn more about REST services and how you can write them, see
+<a href="https://openliberty.io/guides/rest-intro.html" target="_blank" rel="noopener">Creating a RESTful web service</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-rest-client-angular.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-rest-client-angular.git
+cd guide-rest-client-angular</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2 command">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>To try out the application, first go to the <code>finish</code> directory and run the following Maven goal to build the application and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd finish
+mvn liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>The defaultServer server is ready to run a smarter planet.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, point your browser to the web application root <a href="http://localhost:9080/app" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/app</a> to see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>foo wrote 2 albums:
+    Album titled <strong>album_one</strong> by <strong>foo</strong> contains <strong>12</strong> tracks
+    Album tilted <strong>album_two</strong> by <strong>foo</strong> contains <strong>15</strong> tracks
+bar wrote 1 albums:
+    Album titled <strong>foo walks into a bar</strong> by <strong>bar</strong> contains <strong>12</strong> tracks
+dj wrote 0 albums:</pre>
+</div>
+</div>
+<div class="paragraph command">
+<p>After you are finished checking out the application, stop the Liberty instance by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty. Alternatively, you can run the <code>liberty:stop</code> goal from the <code>finish</code> directory in another shell session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:stop</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="starting-the-service">Starting the service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you begin the implementation, start the provided REST service so that the artist JSON is available to you.</p>
+</div>
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph command">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following goal to start Open Liberty in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>You can find your artist JSON at the <a href="http://localhost:9080/artists" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/artists</a> URL.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="project-configuration">Project configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The front end of your application uses Node.js to execute your Angular code. The Maven project is configured for you to install Node.js and produce the production files, which are copied to the web content of your application.</p>
+</div>
+<div class="paragraph">
+<p>Node.js is server-side JavaScript runtime that is used for developing networking applications. Its convenient package manager, <a href="https://www.npmjs.com/" target="_blank" rel="noopener noreferrer">npm</a>, is used to execute the Angular scripts found in the <code>package.json</code> file. To learn more about Node.js, see the official <a href="https://nodejs.org/en/docs/" target="_blank" rel="noopener noreferrer">Node.js documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=frontend-plugin">frontend-maven-plugin</code> is used to <code class="hotspot=node-resource-install">install</code> the dependencies listed in your <code>package.json</code> file from the npm registry into a folder called <code>node_modules</code>. The <code>node_modules</code> folder is found in your <code class="hotspot=working-dir">working</code> directory. Then, the configuration <code class="hotspot=node-resource-build">produces</code> the production files to the <code>src/main/frontend/src/app</code> directory.</p>
+</div>
+<div class="paragraph">
+<p>The <code>src/main/frontend/src/angular.json</code> file is defined so that the production build is copied into the web content of your application.</p>
+</div>
+<div class="paragraph">
+<p>pom.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version='1.0' encoding='utf-8'?&gt;</span>
+<span class="line-numbers">  2</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  3</span>
+<span class="line-numbers">  4</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  5</span>
+<span class="line-numbers">  6</span>    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">  7</span>    <span class="tag">&lt;artifactId&gt;</span>guide-rest-client-angular<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">  8</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">  9</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers"> 10</span>
+<span class="line-numbers"> 11</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 12</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 13</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 14</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>11<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 15</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>11<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 16</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 19</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers"> 20</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 21</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 22</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 23</span>            <span class="tag">&lt;version&gt;</span>10.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 24</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 25</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 26</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 27</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 28</span>            <span class="comment">&lt;!-- tag::microprofile[] --&gt;</span>
+<span class="line-numbers"> 29</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 30</span>            <span class="comment">&lt;!-- end::microprofile[] --&gt;</span>
+<span class="line-numbers"> 31</span>            <span class="tag">&lt;version&gt;</span>6.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 32</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 33</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 34</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 35</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers"> 38</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers"> 39</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers"> 40</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 41</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 42</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 43</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 44</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 45</span>            <span class="comment">&lt;!-- Enable liberty-maven plugin --&gt;</span>
+<span class="line-numbers"> 46</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 47</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 48</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 49</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 50</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 51</span>            <span class="comment">&lt;!-- tag::frontend-plugin[] --&gt;</span>
+<span class="line-numbers"> 52</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 53</span>                <span class="tag">&lt;groupId&gt;</span>com.github.eirslett<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 54</span>                <span class="tag">&lt;artifactId&gt;</span>frontend-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 55</span>                <span class="tag">&lt;version&gt;</span>1.13.3<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 56</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 57</span>                    <span class="comment">&lt;!-- tag::working-dir[] --&gt;</span>
+<span class="line-numbers"> 58</span>                    <span class="tag">&lt;workingDirectory&gt;</span>src/main/frontend<span class="tag">&lt;/workingDirectory&gt;</span>
+<span class="line-numbers"> 59</span>                    <span class="comment">&lt;!-- end::working-dir[] --&gt;</span>
+<span class="line-numbers"> 60</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers"> 61</span>                <span class="tag">&lt;executions&gt;</span>
+<span class="line-numbers"> 62</span>                    <span class="comment">&lt;!-- tag::node-resource-install[] --&gt;</span>
+<span class="line-numbers"> 63</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers"> 64</span>                        <span class="tag">&lt;id&gt;</span>install node and npm<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers"> 65</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers"> 66</span>                            <span class="tag">&lt;goal&gt;</span>install-node-and-npm<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers"> 67</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers"> 68</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 69</span>                            <span class="tag">&lt;nodeVersion&gt;</span>v16.20.1<span class="tag">&lt;/nodeVersion&gt;</span>
+<span class="line-numbers"> 70</span>                            <span class="tag">&lt;npmVersion&gt;</span>8.5.0<span class="tag">&lt;/npmVersion&gt;</span>
+<span class="line-numbers"> 71</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers"> 72</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers"> 73</span>                    <span class="comment">&lt;!-- end::node-resource-install[] --&gt;</span>
+<span class="line-numbers"> 74</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers"> 75</span>                        <span class="tag">&lt;id&gt;</span>npm install<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers"> 76</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers"> 77</span>                            <span class="tag">&lt;goal&gt;</span>npm<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers"> 78</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers"> 79</span>                        <span class="comment">&lt;!-- Optional configuration for running </span>
+<span class="line-numbers"> 80</span><span class="comment">                        any npm command --&gt;</span>
+<span class="line-numbers"> 81</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 82</span>                            <span class="tag">&lt;arguments&gt;</span>install<span class="tag">&lt;/arguments&gt;</span>
+<span class="line-numbers"> 83</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers"> 84</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers"> 85</span>                    <span class="comment">&lt;!-- tag::node-resource-build[] --&gt;</span>
+<span class="line-numbers"> 86</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers"> 87</span>                        <span class="tag">&lt;id&gt;</span>npm run build<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers"> 88</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers"> 89</span>                            <span class="tag">&lt;goal&gt;</span>npm<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers"> 90</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers"> 91</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 92</span>                            <span class="tag">&lt;arguments&gt;</span>run build<span class="tag">&lt;/arguments&gt;</span>
+<span class="line-numbers"> 93</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers"> 94</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers"> 95</span>                    <span class="comment">&lt;!-- end::node-resource-build[] --&gt;</span>
+<span class="line-numbers"> 96</span>                <span class="tag">&lt;/executions&gt;</span>
+<span class="line-numbers"> 97</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 98</span>            <span class="comment">&lt;!-- end::frontend-plugin[] --&gt;</span>
+<span class="line-numbers"> 99</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">100</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">101</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-root-angular-module">Creating the root Angular module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Your application needs a way to communicate with and retrieve resources from RESTful web services. In this case, the provided Angular application needs to communicate with the artists service to retrieve the artists JSON. While there are various ways to perform this task, Angular contains a built-in <code>HttpClientModule</code> that you can use.</p>
+</div>
+<div class="paragraph">
+<p>Angular applications consist of modules, which are groups of classes that perform specific functions. The Angular framework provides its own modules for applications to use. One of these modules, the HTTP Client module, includes convenience classes that make it easier and quicker for you to consume a RESTful API from your application.</p>
+</div>
+<div class="paragraph">
+<p>You will create the module that organizes your application, which is called the root module. The root module includes the Angular HTTP Client module.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>app.module.ts</code> file.</mark>
+<code>src/main/frontend/src/app/app.module.ts</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>app.module.ts</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span class="line-numbers"> 1</span><span class="reserved">import</span> { BrowserModule } from <span class="string"><span class="delimiter">'</span><span class="content">@angular/platform-browser</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 2</span><span class="reserved">import</span> { NgModule } from <span class="string"><span class="delimiter">'</span><span class="content">@angular/core</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 3</span><span class="comment">// tag::importHttpClientModule[]</span>
+<span class="line-numbers"> 4</span><span class="reserved">import</span> { HttpClientModule } from <span class="string"><span class="delimiter">'</span><span class="content">@angular/common/http</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 5</span><span class="comment">// end::importHttpClientModule[]</span>
+<span class="line-numbers"> 6</span><span class="reserved">import</span> { AppComponent } from <span class="string"><span class="delimiter">'</span><span class="content">./app.component</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 7</span>
+<span class="line-numbers"> 8</span><span class="comment">// tag::atNgModule[]</span>
+<span class="line-numbers"> 9</span><span class="error">@</span>NgModule({
+<span class="line-numbers">10</span>  <span class="key">declarations</span>: [
+<span class="line-numbers">11</span>    AppComponent
+<span class="line-numbers">12</span>  ],
+<span class="line-numbers">13</span>  <span class="comment">// tag::importsArray[]</span>
+<span class="line-numbers">14</span>  <span class="key">imports</span>: [
+<span class="line-numbers">15</span>    BrowserModule,
+<span class="line-numbers">16</span>    <span class="comment">// tag::httpClientModule[]</span>
+<span class="line-numbers">17</span>    HttpClientModule,
+<span class="line-numbers">18</span>    <span class="comment">// end::httpClientModule[]</span>
+<span class="line-numbers">19</span>  ],
+<span class="line-numbers">20</span>  <span class="comment">// end::importsArray[]</span>
+<span class="line-numbers">21</span>  <span class="key">providers</span>: [],
+<span class="line-numbers">22</span>  <span class="key">bootstrap</span>: [AppComponent]
+<span class="line-numbers">23</span>})
+<span class="line-numbers">24</span><span class="comment">// end::atNgModule[]</span>
+<span class="line-numbers">25</span><span class="reserved">export</span> <span class="reserved">class</span> AppModule { }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=importHttpClientModule">HttpClientModule</code> imports the class into the file. By using the <code class="hotspot=atNgModule">@NgModule</code> tag, you can declare a module and organize  your dependencies within the Angular framework. The <code>imports</code> array is a declaration array that imports the <code class="hotspot=httpClientModule">HttpClientModule</code> so that you can use the HTTP Client module in your application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-angular-service-to-fetch-data">Creating the Angular service to fetch data</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You need to create the component that is used in the application to acquire and display data from the REST API. The component file contains two classes: the service, which handles data access, and the component itself, which handles the presentation of the data.</p>
+</div>
+<div class="paragraph">
+<p>Services are classes in Angular that are designed to share their functionality across entire applications. A good service performs only one function, and it performs this function well. In this case, the <code>ArtistsService</code> class requests artists data from the REST service.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>app.component.ts</code> file.</mark>
+<code>src/main/frontend/src/app/app.component.ts</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>app.component.ts</p>
+</div>
+<div class="listingblock code_column hide_tags=providersProperty,importOnInitAndAngularCorePackage">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span class="line-numbers"> 1</span><span class="comment">// tag::importOnInitAndAngularCorePackage[]</span>
+<span class="line-numbers"> 2</span><span class="reserved">import</span> { Component, OnInit } from <span class="string"><span class="delimiter">'</span><span class="content">@angular/core</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 3</span><span class="comment">// end::importOnInitAndAngularCorePackage[]</span>
+<span class="line-numbers"> 4</span><span class="comment">// tag::importHttpClient[]</span>
+<span class="line-numbers"> 5</span><span class="reserved">import</span> { HttpClient } from <span class="string"><span class="delimiter">'</span><span class="content">@angular/common/http</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 6</span><span class="comment">// end::importHttpClient[]</span>
+<span class="line-numbers"> 7</span><span class="comment">// tag::importInjectable[]</span>
+<span class="line-numbers"> 8</span><span class="reserved">import</span> { Injectable } from <span class="string"><span class="delimiter">'</span><span class="content">@angular/core</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 9</span><span class="comment">// end::importInjectable[]</span>
+<span class="line-numbers">10</span>
+<span class="line-numbers">11</span><span class="comment">// tag::atInjectable[]</span>
+<span class="line-numbers">12</span><span class="error">@</span>Injectable()
+<span class="line-numbers">13</span><span class="comment">// end::atInjectable[]</span>
+<span class="line-numbers">14</span><span class="comment">// tag::artistsServiceClass[]</span>
+<span class="line-numbers">15</span><span class="reserved">export</span> <span class="reserved">class</span> ArtistsService {
+<span class="line-numbers">16</span>  <span class="comment">// tag::httpClientInstance[]</span>
+<span class="line-numbers">17</span>  constructor(<span class="reserved">private</span> http: HttpClient) { }
+<span class="line-numbers">18</span>  <span class="comment">// end::httpClientInstance[]</span>
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span>  <span class="comment">// tag::artistsUrl[]</span>
+<span class="line-numbers">21</span>  <span class="reserved">private</span> <span class="reserved">static</span> ARTISTS_URL = <span class="string"><span class="delimiter">'</span><span class="content">/artists</span><span class="delimiter">'</span></span>;
+<span class="line-numbers">22</span>  <span class="comment">// end::artistsUrl[]</span>
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span>  <span class="comment">// tag::fetchArtistsMethod[]</span>
+<span class="line-numbers">25</span>  <span class="comment">// tag::asyncFeature[]</span>
+<span class="line-numbers">26</span>  async fetchArtists() {
+<span class="line-numbers">27</span>  <span class="comment">// end::asyncFeature[]</span>
+<span class="line-numbers">28</span>    <span class="keyword">try</span> {
+<span class="line-numbers">29</span>      <span class="comment">// tag::httpInstanceAndAwaitFeatureAndHttpGetAndToPromise[]</span>
+<span class="line-numbers">30</span>      const data: any = await <span class="local-variable">this</span>.http.get(ArtistsService.ARTISTS_URL).toPromise();
+<span class="line-numbers">31</span>      <span class="comment">// end::httpInstanceAndAwaitFeatureAndHttpGetAndToPromise[]</span>
+<span class="line-numbers">32</span>      <span class="keyword">return</span> data;
+<span class="line-numbers">33</span>    } <span class="keyword">catch</span> (error) {
+<span class="line-numbers">34</span>      console.error(<span class="string"><span class="delimiter">'</span><span class="content">Error occurred: </span><span class="delimiter">'</span></span> + error);
+<span class="line-numbers">35</span>    }
+<span class="line-numbers">36</span>  }
+<span class="line-numbers">37</span>  <span class="comment">// end::fetchArtistsMethod[]</span>
+<span class="line-numbers">38</span>}
+<span class="line-numbers">39</span><span class="comment">// end::artistsServiceClass[]</span>
+<span class="line-numbers">40</span>
+<span class="line-numbers">41</span><span class="comment">// tag::atComponent[]</span>
+<span class="line-numbers">42</span><span class="error">@</span>Component({
+<span class="line-numbers">43</span>  <span class="key">selector</span>: <span class="string"><span class="delimiter">'</span><span class="content">app-root</span><span class="delimiter">'</span></span>,
+<span class="line-numbers">44</span>  <span class="comment">// tag::templateUrl[]</span>
+<span class="line-numbers">45</span>  <span class="key">templateUrl</span>: <span class="string"><span class="delimiter">'</span><span class="content">./app.component.html</span><span class="delimiter">'</span></span>,
+<span class="line-numbers">46</span>  <span class="comment">// end::templateUrl[]</span>
+<span class="line-numbers">47</span>  <span class="comment">// tag::providersProperty[]</span>
+<span class="line-numbers">48</span>  <span class="key">providers</span>: [ ArtistsService ],
+<span class="line-numbers">49</span>  <span class="comment">// end::providersProperty[]</span>
+<span class="line-numbers">50</span>  <span class="comment">// tag::styleUrls[]</span>
+<span class="line-numbers">51</span>  <span class="key">styleUrls</span>: [<span class="string"><span class="delimiter">'</span><span class="content">./app.component.css</span><span class="delimiter">'</span></span>]
+<span class="line-numbers">52</span>  <span class="comment">// end::styleUrls[]</span>
+<span class="line-numbers">53</span>})
+<span class="line-numbers">54</span><span class="comment">// end::atComponent[]</span>
+<span class="line-numbers">55</span><span class="comment">// tag::appComponentClass[]</span>
+<span class="line-numbers">56</span><span class="comment">// tag::onInitInterface[]</span>
+<span class="line-numbers">57</span><span class="reserved">export</span> <span class="reserved">class</span> AppComponent <span class="reserved">implements</span> OnInit {
+<span class="line-numbers">58</span><span class="comment">// end::onInitInterface[]</span>
+<span class="line-numbers">59</span>  <span class="comment">// tag::artistsClassMember[]</span>
+<span class="line-numbers">60</span>  <span class="key">artists</span>: any[] = [];
+<span class="line-numbers">61</span>  <span class="comment">// end::artistsClassMember[]</span>
+<span class="line-numbers">62</span>
+<span class="line-numbers">63</span>  <span class="comment">// tag::artistsServiceInstanceDeclaration[]</span>
+<span class="line-numbers">64</span>  constructor(<span class="reserved">private</span> artistsService: ArtistsService) { }
+<span class="line-numbers">65</span>  <span class="comment">// end::artistsServiceInstanceDeclaration[]</span>
+<span class="line-numbers">66</span>
+<span class="line-numbers">67</span>  <span class="comment">// tag::ngOnInitMethod[]</span>
+<span class="line-numbers">68</span>  ngOnInit() {
+<span class="line-numbers">69</span>    <span class="comment">// tag::thenClause[]</span>
+<span class="line-numbers">70</span>    <span class="comment">// tag::artistsServiceInstance[]</span>
+<span class="line-numbers">71</span>    <span class="local-variable">this</span>.artistsService.fetchArtists().then(data =&gt; {
+<span class="line-numbers">72</span>    <span class="comment">// end::artistsServiceInstance[]</span>
+<span class="line-numbers">73</span>      <span class="local-variable">this</span>.artists = data;
+<span class="line-numbers">74</span>    });
+<span class="line-numbers">75</span>    <span class="comment">// end::thenClause[]</span>
+<span class="line-numbers">76</span>  }
+<span class="line-numbers">77</span>  <span class="comment">// end::ngOnInitMethod[]</span>
+<span class="line-numbers">78</span>}
+<span class="line-numbers">79</span><span class="comment">// end::appComponentClass[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The file imports the <code class="hotspot=importHttpClient">HttpClient</code> class and the <code class="hotspot=importInjectable">Injectable</code> decorator.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=artistsServiceClass">ArtistsService</code> class is defined. While it shares the file of the component class <code class="hotspot=appComponentClass">AppComponent</code>, it can also be defined in its own file. The class is annotated by <code class="hotspot=atInjectable">@Injectable</code> so instances of it can be provided to other classes anywhere in the application.</p>
+</div>
+<div class="paragraph">
+<p>The class injects an instance of the <code class="hotspot=httpClientInstance">HttpClient</code> class, which it uses to request data from the REST API. It contains the <code class="hotspot=artistsUrl">ARTISTS_URL</code> constant, which points to the API endpoint it requests data from. The URL does not contain a host name because the artists API endpoint is accessible from the same host as the Angular application. You can send requests to external APIs by specifying the full URL. Finally, it implements a <code class="hotspot=fetchArtistsMethod">fetchArtists()</code> method that makes the request and returns the result.</p>
+</div>
+<div class="paragraph">
+<p>To obtain the data for display on the page, the <code class="hotspot=fetchArtistsMethod">fetchArtists()</code> method tries to use the injected <code class="hotspot=httpInstanceAndAwaitFeatureAndHttpGetAndToPromise">http</code> instance to perform a <code>GET</code> HTTP request to the <code class="hotspot=artistsUrl">ARTISTS_URL</code> constant. If successful, it returns the result. If an error occurs, it prints the error message to the console.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=fetchArtistsMethod">fetchArtists()</code> method uses a feature of JavaScript called <code class="hotspot=asyncFeature">async</code>, <code class="hotspot=httpInstanceAndAwaitFeatureAndHttpGetAndToPromise">await</code> to make requests and receive responses without preventing the application from working while it waits. For the result of the <code class="hotspot=httpInstanceAndAwaitFeatureAndHttpGetAndToPromise">HttpClient.get()</code> method to be compatible with this feature, it must be converted to a Promise by invoking its <code class="hotspot=httpInstanceAndAwaitFeatureAndHttpGetAndToPromise">toPromise()</code> method. APromise is how JavaScript represents the state of an asynchronous operation. If you want to learn more, check out <a href="https://promisejs.org" target="_blank" rel="noopener noreferrer">promisejs.org</a> for an introduction.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="defining-the-component-to-consume-the-service">Defining the component to consume the service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Components are the basic building blocks of Angular application user interfaces. Components are made up of a TypeScript class annotated with the <code class="hotspot=atComponent">@Component</code> annotation and the HTML template file (specified by <code class="hotspot=templateUrl">templateUrl</code>) and CSS style files (specified by <code class="hotspot=styleUrls">styleUrls</code>.)</p>
+</div>
+<div class="paragraph">
+<p>Update the <code class="hotspot=appComponentClass">AppComponent</code> class to use the artists service to fetch the artists data and save it so the component can display it.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Update the <code>app.component.ts</code> file.</mark>
+<code>src/main/frontend/src/app/app.component.ts</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>app.component.ts</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span class="line-numbers"> 1</span><span class="comment">// tag::importOnInitAndAngularCorePackage[]</span>
+<span class="line-numbers"> 2</span><span class="reserved">import</span> { Component, OnInit } from <span class="string"><span class="delimiter">'</span><span class="content">@angular/core</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 3</span><span class="comment">// end::importOnInitAndAngularCorePackage[]</span>
+<span class="line-numbers"> 4</span><span class="comment">// tag::importHttpClient[]</span>
+<span class="line-numbers"> 5</span><span class="reserved">import</span> { HttpClient } from <span class="string"><span class="delimiter">'</span><span class="content">@angular/common/http</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 6</span><span class="comment">// end::importHttpClient[]</span>
+<span class="line-numbers"> 7</span><span class="comment">// tag::importInjectable[]</span>
+<span class="line-numbers"> 8</span><span class="reserved">import</span> { Injectable } from <span class="string"><span class="delimiter">'</span><span class="content">@angular/core</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 9</span><span class="comment">// end::importInjectable[]</span>
+<span class="line-numbers">10</span>
+<span class="line-numbers">11</span><span class="comment">// tag::atInjectable[]</span>
+<span class="line-numbers">12</span><span class="error">@</span>Injectable()
+<span class="line-numbers">13</span><span class="comment">// end::atInjectable[]</span>
+<span class="line-numbers">14</span><span class="comment">// tag::artistsServiceClass[]</span>
+<span class="line-numbers">15</span><span class="reserved">export</span> <span class="reserved">class</span> ArtistsService {
+<span class="line-numbers">16</span>  <span class="comment">// tag::httpClientInstance[]</span>
+<span class="line-numbers">17</span>  constructor(<span class="reserved">private</span> http: HttpClient) { }
+<span class="line-numbers">18</span>  <span class="comment">// end::httpClientInstance[]</span>
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span>  <span class="comment">// tag::artistsUrl[]</span>
+<span class="line-numbers">21</span>  <span class="reserved">private</span> <span class="reserved">static</span> ARTISTS_URL = <span class="string"><span class="delimiter">'</span><span class="content">/artists</span><span class="delimiter">'</span></span>;
+<span class="line-numbers">22</span>  <span class="comment">// end::artistsUrl[]</span>
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span>  <span class="comment">// tag::fetchArtistsMethod[]</span>
+<span class="line-numbers">25</span>  <span class="comment">// tag::asyncFeature[]</span>
+<span class="line-numbers">26</span>  async fetchArtists() {
+<span class="line-numbers">27</span>  <span class="comment">// end::asyncFeature[]</span>
+<span class="line-numbers">28</span>    <span class="keyword">try</span> {
+<span class="line-numbers">29</span>      <span class="comment">// tag::httpInstanceAndAwaitFeatureAndHttpGetAndToPromise[]</span>
+<span class="line-numbers">30</span>      const data: any = await <span class="local-variable">this</span>.http.get(ArtistsService.ARTISTS_URL).toPromise();
+<span class="line-numbers">31</span>      <span class="comment">// end::httpInstanceAndAwaitFeatureAndHttpGetAndToPromise[]</span>
+<span class="line-numbers">32</span>      <span class="keyword">return</span> data;
+<span class="line-numbers">33</span>    } <span class="keyword">catch</span> (error) {
+<span class="line-numbers">34</span>      console.error(<span class="string"><span class="delimiter">'</span><span class="content">Error occurred: </span><span class="delimiter">'</span></span> + error);
+<span class="line-numbers">35</span>    }
+<span class="line-numbers">36</span>  }
+<span class="line-numbers">37</span>  <span class="comment">// end::fetchArtistsMethod[]</span>
+<span class="line-numbers">38</span>}
+<span class="line-numbers">39</span><span class="comment">// end::artistsServiceClass[]</span>
+<span class="line-numbers">40</span>
+<span class="line-numbers">41</span><span class="comment">// tag::atComponent[]</span>
+<span class="line-numbers">42</span><span class="error">@</span>Component({
+<span class="line-numbers">43</span>  <span class="key">selector</span>: <span class="string"><span class="delimiter">'</span><span class="content">app-root</span><span class="delimiter">'</span></span>,
+<span class="line-numbers">44</span>  <span class="comment">// tag::templateUrl[]</span>
+<span class="line-numbers">45</span>  <span class="key">templateUrl</span>: <span class="string"><span class="delimiter">'</span><span class="content">./app.component.html</span><span class="delimiter">'</span></span>,
+<span class="line-numbers">46</span>  <span class="comment">// end::templateUrl[]</span>
+<span class="line-numbers">47</span>  <span class="comment">// tag::providersProperty[]</span>
+<span class="line-numbers">48</span>  <span class="key">providers</span>: [ ArtistsService ],
+<span class="line-numbers">49</span>  <span class="comment">// end::providersProperty[]</span>
+<span class="line-numbers">50</span>  <span class="comment">// tag::styleUrls[]</span>
+<span class="line-numbers">51</span>  <span class="key">styleUrls</span>: [<span class="string"><span class="delimiter">'</span><span class="content">./app.component.css</span><span class="delimiter">'</span></span>]
+<span class="line-numbers">52</span>  <span class="comment">// end::styleUrls[]</span>
+<span class="line-numbers">53</span>})
+<span class="line-numbers">54</span><span class="comment">// end::atComponent[]</span>
+<span class="line-numbers">55</span><span class="comment">// tag::appComponentClass[]</span>
+<span class="line-numbers">56</span><span class="comment">// tag::onInitInterface[]</span>
+<span class="line-numbers">57</span><span class="reserved">export</span> <span class="reserved">class</span> AppComponent <span class="reserved">implements</span> OnInit {
+<span class="line-numbers">58</span><span class="comment">// end::onInitInterface[]</span>
+<span class="line-numbers">59</span>  <span class="comment">// tag::artistsClassMember[]</span>
+<span class="line-numbers">60</span>  <span class="key">artists</span>: any[] = [];
+<span class="line-numbers">61</span>  <span class="comment">// end::artistsClassMember[]</span>
+<span class="line-numbers">62</span>
+<span class="line-numbers">63</span>  <span class="comment">// tag::artistsServiceInstanceDeclaration[]</span>
+<span class="line-numbers">64</span>  constructor(<span class="reserved">private</span> artistsService: ArtistsService) { }
+<span class="line-numbers">65</span>  <span class="comment">// end::artistsServiceInstanceDeclaration[]</span>
+<span class="line-numbers">66</span>
+<span class="line-numbers">67</span>  <span class="comment">// tag::ngOnInitMethod[]</span>
+<span class="line-numbers">68</span>  ngOnInit() {
+<span class="line-numbers">69</span>    <span class="comment">// tag::thenClause[]</span>
+<span class="line-numbers">70</span>    <span class="comment">// tag::artistsServiceInstance[]</span>
+<span class="line-numbers">71</span>    <span class="local-variable">this</span>.artistsService.fetchArtists().then(data =&gt; {
+<span class="line-numbers">72</span>    <span class="comment">// end::artistsServiceInstance[]</span>
+<span class="line-numbers">73</span>      <span class="local-variable">this</span>.artists = data;
+<span class="line-numbers">74</span>    });
+<span class="line-numbers">75</span>    <span class="comment">// end::thenClause[]</span>
+<span class="line-numbers">76</span>  }
+<span class="line-numbers">77</span>  <span class="comment">// end::ngOnInitMethod[]</span>
+<span class="line-numbers">78</span>}
+<span class="line-numbers">79</span><span class="comment">// end::appComponentClass[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>Replace the entire <code class="hotspot=appComponentClass">AppComponent</code> class along with the <code class="hotspot=atComponent">@Component</code> annotation. Add <code class="hotspot=importOnInitAndAngularCorePackage">OnInit</code> to the list of imported classes at the top.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=providersProperty">providers</code> property on the <code class="hotspot=atComponent">@Component</code> annotation indicates that this component provides the <code class="hotspot=artistsServiceClass">ArtistsService</code> to other classes in the application.</p>
+</div>
+<div class="paragraph">
+<p><code class="hotspot=appComponentClass">AppComponent</code> implements <code class="hotspot=onInitInterface">OnInit</code>, which is a special interface called a lifecycle hook. When Angular displays, updates, or removes a component, it calls a specific function, the lifecycle hook, on the component so the component can run code in response to this event. This component responds to the <code class="hotspot=onInitInterface">OnInit</code> event via the <code class="hotspot=ngOnInitMethod">ngOnInit</code> method, which fetches and populates the component’s template with data when it is initialized for display. The file imports the <code class="hotspot=importOnInitAndAngularCorePackage">OnInit</code> interface from the <code class="hotspot=importOnInitAndAngularCorePackage">@angular/core</code> package.</p>
+</div>
+<div class="paragraph">
+<p><code class="hotspot=artistsClassMember">artists</code> is a class member of type <code>any[]</code> that starts out as an empty array. It holds the artists retrieved from the service so the template can display them.</p>
+</div>
+<div class="paragraph">
+<p>An instance of the <code class="hotspot=artistsServiceInstanceDeclaration">ArtistsService</code> class is injected into the constructor and is accessible by any function that is defined in the class. The <code class="hotspot=ngOnInitMethod">ngOnInit</code> function uses the <code class="hotspot=artistsServiceInstance">artistsService</code> instance to request the artists data. The <code class="hotspot=fetchArtistsMethod">fetchArtists()</code> method is an <code>async</code> function so it returns a Promise. To retrieve the data from the request, <code class="hotspot=ngOnInitMethod">ngOnInit</code> calls the <code class="hotspot=thenClause">then()</code> method on the Promise which takes in the data and stores it to the <code class="hotspot=artistsClassMember">artists</code> class member.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-angular-component-template">Creating the Angular component template</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now that you have a service to fetch the data and a component to store it in, you will create a template to specify how the data will be displayed on the page. When you visit the page in the browser, the component populates the template to display the artists data with formatting.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>app.component.html</code> file.</mark>
+<code>src/main/frontend/src/app/app.component.html</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>app.component.html</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span class="line-numbers"> 1</span><span class="comment">&lt;!-- tag::artistsDiv[] --&gt;</span>
+<span class="line-numbers"> 2</span><span class="tag">&lt;div</span> <span class="error">*</span><span class="attribute-name">ngFor</span>=<span class="string"><span class="delimiter">"</span><span class="content">let artist of artists</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 3</span>  <span class="comment">&lt;!-- tag::artistNameAndAlbumsLengthPlaceholders[] --&gt;</span>
+<span class="line-numbers"> 4</span>  <span class="tag">&lt;p&gt;</span>{{ artist.name }} wrote {{ artist.albums.length }} albums: <span class="tag">&lt;/p&gt;</span>
+<span class="line-numbers"> 5</span>  <span class="comment">&lt;!-- end::artistNameAndAlbumsLengthPlaceholders[] --&gt;</span>
+<span class="line-numbers"> 6</span>  <span class="comment">&lt;!-- tag::albumDiv[] --&gt;</span>
+<span class="line-numbers"> 7</span>  <span class="tag">&lt;div</span> <span class="error">*</span><span class="attribute-name">ngFor</span>=<span class="string"><span class="delimiter">"</span><span class="content">let album of artist.albums</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 8</span>    <span class="tag">&lt;p</span> <span class="attribute-name">style</span>=<span class="string"><span class="delimiter">"</span><span class="key">text-indent</span>: <span class="float">20px</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 9</span>      Album titled <span class="tag">&lt;b&gt;</span>{{ album.title }}<span class="tag">&lt;/b&gt;</span> by
+<span class="line-numbers">10</span>                   <span class="tag">&lt;b&gt;</span>{{ album.artist }}<span class="tag">&lt;/b&gt;</span> contains
+<span class="line-numbers">11</span>                   <span class="tag">&lt;b&gt;</span>{{ album.ntracks }}<span class="tag">&lt;/b&gt;</span> tracks
+<span class="line-numbers">12</span>    <span class="tag">&lt;/p&gt;</span>
+<span class="line-numbers">13</span>  <span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">14</span>  <span class="comment">&lt;!-- end::albumDiv[] --&gt;</span>
+<span class="line-numbers">15</span><span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">16</span><span class="comment">&lt;!-- end::artistsDiv[] --&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The template contains a <code class="hotspot=artistsDiv">div</code> element that is enumerated by using the <code>ngFor</code> directive. The <code>artist</code> variable is bound to the <code>artists</code> member of the component. The <code class="hotspot=artistsDiv">div</code> element itself and all elements contained within it are repeated for each artist, and the <code class="hotspot=artistNameAndAlbumsLengthPlaceholders">{{ artist.name }}</code> and <code class="hotspot=artistNameAndAlbumsLengthPlaceholders">{{ artist.albums.length }}</code> placeholders are populated with the information from each artist. The same strategy is used to display each <code class="hotspot=albumDiv">album</code> by each artist.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-the-front-end">Building the front end</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Open Liberty instance is already started, and the REST service is running. In a new command-line session, build the front end by running the following command in the <code>start</code> directory:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn generate-resources</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The build might take a few minutes to complete. You can rebuild the front end at any time with the <code>generate-resources</code> Maven goal. Any local changes to your TypeScript or HTML are picked up when you build the front end.</p>
+</div>
+<div class="paragraph">
+<p>Point your browser to the <a href="http://localhost:9080/app" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/app</a> web application root to see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>foo wrote 2 albums:
+    Album titled <strong>album_one</strong> by <strong>foo</strong> contains <strong>12</strong> tracks
+    Album tilted <strong>album_two</strong> by <strong>foo</strong> contains <strong>15</strong> tracks
+bar wrote 1 albums:
+    Album titled <strong>foo walks into a bar</strong> by <strong>bar</strong> contains <strong>12</strong> tracks
+dj wrote 0 albums:</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you use the <code>curl</code> command to access the web application root URL, you see only the application root page in HTML. The Angular framework uses JavaScript to render the HTML to display the application data. A web browser runs JavaScript, and the <code>curl</code> command doesn’t.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-angular-client">Testing the Angular client</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>No explicit code directly uses the consumed artist JSON, so you don’t need to write any test cases.</p>
+</div>
+<div class="paragraph">
+<p>Whenever you change and build your Angular implementation, the application root at <a href="http://localhost:9080/app" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/app</a> reflects the changes automatically.</p>
+</div>
+<div class="paragraph">
+<p>When you are done checking the application root, exit dev mode by pressing <code>CTRL+C</code> in the command-line session where you ran the Liberty, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+<div class="paragraph">
+<p>Although the Angular application that this guide shows you how to build is simple, when you build more complex Angular applications, testing becomes a crucial part of your development lifecycle. If you need to write test cases, follow the official unit testing and end-to-end testing documentation on the <a href="https://angular.io/guide/testing" target="_blank" rel="noopener noreferrer">official Angular page</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You just accessed a simple RESTful web service and consumed its resources by using Angular in Open Liberty.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Consuming a RESTful web service with Angular <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-rest-client-angular/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-rest-client-angular/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-rest-client-angular/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/rest-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Creating a RESTful web service</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">30 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/rest-client-java.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Consuming a RESTful web service</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">25 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/rest-client-angularjs.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Consuming a RESTful web service with AngularJS</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

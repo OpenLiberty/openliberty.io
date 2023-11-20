@@ -1,0 +1,92 @@
+<!-- tag::copyright[] -->
+<!--
+  Copyright (c) 2022, 2023 IBM Corp.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- end::copyright[] -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Open Liberty System Load</title>
+        <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
+        <link rel="stylesheet" href="css/styles.css">
+        <link href="favicon.ico" rel="icon" />
+        <link href="favicon.ico" rel="shortcut icon" />
+    </head>
+    <body>
+        <section id="appIntro">
+            <div id="titleSection">
+                <h1 id="appTitle">Open Liberty System Load</h1>
+                <div class="line"></div>
+                <div class="headerImage"></div>
+            </div>
+
+            <div class="msSection" id="systemLoads">
+                <div class="headerRow">
+                    <div class="headerIcon">
+                      <img src="img/sysProps.svg"/>
+                    </div>
+                    <div class="headerTitle" id="sysPropTitle">
+                      <h2>System Loads</h2>
+                    </div>
+                </div>
+                <div class="sectionContent">
+                    <table id="systemLoadsTable">
+                        <tbody id="systemLoadsTableBody">
+                            <tr>
+                                <th>Time</th><th>System Load</th>
+                                <th>Memory Usage (%)</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <footer class="bodyFooter">
+            <div class="bodyFooterLink">
+                <a id="licenseLink"
+                   href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE"
+                >License</a>
+                <a href="https://twitter.com/OpenLibertyIO">Twitter</a>
+                <a href="https://github.com/OpenLiberty">GitHub</a>
+                <a href="https://openliberty.io/">openliberty.io</a>
+            </div>
+            <p id="footer_text">an IBM open source project</p>
+            <p id="footer_copyright">&copy;Copyright IBM Corp. 2022, 2023</p>
+        </footer>
+        <script>
+    const webSocket = new WebSocket('ws://localhost:9081/systemLoad')
+
+    webSocket.onopen = function (event) {
+        console.log(event);
+    };
+
+    webSocket.onmessage = function (event) {
+        var data = JSON.parse(event.data);
+        var tableRow = document.createElement('tr');
+        var loadAverage = data.loadAverage == null ? '-' : data.loadAverage.toFixed(2);
+        var memoryUsage = data.memoryUsage == null ? '-' : data.memoryUsage.toFixed(2);
+        tableRow.innerHTML = '<td>' + data.time + '</td>' +
+                             '<td>' + loadAverage + '</td>' +
+                             '<td>' + memoryUsage + '</td>';
+        document.getElementById('systemLoadsTableBody').appendChild(tableRow);
+    };
+    
+    webSocket.onerror = function (event) {
+        console.log(event);
+    };
+        </script>
+    </body>
+</html>

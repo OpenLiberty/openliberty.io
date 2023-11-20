@@ -1,0 +1,322 @@
+/*******************************************************************************
+ * Copyright (c) 2017,2021 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+ .cbDirectionText {
+    font-weight: 500;
+  }
+
+  .circuitBreakerPlayground {
+    display: flex;
+    align-items: flex-start;
+
+    @media (max-width: 1170px) {
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+  }
+
+  .circuitBreakerStateButtons {
+    width: 170px;
+
+    @media (min-width: 1170px) {
+      margin-left: 15px;
+    }
+  }
+
+  .circuitBreakerInfo {
+    margin: 10px 0 1px 0;
+
+    @media (max-width: 1170px) {
+      margin-left: 15px;
+      margin-bottom: 10px;
+    }
+  }
+
+  .circuitBreakerRollingWindowDiv:focus {
+    outline: none;
+  }
+
+  .circuitBreakerConnectionAttempts {
+    overflow: hidden;
+    word-wrap: break-word;
+    max-width: 380px;
+    height: 20px;
+    white-space: nowrap;
+    font-size: 16px;
+
+    @media (max-width: 600px) {
+      max-width: 250px;
+    }
+  }
+
+  .box{
+    width: 11px;
+    height: 11px;
+    display: inline-block;
+    margin-left: 2px;
+    margin-right: 2px;
+  }
+
+  .successBox {
+    background-color: #BED583;
+  }
+
+  .failureBox {
+    background-color: #E3700D;
+  }
+
+  .semiTransparent {
+    opacity: 0.4;
+  }
+
+  .innerPod {
+    height: 300px;
+  }
+
+  .arrow {
+    background-color: transparent;
+    border: none;
+    top: 48%;
+    position: relative;
+    /* margin-top: 145px;
+    margin-bottom: 145px; */
+  }
+
+  .arrow:hover, .arrow:focus {
+    color: blue;
+    outline: 0;
+    border: none;
+    background-color: transparent;
+  }
+
+  .circuitBreakerStates.flexPicDiv {
+    height: 100%;
+
+    @media(max-width: 1170px) {
+      height: 150px;
+      position: relative;
+    }
+  }
+
+  .circuitBreakerStates {
+    background: inherit;
+    height: inherit;
+    position: relative;
+  }
+
+  .circuitBreakerStates img:focus {
+    outline: none;
+  }
+
+  .bankScenarioImg {
+    text-align: center;
+    margin-top: 10px;
+  }
+  .bankScenarioImg > img {
+    width: 100%;
+    min-width: 150px;
+    max-width: 250px !important;  /* Hold this img from getting too large */
+  }
+
+  .cbCenterPod {
+    background: rgba(255,255,255,0.75);
+  }
+
+  .playgroundImg {
+    position: absolute;
+    opacity: 0;
+    top: 8px;
+    transition: opacity 1s ease-in-out;
+
+    @media (max-width: 1170px) {
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .picInPod {
+    max-width: 140px;
+    display: block;
+
+    @media(max-width: 1170px) {
+      max-width: 150px;
+    }
+
+    @media(max-width: 768px) {
+      max-width: 120px;
+    }
+
+  }
+
+  .flexWithPic {
+    display: flex;
+    align-items: center;
+
+    @media (max-width: 1170px) {
+      flex-direction: column;
+    }
+
+    @media (min-width: 1170px) {
+      justify-content: space-around;
+      height: 100%;
+      padding: 5px 15px;
+    }
+  }
+
+  .flexWithPic p, .leftDelayPodText, .circuitBreakerContent {
+    width: 100%;
+  }
+
+  .flexPicDiv {
+    @media (min-width: 1170px) {
+      min-width: 175px;  /* In flex container set min-width, not width */
+    }
+  }
+
+  .centerPicInPod {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translate(-50%);
+    transition: opacity 1s ease-in-out 500ms;
+  }
+
+  .transitionalPicInPod {
+    height: 150px;
+    background: inherit;
+    @media (max-width: 768px) {
+      background: white;
+    }
+  }
+
+  .transitionalPic {
+    position: absolute;
+    top: 8px;
+    background: white;
+    transition: opacity 1s ease-in-out 500ms;
+    left: 50%;
+    transform: translate(-50%);
+  }
+
+  .transitionalInfo {
+    position: absolute;
+    top: 0px;
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+    transition: opacity 1s ease-in-out;
+  }
+
+  .infoShown {
+    opacity: 1;
+  }
+
+  .circuitBreakerButton {
+    margin-top: 5px;
+    padding: 5px 12px;
+    transition: all .2s;
+    border-radius: 100px;
+  }
+
+  .circuitBreakerSuccessRequest {
+    background-color: #96BC32;
+  }
+
+  .circuitBreakerSuccessRequest:hover, .circuitBreakerSuccessRequest:active, .circuitBreakerSuccessRequest:focus {
+    background-color: #C7EE63;
+    outline: none;
+  }
+
+  .circuitBreakerFailureRequest {
+    background-color: #E3700D;
+  }
+
+  .circuitBreakerFailureRequest:hover, .circuitBreakerFailureRequest:active, .circuitBreakerFailureRequest:focus {
+    background-color: #F69144;
+    outline: none;
+  }
+
+  .circuitBreakerReset {
+      background-color: #BEBEBE;
+  }
+
+  .circuitBreakerReset:hover, .circuitBreakerReset:active, .circuitBreakerReset:focus {
+      background-color: #DDDDDD;
+  }
+
+  .delayCounter {
+    font-weight: 500;
+    color: #5A6872;
+  }
+
+  .delayCounterSuccessThreshold {
+    display: inline-block;
+    width: 100px;
+  }
+
+  .successCountDiv {
+    display: inline-block;
+  }
+
+  .successCount {
+    position: relative;
+    display: inline;
+    left: 30px;
+  }
+
+  .backgroundConcepts {
+    float: right;
+  }
+
+  .backgroundConcepts img {
+    max-width: 140px;
+    margin: 20px 20px 20px 10px;
+
+    @media(max-width: 1170px) {
+      max-width: 150px;
+    }
+
+    @media(max-width: 768px) {
+      max-width: 120px;
+    }
+  }
+
+  .delayCountdownText {
+    font-size: 14px;
+    white-space: nowrap;
+
+    @media (min-width: 1170px) {
+      margin: 5px 15px;
+      display: inline-block;
+      width: 100px;
+    }
+    @media (max-width: 1170px) {
+      margin-bottom: 10px;
+    }
+  }
+
+  .delayCountdownColor {
+    color: red;
+  }
+
+  #ConfigureFailureThresholdParams-pod-0 > div.podContainer,
+  #ConfigureDelayParams-pod-0 > div.podContainer,
+  #ConfigureSuccessThresholdParams-pod-0 > div.podContainer,
+  #ConfigurefailOnskipOn-pod-0 > div.podContainer {
+    @media (max-width: 1170px) {
+      position: relative;
+      height: 450px;
+    }
+
+    @media (max-width: 600px) {
+      overflow-y: scroll;
+    }
+  }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2018, 2021 IBM Corporation and others.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+
+  Contributors:
+      IBM Corporation - initial API and implementation
+-->
+<html lang="en">
+
+<head>
+    <title>The system is down</title>
+    <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
+    <link rel="stylesheet" href="/guides/iguides-common/css/interactive-guides/bankApp.css">
+    <link rel="stylesheet" href="/guides/iguide-circuit-breaker/css/circuit-breaker/checkBalance.css">
+    <script type="text/javascript">
+        var script = document.createElement('script');
+
+        script.onload = function() {
+            var guideRootDir = "/guides/iguide-circuit-breaker/js/nls/circuit-breaker/"
+            retrieveExternalizedStrings(guideRootDir);
+        };
+        script.src = '/guides/iguides-common/js/interactive-guides/externalized-string.js';
+        document.getElementsByTagName('head')[0].appendChild(script);
+    </script>
+</head>
+
+<body>
+    <div class="bankHeadingBlockFlexContainer">
+        <div class="bankHeading">Global eBank</div>
+        <span>
+            <img src="/guides/iguides-common/img/interactive-guides/bank-info.svg" data-externalizedAlt="ABOUT">
+            <img src="/guides/iguides-common/img/interactive-guides/bank-user.svg" data-externalizedAlt="USER">
+        </span>
+    </div>
+    <main>
+        <div id="fail">
+            <div class="flexWarningContainer">
+                <img id="errorImg" style="vertical-align:middle" src="/guides/iguide-circuit-breaker/html/images/check-balance-down.svg" data-externalizedAlt="SYSTEM_DOWN">
+            </div>
+        </div>
+    </main>
+</body>
+</html>

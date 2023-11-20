@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Testing reactive Java microservices using MicroShed Testing framework
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples on how to test asynchronous Java microservices developed with Eclipse MicroProfile Reactive Messaging API using MicroShed Testing, a Testcontainers-based testing framework, and Apache Kafka client API.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/reactive-service-testing">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Testing reactive Java microservices using MicroShed Testing framework" />
+  <meta name="twitter:description" content="A getting started tutorial with examples on how to test asynchronous Java microservices developed with Eclipse MicroProfile Reactive Messaging API using MicroShed Testing, a Testcontainers-based testing framework, and Apache Kafka client API." />
+
+  <meta property='og:title' content="Testing reactive Java microservices using MicroShed Testing framework" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples on how to test asynchronous Java microservices developed with Eclipse MicroProfile Reactive Messaging API using MicroShed Testing, a Testcontainers-based testing framework, and Apache Kafka client API." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/reactive-service-testing" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li>
+<a href="#testing-with-the-kafka-consumer-client">Testing with the Kafka consumer client</a>
+<ul class="sectlevel2">
+<li><a href="#configuring-your-containers">Configuring your containers</a></li>
+<li><a href="#testing-your-containers">Testing your containers</a></li>
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li>
+<a href="#testing-with-the-kafka-producer-client">Testing with the Kafka producer client</a>
+<ul class="sectlevel2">
+<li><a href="#configuring-your-containers-2">Configuring your containers</a></li>
+<li><a href="#testing-your-containers-2">Testing your containers</a></li>
+<li><a href="#running-the-tests-2">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#related-links">Related Links</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Testing reactive Java microservices</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">20 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/reactive-service-testing.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to test reactive Java microservices in true-to-production environments using MicroShed Testing.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to write integration tests for reactive Java microservices and to run the tests in true-to-production environments by using containers with <a href="https://microshed.org/microshed-testing/" target="_blank" rel="noopener noreferrer">MicroShed Testing</a>. MicroShed Testing tests your containerized application from outside the container so that you are testing the exact same image that runs in production. The reactive application in this guide sends and receives messages between services by using an external message broker, <a href="https://kafka.apache.org/" target="_blank" rel="noopener noreferrer">Apache Kafka</a>. Using an external message broker enables asynchronous communications between services so that requests are non-blocking and decoupled from responses. You can learn more about reactive Java services that use an external message broker to manage communications in the <a href="https://openliberty.io/guides/microprofile-reactive-messaging.html" target="_blank" rel="noopener">Creating reactive Java microservices</a> guide.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/reactive-service-testing/reactive-messaging-system-inventory.png" alt="Reactive system inventory application">
+</div>
+</div>
+<div class="paragraph">
+<p><strong>True-to-production integration testing with MicroShed Testing</strong></p>
+</div>
+<div class="paragraph">
+<p>Tests sometimes pass during the development and testing stages of an application’s lifecycle but then fail in production because of differences between your development and production environments. While you can create mock objects and custom setups to minimize differences between environments, it is difficult to mimic a production system for an application that uses an external messaging system. MicroShed Testing addresses this problem by enabling the testing of applications in the same Docker containers that you’ll use in production. As a result, your environment remains the same throughout the application’s lifecycle – from development, through testing, and into production. You can learn more about MicroShed Testing in the <a href="https://openliberty.io/guides/microshed-testing.html" target="_blank" rel="noopener">Testing a MicroProfile or Jakarta EE application</a> guide.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You need to have Docker installed. For installation instructions, refer to the official <a href="https://docs.docker.com/get-docker/" target="_blank" rel="noopener noreferrer">Docker documentation</a>. You will build and run the microservices in Docker containers. An installation of Apache Kafka is provided in another Docker container.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-reactive-service-testing.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-reactive-service-testing.git
+cd guide-reactive-service-testing</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>To try out the tests, go to the <code>finish</code> directory and run the following Maven goal to install the <code>models</code> artifact to the local Maven repository:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd finish
+mvn -pl models install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, navigate to the <code>finish/system</code> directory and run the following Maven goal to build the <code>system</code> service and run the integration tests on an Open Liberty server in a container:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd system
+mvn verify</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code> Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 33.001 s - in it.io.openliberty.guides.system.SystemServiceIT
+
+ Results:
+
+ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+
+ --- maven-failsafe-plugin:2.22.2:verify (verify) @ system ---
+ ------------------------------------------------------------------------
+ BUILD SUCCESS
+ ------------------------------------------------------------------------
+ Total time:  52.817 s
+ Finished at: 2020-03-13T16:28:55-04:00
+ ------------------------------------------------------------------------</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command might take some time to run the first time because the dependencies and the Docker image for Open Liberty must download. If you run the same command again, it will be faster.</p>
+</div>
+<div class="paragraph">
+<p>You can also try out the <code>inventory</code> integration tests by repeating the same commands in the <code>finish/inventory</code> directory.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-with-the-kafka-consumer-client">Testing with the Kafka consumer client</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>system/pom.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="XML"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version='1.0' encoding='utf-8'?&gt;</span>
+<span class="line-numbers">  2</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span>
+<span class="line-numbers">  3</span>    <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span>
+<span class="line-numbers">  4</span>    <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  5</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  6</span>
+<span class="line-numbers">  7</span>    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">  8</span>    <span class="tag">&lt;artifactId&gt;</span>system<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">  9</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 10</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers"> 11</span>
+<span class="line-numbers"> 12</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 13</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>1.8<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 14</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>1.8<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 15</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 16</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 17</span>        <span class="comment">&lt;!-- Liberty configuration --&gt;</span>
+<span class="line-numbers"> 18</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9083<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers"> 19</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9446<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers"> 20</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 21</span>
+<span class="line-numbers"> 22</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 23</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers"> 24</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 25</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 26</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 27</span>            <span class="tag">&lt;version&gt;</span>8.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 28</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 29</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 30</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 31</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 32</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 33</span>            <span class="tag">&lt;version&gt;</span>3.3<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 34</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 35</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 36</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 37</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 38</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile.reactive.messaging<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 39</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile-reactive-messaging-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 40</span>            <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 41</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 42</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 43</span>
+<span class="line-numbers"> 44</span>        <span class="comment">&lt;!-- Required dependencies --&gt;</span>
+<span class="line-numbers"> 45</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 46</span>            <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 47</span>            <span class="tag">&lt;artifactId&gt;</span>models<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 48</span>            <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 49</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 50</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 51</span>            <span class="tag">&lt;groupId&gt;</span>org.apache.kafka<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 52</span>            <span class="tag">&lt;artifactId&gt;</span>kafka-clients<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 53</span>            <span class="tag">&lt;version&gt;</span>2.8.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 54</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 55</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 56</span>            <span class="tag">&lt;groupId&gt;</span>io.reactivex.rxjava3<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 57</span>            <span class="tag">&lt;artifactId&gt;</span>rxjava<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 58</span>            <span class="tag">&lt;version&gt;</span>3.1.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 59</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 60</span>
+<span class="line-numbers"> 61</span>        <span class="comment">&lt;!-- For tests --&gt;</span>
+<span class="line-numbers"> 62</span>        <span class="comment">&lt;!-- tag::dependencies[] --&gt;</span>
+<span class="line-numbers"> 63</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 64</span>            <span class="tag">&lt;groupId&gt;</span>org.microshed<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 65</span>            <span class="tag">&lt;artifactId&gt;</span>microshed-testing-liberty<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 66</span>            <span class="tag">&lt;version&gt;</span>0.9.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 67</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 68</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 69</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 70</span>            <span class="tag">&lt;groupId&gt;</span>org.testcontainers<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 71</span>            <span class="tag">&lt;artifactId&gt;</span>kafka<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 72</span>            <span class="tag">&lt;version&gt;</span>1.16.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 73</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 74</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 75</span>        <span class="comment">&lt;!-- end::dependencies[] --&gt;</span>
+<span class="line-numbers"> 76</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 77</span>            <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 78</span>            <span class="tag">&lt;artifactId&gt;</span>junit-jupiter<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 79</span>            <span class="tag">&lt;version&gt;</span>5.7.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 80</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 81</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 82</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers"> 83</span>
+<span class="line-numbers"> 84</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers"> 85</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers"> 86</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers"> 87</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 88</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 89</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 90</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 91</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 92</span>                    <span class="tag">&lt;packagingExcludes&gt;</span>pom.xml<span class="tag">&lt;/packagingExcludes&gt;</span>
+<span class="line-numbers"> 93</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers"> 94</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 95</span>
+<span class="line-numbers"> 96</span>            <span class="comment">&lt;!-- Liberty plugin --&gt;</span>
+<span class="line-numbers"> 97</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 98</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 99</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">100</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">101</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">102</span>
+<span class="line-numbers">103</span>            <span class="comment">&lt;!-- Plugin to run unit tests --&gt;</span>
+<span class="line-numbers">104</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">105</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">106</span>                <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">107</span>                <span class="tag">&lt;version&gt;</span>2.22.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">108</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">109</span>
+<span class="line-numbers">110</span>            <span class="comment">&lt;!-- Plugin to run integration tests --&gt;</span>
+<span class="line-numbers">111</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">112</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">113</span>                <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">114</span>                <span class="tag">&lt;version&gt;</span>2.22.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">115</span>                <span class="tag">&lt;executions&gt;</span>
+<span class="line-numbers">116</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers">117</span>                        <span class="tag">&lt;id&gt;</span>integration-test<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers">118</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers">119</span>                            <span class="tag">&lt;goal&gt;</span>integration-test<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers">120</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers">121</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">122</span>                            <span class="tag">&lt;trimStackTrace&gt;</span>false<span class="tag">&lt;/trimStackTrace&gt;</span>
+<span class="line-numbers">123</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">124</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers">125</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers">126</span>                        <span class="tag">&lt;id&gt;</span>verify<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers">127</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers">128</span>                            <span class="tag">&lt;goal&gt;</span>verify<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers">129</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers">130</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers">131</span>                <span class="tag">&lt;/executions&gt;</span>
+<span class="line-numbers">132</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">133</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">134</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">135</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>inventory/pom.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="XML"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version='1.0' encoding='utf-8'?&gt;</span>
+<span class="line-numbers">  2</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  3</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  4</span>
+<span class="line-numbers">  5</span>    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">  6</span>    <span class="tag">&lt;artifactId&gt;</span>inventory<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">  7</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">  8</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers">  9</span>
+<span class="line-numbers"> 10</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 11</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>1.8<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 12</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>1.8<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 13</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 14</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 15</span>        <span class="comment">&lt;!-- Liberty configuration --&gt;</span>
+<span class="line-numbers"> 16</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9085<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers"> 17</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9448<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers"> 18</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 19</span>    
+<span class="line-numbers"> 20</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 21</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers"> 22</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 23</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 24</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 25</span>            <span class="tag">&lt;version&gt;</span>8.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 26</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 27</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 28</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 29</span>            <span class="tag">&lt;groupId&gt;</span>javax.enterprise.concurrent<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 30</span>            <span class="tag">&lt;artifactId&gt;</span>javax.enterprise.concurrent-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 31</span>            <span class="tag">&lt;version&gt;</span>1.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 32</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 33</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 34</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 35</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 36</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 37</span>            <span class="tag">&lt;version&gt;</span>3.3<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 38</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 39</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 40</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 41</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 42</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile.reactive.messaging<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 43</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile-reactive-messaging-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 44</span>            <span class="tag">&lt;version&gt;</span>1.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 45</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 46</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 47</span>        
+<span class="line-numbers"> 48</span>        <span class="comment">&lt;!--  Required dependencies --&gt;</span>
+<span class="line-numbers"> 49</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 50</span>           <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 51</span>           <span class="tag">&lt;artifactId&gt;</span>models<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 52</span>           <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 53</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 54</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 55</span>            <span class="tag">&lt;groupId&gt;</span>org.apache.kafka<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 56</span>            <span class="tag">&lt;artifactId&gt;</span>kafka-clients<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 57</span>            <span class="tag">&lt;version&gt;</span>2.8.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 58</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 59</span>
+<span class="line-numbers"> 60</span>        <span class="comment">&lt;!-- For tests --&gt;</span>
+<span class="line-numbers"> 61</span>        <span class="comment">&lt;!-- tag::dependencies[] --&gt;</span>
+<span class="line-numbers"> 62</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 63</span>            <span class="tag">&lt;groupId&gt;</span>org.microshed<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 64</span>            <span class="tag">&lt;artifactId&gt;</span>microshed-testing-liberty<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 65</span>            <span class="tag">&lt;version&gt;</span>0.9.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 66</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 67</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 68</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 69</span>            <span class="tag">&lt;groupId&gt;</span>org.testcontainers<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 70</span>            <span class="tag">&lt;artifactId&gt;</span>kafka<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 71</span>            <span class="tag">&lt;version&gt;</span>1.16.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 72</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 73</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 74</span>        <span class="comment">&lt;!-- end::dependencies[] --&gt;</span>
+<span class="line-numbers"> 75</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 76</span>            <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 77</span>            <span class="tag">&lt;artifactId&gt;</span>junit-jupiter<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 78</span>            <span class="tag">&lt;version&gt;</span>5.7.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 79</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 80</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 81</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers"> 82</span>
+<span class="line-numbers"> 83</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers"> 84</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers"> 85</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers"> 86</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 87</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 88</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 89</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 90</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 91</span>                    <span class="tag">&lt;packagingExcludes&gt;</span>pom.xml<span class="tag">&lt;/packagingExcludes&gt;</span>
+<span class="line-numbers"> 92</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers"> 93</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 94</span>
+<span class="line-numbers"> 95</span>            <span class="comment">&lt;!-- Liberty plugin --&gt;</span>
+<span class="line-numbers"> 96</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 97</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 98</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 99</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">100</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">101</span>
+<span class="line-numbers">102</span>            <span class="comment">&lt;!-- Plugin to run unit tests --&gt;</span>
+<span class="line-numbers">103</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">104</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">105</span>                <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">106</span>                <span class="tag">&lt;version&gt;</span>2.22.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">107</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">108</span>
+<span class="line-numbers">109</span>            <span class="comment">&lt;!-- Plugin to run integration tests --&gt;</span>
+<span class="line-numbers">110</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">111</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">112</span>                <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">113</span>                <span class="tag">&lt;version&gt;</span>2.22.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">114</span>                <span class="tag">&lt;executions&gt;</span>
+<span class="line-numbers">115</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers">116</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers">117</span>                            <span class="tag">&lt;goal&gt;</span>integration-test<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers">118</span>                            <span class="tag">&lt;goal&gt;</span>verify<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers">119</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers">120</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers">121</span>                <span class="tag">&lt;/executions&gt;</span>
+<span class="line-numbers">122</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">123</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">124</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">125</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph">
+<p>The example reactive application consists of the <code>system</code> and <code>inventory</code> microservices. The <code>system</code> microservice produces messages to the Kafka message broker, and the <code>inventory</code> microservice consumes messages from the Kafka message broker. You will write integration tests to see how you can use the Kafka consumer and producer client APIs to test each service. MicroShed Testing and Kafka Testcontainers have already been included as required test dependencies in your Maven <code>pom.xml</code> files for the <code class="hotspot=dependencies file=0">system</code> and <code class="hotspot=dependencies file=1">inventory</code> services.</p>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains three directories: the <code>system</code> service directory, the <code>inventory</code> service directory, and the <code>models</code> directory. The <code>models</code> directory contains the model class that defines the structure of the system load data that is used in the application. Run the following Maven goal to install the packaged <code>models</code> artifact to the local Maven repository so it can be used later by the <code>system</code> and <code>inventory</code> services:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn -pl models install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With Open Liberty dev mode, you can use MicroShed Testing to run tests on an already running Open Liberty server. Navigate to the <code>start/system</code> directory.</p>
+</div>
+<div class="paragraph command">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following goal to start Open Liberty in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>Now you can add your test files.</p>
+</div>
+<div class="paragraph">
+<p>The running <code>system</code> service searches for a Kafka topic to push its messages to. Because there are not yet any running Kafka services, the <code>system</code> service throws errors. Later in the guide, you will write and run tests that start a Kafka Testcontainer that can communicate with the <code>system</code> service. This will resolve the errors that you see now.</p>
+</div>
+<div class="sect2">
+<h3 id="configuring-your-containers">Configuring your containers</h3>
+<div class="paragraph">
+<p>Create a class to externalize your container configurations.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>AppContainerConfig</code> class.</mark>
+<code>system/src/test/java/it/io/openliberty/guides/system/AppContainerConfig.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>AppContainerConfig.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2020, 2021 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.system</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.time.Duration</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">org.microshed.testing.SharedContainerConfiguration</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">org.microshed.testing.testcontainers.ApplicationContainer</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">org.testcontainers.containers.KafkaContainer</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">org.testcontainers.containers.Network</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.testcontainers.junit.jupiter.Container</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="comment">// tag::AppContainerConfig[]</span>
+<span class="line-numbers">24</span><span class="directive">public</span> <span class="type">class</span> <span class="class">AppContainerConfig</span> <span class="directive">implements</span> SharedContainerConfiguration {
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span>    <span class="directive">private</span> <span class="directive">static</span> Network network = Network.newNetwork();
+<span class="line-numbers">27</span>
+<span class="line-numbers">28</span>    <span class="comment">// tag::container[]</span>
+<span class="line-numbers">29</span>    <span class="comment">// tag::kafka[]</span>
+<span class="line-numbers">30</span>    <span class="annotation">@Container</span>
+<span class="line-numbers">31</span>    <span class="comment">// end::container[]</span>
+<span class="line-numbers">32</span>    <span class="directive">public</span> <span class="directive">static</span> KafkaContainer kafka = <span class="keyword">new</span> KafkaContainer()
+<span class="line-numbers">33</span>                    .withNetwork(network);
+<span class="line-numbers">34</span>    <span class="comment">// end::kafka[]</span>
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span>    <span class="comment">// tag::container2[]</span>
+<span class="line-numbers">37</span>    <span class="comment">// tag::system[]</span>
+<span class="line-numbers">38</span>    <span class="annotation">@Container</span>
+<span class="line-numbers">39</span>    <span class="comment">// end::container2[]</span>
+<span class="line-numbers">40</span>    <span class="directive">public</span> <span class="directive">static</span> ApplicationContainer system = <span class="keyword">new</span> ApplicationContainer()
+<span class="line-numbers">41</span>                    .withAppContextRoot(<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">42</span>                    .withExposedPorts(<span class="integer">9083</span>)
+<span class="line-numbers">43</span>                    .withReadinessPath(<span class="string"><span class="delimiter">"</span><span class="content">/health/ready</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">44</span>                    .withNetwork(network)
+<span class="line-numbers">45</span>                    .withStartupTimeout(<span class="predefined-type">Duration</span>.ofMinutes(<span class="integer">3</span>))
+<span class="line-numbers">46</span>                    <span class="comment">// tag::dependsOn[]</span>
+<span class="line-numbers">47</span>                    .dependsOn(kafka);
+<span class="line-numbers">48</span>                    <span class="comment">// end::dependsOn[]</span>
+<span class="line-numbers">49</span>    <span class="comment">// end::system[]</span>
+<span class="line-numbers">50</span>}
+<span class="line-numbers">51</span><span class="comment">// end::AppContainerConfig[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=AppContainerConfig file=0">AppContainerConfig</code> class externalizes test container setup and configuration, so you can use the same application containers across multiple tests.The <code class="hotspot=container hotspot=container2 file=0">@Container</code> annotation denotes an application container that is started up and used in the tests.</p>
+</div>
+<div class="paragraph">
+<p>Two containers are used for testing the <code>system</code> service: the <code class="hotspot=system file=0">system</code> container, which you built, and the <code class="hotspot=kafka file=0">kafka</code> container, which receives messages from the <code>system</code> service.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=dependsOn file=0">dependsOn()</code> method specifies that the <code>system</code> service container must wait until the <code>kafka</code> container is ready before it can start.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="testing-your-containers">Testing your containers</h3>
+<div class="paragraph">
+<p>Now you can start writing the test that uses the configured containers.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>SystemServiceIT</code> class.</mark>
+<code>system/src/test/java/it/io/openliberty/guides/system/SystemServiceIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemServiceIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2020, 2021 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.system</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.Assert.assertNotNull</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">java.time.Duration</span>;
+<span class="line-numbers">18</span>
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.consumer.ConsumerConfig</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.consumer.ConsumerRecord</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.consumer.ConsumerRecords</span>;
+<span class="line-numbers">22</span><span class="comment">// tag::KafkaConsumer[]</span>
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.consumer.KafkaConsumer</span>;
+<span class="line-numbers">24</span><span class="comment">// end::KafkaConsumer[]</span>
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">org.microshed.testing.SharedContainerConfig</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jupiter.MicroShedTest</span>;
+<span class="line-numbers">28</span><span class="keyword">import</span> <span class="include">org.microshed.testing.kafka.KafkaConsumerClient</span>;
+<span class="line-numbers">29</span>
+<span class="line-numbers">30</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.models.SystemLoad</span>;
+<span class="line-numbers">31</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.models.SystemLoad.SystemLoadDeserializer</span>;
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span><span class="annotation">@MicroShedTest</span>
+<span class="line-numbers">34</span><span class="annotation">@SharedContainerConfig</span>(AppContainerConfig.class)
+<span class="line-numbers">35</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemServiceIT</span> {
+<span class="line-numbers">36</span>
+<span class="line-numbers">37</span>    <span class="comment">// tag::KafkaConsumer2[]</span>
+<span class="line-numbers">38</span>    <span class="comment">// tag::KafkaConsumerClient[]</span>
+<span class="line-numbers">39</span>    <span class="comment">// tag::valueDeserializer[]</span>
+<span class="line-numbers">40</span>    <span class="annotation">@KafkaConsumerClient</span>(valueDeserializer = SystemLoadDeserializer.class,
+<span class="line-numbers">41</span>    <span class="comment">// end::valueDeserializer[]</span>
+<span class="line-numbers">42</span>                         groupId = <span class="string"><span class="delimiter">"</span><span class="content">system-load-status</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">43</span>                         <span class="comment">// tag::systemLoadTopic[]</span>
+<span class="line-numbers">44</span>                         topics = <span class="string"><span class="delimiter">"</span><span class="content">system.load</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">45</span>                         <span class="comment">// end::systemLoadTopic[]</span>
+<span class="line-numbers">46</span>                         properties = ConsumerConfig.AUTO_OFFSET_RESET_CONFIG
+<span class="line-numbers">47</span>                                      + <span class="string"><span class="delimiter">"</span><span class="content">=earliest</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">48</span>    <span class="comment">// end::KafkaConsumerClient[]</span>
+<span class="line-numbers">49</span>    <span class="directive">public</span> <span class="directive">static</span> KafkaConsumer&lt;<span class="predefined-type">String</span>, SystemLoad&gt; consumer;
+<span class="line-numbers">50</span>    <span class="comment">// end::KafkaConsumer2[]</span>
+<span class="line-numbers">51</span>
+<span class="line-numbers">52</span>    <span class="comment">// tag::testCpuStatus[]</span>
+<span class="line-numbers">53</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">54</span>    <span class="directive">public</span> <span class="type">void</span> testCpuStatus() {
+<span class="line-numbers">55</span>        <span class="comment">// tag::poll[]</span>
+<span class="line-numbers">56</span>        ConsumerRecords&lt;<span class="predefined-type">String</span>, SystemLoad&gt; records =
+<span class="line-numbers">57</span>                consumer.poll(<span class="predefined-type">Duration</span>.ofMillis(<span class="integer">30</span> * <span class="integer">1000</span>));
+<span class="line-numbers">58</span>        <span class="comment">// end::poll[]</span>
+<span class="line-numbers">59</span>        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">"</span><span class="content">Polled </span><span class="delimiter">"</span></span> + records.count() + <span class="string"><span class="delimiter">"</span><span class="content"> records from Kafka:</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">60</span>
+<span class="line-numbers">61</span>        <span class="keyword">for</span> (ConsumerRecord&lt;<span class="predefined-type">String</span>, SystemLoad&gt; record : records) {
+<span class="line-numbers">62</span>            SystemLoad sl = record.value();
+<span class="line-numbers">63</span>            <span class="predefined-type">System</span>.out.println(sl);
+<span class="line-numbers">64</span>            <span class="comment">// tag::assert[]</span>
+<span class="line-numbers">65</span>            assertNotNull(sl.hostname);
+<span class="line-numbers">66</span>            assertNotNull(sl.loadAverage);
+<span class="line-numbers">67</span>            <span class="comment">// end::assert[]</span>
+<span class="line-numbers">68</span>        }
+<span class="line-numbers">69</span>
+<span class="line-numbers">70</span>        consumer.commitAsync();
+<span class="line-numbers">71</span>    }
+<span class="line-numbers">72</span>    <span class="comment">// end::testCpuStatus[]</span>
+<span class="line-numbers">73</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemLoad.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2020 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.models</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.Objects</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">javax.json.bind.Jsonb</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">javax.json.bind.JsonbBuilder</span>;
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">org.apache.kafka.common.serialization.Deserializer</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.apache.kafka.common.serialization.Serializer</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemLoad</span> {
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> Jsonb jsonb = JsonbBuilder.create();
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span>    <span class="directive">public</span> <span class="predefined-type">String</span> hostname;
+<span class="line-numbers">28</span>    <span class="directive">public</span> <span class="predefined-type">Double</span> loadAverage;
+<span class="line-numbers">29</span>        
+<span class="line-numbers">30</span>    <span class="directive">public</span> SystemLoad(<span class="predefined-type">String</span> hostname, <span class="predefined-type">Double</span> cpuLoadAvg) {
+<span class="line-numbers">31</span>        <span class="local-variable">this</span>.hostname = hostname;
+<span class="line-numbers">32</span>        <span class="local-variable">this</span>.loadAverage = cpuLoadAvg;
+<span class="line-numbers">33</span>    }
+<span class="line-numbers">34</span>
+<span class="line-numbers">35</span>    <span class="directive">public</span> SystemLoad() {
+<span class="line-numbers">36</span>    }
+<span class="line-numbers">37</span>
+<span class="line-numbers">38</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">39</span>    <span class="directive">public</span> <span class="type">boolean</span> equals(<span class="predefined-type">Object</span> o) {
+<span class="line-numbers">40</span>        <span class="keyword">if</span> (<span class="local-variable">this</span> == o) <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers">41</span>        <span class="keyword">if</span> (!(o <span class="keyword">instanceof</span> SystemLoad)) <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">42</span>        SystemLoad sl = (SystemLoad) o;
+<span class="line-numbers">43</span>        <span class="keyword">return</span> Objects.equals(hostname, sl.hostname)
+<span class="line-numbers">44</span>                &amp;&amp; Objects.equals(loadAverage, sl.loadAverage);
+<span class="line-numbers">45</span>    }
+<span class="line-numbers">46</span>
+<span class="line-numbers">47</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">48</span>    <span class="directive">public</span> <span class="type">int</span> hashCode() {
+<span class="line-numbers">49</span>        <span class="keyword">return</span> Objects.hash(hostname, loadAverage);
+<span class="line-numbers">50</span>    }
+<span class="line-numbers">51</span>    
+<span class="line-numbers">52</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">53</span>    <span class="directive">public</span> <span class="predefined-type">String</span> toString() {
+<span class="line-numbers">54</span>        <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">CpuLoadAverage: </span><span class="delimiter">"</span></span> + jsonb.toJson(<span class="local-variable">this</span>);
+<span class="line-numbers">55</span>    }
+<span class="line-numbers">56</span>
+<span class="line-numbers">57</span>    <span class="comment">// tag::SystemLoadSerializer[]</span>
+<span class="line-numbers">58</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">class</span> <span class="class">SystemLoadSerializer</span> <span class="directive">implements</span> Serializer&lt;<span class="predefined-type">Object</span>&gt; {
+<span class="line-numbers">59</span>        <span class="annotation">@Override</span>
+<span class="line-numbers">60</span>        <span class="directive">public</span> <span class="type">byte</span><span class="type">[]</span> serialize(<span class="predefined-type">String</span> topic, <span class="predefined-type">Object</span> data) {
+<span class="line-numbers">61</span>          <span class="keyword">return</span> jsonb.toJson(data).getBytes();
+<span class="line-numbers">62</span>        }
+<span class="line-numbers">63</span>    }
+<span class="line-numbers">64</span>    <span class="comment">// end::SystemLoadSerializer[]</span>
+<span class="line-numbers">65</span>
+<span class="line-numbers">66</span>    <span class="comment">// tag::SystemLoadDeserializer[]</span>
+<span class="line-numbers">67</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">class</span> <span class="class">SystemLoadDeserializer</span> <span class="directive">implements</span> Deserializer&lt;SystemLoad&gt; {
+<span class="line-numbers">68</span>        <span class="annotation">@Override</span>
+<span class="line-numbers">69</span>        <span class="directive">public</span> SystemLoad deserialize(<span class="predefined-type">String</span> topic, <span class="type">byte</span><span class="type">[]</span> data) {
+<span class="line-numbers">70</span>            <span class="keyword">if</span> (data == <span class="predefined-constant">null</span>)
+<span class="line-numbers">71</span>                <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+<span class="line-numbers">72</span>            <span class="keyword">return</span> jsonb.fromJson(<span class="keyword">new</span> <span class="predefined-type">String</span>(data), SystemLoad.class);
+<span class="line-numbers">73</span>        }
+<span class="line-numbers">74</span>    }
+<span class="line-numbers">75</span>    <span class="comment">// end::SystemLoadDeserializer[]</span>
+<span class="line-numbers">76</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemService.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2020 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.system</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.lang.management.ManagementFactory</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">java.lang.management.OperatingSystemMXBean</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">java.net.InetAddress</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">java.net.UnknownHostException</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">java.util.concurrent.TimeUnit</span>;
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">javax.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.reactive.messaging.Outgoing</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.reactivestreams.Publisher</span>;
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.models.SystemLoad</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">io.reactivex.rxjava3.core.Flowable</span>;
+<span class="line-numbers">28</span>
+<span class="line-numbers">29</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">30</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemService</span> {
+<span class="line-numbers">31</span>
+<span class="line-numbers">32</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">OperatingSystemMXBean</span> osMean = 
+<span class="line-numbers">33</span>            <span class="predefined-type">ManagementFactory</span>.getOperatingSystemMXBean();
+<span class="line-numbers">34</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> hostname = <span class="predefined-constant">null</span>;
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> getHostname() {
+<span class="line-numbers">37</span>        <span class="keyword">if</span> (hostname == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">38</span>            <span class="keyword">try</span> {
+<span class="line-numbers">39</span>                <span class="keyword">return</span> <span class="predefined-type">InetAddress</span>.getLocalHost().getHostName();
+<span class="line-numbers">40</span>            } <span class="keyword">catch</span> (<span class="exception">UnknownHostException</span> e) {
+<span class="line-numbers">41</span>                <span class="keyword">return</span> <span class="predefined-type">System</span>.getenv(<span class="string"><span class="delimiter">"</span><span class="content">HOSTNAME</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">42</span>            }
+<span class="line-numbers">43</span>        }
+<span class="line-numbers">44</span>        <span class="keyword">return</span> hostname;
+<span class="line-numbers">45</span>    }
+<span class="line-numbers">46</span>
+<span class="line-numbers">47</span>    <span class="comment">// tag::systemLoad[]</span>
+<span class="line-numbers">48</span>    <span class="comment">// tag::Outgoing[]</span>
+<span class="line-numbers">49</span>    <span class="annotation">@Outgoing</span>(<span class="string"><span class="delimiter">"</span><span class="content">systemLoad</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">50</span>    <span class="comment">// end::Outgoing[]</span>
+<span class="line-numbers">51</span>    <span class="directive">public</span> Publisher&lt;SystemLoad&gt; sendSystemLoad() {
+<span class="line-numbers">52</span>        <span class="keyword">return</span> Flowable.interval(<span class="integer">15</span>, <span class="predefined-type">TimeUnit</span>.SECONDS)
+<span class="line-numbers">53</span>                .map((interval -&gt; <span class="keyword">new</span> SystemLoad(getHostname(),
+<span class="line-numbers">54</span>                        osMean.getSystemLoadAverage())));
+<span class="line-numbers">55</span>    }
+<span class="line-numbers">56</span>    <span class="comment">// end::systemLoad[]</span>
+<span class="line-numbers">57</span>    
+<span class="line-numbers">58</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The test uses the <code class="hotspot=KafkaConsumer hotspot=KafkaConsumer2 file=0">KafkaConsumer</code> client API and is configured by using the <code class="hotspot=KafkaConsumerClient file=0">@KafkaConsumerClient</code> annotation. The consumer client is configured to consume messages from the <code class="hotspot=systemLoadTopic file=0">system.load</code> topic in the <code>kafka</code> container. To learn more about Kafka APIs and how to use them, check out the <a href="https://kafka.apache.org/documentation/#api" target="_blank" rel="noopener noreferrer">official Kafka Documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>To consume messages from a stream, the messages need to be deserialized from bytes. Kafka has its own default deserializer, but a custom deserializer is provided for you. The deserializer is configured to the consumer’s <code class="hotspot=valueDeserializer file=0">valueDeserializer</code> and is implemented in the <code class="hotspot=SystemLoadDeserializer file=1">SystemLoad</code> class.</p>
+</div>
+<div class="paragraph">
+<p>The running <code>system</code> service container produces messages to the <code class="hotspot=systemLoad file=2">systemLoad</code> Kafka topic, as denoted by the <code class="hotspot=Outgoing file=2">@Outgoing</code> annotation. The <code class="hotspot=testCpuStatus file=0">testCpuStatus()</code> test method <code class="hotspot=poll file=0">polls</code> a record from Kafka every 3 seconds until the timeout limit. It then <code class="hotspot=assert file=0">verifies</code> that the record polled matches the expected record.</p>
+</div>
+</div>
+<div class="sect2 command">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Because you started Open Liberty in dev mode, you can run the tests by pressing the <code>enter/return</code> key from the command-line session where you started dev mode.</p>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code> Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 25.674 s - in it.io.openliberty.guides.system.SystemServiceIT
+
+ Results:
+
+ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+ Integration tests finished.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you are finished running tests, stop the Open Liberty server by typing <code>q</code> in the command-line session where you ran the server, and then press the <code>enter/return</code> key.</p>
+</div>
+<div class="paragraph">
+<p>If you aren’t running in dev mode, you can run the tests by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn verify</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code> Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 33.001 s - in it.io.openliberty.guides.system.SystemServiceIT
+
+ Results:
+
+ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+
+ --- maven-failsafe-plugin:2.22.2:verify (verify) @ system ---
+ ------------------------------------------------------------------------
+ BUILD SUCCESS
+ ------------------------------------------------------------------------
+ Total time:  52.817 s
+ Finished at: 2020-03-13T16:28:55-04:00
+ ------------------------------------------------------------------------</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-with-the-kafka-producer-client">Testing with the Kafka producer client</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>inventory</code> service is tested in the same way as the <code>system</code> service. The only difference is that the <code>inventory</code> service consumes messages, which means that tests are written to use the Kafka producer client.</p>
+</div>
+<div class="sect2">
+<h3 id="configuring-your-containers-2">Configuring your containers</h3>
+<div class="paragraph">
+<p>Navigate to the <code>start/inventory</code> directory.</p>
+</div>
+<div class="paragraph">
+<p>The <code>AppContainerConfig</code> class is provided, and it is configured in the same way as it was for the <code>system</code> service. The two containers that are configured for use in the <code>inventory</code> service integration test are the <code>kafka</code> and <code>inventory</code> containers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="testing-your-containers-2">Testing your containers</h3>
+<div class="paragraph">
+<p>As you did with the <code>system</code> service, run Open Liberty in dev mode to listen for file changes:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now you can create your integrated test.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>InventoryServiceIT</code> class.</mark>
+<code>inventory/src/test/java/it/io/openliberty/guides/inventory/InventoryServiceIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryServiceIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2020, 2021 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.inventory</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.math.BigDecimal</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">18</span>
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">javax.ws.rs.core.GenericType</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">javax.ws.rs.core.Response</span>;
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span><span class="comment">// tag::KafkaProducer[]</span>
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.producer.KafkaProducer</span>;
+<span class="line-numbers">24</span><span class="comment">// end::KafkaProducer[]</span>
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.producer.ProducerRecord</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterAll</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Assertions</span>;
+<span class="line-numbers">28</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.MethodOrderer.OrderAnnotation</span>;
+<span class="line-numbers">29</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers">30</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.TestMethodOrder</span>;
+<span class="line-numbers">31</span><span class="keyword">import</span> <span class="include">org.microshed.testing.SharedContainerConfig</span>;
+<span class="line-numbers">32</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jaxrs.RESTClient</span>;
+<span class="line-numbers">33</span><span class="keyword">import</span> <span class="include">org.microshed.testing.jupiter.MicroShedTest</span>;
+<span class="line-numbers">34</span><span class="keyword">import</span> <span class="include">org.microshed.testing.kafka.KafkaProducerClient</span>;
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.InventoryResource</span>;
+<span class="line-numbers">37</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.models.SystemLoad</span>;
+<span class="line-numbers">38</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.models.SystemLoad.SystemLoadSerializer</span>;
+<span class="line-numbers">39</span>
+<span class="line-numbers">40</span><span class="annotation">@MicroShedTest</span>
+<span class="line-numbers">41</span><span class="annotation">@SharedContainerConfig</span>(AppContainerConfig.class)
+<span class="line-numbers">42</span><span class="annotation">@TestMethodOrder</span>(OrderAnnotation.class)
+<span class="line-numbers">43</span><span class="comment">// tag::InventoryServiceIT[]</span>
+<span class="line-numbers">44</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryServiceIT</span> {
+<span class="line-numbers">45</span>
+<span class="line-numbers">46</span>    <span class="comment">// tag::RESTClient[]</span>
+<span class="line-numbers">47</span>    <span class="annotation">@RESTClient</span>
+<span class="line-numbers">48</span>    <span class="directive">public</span> <span class="directive">static</span> InventoryResource inventoryResource;
+<span class="line-numbers">49</span>    <span class="comment">// end::RESTClient[]</span>
+<span class="line-numbers">50</span>
+<span class="line-numbers">51</span>    <span class="comment">// tag::KafkaProducer2[]</span>
+<span class="line-numbers">52</span>    <span class="comment">// tag::KafkaProducerClient[]</span>
+<span class="line-numbers">53</span>    <span class="annotation">@KafkaProducerClient</span>(valueSerializer = SystemLoadSerializer.class)
+<span class="line-numbers">54</span>    <span class="comment">// end::KafkaProducerClient[]</span>
+<span class="line-numbers">55</span>    <span class="directive">public</span> <span class="directive">static</span> KafkaProducer&lt;<span class="predefined-type">String</span>, SystemLoad&gt; producer;
+<span class="line-numbers">56</span>    <span class="comment">// end::KafkaProducer2[]</span>
+<span class="line-numbers">57</span>
+<span class="line-numbers">58</span>    <span class="annotation">@AfterAll</span>
+<span class="line-numbers">59</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> cleanup() {
+<span class="line-numbers">60</span>        inventoryResource.resetSystems();
+<span class="line-numbers">61</span>    }
+<span class="line-numbers">62</span>
+<span class="line-numbers">63</span>    <span class="comment">// tag::testCpuUsage[]</span>
+<span class="line-numbers">64</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">65</span>    <span class="directive">public</span> <span class="type">void</span> testCpuUsage() <span class="directive">throws</span> <span class="exception">InterruptedException</span> {
+<span class="line-numbers">66</span>        SystemLoad sl = <span class="keyword">new</span> SystemLoad(<span class="string"><span class="delimiter">"</span><span class="content">localhost</span><span class="delimiter">"</span></span>, <span class="float">1.1</span>);
+<span class="line-numbers">67</span>        <span class="comment">// tag::systemLoadTopic[]</span>
+<span class="line-numbers">68</span>        producer.send(<span class="keyword">new</span> ProducerRecord&lt;<span class="predefined-type">String</span>, SystemLoad&gt;(<span class="string"><span class="delimiter">"</span><span class="content">system.load</span><span class="delimiter">"</span></span>, sl));
+<span class="line-numbers">69</span>        <span class="comment">// end::systemLoadTopic[]</span>
+<span class="line-numbers">70</span>        <span class="predefined-type">Thread</span>.sleep(<span class="integer">5000</span>);
+<span class="line-numbers">71</span>        Response response = inventoryResource.getSystems();
+<span class="line-numbers">72</span>        <span class="predefined-type">List</span>&lt;<span class="predefined-type">Properties</span>&gt; systems =
+<span class="line-numbers">73</span>                response.readEntity(<span class="keyword">new</span> GenericType&lt;<span class="predefined-type">List</span>&lt;<span class="predefined-type">Properties</span>&gt;&gt;() { });
+<span class="line-numbers">74</span>        <span class="comment">// tag::assert[]</span>
+<span class="line-numbers">75</span>        Assertions.assertEquals(<span class="integer">200</span>, response.getStatus(),
+<span class="line-numbers">76</span>                <span class="string"><span class="delimiter">"</span><span class="content">Response should be 200</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">77</span>        Assertions.assertEquals(systems.size(), <span class="integer">1</span>);
+<span class="line-numbers">78</span>        <span class="comment">// end::assert[]</span>
+<span class="line-numbers">79</span>        <span class="keyword">for</span> (<span class="predefined-type">Properties</span> system : systems) {
+<span class="line-numbers">80</span>            <span class="comment">// tag::assert2[]</span>
+<span class="line-numbers">81</span>            Assertions.assertEquals(sl.hostname, system.get(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">82</span>                    <span class="string"><span class="delimiter">"</span><span class="content">Hostname doesn't match!</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">83</span>            <span class="comment">// end::assert2[]</span>
+<span class="line-numbers">84</span>            <span class="predefined-type">BigDecimal</span> systemLoad = (<span class="predefined-type">BigDecimal</span>) system.get(<span class="string"><span class="delimiter">"</span><span class="content">systemLoad</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">85</span>            <span class="comment">// tag::assert3[]</span>
+<span class="line-numbers">86</span>            Assertions.assertEquals(sl.loadAverage, systemLoad.doubleValue(),
+<span class="line-numbers">87</span>                    <span class="string"><span class="delimiter">"</span><span class="content">CPU load doesn't match!</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">88</span>            <span class="comment">// end::assert3[]</span>
+<span class="line-numbers">89</span>        }
+<span class="line-numbers">90</span>    }
+<span class="line-numbers">91</span>    <span class="comment">// end::testCpuUsage[]</span>
+<span class="line-numbers">92</span>}
+<span class="line-numbers">93</span><span class="comment">// end::InventoryServiceIT[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemLoad.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2020 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.models</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.Objects</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">javax.json.bind.Jsonb</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">javax.json.bind.JsonbBuilder</span>;
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">org.apache.kafka.common.serialization.Deserializer</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.apache.kafka.common.serialization.Serializer</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemLoad</span> {
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> Jsonb jsonb = JsonbBuilder.create();
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span>    <span class="directive">public</span> <span class="predefined-type">String</span> hostname;
+<span class="line-numbers">28</span>    <span class="directive">public</span> <span class="predefined-type">Double</span> loadAverage;
+<span class="line-numbers">29</span>        
+<span class="line-numbers">30</span>    <span class="directive">public</span> SystemLoad(<span class="predefined-type">String</span> hostname, <span class="predefined-type">Double</span> cpuLoadAvg) {
+<span class="line-numbers">31</span>        <span class="local-variable">this</span>.hostname = hostname;
+<span class="line-numbers">32</span>        <span class="local-variable">this</span>.loadAverage = cpuLoadAvg;
+<span class="line-numbers">33</span>    }
+<span class="line-numbers">34</span>
+<span class="line-numbers">35</span>    <span class="directive">public</span> SystemLoad() {
+<span class="line-numbers">36</span>    }
+<span class="line-numbers">37</span>
+<span class="line-numbers">38</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">39</span>    <span class="directive">public</span> <span class="type">boolean</span> equals(<span class="predefined-type">Object</span> o) {
+<span class="line-numbers">40</span>        <span class="keyword">if</span> (<span class="local-variable">this</span> == o) <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers">41</span>        <span class="keyword">if</span> (!(o <span class="keyword">instanceof</span> SystemLoad)) <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">42</span>        SystemLoad sl = (SystemLoad) o;
+<span class="line-numbers">43</span>        <span class="keyword">return</span> Objects.equals(hostname, sl.hostname)
+<span class="line-numbers">44</span>                &amp;&amp; Objects.equals(loadAverage, sl.loadAverage);
+<span class="line-numbers">45</span>    }
+<span class="line-numbers">46</span>
+<span class="line-numbers">47</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">48</span>    <span class="directive">public</span> <span class="type">int</span> hashCode() {
+<span class="line-numbers">49</span>        <span class="keyword">return</span> Objects.hash(hostname, loadAverage);
+<span class="line-numbers">50</span>    }
+<span class="line-numbers">51</span>    
+<span class="line-numbers">52</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">53</span>    <span class="directive">public</span> <span class="predefined-type">String</span> toString() {
+<span class="line-numbers">54</span>        <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">CpuLoadAverage: </span><span class="delimiter">"</span></span> + jsonb.toJson(<span class="local-variable">this</span>);
+<span class="line-numbers">55</span>    }
+<span class="line-numbers">56</span>
+<span class="line-numbers">57</span>    <span class="comment">// tag::SystemLoadSerializer[]</span>
+<span class="line-numbers">58</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">class</span> <span class="class">SystemLoadSerializer</span> <span class="directive">implements</span> Serializer&lt;<span class="predefined-type">Object</span>&gt; {
+<span class="line-numbers">59</span>        <span class="annotation">@Override</span>
+<span class="line-numbers">60</span>        <span class="directive">public</span> <span class="type">byte</span><span class="type">[]</span> serialize(<span class="predefined-type">String</span> topic, <span class="predefined-type">Object</span> data) {
+<span class="line-numbers">61</span>          <span class="keyword">return</span> jsonb.toJson(data).getBytes();
+<span class="line-numbers">62</span>        }
+<span class="line-numbers">63</span>    }
+<span class="line-numbers">64</span>    <span class="comment">// end::SystemLoadSerializer[]</span>
+<span class="line-numbers">65</span>
+<span class="line-numbers">66</span>    <span class="comment">// tag::SystemLoadDeserializer[]</span>
+<span class="line-numbers">67</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">class</span> <span class="class">SystemLoadDeserializer</span> <span class="directive">implements</span> Deserializer&lt;SystemLoad&gt; {
+<span class="line-numbers">68</span>        <span class="annotation">@Override</span>
+<span class="line-numbers">69</span>        <span class="directive">public</span> SystemLoad deserialize(<span class="predefined-type">String</span> topic, <span class="type">byte</span><span class="type">[]</span> data) {
+<span class="line-numbers">70</span>            <span class="keyword">if</span> (data == <span class="predefined-constant">null</span>)
+<span class="line-numbers">71</span>                <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+<span class="line-numbers">72</span>            <span class="keyword">return</span> jsonb.fromJson(<span class="keyword">new</span> <span class="predefined-type">String</span>(data), SystemLoad.class);
+<span class="line-numbers">73</span>        }
+<span class="line-numbers">74</span>    }
+<span class="line-numbers">75</span>    <span class="comment">// end::SystemLoadDeserializer[]</span>
+<span class="line-numbers">76</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2020 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.ArrayList</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">java.util.Optional</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">java.util.logging.Logger</span>;
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">javax.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">javax.inject.Inject</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">javax.ws.rs.DELETE</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">javax.ws.rs.GET</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">javax.ws.rs.Path</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">javax.ws.rs.PathParam</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">javax.ws.rs.Produces</span>;
+<span class="line-numbers">28</span><span class="keyword">import</span> <span class="include">javax.ws.rs.core.MediaType</span>;
+<span class="line-numbers">29</span><span class="keyword">import</span> <span class="include">javax.ws.rs.core.Response</span>;
+<span class="line-numbers">30</span>
+<span class="line-numbers">31</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.reactive.messaging.Incoming</span>;
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.models.SystemLoad</span>;
+<span class="line-numbers">34</span>
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">37</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/inventory</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">38</span><span class="comment">// tag::InventoryResource[]</span>
+<span class="line-numbers">39</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers">40</span>
+<span class="line-numbers">41</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">Logger</span> logger = <span class="predefined-type">Logger</span>.getLogger(InventoryResource.class.getName());
+<span class="line-numbers">42</span>
+<span class="line-numbers">43</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers">44</span>    <span class="directive">private</span> InventoryManager manager;
+<span class="line-numbers">45</span>    
+<span class="line-numbers">46</span>    <span class="annotation">@GET</span>
+<span class="line-numbers">47</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">48</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">49</span>    <span class="directive">public</span> Response getSystems() {
+<span class="line-numbers">50</span>        <span class="predefined-type">List</span>&lt;<span class="predefined-type">Properties</span>&gt; systems = <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;&gt;(manager.getSystems().values());
+<span class="line-numbers">51</span>        <span class="keyword">return</span> Response
+<span class="line-numbers">52</span>                .status(Response.Status.OK)
+<span class="line-numbers">53</span>                .entity(systems)
+<span class="line-numbers">54</span>                .build();
+<span class="line-numbers">55</span>    }
+<span class="line-numbers">56</span>
+<span class="line-numbers">57</span>    <span class="annotation">@GET</span>
+<span class="line-numbers">58</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/system/{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">59</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">60</span>    <span class="directive">public</span> Response getSystem(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">61</span>        Optional&lt;<span class="predefined-type">Properties</span>&gt; system = manager.getSystem(hostname);
+<span class="line-numbers">62</span>        <span class="keyword">if</span> (system.isPresent()) {
+<span class="line-numbers">63</span>            <span class="keyword">return</span> Response
+<span class="line-numbers">64</span>                    .status(Response.Status.OK)
+<span class="line-numbers">65</span>                    .entity(system)
+<span class="line-numbers">66</span>                    .build();
+<span class="line-numbers">67</span>        }
+<span class="line-numbers">68</span>        <span class="keyword">return</span> Response
+<span class="line-numbers">69</span>                .status(Response.Status.NOT_FOUND)
+<span class="line-numbers">70</span>                .entity(<span class="string"><span class="delimiter">"</span><span class="content">hostname does not exist.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">71</span>                .build();
+<span class="line-numbers">72</span>    }
+<span class="line-numbers">73</span>
+<span class="line-numbers">74</span>    <span class="annotation">@DELETE</span>
+<span class="line-numbers">75</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">76</span>    <span class="directive">public</span> Response resetSystems() {
+<span class="line-numbers">77</span>        manager.resetSystems();
+<span class="line-numbers">78</span>        <span class="keyword">return</span> Response
+<span class="line-numbers">79</span>                .status(Response.Status.OK)
+<span class="line-numbers">80</span>                .build();
+<span class="line-numbers">81</span>    }
+<span class="line-numbers">82</span>
+<span class="line-numbers">83</span>    <span class="annotation">@Incoming</span>(<span class="string"><span class="delimiter">"</span><span class="content">systemLoad</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">84</span>    <span class="directive">public</span> <span class="type">void</span> updateStatus(SystemLoad s)  {
+<span class="line-numbers">85</span>        <span class="predefined-type">String</span> hostname = s.hostname;
+<span class="line-numbers">86</span>        <span class="keyword">if</span> (manager.getSystem(hostname).isPresent()) {
+<span class="line-numbers">87</span>            manager.updateCpuStatus(hostname, s.loadAverage);
+<span class="line-numbers">88</span>            logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Host </span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="content"> was updated: </span><span class="delimiter">"</span></span> + s);
+<span class="line-numbers">89</span>        } <span class="keyword">else</span> {
+<span class="line-numbers">90</span>            manager.addSystem(hostname, s.loadAverage);
+<span class="line-numbers">91</span>            logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Host </span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="content"> was added: </span><span class="delimiter">"</span></span> + s);
+<span class="line-numbers">92</span>        }
+<span class="line-numbers">93</span>    }
+<span class="line-numbers">94</span>}
+<span class="line-numbers">95</span><span class="comment">// end::InventoryResource[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=InventoryServiceIT file=0">InventoryServiceIT</code> class uses the <code class="hotspot=KafkaProducer hotspot=KafkaProducer file=0">KafkaProducer</code> client API to produce messages in the test environment for the <code>inventory</code> service container to consume. The <code class="hotspot=KafkaProducerClient file=0">@KafkaProducerClient</code> annotation configures the producer to use the custom serializer provided in the <code class="hotspot=SystemLoadSerializer file=1">SystemLoad</code> class. The <code class="hotspot=KafkaProducerClient file=0">@KafkaProducerClient</code> annotation doesn’t include a topic that the client produces messages to because it has the flexibility to produce messages to any topic. In this example, it is configured to produce messages to the <code class="hotspot=systemLoadTopic file=0">system.load</code> topic.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=testCpuUsage file=0">testCpuUsage</code> test method produces a message to Kafka and then <code class="hotspot=assert hotspot=assert2 hotspot=assert3 file=0">verifies</code> that the response from the <code>inventory</code> service matches what is expected.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=RESTClient file=0">@RESTClient</code> annotation injects a REST client proxy of the <code class="hotspot=InventoryResource file=2">InventoryResource</code> class, which allows HTTP requests to be made to the running application. To learn more about REST clients, check out the <a href="https://openliberty.io/guides/microprofile-rest-client.html" target="_blank" rel="noopener">Consuming RESTful services with template interfaces</a> guide.</p>
+</div>
+</div>
+<div class="sect2 command">
+<h3 id="running-the-tests-2">Running the tests</h3>
+<div class="paragraph">
+<p>Because you started Open Liberty in dev mode, you can run the tests by pressing the <code>enter/return</code> key from the command-line session where you started dev mode.</p>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code> Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 32.564 s - in it.io.openliberty.guides.inventory.InventoryServiceIT
+
+ Results:
+
+ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+ Integration tests finished.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you are finished running tests, stop the Open Liberty server by typing <code>q</code> in the command-line session where you ran the server, and then press the <code>enter/return</code> key.</p>
+</div>
+<div class="paragraph">
+<p>If you aren’t running in dev mode, you can run the tests by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn verify</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code> Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 42.345 s - in it.io.openliberty.guides.inventory.InventoryServiceIT
+
+ Results:
+
+ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+
+ --- maven-failsafe-plugin:2.22.2:verify (verify) @ inventory ---
+ ------------------------------------------------------------------------
+ BUILD SUCCESS
+ ------------------------------------------------------------------------
+ Total time:  48.213 s
+ Finished at: 2020-03-13T16:43:34-04:00
+ ------------------------------------------------------------------------</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You just tested two reactive Java microservices using MicroShed Testing.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="related-links">Related Links</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Learn more about MicroShed Testing.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://microshed.org/microshed-testing/" target="_blank" rel="noopener noreferrer">Visit the official MicroShed Testing website</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Testing reactive Java microservices <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-reactive-service-testing/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-reactive-service-testing/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-reactive-service-testing/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-reactive-messaging.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Creating reactive Java microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microshed-testing.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Testing a MicroProfile or Jakarta EE application</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

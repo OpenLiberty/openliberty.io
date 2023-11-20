@@ -1,0 +1,32 @@
+apiVersion: apps.openliberty.io/v1beta2
+# tag::kind[]
+kind: OpenLibertyApplication
+# end::kind[]
+metadata:
+  name: inventory-deployment
+  labels:
+    name: inventory-deployment
+spec:
+  # tag::applicationImage[]
+  applicationImage: liberty-deepdive-inventory:1.0-SNAPSHOT
+  # end::applicationImage[]
+  service:
+    port: 9443
+  volumeMounts:
+  - name: postgres
+   # tag::mountPath[]
+    mountPath: "/config/variables/postgres"
+    # end::mountPath[]
+    readOnly: true
+  volumes:
+  - name: postgres
+    secret:
+      secretName: post-app-credentials 
+  env:
+    - name: POSTGRES_HOSTNAME
+      value: "postgres"
+    - name: DEFAULT_CONTEXT_ROOT
+      valueFrom:
+        configMapKeyRef:
+          name: inv-app-root
+          key: contextRoot

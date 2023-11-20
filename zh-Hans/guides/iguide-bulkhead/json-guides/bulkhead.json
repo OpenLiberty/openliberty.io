@@ -1,0 +1,809 @@
+{
+    "name": "Bulkhead",
+    "title": "Bulkhead",
+    "description": "Learn how to use the MicroProfile Bulkhead policy to prevent cascading failures.",
+    "duration": "20 minutes",
+    "audience": "developer",
+    "repo": "https://github.com/OpenLiberty/iguide-bulkhead",
+    "defaultWidgets": [
+        {
+            "displayType": "webBrowser",
+            "url": "https://global-ebank.openliberty.io/welcome",
+            "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+            "enable": false
+        },
+        {
+            "displayType": "tabbedEditor",
+            "enable": false,
+            "editorList": [
+                {
+                    "displayType": "fileEditor",
+                    "fileName": "BankService.java",
+                    "preload": [
+                        "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                        "import java.util.concurrent.Future;",
+                        "import org.eclipse.microprofile.context.ManagedExecutor;",
+                        "import org.eclipse.microprofile.context.ThreadContext;",
+                        "",
+                        "public class BankService {",
+                        "  @Inject private BankService bankService;",
+                        "  private int counterForVFA = 0;",
+                        "",
+                        "  public Service requestForVFA() {",
+                        "    int counter = ++counterForVFA;",
+                        "    return bankService.serviceForVFA(counter);",
+                        "  }",
+                        "",
+                        "  public Service serviceForVFA(int counterForVFA) {",
+                        "    Service chatService = new ChatSession(counterForVFA);",
+                        "    return chatService;",
+                        "  }",
+                        "}"
+                    ]
+                },
+                {
+                    "displayType": "fileEditor",
+                    "fileName": "server.xml",
+                    "preload": [
+                        "<?xml version=\"1.0\"?>",
+                        "<server description=\"Sample Liberty server\">",
+                        "   <featureManager>",
+                        "      <feature>cdi-2.0</feature>",
+                        "      <feature>mpContextPropagation-1.0</feature>",
+                        "   </featureManager>",
+                        "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                        "</server>"
+                   ]
+                }
+            ]
+        }
+    ],
+    "configWidgets": [
+        {
+            "displayType": "webBrowser",
+            "height": "350px",
+            "singleColumnHeight": "450px"
+        },
+        {
+            "displayType": "pod",
+            "height": "50px"
+        },
+        {
+            "displayType": "tabbedEditor",
+            "height": "400px"
+        }
+    ],
+    "steps": [
+        {
+            "name": "Intro",
+            "title": "What you'll learn",
+            "guide_duration" : "20 minutes",
+            "description": [
+                "Explore how the <a href='https://microprofile.io/' target='_blank' rel='noopener noreferrer'>MicroProfile</a> Bulkhead policy from the <a href='https://github.com/eclipse/microprofile-fault-tolerance' target='_blank' rel='noopener noreferrer'>Fault Tolerance feature</a> limits requests and prevents faults from stopping an entire system.",
+                "You will learn about the limitations of single-threaded programs by looking at a simple online banking microservice. You'll then implement concurrency to scale your microservice and see how it fails when no fault tolerance is implemented. Next, you'll enable the MicroProfile Fault Tolerance feature and use the Bulkhead policy to prevent the failing method from taking down the whole application. You'll explore the two approaches to Bulkhead, semaphore isolation and thread pool isolation, and the parameters used for the annotation. Finally, you'll add a fallback class, which is invoked if a <code>BulkheadException</code> is thrown.",
+                "When you arrive at the section about the Interactive bulkhead and asynchronous playground, you can modify the parameters of a MicroProfile Bulkhead policy in any combination. You can then run a sample scenario to see how the parameter values affect the results."
+            ],
+            "sections" : [
+                {
+                    "name": "backgroundConcepts",
+                    "title": "Background concepts",
+                    "description": [
+                        "Within this guide, we use the MicroProfile <b><i>Bulkhead</i></b>, <b><i>Asynchronous</i></b>, and <b><i>Fallback</i></b> policies to limit the number of concurrent requests to a microservice. These policies prevent system overload and isolate any failing microservices to a limited resource pool.",
+                        "<h4>Bulkhead</h4>",
+                        "The term <b><i>bulkhead</i></b> comes from the structure that is used in ships to create partitions in the hull. In the event of a hull breach, these isolated partitions prevent water from filling up the entire hull and sinking the ship.",
+                        "The bulkhead pattern in software systems works similarly by isolating services to prevent them from starving the system of resources. Two approaches to bulkhead are semaphore isolation and thread pool isolation.",
+                        "<div class=\"boatImages\"><figure><img src=\"/guides/iguide-bulkhead/html/images/without-bulkhead.svg\" alt=\"Ship without bulkheads\"><figcaption>A ship without bulkheads allows water to fill the entire hull.</figcaption></figure><figure><img src=\"/guides/iguide-bulkhead/html/images/with-bulkhead.svg\" alt=\"Ship with bulkheads\"><figcaption>A ship with bulkheads isolates the water damage.</figcaption></figure></div>",
+                        "The <b><i>semaphore</i></b> isolation approach limits the number of concurrent requests to the service. It rejects requests immediately once the limit is hit.",
+                        "The <b><i>thread pool</i></b> isolation approach uses a thread pool to separate the service from the caller and contain it to a subset of system resources. This approach also provides a waiting queue, rejecting requests only when both the pool and queue are full. Thread pool management adds some overhead, which slightly reduces performance compared to using a semaphore, but allows hanging threads to time out.",
+                        "<h4>Asynchronous</h4>",
+                        "Asynchronous programming allows multiple tasks to run simultaneously rather than waiting for a task to finish before it executes the next. To run multiple tasks, this policy runs tasks on separate threads.",
+                        "<h4>Fallback</h4>",
+                        "A fallback service runs when the main service fails. It can provide graceful failure or continued or partial operation of the original service."
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "ExampleScenario",
+            "title": "Example: bank scenario",
+            "description": [
+                "Imagine that you're developing a VirtualFinancialAdvisor (VFA) microservice for a bank to allow clients to chat online with a virtual financial advisor, a resource intensive AI. The initial naive synchronous implementation of the microservice allows only one customer to chat with a financial advisor at a time. As you progress through the guide, you will see how the number of available chat sessions impacts the service and the system.",
+                "Begin by requesting an online chat with a virtual financial advisor."
+            ],
+            "instruction": [
+                "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'ExampleScenario', 1)\">Customer1 requests chat</action> to open a chat session with a virtual financial advisor.",
+                "Currently, the microservice allows only one active chat session. The next chat session request fails while the Customer1 chat is still active.<br>Click <action title='Customer2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'ExampleScenario', 2)\">Customer2 requests chat</action> to see the failure."
+            ],
+            "content":[
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "enableStatusBar": false,
+                    "enableRefreshButton": false,
+                    "active": true
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "enable": false,
+                    "editorList": [
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                                "import java.util.concurrent.Future;",
+                                "import org.eclipse.microprofile.context.ManagedExecutor;",
+								"import org.eclipse.microprofile.context.ThreadContext;",
+                                "",
+                                "public class BankService {",
+                                "  @Inject private BankService bankService;",
+                                "  private int counterForVFA = 0;",
+                                "",
+                                "  public Service requestForVFA() {",
+                                "    int counter = ++counterForVFA;",
+                                "    return bankService.serviceForVFA(counter);",
+                                "  }",
+                                "",
+                                "  public Service serviceForVFA(int counterForVFA) {",
+                                "    Service chatService = new ChatSession(counterForVFA);",
+                                "    return chatService;",
+                                "  }",
+                                "}"
+                            ]
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>mpContextPropagation-1.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                           ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AsyncWithoutBulkhead",
+            "title": "Adding concurrency with Future and ManagedExecutor",
+            "description": [
+                "The initial synchronous implementation of the VirtualFinancialAdvisor microservice allows only a single virtual financial advisor chat session at a time. Implement concurrency with <code>Future</code> and <code>ManagedExecutor</code> to remove the single chat limitation and allow multiple chat sessions to be available at the same time.",
+                "<code>Future</code> is a special return type that is used in Java concurrency to fetch the result of a task when it is available. <code>ManagedExecutor</code> is a container-managed executor service that creates instances of <code>CompletableFuture</code>, an implementation of <code>Future</code>.",
+				"<a href='https://github.com/eclipse/microprofile-context-propagation' target='_blank' rel='noopener noreferrer'>Microprofile Context Propagation</a> allows us to build a <code>ManagedExecutor</code> instance which can propagate context to completion stage actions. Using the <code>@Produces</code> and <code>@ApplicationScoped</code> annotations allow injecting the same ManagedExecutor at other points in the application."
+            ],
+            "instruction": [
+                "Replace the <code>requestForVFA</code> method on line 10 with the following block of code.<br><codeblock>@Produces @ApplicationScoped\nManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();\n\npublic Future&ltService&gt requestForVFA() {\nint counter = ++counterForVFA;\nFuture&ltService&gt serviceRequest = executor.runAsync(<span title='Lambda Expression'>() -> {\n    try{\n      return bankService.serviceForVFA(counter);\n    } catch (Exception ex) {\n      handleException();\n    }\n    return null;\n  }</span>);\n  return serviceRequest;\n}</codeblock><br>Alternatively, click <action title='Replace requestForVFA method to enable Java concurrency' onclick=\"bulkheadCallBack.addJavaConcurrencyButton(event, 'AsyncWithoutBulkhead')\">Replace</action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncWithoutBulkhead')\">Run</action> on the editor menu pane.",
+                "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 1)\">Customer1 requests chat</action> to open a chat session with a virtual financial advisor.",
+                "While Customer1 is still chatting with a financial advisor, click <action title='Customer2 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 2)\">Customer2 requests chat</action> to open a separate chat session with a virtual financial advisor.",
+                "As more customers request chat sessions with a virtual financial advisor, more sessions become busy. Currently, the code does not implement a limit to the number of available advisor sessions. The VirtualFinancialAdvisor microservice causes the system to slowly run out of CPU or memory resources, which affects other microservices. <br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncWithoutBulkhead', 3)\">50 customer chat requests</action> to see the cascading failure."
+            ],
+            "content":[
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "enableStatusBar": false,
+                    "enableRefreshButton": false
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "editorList": [
+                        {
+                            "displayType":"fileEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                                "import java.util.concurrent.Future;",
+                                "import org.eclipse.microprofile.context.ManagedExecutor;",
+								"import org.eclipse.microprofile.context.ThreadContext;",
+                                "",
+                                "public class BankService {",
+                                "  @Inject private BankService bankService;",
+                                "  private int counterForVFA = 0;",
+                                "",
+                                "  public Service requestForVFA() {",
+									"    int counter = ++counterForVFA;",
+									"    return bankService.serviceForVFA(counter);",
+                                "  }",
+                                "",
+                                "  public Service serviceForVFA(int counterForVFA) {",
+                                "    Service chatService = new ChatSession(counterForVFA);",
+                                "    return chatService;",
+                                "  }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "9"
+                                },
+                                {
+                                    "from": "14",
+                                    "to": "19"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "10",
+                                    "to": "13"
+                                }
+                            ],
+                            "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForJavaConcurrency(editor); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>mpContextPropagation-1.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                           ],
+                           "readonly": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AddLibertyMPFaultTolerance",
+            "title": "Enabling MicroProfile Fault Tolerance in Open Liberty",
+            "description": [
+                "Microprofile Fault Tolerance allows microservices to handle unavailable services. It uses different policies such as Bulkhead and Fallback to guide the execution and result of some logic. The MicroProfile Fault Tolerance 1.0 feature provides an environment to support resilient microservices through patterns that include bulkheads. Enable the MicroProfile Fault Tolerance 1.0 feature in the <code>server.xml</code> file of the Open Liberty server where the VirtualFinancialAdvisor microservice runs."
+            ],
+            "instruction": [
+              "Add the following element declaration to the <code>featureManager</code> element that is in the <code>server.xml</code> file.<br><codeblock>&lt;feature>mpFaultTolerance-2.1&lt;/feature&gt;</codeblock><br>Alternatively, click <action title='Add MicroProfile Fault Tolerance' onclick=\"bulkheadCallBack.addMicroProfileFaultToleranceFeatureButton(event)\">Add</action>. <br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveServerXMLButton(event)\">Run</action> on the editor menu pane."
+            ],
+            "content": [
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "enableStatusBar": false,
+                    "enableRefreshButton": false,
+                    "enable": false
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "activeTab": "server.xml",
+                    "editorList": [
+                        {
+                            "displayType": "tabbedEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package global.eBank.microservices;",
+                                "import java.util.concurrent.Future;",
+                                "import org.eclipse.microprofile.context.ManagedExecutor;",
+								"import org.eclipse.microprofile.context.ThreadContext;",
+                                "",
+                                "public class BankService {",
+                                "  @Inject private BankService bankService;",
+                                "  private int counterForVFA = 0;",
+								"",
+								"  @Produces @ApplicationScoped",
+  								"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
+								"",
+                                "  public Future<Service> requestForVFA() {",
+                                "    int counter = ++counterForVFA;",
+                                "    Future<Service> serviceRequest = executor.runAsync(() -> {",
+                                "      try {",
+                                "        return bankService.serviceForVFA(counter);",
+                                "      } catch (Exception ex) {",
+                                "        handleException();",
+                                "      }",
+                                "      return null;",
+                                "    });",
+                                "    return serviceRequest;",
+                                "  }",
+                                "",
+                                "  public Service serviceForVFA(int counterForVFA) {",
+                                "    Service chatService = new ChatSession(counterForVFA);",
+                                "    return chatService;",
+                                "  }",
+                                "}"
+                            ],
+                            "readonly": true
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+								"      <feature>cdi-2.0</feature>",
+								"      <feature>mpContextPropagation-1.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "4"
+                                },
+                                {
+                                    "from": "6",
+                                    "to": "8"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "5",
+                                    "to": "5"
+                                }
+                            ],
+                            "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForFeatureInServerXML(editor); })"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "BulkheadAnnotation",
+            "title": "Adding the @Bulkhead annotation",
+            "description": [
+                "Now that you've seen the application easily fail when it becomes overloaded, let's apply a Bulkhead policy to limit the number of concurrent chat requests to the service. Limiting the number of concurrent requests limits the amount of system resources that service invocations can use and prevents the rest of the system from failing.",
+                "With a Bulkhead policy, the microservice runs on the current thread. The number of concurrent threads that invoke the service is limited and managed by a semaphore. When this maximum number of concurrent chat requests is reached, any subsequent requests immediately fail with a <code>BulkheadException</code>.",
+                "The <code>@Bulkhead</code> annotation has one parameter that specifies the maximum number of concurrent requests to the service. If the parameter is not specified, the default is <code>10</code> requests.",
+                "After you modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance-in-open-liberty'> include the Fault Tolerance feature</a>, add a Bulkhead policy to the VirtualFinancialAdvisor microservice."
+            ],
+            "instruction": [
+                "Add the <code>@Bulkhead</code> annotation with a value of <code>50</code> on line 25, before the <code>serviceForVFA</code> method.<br><codeblock>@Bulkhead(50)</codeblock><br>Alternatively, click <action title='Add @Bulkhead' onclick=\"bulkheadCallBack.addBulkheadButton(event, 'BulkheadAnnotation')\">Add</action>. This annotation limits the number of concurrent chat requests to 50. <br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'BulkheadAnnotation')\">Run</action> on the editor menu pane.",
+                "Click <action title='Customer1 request chat' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation', 1)\">Customer1 request chat</action> to open a chat session with a virtual financial advisor.",
+                "As more customers request chat sessions with a virtual financial advisor, all 50 sessions become busy. Once the maximum number of concurrent chat requests is reached, the next chat request is rejected.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'BulkheadAnnotation', 2)\">50 customer chat requests</action> to fill the <b>IN PROGRESS</b> chats and see how an additional chat session fails to open for the last customer."
+            ],
+            "content": [
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "enableStatusBar": false,
+                    "enableRefreshButton": false,
+                    "singleColumnOrder": "3"
+                },
+                {
+                    "displayType": "pod",
+                    "hidden": true,
+                    "singleColumnOrder": "2"
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "activeTab": "BankService.java",
+                    "singleColumnOrder": "1",
+                    "editorList": [
+                        {
+                            "displayType": "tabbedEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package global.eBank.microservices;",
+                                "import java.util.concurrent.Future;",
+                                "import org.eclipse.microprofile.context.ManagedExecutor;",
+								"import org.eclipse.microprofile.context.ThreadContext;",
+                                "",
+                                "public class BankService {",
+                                "  @Inject private BankService bankService;",
+                                "  private int counterForVFA = 0;",
+								"",
+								"  @Produces @ApplicationScoped",
+  								"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
+								"",
+                                "  public Future<Service> requestForVFA() {",
+                                "    int counter = ++counterForVFA;",
+                                "    Future<Service> serviceRequest = executor.runAsync(() -> {",
+                                "      try {",
+                                "        return bankService.serviceForVFA(counter);",
+                                "      } catch (Exception ex) {",
+                                "        handleException();",
+                                "      }",
+                                "      return null;",
+                                "    });",
+                                "    return serviceRequest;",
+                                "  }",
+                                "",
+                                "  public Service serviceForVFA(int counterForVFA) {",
+                                "    Service chatService = new ChatSession(counterForVFA);",
+                                "    return chatService;",
+                                "  }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "24"
+                                },
+                                {
+                                    "from": "26",
+                                    "to": "30"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "25",
+                                    "to": "25"
+                                }
+                            ],
+                            "callback": "(function test(tabbedEditor) {bulkheadCallBack.listenToEditorForJavaConcurrency(tabbedEditor, 'BankService.java'); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+								"      <feature>cdi-2.0</feature>",
+								"      <feature>mpContextPropagation-1.0</feature>",
+                                "      <feature>mpFaultTolerance-2.1</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AsyncBulkheadAnnotation",
+            "title": "Adding the @Asynchronous annotation with @Bulkhead",
+            "description": [
+                "The <code>@Bulkhead</code> annotation limits the number of concurrent financial advisor chat requests. After the maximum number of concurrent chat requests to the VirtualFinancialAdvisor microservice is reached, the next chat request fails. To ease this problem, add the <code>@Asynchronous</code> annotation to allow additional chat requests to be placed in a waiting queue.",
+                "When you use the <code>@Bulkhead</code> annotation with the <code>@Asynchronous</code> annotation, a thread pool manages access to the microservice. You configure the maximum number of threads that are used along with a waiting queue size. When a request for a financial advisor cannot be added to the waiting queue, a <code>BulkheadException</code> is thrown.",
+                "To use the <code>@Bulkhead</code> and <code>@Asynchronous</code> annotations together, modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance-in-open-liberty'>include the Fault Tolerance feature</a>. Then, configure the <code>@Bulkhead</code> annotation with the following parameters:",
+                "<ul><li><b>value</b>: The maximum number of concurrent requests to the service. If the parameter is not specified, the default is <code>10</code> requests.</li><li><b>waitingTaskQueue</b>: The size of the waiting queue that holds requests to run at a different time. This parameter must be greater than 0. If the parameter is not specified, the default is <code>10</code> requests. This parameter for the <code>@Bulkhead</code> annotation takes effect only when you use the <code>@Asynchronous</code> annotation.</li></ul>",
+                "It is best practice to set the <code>waitingTaskQueue</code> parameter so that it has a value equal to or larger than the <code>value</code> parameter."
+            ],
+            "instruction": [
+                "The method annotated with an <code>@Asynchronous</code> annotation must return a <code>Future</code>. To add the <code>@Asynchronous</code> annotation, update the <code>@Bulkhead</code> annotation's parameters and change the return type for <code>serviceForVFA</code>, replace the code from lines 28 - 32 with the following block of code.<br><codeblock>@Asynchronous\n@Bulkhead(value = 50, waitingTaskQueue = 50)\npublic Future&ltService&gt serviceForVFA(int counterForVFA) {\n  Service chatService = new ChatSession( counterForVFA );\n  return executor.completedFuture( chatService );\n}</codeblock><br>Alternatively, click <action title='Replace the Bulkhead annotation to work with Asynchronous' onclick=\"bulkheadCallBack.addAsyncBulkheadButton(event, 'AsyncBulkheadAnnotation')\">Replace</action>.<br>Because the <code>@Asynchronous</code> annotation manages thread pools, you no longer need to use <code>ManagedExecutor</code> in the <code>requestForVFA</code> method. Replace the <code>requestForVFA</code> method on line 15 with the following block of code.<br><codeblock>public Future&ltService&gt requestForVFA() {\n  int counter = ++counterForVFA;\n  return bankService.serviceForVFA(counter);\n}</codeblock><br>Alternatively, click <action title='Replace requestForVFA method to return Future' onclick=\"bulkheadCallBack.updateAsyncBulkheadMethodButton(event, 'AsyncBulkheadAnnotation')\">Replace</action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'AsyncBulkheadAnnotation')\">Run</action> on the editor menu pane.",
+                "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 1)\">Customer1 requests chat</action> to open a chat session with a virtual financial advisor.",
+                "As more customers request chat sessions with a virtual financial advisor, all 50 sessions become busy. Once the maximum number of concurrent chat requests is reached, the next chat request is placed in the waiting queue.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 2)\">50 customer chat requests</action> to fill the <b>IN PROGRESS</b> chats and to see that the last customer is placed in the <b>WAITING</b> queue.",
+                "As more customers request chat sessions with a virtual financial advisor, the waiting queue eventually fills up. Our Bulkhead policy limits the maximum number of requests in the waiting queue to 50. The next chat request cannot be started and cannot be added to the waiting queue.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'AsyncBulkheadAnnotation', 3)\">50 customer chat requests</action> to fill the <b>WAITING</b> queue and see that an additional chat session fails to open for the last customer."
+            ],
+            "content":[
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "enableStatusBar": false,
+                    "enableRefreshButton": false,
+                    "singleColumnOrder": "3"
+                },
+                {
+                    "displayType": "pod",
+                    "content": "/guides/iguide-bulkhead/html/virtual-financial-advisor-bulkhead.html",
+                    "singleColumnOrder": "2"
+                },
+                {
+                    "displayType":"tabbedEditor",
+                    "active": true,
+                    "activeTab": "BankService.java",
+                    "singleColumnOrder": "1",
+                    "editorList": [
+                        {
+                            "displayType":"fileEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                                "import java.util.concurrent.Future;",
+                                "import org.eclipse.microprofile.faulttolerance.Asynchronous;",
+								"import org.eclipse.microprofile.faulttolerance.Bulkhead;",
+								"import org.eclipse.microprofile.context.ManagedExecutor;",
+								"import org.eclipse.microprofile.context.ThreadContext;",
+                                "",
+                                "public class BankService {",
+                                "  @Inject private BankService bankService;",
+                                "  private int counterForVFA = 0;",
+								"",
+								"  @Produces @ApplicationScoped",
+								"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
+								"",
+                                "  public Future<Service> requestForVFA() {",
+                                "    int counter = ++counterForVFA;",
+                                "    Future<Service> serviceRequest = executor.runAsync(() -> {",
+                                "      try {",
+                                "        return bankService.serviceForVFA(counter);",
+                                "      } catch (Exception ex) {",
+                                "        handleException();",
+                                "      }",
+                                "      return null;",
+                                "    });",
+                                "    return serviceRequest;",
+                                "  }",
+                                "",
+                                "  @Bulkhead(50)",
+                                "  public Service serviceForVFA(int counterForVFA) {",
+                                "    Service chatService = new ChatSession(counterForVFA);",
+                                "    return chatService;",
+                                "  }",
+                                "}",
+                                ""
+							],
+
+                           "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "14"
+                                },
+                                {
+                                    "from": "33",
+                                    "to": "34"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "15",
+                                    "to": "26"
+                                },
+                                {
+                                    "from": "28",
+                                    "to": "32"
+                                }
+							],
+                            "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForAsyncBulkhead(editor); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+								"      <feature>cdi-2.0</feature>",
+								"      <feature>mpContextPropagation-1.0</feature>",
+                                "      <feature>mpFaultTolerance-2.1</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Fallback",
+            "title": "Adding the @Fallback annotation",
+            "description": [
+                "The <code>@Asynchronous</code> and <code>@Bulkhead</code> annotations together place requests for a financial advisor in a waiting queue after the number of requests exceeds the specified maximum number of concurrent requests. If the waiting queue is full, a <code>BulkheadException</code> is thrown. Let's add a fallback service to handle the exception. A fallback service runs when the main service fails. It can provide graceful failure or continued or partial operation of the original service.",
+                "The <code>@Fallback</code> annotation identifies a class or a method that automatically runs when a <code>BulkheadException</code> occurs. To use the <code>@Fallback</code> annotation, modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance-in-open-liberty'>include the Fault Tolerance feature</a>. In our scenario, add the <code>ServiceFallbackHandler.class</code>, which implements the <code>FallbackHandler.class</code>, to allow a customer to schedule an appointment. When a customer makes a request for a chat session, and the request cannot be handled because the maximum limit of concurrent requests has been reached and the wait queue is full, the <code>ServiceFallbackHandler.handle</code> method is called. The return type of both methods, <code>ServiceFallbackHandler.handle</code> and <code>BankService.serviceForVFA</code>, must be of type <code>Future&ltService&gt</code>. Otherwise, a <code>FaultToleranceDefinitionException</code> is thrown. <br><br>For more information on using the <code>@Fallback</code> annotation to identify the fallback as a method instead of a class or to learn about further restricting when the fallback will run by using the <code>applyOn</code> and <code>skipOn</code> parameters of the Fallback annotation, see the <a href='https://openliberty.io/guides/circuit-breaker.html#adding-the-fallback-annotation' target='_blank' rel='noopener noreferrer'>MicroProfile Circuit Breaker </a>guide."
+            ],
+            "instruction": [
+                "In the <code>BankService.java</code> file, add the <code>@Fallback(ServiceFallbackHandler.class)</code> annotation on line 20.<br><codeblock>@Fallback(ServiceFallbackHandler.class)</codeblock><br>Alternatively, click <action title='Add Fallback annotation' onclick=\"bulkheadCallBack.addFallbackAsyncBulkheadButton(event, 'Fallback')\">Add</action>.<br>Then, click <action title='Run' onclick=\"bulkheadCallBack.saveButtonEditorButton(event, 'Fallback')\">Run</action> on the editor menu pane.",
+                "Click <action title='Customer1 requests chat' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback', 1)\">Customer1 requests chat</action> to open a chat session with a virtual financial advisor.",
+                "As more customers request chat sessions with a virtual financial advisor, all 50 sessions become busy. When the maximum number of concurrent chat requests is reached, the next chat request is placed in the waiting queue.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback', 2)\">50 customer chat requests</action> to fill the <b>IN PROGRESS</b> chats and place the last customer in the <b>WAITING</b> queue.",
+                "As more customers request chat sessions with a virtual financial advisor, the waiting queue eventually fills up. Our Bulkhead policy limits the maximum number of requests in the waiting queue to 50. The next chat request cannot be started and cannot be added to the waiting queue. The fallback service runs to handle the next request.<br>Click <action title='50 customer chat requests' onclick=\"bulkheadCallBack.clickChat(event, 'Fallback', 3)\">50 customer chat requests</action> to fill the <b>WAITING</b> queue and see the fallback service ask the last customer to schedule an appointment."
+            ],
+            "content":[
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "enableStatusBar": false,
+                    "enableRefreshButton": false,
+                    "singleColumnOrder": "3"
+                },
+                {
+                    "displayType": "pod",
+                    "content": "/guides/iguide-bulkhead/html/virtual-financial-advisor-asyncbulkhead.html",
+                    "singleColumnOrder": "2"
+                },
+                {
+                    "displayType":"tabbedEditor",
+                    "active": true,
+                    "activeTab": "BankService.java",
+                    "singleColumnOrder": "1",
+                    "editorList": [
+                        {
+                            "displayType":"fileEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.bulkhead;",
+                                "import java.util.concurrent.Future;",
+                                "import org.eclipse.microprofile.faulttolerance.Asynchronous;",
+                                "import org.eclipse.microprofile.faulttolerance.Bulkhead;",
+                                "import org.eclipse.microprofile.faulttolerance.Fallback;",
+                                "import org.eclipse.microprofile.context.ManagedExecutor;",
+								"import org.eclipse.microprofile.context.ThreadContext;",
+                                "",
+                                "public class BankService {",
+                                "  @Inject private BankService bankService;",
+                                "  private int counterForVFA = 0;",
+								"",
+								"  @Produces @ApplicationScoped",
+								"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
+								"",
+                                "  public Future<Service> requestForVFA() {",
+                                "    int counter = ++counterForVFA;",
+                                "    return bankService.serviceForVFA(counter);",
+                                "  }",
+                                "",
+                                "  @Asynchronous",
+                                "  @Bulkhead(value = 50,",
+                                "            waitingTaskQueue = 50)",
+                                "  public Future<Service> serviceForVFA(int counterForVFA) {",
+                                "    Service chatService = new ChatSession(counterForVFA);",
+                                "    return executor.completedFuture(chatService);",
+                                "  }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "19"
+                                },
+                                {
+                                    "from": "21",
+                                    "to": "28"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "20",
+                                    "to": "20"
+                                }
+                            ],
+                            "callback": "(function test(editor) {bulkheadCallBack.listenToEditorForAsyncBulkheadFallback(editor); })"
+                        },
+                        {
+                            "displayType":"fileEditor",
+                            "fileName": "ServiceFallbackHandler.java",
+                            "preload": [
+                                "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                                "import org.eclipse.microprofile.faulttolerance.ExecutionContext;",
+                                "import org.eclipse.microprofile.faulttolerance.FallbackHandler;",
+                                "import org.eclipse.microprofile.context.ManagedExecutor;",
+                                "import java.util.concurrent.Future;",
+								"",
+								"@ApplicationScoped",
+                                "public class ServiceFallbackHandler implements FallbackHandler<Future<Service>> {",
+								"",
+								"  @Inject",
+								"  ManagedExecutor executor;",
+								"",
+                                "  @Override",
+                                "  public Future<Service> handle(ExecutionContext context) {",
+                                "    return handleFallback(context);",
+                                "  }",
+                                "",
+                                "  private Future<Service> handleFallback(ExecutionContext context) {",
+                                "    Service service = new ScheduleService();",
+                                "    return executor.completedFuture(service);",
+                                "  }",
+                                "}"
+                            ],
+                            "readonly": true
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+								"      <feature>cdi-2.0</feature>",
+								"      <feature>mpContextPropagation-1.0</feature>",
+                                "      <feature>mpFaultTolerance-2.1</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {   "name": "playground",
+            "title": "Interactive bulkhead and asynchronous playground",
+            "description": [
+              "Now that you learned about bulkheads and asynchronous threads, you can explore the parameters in the <code>@Bulkhead</code> annotation and see the asynchronous bulkhead in action.",
+              "You learned about the following parameters:",
+              "<ul>",
+              "<li><b>value</b>: The maximum number of concurrent requests to the service. The default is <code>10</code> requests.",
+              "<li><b>waitingTaskQueue</b>: The size of the waiting queue that holds requests to execute at a different time. The default is <code>10</code> requests.",
+              "</ul>",
+              "It is best practice to set the <b>waitingTaskQueue</b> parameter so that it is has a value equal to or larger than the <b>value</b> parameter."
+            ],
+            "instruction": [
+                "Modify the parameter values for the <code>@Bulkhead</code> annotation on lines 22 and 23 in the editor. In this simulation, the maximum value for <code>value</code> and <code>waitingTaskQueue</code> is 10. <br>Then click Run to use the new values. Repeat the process as many times as you like. <br><br>Click <b>Chat request</b> to initiate a request with a virtual financial advisor or <b>End chat</b> to end an arbitrary chat and observe the simulation."
+            ],
+            "content":[
+                {
+                    "displayType":"pod",
+                    "content": "/guides/iguide-bulkhead/html/async-bulkhead-playground.html",
+                    "callback": "(function(pod) {bulkheadCallBack.createAsyncBulkhead(pod, 'playground');})",
+                    "height": "230px"
+                },
+              {
+                "displayType": "tabbedEditor",
+                "active": true,
+                "editorList": [
+                    {
+                        "displayType":"fileEditor",
+                        "fileName": "BankService.java",
+                        "preload": [
+                            "package io.openliberty.guides.bulkhead.global.eBank.microservices;",
+                            "import java.util.concurrent.Future;",
+                            "import org.eclipse.microprofile.faulttolerance.Asynchronous;",
+                            "import org.eclipse.microprofile.faulttolerance.Bulkhead;",
+							"import org.eclipse.microprofile.context.ManagedExecutor;",
+							"import org.eclipse.microprofile.context.ThreadContext;",
+							"",
+                            "public class BankService {",
+                            "",
+                            "  @Inject private BankService bankService;",
+							"  private int counterForVFA = 0;",
+							"",
+							"  @Produces @ApplicationScoped",
+							"  ManagedExecutor executor = ManagedExecutor.builder().propagated( ThreadContext.APPLICATION ).build();",
+                            "",
+                            "  public Future<Service> requestForVFA() {",
+                            "    int counter = ++counterForVFA;",
+                            "    return bankService.serviceForVFA(counter);",
+                            "  }",
+                            "",
+                            "  @Asynchronous",
+                            "  @Bulkhead(value=5,",
+                            "            waitingTaskQueue=5)",
+                            "  public Future<Service> serviceForVFA(int counterForVFA) {",
+                            "    Service chatService = new ChatSession(counterForVFA);",
+                            "    return executor.completedFuture(chatService);",
+                            "  }",
+                            "}"
+                        ],
+                        "readonly": [
+                            {
+                                "from": "1",
+                                "to": "21"
+                            },
+                            {
+                                "from": "24",
+                                "to": "28"
+                            }
+                        ],
+                        "writable": [
+                            {
+                                "from": "22",
+                                "to": "23"
+                            }
+                        ],
+                        "callback": "(function test(editor) {bulkheadCallBack.listenToPlaygroundEditorAnnotationChanges(editor); })"
+                    }
+                ]
+              }
+            ]
+        },
+        {
+            "name": "WhatNext",
+            "title": "Great work!  You're done!",
+            "description": [
+               "You learned about the benefits of asynchronous processing and how a faulty process could potentially build up many requests, which, if not limited, could consume all resources, such as CPU, threads, and memory, in the host and lead to a cascading failure.  You learned that a bulkhead isolation policy can be used to limit the number of parallel executions so that the impact of a failing process is isolated from affecting the whole system.  You learned about the two approaches to bulkhead, semaphore isolation and thread pool isolation, and how to identify a fallback service to run when the number of concurrent processes as defined by the bulkhead policy is reached."
+            ]
+        },
+        {
+            "name": "RelatedLinks",
+            "title": "Related links",
+            "description": ["Learn more about <b>MicroProfile</b>.",
+                            "<p> <a target='_blank' rel='noopener noreferrer' href='http://microprofile.io/' >See the MicroProfile specs.</a></p>",
+                            "<p> <a target='_blank' rel='noopener noreferrer' href='https://openliberty.io/docs/ref/microprofile/' >View MicroProfile API.</a></p>"
+                           ]
+        }
+    ]
+}

@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Consuming a RESTful Java web service with ReactJS
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples on how to access a RESTful Java micoservice and deserialize the returned JSON in React Table 7 of ReactJS.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/rest-client-reactjs">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Consuming a RESTful Java web service with ReactJS" />
+  <meta name="twitter:description" content="A getting started tutorial with examples on how to access a RESTful Java micoservice and deserialize the returned JSON in React Table 7 of ReactJS." />
+
+  <meta property='og:title' content="Consuming a RESTful Java web service with ReactJS" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples on how to access a RESTful Java micoservice and deserialize the returned JSON in React Table 7 of ReactJS." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/rest-client-reactjs" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li><a href="#starting-the-service">Starting the service</a></li>
+<li><a href="#project-configuration">Project configuration</a></li>
+<li><a href="#creating-the-default-page">Creating the default page</a></li>
+<li>
+<a href="#creating-the-react-components">Creating the React components</a>
+<ul class="sectlevel2">
+<li><a href="#importing-the-http-client">Importing the HTTP client</a></li>
+</ul>
+</li>
+<li><a href="#building-and-packaging-the-front-end">Building and packaging the front end</a></li>
+<li><a href="#testing-the-react-client">Testing the React client</a></li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Consuming a RESTful web service with ReactJS</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">20 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/rest-client-reactjs.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Explore how to access a simple RESTful web service and consume its resources with ReactJS in Open Liberty.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to access a REST service and deserialize the returned JSON that contains a list of artists and their albums by using an HTTP client with the ReactJS library. You will then present this data by using a ReactJS paginated table component.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://reactjs.org/" target="_blank" rel="noopener noreferrer">ReactJS</a> is a JavaScript library that is used to build user interfaces. Its main purpose is to incorporate a component-based approach to create reusable UI elements. With ReactJS, you can also interface with other libraries and frameworks. Note that the names ReactJS and React are used interchangeably.</p>
+</div>
+<div class="paragraph">
+<p>The React application in this guide is provided and configured for you in the <code>src/main/frontend</code> directory. The application uses the <a href="https://reactjs.org/docs/create-a-new-react-app.html" target="_blank" rel="noopener noreferrer">Create React App</a> prebuilt configuration to set up the modern single-page React application. The <a href="https://github.com/facebook/create-react-app" target="_blank" rel="noopener noreferrer">create-react-app</a> integrated toolchain is a comfortable environment for learning React and is the best way to start building a new single-page application with React.</p>
+</div>
+<div class="paragraph">
+<p>artists.json</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json"><span class="line-numbers"> 1</span>[
+<span class="line-numbers"> 2</span>    {
+<span class="line-numbers"> 3</span>        <span class="key"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">1</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 4</span>        <span class="key"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">foo</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 5</span>        <span class="key"><span class="delimiter">"</span><span class="content">genres</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">pop</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 6</span>        <span class="key"><span class="delimiter">"</span><span class="content">albums</span><span class="delimiter">"</span></span> : [
+<span class="line-numbers"> 7</span>            {
+<span class="line-numbers"> 8</span>                <span class="key"><span class="delimiter">"</span><span class="content">title</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">album_one</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 9</span>                <span class="key"><span class="delimiter">"</span><span class="content">artist</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">foo</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">10</span>                <span class="key"><span class="delimiter">"</span><span class="content">ntracks</span><span class="delimiter">"</span></span> : <span class="integer">12</span>
+<span class="line-numbers">11</span>            },
+<span class="line-numbers">12</span>            {
+<span class="line-numbers">13</span>                <span class="key"><span class="delimiter">"</span><span class="content">title</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">album_two</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">14</span>                <span class="key"><span class="delimiter">"</span><span class="content">artist</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">foo</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">15</span>                <span class="key"><span class="delimiter">"</span><span class="content">ntracks</span><span class="delimiter">"</span></span> : <span class="integer">15</span>
+<span class="line-numbers">16</span>            }
+<span class="line-numbers">17</span>        ]
+<span class="line-numbers">18</span>    }, 
+<span class="line-numbers">19</span>    {
+<span class="line-numbers">20</span>        <span class="key"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">2</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">21</span>        <span class="key"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">bar</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">22</span>        <span class="key"><span class="delimiter">"</span><span class="content">genres</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">rock</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">23</span>        <span class="key"><span class="delimiter">"</span><span class="content">albums</span><span class="delimiter">"</span></span> : [
+<span class="line-numbers">24</span>            {
+<span class="line-numbers">25</span>                <span class="key"><span class="delimiter">"</span><span class="content">title</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">album_rock</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">26</span>                <span class="key"><span class="delimiter">"</span><span class="content">artist</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">bar</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">27</span>                <span class="key"><span class="delimiter">"</span><span class="content">ntracks</span><span class="delimiter">"</span></span> : <span class="integer">15</span>
+<span class="line-numbers">28</span>            }
+<span class="line-numbers">29</span>        ]
+<span class="line-numbers">30</span>    }, 
+<span class="line-numbers">31</span>    {
+<span class="line-numbers">32</span>        <span class="key"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">3</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">33</span>        <span class="key"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">dj</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">34</span>        <span class="key"><span class="delimiter">"</span><span class="content">genres</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">hip hop</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">35</span>        <span class="key"><span class="delimiter">"</span><span class="content">albums</span><span class="delimiter">"</span></span> : [
+<span class="line-numbers">36</span>            {
+<span class="line-numbers">37</span>                <span class="key"><span class="delimiter">"</span><span class="content">title</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">album_dj</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">38</span>                <span class="key"><span class="delimiter">"</span><span class="content">artist</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">dj</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">39</span>                <span class="key"><span class="delimiter">"</span><span class="content">ntracks</span><span class="delimiter">"</span></span> : <span class="integer">7</span>
+<span class="line-numbers">40</span>            }
+<span class="line-numbers">41</span>        ]
+<span class="line-numbers">42</span>    },
+<span class="line-numbers">43</span>    {
+<span class="line-numbers">44</span>        <span class="key"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">4</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">45</span>        <span class="key"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">flow</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">46</span>        <span class="key"><span class="delimiter">"</span><span class="content">genres</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">R&amp;B</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">47</span>        <span class="key"><span class="delimiter">"</span><span class="content">albums</span><span class="delimiter">"</span></span> : [
+<span class="line-numbers">48</span>            {
+<span class="line-numbers">49</span>                <span class="key"><span class="delimiter">"</span><span class="content">title</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">album_long</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">50</span>                <span class="key"><span class="delimiter">"</span><span class="content">artist</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">flow</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">51</span>                <span class="key"><span class="delimiter">"</span><span class="content">ntracks</span><span class="delimiter">"</span></span> : <span class="integer">22</span>
+<span class="line-numbers">52</span>            }
+<span class="line-numbers">53</span>        ]
+<span class="line-numbers">54</span>    },
+<span class="line-numbers">55</span>    {
+<span class="line-numbers">56</span>        <span class="key"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">5</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">57</span>        <span class="key"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">cc</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">58</span>        <span class="key"><span class="delimiter">"</span><span class="content">genres</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">country</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">59</span>        <span class="key"><span class="delimiter">"</span><span class="content">albums</span><span class="delimiter">"</span></span> : [
+<span class="line-numbers">60</span>            {
+<span class="line-numbers">61</span>                <span class="key"><span class="delimiter">"</span><span class="content">title</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">album_short</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">62</span>                <span class="key"><span class="delimiter">"</span><span class="content">artist</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">cc</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">63</span>                <span class="key"><span class="delimiter">"</span><span class="content">ntracks</span><span class="delimiter">"</span></span> : <span class="integer">5</span>
+<span class="line-numbers">64</span>            }
+<span class="line-numbers">65</span>        ]
+<span class="line-numbers">66</span>    },
+<span class="line-numbers">67</span>    {
+<span class="line-numbers">68</span>        <span class="key"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">6</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">69</span>        <span class="key"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">axis</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">70</span>        <span class="key"><span class="delimiter">"</span><span class="content">genres</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">classical</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">71</span>        <span class="key"><span class="delimiter">"</span><span class="content">albums</span><span class="delimiter">"</span></span> : [
+<span class="line-numbers">72</span>            {
+<span class="line-numbers">73</span>                <span class="key"><span class="delimiter">"</span><span class="content">title</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">album_one</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">74</span>                <span class="key"><span class="delimiter">"</span><span class="content">artist</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">axis</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">75</span>                <span class="key"><span class="delimiter">"</span><span class="content">ntracks</span><span class="delimiter">"</span></span> : <span class="integer">9</span>
+<span class="line-numbers">76</span>            },
+<span class="line-numbers">77</span>            {
+<span class="line-numbers">78</span>                <span class="key"><span class="delimiter">"</span><span class="content">title</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">album_two</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">79</span>                <span class="key"><span class="delimiter">"</span><span class="content">artist</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">axis</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">80</span>                <span class="key"><span class="delimiter">"</span><span class="content">ntracks</span><span class="delimiter">"</span></span> : <span class="integer">8</span>
+<span class="line-numbers">81</span>            },
+<span class="line-numbers">82</span>            {
+<span class="line-numbers">83</span>                <span class="key"><span class="delimiter">"</span><span class="content">title</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">album_three</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">84</span>                <span class="key"><span class="delimiter">"</span><span class="content">artist</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">axis</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">85</span>                <span class="key"><span class="delimiter">"</span><span class="content">ntracks</span><span class="delimiter">"</span></span> : <span class="integer">11</span>
+<span class="line-numbers">86</span>            }
+<span class="line-numbers">87</span>        ]
+<span class="line-numbers">88</span>    }
+<span class="line-numbers">89</span>]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The REST service that provides the resources was written for you in advance in the back end of the application, and it responds with the <code class="hotspot">artists.json</code> in the <code>src/resources</code> directory. You will implement a ReactJS client as the front end of your application, which consumes this JSON file and displays its contents on a single-page webpage.</p>
+</div>
+<div class="paragraph">
+<p>To learn more about REST services and how you can write them, see the <a href="https://openliberty.io/guides/rest-intro.html" target="_blank" rel="noopener">Creating a RESTful web service</a> guide.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-rest-client-reactjs.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-rest-client-reactjs.git
+cd guide-rest-client-reactjs</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. The React front end is already pre-built for you and the static files from the production build can be found in the <code>src/main/webapp/static</code> directory.</p>
+</div>
+<div class="paragraph">
+<p>To try out the application, navigate to the <code>finish</code> directory and run the following Maven goal to build the application and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd finish
+mvn liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your application Liberty instance is ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>The defaultServer server is ready to run a smarter planet.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, point your browser to the <a href="http://localhost:9080" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080</a> web application root to see the following output:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/rest-client-reactjs/react-table.png" alt="React Paginated Table">
+</div>
+</div>
+<div class="paragraph command">
+<p>After you are finished checking out the application, stop the Liberty instance by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty. Alternatively, you can run the <code>liberty:stop</code> goal from the <code>finish</code> directory in another shell session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:stop</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="starting-the-service">Starting the service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you begin the implementation, start the provided REST service so that the artist JSON is available to you.</p>
+</div>
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph command">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following goal to start Open Liberty in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>After you start the service, you can find your artist JSON at the <a href="http://localhost:9080/artists" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/artists</a> URL.</p>
+</div>
+<div class="paragraph">
+<p>All the dependencies for the React front end can be found in <code>src/main/frontend/src/package.json</code>, and they are installed before the front end is built by the <code>frontend-maven-plugin</code>. Additionally, some provided <code>CSS</code> stylesheets files are provided and can be found in the <code>src/main/frontend/src/Styles</code> directory.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="project-configuration">Project configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The front end of your application uses Node.js to build your React code. The Maven project is configured for you to install Node.js and produce the production files, which are copied to the web content of your application.</p>
+</div>
+<div class="paragraph">
+<p>Node.js is a server-side JavaScript runtime that is used for developing networking applications. Its convenient package manager, <a href="https://www.npmjs.com/" target="_blank" rel="noopener noreferrer">npm</a>, is used to run the React build scripts that are found in the <code>package.json</code> file. To learn more about Node.js, see the official <a href="https://nodejs.org/en/docs/" target="_blank" rel="noopener noreferrer">Node.js documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=frontend-plugin">frontend-maven-plugin</code> is used to <code class="hotspot=node-resource-install">install</code> the dependencies that are listed in your <code>package.json</code> file from the npm registry into a folder called <code>node_modules</code>. The <code>node_modules</code> folder can be found in your <code class="hotspot=working-dir">working</code> directory. Then, the configuration <code class="hotspot=node-resource-build">produces</code> the production files to the <code>src/main/frontend/build</code> directory.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=copy-plugin">maven-resources-plugin</code> copies the <code>static</code> content from the <code class="hotspot=directory">build</code> directory to the <code class="hotspot=output-directory">web content</code> of the application.</p>
+</div>
+<div class="paragraph">
+<p>pom.xml</p>
+</div>
+<div class="listingblock code_column hide_tags=node-tests">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version='1.0' encoding='utf-8'?&gt;</span>
+<span class="line-numbers">  2</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  3</span>
+<span class="line-numbers">  4</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  5</span>
+<span class="line-numbers">  6</span>    <span class="tag">&lt;groupId&gt;</span>com.microprofile.demo<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">  7</span>    <span class="tag">&lt;artifactId&gt;</span>guide-rest-client-reactjs<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">  8</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">  9</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers"> 10</span>
+<span class="line-numbers"> 11</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 12</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 13</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 14</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>11<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 15</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>11<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 16</span>        <span class="comment">&lt;!-- Liberty configuration --&gt;</span>
+<span class="line-numbers"> 17</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9080<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers"> 18</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9443<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers"> 19</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 20</span>
+<span class="line-numbers"> 21</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 22</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers"> 23</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 24</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 25</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 26</span>            <span class="tag">&lt;version&gt;</span>10.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 27</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 28</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 29</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 30</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 31</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 32</span>            <span class="tag">&lt;version&gt;</span>6.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 33</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 34</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 35</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span>        <span class="comment">&lt;!-- For tests --&gt;</span>
+<span class="line-numbers"> 38</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 39</span>            <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 40</span>            <span class="tag">&lt;artifactId&gt;</span>junit-jupiter<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 41</span>            <span class="tag">&lt;version&gt;</span>5.9.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 42</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 43</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 44</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers"> 45</span>
+<span class="line-numbers"> 46</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers"> 47</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers"> 48</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers"> 49</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 50</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 51</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 52</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 53</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 54</span>            <span class="comment">&lt;!-- Enable liberty-maven plugin --&gt;</span>
+<span class="line-numbers"> 55</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 56</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 57</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 58</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>            
+<span class="line-numbers"> 59</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 60</span>            <span class="comment">&lt;!-- Frontend resources --&gt;</span>
+<span class="line-numbers"> 61</span>            <span class="comment">&lt;!-- tag::frontend-plugin[] --&gt;</span>
+<span class="line-numbers"> 62</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 63</span>                <span class="tag">&lt;groupId&gt;</span>com.github.eirslett<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 64</span>                <span class="tag">&lt;artifactId&gt;</span>frontend-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 65</span>                <span class="tag">&lt;version&gt;</span>1.12.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 66</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 67</span>                    <span class="comment">&lt;!-- tag::working-dir[] --&gt;</span>
+<span class="line-numbers"> 68</span>                    <span class="tag">&lt;workingDirectory&gt;</span>src/main/frontend<span class="tag">&lt;/workingDirectory&gt;</span>
+<span class="line-numbers"> 69</span>                    <span class="comment">&lt;!-- end::working-dir[] --&gt;</span>
+<span class="line-numbers"> 70</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers"> 71</span>                <span class="tag">&lt;executions&gt;</span>
+<span class="line-numbers"> 72</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers"> 73</span>                        <span class="tag">&lt;id&gt;</span>install node and npm<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers"> 74</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers"> 75</span>                            <span class="tag">&lt;goal&gt;</span>install-node-and-npm<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers"> 76</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers"> 77</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 78</span>                            <span class="tag">&lt;nodeVersion&gt;</span>v16.16.0<span class="tag">&lt;/nodeVersion&gt;</span>
+<span class="line-numbers"> 79</span>                            <span class="tag">&lt;npmVersion&gt;</span>8.11.0<span class="tag">&lt;/npmVersion&gt;</span>
+<span class="line-numbers"> 80</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers"> 81</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers"> 82</span>                    <span class="comment">&lt;!-- tag::node-resource-install[] --&gt;</span>
+<span class="line-numbers"> 83</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers"> 84</span>                        <span class="tag">&lt;id&gt;</span>npm install<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers"> 85</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers"> 86</span>                            <span class="tag">&lt;goal&gt;</span>npm<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers"> 87</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers"> 88</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 89</span>                            <span class="tag">&lt;arguments&gt;</span>install<span class="tag">&lt;/arguments&gt;</span>
+<span class="line-numbers"> 90</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers"> 91</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers"> 92</span>                    <span class="comment">&lt;!-- end::node-resource-install[] --&gt;</span>
+<span class="line-numbers"> 93</span>                    <span class="comment">&lt;!-- tag::node-resource-build[] --&gt;</span>
+<span class="line-numbers"> 94</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers"> 95</span>                        <span class="tag">&lt;id&gt;</span>npm run build<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers"> 96</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers"> 97</span>                            <span class="tag">&lt;goal&gt;</span>npm<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers"> 98</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers"> 99</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">100</span>                            <span class="tag">&lt;arguments&gt;</span>run build<span class="tag">&lt;/arguments&gt;</span>
+<span class="line-numbers">101</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">102</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers">103</span>                    <span class="comment">&lt;!-- end::node-resource-build[] --&gt;</span>
+<span class="line-numbers">104</span>                    <span class="comment">&lt;!-- tag::node-tests[] --&gt;</span>
+<span class="line-numbers">105</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers">106</span>                        <span class="tag">&lt;id&gt;</span>run tests<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers">107</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers">108</span>                            <span class="tag">&lt;goal&gt;</span>npm<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers">109</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers">110</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">111</span>                            <span class="tag">&lt;arguments&gt;</span>test a<span class="tag">&lt;/arguments&gt;</span>
+<span class="line-numbers">112</span>                            <span class="tag">&lt;environmentVariables&gt;</span>
+<span class="line-numbers">113</span>                                <span class="tag">&lt;CI&gt;</span>true<span class="tag">&lt;/CI&gt;</span>
+<span class="line-numbers">114</span>                            <span class="tag">&lt;/environmentVariables&gt;</span>
+<span class="line-numbers">115</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">116</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers">117</span>                    <span class="comment">&lt;!-- end::node-tests[] --&gt;</span>
+<span class="line-numbers">118</span>                <span class="tag">&lt;/executions&gt;</span>
+<span class="line-numbers">119</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">120</span>            <span class="comment">&lt;!-- end::frontend-plugin[] --&gt;</span>
+<span class="line-numbers">121</span>            <span class="comment">&lt;!-- Copy frontend static files to target directory --&gt;</span>
+<span class="line-numbers">122</span>            <span class="comment">&lt;!-- tag::copy-plugin[] --&gt;</span>
+<span class="line-numbers">123</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">124</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">125</span>                <span class="tag">&lt;artifactId&gt;</span>maven-resources-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">126</span>                <span class="tag">&lt;version&gt;</span>3.3.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">127</span>                <span class="tag">&lt;executions&gt;</span>
+<span class="line-numbers">128</span>                 <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers">129</span>                        <span class="tag">&lt;id&gt;</span>Copy frontend build to target<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers">130</span>                        <span class="tag">&lt;phase&gt;</span>process-resources<span class="tag">&lt;/phase&gt;</span>
+<span class="line-numbers">131</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers">132</span>                            <span class="tag">&lt;goal&gt;</span>copy-resources<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers">133</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers">134</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">135</span>                            <span class="tag">&lt;outputDirectory&gt;</span>
+<span class="line-numbers">136</span>                                <span class="comment">&lt;!-- tag::output-directory[] --&gt;</span>
+<span class="line-numbers">137</span>                                ${basedir}/src/main/webapp
+<span class="line-numbers">138</span>                                <span class="comment">&lt;!-- end::output-directory[] --&gt;</span>
+<span class="line-numbers">139</span>                            <span class="tag">&lt;/outputDirectory&gt;</span>
+<span class="line-numbers">140</span>                            <span class="tag">&lt;resources&gt;</span>
+<span class="line-numbers">141</span>                                <span class="tag">&lt;resource&gt;</span>
+<span class="line-numbers">142</span>                                    <span class="tag">&lt;directory&gt;</span>
+<span class="line-numbers">143</span>                                        <span class="comment">&lt;!-- tag::directory[] --&gt;</span>
+<span class="line-numbers">144</span>                                        ${basedir}/src/main/frontend/build
+<span class="line-numbers">145</span>                                        <span class="comment">&lt;!-- end::directory[] --&gt;</span>
+<span class="line-numbers">146</span>                                    <span class="tag">&lt;/directory&gt;</span>
+<span class="line-numbers">147</span>                                    <span class="tag">&lt;filtering&gt;</span>true<span class="tag">&lt;/filtering&gt;</span>
+<span class="line-numbers">148</span>                                <span class="tag">&lt;/resource&gt;</span>
+<span class="line-numbers">149</span>                            <span class="tag">&lt;/resources&gt;</span>
+<span class="line-numbers">150</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">151</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers">152</span>                <span class="tag">&lt;/executions&gt;</span>
+<span class="line-numbers">153</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">154</span>            <span class="comment">&lt;!-- end::copy-plugin[] --&gt;</span>
+<span class="line-numbers">155</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">156</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">157</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-default-page">Creating the default page</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You need to create the entry point of your React application. <code>create-react-app</code> uses the <code class="hotspot file=0">index.js</code> file as the main entry point of the application. This JavaScript file corresponds with the <code class="hotspot file=1">index.html</code> file, which is the entry point where your code runs in the browser.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>index.js</code> file.</mark>
+<code>src/main/frontend/src/index.js</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>index.js</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span class="line-numbers"> 1</span><span class="comment">// tag::import-react[]</span>
+<span class="line-numbers"> 2</span><span class="reserved">import</span> React from <span class="string"><span class="delimiter">'</span><span class="content">react</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 3</span><span class="comment">// end::import-react[]</span>
+<span class="line-numbers"> 4</span><span class="comment">// tag::react-dom[]</span>
+<span class="line-numbers"> 5</span><span class="reserved">import</span> ReactDOM from <span class="string"><span class="delimiter">'</span><span class="content">react-dom</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 6</span><span class="comment">// end::react-dom[]</span>
+<span class="line-numbers"> 7</span><span class="reserved">import</span> <span class="string"><span class="delimiter">'</span><span class="content">./Styles/index.css</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 8</span><span class="reserved">import</span> App from <span class="string"><span class="delimiter">'</span><span class="content">./Components/App</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 9</span>
+<span class="line-numbers">10</span><span class="comment">// tag::dom-render[]</span>
+<span class="line-numbers">11</span>ReactDOM.render(&lt;App /&gt;, document.getElementById(<span class="string"><span class="delimiter">'</span><span class="content">root</span><span class="delimiter">'</span></span>));
+<span class="line-numbers">12</span><span class="comment">// end::dom-render[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>index.html</p>
+</div>
+<div class="listingblock code_column tags=html hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="html"><span class="line-numbers"> 1</span><span class="doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="line-numbers"> 2</span><span class="tag">&lt;html</span> <span class="attribute-name">lang</span>=<span class="string"><span class="delimiter">"</span><span class="content">en</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 3</span>  <span class="tag">&lt;head&gt;</span>
+<span class="line-numbers"> 4</span>    <span class="tag">&lt;title&gt;</span>React App<span class="tag">&lt;/title&gt;</span>
+<span class="line-numbers"> 5</span>  <span class="tag">&lt;/head&gt;</span>
+<span class="line-numbers"> 6</span>  <span class="tag">&lt;body&gt;</span>
+<span class="line-numbers"> 7</span>    <span class="tag">&lt;noscript&gt;</span>You need to enable JavaScript to run this app.<span class="tag">&lt;/noscript&gt;</span>
+<span class="line-numbers"> 8</span>    <span class="comment">&lt;!-- tag::id-root[] --&gt;</span>
+<span class="line-numbers"> 9</span>    <span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">root</span><span class="delimiter">"</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">10</span>    <span class="comment">&lt;!-- end::id-root[] --&gt;</span>
+<span class="line-numbers">11</span>  <span class="tag">&lt;/body&gt;</span>
+<span class="line-numbers">12</span><span class="tag">&lt;/html&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=import-react file=0">React</code> library imports the <code class="hotspot=import-react file=0">react</code> package. A DOM, or Document Object Model, is a programming interface for HTML and XML documents. React offers a virtual DOM, which is essentially a copy of the browser DOM that resides in memory. The React virtual DOM improves the performance of your web application and plays a crucial role in the rendering process. The <code class="hotspot=react-dom file=0">react-dom</code> package provides DOM-specific methods that can be used in your application to get outside of the React model, if necessary.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=dom-render file=0">render</code> method takes an HTML DOM element and tells the ReactDOM to render your React application inside of this DOM element. To learn more about the React virtual DOM, see the <a href="https://reactjs.org/docs/react-dom.html" target="_blank" rel="noopener noreferrer">ReactDOM</a> documentation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-react-components">Creating the React components</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A React web application is a collection of components, and each component has a specific function. You will create the components that are used in the application to acquire and display data from the REST API.</p>
+</div>
+<div class="paragraph">
+<p>The main component in your React application is the <code>App</code> component. You need to create the <code class="hotspot file=0">App.js</code> file to act as a container for all other components.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>App.js</code> file.</mark>
+<code>src/main/frontend/src/Components/App.js</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>App.js</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span class="line-numbers"> 1</span><span class="reserved">import</span> React from <span class="string"><span class="delimiter">'</span><span class="content">react</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 2</span><span class="reserved">import</span> {ArtistTable} from <span class="string"><span class="delimiter">'</span><span class="content">./ArtistTable</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 3</span>
+<span class="line-numbers"> 4</span><span class="keyword">function</span> <span class="function">App</span>() {
+<span class="line-numbers"> 5</span>  <span class="keyword">return</span> (
+<span class="line-numbers"> 6</span>    <span class="comment">// tag::react-component[]</span>
+<span class="line-numbers"> 7</span>      <span class="tag">&lt;ArtistTable</span><span class="tag">/&gt;</span>
+<span class="line-numbers"> 8</span>    <span class="comment">// end::react-component[]</span>
+<span class="line-numbers"> 9</span>  );
+<span class="line-numbers">10</span>}
+<span class="line-numbers">11</span>
+<span class="line-numbers">12</span><span class="reserved">export</span> <span class="keyword">default</span> App;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>App.js</code> file returns the <code class="hotspot=react-component file=0">ArtistTable</code> function to create a reusable element that encompasses your web application.</p>
+</div>
+<div class="paragraph">
+<p>Next, create the <code>ArtistTable</code> function that fetches data from your back end and renders it in a table.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the <code>ArtistTable.js</code> file.</mark>
+<code>src/main/frontend/src/Components/ArtistTable.js</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ArtistTable.js</p>
+</div>
+<div class="listingblock code_column hide_tags=get-posts,useEffect,axios-library">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span class="line-numbers">  1</span><span class="comment">// tag::react-library[]</span>
+<span class="line-numbers">  2</span><span class="reserved">import</span> React, { useEffect, useMemo, useState } from <span class="string"><span class="delimiter">'</span><span class="content">react</span><span class="delimiter">'</span></span>;
+<span class="line-numbers">  3</span><span class="comment">// end::react-library[]</span>
+<span class="line-numbers">  4</span><span class="comment">// tag::axios-library[]</span>
+<span class="line-numbers">  5</span><span class="reserved">import</span> axios from <span class="string"><span class="delimiter">'</span><span class="content">axios</span><span class="delimiter">'</span></span>;
+<span class="line-numbers">  6</span><span class="comment">// end::axios-library[]</span>
+<span class="line-numbers">  7</span><span class="comment">// tag::react-table[]</span>
+<span class="line-numbers">  8</span><span class="reserved">import</span> { useTable, usePagination, useSortBy } from <span class="string"><span class="delimiter">'</span><span class="content">react-table</span><span class="delimiter">'</span></span>;
+<span class="line-numbers">  9</span><span class="comment">// end::react-table[]</span>
+<span class="line-numbers"> 10</span><span class="comment">// tag::custom-style[]</span>
+<span class="line-numbers"> 11</span><span class="reserved">import</span> <span class="string"><span class="delimiter">'</span><span class="content">../Styles/table.css</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 12</span><span class="comment">// end::custom-styly[]</span>
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="comment">// tag::ArtistTable[]</span>
+<span class="line-numbers"> 15</span><span class="reserved">export</span> <span class="keyword">function</span> <span class="function">ArtistTable</span>() {
+<span class="line-numbers"> 16</span>  <span class="comment">// end::ArtistTable[]</span>
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span>  <span class="comment">// tag::posts[]</span>
+<span class="line-numbers"> 19</span>  const [posts, setPosts] = useState([]);
+<span class="line-numbers"> 20</span>  <span class="comment">// end::posts[]</span>
+<span class="line-numbers"> 21</span>
+<span class="line-numbers"> 22</span>  <span class="comment">// tag::get-posts[]</span>
+<span class="line-numbers"> 23</span>  const GetArtistsInfo = async () =&gt; {
+<span class="line-numbers"> 24</span>    <span class="comment">// tag::axios[]</span>
+<span class="line-numbers"> 25</span>    const response = await axios.get(<span class="string"><span class="delimiter">'</span><span class="content">http://localhost:9080/artists</span><span class="delimiter">'</span></span>)
+<span class="line-numbers"> 26</span>      <span class="comment">// end::axios[]</span>
+<span class="line-numbers"> 27</span>      .then(response =&gt; {
+<span class="line-numbers"> 28</span>        <span class="comment">// tag::response-data[]</span>
+<span class="line-numbers"> 29</span>        const artists = response.data;
+<span class="line-numbers"> 30</span>        <span class="comment">// end::response-data[]</span>
+<span class="line-numbers"> 31</span>        <span class="comment">// tag::for-artists[]</span>
+<span class="line-numbers"> 32</span>        <span class="keyword">for</span> (const artist of artists) {
+<span class="line-numbers"> 33</span>          <span class="comment">// tag::spread-one[]</span>
+<span class="line-numbers"> 34</span>          const { albums, ...rest } = artist;
+<span class="line-numbers"> 35</span>          <span class="comment">// end::spread-one[]</span>
+<span class="line-numbers"> 36</span>          <span class="keyword">for</span> (const album of albums) {
+<span class="line-numbers"> 37</span>            <span class="comment">//tag::setState[]</span>
+<span class="line-numbers"> 38</span>            setPosts([...posts, { ...rest, ...album }]);
+<span class="line-numbers"> 39</span>            <span class="comment">// end::setState[]</span>
+<span class="line-numbers"> 40</span>            <span class="comment">// tag::spread-two[]</span>
+<span class="line-numbers"> 41</span>            posts.push({ ...rest, ...album });
+<span class="line-numbers"> 42</span>            <span class="comment">// end::spread-two[]</span>
+<span class="line-numbers"> 43</span>          }
+<span class="line-numbers"> 44</span>        };
+<span class="line-numbers"> 45</span>        <span class="comment">// end::for-artists[]</span>
+<span class="line-numbers"> 46</span>      }).<span class="keyword">catch</span>(error =&gt; { console.log(error); });
+<span class="line-numbers"> 47</span>  };
+<span class="line-numbers"> 48</span>  <span class="comment">// end::get-posts[]</span>
+<span class="line-numbers"> 49</span>
+<span class="line-numbers"> 50</span>  <span class="comment">// tag::useMemo[]</span>
+<span class="line-numbers"> 51</span>  const data = useMemo(() =&gt; [...posts], [posts]);
+<span class="line-numbers"> 52</span>  <span class="comment">// end::useMemo[]</span>
+<span class="line-numbers"> 53</span>
+<span class="line-numbers"> 54</span>  <span class="comment">// tag::table-info[]</span>
+<span class="line-numbers"> 55</span>  const columns = useMemo(() =&gt; [{
+<span class="line-numbers"> 56</span>    <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Artist Info</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 57</span>    <span class="key">columns</span>: [
+<span class="line-numbers"> 58</span>      {
+<span class="line-numbers"> 59</span>        <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Artist ID</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 60</span>        <span class="key">accessor</span>: <span class="string"><span class="delimiter">'</span><span class="content">id</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 61</span>      },
+<span class="line-numbers"> 62</span>      {
+<span class="line-numbers"> 63</span>        <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Artist Name</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 64</span>        <span class="key">accessor</span>: <span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 65</span>      },
+<span class="line-numbers"> 66</span>      {
+<span class="line-numbers"> 67</span>        <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Genres</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 68</span>        <span class="key">accessor</span>: <span class="string"><span class="delimiter">'</span><span class="content">genres</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 69</span>      }
+<span class="line-numbers"> 70</span>    ]
+<span class="line-numbers"> 71</span>  },
+<span class="line-numbers"> 72</span>  {
+<span class="line-numbers"> 73</span>    <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Albums</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 74</span>    <span class="key">columns</span>: [
+<span class="line-numbers"> 75</span>      {
+<span class="line-numbers"> 76</span>        <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Number of Tracks</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 77</span>        <span class="key">accessor</span>: <span class="string"><span class="delimiter">'</span><span class="content">ntracks</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 78</span>      },
+<span class="line-numbers"> 79</span>      {
+<span class="line-numbers"> 80</span>        <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Title</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 81</span>        <span class="key">accessor</span>: <span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 82</span>      }
+<span class="line-numbers"> 83</span>    ]
+<span class="line-numbers"> 84</span>  }
+<span class="line-numbers"> 85</span>  ], []
+<span class="line-numbers"> 86</span>  );
+<span class="line-numbers"> 87</span>  <span class="comment">// end::table-info[]</span>
+<span class="line-numbers"> 88</span>
+<span class="line-numbers"> 89</span>  <span class="comment">// tag::useTable[]</span>
+<span class="line-numbers"> 90</span>  const tableInstance = useTable(
+<span class="line-numbers"> 91</span>    {
+<span class="line-numbers"> 92</span>      columns,
+<span class="line-numbers"> 93</span>      data,
+<span class="line-numbers"> 94</span>      <span class="key">initialState</span>: { <span class="key">pageIndex</span>: <span class="integer">0</span>, <span class="key">pageSize</span>: <span class="integer">4</span> }
+<span class="line-numbers"> 95</span>    },
+<span class="line-numbers"> 96</span>    <span class="comment">// tag::useSortBy[]</span>
+<span class="line-numbers"> 97</span>    useSortBy,
+<span class="line-numbers"> 98</span>    <span class="comment">// end::useSortBy[]</span>
+<span class="line-numbers"> 99</span>    <span class="comment">// tag::usePagination[]</span>
+<span class="line-numbers">100</span>    usePagination
+<span class="line-numbers">101</span>    <span class="comment">// end::usePagination[]</span>
+<span class="line-numbers">102</span>  )
+<span class="line-numbers">103</span>  <span class="comment">// end::useTable[]</span>
+<span class="line-numbers">104</span>
+<span class="line-numbers">105</span>  <span class="comment">// tag::destructuring[]</span>
+<span class="line-numbers">106</span>  const {
+<span class="line-numbers">107</span>    getTableProps,
+<span class="line-numbers">108</span>    getTableBodyProps,
+<span class="line-numbers">109</span>    headerGroups,
+<span class="line-numbers">110</span>    prepareRow,
+<span class="line-numbers">111</span>    page,
+<span class="line-numbers">112</span>    canPreviousPage,
+<span class="line-numbers">113</span>    canNextPage,
+<span class="line-numbers">114</span>    pageOptions,
+<span class="line-numbers">115</span>    pageCount,
+<span class="line-numbers">116</span>    gotoPage,
+<span class="line-numbers">117</span>    nextPage,
+<span class="line-numbers">118</span>    previousPage,
+<span class="line-numbers">119</span>    setPageSize,
+<span class="line-numbers">120</span>    <span class="key">state</span>: { pageIndex, pageSize }
+<span class="line-numbers">121</span>  } = tableInstance;
+<span class="line-numbers">122</span>  <span class="comment">// end::destructuring[]</span>
+<span class="line-numbers">123</span>
+<span class="line-numbers">124</span>  <span class="comment">// tag::useEffect[]</span>
+<span class="line-numbers">125</span>  useEffect(() =&gt; {
+<span class="line-numbers">126</span>    GetArtistsInfo();
+<span class="line-numbers">127</span>  }, []);
+<span class="line-numbers">128</span>  <span class="comment">// end::useEffect[]</span>
+<span class="line-numbers">129</span>
+<span class="line-numbers">130</span>  <span class="comment">// tag::return-table[]</span>
+<span class="line-numbers">131</span>  <span class="keyword">return</span> (
+<span class="line-numbers">132</span>    &lt;&gt;
+<span class="line-numbers">133</span>      <span class="tag">&lt;h2&gt;</span>Artist Web Service<span class="tag">&lt;/h2&gt;</span>
+<span class="line-numbers">134</span>      {<span class="comment">/* tag::table[] */</span>}
+<span class="line-numbers">135</span>      <span class="tag">&lt;table</span> <span class="error">{</span><span class="attribute-name">...getTableProps</span><span class="error">(</span><span class="error">)</span><span class="error">}</span><span class="tag">&gt;</span>
+<span class="line-numbers">136</span>        <span class="tag">&lt;thead&gt;</span>
+<span class="line-numbers">137</span>          {headerGroups.map(headerGroup =<span class="error">&gt;</span> (
+<span class="line-numbers">138</span>            <span class="tag">&lt;tr</span> <span class="error">{</span><span class="attribute-name">...headerGroup.getHeaderGroupProps</span><span class="error">(</span><span class="error">)</span><span class="error">}</span><span class="tag">&gt;</span>
+<span class="line-numbers">139</span>              {headerGroup.headers.map((column) =<span class="error">&gt;</span> (
+<span class="line-numbers">140</span>                <span class="tag">&lt;th</span> <span class="error">{</span><span class="attribute-name">...column.getHeaderProps</span><span class="error">(</span><span class="attribute-name">column.getSortByToggleProps</span><span class="error">(</span><span class="error">)</span><span class="error">)</span><span class="error">}</span><span class="tag">&gt;</span>
+<span class="line-numbers">141</span>                  {column.render('Header')}
+<span class="line-numbers">142</span>                  <span class="tag">&lt;span&gt;</span>
+<span class="line-numbers">143</span>                    {column.isSorted
+<span class="line-numbers">144</span>                      ? column.isSortedDesc
+<span class="line-numbers">145</span>                        ? ' 🔽'
+<span class="line-numbers">146</span>                        : ' 🔼'
+<span class="line-numbers">147</span>                      : ''}
+<span class="line-numbers">148</span>                  <span class="tag">&lt;/span&gt;</span>
+<span class="line-numbers">149</span>                <span class="tag">&lt;/th&gt;</span>
+<span class="line-numbers">150</span>              ))}
+<span class="line-numbers">151</span>            <span class="tag">&lt;/tr&gt;</span>
+<span class="line-numbers">152</span>          ))}
+<span class="line-numbers">153</span>        <span class="tag">&lt;/thead&gt;</span>
+<span class="line-numbers">154</span>        <span class="tag">&lt;tbody</span> <span class="error">{</span><span class="attribute-name">...getTableBodyProps</span><span class="error">(</span><span class="error">)</span><span class="error">}</span><span class="tag">&gt;</span>
+<span class="line-numbers">155</span>          {page.map((row, i) =<span class="error">&gt;</span> {
+<span class="line-numbers">156</span>            prepareRow(row)
+<span class="line-numbers">157</span>            return (
+<span class="line-numbers">158</span>              <span class="tag">&lt;tr</span> <span class="error">{</span><span class="attribute-name">...row.getRowProps</span><span class="error">(</span><span class="error">)</span><span class="error">}</span><span class="tag">&gt;</span>
+<span class="line-numbers">159</span>                {row.cells.map(cell =<span class="error">&gt;</span> {
+<span class="line-numbers">160</span>                  return <span class="tag">&lt;td</span> <span class="error">{</span><span class="attribute-name">...cell.getCellProps</span><span class="error">(</span><span class="error">)</span><span class="error">}</span><span class="tag">&gt;</span>{cell.render('Cell')}<span class="tag">&lt;/td&gt;</span>
+<span class="line-numbers">161</span>                })}
+<span class="line-numbers">162</span>              <span class="tag">&lt;/tr&gt;</span>
+<span class="line-numbers">163</span>            )
+<span class="line-numbers">164</span>          })}
+<span class="line-numbers">165</span>        <span class="tag">&lt;/tbody&gt;</span>
+<span class="line-numbers">166</span>      <span class="tag">&lt;/table&gt;</span>
+<span class="line-numbers">167</span>      {<span class="comment">/* end::table[] */</span>}
+<span class="line-numbers">168</span>      <span class="tag">&lt;div</span> <span class="attribute-name">className</span>=<span class="string"><span class="delimiter">"</span><span class="content">pagination</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">169</span>        <span class="tag">&lt;button</span> <span class="attribute-name">onClick</span>=<span class="error">{</span><span class="error">(</span><span class="error">)</span> <span class="error">=</span><span class="tag">&gt;</span> previousPage()} disabled={!canPreviousPage}<span class="error">&gt;</span>
+<span class="line-numbers">170</span>          {'Previous'}
+<span class="line-numbers">171</span>        <span class="tag">&lt;/button&gt;</span>{' '}
+<span class="line-numbers">172</span>        <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">page-info</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">173</span>          <span class="tag">&lt;span&gt;</span>
+<span class="line-numbers">174</span>            Page{' '}
+<span class="line-numbers">175</span>            <span class="tag">&lt;strong&gt;</span>
+<span class="line-numbers">176</span>              {pageIndex + 1} of {pageOptions.length}
+<span class="line-numbers">177</span>            <span class="tag">&lt;/strong&gt;</span>{' '}
+<span class="line-numbers">178</span>          <span class="tag">&lt;/span&gt;</span>
+<span class="line-numbers">179</span>          <span class="tag">&lt;span&gt;</span>
+<span class="line-numbers">180</span>            | Go to page:{' '}
+<span class="line-numbers">181</span>            <span class="tag">&lt;input</span>
+<span class="line-numbers">182</span>              <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">"</span><span class="content">number</span><span class="delimiter">"</span></span>
+<span class="line-numbers">183</span>              <span class="attribute-name">defaultValue</span>=<span class="error">{</span><span class="attribute-value">pageIndex</span> <span class="error">+</span> <span class="attribute-name">1</span><span class="error">}</span>
+<span class="line-numbers">184</span>              <span class="attribute-name">onChange</span>=<span class="error">{</span><span class="attribute-value">e</span> <span class="error">=</span><span class="tag">&gt;</span> {
+<span class="line-numbers">185</span>                const page = e.target.value ? Number(e.target.value) - 1 : 0
+<span class="line-numbers">186</span>                gotoPage(page)
+<span class="line-numbers">187</span>              }}
+<span class="line-numbers">188</span>              style={{ width: '100px' }}
+<span class="line-numbers">189</span>            /<span class="error">&gt;</span>
+<span class="line-numbers">190</span>          <span class="tag">&lt;/span&gt;</span>{' '}
+<span class="line-numbers">191</span>          <span class="tag">&lt;select</span>
+<span class="line-numbers">192</span>            <span class="attribute-name">value</span>=<span class="error">{</span><span class="attribute-value">pageSize</span><span class="error">}</span>
+<span class="line-numbers">193</span>            <span class="attribute-name">onChange</span>=<span class="error">{</span><span class="attribute-value">e</span> <span class="error">=</span><span class="tag">&gt;</span> {
+<span class="line-numbers">194</span>              setPageSize(Number(e.target.value))
+<span class="line-numbers">195</span>            }}
+<span class="line-numbers">196</span>          <span class="error">&gt;</span>
+<span class="line-numbers">197</span>            {[4, 5, 6, 9].map(pageSize =<span class="error">&gt;</span> (
+<span class="line-numbers">198</span>              <span class="tag">&lt;option</span> <span class="attribute-name">key</span>=<span class="error">{</span><span class="attribute-value">pageSize</span><span class="error">}</span> <span class="attribute-name">value</span>=<span class="error">{</span><span class="attribute-value">pageSize</span><span class="error">}</span><span class="tag">&gt;</span>
+<span class="line-numbers">199</span>                Show {pageSize}
+<span class="line-numbers">200</span>              <span class="tag">&lt;/option&gt;</span>
+<span class="line-numbers">201</span>            ))}
+<span class="line-numbers">202</span>          <span class="tag">&lt;/select&gt;</span>
+<span class="line-numbers">203</span>        <span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">204</span>        <span class="tag">&lt;button</span> <span class="attribute-name">onClick</span>=<span class="error">{</span><span class="error">(</span><span class="error">)</span> <span class="error">=</span><span class="tag">&gt;</span> nextPage()} disabled={!canNextPage}<span class="error">&gt;</span>
+<span class="line-numbers">205</span>          {'Next'}
+<span class="line-numbers">206</span>        <span class="tag">&lt;/button&gt;</span>{<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>}
+<span class="line-numbers">207</span>      &lt;<span class="regexp"><span class="delimiter">/</span><span class="content">div&gt;</span></span>
+<span class="line-numbers">208</span><span class="regexp"><span class="content">    &lt;</span><span class="delimiter">/</span></span>&gt;
+<span class="line-numbers">209</span>  );
+<span class="line-numbers">210</span>  <span class="comment">// end::return-table[]</span>
+<span class="line-numbers">211</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=react-library file=1">React</code> library imports the <code>react</code> package for you to create the <code class="hotspot=ArtistTable file=1">ArtistTable</code> function. This function must have the <code>export</code> declaration because it is being exported to the <code>App.js</code> module. The <code class="hotspot=posts file=1">posts</code> object is initialized using a React Hook that lets you add a state to represent the state of the posts that appear on the paginated table.</p>
+</div>
+<div class="paragraph">
+<p>To display the returned data, you will use pagination. Pagination is the process of separating content into discrete pages, and it can be used for handling data sets in React. In your application, you’ll render the columns in the paginated table. The <code class="hotspot=table-info file=1">columns</code> constant is used to define the table that is present on the webpage.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=useTable file=1">useTable</code> hook creates a paginated table. The <code>useTable</code> hook takes in the <code class="hotspot=table-info file=1">columns</code>, <code class="hotspot=posts file=1">posts</code>, and <code>setPosts</code> objects as parameters. It returns a paginated table that is assigned to the <code class="hotspot=table file=1">table</code> constant. The <code class="hotspot=table file=1">table</code> constant renders the paginated table on the webpage. The <code class="hotspot=return-table file=1">return</code> statement returns the paginated table. The <code class="hotspot=useSortBy file=1">useSortBy</code> hook sorts the paginated table by the column headers. The <code class="hotspot=usePagination file=1">usePagination</code> hook creates the pagination buttons at the bottom of the table that are used to navigate through the paginated table.</p>
+</div>
+<div class="sect2">
+<h3 id="importing-the-http-client">Importing the HTTP client</h3>
+<div class="paragraph">
+<p>Your application needs a way to communicate with and retrieve resources from RESTful web services to output the resources onto the paginated table. The <a href="https://github.com/axios/axios" target="_blank" rel="noopener noreferrer">Axios</a> library will provide you with an HTTP client. This client is used to make HTTP requests to external resources. Axios is a promise-based HTTP client that can send asynchronous requests to REST endpoints. To learn more about the Axios library and its HTTP client, see the <a href="https://www.npmjs.com/package/axios" target="_blank" rel="noopener noreferrer">Axios documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=get-posts">GetArtistsInfo()</code> function uses the Axios API to fetch data from your back end. This function is called when the <code>ArtistTable</code> is rendered to the page using the <code class="hotspot=useEffect">useEffect()</code> React lifecycle method.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Update the <code>ArtistTable.js</code> file.</mark>
+<code>src/main/frontend/src/Components/ArtistTable.js</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ArtistTable.js</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span class="line-numbers">  1</span><span class="comment">// tag::react-library[]</span>
+<span class="line-numbers">  2</span><span class="reserved">import</span> React, { useEffect, useMemo, useState } from <span class="string"><span class="delimiter">'</span><span class="content">react</span><span class="delimiter">'</span></span>;
+<span class="line-numbers">  3</span><span class="comment">// end::react-library[]</span>
+<span class="line-numbers">  4</span><span class="comment">// tag::axios-library[]</span>
+<span class="line-numbers">  5</span><span class="reserved">import</span> axios from <span class="string"><span class="delimiter">'</span><span class="content">axios</span><span class="delimiter">'</span></span>;
+<span class="line-numbers">  6</span><span class="comment">// end::axios-library[]</span>
+<span class="line-numbers">  7</span><span class="comment">// tag::react-table[]</span>
+<span class="line-numbers">  8</span><span class="reserved">import</span> { useTable, usePagination, useSortBy } from <span class="string"><span class="delimiter">'</span><span class="content">react-table</span><span class="delimiter">'</span></span>;
+<span class="line-numbers">  9</span><span class="comment">// end::react-table[]</span>
+<span class="line-numbers"> 10</span><span class="comment">// tag::custom-style[]</span>
+<span class="line-numbers"> 11</span><span class="reserved">import</span> <span class="string"><span class="delimiter">'</span><span class="content">../Styles/table.css</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 12</span><span class="comment">// end::custom-styly[]</span>
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="comment">// tag::ArtistTable[]</span>
+<span class="line-numbers"> 15</span><span class="reserved">export</span> <span class="keyword">function</span> <span class="function">ArtistTable</span>() {
+<span class="line-numbers"> 16</span>  <span class="comment">// end::ArtistTable[]</span>
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span>  <span class="comment">// tag::posts[]</span>
+<span class="line-numbers"> 19</span>  const [posts, setPosts] = useState([]);
+<span class="line-numbers"> 20</span>  <span class="comment">// end::posts[]</span>
+<span class="line-numbers"> 21</span>
+<span class="line-numbers"> 22</span>  <span class="comment">// tag::get-posts[]</span>
+<span class="line-numbers"> 23</span>  const GetArtistsInfo = async () =&gt; {
+<span class="line-numbers"> 24</span>    <span class="comment">// tag::axios[]</span>
+<span class="line-numbers"> 25</span>    const response = await axios.get(<span class="string"><span class="delimiter">'</span><span class="content">http://localhost:9080/artists</span><span class="delimiter">'</span></span>)
+<span class="line-numbers"> 26</span>      <span class="comment">// end::axios[]</span>
+<span class="line-numbers"> 27</span>      .then(response =&gt; {
+<span class="line-numbers"> 28</span>        <span class="comment">// tag::response-data[]</span>
+<span class="line-numbers"> 29</span>        const artists = response.data;
+<span class="line-numbers"> 30</span>        <span class="comment">// end::response-data[]</span>
+<span class="line-numbers"> 31</span>        <span class="comment">// tag::for-artists[]</span>
+<span class="line-numbers"> 32</span>        <span class="keyword">for</span> (const artist of artists) {
+<span class="line-numbers"> 33</span>          <span class="comment">// tag::spread-one[]</span>
+<span class="line-numbers"> 34</span>          const { albums, ...rest } = artist;
+<span class="line-numbers"> 35</span>          <span class="comment">// end::spread-one[]</span>
+<span class="line-numbers"> 36</span>          <span class="keyword">for</span> (const album of albums) {
+<span class="line-numbers"> 37</span>            <span class="comment">//tag::setState[]</span>
+<span class="line-numbers"> 38</span>            setPosts([...posts, { ...rest, ...album }]);
+<span class="line-numbers"> 39</span>            <span class="comment">// end::setState[]</span>
+<span class="line-numbers"> 40</span>            <span class="comment">// tag::spread-two[]</span>
+<span class="line-numbers"> 41</span>            posts.push({ ...rest, ...album });
+<span class="line-numbers"> 42</span>            <span class="comment">// end::spread-two[]</span>
+<span class="line-numbers"> 43</span>          }
+<span class="line-numbers"> 44</span>        };
+<span class="line-numbers"> 45</span>        <span class="comment">// end::for-artists[]</span>
+<span class="line-numbers"> 46</span>      }).<span class="keyword">catch</span>(error =&gt; { console.log(error); });
+<span class="line-numbers"> 47</span>  };
+<span class="line-numbers"> 48</span>  <span class="comment">// end::get-posts[]</span>
+<span class="line-numbers"> 49</span>
+<span class="line-numbers"> 50</span>  <span class="comment">// tag::useMemo[]</span>
+<span class="line-numbers"> 51</span>  const data = useMemo(() =&gt; [...posts], [posts]);
+<span class="line-numbers"> 52</span>  <span class="comment">// end::useMemo[]</span>
+<span class="line-numbers"> 53</span>
+<span class="line-numbers"> 54</span>  <span class="comment">// tag::table-info[]</span>
+<span class="line-numbers"> 55</span>  const columns = useMemo(() =&gt; [{
+<span class="line-numbers"> 56</span>    <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Artist Info</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 57</span>    <span class="key">columns</span>: [
+<span class="line-numbers"> 58</span>      {
+<span class="line-numbers"> 59</span>        <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Artist ID</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 60</span>        <span class="key">accessor</span>: <span class="string"><span class="delimiter">'</span><span class="content">id</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 61</span>      },
+<span class="line-numbers"> 62</span>      {
+<span class="line-numbers"> 63</span>        <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Artist Name</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 64</span>        <span class="key">accessor</span>: <span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>
+<span class="line-numbers"> 65</span>      },
+<span class="line-numbers"> 66</span>      {
+<span class="line-numbers"> 67</span>        <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Genres</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 68</span>        <span class="key">accessor</span>: <span class="string"><span class="delimiter">'</span><span class="content">genres</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 69</span>      }
+<span class="line-numbers"> 70</span>    ]
+<span class="line-numbers"> 71</span>  },
+<span class="line-numbers"> 72</span>  {
+<span class="line-numbers"> 73</span>    <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Albums</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 74</span>    <span class="key">columns</span>: [
+<span class="line-numbers"> 75</span>      {
+<span class="line-numbers"> 76</span>        <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Number of Tracks</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 77</span>        <span class="key">accessor</span>: <span class="string"><span class="delimiter">'</span><span class="content">ntracks</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 78</span>      },
+<span class="line-numbers"> 79</span>      {
+<span class="line-numbers"> 80</span>        <span class="key">Header</span>: <span class="string"><span class="delimiter">'</span><span class="content">Title</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 81</span>        <span class="key">accessor</span>: <span class="string"><span class="delimiter">'</span><span class="content">title</span><span class="delimiter">'</span></span>,
+<span class="line-numbers"> 82</span>      }
+<span class="line-numbers"> 83</span>    ]
+<span class="line-numbers"> 84</span>  }
+<span class="line-numbers"> 85</span>  ], []
+<span class="line-numbers"> 86</span>  );
+<span class="line-numbers"> 87</span>  <span class="comment">// end::table-info[]</span>
+<span class="line-numbers"> 88</span>
+<span class="line-numbers"> 89</span>  <span class="comment">// tag::useTable[]</span>
+<span class="line-numbers"> 90</span>  const tableInstance = useTable(
+<span class="line-numbers"> 91</span>    {
+<span class="line-numbers"> 92</span>      columns,
+<span class="line-numbers"> 93</span>      data,
+<span class="line-numbers"> 94</span>      <span class="key">initialState</span>: { <span class="key">pageIndex</span>: <span class="integer">0</span>, <span class="key">pageSize</span>: <span class="integer">4</span> }
+<span class="line-numbers"> 95</span>    },
+<span class="line-numbers"> 96</span>    <span class="comment">// tag::useSortBy[]</span>
+<span class="line-numbers"> 97</span>    useSortBy,
+<span class="line-numbers"> 98</span>    <span class="comment">// end::useSortBy[]</span>
+<span class="line-numbers"> 99</span>    <span class="comment">// tag::usePagination[]</span>
+<span class="line-numbers">100</span>    usePagination
+<span class="line-numbers">101</span>    <span class="comment">// end::usePagination[]</span>
+<span class="line-numbers">102</span>  )
+<span class="line-numbers">103</span>  <span class="comment">// end::useTable[]</span>
+<span class="line-numbers">104</span>
+<span class="line-numbers">105</span>  <span class="comment">// tag::destructuring[]</span>
+<span class="line-numbers">106</span>  const {
+<span class="line-numbers">107</span>    getTableProps,
+<span class="line-numbers">108</span>    getTableBodyProps,
+<span class="line-numbers">109</span>    headerGroups,
+<span class="line-numbers">110</span>    prepareRow,
+<span class="line-numbers">111</span>    page,
+<span class="line-numbers">112</span>    canPreviousPage,
+<span class="line-numbers">113</span>    canNextPage,
+<span class="line-numbers">114</span>    pageOptions,
+<span class="line-numbers">115</span>    pageCount,
+<span class="line-numbers">116</span>    gotoPage,
+<span class="line-numbers">117</span>    nextPage,
+<span class="line-numbers">118</span>    previousPage,
+<span class="line-numbers">119</span>    setPageSize,
+<span class="line-numbers">120</span>    <span class="key">state</span>: { pageIndex, pageSize }
+<span class="line-numbers">121</span>  } = tableInstance;
+<span class="line-numbers">122</span>  <span class="comment">// end::destructuring[]</span>
+<span class="line-numbers">123</span>
+<span class="line-numbers">124</span>  <span class="comment">// tag::useEffect[]</span>
+<span class="line-numbers">125</span>  useEffect(() =&gt; {
+<span class="line-numbers">126</span>    GetArtistsInfo();
+<span class="line-numbers">127</span>  }, []);
+<span class="line-numbers">128</span>  <span class="comment">// end::useEffect[]</span>
+<span class="line-numbers">129</span>
+<span class="line-numbers">130</span>  <span class="comment">// tag::return-table[]</span>
+<span class="line-numbers">131</span>  <span class="keyword">return</span> (
+<span class="line-numbers">132</span>    &lt;&gt;
+<span class="line-numbers">133</span>      <span class="tag">&lt;h2&gt;</span>Artist Web Service<span class="tag">&lt;/h2&gt;</span>
+<span class="line-numbers">134</span>      {<span class="comment">/* tag::table[] */</span>}
+<span class="line-numbers">135</span>      <span class="tag">&lt;table</span> <span class="error">{</span><span class="attribute-name">...getTableProps</span><span class="error">(</span><span class="error">)</span><span class="error">}</span><span class="tag">&gt;</span>
+<span class="line-numbers">136</span>        <span class="tag">&lt;thead&gt;</span>
+<span class="line-numbers">137</span>          {headerGroups.map(headerGroup =<span class="error">&gt;</span> (
+<span class="line-numbers">138</span>            <span class="tag">&lt;tr</span> <span class="error">{</span><span class="attribute-name">...headerGroup.getHeaderGroupProps</span><span class="error">(</span><span class="error">)</span><span class="error">}</span><span class="tag">&gt;</span>
+<span class="line-numbers">139</span>              {headerGroup.headers.map((column) =<span class="error">&gt;</span> (
+<span class="line-numbers">140</span>                <span class="tag">&lt;th</span> <span class="error">{</span><span class="attribute-name">...column.getHeaderProps</span><span class="error">(</span><span class="attribute-name">column.getSortByToggleProps</span><span class="error">(</span><span class="error">)</span><span class="error">)</span><span class="error">}</span><span class="tag">&gt;</span>
+<span class="line-numbers">141</span>                  {column.render('Header')}
+<span class="line-numbers">142</span>                  <span class="tag">&lt;span&gt;</span>
+<span class="line-numbers">143</span>                    {column.isSorted
+<span class="line-numbers">144</span>                      ? column.isSortedDesc
+<span class="line-numbers">145</span>                        ? ' 🔽'
+<span class="line-numbers">146</span>                        : ' 🔼'
+<span class="line-numbers">147</span>                      : ''}
+<span class="line-numbers">148</span>                  <span class="tag">&lt;/span&gt;</span>
+<span class="line-numbers">149</span>                <span class="tag">&lt;/th&gt;</span>
+<span class="line-numbers">150</span>              ))}
+<span class="line-numbers">151</span>            <span class="tag">&lt;/tr&gt;</span>
+<span class="line-numbers">152</span>          ))}
+<span class="line-numbers">153</span>        <span class="tag">&lt;/thead&gt;</span>
+<span class="line-numbers">154</span>        <span class="tag">&lt;tbody</span> <span class="error">{</span><span class="attribute-name">...getTableBodyProps</span><span class="error">(</span><span class="error">)</span><span class="error">}</span><span class="tag">&gt;</span>
+<span class="line-numbers">155</span>          {page.map((row, i) =<span class="error">&gt;</span> {
+<span class="line-numbers">156</span>            prepareRow(row)
+<span class="line-numbers">157</span>            return (
+<span class="line-numbers">158</span>              <span class="tag">&lt;tr</span> <span class="error">{</span><span class="attribute-name">...row.getRowProps</span><span class="error">(</span><span class="error">)</span><span class="error">}</span><span class="tag">&gt;</span>
+<span class="line-numbers">159</span>                {row.cells.map(cell =<span class="error">&gt;</span> {
+<span class="line-numbers">160</span>                  return <span class="tag">&lt;td</span> <span class="error">{</span><span class="attribute-name">...cell.getCellProps</span><span class="error">(</span><span class="error">)</span><span class="error">}</span><span class="tag">&gt;</span>{cell.render('Cell')}<span class="tag">&lt;/td&gt;</span>
+<span class="line-numbers">161</span>                })}
+<span class="line-numbers">162</span>              <span class="tag">&lt;/tr&gt;</span>
+<span class="line-numbers">163</span>            )
+<span class="line-numbers">164</span>          })}
+<span class="line-numbers">165</span>        <span class="tag">&lt;/tbody&gt;</span>
+<span class="line-numbers">166</span>      <span class="tag">&lt;/table&gt;</span>
+<span class="line-numbers">167</span>      {<span class="comment">/* end::table[] */</span>}
+<span class="line-numbers">168</span>      <span class="tag">&lt;div</span> <span class="attribute-name">className</span>=<span class="string"><span class="delimiter">"</span><span class="content">pagination</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">169</span>        <span class="tag">&lt;button</span> <span class="attribute-name">onClick</span>=<span class="error">{</span><span class="error">(</span><span class="error">)</span> <span class="error">=</span><span class="tag">&gt;</span> previousPage()} disabled={!canPreviousPage}<span class="error">&gt;</span>
+<span class="line-numbers">170</span>          {'Previous'}
+<span class="line-numbers">171</span>        <span class="tag">&lt;/button&gt;</span>{' '}
+<span class="line-numbers">172</span>        <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">page-info</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">173</span>          <span class="tag">&lt;span&gt;</span>
+<span class="line-numbers">174</span>            Page{' '}
+<span class="line-numbers">175</span>            <span class="tag">&lt;strong&gt;</span>
+<span class="line-numbers">176</span>              {pageIndex + 1} of {pageOptions.length}
+<span class="line-numbers">177</span>            <span class="tag">&lt;/strong&gt;</span>{' '}
+<span class="line-numbers">178</span>          <span class="tag">&lt;/span&gt;</span>
+<span class="line-numbers">179</span>          <span class="tag">&lt;span&gt;</span>
+<span class="line-numbers">180</span>            | Go to page:{' '}
+<span class="line-numbers">181</span>            <span class="tag">&lt;input</span>
+<span class="line-numbers">182</span>              <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">"</span><span class="content">number</span><span class="delimiter">"</span></span>
+<span class="line-numbers">183</span>              <span class="attribute-name">defaultValue</span>=<span class="error">{</span><span class="attribute-value">pageIndex</span> <span class="error">+</span> <span class="attribute-name">1</span><span class="error">}</span>
+<span class="line-numbers">184</span>              <span class="attribute-name">onChange</span>=<span class="error">{</span><span class="attribute-value">e</span> <span class="error">=</span><span class="tag">&gt;</span> {
+<span class="line-numbers">185</span>                const page = e.target.value ? Number(e.target.value) - 1 : 0
+<span class="line-numbers">186</span>                gotoPage(page)
+<span class="line-numbers">187</span>              }}
+<span class="line-numbers">188</span>              style={{ width: '100px' }}
+<span class="line-numbers">189</span>            /<span class="error">&gt;</span>
+<span class="line-numbers">190</span>          <span class="tag">&lt;/span&gt;</span>{' '}
+<span class="line-numbers">191</span>          <span class="tag">&lt;select</span>
+<span class="line-numbers">192</span>            <span class="attribute-name">value</span>=<span class="error">{</span><span class="attribute-value">pageSize</span><span class="error">}</span>
+<span class="line-numbers">193</span>            <span class="attribute-name">onChange</span>=<span class="error">{</span><span class="attribute-value">e</span> <span class="error">=</span><span class="tag">&gt;</span> {
+<span class="line-numbers">194</span>              setPageSize(Number(e.target.value))
+<span class="line-numbers">195</span>            }}
+<span class="line-numbers">196</span>          <span class="error">&gt;</span>
+<span class="line-numbers">197</span>            {[4, 5, 6, 9].map(pageSize =<span class="error">&gt;</span> (
+<span class="line-numbers">198</span>              <span class="tag">&lt;option</span> <span class="attribute-name">key</span>=<span class="error">{</span><span class="attribute-value">pageSize</span><span class="error">}</span> <span class="attribute-name">value</span>=<span class="error">{</span><span class="attribute-value">pageSize</span><span class="error">}</span><span class="tag">&gt;</span>
+<span class="line-numbers">199</span>                Show {pageSize}
+<span class="line-numbers">200</span>              <span class="tag">&lt;/option&gt;</span>
+<span class="line-numbers">201</span>            ))}
+<span class="line-numbers">202</span>          <span class="tag">&lt;/select&gt;</span>
+<span class="line-numbers">203</span>        <span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">204</span>        <span class="tag">&lt;button</span> <span class="attribute-name">onClick</span>=<span class="error">{</span><span class="error">(</span><span class="error">)</span> <span class="error">=</span><span class="tag">&gt;</span> nextPage()} disabled={!canNextPage}<span class="error">&gt;</span>
+<span class="line-numbers">205</span>          {'Next'}
+<span class="line-numbers">206</span>        <span class="tag">&lt;/button&gt;</span>{<span class="string"><span class="delimiter">'</span><span class="content"> </span><span class="delimiter">'</span></span>}
+<span class="line-numbers">207</span>      &lt;<span class="regexp"><span class="delimiter">/</span><span class="content">div&gt;</span></span>
+<span class="line-numbers">208</span><span class="regexp"><span class="content">    &lt;</span><span class="delimiter">/</span></span>&gt;
+<span class="line-numbers">209</span>  );
+<span class="line-numbers">210</span>  <span class="comment">// end::return-table[]</span>
+<span class="line-numbers">211</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>Add the <code class="hotspot=axios-library">axios</code> library and the <code class="hotspot=get-posts">GetArtistsInfo()</code> function.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=axios">axios</code> HTTP call is used to read the artist JSON that contains the data from the sample JSON file in the <code>resources</code> directory. When a response is successful, the state of the system changes by assigning <code class="hotspot=response-data">response.data</code> to <code class="hotspot=posts">posts</code>. The <code class="hotspot=for-artists">artists</code> and their <code>albums</code> JSON data are manipulated to allow them to be accessed by the <code>ReactTable</code>. The <code class="hotspot=spread-one">…​rest</code> or <code class="hotspot=spread-two">…​album</code> object spread syntax is designed for simplicity. To learn more about it, see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#Spread_in_object_literals" target="_blank" rel="noopener noreferrer">Spread in object literals</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-and-packaging-the-front-end">Building and packaging the front end</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After you successfully build your components, you need to build the front end and package your application. The Maven <code>process-resources</code> goal generates the Node.js resources, creates the front-end production build, and copies and processes the resources into the destination directory.</p>
+</div>
+<div class="paragraph">
+<p>In a new command-line session, build the front end by running the following command in the <code>start</code> directory:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn process-resources</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The build may take a few minutes to complete. You can rebuild the front end at any time with the Maven <code>process-resources</code> goal. Any local changes to your JavaScript and HTML are picked up when you build the front end.</p>
+</div>
+<div class="paragraph">
+<p>Navigate to the <a href="http://localhost:9080" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080</a> web application root to view the front end of your application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-react-client">Testing the React client</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>New projects that are created with <code>create-react-app</code> comes with a test file called <code class="hotspot file">App.test.js</code>, which is included in the <code>src/main/frontend/src</code> directory. The <code>App.test.js</code> file is a simple JavaScript file that tests against the <code>App.js</code> component. There are no explicit test cases that are written for this application. The <code>create-react-app</code> configuration uses <a href="https://jestjs.io/" target="_blank" rel="noopener noreferrer">Jest</a> as its test runner.
+To learn more about Jest, go to their documentation on <a href="https://jestjs.io/docs/en/tutorial-react" target="_blank" rel="noopener noreferrer">Testing React apps</a>.</p>
+</div>
+<div class="paragraph">
+<p>App.test.js</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span class="line-numbers"> 1</span><span class="reserved">import</span> React from <span class="string"><span class="delimiter">'</span><span class="content">react</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 2</span><span class="reserved">import</span> { render } from <span class="string"><span class="delimiter">'</span><span class="content">@testing-library/react</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 3</span><span class="reserved">import</span> App from <span class="string"><span class="delimiter">'</span><span class="content">./Components/App</span><span class="delimiter">'</span></span>;
+<span class="line-numbers"> 4</span>
+<span class="line-numbers"> 5</span>test(<span class="string"><span class="delimiter">'</span><span class="content">renders artist web service title</span><span class="delimiter">'</span></span>, () =&gt; {
+<span class="line-numbers"> 6</span>  const { getByText } = render(&lt;App /&gt;);
+<span class="line-numbers"> 7</span>  const titleElement = getByText(<span class="regexp"><span class="delimiter">/</span><span class="content">Artist Web Service</span><span class="delimiter">/</span><span class="modifier">i</span></span>);
+<span class="line-numbers"> 8</span>  expect(titleElement).toBeInTheDocument();
+<span class="line-numbers"> 9</span>});</code></pre>
+</div>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Update the <code>pom.xml</code> file.</mark>
+<code>pom.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>pom.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version='1.0' encoding='utf-8'?&gt;</span>
+<span class="line-numbers">  2</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  3</span>
+<span class="line-numbers">  4</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  5</span>
+<span class="line-numbers">  6</span>    <span class="tag">&lt;groupId&gt;</span>com.microprofile.demo<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">  7</span>    <span class="tag">&lt;artifactId&gt;</span>guide-rest-client-reactjs<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">  8</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">  9</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers"> 10</span>
+<span class="line-numbers"> 11</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 12</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 13</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 14</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>11<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 15</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>11<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 16</span>        <span class="comment">&lt;!-- Liberty configuration --&gt;</span>
+<span class="line-numbers"> 17</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9080<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers"> 18</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9443<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers"> 19</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 20</span>
+<span class="line-numbers"> 21</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 22</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers"> 23</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 24</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 25</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 26</span>            <span class="tag">&lt;version&gt;</span>10.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 27</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 28</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 29</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 30</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 31</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 32</span>            <span class="tag">&lt;version&gt;</span>6.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 33</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 34</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 35</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span>        <span class="comment">&lt;!-- For tests --&gt;</span>
+<span class="line-numbers"> 38</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 39</span>            <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 40</span>            <span class="tag">&lt;artifactId&gt;</span>junit-jupiter<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 41</span>            <span class="tag">&lt;version&gt;</span>5.9.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 42</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 43</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 44</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers"> 45</span>
+<span class="line-numbers"> 46</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers"> 47</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers"> 48</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers"> 49</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 50</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 51</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 52</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 53</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 54</span>            <span class="comment">&lt;!-- Enable liberty-maven plugin --&gt;</span>
+<span class="line-numbers"> 55</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 56</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 57</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 58</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>            
+<span class="line-numbers"> 59</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 60</span>            <span class="comment">&lt;!-- Frontend resources --&gt;</span>
+<span class="line-numbers"> 61</span>            <span class="comment">&lt;!-- tag::frontend-plugin[] --&gt;</span>
+<span class="line-numbers"> 62</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 63</span>                <span class="tag">&lt;groupId&gt;</span>com.github.eirslett<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 64</span>                <span class="tag">&lt;artifactId&gt;</span>frontend-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 65</span>                <span class="tag">&lt;version&gt;</span>1.12.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 66</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 67</span>                    <span class="comment">&lt;!-- tag::working-dir[] --&gt;</span>
+<span class="line-numbers"> 68</span>                    <span class="tag">&lt;workingDirectory&gt;</span>src/main/frontend<span class="tag">&lt;/workingDirectory&gt;</span>
+<span class="line-numbers"> 69</span>                    <span class="comment">&lt;!-- end::working-dir[] --&gt;</span>
+<span class="line-numbers"> 70</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers"> 71</span>                <span class="tag">&lt;executions&gt;</span>
+<span class="line-numbers"> 72</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers"> 73</span>                        <span class="tag">&lt;id&gt;</span>install node and npm<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers"> 74</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers"> 75</span>                            <span class="tag">&lt;goal&gt;</span>install-node-and-npm<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers"> 76</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers"> 77</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 78</span>                            <span class="tag">&lt;nodeVersion&gt;</span>v16.16.0<span class="tag">&lt;/nodeVersion&gt;</span>
+<span class="line-numbers"> 79</span>                            <span class="tag">&lt;npmVersion&gt;</span>8.11.0<span class="tag">&lt;/npmVersion&gt;</span>
+<span class="line-numbers"> 80</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers"> 81</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers"> 82</span>                    <span class="comment">&lt;!-- tag::node-resource-install[] --&gt;</span>
+<span class="line-numbers"> 83</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers"> 84</span>                        <span class="tag">&lt;id&gt;</span>npm install<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers"> 85</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers"> 86</span>                            <span class="tag">&lt;goal&gt;</span>npm<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers"> 87</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers"> 88</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 89</span>                            <span class="tag">&lt;arguments&gt;</span>install<span class="tag">&lt;/arguments&gt;</span>
+<span class="line-numbers"> 90</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers"> 91</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers"> 92</span>                    <span class="comment">&lt;!-- end::node-resource-install[] --&gt;</span>
+<span class="line-numbers"> 93</span>                    <span class="comment">&lt;!-- tag::node-resource-build[] --&gt;</span>
+<span class="line-numbers"> 94</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers"> 95</span>                        <span class="tag">&lt;id&gt;</span>npm run build<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers"> 96</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers"> 97</span>                            <span class="tag">&lt;goal&gt;</span>npm<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers"> 98</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers"> 99</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">100</span>                            <span class="tag">&lt;arguments&gt;</span>run build<span class="tag">&lt;/arguments&gt;</span>
+<span class="line-numbers">101</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">102</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers">103</span>                    <span class="comment">&lt;!-- end::node-resource-build[] --&gt;</span>
+<span class="line-numbers">104</span>                    <span class="comment">&lt;!-- tag::node-tests[] --&gt;</span>
+<span class="line-numbers">105</span>                    <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers">106</span>                        <span class="tag">&lt;id&gt;</span>run tests<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers">107</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers">108</span>                            <span class="tag">&lt;goal&gt;</span>npm<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers">109</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers">110</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">111</span>                            <span class="tag">&lt;arguments&gt;</span>test a<span class="tag">&lt;/arguments&gt;</span>
+<span class="line-numbers">112</span>                            <span class="tag">&lt;environmentVariables&gt;</span>
+<span class="line-numbers">113</span>                                <span class="tag">&lt;CI&gt;</span>true<span class="tag">&lt;/CI&gt;</span>
+<span class="line-numbers">114</span>                            <span class="tag">&lt;/environmentVariables&gt;</span>
+<span class="line-numbers">115</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">116</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers">117</span>                    <span class="comment">&lt;!-- end::node-tests[] --&gt;</span>
+<span class="line-numbers">118</span>                <span class="tag">&lt;/executions&gt;</span>
+<span class="line-numbers">119</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">120</span>            <span class="comment">&lt;!-- end::frontend-plugin[] --&gt;</span>
+<span class="line-numbers">121</span>            <span class="comment">&lt;!-- Copy frontend static files to target directory --&gt;</span>
+<span class="line-numbers">122</span>            <span class="comment">&lt;!-- tag::copy-plugin[] --&gt;</span>
+<span class="line-numbers">123</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">124</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">125</span>                <span class="tag">&lt;artifactId&gt;</span>maven-resources-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">126</span>                <span class="tag">&lt;version&gt;</span>3.3.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">127</span>                <span class="tag">&lt;executions&gt;</span>
+<span class="line-numbers">128</span>                 <span class="tag">&lt;execution&gt;</span>
+<span class="line-numbers">129</span>                        <span class="tag">&lt;id&gt;</span>Copy frontend build to target<span class="tag">&lt;/id&gt;</span>
+<span class="line-numbers">130</span>                        <span class="tag">&lt;phase&gt;</span>process-resources<span class="tag">&lt;/phase&gt;</span>
+<span class="line-numbers">131</span>                        <span class="tag">&lt;goals&gt;</span>
+<span class="line-numbers">132</span>                            <span class="tag">&lt;goal&gt;</span>copy-resources<span class="tag">&lt;/goal&gt;</span>
+<span class="line-numbers">133</span>                        <span class="tag">&lt;/goals&gt;</span>
+<span class="line-numbers">134</span>                        <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">135</span>                            <span class="tag">&lt;outputDirectory&gt;</span>
+<span class="line-numbers">136</span>                                <span class="comment">&lt;!-- tag::output-directory[] --&gt;</span>
+<span class="line-numbers">137</span>                                ${basedir}/src/main/webapp
+<span class="line-numbers">138</span>                                <span class="comment">&lt;!-- end::output-directory[] --&gt;</span>
+<span class="line-numbers">139</span>                            <span class="tag">&lt;/outputDirectory&gt;</span>
+<span class="line-numbers">140</span>                            <span class="tag">&lt;resources&gt;</span>
+<span class="line-numbers">141</span>                                <span class="tag">&lt;resource&gt;</span>
+<span class="line-numbers">142</span>                                    <span class="tag">&lt;directory&gt;</span>
+<span class="line-numbers">143</span>                                        <span class="comment">&lt;!-- tag::directory[] --&gt;</span>
+<span class="line-numbers">144</span>                                        ${basedir}/src/main/frontend/build
+<span class="line-numbers">145</span>                                        <span class="comment">&lt;!-- end::directory[] --&gt;</span>
+<span class="line-numbers">146</span>                                    <span class="tag">&lt;/directory&gt;</span>
+<span class="line-numbers">147</span>                                    <span class="tag">&lt;filtering&gt;</span>true<span class="tag">&lt;/filtering&gt;</span>
+<span class="line-numbers">148</span>                                <span class="tag">&lt;/resource&gt;</span>
+<span class="line-numbers">149</span>                            <span class="tag">&lt;/resources&gt;</span>
+<span class="line-numbers">150</span>                        <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">151</span>                    <span class="tag">&lt;/execution&gt;</span>
+<span class="line-numbers">152</span>                <span class="tag">&lt;/executions&gt;</span>
+<span class="line-numbers">153</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">154</span>            <span class="comment">&lt;!-- end::copy-plugin[] --&gt;</span>
+<span class="line-numbers">155</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">156</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">157</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>To run the default test, you can add the <code class="hotspot=node-tests file=1">testing</code> configuration to the <code>frontend-maven-plugin</code>. Rerun the Maven <code>process-resources</code> goal to rebuild the front end and run the tests.</p>
+</div>
+<div class="paragraph">
+<p>Although the React application in this guide is simple, when you build more complex React applications, testing becomes a crucial part of your development lifecycle. If you need to write application-oriented test cases, follow the official <a href="https://reactjs.org/docs/testing.html" target="_blank" rel="noopener noreferrer">React testing documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>When you are done checking the application root, exit dev mode by pressing CTRL+C in the shell session where you ran the Liberty, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Nice work! You just accessed a simple RESTful web service and consumed its resources by using ReactJS in Open Liberty.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Consuming a RESTful web service with ReactJS <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-rest-client-reactjs/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-rest-client-reactjs/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-rest-client-reactjs/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/rest-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Creating a RESTful web service</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">30 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/rest-client-java.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Consuming a RESTful web service</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">25 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

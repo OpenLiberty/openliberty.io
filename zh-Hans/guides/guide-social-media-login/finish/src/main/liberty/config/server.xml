@@ -1,0 +1,57 @@
+<server description="Social Login Guide Server">
+    <!-- tag::featureManager[] -->
+    <featureManager>
+        <feature>pages-3.1</feature>
+        <feature>appSecurity-5.0</feature>
+        <feature>transportSecurity-1.0</feature>
+        <feature>mpConfig-3.0</feature>
+        <feature>restfulWSClient-3.1</feature>
+        <feature>cdi-4.0</feature>
+        <feature>jsonb-3.0</feature>
+        <feature>jwt-1.0</feature>
+        <!-- tag::socialLogin[] -->
+        <feature>socialLogin-1.0</feature>
+        <!-- end::socialLogin[] -->
+    </featureManager>
+    <!-- end::featureManager[] -->
+
+    <httpEndpoint httpPort="${default.http.port}"
+                  httpsPort="${default.https.port}"
+                  id="defaultHttpEndpoint"
+                  host="*" />
+
+    <!-- Set up default key store, trust stores for auth APIs -->
+    <!-- tag::keystore[] -->
+    <keyStore id="defaultKeyStore"
+              password="changeit" />
+    <!-- end::keystore[] -->
+
+    <!-- SSL configuration for auth services -->
+    <!-- tag::sslConfig[] -->
+    <ssl id="defaultSSLConfig"
+         keyStoreRef="defaultKeyStore"
+         trustDefaultCerts="true" />
+    <!-- end::sslConfig[] -->
+
+    <!-- Social Login Configuration -->
+    <!-- Github Login -->
+    <!-- tag::githubLogin[] -->
+    <githubLogin clientId="${github.client.id}"
+                 clientSecret="${github.client.secret}" />
+    <!-- end::githubLogin[] -->
+
+    <!-- tag::webApplication[] -->
+    <webApplication location="guide-social-login.war"
+                    contextRoot="${app.context.root}">
+        <!-- tag::applicationBnd[] -->
+        <application-bnd>
+            <!-- tag::users[] -->
+            <security-role name="users">
+                <special-subject type="ALL_AUTHENTICATED_USERS"/>
+            </security-role>
+            <!-- end::users[] -->
+        </application-bnd>
+        <!-- end::applicationBnd[] -->
+    </webApplication>
+    <!-- end::webApplication[] -->
+</server>

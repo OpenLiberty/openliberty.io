@@ -1,0 +1,48 @@
+# tag::system[]
+apiVersion: apps.openliberty.io/v1
+# tag::olapp[]
+kind: OpenLibertyApplication
+# end::olapp[]
+metadata:
+  name: system
+spec:
+  # tag::sysImage[]
+  applicationImage: [system-repository-uri]:1.0-SNAPSHOT
+  # end::sysImage[]
+  pullPolicy: Always
+  manageTLS: false
+  replicas: 3
+  resources:
+    limits:
+      cpu: 1
+      memory: 512Mi
+    requests:
+      cpu: 500m
+      memory: 256Mi
+  service:
+    type: ClusterIP
+    port: 9443
+  expose: true
+  env:
+    - name: WLP_LOGGING_MESSAGE_FORMAT
+      value: "json"
+    - name: WLP_LOGGING_MESSAGE_SOURCE
+      value: "message,trace,accessLog,ffdc,audit"
+  # tag::securityContext[]
+  securityContext:
+    runAsNonRoot: true
+    privileged: false
+    allowPrivilegeEscalation: true
+    capabilities:
+      add:
+      - CHECKPOINT_RESTORE
+      - SETPCAP
+      drop:
+      - ALL
+  # end::securityContext[]
+  # tag::semeruCloudCompiler[]
+  semeruCloudCompiler:
+    enable: true
+    replicas: 3
+  # end::semeruCloudCompiler[]
+# end::system[]

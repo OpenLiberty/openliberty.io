@@ -1,0 +1,100 @@
+/*******************************************************************************
+ * Copyright (c) 2018,2021 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+ @import url("https://fonts.googleapis.com/css?family=Asap:300,400,500");
+
+ @font-face {
+    font-family: BunueloLight;
+    src: url("/fonts/BunueloCleanPro-Light.woff");
+}
+
+body {
+    font-family: Asap;
+    margin: 0 1px;
+    overflow: hidden;
+}
+
+.bankHeadingBlockFlexContainer { /* The same flexbox will be used to hold the bank heading with and without the account in it */
+    height: 36px;
+    background-color: #deedf7;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bankHeadingBlockFlexContainer > span {
+    margin: auto 10px auto auto;
+}
+
+.bankHeadingBlockFlexContainer > span > img {
+    height: 24px;
+    width: 24px;
+    opacity: 0.41;
+    padding-left: 10px;
+}
+
+.bankHeading {
+    font-weight: 500;
+    font-size: 16px;
+    color: #5E6B8D;
+    letter-spacing: 0;
+    text-align: left;
+    padding: 9px 0px 9px 18px;
+}
+
+.loader {
+    position: absolute;
+    left: 43%;
+    top: 50%;
+    border: 4px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 4px solid #3498db;
+    width: 40px;
+    height: 40px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+#fail {
+    display: flex;  /** Initially the spinner is showing so hide this div **/
+    height: calc(100% - 85px);    /** 85px is height of check balance + global ebank headers **/
+}
+
+@media (max-width: 375px) {
+    .bankHeading {
+        font-size: 14px;
+        padding-left: 5px;
+    }
+
+    .bankHeadingBlockFlexContainer > span {
+        margin-right: 5px;
+    }
+
+    .bankHeadingBlockFlexContainer > span > img {
+        padding-left: 0px;
+    }
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

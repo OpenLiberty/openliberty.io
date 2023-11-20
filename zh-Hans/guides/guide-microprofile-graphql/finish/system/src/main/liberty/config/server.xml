@@ -1,0 +1,17 @@
+<server description="System service">
+
+  <featureManager>
+    <feature>restfulWS-3.1</feature>
+    <feature>cdi-4.0</feature>
+    <feature>jsonb-3.0</feature>
+    <feature>mpConfig-3.0</feature>
+  </featureManager>
+
+  <variable name="default.http.port" defaultValue="9080"/>
+  <variable name="default.https.port" defaultValue="9443"/>
+  
+  <httpEndpoint host="*" httpPort="${default.http.port}"
+      httpsPort="${default.https.port}" id="defaultHttpEndpoint"/>
+
+  <webApplication location="guide-microprofile-graphql-system.war" contextRoot="/"/>
+</server>

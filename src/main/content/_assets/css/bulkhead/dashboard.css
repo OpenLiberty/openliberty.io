@@ -1,0 +1,84 @@
+/*******************************************************************************
+* Copyright (c) 2018. 2021 IBM Corporation and others.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     IBM Corporation - initial API and implementation
+*******************************************************************************/
+.dashboardContainer {
+    height: 100%;
+    width: 100%;
+}
+
+.chatSummary {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    height: 100%;
+}
+
+.oneCount {
+    text-align: center;
+}
+
+.chatLabel {
+    font-weight: 500;
+    font-size: 13px;
+    color: #24253a;
+    letter-spacing: 0.5px;
+    line-height: 26px;
+    text-align: left;
+}
+
+.chatCount {
+    font-weight: 400;
+    font-size: 20px;
+    color: #24253a;
+    letter-spacing: 0;
+    line-height: 26px;
+    text-align: left;
+    margin: 8px 0 10px 10px;
+    white-space: nowrap;
+}
+
+th:nth-child(odd):not(:last-child) {
+    border-right: 1px solid #cbcbcb;
+}
+
+.countTableCellLine {
+    text-align: center;
+}
+
+.busyCount {
+    color: #4E8118;
+}
+
+.waitCount {
+    color: #CA4802;
+}
+
+.chatSummaryTransition {
+    height: 100%;
+    -webkit-animation: fadeinout 1s linear 1 forwards;
+    animation: fadeinout 1s linear 1 forwards;
+}
+
+@-webkit-keyframes fadeinout {
+    0% { opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeinout {
+    0% { opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+#guide_content table {
+    margin-top: 1.25em; /* balance out the margin-bottom imposed by guide-multipane */
+}

@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Checking the health of Java microservices by using Kubernetes readiness and liveness probes
+    
+  </title>
+  <meta name="description" content="A tutorial with examples of how to report the health status of Java microservices using Eclipse MicroProfile Health Check endpoints and inspect them with Kubernetes readiness and liveness probes.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/kubernetes-microprofile-health">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Checking the health of Java microservices by using Kubernetes readiness and liveness probes" />
+  <meta name="twitter:description" content="A tutorial with examples of how to report the health status of Java microservices using Eclipse MicroProfile Health Check endpoints and inspect them with Kubernetes readiness and liveness probes." />
+
+  <meta property='og:title' content="Checking the health of Java microservices by using Kubernetes readiness and liveness probes" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A tutorial with examples of how to report the health status of Java microservices using Eclipse MicroProfile Health Check endpoints and inspect them with Kubernetes readiness and liveness probes." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/kubernetes-microprofile-health" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#starting-and-preparing-your-cluster-for-deployment">Starting and preparing your cluster for deployment</a></li>
+<li><a href="#adding-health-checks-to-the-inventory-microservice">Adding health checks to the inventory microservice</a></li>
+<li><a href="#configuring-startup-liveness-and-readiness-probes">Configuring startup, liveness, and readiness probes</a></li>
+<li><a href="#deploying-the-microservices">Deploying the microservices</a></li>
+<li>
+<a href="#changing-the-ready-state-of-the-system-microservice">Changing the ready state of the system microservice</a>
+<ul class="sectlevel2">
+<li><a href="#observing-the-effects-on-the-inventory-microservice">Observing the effects on the inventory microservice</a></li>
+</ul>
+</li>
+<li><a href="#testing-the-microservices">Testing the microservices</a></li>
+<li><a href="#tearing-down-the-environment">Tearing down the environment</a></li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Checking the health of microservices on Kubernetes</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">20 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/kubernetes-microprofile-health.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to check the health of microservices on Kubernetes by setting up startup, liveness, and readiness probes to inspect MicroProfile Health Check endpoints.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to create health check endpoints for your microservices. Then, you will configure Kubernetes to use these endpoints to keep your microservices running smoothly.</p>
+</div>
+<div class="paragraph">
+<p>MicroProfile Health allows services to report their health, and it publishes the overall health status to defined endpoints. If a service reports <code>UP</code>, then it’s available. If the service reports <code>DOWN</code>, then it’s unavailable. MicroProfile Health reports an individual service status at the endpoint and indicates the overall status as <code>UP</code> if all the services are <code>UP</code>. A service orchestrator can then use the health statuses to make decisions.</p>
+</div>
+<div class="paragraph">
+<p>Kubernetes provides startup, liveness, and readiness probes that are used to check the health of your containers. These probes can check certain files in your containers, check a TCP socket, or make HTTP requests. MicroProfile Health exposes startup, liveness, and readiness endpoints on your microservices. Kubernetes polls these endpoints as specified by the probes to react appropriately to any change in the microservice’s status. Read the <a href="https://openliberty.io/guides/microprofile-health.html" target="_blank" rel="noopener">Adding health reports to microservices</a> guide to learn more about MicroProfile Health.</p>
+</div>
+<div class="paragraph">
+<p>The two microservices you will work with are called <code>system</code> and <code>inventory</code>. The <code>system</code> microservice returns the JVM system properties of the running container and it returns the pod’s name in the HTTP header making replicas easy to distinguish from each other. The <code>inventory</code> microservice adds the properties from the <code>system</code> microservice to the inventory. This demonstrates how communication can be established between pods inside a cluster.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you begin, you need a containerization software for building containers. Kubernetes supports various container runtimes. You will use <code>Docker</code> in this guide. For Docker installation instructions, refer to the official <a href="https://docs.docker.com/install/" target="_blank" rel="noopener noreferrer">Docker documentation</a>.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="paragraph">
+<p>Use Docker Desktop, where a local Kubernetes environment is pre-installed and enabled. If you do not see the <em>Kubernetes</em> tab, then upgrade to the latest version of Docker Desktop.</p>
+</div>
+<div class="paragraph">
+<p>Complete the setup for your operating system:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set up  <a href="https://docs.docker.com/docker-for-windows/#kubernetes" target="_blank" rel="noopener noreferrer">Docker for Windows</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>After you complete the Docker setup instructions for your operating system, ensure that Kubernetes (not Swarm) is selected as the orchestrator in Docker Preferences.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section">
+<div class="content">
+<div class="paragraph">
+<p>Use Docker Desktop, where a local Kubernetes environment is pre-installed and enabled. If you do not see the <em>Kubernetes</em> tab, then upgrade to the latest version of Docker Desktop.</p>
+</div>
+<div class="paragraph">
+<p>Complete the setup for your operating system:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set up <a href="https://docs.docker.com/docker-for-mac/#kubernetes" target="_blank" rel="noopener noreferrer">Docker for Mac</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>After you complete the Docker setup instructions for your operating system, ensure that Kubernetes (not Swarm) is selected as the orchestrator in Docker Preferences.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>You will use <code>Minikube</code> as a single-node Kubernetes cluster that runs locally in a virtual machine.
+Make sure you have <code>kubectl</code> installed. If you need to install <code>kubectl</code>, see the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-on-linux" target="_blank" rel="noopener noreferrer">kubectl installation instructions</a>.
+For Minikube installation instructions, see the <a href="https://github.com/kubernetes/minikube#installation" target="_blank" rel="noopener noreferrer">Minikube documentation</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-kubernetes-microprofile-health.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-kubernetes-microprofile-health.git
+cd guide-kubernetes-microprofile-health</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="starting-and-preparing-your-cluster-for-deployment">Starting and preparing your cluster for deployment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Start your Kubernetes cluster.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="paragraph">
+<p>Start your Docker Desktop environment.</p>
+</div>
+<div class="paragraph">
+<p>Ensure that Kubernetes is running on Docker Desktop and that the context is set to <code>docker-desktop</code>.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>Run the following command from a command-line session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>minikube start</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+
+</div>
+</div>
+<div class="paragraph">
+<p>Next, validate that you have a healthy Kubernetes environment by running the following command from the active command-line session.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get nodes</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command should return a <code>Ready</code> status for the master node.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="paragraph">
+<p>You do not need to do any other step.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>Run the following command to configure the Docker CLI to use Minikube’s Docker daemon.
+After you run this command, you will be able to interact with Minikube’s Docker daemon and build new
+images directly to it from your host machine:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>eval $(minikube docker-env)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-health-checks-to-the-inventory-microservice">Adding health checks to the inventory microservice</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Navigate to <code>start</code> directory to begin.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>InventoryStartupCheck</code> class.</mark>
+<code>inventory/src/main/java/io/openliberty/guides/inventory/InventoryStartupCheck.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryStartupCheck.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="comment">// tag::InventoryStartupCheck[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.lang.management.ManagementFactory</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">com.sun.management.OperatingSystemMXBean</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.health.Startup</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.health.HealthCheck</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.health.HealthCheckResponse</span>;
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span><span class="comment">// tag::Startup[]</span>
+<span class="line-numbers">23</span><span class="annotation">@Startup</span>
+<span class="line-numbers">24</span><span class="comment">// end::Startup[]</span>
+<span class="line-numbers">25</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">26</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryStartupCheck</span> <span class="directive">implements</span> HealthCheck {
+<span class="line-numbers">27</span>
+<span class="line-numbers">28</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">29</span>    <span class="directive">public</span> HealthCheckResponse call() {
+<span class="line-numbers">30</span>        <span class="predefined-type">OperatingSystemMXBean</span> bean = (com.sun.management.OperatingSystemMXBean)
+<span class="line-numbers">31</span>        <span class="predefined-type">ManagementFactory</span>.getOperatingSystemMXBean();
+<span class="line-numbers">32</span>        <span class="type">double</span> cpuUsed = bean.getSystemCpuLoad();
+<span class="line-numbers">33</span>        <span class="predefined-type">String</span> cpuUsage = <span class="predefined-type">String</span>.valueOf(cpuUsed);
+<span class="line-numbers">34</span>        <span class="keyword">return</span> HealthCheckResponse.named(InventoryResource.class
+<span class="line-numbers">35</span>                                            .getSimpleName() + <span class="string"><span class="delimiter">"</span><span class="content"> Startup Check</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">36</span>                                            .status(cpuUsed &lt; <span class="float">0.95</span>).build();
+<span class="line-numbers">37</span>    }
+<span class="line-numbers">38</span>}
+<span class="line-numbers">39</span>
+<span class="line-numbers">40</span><span class="comment">// end::InventoryStartupCheck[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A health check for startup allows applications to define startup probes that verify whether deployed application is fully initialized before the liveness probe takes over. This check is useful for applications that require additional startup time on their first initialization. The <code class="hotspot=Startup file=0">@Startup</code> annotation must be applied on a HealthCheck implementation to define a startup check procedure. Otherwise, this annotation is ignored. This startup check verifies that the cpu usage is below 95%. If more than 95% of the cpu is used, a status of <code>DOWN</code> is returned.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the <code>InventoryLivenessCheck</code> class.</mark>
+<code>inventory/src/main/java/io/openliberty/guides/inventory/InventoryLivenessCheck.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryLivenessCheck.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">java.lang.management.MemoryMXBean</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">java.lang.management.ManagementFactory</span>;
+<span class="line-numbers">18</span>
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.health.Liveness</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.health.HealthCheck</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.health.HealthCheckResponse</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="comment">// tag::Liveness[]</span>
+<span class="line-numbers">24</span><span class="annotation">@Liveness</span>
+<span class="line-numbers">25</span><span class="comment">// end::Liveness[]</span>
+<span class="line-numbers">26</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">27</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryLivenessCheck</span> <span class="directive">implements</span> HealthCheck {
+<span class="line-numbers">28</span>
+<span class="line-numbers">29</span>  <span class="annotation">@Override</span>
+<span class="line-numbers">30</span>  <span class="directive">public</span> HealthCheckResponse call() {
+<span class="line-numbers">31</span>      <span class="predefined-type">MemoryMXBean</span> memBean = <span class="predefined-type">ManagementFactory</span>.getMemoryMXBean();
+<span class="line-numbers">32</span>      <span class="type">long</span> memUsed = memBean.getHeapMemoryUsage().getUsed();
+<span class="line-numbers">33</span>      <span class="type">long</span> memMax = memBean.getHeapMemoryUsage().getMax();
+<span class="line-numbers">34</span>
+<span class="line-numbers">35</span>      <span class="keyword">return</span> HealthCheckResponse.named(InventoryResource.class.getSimpleName()
+<span class="line-numbers">36</span>                                      + <span class="string"><span class="delimiter">"</span><span class="content"> Liveness Check</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">37</span>                                .status(memUsed &lt; memMax * <span class="float">0.9</span>).build();
+<span class="line-numbers">38</span>  }
+<span class="line-numbers">39</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A health check for liveness allows third party services to determine whether the application is running. If this procedure fails, the application can be stopped. The <code class="hotspot=Liveness file=1">@Liveness</code> annotation must be applied on a HealthCheck implementation to define a Liveness check procedure. Otherwise, this annotation is ignored. This liveness check verifies that the heap memory usage is below 90% of the maximum memory. If more than 90% of the maximum memory is used, a status of <code>DOWN</code> is returned.</p>
+</div>
+<div class="paragraph">
+<p>The <code>inventory</code> microservice is healthy only when the <code>system</code> microservice is available. To add this check to the <code>/health/ready</code> endpoint, create a class that is annotated with the <code class="hotspot=Readiness file=2">@Readiness</code> annotation and implements the <code>HealthCheck</code> interface. A Health Check for readiness allows third party services to know whether the application is ready to process requests. The <code>@Readiness</code> annotation must be applied on a HealthCheck implementation to define a readiness check procedure. Otherwise, this annotation is ignored.</p>
+</div>
+<div class="listingblock code_command hotspot file=2">
+<div class="content">
+<pre><mark>Create the <code>InventoryReadinessCheck</code> class.</mark>
+<code>inventory/src/main/java/io/openliberty/guides/inventory/InventoryReadinessCheck.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryReadinessCheck.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Client</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.ClientBuilder</span>;
+<span class="line-numbers">18</span>
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.health.Readiness</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.health.HealthCheck</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.health.HealthCheckResponse</span>;
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span><span class="comment">// tag::Readiness[]</span>
+<span class="line-numbers">25</span><span class="annotation">@Readiness</span>
+<span class="line-numbers">26</span><span class="comment">// end::Readiness[]</span>
+<span class="line-numbers">27</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">28</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryReadinessCheck</span> <span class="directive">implements</span> HealthCheck {
+<span class="line-numbers">29</span>
+<span class="line-numbers">30</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> READINESS_CHECK = InventoryResource.class
+<span class="line-numbers">31</span>                                                .getSimpleName()
+<span class="line-numbers">32</span>                                                + <span class="string"><span class="delimiter">"</span><span class="content"> Readiness Check</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers">35</span>    <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">SYS_APP_HOSTNAME</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">36</span>    <span class="directive">private</span> <span class="predefined-type">String</span> hostname;
+<span class="line-numbers">37</span>
+<span class="line-numbers">38</span>    <span class="directive">public</span> HealthCheckResponse call() {
+<span class="line-numbers">39</span>        <span class="keyword">if</span> (isSystemServiceReachable()) {
+<span class="line-numbers">40</span>            <span class="keyword">return</span> HealthCheckResponse.up(READINESS_CHECK);
+<span class="line-numbers">41</span>        } <span class="keyword">else</span> {
+<span class="line-numbers">42</span>            <span class="keyword">return</span> HealthCheckResponse.down(READINESS_CHECK);
+<span class="line-numbers">43</span>        }
+<span class="line-numbers">44</span>    }
+<span class="line-numbers">45</span>
+<span class="line-numbers">46</span>    <span class="directive">private</span> <span class="type">boolean</span> isSystemServiceReachable() {
+<span class="line-numbers">47</span>        <span class="keyword">try</span> {
+<span class="line-numbers">48</span>            Client client = ClientBuilder.newClient();
+<span class="line-numbers">49</span>            client
+<span class="line-numbers">50</span>                .target(<span class="string"><span class="delimiter">"</span><span class="content">http://</span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="content">:9080/system/properties</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">51</span>                .request()
+<span class="line-numbers">52</span>                .post(<span class="predefined-constant">null</span>);
+<span class="line-numbers">53</span>
+<span class="line-numbers">54</span>            <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers">55</span>        } <span class="keyword">catch</span> (<span class="exception">Exception</span> ex) {
+<span class="line-numbers">56</span>            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">57</span>        }
+<span class="line-numbers">58</span>    }
+<span class="line-numbers">59</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This health check verifies that the <code>system</code> microservice is available at <code>http://system-service:9080/</code>. The <code>system-service</code> host name is accessible only from inside the cluster; you can’t access it yourself. If it’s available, then it returns an <code>UP</code> status. Similarly, if it’s unavailable then it returns a <code>DOWN</code> status. When the status is <code>DOWN</code>, the microservice is considered to be unhealthy.</p>
+</div>
+<div class="paragraph">
+<p>The health checks for the <code>system</code> microservice were already been implemented. The <code>system</code> microservice was set up to become unhealthy for 60 seconds when a specific endpoint is called. This endpoint has been provided for you to observe the results of an unhealthy pod and how Kubernetes reacts.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-startup-liveness-and-readiness-probes">Configuring startup, liveness, and readiness probes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will configure Kubernetes startup, liveness, and readiness probes. Startup probes determine whether your application is fully initialized. Liveness probes determine whether a container needs to be restarted. Readiness probes determine whether your application is ready to accept requests. If it’s not ready, no traffic is routed to the container.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the kubernetes configuration file.</mark>
+<code>kubernetes.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>kubernetes.yaml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers">  1</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="line-numbers">  2</span><span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="line-numbers">  3</span><span class="key">metadata</span>:
+<span class="line-numbers">  4</span>  <span class="key">name</span>: <span class="string"><span class="content">system-deployment</span></span>
+<span class="line-numbers">  5</span>  <span class="key">labels</span>:
+<span class="line-numbers">  6</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers">  7</span><span class="key">spec</span>:
+<span class="line-numbers">  8</span>  <span class="key">replicas</span>: <span class="string"><span class="content">2</span></span>
+<span class="line-numbers">  9</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 10</span>    <span class="key">matchLabels</span>:
+<span class="line-numbers"> 11</span>      <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 12</span>  <span class="key">strategy</span>:
+<span class="line-numbers"> 13</span>    <span class="key">type</span>: <span class="string"><span class="content">RollingUpdate</span></span>
+<span class="line-numbers"> 14</span>    <span class="key">rollingUpdate</span>:
+<span class="line-numbers"> 15</span>      <span class="key">maxUnavailable</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers"> 16</span>      <span class="key">maxSurge</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers"> 17</span>  <span class="key">template</span>:
+<span class="line-numbers"> 18</span>    <span class="key">metadata</span>:
+<span class="line-numbers"> 19</span>      <span class="key">labels</span>:
+<span class="line-numbers"> 20</span>        <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 21</span>    <span class="key">spec</span>:
+<span class="line-numbers"> 22</span>      <span class="key">containers</span>:
+<span class="line-numbers"> 23</span>      - <span class="string"><span class="content">name: system-container</span></span>
+<span class="line-numbers"> 24</span>        <span class="key">image</span>: <span class="string"><span class="content">system:1.0-SNAPSHOT</span></span>
+<span class="line-numbers"> 25</span>        <span class="key">ports</span>:
+<span class="line-numbers"> 26</span>        - <span class="string"><span class="content">containerPort: 9080</span></span>
+<span class="line-numbers"> 27</span>        <span class="comment"># system probes</span>
+<span class="line-numbers"> 28</span>        <span class="key">startupProbe</span>:
+<span class="line-numbers"> 29</span>          <span class="key">httpGet</span>:
+<span class="line-numbers"> 30</span>            <span class="comment"># tag::start1[]</span>
+<span class="line-numbers"> 31</span>            <span class="key">path</span>: <span class="string"><span class="content">/health/started</span></span>
+<span class="line-numbers"> 32</span>            <span class="comment"># end::start1[]</span>
+<span class="line-numbers"> 33</span>            <span class="key">port</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers"> 34</span>        <span class="key">livenessProbe</span>:
+<span class="line-numbers"> 35</span>          <span class="key">httpGet</span>:
+<span class="line-numbers"> 36</span>            <span class="comment"># tag::live1[]</span>
+<span class="line-numbers"> 37</span>            <span class="key">path</span>: <span class="string"><span class="content">/health/live</span></span>
+<span class="line-numbers"> 38</span>            <span class="comment"># end::live1[]</span>
+<span class="line-numbers"> 39</span>            <span class="key">port</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers"> 40</span>          <span class="comment"># tag::delay1[]</span>
+<span class="line-numbers"> 41</span>          <span class="key">initialDelaySeconds</span>: <span class="string"><span class="content">60</span></span>
+<span class="line-numbers"> 42</span>          <span class="comment"># end::delay1[]</span>
+<span class="line-numbers"> 43</span>          <span class="comment"># tag::period1[]</span>
+<span class="line-numbers"> 44</span>          <span class="key">periodSeconds</span>: <span class="string"><span class="content">10</span></span>
+<span class="line-numbers"> 45</span>          <span class="comment"># end::period1[]</span>
+<span class="line-numbers"> 46</span>          <span class="comment"># tag::timeout1[]</span>
+<span class="line-numbers"> 47</span>          <span class="key">timeoutSeconds</span>: <span class="string"><span class="content">3</span></span>
+<span class="line-numbers"> 48</span>          <span class="comment"># end::timeout1[]</span>
+<span class="line-numbers"> 49</span>          <span class="comment"># tag::threshold1[]</span>
+<span class="line-numbers"> 50</span>          <span class="key">failureThreshold</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers"> 51</span>          <span class="comment"># end::threshold1[]</span>
+<span class="line-numbers"> 52</span>        <span class="key">readinessProbe</span>:
+<span class="line-numbers"> 53</span>          <span class="key">httpGet</span>:
+<span class="line-numbers"> 54</span>            <span class="comment"># tag::ready1[]</span>
+<span class="line-numbers"> 55</span>            <span class="key">path</span>: <span class="string"><span class="content">/health/ready</span></span>
+<span class="line-numbers"> 56</span>            <span class="comment"># end::ready1[]</span>
+<span class="line-numbers"> 57</span>            <span class="key">port</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers"> 58</span>          <span class="comment"># tag::delay2[]</span>
+<span class="line-numbers"> 59</span>          <span class="key">initialDelaySeconds</span>: <span class="string"><span class="content">30</span></span>
+<span class="line-numbers"> 60</span>          <span class="comment"># end::delay2[]</span>
+<span class="line-numbers"> 61</span>          <span class="comment"># tag::period2[]</span>
+<span class="line-numbers"> 62</span>          <span class="key">periodSeconds</span>: <span class="string"><span class="content">10</span></span>
+<span class="line-numbers"> 63</span>          <span class="comment"># end::period2[]</span>
+<span class="line-numbers"> 64</span>          <span class="comment"># tag::timeout2[]</span>
+<span class="line-numbers"> 65</span>          <span class="key">timeoutSeconds</span>: <span class="string"><span class="content">3</span></span>
+<span class="line-numbers"> 66</span>          <span class="comment"># end::timeout2[]</span>
+<span class="line-numbers"> 67</span>          <span class="comment"># tag::threshold2[]</span>
+<span class="line-numbers"> 68</span>          <span class="key">failureThreshold</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers"> 69</span>          <span class="comment"># end::threshold2[]</span>
+<span class="line-numbers"> 70</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers"> 71</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="line-numbers"> 72</span><span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="line-numbers"> 73</span><span class="key">metadata</span>:
+<span class="line-numbers"> 74</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-deployment</span></span>
+<span class="line-numbers"> 75</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 76</span>    <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 77</span><span class="key">spec</span>:
+<span class="line-numbers"> 78</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 79</span>    <span class="key">matchLabels</span>:
+<span class="line-numbers"> 80</span>      <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 81</span>  <span class="key">strategy</span>:
+<span class="line-numbers"> 82</span>    <span class="key">type</span>: <span class="string"><span class="content">RollingUpdate</span></span>
+<span class="line-numbers"> 83</span>    <span class="key">rollingUpdate</span>:
+<span class="line-numbers"> 84</span>      <span class="key">maxUnavailable</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers"> 85</span>      <span class="key">maxSurge</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers"> 86</span>  <span class="key">template</span>:
+<span class="line-numbers"> 87</span>    <span class="key">metadata</span>:
+<span class="line-numbers"> 88</span>      <span class="key">labels</span>:
+<span class="line-numbers"> 89</span>        <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers"> 90</span>    <span class="key">spec</span>:
+<span class="line-numbers"> 91</span>      <span class="key">containers</span>:
+<span class="line-numbers"> 92</span>      - <span class="string"><span class="content">name: inventory-container</span></span>
+<span class="line-numbers"> 93</span>        <span class="key">image</span>: <span class="string"><span class="content">inventory:1.0-SNAPSHOT</span></span>
+<span class="line-numbers"> 94</span>        <span class="key">ports</span>:
+<span class="line-numbers"> 95</span>        - <span class="string"><span class="content">containerPort: 9080</span></span>
+<span class="line-numbers"> 96</span>        <span class="key">env</span>:
+<span class="line-numbers"> 97</span>        - <span class="string"><span class="content">name: SYS_APP_HOSTNAME</span></span>
+<span class="line-numbers"> 98</span>          <span class="key">value</span>: <span class="string"><span class="content">system-service</span></span>
+<span class="line-numbers"> 99</span>        <span class="comment"># inventory probes</span>
+<span class="line-numbers">100</span>        <span class="key">startupProbe</span>:
+<span class="line-numbers">101</span>          <span class="key">httpGet</span>:
+<span class="line-numbers">102</span>            <span class="comment"># tag::start2[]</span>
+<span class="line-numbers">103</span>            <span class="key">path</span>: <span class="string"><span class="content">/health/started</span></span>
+<span class="line-numbers">104</span>            <span class="comment"># end::start2[]</span>
+<span class="line-numbers">105</span>            <span class="key">port</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">106</span>        <span class="key">livenessProbe</span>:
+<span class="line-numbers">107</span>          <span class="key">httpGet</span>:
+<span class="line-numbers">108</span>            <span class="comment"># tag::live2[]</span>
+<span class="line-numbers">109</span>            <span class="key">path</span>: <span class="string"><span class="content">/health/live</span></span>
+<span class="line-numbers">110</span>            <span class="comment"># end::live2[]</span>
+<span class="line-numbers">111</span>            <span class="key">port</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">112</span>          <span class="comment"># tag::delay3[]</span>
+<span class="line-numbers">113</span>          <span class="key">initialDelaySeconds</span>: <span class="string"><span class="content">60</span></span>
+<span class="line-numbers">114</span>          <span class="comment"># end::delay3[]</span>
+<span class="line-numbers">115</span>          <span class="comment"># tag::period3[]</span>
+<span class="line-numbers">116</span>          <span class="key">periodSeconds</span>: <span class="string"><span class="content">10</span></span>
+<span class="line-numbers">117</span>          <span class="comment"># end::period3[]</span>
+<span class="line-numbers">118</span>          <span class="comment"># tag::timeout3[]</span>
+<span class="line-numbers">119</span>          <span class="key">timeoutSeconds</span>: <span class="string"><span class="content">3</span></span>
+<span class="line-numbers">120</span>          <span class="comment"># end::timeout3[]</span>
+<span class="line-numbers">121</span>          <span class="comment"># tag::threshold3[]</span>
+<span class="line-numbers">122</span>          <span class="key">failureThreshold</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers">123</span>          <span class="comment"># end::threshold3[]</span>
+<span class="line-numbers">124</span>        <span class="key">readinessProbe</span>:
+<span class="line-numbers">125</span>          <span class="key">httpGet</span>:
+<span class="line-numbers">126</span>            <span class="comment"># tag::ready2[]</span>
+<span class="line-numbers">127</span>            <span class="key">path</span>: <span class="string"><span class="content">/health/ready</span></span>
+<span class="line-numbers">128</span>            <span class="comment"># end::ready2[]</span>
+<span class="line-numbers">129</span>            <span class="key">port</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">130</span>          <span class="comment"># tag::delay4[]</span>
+<span class="line-numbers">131</span>          <span class="key">initialDelaySeconds</span>: <span class="string"><span class="content">30</span></span>
+<span class="line-numbers">132</span>          <span class="comment"># end::delay4[]</span>
+<span class="line-numbers">133</span>          <span class="comment"># tag::period4[]</span>
+<span class="line-numbers">134</span>          <span class="key">periodSeconds</span>: <span class="string"><span class="content">10</span></span>
+<span class="line-numbers">135</span>          <span class="comment"># end::period4[]</span>
+<span class="line-numbers">136</span>          <span class="comment"># tag::timeout4[]</span>
+<span class="line-numbers">137</span>          <span class="key">timeoutSeconds</span>: <span class="string"><span class="content">3</span></span>
+<span class="line-numbers">138</span>          <span class="comment"># end::timeout4[]</span>
+<span class="line-numbers">139</span>          <span class="comment"># tag::threshold4[]</span>
+<span class="line-numbers">140</span>          <span class="key">failureThreshold</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers">141</span>          <span class="comment"># end::threshold4[]</span>
+<span class="line-numbers">142</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">143</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers">144</span><span class="key">kind</span>: <span class="string"><span class="content">Service</span></span>
+<span class="line-numbers">145</span><span class="key">metadata</span>:
+<span class="line-numbers">146</span>  <span class="key">name</span>: <span class="string"><span class="content">system-service</span></span>
+<span class="line-numbers">147</span><span class="key">spec</span>:
+<span class="line-numbers">148</span>  <span class="key">type</span>: <span class="string"><span class="content">NodePort</span></span>
+<span class="line-numbers">149</span>  <span class="key">selector</span>:
+<span class="line-numbers">150</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers">151</span>  <span class="key">ports</span>:
+<span class="line-numbers">152</span>  - <span class="string"><span class="content">protocol: TCP</span></span>
+<span class="line-numbers">153</span>    <span class="key">port</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">154</span>    <span class="key">targetPort</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">155</span>    <span class="key">nodePort</span>: <span class="string"><span class="content">31000</span></span>
+<span class="line-numbers">156</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">157</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers">158</span><span class="key">kind</span>: <span class="string"><span class="content">Service</span></span>
+<span class="line-numbers">159</span><span class="key">metadata</span>:
+<span class="line-numbers">160</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-service</span></span>
+<span class="line-numbers">161</span><span class="key">spec</span>:
+<span class="line-numbers">162</span>  <span class="key">type</span>: <span class="string"><span class="content">NodePort</span></span>
+<span class="line-numbers">163</span>  <span class="key">selector</span>:
+<span class="line-numbers">164</span>    <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers">165</span>  <span class="key">ports</span>:
+<span class="line-numbers">166</span>  - <span class="string"><span class="content">protocol: TCP</span></span>
+<span class="line-numbers">167</span>    <span class="key">port</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">168</span>    <span class="key">targetPort</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">169</span>    <span class="key">nodePort</span>: <span class="string"><span class="content">32000</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The startup, liveness, and readiness probes are configured for the containers that are running the <code>system</code> and <code>inventory</code> microservices.</p>
+</div>
+<div class="paragraph">
+<p>The startup probes are configured to poll the <code class="hotspot=start1 hotspot=start2">/health/started</code> endpoint. The startup probe determines whether a container is started.</p>
+</div>
+<div class="paragraph">
+<p>The liveness probes are configured to poll the <code class="hotspot=live1 hotspot=live2">/health/live</code> endpoint. The liveness probes determine whether a container needs to be restarted. The <code class="hotspot=delay1 hotspot=delay3">initialDelaySeconds</code> field defines the duration that the probe waits before it starts to poll so that it does not make requests before the server is started. The <code class="hotspot=period1 hotspot=period3">periodSeconds</code> option defines how often the probe polls the given endpoint. The <code class="hotspot=timeout1 hotspot=timeout3">timeoutSeconds</code> option defines how many seconds before the probe times out. The <code class="hotspot=threshold1 hotspot=threshold3">failureThreshold</code> option defines how many times the probe fails before the state changes from ready to not ready.</p>
+</div>
+<div class="paragraph">
+<p>The readiness probes are configured to poll the <code class="hotspot=ready1 hotspot=ready2">/health/ready</code> endpoint. The readiness probe determines the READY status of the container, as seen in the <code>kubectl get pods</code> output. Similar to the liveness probes, the readiness probes also define <code class="hotspot=delay2 hotspot=delay4">initialDelaySeconds</code>, <code class="hotspot=period2 hotspot=period4">periodSeconds</code>, <code class="hotspot=timeout2 hotspot=timeout4">timeoutSeconds</code>, and <code class="hotspot=threshold2 hotspot=threshold4">failureThreshold</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-the-microservices">Deploying the microservices</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To build these microservices, navigate to the <code>start</code> directory and run the following command.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn package</code></pre>
+</div>
+</div>
+<div class="paragraph command">
+<p>Next, run the <code>docker build</code> commands to build container images for your application:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker build -t system:1.0-SNAPSHOT system/.
+docker build -t inventory:1.0-SNAPSHOT inventory/.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>-t</code> flag in the <code>docker build</code> command allows the Docker image to be labeled (tagged) in the <code>name[:tag]</code> format. The tag for an image describes the specific image version. If the optional <code>[:tag]</code> tag is not specified, the <code>latest</code> tag is created by default.</p>
+</div>
+<div class="paragraph">
+<p>When the builds succeed, run the following command to deploy the necessary Kubernetes resources to serve the applications.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl apply -f kubernetes.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the following command to view the status of the pods. There will be two <code>system</code> pods and one <code>inventory</code> pod, later you’ll observe their behavior as the <code>system</code> pods become unhealthy.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get pods</code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     1/1       Running   0          59s
+system-deployment-694c7b74f7-lrlf7     1/1       Running   0          59s
+inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          59s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait until the pods are ready. After the pods are ready, you will make requests to your services.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="paragraph">
+<p>The default host name for Docker Desktop is <code>localhost</code>.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>The default host name for minikube is 192.168.99.100. Otherwise it can be found using the <code>minikube ip</code> command.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Navigate to <code>http://[hostname]:31000/system/properties</code> and observe a response containing JVM system properties. Replace <code>[hostname]</code> with the IP address or host name of your Kubernetes cluster. The readiness probe ensures the READY state won’t be <code>1/1</code> until the container is available to accept requests. Without a readiness probe, you might notice an unsuccessful response from the server. This scenario can occur when the container has started, but the application server hasn’t fully initialized. With the readiness probe, you can be certain the pod will only accept traffic when the microservice has fully started.</p>
+</div>
+<div class="paragraph">
+<p>Similarly, navigate to <code>http://[hostname]:32000/inventory/systems/system-service</code> and observe that the request is successful.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="changing-the-ready-state-of-the-system-microservice">Changing the ready state of the system microservice</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An <code>unhealthy</code> endpoint has been provided under the <code>system</code> microservice to set it to an unhealthy state. The unhealthy state causes the readiness probe to fail. A request to the <code>unhealthy</code> endpoint puts the service in an unhealthy state as a simulation.</p>
+</div>
+<div class="paragraph">
+<p>Navigate to <code>http://[hostname]:31000/system/unhealthy</code> to invoke the unhealthy endpoint by running the following curl command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl http://[hostname]:31000/system/unhealthy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the following command to view the state of the pods:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get pods</code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     1/1       Running   0          1m
+system-deployment-694c7b74f7-lrlf7     0/1       Running   0          1m
+inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          1m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will notice that one of the two <code>system</code> pods is no longer in the ready state. Navigate to <code>http://[hostname]:31000/system/properties</code>. Your request is successful because you have two replicas and one is still healthy.</p>
+</div>
+<div class="sect2">
+<h3 id="observing-the-effects-on-the-inventory-microservice">Observing the effects on the inventory microservice</h3>
+<div class="paragraph">
+<p>Wait until the <code>system</code> pod is ready again. Make two requests to <code>http://[hostname]:31000/system/unhealthy</code>. If you see the same pod name twice, repeat the request until you see that the second pod is unhealthy. You might see the same pod twice due to a delay between when a pod becomes unhealthy and when the readiness probe notices it. Therefore, traffic might still be routed to the unhealthy service for approximately 5 seconds. Continue to observe the output of <code>kubectl get pods</code>. You will see both pods are no longer ready. During this process, the readiness probe for the <code>inventory</code> microservice will also fail. Observe that it’s no longer in the ready state either.</p>
+</div>
+<div class="paragraph">
+<p>First, both <code>system</code> pods will no longer be ready because the readiness probe failed.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     0/1       Running   0          5m
+system-deployment-694c7b74f7-lrlf7     0/1       Running   0          5m
+inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          5m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, the <code>inventory</code> pod is no longer ready because the readiness probe failed. The probe failed because <code>system-service</code> is now unavailable.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     0/1       Running   0          6m
+system-deployment-694c7b74f7-lrlf7     0/1       Running   0          6m
+inventory-deployment-cf8f564c6-nctcr   0/1       Running   0          6m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, the <code>system</code> pods will start to become healthy again after 60 seconds.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     1/1       Running   0          7m
+system-deployment-694c7b74f7-lrlf7     0/1       Running   0          7m
+inventory-deployment-cf8f564c6-nctcr   0/1       Running   0          7m</code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     1/1       Running   0          7m
+system-deployment-694c7b74f7-lrlf7     1/1       Running   0          7m
+inventory-deployment-cf8f564c6-nctcr   0/1       Running   0          7m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, you will see all of the pods have recovered.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                                   READY     STATUS    RESTARTS   AGE
+system-deployment-694c7b74f7-hcf4q     1/1       Running   0          8m
+system-deployment-694c7b74f7-lrlf7     1/1       Running   0          8m
+inventory-deployment-cf8f564c6-nctcr   1/1       Running   0          8m</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-microservices">Testing the microservices</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Run the tests by running the following command and appropriately substituting <code>[hostname]</code> for the correct value.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn failsafe:integration-test -Dsystem.service.root=[hostname]:31000 -Dinventory.service.root=[hostname]:32000</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A few tests are included for you to test the basic functions of the microservices. If a test fails, then you might have introduced a bug into the code. Wait for all pods to be in the ready state before you run the tests.</p>
+</div>
+<div class="paragraph">
+<p>When the tests succeed, you should see output similar to the following in your console.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.system.SystemEndpointIT
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.65 s - in it.io.openliberty.guides.system.SystemEndpointIT
+
+Results:
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.inventory.InventoryEndpointIT
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.542 s - in it.io.openliberty.guides.inventory.InventoryEndpointIT
+
+Results:
+
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tearing-down-the-environment">Tearing down the environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To remove all of the resources created during this guide, run the following command to delete all of the resources that you created.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl delete -f kubernetes.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph command tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="paragraph">
+<p>Nothing more needs to be done for Docker Desktop.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>Perform the following steps to return your environment to a clean state.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Point the Docker daemon back to your local machine:</p>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>eval $(minikube docker-env -u)</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Stop your Minikube cluster:</p>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>minikube stop</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Delete your cluster:</p>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>minikube delete</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You have used MicroProfile Health and Open Liberty to create endpoints that report on your microservice’s status. Then, you observed how Kubernetes uses the <code>/health/started</code>, <code>/health/live</code>, and <code>/health/ready</code> endpoints to keep your microservices running smoothly.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Checking the health of microservices on Kubernetes <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-kubernetes-microprofile-health/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-kubernetes-microprofile-health/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-kubernetes-microprofile-health/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-health.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Adding health reports to microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/kubernetes-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Deploying microservices to Kubernetes</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">25 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

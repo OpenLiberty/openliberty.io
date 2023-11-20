@@ -1,0 +1,63 @@
+apply plugin: 'war'
+apply plugin: 'liberty'
+
+group = 'io.openliberty.guides'
+version = '1.0-SNAPSHOT'
+description = "JSF Container guide"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.wasdev.wlp.gradle.plugins:liberty-gradle-plugin:2.1'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+// tag::dependencies[]
+dependencies {
+    compile group: 'com.sun.faces', name: 'jsf-api', version: '2.2.14'
+    compile group: 'com.sun.faces', name: 'jsf-impl', version: '2.2.14'
+	providedCompile group: 'javax.enterprise', name: 'cdi-api', version: '1.2'
+    libertyRuntime group: 'io.openliberty', name: 'openliberty-runtime', version: '[17.0.0.4,)'
+}
+// end::dependencies[]
+
+ext {
+	httpPort = 8080
+	httpsPort = 8443
+	appUrl = 'http://localhost:' + httpPort + '/' + war.baseName + '-' + war.version
+}
+
+liberty {
+	server {
+		name = rootProject.name + 'Server'
+		dropins = [war]
+		bootstrapProperties = ['httpPort': httpPort, 'httpsPort': httpsPort]
+	}
+}
+
+task open {
+    description = 'Open browser to ${appUrl}'
+    doLast {
+        java.awt.Desktop.desktop.browse "${appUrl}".toURI()
+    }
+}
+
+clean.dependsOn 'libertyStop'
+libertyPackage.dependsOn 'libertyStop'
+libertyStart.dependsOn 'libertyStop'
+libertyRun.dependsOn 'libertyStop'
+libertyStart.doLast {
+	println "Application available at: ${appUrl}"
+}

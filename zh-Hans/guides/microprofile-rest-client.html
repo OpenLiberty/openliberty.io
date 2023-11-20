@@ -1,0 +1,2289 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Consuming RESTful Java microservices with template interfaces using Eclipse MicroProfile Rest Client
+    
+  </title>
+  <meta name="description" content="A getting started tutorial and an example on how to consume RESTful Java microservices using template interfaces and Context and Dependency Injection (CDI) or a builder with MicroProfile Rest Client.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/microprofile-rest-client">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Consuming RESTful Java microservices with template interfaces using Eclipse MicroProfile Rest Client" />
+  <meta name="twitter:description" content="A getting started tutorial and an example on how to consume RESTful Java microservices using template interfaces and Context and Dependency Injection (CDI) or a builder with MicroProfile Rest Client." />
+
+  <meta property='og:title' content="Consuming RESTful Java microservices with template interfaces using Eclipse MicroProfile Rest Client" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial and an example on how to consume RESTful Java microservices using template interfaces and Context and Dependency Injection (CDI) or a builder with MicroProfile Rest Client." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/microprofile-rest-client" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li>
+<a href="#writing-the-restful-client-interface">Writing the RESTful client interface</a>
+<ul class="sectlevel2">
+<li><a href="#handling-exceptions-through-responseexceptionmappers">Handling exceptions through ResponseExceptionMappers</a></li>
+</ul>
+</li>
+<li><a href="#injecting-the-client-with-dependency-injection">Injecting the client with dependency injection</a></li>
+<li><a href="#building-the-client-with-restclientbuilder">Building the client with RestClientBuilder</a></li>
+<li><a href="#running-the-application">Running the application</a></li>
+<li>
+<a href="#testing-the-application">Testing the application</a>
+<ul class="sectlevel2">
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Consuming RESTful services with template interfaces</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">20 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/microprofile-rest-client.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to use MicroProfile Rest Client to invoke RESTful microservices over HTTP in a type-safe way.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to build a MicroProfile Rest Client to access remote RESTful services. You will create a template interface that maps to the remote service that you want to call. MicroProfile Rest Client automatically generates a client instance based on what is defined and annotated in the template interface. Thus, you don’t have to worry about all of the boilerplate code, such as setting up a client class, connecting to the remote server, or invoking the correct URI with the correct parameters.</p>
+</div>
+<div class="paragraph">
+<p>The application that you will be working with is an <code>inventory</code> service, which fetches and stores the system property information for different hosts. Whenever a request is made to retrieve the system properties of a particular host, the <code>inventory</code> service will create a client to invoke the <code>system</code> service on that host. The <code>system</code> service simulates a remote service in the application.</p>
+</div>
+<div class="paragraph">
+<p>You will instantiate the client and use it in the <code>inventory</code> service. You can choose from two different approaches, <a href="https://openliberty.io/docs/latest/cdi-beans.html" target="_blank" rel="noopener">Context and Dependency Injection (CDI)</a> with the help of MicroProfile Config or the <a href="https://openliberty.io/blog/2018/01/31/mpRestClient.html" target="_blank" rel="noopener">RestClientBuilder</a> method. In this guide, you will explore both methods to handle scenarios for providing a valid base URL.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>When the base URL of the remote service is static and known, define the default base URL in the configuration file. Inject the client with a CDI method.</p>
+</li>
+<li>
+<p>When the base URL is not yet known and needs to be determined during the run time, set the base URL as a variable. Build the client with the more verbose <code>RestClientBuilder</code> method.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-microprofile-rest-client.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-microprofile-rest-client.git
+cd guide-microprofile-rest-client</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>To try out the application, first go to the <code>finish</code> directory and run the following Maven goal to build the application and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd finish
+mvn liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>The defaultServer server is ready to run a smarter planet.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>system</code> microservice simulates a service that returns the system property information for the host. The <code>system</code> service is accessible at the <a href="http://localhost:9080/system/properties" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/system/properties</a> URL. In this case, <code>localhost</code> is the host name.</p>
+</div>
+<div class="paragraph">
+<p>The <code>inventory</code> microservice makes a request to the <code>system</code> microservice and stores the system property information.  To fetch and store your system information, visit the <a href="http://localhost:9080/inventory/systems/localhost" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/inventory/systems/localhost</a> URL.</p>
+</div>
+<div class="paragraph">
+<p>You can also use the <code>http://localhost:9080/inventory/systems/{your-hostname}</code> URL. In Windows, MacOS, and Linux, get your fully qualified domain name (FQDN) by entering <code>hostname</code> into your command-line. Visit the URL by replacing <code>{your-hostname}</code> with your FQDN.</p>
+</div>
+<div class="paragraph command">
+<p>After you are finished checking out the application, stop the Liberty instance by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty. Alternatively, you can run the <code>liberty:stop</code> goal from the <code>finish</code> directory in another shell session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:stop</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="writing-the-restful-client-interface">Writing the RESTful client interface</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now, navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph command">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following goal to start Open Liberty in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>The MicroProfile Rest Client API is included in the MicroProfile dependency specified by your <code class="hotspot file=0">pom.xml</code> file. Look for the dependency with the <code class="hotspot=microprofile file=0">microprofile</code> artifact ID.</p>
+</div>
+<div class="paragraph">
+<p>pom.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version='1.0' encoding='utf-8'?&gt;</span>
+<span class="line-numbers">  2</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 </span></span>
+<span class="line-numbers">  3</span><span class="string">                             <span class="content">http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  4</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  5</span>
+<span class="line-numbers">  6</span>    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">  7</span>    <span class="tag">&lt;artifactId&gt;</span>guide-microprofile-rest-client<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">  8</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">  9</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers"> 10</span>
+<span class="line-numbers"> 11</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 12</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 13</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 14</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>11<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 15</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>11<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 16</span>        <span class="comment">&lt;!-- Liberty configuration --&gt;</span>
+<span class="line-numbers"> 17</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9080<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers"> 18</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9443<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers"> 19</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 20</span>
+<span class="line-numbers"> 21</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 22</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers"> 23</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 24</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 25</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 26</span>            <span class="tag">&lt;version&gt;</span>10.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 27</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 28</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 29</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 30</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 31</span>            <span class="comment">&lt;!-- tag::microprofile[] --&gt;</span>
+<span class="line-numbers"> 32</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 33</span>            <span class="comment">&lt;!-- end::microprofile[] --&gt;</span>
+<span class="line-numbers"> 34</span>            <span class="tag">&lt;version&gt;</span>6.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 35</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 36</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 37</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 38</span>        <span class="comment">&lt;!-- Java utility classes --&gt;</span>
+<span class="line-numbers"> 39</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 40</span>            <span class="tag">&lt;groupId&gt;</span>org.apache.commons<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 41</span>            <span class="tag">&lt;artifactId&gt;</span>commons-lang3<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 42</span>            <span class="tag">&lt;version&gt;</span>3.12.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 43</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 44</span>        <span class="comment">&lt;!-- For tests--&gt;</span>
+<span class="line-numbers"> 45</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 46</span>            <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 47</span>            <span class="tag">&lt;artifactId&gt;</span>junit-jupiter<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 48</span>            <span class="tag">&lt;version&gt;</span>5.9.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 49</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 50</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 51</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 52</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 53</span>            <span class="tag">&lt;artifactId&gt;</span>resteasy-client<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 54</span>            <span class="tag">&lt;version&gt;</span>6.2.3.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 55</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 56</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 57</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 58</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 59</span>            <span class="tag">&lt;artifactId&gt;</span>resteasy-json-binding-provider<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 60</span>            <span class="tag">&lt;version&gt;</span>6.2.3.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 61</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 62</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 63</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 64</span>            <span class="tag">&lt;groupId&gt;</span>org.glassfish<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 65</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.json<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 66</span>            <span class="tag">&lt;version&gt;</span>2.0.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 67</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 68</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 69</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers"> 70</span>
+<span class="line-numbers"> 71</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers"> 72</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers"> 73</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers"> 74</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 75</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 76</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 77</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 78</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 79</span>            <span class="comment">&lt;!-- Plugin to run unit tests --&gt;</span>
+<span class="line-numbers"> 80</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 81</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 82</span>                <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 83</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 84</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 85</span>            <span class="comment">&lt;!-- Enable liberty-maven plugin --&gt;</span>
+<span class="line-numbers"> 86</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 87</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 88</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 89</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 90</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 91</span>            <span class="comment">&lt;!-- Plugin to run functional tests --&gt;</span>
+<span class="line-numbers"> 92</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 93</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 94</span>                <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 95</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 96</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 97</span>                    <span class="tag">&lt;systemPropertyVariables&gt;</span>
+<span class="line-numbers"> 98</span>                        <span class="tag">&lt;http.port&gt;</span>${liberty.var.default.http.port}<span class="tag">&lt;/http.port&gt;</span>
+<span class="line-numbers"> 99</span>                    <span class="tag">&lt;/systemPropertyVariables&gt;</span>
+<span class="line-numbers">100</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">101</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">102</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">103</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">104</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This dependency provides a library that is required to implement the MicroProfile Rest Client interface.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=mpRestClient file=1">mpRestClient</code> feature is also enabled in the <code class="hotspot file=1">src/main/liberty/config/server.xml</code> file. This feature enables your Open Liberty to use MicroProfile Rest Client to invoke RESTful microservices.</p>
+</div>
+<div class="paragraph">
+<p>server.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">Sample Liberty server</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>  <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>    <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 5</span>    <span class="tag">&lt;feature&gt;</span>jsonp-2.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>    <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 7</span>    <span class="tag">&lt;feature&gt;</span>cdi-4.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 8</span>    <span class="comment">&lt;!-- tag::mpConfig[] --&gt;</span>
+<span class="line-numbers"> 9</span>    <span class="tag">&lt;feature&gt;</span>mpConfig-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">10</span>    <span class="comment">&lt;!-- end::mpConfig[] --&gt;</span>
+<span class="line-numbers">11</span>    <span class="comment">&lt;!-- tag::mpRestClient[] --&gt;</span>
+<span class="line-numbers">12</span>    <span class="tag">&lt;feature&gt;</span>mpRestClient-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">13</span>    <span class="comment">&lt;!-- end::mpRestClient[] --&gt;</span>
+<span class="line-numbers">14</span>  <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span>  <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9080</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">17</span>  <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.https.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9443</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">18</span>  
+<span class="line-numbers">19</span>  <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span> <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">20</span>                <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span>  <span class="tag">&lt;webApplication</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-microprofile-rest-client.war</span><span class="delimiter">"</span></span> <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">23</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The code for the <code>system</code> service in the <code>src/main/java/io/openliberty/guides/system</code> directory is provided for you. It simulates a remote RESTful service that the <code>inventory</code> service invokes.</p>
+</div>
+<div class="paragraph">
+<p>Create a RESTful client interface for the <code>system</code> service. Write a template interface that maps the API of the remote <code>system</code> service. The template interface describes the remote service that you want to access. The interface defines the resource to access as a method by mapping its annotations, return type, list of arguments, and exception declarations.</p>
+</div>
+<div class="listingblock code_command hotspot file=2">
+<div class="content">
+<pre><mark>Create the <code>SystemClient</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/client/SystemClient.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemClient.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="comment">// tag::client[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory.client</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.ProcessingException</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.annotation.RegisterProvider</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.inject.RegisterRestClient</span>;
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span><span class="comment">// tag::RegisterRestClient[]</span>
+<span class="line-numbers">27</span><span class="annotation">@RegisterRestClient</span>(configKey = <span class="string"><span class="delimiter">"</span><span class="content">systemClient</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">28</span>                     baseUri = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:9080/system</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">29</span><span class="comment">// end::RegisterRestClient[]</span>
+<span class="line-numbers">30</span><span class="comment">// tag::RegisterProvider[]</span>
+<span class="line-numbers">31</span><span class="annotation">@RegisterProvider</span>(UnknownUriExceptionMapper.class)
+<span class="line-numbers">32</span><span class="comment">// end::RegisterProvider[]</span>
+<span class="line-numbers">33</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/properties</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">34</span><span class="comment">// tag::SystemClient[]</span>
+<span class="line-numbers">35</span><span class="comment">// tag::AutoCloseable[]</span>
+<span class="line-numbers">36</span><span class="directive">public</span> <span class="type">interface</span> <span class="class">SystemClient</span> <span class="directive">extends</span> AutoCloseable {
+<span class="line-numbers">37</span><span class="comment">// end::AutoCloseable[]</span>
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">40</span>  <span class="comment">// tag::Produces[]</span>
+<span class="line-numbers">41</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">42</span>  <span class="comment">// end::Produces[]</span>
+<span class="line-numbers">43</span>  <span class="comment">// tag::getProperties[]</span>
+<span class="line-numbers">44</span>  <span class="predefined-type">Properties</span> getProperties() <span class="directive">throws</span> UnknownUriException, ProcessingException;
+<span class="line-numbers">45</span>  <span class="comment">// end::getProperties[]</span>
+<span class="line-numbers">46</span>}
+<span class="line-numbers">47</span><span class="comment">// end::SystemClient[]</span>
+<span class="line-numbers">48</span><span class="comment">// end::client[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The MicroProfile Rest Client feature automatically builds and generates a client implementation based on what is defined in the <code class="hotspot=SystemClient file=2">SystemClient</code> interface. There is no need to set up the client and connect with the remote service.</p>
+</div>
+<div class="paragraph">
+<p>Notice the <code class="hotspot=SystemClient file=2">SystemClient</code> interface inherits the <code class="hotspot=AutoCloseable file=2">AutoCloseable</code> interface. This allows the user to explicitly close the client instance by invoking the <code>close()</code> method or to implicitly close the client instance using a try-with-resources block. When the client instance is closed, all underlying resources associated with the client instance are cleaned up. Refer to the <a href="https://github.com/eclipse/microprofile-rest-client/releases" target="_blank" rel="noopener noreferrer">MicroProfile Rest Client specification</a> for more details.</p>
+</div>
+<div class="paragraph">
+<p>When the <code class="hotspot=getProperties file=2">getProperties()</code> method is invoked, the <code class="hotspot=SystemClient file=2">SystemClient</code> instance sends a GET request to the <code>&lt;baseUrl&gt;/properties</code> endpoint, where <code>&lt;baseUrl&gt;</code> is the default base URL of the <code>system</code> service. You will see how to configure the base URL in the next section.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=Produces file=2">@Produces</code> annotation specifies the media (MIME) type of the expected response. The default value is <code>MediaType.APPLICATION_JSON</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=RegisterProvider file=2">@RegisterProvider</code> annotation tells the framework to register the provider classes to be used when the framework invokes the interface. You can add as many providers as necessary. In the <code class="hotspot=SystemClient file=2">SystemClient</code> interface, add a response exception mapper as a provider to map the <code>404</code> response code with the <code class="hotspot=getProperties file=2">UnknownUriException</code> exception.</p>
+</div>
+<div class="sect2">
+<h3 id="handling-exceptions-through-responseexceptionmappers">Handling exceptions through ResponseExceptionMappers</h3>
+<div class="paragraph">
+<p>Error handling is an important step to ensure that the application can fail safely. If there is an error response such as <code>404 NOT FOUND</code> when invoking the remote service, you need to handle it. First, define an exception, and map the exception with the error response code. Then, register the exception mapper in the client interface.</p>
+</div>
+<div class="paragraph">
+<p>Look at the client interface again, the <code class="hotspot=RegisterProvider file=0">@RegisterProvider</code> annotation registers the <code>UnknownUriExceptionMapper</code> response exception mapper. An exception mapper maps various response codes from the remote service to throwable exceptions.</p>
+</div>
+<div class="paragraph">
+<p>SystemClient.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="comment">// tag::client[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory.client</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.ProcessingException</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.annotation.RegisterProvider</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.inject.RegisterRestClient</span>;
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span><span class="comment">// tag::RegisterRestClient[]</span>
+<span class="line-numbers">27</span><span class="annotation">@RegisterRestClient</span>(configKey = <span class="string"><span class="delimiter">"</span><span class="content">systemClient</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">28</span>                     baseUri = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:9080/system</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">29</span><span class="comment">// end::RegisterRestClient[]</span>
+<span class="line-numbers">30</span><span class="comment">// tag::RegisterProvider[]</span>
+<span class="line-numbers">31</span><span class="annotation">@RegisterProvider</span>(UnknownUriExceptionMapper.class)
+<span class="line-numbers">32</span><span class="comment">// end::RegisterProvider[]</span>
+<span class="line-numbers">33</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/properties</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">34</span><span class="comment">// tag::SystemClient[]</span>
+<span class="line-numbers">35</span><span class="comment">// tag::AutoCloseable[]</span>
+<span class="line-numbers">36</span><span class="directive">public</span> <span class="type">interface</span> <span class="class">SystemClient</span> <span class="directive">extends</span> AutoCloseable {
+<span class="line-numbers">37</span><span class="comment">// end::AutoCloseable[]</span>
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">40</span>  <span class="comment">// tag::Produces[]</span>
+<span class="line-numbers">41</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">42</span>  <span class="comment">// end::Produces[]</span>
+<span class="line-numbers">43</span>  <span class="comment">// tag::getProperties[]</span>
+<span class="line-numbers">44</span>  <span class="predefined-type">Properties</span> getProperties() <span class="directive">throws</span> UnknownUriException, ProcessingException;
+<span class="line-numbers">45</span>  <span class="comment">// end::getProperties[]</span>
+<span class="line-numbers">46</span>}
+<span class="line-numbers">47</span><span class="comment">// end::SystemClient[]</span>
+<span class="line-numbers">48</span><span class="comment">// end::client[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Implement the actual exception class and the mapper class to see how this mechanism works.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the <code>UnknownUriException</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/client/UnknownUriException.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>UnknownUriException.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory.client</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="comment">// tag::exception[]</span>
+<span class="line-numbers">15</span><span class="directive">public</span> <span class="type">class</span> <span class="class">UnknownUriException</span> <span class="directive">extends</span> <span class="exception">Exception</span> {
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span>  <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">long</span> serialVersionUID = <span class="integer">1L</span>;
+<span class="line-numbers">18</span>
+<span class="line-numbers">19</span>  <span class="directive">public</span> UnknownUriException() {
+<span class="line-numbers">20</span>    <span class="local-variable">super</span>();
+<span class="line-numbers">21</span>  }
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span>  <span class="directive">public</span> UnknownUriException(<span class="predefined-type">String</span> message) {
+<span class="line-numbers">24</span>    <span class="local-variable">super</span>(message);
+<span class="line-numbers">25</span>  }
+<span class="line-numbers">26</span>}
+<span class="line-numbers">27</span><span class="comment">// end::exception[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, link the <code class="hotspot=exception file=1">UnknownUriException</code> class with the corresponding response code through a <code>ResponseExceptionMapper</code> mapper class.</p>
+</div>
+<div class="listingblock code_command hotspot file=2">
+<div class="content">
+<pre><mark>Create the <code>UnknownUriExceptionMapper</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/client/UnknownUriExceptionMapper.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>UnknownUriExceptionMapper.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="comment">// tag::mapper[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory.client</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.logging.Logger</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MultivaluedMap</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.ext.Provider</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper</span>;
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span><span class="annotation">@Provider</span>
+<span class="line-numbers">22</span><span class="directive">public</span> <span class="type">class</span> <span class="class">UnknownUriExceptionMapper</span>
+<span class="line-numbers">23</span>    <span class="directive">implements</span> ResponseExceptionMapper&lt;UnknownUriException&gt; {
+<span class="line-numbers">24</span>  <span class="predefined-type">Logger</span> LOG = <span class="predefined-type">Logger</span>.getLogger(UnknownUriExceptionMapper.class.getName());
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span>  <span class="annotation">@Override</span>
+<span class="line-numbers">27</span>  <span class="comment">// tag::handles[]</span>
+<span class="line-numbers">28</span>  <span class="directive">public</span> <span class="type">boolean</span> handles(<span class="type">int</span> status, MultivaluedMap&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt; headers) {
+<span class="line-numbers">29</span>    LOG.info(<span class="string"><span class="delimiter">"</span><span class="content">status = </span><span class="delimiter">"</span></span> + status);
+<span class="line-numbers">30</span>    <span class="keyword">return</span> status == <span class="integer">404</span>;
+<span class="line-numbers">31</span>  }
+<span class="line-numbers">32</span>  <span class="comment">// end::handles[]</span>
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>  <span class="annotation">@Override</span>
+<span class="line-numbers">35</span>  <span class="comment">// tag::toThrowable[]</span>
+<span class="line-numbers">36</span>  <span class="directive">public</span> UnknownUriException toThrowable(Response response) {
+<span class="line-numbers">37</span>    <span class="keyword">return</span> <span class="keyword">new</span> UnknownUriException();
+<span class="line-numbers">38</span>  }
+<span class="line-numbers">39</span>  <span class="comment">// end::toThrowable[]</span>
+<span class="line-numbers">40</span>}
+<span class="line-numbers">41</span><span class="comment">// end::mapper[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=handles file=2">handles()</code> method inspects the HTTP response code to determine whether an exception is thrown for the specific response, and the <code class="hotspot=toThrowable file=2">toThrowable()</code> method returns the mapped exception.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="injecting-the-client-with-dependency-injection">Injecting the client with dependency injection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now, instantiate the <code class="hotspot=SystemClient file=1">SystemClient</code> interface and use it in the <code>inventory</code> service. If you want to connect only with the default host name, you can easily instantiate the <code class="hotspot=SystemClient file=1">SystemClient</code> with CDI annotations. CDI injection simplifies the process of bootstrapping the client.</p>
+</div>
+<div class="paragraph">
+<p>First, you need to define the base URL of the <code class="hotspot=SystemClient file=1">SystemClient</code> instance. Configure the default base URL with the MicroProfile Config feature. This feature is enabled for you in the <code class="hotspot=mpConfig file=3">server.xml</code> file.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the configuration file.</mark>
+<code>src/main/webapp/META-INF/microprofile-config.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties"><span class="line-numbers">1</span># tag::config[]
+<span class="line-numbers">2</span># tag::baseUri[]
+<span class="line-numbers">3</span>systemClient/mp-rest/uri=http://localhost:9080/system
+<span class="line-numbers">4</span># end::baseUri[]
+<span class="line-numbers">5</span># end::config[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=baseUri file=0">mp-rest/uri</code> base URL config property is configured to the default <code class="hotspot=baseUri file=0">http://localhost:9080/system</code> URL.</p>
+</div>
+<div class="paragraph">
+<p>This configuration is automatically picked up by the MicroProfile Config API.</p>
+</div>
+<div class="paragraph">
+<p>Look at the annotations in the <code class="hotspot=SystemClient file=1">SystemClient</code> interface again.</p>
+</div>
+<div class="paragraph">
+<p>SystemClient.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="comment">// tag::client[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory.client</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.ProcessingException</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.annotation.RegisterProvider</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.inject.RegisterRestClient</span>;
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span><span class="comment">// tag::RegisterRestClient[]</span>
+<span class="line-numbers">27</span><span class="annotation">@RegisterRestClient</span>(configKey = <span class="string"><span class="delimiter">"</span><span class="content">systemClient</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">28</span>                     baseUri = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:9080/system</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">29</span><span class="comment">// end::RegisterRestClient[]</span>
+<span class="line-numbers">30</span><span class="comment">// tag::RegisterProvider[]</span>
+<span class="line-numbers">31</span><span class="annotation">@RegisterProvider</span>(UnknownUriExceptionMapper.class)
+<span class="line-numbers">32</span><span class="comment">// end::RegisterProvider[]</span>
+<span class="line-numbers">33</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/properties</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">34</span><span class="comment">// tag::SystemClient[]</span>
+<span class="line-numbers">35</span><span class="comment">// tag::AutoCloseable[]</span>
+<span class="line-numbers">36</span><span class="directive">public</span> <span class="type">interface</span> <span class="class">SystemClient</span> <span class="directive">extends</span> AutoCloseable {
+<span class="line-numbers">37</span><span class="comment">// end::AutoCloseable[]</span>
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">40</span>  <span class="comment">// tag::Produces[]</span>
+<span class="line-numbers">41</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">42</span>  <span class="comment">// end::Produces[]</span>
+<span class="line-numbers">43</span>  <span class="comment">// tag::getProperties[]</span>
+<span class="line-numbers">44</span>  <span class="predefined-type">Properties</span> getProperties() <span class="directive">throws</span> UnknownUriException, ProcessingException;
+<span class="line-numbers">45</span>  <span class="comment">// end::getProperties[]</span>
+<span class="line-numbers">46</span>}
+<span class="line-numbers">47</span><span class="comment">// end::SystemClient[]</span>
+<span class="line-numbers">48</span><span class="comment">// end::client[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=RegisterRestClient file=1">@RegisterRestClient</code> annotation registers the interface as a RESTful client. The runtime creates a CDI managed bean for every interface that is annotated with the <code>@RegisterRestClient</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=RegisterRestClient file=1">configKey</code> value in the <code class="hotspot=RegisterRestClient file=1">@RegisterRestClient</code> annotation replaces the fully-qualified classname of the properties in the <code class="hotspot file=0">microprofile-config.properties</code> configuration file. For example, the <code>&lt;fully-qualified classname&gt;/mp-rest/uri</code> property becomes <code>systemClient/mp-rest/uri</code>. The benefit of using Config Keys is when multiple client interfaces have the same <code>configKey</code> value, the interfaces can be configured with a single MP config property.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=RegisterRestClient file=1">baseUri</code> value can also be set in the <code class="hotspot=RegisterRestClient file=1">@RegisterRestClient</code> annotation. However, this value will be overridden by the base URI property defined in the <code class="hotspot file=0">microprofile-config.properties</code> configuration file, which takes precedence. In a production environment, you can use the <code>baseUri</code> variable to specify a different URI for development and testing purposes.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=RegisterRestClient file=1">@RegisterRestClient</code> annotation, which is a bean defining annotation implies that the interface is manageable through CDI. You must have this annotation in order to inject the client.</p>
+</div>
+<div class="paragraph">
+<p>Inject the <code class="hotspot=SystemClient file=1">SystemClient</code> interface into the <code class="hotspot file=2">InventoryManager</code> class, which is another CDI managed bean.</p>
+</div>
+<div class="listingblock code_command hotspot file=2">
+<div class="content">
+<pre><mark>Replace the <code>InventoryManager</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/InventoryManager.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryManager.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="comment">// tag::manager[]</span>
+<span class="line-numbers"> 13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers"> 14</span>
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">java.net.ConnectException</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.net.URI</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">java.net.UnknownHostException</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">java.util.ArrayList</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">java.util.Collections</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers"> 22</span>
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.ProcessingException</span>;
+<span class="line-numbers"> 26</span>
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">org.apache.commons.lang3.exception.ExceptionUtils</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.RestClientBuilder</span>;
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.inject.RestClient</span>;
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers"> 31</span>
+<span class="line-numbers"> 32</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.SystemClient</span>;
+<span class="line-numbers"> 33</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.UnknownUriException</span>;
+<span class="line-numbers"> 34</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.UnknownUriExceptionMapper</span>;
+<span class="line-numbers"> 35</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers"> 36</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.SystemData</span>;
+<span class="line-numbers"> 37</span>
+<span class="line-numbers"> 38</span><span class="comment">// tag::ApplicationScoped[]</span>
+<span class="line-numbers"> 39</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers"> 40</span><span class="comment">// end::ApplicationScoped[]</span>
+<span class="line-numbers"> 41</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryManager</span> {
+<span class="line-numbers"> 42</span>
+<span class="line-numbers"> 43</span>  <span class="directive">private</span> <span class="predefined-type">List</span>&lt;SystemData&gt; systems = <span class="predefined-type">Collections</span>.synchronizedList(
+<span class="line-numbers"> 44</span>                                       <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;SystemData&gt;());
+<span class="line-numbers"> 45</span>
+<span class="line-numbers"> 46</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers"> 47</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 48</span>  <span class="predefined-type">String</span> DEFAULT_PORT;
+<span class="line-numbers"> 49</span>
+<span class="line-numbers"> 50</span>  <span class="comment">// tag::Inject[]</span>
+<span class="line-numbers"> 51</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers"> 52</span>  <span class="comment">// end::Inject[]</span>
+<span class="line-numbers"> 53</span>  <span class="comment">// tag::RestClient[]</span>
+<span class="line-numbers"> 54</span>  <span class="annotation">@RestClient</span>
+<span class="line-numbers"> 55</span>  <span class="comment">// end::RestClient[]</span>
+<span class="line-numbers"> 56</span>  <span class="comment">// tag::SystemClient[]</span>
+<span class="line-numbers"> 57</span>  <span class="directive">private</span> SystemClient defaultRestClient;
+<span class="line-numbers"> 58</span>  <span class="comment">// end::SystemClient[]</span>
+<span class="line-numbers"> 59</span>
+<span class="line-numbers"> 60</span>  <span class="directive">public</span> <span class="predefined-type">Properties</span> get(<span class="predefined-type">String</span> hostname) {
+<span class="line-numbers"> 61</span>    <span class="predefined-type">Properties</span> properties = <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 62</span>    <span class="keyword">if</span> (hostname.equals(<span class="string"><span class="delimiter">"</span><span class="content">localhost</span><span class="delimiter">"</span></span>)) {
+<span class="line-numbers"> 63</span>      properties = getPropertiesWithDefaultHostName();
+<span class="line-numbers"> 64</span>    } <span class="keyword">else</span> {
+<span class="line-numbers"> 65</span>      properties = getPropertiesWithGivenHostName(hostname);
+<span class="line-numbers"> 66</span>    }
+<span class="line-numbers"> 67</span>
+<span class="line-numbers"> 68</span>    <span class="keyword">return</span> properties;
+<span class="line-numbers"> 69</span>  }
+<span class="line-numbers"> 70</span>
+<span class="line-numbers"> 71</span>  <span class="directive">public</span> <span class="type">void</span> add(<span class="predefined-type">String</span> hostname, <span class="predefined-type">Properties</span> systemProps) {
+<span class="line-numbers"> 72</span>    <span class="predefined-type">Properties</span> props = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+<span class="line-numbers"> 73</span>    props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers"> 74</span>    props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers"> 75</span>
+<span class="line-numbers"> 76</span>    SystemData host = <span class="keyword">new</span> SystemData(hostname, props);
+<span class="line-numbers"> 77</span>    <span class="keyword">if</span> (!systems.contains(host)) {
+<span class="line-numbers"> 78</span>      systems.add(host);
+<span class="line-numbers"> 79</span>    }
+<span class="line-numbers"> 80</span>  }
+<span class="line-numbers"> 81</span>
+<span class="line-numbers"> 82</span>  <span class="directive">public</span> InventoryList list() {
+<span class="line-numbers"> 83</span>    <span class="keyword">return</span> <span class="keyword">new</span> InventoryList(systems);
+<span class="line-numbers"> 84</span>  }
+<span class="line-numbers"> 85</span>
+<span class="line-numbers"> 86</span>  <span class="comment">// tag::getPropertiesWithDefaultHostName[]</span>
+<span class="line-numbers"> 87</span>  <span class="directive">private</span> <span class="predefined-type">Properties</span> getPropertiesWithDefaultHostName() {
+<span class="line-numbers"> 88</span>    <span class="keyword">try</span> {
+<span class="line-numbers"> 89</span>      <span class="comment">// tag::defaultRCGetProperties[]</span>
+<span class="line-numbers"> 90</span>      <span class="keyword">return</span> defaultRestClient.getProperties();
+<span class="line-numbers"> 91</span>      <span class="comment">// end::defaultRCGetProperties[]</span>
+<span class="line-numbers"> 92</span>    } <span class="keyword">catch</span> (UnknownUriException e) {
+<span class="line-numbers"> 93</span>      <span class="predefined-type">System</span>.err.println(<span class="string"><span class="delimiter">"</span><span class="content">The given URI is not formatted correctly.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 94</span>    } <span class="keyword">catch</span> (ProcessingException ex) {
+<span class="line-numbers"> 95</span>      handleProcessingException(ex);
+<span class="line-numbers"> 96</span>    }
+<span class="line-numbers"> 97</span>    <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 98</span>  }
+<span class="line-numbers"> 99</span>  <span class="comment">// end::getPropertiesWithDefaultHostName[]</span>
+<span class="line-numbers">100</span>
+<span class="line-numbers">101</span>  <span class="comment">// tag::getPropertiesWithGivenHostName[]</span>
+<span class="line-numbers">102</span>  <span class="directive">private</span> <span class="predefined-type">Properties</span> getPropertiesWithGivenHostName(<span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">103</span>    <span class="predefined-type">String</span> customURIString = <span class="string"><span class="delimiter">"</span><span class="content">http://</span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="content">:</span><span class="delimiter">"</span></span> + DEFAULT_PORT + <span class="string"><span class="delimiter">"</span><span class="content">/system</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">104</span>    <span class="predefined-type">URI</span> customURI = <span class="predefined-constant">null</span>;
+<span class="line-numbers">105</span>    <span class="keyword">try</span> {
+<span class="line-numbers">106</span>      customURI = <span class="predefined-type">URI</span>.create(customURIString);
+<span class="line-numbers">107</span>      <span class="comment">// tag::customRestClientBuilder[]</span>
+<span class="line-numbers">108</span>      SystemClient customRestClient = RestClientBuilder.newBuilder()
+<span class="line-numbers">109</span>                                        .baseUri(customURI)
+<span class="line-numbers">110</span>                                        .register(UnknownUriExceptionMapper.class)
+<span class="line-numbers">111</span>                                        .build(SystemClient.class);
+<span class="line-numbers">112</span>      <span class="comment">// end::customRestClientBuilder[]</span>
+<span class="line-numbers">113</span>      <span class="comment">// tag::customRCGetProperties[]</span>
+<span class="line-numbers">114</span>      <span class="keyword">return</span> customRestClient.getProperties();
+<span class="line-numbers">115</span>      <span class="comment">// end::customRCGetProperties[]</span>
+<span class="line-numbers">116</span>    } <span class="keyword">catch</span> (ProcessingException ex) {
+<span class="line-numbers">117</span>      handleProcessingException(ex);
+<span class="line-numbers">118</span>    } <span class="keyword">catch</span> (UnknownUriException e) {
+<span class="line-numbers">119</span>      <span class="predefined-type">System</span>.err.println(<span class="string"><span class="delimiter">"</span><span class="content">The given URI is unreachable.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">120</span>    }
+<span class="line-numbers">121</span>    <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+<span class="line-numbers">122</span>  }
+<span class="line-numbers">123</span>  <span class="comment">// end::getPropertiesWithGivenHostName[]</span>
+<span class="line-numbers">124</span>
+<span class="line-numbers">125</span>  <span class="directive">private</span> <span class="type">void</span> handleProcessingException(ProcessingException ex) {
+<span class="line-numbers">126</span>    <span class="predefined-type">Throwable</span> rootEx = ExceptionUtils.getRootCause(ex);
+<span class="line-numbers">127</span>    <span class="keyword">if</span> (rootEx != <span class="predefined-constant">null</span> &amp;&amp; (rootEx <span class="keyword">instanceof</span> <span class="exception">UnknownHostException</span>
+<span class="line-numbers">128</span>        || rootEx <span class="keyword">instanceof</span> <span class="exception">ConnectException</span>)) {
+<span class="line-numbers">129</span>      <span class="predefined-type">System</span>.err.println(<span class="string"><span class="delimiter">"</span><span class="content">The specified host is unknown.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">130</span>    } <span class="keyword">else</span> {
+<span class="line-numbers">131</span>      <span class="keyword">throw</span> ex;
+<span class="line-numbers">132</span>    }
+<span class="line-numbers">133</span>  }
+<span class="line-numbers">134</span>
+<span class="line-numbers">135</span>}
+<span class="line-numbers">136</span><span class="comment">// end::manager[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code class="hotspot=Inject file=2">@Inject</code> and <code class="hotspot=RestClient file=2">@RestClient</code> annotations inject an instance of the <code class="hotspot=SystemClient file=2">SystemClient</code> called <code>defaultRestClient</code> to the <code class="hotspot file=2">InventoryManager</code> class.</p>
+</div>
+<div class="paragraph">
+<p>Because the <code class="hotspot file=2">InventoryManager</code> class is <code class="hotspot=ApplicationScoped file=2">@ApplicationScoped</code>, and the <code class="hotspot=SystemClient file=1">SystemClient</code> CDI bean maintains the same scope through the default dependent scope, the client is initialized once per application.</p>
+</div>
+<div class="paragraph">
+<p>If the <code>hostname</code> parameter is <code>localhost</code>, the service runs the <code class="hotspot=getPropertiesWithDefaultHostName file=2">getPropertiesWithDefaultHostName()</code> helper function to fetch system properties. The helper function invokes the <code>system</code> service by calling the <code class="hotspot=defaultRCGetProperties file=2">defaultRestClient.getProperties()</code> method.</p>
+</div>
+<div class="paragraph">
+<p>server.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">Sample Liberty server</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>  <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>    <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 5</span>    <span class="tag">&lt;feature&gt;</span>jsonp-2.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>    <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 7</span>    <span class="tag">&lt;feature&gt;</span>cdi-4.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 8</span>    <span class="comment">&lt;!-- tag::mpConfig[] --&gt;</span>
+<span class="line-numbers"> 9</span>    <span class="tag">&lt;feature&gt;</span>mpConfig-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">10</span>    <span class="comment">&lt;!-- end::mpConfig[] --&gt;</span>
+<span class="line-numbers">11</span>    <span class="comment">&lt;!-- tag::mpRestClient[] --&gt;</span>
+<span class="line-numbers">12</span>    <span class="tag">&lt;feature&gt;</span>mpRestClient-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">13</span>    <span class="comment">&lt;!-- end::mpRestClient[] --&gt;</span>
+<span class="line-numbers">14</span>  <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span>  <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9080</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">17</span>  <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.https.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9443</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">18</span>  
+<span class="line-numbers">19</span>  <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span> <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">20</span>                <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span>  <span class="tag">&lt;webApplication</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-microprofile-rest-client.war</span><span class="delimiter">"</span></span> <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">23</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-the-client-with-restclientbuilder">Building the client with RestClientBuilder</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>inventory</code> service can also connect with a host other than the default <code>localhost</code> host, but you cannot configure a base URL that is not yet known. In this case, set the host name as a variable and build the client by using the <code>RestClientBuilder</code> method. You can customize the base URL from the host name attribute.</p>
+</div>
+<div class="paragraph">
+<p>Look at the <code class="hotspot=getPropertiesWithGivenHostName">getPropertiesWithGivenHostName()</code> method in the <code class="hotspot file=0">src/main/java/io/openliberty/guides/inventory/InventoryManager.java</code> file.</p>
+</div>
+<div class="paragraph">
+<p>InventoryManager.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="comment">// tag::manager[]</span>
+<span class="line-numbers"> 13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers"> 14</span>
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">java.net.ConnectException</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.net.URI</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">java.net.UnknownHostException</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">java.util.ArrayList</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">java.util.Collections</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers"> 22</span>
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.ProcessingException</span>;
+<span class="line-numbers"> 26</span>
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">org.apache.commons.lang3.exception.ExceptionUtils</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.RestClientBuilder</span>;
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.rest.client.inject.RestClient</span>;
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers"> 31</span>
+<span class="line-numbers"> 32</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.SystemClient</span>;
+<span class="line-numbers"> 33</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.UnknownUriException</span>;
+<span class="line-numbers"> 34</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.UnknownUriExceptionMapper</span>;
+<span class="line-numbers"> 35</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers"> 36</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.SystemData</span>;
+<span class="line-numbers"> 37</span>
+<span class="line-numbers"> 38</span><span class="comment">// tag::ApplicationScoped[]</span>
+<span class="line-numbers"> 39</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers"> 40</span><span class="comment">// end::ApplicationScoped[]</span>
+<span class="line-numbers"> 41</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryManager</span> {
+<span class="line-numbers"> 42</span>
+<span class="line-numbers"> 43</span>  <span class="directive">private</span> <span class="predefined-type">List</span>&lt;SystemData&gt; systems = <span class="predefined-type">Collections</span>.synchronizedList(
+<span class="line-numbers"> 44</span>                                       <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;SystemData&gt;());
+<span class="line-numbers"> 45</span>
+<span class="line-numbers"> 46</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers"> 47</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 48</span>  <span class="predefined-type">String</span> DEFAULT_PORT;
+<span class="line-numbers"> 49</span>
+<span class="line-numbers"> 50</span>  <span class="comment">// tag::Inject[]</span>
+<span class="line-numbers"> 51</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers"> 52</span>  <span class="comment">// end::Inject[]</span>
+<span class="line-numbers"> 53</span>  <span class="comment">// tag::RestClient[]</span>
+<span class="line-numbers"> 54</span>  <span class="annotation">@RestClient</span>
+<span class="line-numbers"> 55</span>  <span class="comment">// end::RestClient[]</span>
+<span class="line-numbers"> 56</span>  <span class="comment">// tag::SystemClient[]</span>
+<span class="line-numbers"> 57</span>  <span class="directive">private</span> SystemClient defaultRestClient;
+<span class="line-numbers"> 58</span>  <span class="comment">// end::SystemClient[]</span>
+<span class="line-numbers"> 59</span>
+<span class="line-numbers"> 60</span>  <span class="directive">public</span> <span class="predefined-type">Properties</span> get(<span class="predefined-type">String</span> hostname) {
+<span class="line-numbers"> 61</span>    <span class="predefined-type">Properties</span> properties = <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 62</span>    <span class="keyword">if</span> (hostname.equals(<span class="string"><span class="delimiter">"</span><span class="content">localhost</span><span class="delimiter">"</span></span>)) {
+<span class="line-numbers"> 63</span>      properties = getPropertiesWithDefaultHostName();
+<span class="line-numbers"> 64</span>    } <span class="keyword">else</span> {
+<span class="line-numbers"> 65</span>      properties = getPropertiesWithGivenHostName(hostname);
+<span class="line-numbers"> 66</span>    }
+<span class="line-numbers"> 67</span>
+<span class="line-numbers"> 68</span>    <span class="keyword">return</span> properties;
+<span class="line-numbers"> 69</span>  }
+<span class="line-numbers"> 70</span>
+<span class="line-numbers"> 71</span>  <span class="directive">public</span> <span class="type">void</span> add(<span class="predefined-type">String</span> hostname, <span class="predefined-type">Properties</span> systemProps) {
+<span class="line-numbers"> 72</span>    <span class="predefined-type">Properties</span> props = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+<span class="line-numbers"> 73</span>    props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers"> 74</span>    props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers"> 75</span>
+<span class="line-numbers"> 76</span>    SystemData host = <span class="keyword">new</span> SystemData(hostname, props);
+<span class="line-numbers"> 77</span>    <span class="keyword">if</span> (!systems.contains(host)) {
+<span class="line-numbers"> 78</span>      systems.add(host);
+<span class="line-numbers"> 79</span>    }
+<span class="line-numbers"> 80</span>  }
+<span class="line-numbers"> 81</span>
+<span class="line-numbers"> 82</span>  <span class="directive">public</span> InventoryList list() {
+<span class="line-numbers"> 83</span>    <span class="keyword">return</span> <span class="keyword">new</span> InventoryList(systems);
+<span class="line-numbers"> 84</span>  }
+<span class="line-numbers"> 85</span>
+<span class="line-numbers"> 86</span>  <span class="comment">// tag::getPropertiesWithDefaultHostName[]</span>
+<span class="line-numbers"> 87</span>  <span class="directive">private</span> <span class="predefined-type">Properties</span> getPropertiesWithDefaultHostName() {
+<span class="line-numbers"> 88</span>    <span class="keyword">try</span> {
+<span class="line-numbers"> 89</span>      <span class="comment">// tag::defaultRCGetProperties[]</span>
+<span class="line-numbers"> 90</span>      <span class="keyword">return</span> defaultRestClient.getProperties();
+<span class="line-numbers"> 91</span>      <span class="comment">// end::defaultRCGetProperties[]</span>
+<span class="line-numbers"> 92</span>    } <span class="keyword">catch</span> (UnknownUriException e) {
+<span class="line-numbers"> 93</span>      <span class="predefined-type">System</span>.err.println(<span class="string"><span class="delimiter">"</span><span class="content">The given URI is not formatted correctly.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 94</span>    } <span class="keyword">catch</span> (ProcessingException ex) {
+<span class="line-numbers"> 95</span>      handleProcessingException(ex);
+<span class="line-numbers"> 96</span>    }
+<span class="line-numbers"> 97</span>    <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 98</span>  }
+<span class="line-numbers"> 99</span>  <span class="comment">// end::getPropertiesWithDefaultHostName[]</span>
+<span class="line-numbers">100</span>
+<span class="line-numbers">101</span>  <span class="comment">// tag::getPropertiesWithGivenHostName[]</span>
+<span class="line-numbers">102</span>  <span class="directive">private</span> <span class="predefined-type">Properties</span> getPropertiesWithGivenHostName(<span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">103</span>    <span class="predefined-type">String</span> customURIString = <span class="string"><span class="delimiter">"</span><span class="content">http://</span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="content">:</span><span class="delimiter">"</span></span> + DEFAULT_PORT + <span class="string"><span class="delimiter">"</span><span class="content">/system</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">104</span>    <span class="predefined-type">URI</span> customURI = <span class="predefined-constant">null</span>;
+<span class="line-numbers">105</span>    <span class="keyword">try</span> {
+<span class="line-numbers">106</span>      customURI = <span class="predefined-type">URI</span>.create(customURIString);
+<span class="line-numbers">107</span>      <span class="comment">// tag::customRestClientBuilder[]</span>
+<span class="line-numbers">108</span>      SystemClient customRestClient = RestClientBuilder.newBuilder()
+<span class="line-numbers">109</span>                                        .baseUri(customURI)
+<span class="line-numbers">110</span>                                        .register(UnknownUriExceptionMapper.class)
+<span class="line-numbers">111</span>                                        .build(SystemClient.class);
+<span class="line-numbers">112</span>      <span class="comment">// end::customRestClientBuilder[]</span>
+<span class="line-numbers">113</span>      <span class="comment">// tag::customRCGetProperties[]</span>
+<span class="line-numbers">114</span>      <span class="keyword">return</span> customRestClient.getProperties();
+<span class="line-numbers">115</span>      <span class="comment">// end::customRCGetProperties[]</span>
+<span class="line-numbers">116</span>    } <span class="keyword">catch</span> (ProcessingException ex) {
+<span class="line-numbers">117</span>      handleProcessingException(ex);
+<span class="line-numbers">118</span>    } <span class="keyword">catch</span> (UnknownUriException e) {
+<span class="line-numbers">119</span>      <span class="predefined-type">System</span>.err.println(<span class="string"><span class="delimiter">"</span><span class="content">The given URI is unreachable.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">120</span>    }
+<span class="line-numbers">121</span>    <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+<span class="line-numbers">122</span>  }
+<span class="line-numbers">123</span>  <span class="comment">// end::getPropertiesWithGivenHostName[]</span>
+<span class="line-numbers">124</span>
+<span class="line-numbers">125</span>  <span class="directive">private</span> <span class="type">void</span> handleProcessingException(ProcessingException ex) {
+<span class="line-numbers">126</span>    <span class="predefined-type">Throwable</span> rootEx = ExceptionUtils.getRootCause(ex);
+<span class="line-numbers">127</span>    <span class="keyword">if</span> (rootEx != <span class="predefined-constant">null</span> &amp;&amp; (rootEx <span class="keyword">instanceof</span> <span class="exception">UnknownHostException</span>
+<span class="line-numbers">128</span>        || rootEx <span class="keyword">instanceof</span> <span class="exception">ConnectException</span>)) {
+<span class="line-numbers">129</span>      <span class="predefined-type">System</span>.err.println(<span class="string"><span class="delimiter">"</span><span class="content">The specified host is unknown.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">130</span>    } <span class="keyword">else</span> {
+<span class="line-numbers">131</span>      <span class="keyword">throw</span> ex;
+<span class="line-numbers">132</span>    }
+<span class="line-numbers">133</span>  }
+<span class="line-numbers">134</span>
+<span class="line-numbers">135</span>}
+<span class="line-numbers">136</span><span class="comment">// end::manager[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The host name is provided as a parameter. This method first assembles the base URL that consists of the new host name. Then, the method instantiates a <code class="hotspot=customRestClientBuilder">RestClientBuilder</code> builder with the new URL, registers the response exception mapper, and builds the <code>SystemClient</code> instance.</p>
+</div>
+<div class="paragraph">
+<p>Similarly, call the <code class="hotspot=customRCGetProperties">customRestClient.getProperties()</code> method to invoke the <code>system</code> service.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="running-the-application">Running the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You started the Open Liberty in dev mode at the beginning of the guide, so all the changes were automatically picked up.</p>
+</div>
+<div class="paragraph">
+<p>When the Liberty instance is running, select either approach to fetch your system properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Visit the <a href="http://localhost:9080/inventory/systems/localhost" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/inventory/systems/localhost</a> URL. The URL retrieves the system property information for the <code>localhost</code> host name by making a request to the <code>system</code> service at <code>http://localhost:9080/system/properties</code>.</p>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Get your FQDN first. Then, visit the <code>http://localhost:9080/inventory/systems/{your-hostname}</code> URL by replacing <code>{your-hostname}</code> with your FQDN, which retrieves your system properties by making a request to the <code>system</code> service at <code>http://{your-hostname}:9080/system/properties</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-application">Testing the application</h2>
+<div class="sectionbody">
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>RestClientIT</code> class.</mark>
+<code>src/test/java/it/io/openliberty/guides/client/RestClientIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>RestClientIT.java</p>
+</div>
+<div class="listingblock code_column  hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="comment">// tag::testClass[]</span>
+<span class="line-numbers"> 13</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.client</span>;
+<span class="line-numbers"> 14</span>
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObject</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Client</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.ClientBuilder</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.WebTarget</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeAll</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">java.net.InetAddress</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">java.net.UnknownHostException</span>;
+<span class="line-numbers"> 27</span>
+<span class="line-numbers"> 28</span><span class="directive">public</span> <span class="type">class</span> <span class="class">RestClientIT</span> {
+<span class="line-numbers"> 29</span>
+<span class="line-numbers"> 30</span>  <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> port;
+<span class="line-numbers"> 31</span>
+<span class="line-numbers"> 32</span>  <span class="directive">private</span> Client client;
+<span class="line-numbers"> 33</span>
+<span class="line-numbers"> 34</span>  <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> INVENTORY_SYSTEMS = <span class="string"><span class="delimiter">"</span><span class="content">inventory/systems</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 35</span>
+<span class="line-numbers"> 36</span>  <span class="annotation">@BeforeAll</span>
+<span class="line-numbers"> 37</span>  <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> oneTimeSetup() {
+<span class="line-numbers"> 38</span>    port = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">http.port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 39</span>  }
+<span class="line-numbers"> 40</span>
+<span class="line-numbers"> 41</span>  <span class="annotation">@BeforeEach</span>
+<span class="line-numbers"> 42</span>  <span class="directive">public</span> <span class="type">void</span> setup() {
+<span class="line-numbers"> 43</span>    client = ClientBuilder.newClient();
+<span class="line-numbers"> 44</span>  }
+<span class="line-numbers"> 45</span>
+<span class="line-numbers"> 46</span>  <span class="annotation">@AfterEach</span>
+<span class="line-numbers"> 47</span>  <span class="directive">public</span> <span class="type">void</span> teardown() {
+<span class="line-numbers"> 48</span>    client.close();
+<span class="line-numbers"> 49</span>  }
+<span class="line-numbers"> 50</span>
+<span class="line-numbers"> 51</span>  <span class="annotation">@Test</span>
+<span class="line-numbers"> 52</span>  <span class="directive">public</span> <span class="type">void</span> testSuite() {
+<span class="line-numbers"> 53</span>    <span class="local-variable">this</span>.testDefaultLocalhost();
+<span class="line-numbers"> 54</span>    <span class="local-variable">this</span>.testRestClientBuilder();
+<span class="line-numbers"> 55</span>  }
+<span class="line-numbers"> 56</span>
+<span class="line-numbers"> 57</span>  <span class="comment">// tag::testDefaultLocalhost[]</span>
+<span class="line-numbers"> 58</span>  <span class="directive">public</span> <span class="type">void</span> testDefaultLocalhost() {
+<span class="line-numbers"> 59</span>    <span class="predefined-type">String</span> hostname = <span class="string"><span class="delimiter">"</span><span class="content">localhost</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 60</span>
+<span class="line-numbers"> 61</span>    <span class="predefined-type">String</span> url = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:</span><span class="delimiter">"</span></span> + port + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span> + INVENTORY_SYSTEMS + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span> + hostname;
+<span class="line-numbers"> 62</span>
+<span class="line-numbers"> 63</span>    JsonObject obj = fetchProperties(url);
+<span class="line-numbers"> 64</span>
+<span class="line-numbers"> 65</span>    assertEquals(<span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>), obj.getString(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>),
+<span class="line-numbers"> 66</span>                 <span class="string"><span class="delimiter">"</span><span class="content">The system property for the local and remote JVM should match</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 67</span>  }
+<span class="line-numbers"> 68</span>  <span class="comment">// end::testDefaultLocalhost[]</span>
+<span class="line-numbers"> 69</span>
+<span class="line-numbers"> 70</span>  <span class="comment">// tag::testRestClientBuilder[]</span>
+<span class="line-numbers"> 71</span>  <span class="directive">public</span> <span class="type">void</span> testRestClientBuilder() {
+<span class="line-numbers"> 72</span>    <span class="predefined-type">String</span> hostname = <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 73</span>    <span class="keyword">try</span> {
+<span class="line-numbers"> 74</span>      hostname = <span class="predefined-type">InetAddress</span>.getLocalHost().getHostAddress();
+<span class="line-numbers"> 75</span>    } <span class="keyword">catch</span> (<span class="exception">UnknownHostException</span> e) {
+<span class="line-numbers"> 76</span>      <span class="predefined-type">System</span>.err.println(<span class="string"><span class="delimiter">"</span><span class="content">Unknown Host.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 77</span>    }
+<span class="line-numbers"> 78</span>
+<span class="line-numbers"> 79</span>    <span class="predefined-type">String</span> url = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:</span><span class="delimiter">"</span></span> + port + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span> + INVENTORY_SYSTEMS + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span> + hostname;
+<span class="line-numbers"> 80</span>
+<span class="line-numbers"> 81</span>    JsonObject obj = fetchProperties(url);
+<span class="line-numbers"> 82</span>
+<span class="line-numbers"> 83</span>    assertEquals(<span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>), obj.getString(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>),
+<span class="line-numbers"> 84</span>                 <span class="string"><span class="delimiter">"</span><span class="content">The system property for the local and remote JVM should match</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 85</span>  }
+<span class="line-numbers"> 86</span>  <span class="comment">// end::testRestClientBuilder[]</span>
+<span class="line-numbers"> 87</span>
+<span class="line-numbers"> 88</span>  <span class="directive">private</span> JsonObject fetchProperties(<span class="predefined-type">String</span> url) {
+<span class="line-numbers"> 89</span>    WebTarget target = client.target(url);
+<span class="line-numbers"> 90</span>    Response response = target.request().get();
+<span class="line-numbers"> 91</span>
+<span class="line-numbers"> 92</span>    assertEquals(<span class="integer">200</span>, response.getStatus(), <span class="string"><span class="delimiter">"</span><span class="content">Incorrect response code from </span><span class="delimiter">"</span></span> + url);
+<span class="line-numbers"> 93</span>
+<span class="line-numbers"> 94</span>    JsonObject obj = response.readEntity(JsonObject.class);
+<span class="line-numbers"> 95</span>    response.close();
+<span class="line-numbers"> 96</span>    <span class="keyword">return</span> obj;
+<span class="line-numbers"> 97</span>  }
+<span class="line-numbers"> 98</span>
+<span class="line-numbers"> 99</span>}
+<span class="line-numbers">100</span><span class="comment">// end::testClass[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each test case tests one of the methods for instantiating a RESTful client.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=testDefaultLocalhost file=0">testDefaultLocalhost()</code> test fetches and compares system properties from the http://localhost:9080/inventory/systems/localhost URL.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=testRestClientBuilder file=0">testRestClientBuilder()</code> test gets your IP address. Then, use your IP address as the host name to fetch your system properties and compare them.</p>
+</div>
+<div class="paragraph">
+<p>In addition, a few endpoint tests are provided for you to test the basic functionality of the <code>inventory</code> and <code>system</code> services. If a test failure occurs, you might have introduced a bug into the code.</p>
+</div>
+<div class="sect2 command">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Because you started Open Liberty in dev mode, you can run the tests by pressing the <code>enter/return</code> key from the command-line session where you started dev mode.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.system.SystemEndpointIT
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.377 sec - in it.io.openliberty.guides.system.SystemEndpointIT
+Running it.io.openliberty.guides.inventory.InventoryEndpointIT
+Interceptor for {http://client.inventory.guides.openliberty.io/}SystemClient has thrown exception, unwinding now
+Could not send Message.
+[err] The specified host is unknown.
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.379 sec - in it.io.openliberty.guides.inventory.InventoryEndpointIT
+Running it.io.openliberty.guides.client.RestClientIT
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.121 sec - in it.io.openliberty.guides.client.RestClientIT
+
+Results :
+
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The warning and error messages are expected and result from a request to a bad or an unknown hostname. This request is made in the <code>testUnknownHost()</code> test from the <code>InventoryEndpointIT</code> integration test.</p>
+</div>
+<div class="paragraph">
+<p>To see whether the tests detect a failure, change the base URL in the configuration file so that when the <code>inventory</code> service tries to access the invalid URL, an <code>UnknownUriException</code> is thrown. Rerun the tests to see a test failure occur.</p>
+</div>
+<div class="paragraph command">
+<p>When you are done checking out the service, exit dev mode by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You just invoked a remote service by using a template interface with MicroProfile Rest Client in Open Liberty.</p>
+</div>
+<div class="paragraph">
+<p>MicroProfile Rest Client also provides a uniform way to configure SSL for the client. You can learn more in the <a href="https://openliberty.io/blog/2019/06/21/microprofile-rest-client-19006.html#ssl" target="_blank" rel="noopener">Hostname verification with SSL on Open Liberty and MicroProfile Rest Client</a> blog and the <a href="https://github.com/eclipse/microprofile-rest-client/releases" target="_blank" rel="noopener noreferrer">MicroProfile Rest Client specification</a>.</p>
+</div>
+<div class="paragraph">
+<p>Feel free to try one of the related guides where you can learn more technologies and expand on what you built here.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Consuming RESTful services with template interfaces <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-microprofile-rest-client/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-rest-client/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-rest-client/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/rest-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Creating a RESTful web service</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">30 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/cdi-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Injecting dependencies into microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">15 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-config.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Configuring microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-rest-client-async.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Consuming RESTful services asynchronously with template interfaces</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">15 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

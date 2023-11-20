@@ -1,0 +1,32 @@
+<server description="Sample Liberty server">
+    <!-- tag::features[] -->
+    <featureManager>
+        <feature>restfulWS-3.1</feature>
+        <feature>jsonp-2.1</feature>
+        <feature>jsonb-3.0</feature>
+        <feature>cdi-4.0</feature>
+        <feature>mpMetrics-5.0</feature>
+        <!-- tag::mpHealth[] -->
+        <feature>mpHealth-4.0</feature>
+        <!-- end::mpHealth[] -->
+        <feature>mpConfig-3.0</feature>
+    </featureManager>
+    <!-- end::features[] -->
+
+    <variable name="default.http.port" defaultValue="9080"/>
+    <variable name="default.https.port" defaultValue="9443"/>
+
+    <!-- tag::webApplication[] -->
+    <webApplication location="guide-getting-started.war" contextRoot="/dev" />
+    <!-- end::webApplication[] -->    
+    <mpMetrics authentication="false"/>
+
+    <!-- tag::logging[] -->
+    <logging traceSpecification="com.ibm.ws.microprofile.health.*=all" />
+    <!-- end::logging[] -->
+
+    <httpEndpoint host="*" httpPort="${default.http.port}" 
+        httpsPort="${default.https.port}" id="defaultHttpEndpoint"/>
+
+    <variable name="io_openliberty_guides_system_inMaintenance" value="false"/>
+</server>

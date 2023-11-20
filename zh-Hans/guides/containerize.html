@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Containerizing and running Java microservices in Docker containers
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples of how to containerize or dockerize your Java microservices by building a container image and running the image as a Docker container.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/containerize">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Containerizing and running Java microservices in Docker containers" />
+  <meta name="twitter:description" content="A getting started tutorial with examples of how to containerize or dockerize your Java microservices by building a container image and running the image as a Docker container." />
+
+  <meta property='og:title' content="Containerizing and running Java microservices in Docker containers" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples of how to containerize or dockerize your Java microservices by building a container image and running the image as a Docker container." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/containerize" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#packaging-your-microservices">Packaging your microservices</a></li>
+<li>
+<a href="#building-your-docker-images">Building your Docker images</a>
+<ul class="sectlevel2">
+<li><a href="#creating-your-dockerfiles">Creating your Dockerfiles</a></li>
+<li><a href="#building-your-docker-image">Building your Docker image</a></li>
+</ul>
+</li>
+<li><a href="#running-your-microservices-in-docker-containers">Running your microservices in Docker containers</a></li>
+<li><a href="#externalizing-libertys-configuration">Externalizing Liberty’s configuration</a></li>
+<li><a href="#optimizing-the-image-size">Optimizing the image size</a></li>
+<li>
+<a href="#testing-the-microservices">Testing the microservices</a>
+<ul class="sectlevel2">
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Containerizing microservices</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">20 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the  <a href="https://openliberty.io/guides/containerize.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to containerize and run your microservices with Open Liberty using Docker.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>From development to production, and across your DevOps environments, you can deploy your microservices in a lightweight and portable manner by using containers. You can run a container from a container image. Each container image is a package of what you need to run your microservice or application, from the code to its dependencies and configuration. If you’re new to the development of applications in containers, you might want to start with the <a href="https://openliberty.io/guides/docker.html" target="_blank" rel="noopener">Using Docker containers to develop microservices</a> guide before you work through this guide.</p>
+</div>
+<div class="paragraph">
+<p>You’ll learn how to build container images and run containers using <a href="https://www.docker.com/" target="_blank" rel="noopener noreferrer">Docker</a> for your microservices. You’ll learn about the <a href="https://github.com/OpenLiberty/ci.docker" target="_blank" rel="noopener noreferrer">Open Liberty container images</a> and how to use them for your containerized applications. You’ll construct <code>Dockerfile</code> files, create Docker images by using the <code>docker build</code> command, and run the image as Docker containers by using <code>docker run</code> command.</p>
+</div>
+<div class="paragraph">
+<p>The two microservices that you’ll be working with are called <code>system</code> and <code>inventory</code>. The <code>system</code> microservice returns the JVM system properties of the running container. The <code>inventory</code> microservice adds the properties from the <code>system</code> microservice to the inventory. This guide demonstrates how both microservices can run and communicate with each other in different Docker containers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you begin, Docker needs to be installed. For installation instructions, refer to the <a href="https://docs.docker.com/get-docker/" target="_blank" rel="noopener noreferrer">official Docker documentation</a>. You will build and run the microservices in Docker containers.</p>
+</div>
+<div class="paragraph">
+<p>Make sure to start your Docker daemon before you proceed.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-containerize.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-containerize.git
+cd guide-containerize</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="packaging-your-microservices">Packaging your microservices</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph">
+<p>You can find the starting Java project in the <code>start</code> directory. This project is a multi-module Maven project that is made up of the <code>system</code> and <code>inventory</code> microservices. Each microservice is located in its own corresponding directory, <code>system</code> and <code>inventory</code>.</p>
+</div>
+<div class="paragraph">
+<p>To try out the microservices by using Maven, run the following Maven goal to build the <code>system</code> microservice and run it inside Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn -pl system liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Open another command-line session and run the following Maven goal to build the <code>inventory</code> microservice and run it inside Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn -pl inventory liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message in both command-line sessions, both of your services are ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>The defaultServer server is ready to run a smarter planet.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To access the <code>inventory</code> service, which displays the current contents of the inventory, see <a href="http://localhost:9081/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9081/inventory/systems</a>.</p>
+</div>
+<div class="paragraph">
+<p>To access the <code>system</code> service, which shows the system properties of the running JVM, see <a href="http://localhost:9080/system/properties" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080/system/properties</a>.</p>
+</div>
+<div class="paragraph">
+<p>You can add the system properties of your localhost to the <code>inventory</code> service at <a href="http://localhost:9081/inventory/systems/localhost" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9081/inventory/systems/localhost</a>.</p>
+</div>
+<div class="paragraph">
+<p>After you are finished checking out the microservices, stop the Liberty instances by pressing <code>CTRL+C</code> in the command-line sessions where you ran the <code>system</code> and <code>inventory</code> services. Alternatively, you can run the <code>liberty:stop</code> goal in another command-line session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn -pl system liberty:stop
+mvn -pl inventory liberty:stop</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To package your microservices, run the Maven package goal to build the application <code>.war</code> files from the start directory so that the <code>.war</code> files are in the <code>system/target</code> and <code>inventory/target</code> directories.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To learn more about RESTful web services and how to build them, see <a href="https://openliberty.io/guides/rest-intro.html" target="_blank" rel="noopener">Creating a RESTful web service</a> for details about how to build the <code>system</code> service. The <code>inventory</code> service is built in a similar way.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-your-docker-images">Building your Docker images</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A Docker image is a binary file. It is made up of multiple layers and is used to run code in a Docker container. Images are built from instructions in Dockerfiles to create a containerized version of the application.</p>
+</div>
+<div class="paragraph">
+<p>A <code>Dockerfile</code> is a collection of instructions for building a Docker image that can then be run as a container. As each instruction is run in a <code>Dockerfile</code>, a new Docker layer is created. These layers, which are known as intermediate images, are created when a change is made to your Docker image.</p>
+</div>
+<div class="paragraph">
+<p>Every <code>Dockerfile</code> begins with a parent or base image over which various commands are run. For example, you can start your image from scratch and run commands that download and install a Java runtime, or you can start from an image that already contains a Java installation.</p>
+</div>
+<div class="paragraph">
+<p>Learn more about Docker on the <a href="https://www.docker.com/what-docker" target="_blank" rel="noopener noreferrer">official Docker page</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="creating-your-dockerfiles">Creating your Dockerfiles</h3>
+<div class="paragraph">
+<p>You will be creating two Docker images to run the <code>inventory</code> service and <code>system</code> service. The first step is to create Dockerfiles for both services.</p>
+</div>
+<div class="paragraph">
+<p>In this guide, you’re using an official image from the IBM Container Registry (ICR), <code>icr.io/appcafe/open-liberty:full-java11-openj9-ubi</code>, as your parent image. This image is tagged with the word <code>full</code>, meaning it includes all Liberty features. <code>full</code> images are recommended for development only because they significantly expand the image size with features that are not required by the application.</p>
+</div>
+<div class="paragraph">
+<p>To minimize your image footprint in production, you can use one of the <code>kernel-slim</code> images, such as <code>icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi</code>.  This image installs the basic Liberty runtime. You can then add all the necessary features for your application with the usage pattern that is detailed in the Open Liberty <a href="https://openliberty.io/docs/latest/container-images.html#build" target="_blank" rel="noopener">container image documentation</a>. To use the default image that comes with the Open Liberty runtime, define the <code>FROM</code> instruction as <code>FROM icr.io/appcafe/open-liberty</code>. You can find all official images on the Open Liberty <a href="https://openliberty.io/docs/latest/container-images.html" target="_blank" rel="noopener">container image repository</a>.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>Dockerfile</code> for the inventory service.</mark>
+<code>inventory/Dockerfile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>inventory/Dockerfile</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Text"><span class="line-numbers"> 1</span># tag::from[]
+<span class="line-numbers"> 2</span>FROM icr.io/appcafe/open-liberty:full-java11-openj9-ubi
+<span class="line-numbers"> 3</span># end::from[]
+<span class="line-numbers"> 4</span>
+<span class="line-numbers"> 5</span>ARG VERSION=1.0
+<span class="line-numbers"> 6</span>ARG REVISION=SNAPSHOT
+<span class="line-numbers"> 7</span>
+<span class="line-numbers"> 8</span># tag::label[]
+<span class="line-numbers"> 9</span>LABEL \
+<span class="line-numbers">10</span>  org.opencontainers.image.authors="Your Name" \
+<span class="line-numbers">11</span>  org.opencontainers.image.vendor="Open Liberty" \
+<span class="line-numbers">12</span>  org.opencontainers.image.url="local" \
+<span class="line-numbers">13</span>  org.opencontainers.image.source="https://github.com/OpenLiberty/guide-containerize" \
+<span class="line-numbers">14</span>  org.opencontainers.image.version="$VERSION" \
+<span class="line-numbers">15</span>  org.opencontainers.image.revision="$REVISION" \
+<span class="line-numbers">16</span>  vendor="Open Liberty" \
+<span class="line-numbers">17</span>  name="inventory" \
+<span class="line-numbers">18</span>  version="$VERSION-$REVISION" \
+<span class="line-numbers">19</span>  summary="The inventory microservice from the Containerizing microservices guide" \
+<span class="line-numbers">20</span>  description="This image contains the inventory microservice running with the Open Liberty runtime."
+<span class="line-numbers">21</span># end::label[]
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span># tag::copy-config[]
+<span class="line-numbers">24</span># tag::config-userID[]
+<span class="line-numbers">25</span>COPY --chown=1001:0 \
+<span class="line-numbers">26</span># end::config-userID[]
+<span class="line-numbers">27</span>    # tag::inventory-config[]
+<span class="line-numbers">28</span>    src/main/liberty/config \
+<span class="line-numbers">29</span>    # end::inventory-config[]
+<span class="line-numbers">30</span>    # tag::config[]
+<span class="line-numbers">31</span>    /config/
+<span class="line-numbers">32</span>    # end::config[]
+<span class="line-numbers">33</span># end::copy-config[]
+<span class="line-numbers">34</span>
+<span class="line-numbers">35</span># tag::copy-war[]
+<span class="line-numbers">36</span># tag::war-userID[]
+<span class="line-numbers">37</span>COPY --chown=1001:0 \
+<span class="line-numbers">38</span># end::war-userID[]
+<span class="line-numbers">39</span>    # tag::inventory-war[]
+<span class="line-numbers">40</span>    target/guide-containerize-inventory.war \
+<span class="line-numbers">41</span>    # end::inventory-war[]
+<span class="line-numbers">42</span>    # tag::config-apps[]
+<span class="line-numbers">43</span>    /config/apps
+<span class="line-numbers">44</span>    # end::config-apps[]
+<span class="line-numbers">45</span># end::copy-war[]
+<span class="line-numbers">46</span>
+<span class="line-numbers">47</span># tag::configure-sh[]
+<span class="line-numbers">48</span>RUN configure.sh
+<span class="line-numbers">49</span># end::configure-sh[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=from file=0">FROM</code> instruction initializes a new build stage, which indicates the parent image of the built image. If you don’t need a parent image, then you can use <code>FROM scratch</code>, which makes your image a base image.</p>
+</div>
+<div class="paragraph">
+<p>It is also recommended to label your Docker images with the <code class="hotspot=label file=0">LABEL</code> command, as the label information can help you manage your images. For more information, see <a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#label" target="_blank" rel="noopener noreferrer">Best practices for writing Dockerfiles</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=copy-config hotspot=copy-war file=0">COPY</code> instructions are structured as <code>COPY</code> <code class="hotspot=config-userID hotspot=war-userID file=0">[--chown=&lt;user&gt;:&lt;group&gt;]</code> <code class="hotspot=inventory-config hotspot=inventory-war file=0">&lt;source&gt;</code> <code class="hotspot=config hotspot=config-apps file=0">&lt;destination&gt;</code>. They copy local files into the specified destination within your Docker image. In this case, the <code>inventory</code> Liberty configuration files that are located at <code>src/main/liberty/config</code> are copied to the <code class="hotspot=config file=0">/config/</code> destination directory. The <code>inventory</code> application WAR file <code class="hotspot=inventory-war file=0">inventory.war</code>, which was created from running <code>mvn package</code>, is copied to the <code class="hotspot=config-apps file=0">/config/apps</code> destination directory.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=copy-config hotspot=copy-war file=0">COPY</code> instructions use the <code class="hotspot=config-userID hotspot=war-userID file=0">1001</code> user ID  and <code class="hotspot=config-userID hotspot=war-userID file=0">0</code> group because the <code>icr.io/appcafe/open-liberty:full-java11-openj9-ubi</code> image runs by default with the <code>USER 1001</code> (non-root) user for security purposes. Otherwise, the files and directories that are copied over are owned by the root user.</p>
+</div>
+<div class="paragraph">
+<p>Place the <code class="hotspot=configure-sh file=0">RUN configure.sh</code> command at the end to get a pre-warmed Docker image. It improves the startup time of running your Docker container.</p>
+</div>
+<div class="paragraph">
+<p>The <code>Dockerfile</code> for the <code>system</code> service follows the same instructions as the <code>inventory</code> service, except that some <code class="hotspot=name hotspot=summary file=1">labels</code> are updated, and the <code class="hotspot=copy-war file=1">system.war</code> archive is copied into <code>/config/apps</code>.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the <code>Dockerfile</code> for the system service.</mark>
+<code>system/Dockerfile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>system/Dockerfile</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Text"><span class="line-numbers"> 1</span>FROM icr.io/appcafe/open-liberty:full-java11-openj9-ubi
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>ARG VERSION=1.0
+<span class="line-numbers"> 4</span>ARG REVISION=SNAPSHOT
+<span class="line-numbers"> 5</span>
+<span class="line-numbers"> 6</span>LABEL \
+<span class="line-numbers"> 7</span>  org.opencontainers.image.authors="Your Name" \
+<span class="line-numbers"> 8</span>  org.opencontainers.image.vendor="Open Liberty" \
+<span class="line-numbers"> 9</span>  org.opencontainers.image.url="local" \
+<span class="line-numbers">10</span>  org.opencontainers.image.source="https://github.com/OpenLiberty/guide-containerize" \
+<span class="line-numbers">11</span>  org.opencontainers.image.version="$VERSION" \
+<span class="line-numbers">12</span>  org.opencontainers.image.revision="$REVISION" \
+<span class="line-numbers">13</span>  vendor="Open Liberty" \
+<span class="line-numbers">14</span># tag::name[]
+<span class="line-numbers">15</span>  name="system" \
+<span class="line-numbers">16</span># end::name[]
+<span class="line-numbers">17</span>  version="$VERSION-$REVISION" \
+<span class="line-numbers">18</span># tag::summary[]
+<span class="line-numbers">19</span>  summary="The system microservice from the Containerizing microservices guide" \
+<span class="line-numbers">20</span>  description="This image contains the system microservice running with the Open Liberty runtime."
+<span class="line-numbers">21</span># end::summary[]
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span>COPY --chown=1001:0 src/main/liberty/config /config/
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span># tag::copy-war[]
+<span class="line-numbers">26</span>COPY --chown=1001:0 target/guide-containerize-system.war /config/apps
+<span class="line-numbers">27</span># end::copy-war[]
+<span class="line-numbers">28</span>
+<span class="line-numbers">29</span>RUN configure.sh</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="building-your-docker-image">Building your Docker image</h3>
+<div class="paragraph">
+<p>Now that your microservices are packaged and you have written your Dockerfiles, you will build your Docker images by using the <code>docker build</code> command.</p>
+</div>
+<div class="paragraph">
+<p>Run the following commands to build container images for your application:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker build -t system:1.0-SNAPSHOT system/.
+docker build -t inventory:1.0-SNAPSHOT inventory/.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>-t</code> flag in the <code>docker build</code> command allows the Docker image to be labeled (tagged) in the <code>name[:tag]</code> format. The tag for an image describes the specific image version. If the optional <code>[:tag]</code> tag is not specified, the <code>latest</code> tag is created by default.</p>
+</div>
+<div class="paragraph">
+<p>To verify that the images are built, run the <code>docker images</code> command to list all local Docker images:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker images</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or, run the <code>docker images</code> command with <code>--filter</code> option to list your images:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker images -f "label=org.opencontainers.image.authors=Your Name"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Your <code>inventory</code> and <code>system</code> images appear in the list of all Docker images:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>REPOSITORY    TAG             IMAGE ID        CREATED          SIZE
+inventory     1.0-SNAPSHOT    08fef024e986    4 minutes ago    1GB
+system        1.0-SNAPSHOT    1dff6d0b4f31    5 minutes ago    977MB</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-your-microservices-in-docker-containers">Running your microservices in Docker containers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now that your two images are built, you will run your microservices in Docker containers:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker run -d --name system -p 9080:9080 system:1.0-SNAPSHOT
+docker run -d --name inventory -p 9081:9081 inventory:1.0-SNAPSHOT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following table describes the flags in these commands:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 13.0434%;">
+<col style="width: 86.9566%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Flag</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-d</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runs the container in the background.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">--name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a name for the container.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-p</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maps the host ports to the container ports. For example: <code>-p &lt;HOST_PORT&gt;:&lt;CONTAINER_PORT&gt;</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Next, run the <code>docker ps</code> command to verify that your containers are started:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker ps</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make sure that your containers are running and show <code>Up</code> as their status:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>CONTAINER ID    IMAGE                   COMMAND                  CREATED          STATUS          PORTS                                        NAMES
+2b584282e0f5    inventory:1.0-SNAPSHOT  "/opt/ol/helpers/run…"   2 seconds ago    Up 1 second     9080/tcp, 9443/tcp, 0.0.0.0:9081-&gt;9081/tcp   inventory
+99a98313705f    system:1.0-SNAPSHOT     "/opt/ol/helpers/run…"   3 seconds ago    Up 2 seconds    0.0.0.0:9080-&gt;9080/tcp, 9443/tcp             system</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If a problem occurs and your containers exit prematurely, the containers don’t appear in the container list that the <code>docker ps</code> command displays. Instead, your containers appear with an <code>Exited</code> status when they run the <code>docker ps -a</code> command. Run the <code>docker logs system</code> and <code>docker logs inventory</code> commands to view the container logs for any potential problems. Run the <code>docker stats system</code> and <code>docker stats inventory</code> commands to display a live stream of usage statistics for your containers. You can also double-check that your Dockerfiles are correct. When you find the cause of the issues, remove the faulty containers with the <code>docker rm system</code> and <code>docker rm inventory</code> commands. Rebuild your images, and start the containers again.</p>
+</div>
+<div class="paragraph">
+<p>To access the application, go to the <a href="http://localhost:9081/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9081/inventory/systems</a> URL. An empty list is expected because no system properties are stored in the inventory yet.</p>
+</div>
+<div class="paragraph">
+<p>Next, retrieve the <code>system</code> container’s IP address by running the following:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker inspect -f "{{.NetworkSettings.IPAddress }}" system</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command returns the system container IP address:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>172.17.0.2</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, the IP address for the <code>system</code> service is <code>172.17.0.2</code>. Take note of this IP address to construct the URL to view the system properties.</p>
+</div>
+<div class="paragraph">
+<p>Go to the <code>http://localhost:9081/inventory/systems/[system-ip-address]</code> URL by replacing <code>[system-ip-address]</code> with the IP address that you obtained earlier. You see a result in JSON format with the system properties of your local JVM. When you go to this URL, these system properties are automatically stored in the inventory. Go back to the <a href="http://localhost:9081/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9081/inventory/systems</a> URL and you see a new entry for <code>[system-ip-address]</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="externalizing-libertys-configuration">Externalizing Liberty’s configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>inventory/server.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">Sample Liberty server</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>  <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>    <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 5</span>    <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>    <span class="tag">&lt;feature&gt;</span>jsonp-2.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 7</span>    <span class="tag">&lt;feature&gt;</span>cdi-4.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 8</span>    <span class="tag">&lt;feature&gt;</span>mpConfig-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 9</span>  <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">10</span>
+<span class="line-numbers">11</span>  <span class="comment">&lt;!-- tag::httpPort[] --&gt;</span>
+<span class="line-numbers">12</span>  <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9081</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">13</span>  <span class="comment">&lt;!-- end::httpPort[] --&gt;</span>
+<span class="line-numbers">14</span>  <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.https.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9444</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span>  <span class="comment">&lt;!-- tag::httpEndpoint[] --&gt;</span>
+<span class="line-numbers">17</span>  <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span> <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">18</span>      <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">19</span>  <span class="comment">&lt;!-- end::httpEndpoint[] --&gt;</span>
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span>  <span class="tag">&lt;webApplication</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-containerize-inventory.war</span><span class="delimiter">"</span></span> <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span>  <span class="tag">&lt;/webApplication&gt;</span>
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As mentioned at the beginning of this guide, one of the advantages of using containers is that they are portable and can be moved and deployed efficiently across all of your DevOps environments. Configuration often changes across different environments, and by externalizing your Liberty’s configuration, you can simplify the development process.</p>
+</div>
+<div class="paragraph">
+<p>Imagine a scenario where you are developing an Open Liberty application on port <code>9081</code> but to deploy it to production, it must be available on port <code>9091</code>. To manage this scenario, you can keep two different versions of the <code>server.xml</code> file; one for production and one for development. However, trying to maintain two different versions of a file might lead to mistakes. A better solution would be to externalize the configuration of the port number and use the value of an environment variable that is stored in each environment.</p>
+</div>
+<div class="paragraph">
+<p>In this example, you will use an environment variable to externally configure the HTTP port number of the <code>inventory</code> service.</p>
+</div>
+<div class="paragraph">
+<p>In the <code class="hotspot file=0">inventory/server.xml</code> file, the <code class="hotspot=httpPort file=0">default.http.port</code> variable is declared and is used in the <code class="hotspot=httpEndpoint file=0">httpEndpoint</code> element to define the service endpoint. The default value of the <code class="hotspot=httpPort file=0">default.http.port</code> variable is <code>9081</code>. However, this value is only used if no other value is specified. You can replace this value in the container by using the -e flag for the podman run command.</p>
+</div>
+<div class="paragraph">
+<p>Run the following commands to stop and remove the <code>inventory</code> container and rerun it with the <code>default.http.port</code> environment variable set:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker stop inventory
+docker rm inventory
+docker run -d --name inventory -e default.http.port=9091 -p 9091:9091 inventory:1.0-SNAPSHOT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>-e</code> flag can be used to create and set the values of environment variables in a Docker container. In this case, you are setting the <code>default.http.port</code> environment variable to <code>9091</code> for the <code>inventory</code> container.</p>
+</div>
+<div class="paragraph">
+<p>Now, when the service is starting up, Open Liberty finds the <code>default.http.port</code> environment variable and uses it to set the value of the <code class="hotspot=httpPort file=0">default.http.port</code> variable to be used in the HTTP endpoint.</p>
+</div>
+<div class="paragraph">
+<p>The <code>inventory</code> service is now available on the new port number that you specified. You can see the contents of the inventory at the <a href="http://localhost:9091/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9091/inventory/systems</a> URL. You can add your local system properties at <code>http://localhost:9091/inventory/systems/[system-ip-address]</code> by replacing <code>[system-ip-address]</code> with the IP address that you obtained in the previous section. The <code>system</code> service remains unchanged and is available at the <a href="http://localhost:9080/system/properties" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/system/properties</a> URL.</p>
+</div>
+<div class="paragraph">
+<p>You can externalize the configuration of more than just the port numbers. To learn more about Open Liberty configuration, check out the <a href="https://openliberty.io/docs/latest/reference/config/server-configuration-overview.html" target="_blank" rel="noopener">Server Configuration Overview</a> docs.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="optimizing-the-image-size">Optimizing the image size</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As mentioned previously, the parent image that is used in each <code>Dockerfile</code> contains the <code>full</code> tag, which includes all of the Liberty features. This parent image with the <code>full</code> tag is recommended for development, but while deploying to production it is recommended to use a parent image with the <code>kernel-slim</code> tag. The <code>kernel-slim</code> tag provides a bare minimum Liberty runtime with the ability to add the features required by the application.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the <code>Dockerfile</code> for the inventory service.</mark>
+<code>inventory/Dockerfile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>inventory/Dockerfile</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Text"><span class="line-numbers"> 1</span># tag::kernel-slim[]
+<span class="line-numbers"> 2</span>FROM icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
+<span class="line-numbers"> 3</span># end::kernel-slim[]
+<span class="line-numbers"> 4</span>
+<span class="line-numbers"> 5</span>ARG VERSION=1.0
+<span class="line-numbers"> 6</span>ARG REVISION=SNAPSHOT
+<span class="line-numbers"> 7</span>
+<span class="line-numbers"> 8</span># tag::label[]
+<span class="line-numbers"> 9</span>LABEL \
+<span class="line-numbers">10</span>  org.opencontainers.image.authors="Your Name" \
+<span class="line-numbers">11</span>  org.opencontainers.image.vendor="Open Liberty" \
+<span class="line-numbers">12</span>  org.opencontainers.image.url="local" \
+<span class="line-numbers">13</span>  org.opencontainers.image.source="https://github.com/OpenLiberty/guide-containerize" \
+<span class="line-numbers">14</span>  org.opencontainers.image.version="$VERSION" \
+<span class="line-numbers">15</span>  org.opencontainers.image.revision="$REVISION" \
+<span class="line-numbers">16</span>  vendor="Open Liberty" \
+<span class="line-numbers">17</span>  name="inventory" \
+<span class="line-numbers">18</span>  version="$VERSION-$REVISION" \
+<span class="line-numbers">19</span>  summary="The inventory microservice from the Containerizing microservices guide" \
+<span class="line-numbers">20</span>  description="This image contains the inventory microservice running with the Open Liberty runtime."
+<span class="line-numbers">21</span># end::label[]
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span># tag::copy-config[]
+<span class="line-numbers">24</span># tag::config-userID[]
+<span class="line-numbers">25</span>COPY --chown=1001:0 \
+<span class="line-numbers">26</span># end::config-userID[]
+<span class="line-numbers">27</span>    # tag::inventory-config[]
+<span class="line-numbers">28</span>    src/main/liberty/config \
+<span class="line-numbers">29</span>    # end::inventory-config[]
+<span class="line-numbers">30</span>    # tag::config[]
+<span class="line-numbers">31</span>    /config/
+<span class="line-numbers">32</span>    # end::config[]
+<span class="line-numbers">33</span># end::copy-config[]
+<span class="line-numbers">34</span>
+<span class="line-numbers">35</span># tag::features[]
+<span class="line-numbers">36</span>RUN features.sh
+<span class="line-numbers">37</span># end::features[]
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span># tag::copy-war[]
+<span class="line-numbers">40</span># tag::war-userID[]
+<span class="line-numbers">41</span>COPY --chown=1001:0 \
+<span class="line-numbers">42</span># end::war-userID[]
+<span class="line-numbers">43</span>    # tag::inventory-war[]
+<span class="line-numbers">44</span>    target/guide-containerize-inventory.war \
+<span class="line-numbers">45</span>    # end::inventory-war[]
+<span class="line-numbers">46</span>    # tag::config-apps[]
+<span class="line-numbers">47</span>    /config/apps
+<span class="line-numbers">48</span>    # end::config-apps[]
+<span class="line-numbers">49</span># end::copy-war[]
+<span class="line-numbers">50</span>
+<span class="line-numbers">51</span># tag::configure-sh[]
+<span class="line-numbers">52</span>RUN configure.sh
+<span class="line-numbers">53</span># end::configure-sh[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace the parent image with <code class="hotspot=kernel-slim file=0">icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi</code> at the top of your <code>Dockerfile</code>. This image contains the <code>kernel-slim</code> tag that is recommended when deploying to production.</p>
+</div>
+<div class="paragraph">
+<p>Place <code class="hotspot=features file=0">RUN features.sh</code> command after the <code>COPY</code> command that copies the local <code>/config/</code> directory into the <code>Docker</code> image. The <code>features.sh</code> script adds the Liberty features that your application is required to operate.</p>
+</div>
+<div class="paragraph">
+<p>Ensure that you repeat these instructions for the <code>system</code> service.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Replace the <code>Dockerfile</code> for the system service.</mark>
+<code>system/Dockerfile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>system/Dockerfile</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Text"><span class="line-numbers"> 1</span># tag::kernel-slim[]
+<span class="line-numbers"> 2</span>FROM icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
+<span class="line-numbers"> 3</span># end::kernel-slim[]
+<span class="line-numbers"> 4</span>
+<span class="line-numbers"> 5</span>ARG VERSION=1.0
+<span class="line-numbers"> 6</span>ARG REVISION=SNAPSHOT
+<span class="line-numbers"> 7</span>
+<span class="line-numbers"> 8</span>LABEL \
+<span class="line-numbers"> 9</span>  org.opencontainers.image.authors="Your Name" \
+<span class="line-numbers">10</span>  org.opencontainers.image.vendor="Open Liberty" \
+<span class="line-numbers">11</span>  org.opencontainers.image.url="local" \
+<span class="line-numbers">12</span>  org.opencontainers.image.source="https://github.com/OpenLiberty/guide-containerize" \
+<span class="line-numbers">13</span>  org.opencontainers.image.version="$VERSION" \
+<span class="line-numbers">14</span>  org.opencontainers.image.revision="$REVISION" \
+<span class="line-numbers">15</span>  vendor="Open Liberty" \
+<span class="line-numbers">16</span># tag::name[]
+<span class="line-numbers">17</span>  name="system" \
+<span class="line-numbers">18</span># end::name[]
+<span class="line-numbers">19</span>  version="$VERSION-$REVISION" \
+<span class="line-numbers">20</span># tag::summary[]
+<span class="line-numbers">21</span>  summary="The system microservice from the Containerizing microservices guide" \
+<span class="line-numbers">22</span>  description="This image contains the system microservice running with the Open Liberty runtime."
+<span class="line-numbers">23</span># end::summary[]
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span>COPY --chown=1001:0 src/main/liberty/config /config/
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span># tag::features[]
+<span class="line-numbers">28</span>RUN features.sh
+<span class="line-numbers">29</span># end::features[]
+<span class="line-numbers">30</span>
+<span class="line-numbers">31</span># tag::copy-war[]
+<span class="line-numbers">32</span>COPY --chown=1001:0 target/guide-containerize-system.war /config/apps
+<span class="line-numbers">33</span># end::copy-war[]
+<span class="line-numbers">34</span>
+<span class="line-numbers">35</span>RUN configure.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Continue by running the following commands to stop and remove your current <code>Docker</code> containers that are using the <code>full</code> parent image:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker stop inventory system
+docker rm inventory system</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, build your new <code>Docker</code> images with the <code>kernel-slim</code> parent image:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker build -t system:1.0-SNAPSHOT system/.
+docker build -t inventory:1.0-SNAPSHOT inventory/.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that the images have been built by executing the following command to list all the local <code>Docker</code> images:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker images</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice that the images for the <code>inventory</code> and <code>system</code> services now have a reduced image size.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>REPOSITORY      TAG             IMAGE ID        CREATED         SIZE
+inventory       1.0-SNAPSHOT	d5a3d1b2c20e    4 minutes ago	682MB
+system          1.0-SNAPSHOT	6346cf87eae0	5 minutes ago	694MB</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After confirming that the images have been built, run the following commands to start the <code>Docker</code> containers:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker run -d --name system -p 9080:9080 system:1.0-SNAPSHOT
+docker run -d --name inventory -p 9081:9081 inventory:1.0-SNAPSHOT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once your <code>Docker</code> containers are running, run the following command to see the list of required features installed by <code>features.sh</code>:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker exec -it inventory /opt/ol/wlp/bin/productInfo featureInfo</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Your list of Liberty features should be similar to the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>jndi-1.0
+servlet-5.0
+cdi-3.0
+concurrent-2.0
+jsonb-2.0
+jsonp-2.0
+mpConfig-3.0
+restfulWS-3.0
+restfulWSClient-3.0</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To ensure that your containers are working properly, try accessing the <code>system</code> service to show the system properties of the running JVM.
+See <a href="http://localhost:9080/system/properties" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/system/properties</a></p>
+</div>
+<div class="paragraph">
+<p>Next, replace <code>[system-ip-address]</code> with the IP address that you obtained earlier and add your localhost system properties to the <code>inventory</code> service by visiting:
+<code>http://localhost:9081/inventory/systems/[system-ip-address]</code></p>
+</div>
+<div class="paragraph">
+<p>Then, verify the addition of your localhost system properties to your <code>inventory</code> service.
+See <a href="http://localhost:9081/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9081/inventory/systems</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-microservices">Testing the microservices</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can test your microservices manually by hitting the endpoints or with automated tests that check your running Docker containers.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>SystemEndpointIT</code> class.</mark>
+<code>system/src/test/java/it/io/openliberty/guides/system/SystemEndpointIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemEndpointIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2018, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.system</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">javax.net.ssl.HostnameVerifier</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">javax.net.ssl.SSLSession</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Client</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.ClientBuilder</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.WebTarget</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeAll</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers">27</span>
+<span class="line-numbers">28</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemEndpointIT</span> {
+<span class="line-numbers">29</span>
+<span class="line-numbers">30</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> clusterUrl;
+<span class="line-numbers">31</span>
+<span class="line-numbers">32</span>    <span class="directive">private</span> Client client;
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="annotation">@BeforeAll</span>
+<span class="line-numbers">35</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> oneTimeSetup() {
+<span class="line-numbers">36</span>        <span class="predefined-type">String</span> nodePort = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">system.http.port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">37</span>        clusterUrl = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:</span><span class="delimiter">"</span></span> + nodePort + <span class="string"><span class="delimiter">"</span><span class="content">/system/properties/</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">38</span>    }
+<span class="line-numbers">39</span>
+<span class="line-numbers">40</span>    <span class="annotation">@BeforeEach</span>
+<span class="line-numbers">41</span>    <span class="directive">public</span> <span class="type">void</span> setup() {
+<span class="line-numbers">42</span>        client = ClientBuilder.newBuilder()
+<span class="line-numbers">43</span>                    .hostnameVerifier(<span class="keyword">new</span> <span class="predefined-type">HostnameVerifier</span>() {
+<span class="line-numbers">44</span>                        <span class="directive">public</span> <span class="type">boolean</span> verify(<span class="predefined-type">String</span> hostname, <span class="predefined-type">SSLSession</span> session) {
+<span class="line-numbers">45</span>                            <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers">46</span>                        }
+<span class="line-numbers">47</span>                    })
+<span class="line-numbers">48</span>                    .build();
+<span class="line-numbers">49</span>    }
+<span class="line-numbers">50</span>
+<span class="line-numbers">51</span>    <span class="annotation">@AfterEach</span>
+<span class="line-numbers">52</span>    <span class="directive">public</span> <span class="type">void</span> teardown() {
+<span class="line-numbers">53</span>        client.close();
+<span class="line-numbers">54</span>    }
+<span class="line-numbers">55</span>
+<span class="line-numbers">56</span>    <span class="comment">// tag::testGetProperties[]</span>
+<span class="line-numbers">57</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">58</span>    <span class="directive">public</span> <span class="type">void</span> testGetProperties() {
+<span class="line-numbers">59</span>        Client client = ClientBuilder.newClient();
+<span class="line-numbers">60</span>
+<span class="line-numbers">61</span>        WebTarget target = client.target(clusterUrl);
+<span class="line-numbers">62</span>        Response response = target.request().get();
+<span class="line-numbers">63</span>
+<span class="line-numbers">64</span>        assertEquals(<span class="integer">200</span>, response.getStatus(),
+<span class="line-numbers">65</span>            <span class="string"><span class="delimiter">"</span><span class="content">Incorrect response code from </span><span class="delimiter">"</span></span> + clusterUrl);
+<span class="line-numbers">66</span>        response.close();
+<span class="line-numbers">67</span>    }
+<span class="line-numbers">68</span>    <span class="comment">// end::testGetProperties[]</span>
+<span class="line-numbers">69</span>
+<span class="line-numbers">70</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=testGetProperties file=0">testGetProperties()</code> method checks for a <code>200</code> response code from the <code>system</code> service endpoint.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the <code>InventoryEndpointIT</code> class.</mark>
+<code>inventory/src/test/java/it/io/openliberty/guides/inventory/InventoryEndpointIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryEndpointIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2018, 2023 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.inventory</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
+<span class="line-numbers"> 16</span>
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObject</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">javax.net.ssl.HostnameVerifier</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">javax.net.ssl.SSLSession</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Client</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.ClientBuilder</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 24</span>
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterAll</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeAll</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.MethodOrderer.OrderAnnotation</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Order</span>;
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.TestMethodOrder</span>;
+<span class="line-numbers"> 31</span>
+<span class="line-numbers"> 32</span><span class="annotation">@TestMethodOrder</span>(OrderAnnotation.class)
+<span class="line-numbers"> 33</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryEndpointIT</span> {
+<span class="line-numbers"> 34</span>
+<span class="line-numbers"> 35</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> invUrl;
+<span class="line-numbers"> 36</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> sysUrl;
+<span class="line-numbers"> 37</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> systemServiceIp;
+<span class="line-numbers"> 38</span>
+<span class="line-numbers"> 39</span>    <span class="directive">private</span> <span class="directive">static</span> Client client;
+<span class="line-numbers"> 40</span>
+<span class="line-numbers"> 41</span>    <span class="annotation">@BeforeAll</span>
+<span class="line-numbers"> 42</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> oneTimeSetup() {
+<span class="line-numbers"> 43</span>
+<span class="line-numbers"> 44</span>        <span class="predefined-type">String</span> invServPort = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">inventory.http.port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 45</span>        <span class="predefined-type">String</span> sysServPort = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">system.http.port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 46</span>
+<span class="line-numbers"> 47</span>        <span class="comment">// tag::systemServiceIp[]</span>
+<span class="line-numbers"> 48</span>        systemServiceIp = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">system.ip</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 49</span>        <span class="comment">// end::systemServiceIp[]</span>
+<span class="line-numbers"> 50</span>
+<span class="line-numbers"> 51</span>        invUrl = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost</span><span class="delimiter">"</span></span> + <span class="string"><span class="delimiter">"</span><span class="content">:</span><span class="delimiter">"</span></span> + invServPort + <span class="string"><span class="delimiter">"</span><span class="content">/inventory/systems/</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 52</span>        sysUrl = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost</span><span class="delimiter">"</span></span> + <span class="string"><span class="delimiter">"</span><span class="content">:</span><span class="delimiter">"</span></span> + sysServPort + <span class="string"><span class="delimiter">"</span><span class="content">/system/properties/</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 53</span>
+<span class="line-numbers"> 54</span>        client = ClientBuilder.newBuilder().hostnameVerifier(<span class="keyword">new</span> <span class="predefined-type">HostnameVerifier</span>() {
+<span class="line-numbers"> 55</span>            <span class="directive">public</span> <span class="type">boolean</span> verify(<span class="predefined-type">String</span> hostname, <span class="predefined-type">SSLSession</span> session) {
+<span class="line-numbers"> 56</span>                <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers"> 57</span>            }
+<span class="line-numbers"> 58</span>        }).build();
+<span class="line-numbers"> 59</span>
+<span class="line-numbers"> 60</span>        client.target(invUrl + <span class="string"><span class="delimiter">"</span><span class="content">reset</span><span class="delimiter">"</span></span>).request().post(<span class="predefined-constant">null</span>);
+<span class="line-numbers"> 61</span>    }
+<span class="line-numbers"> 62</span>
+<span class="line-numbers"> 63</span>    <span class="annotation">@AfterAll</span>
+<span class="line-numbers"> 64</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> teardown() {
+<span class="line-numbers"> 65</span>        client.close();
+<span class="line-numbers"> 66</span>    }
+<span class="line-numbers"> 67</span>
+<span class="line-numbers"> 68</span>    <span class="comment">// tag::tests[]</span>
+<span class="line-numbers"> 69</span>    <span class="comment">// tag::testEmptyInventory[]</span>
+<span class="line-numbers"> 70</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 71</span>    <span class="annotation">@Order</span>(<span class="integer">1</span>)
+<span class="line-numbers"> 72</span>    <span class="directive">public</span> <span class="type">void</span> testEmptyInventory() {
+<span class="line-numbers"> 73</span>        Response response = <span class="local-variable">this</span>.getResponse(invUrl);
+<span class="line-numbers"> 74</span>        <span class="local-variable">this</span>.assertResponse(invUrl, response);
+<span class="line-numbers"> 75</span>
+<span class="line-numbers"> 76</span>        JsonObject obj = response.readEntity(JsonObject.class);
+<span class="line-numbers"> 77</span>
+<span class="line-numbers"> 78</span>        <span class="type">int</span> expected = <span class="integer">0</span>;
+<span class="line-numbers"> 79</span>        <span class="type">int</span> actual = obj.getInt(<span class="string"><span class="delimiter">"</span><span class="content">total</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 80</span>        assertEquals(expected, actual,
+<span class="line-numbers"> 81</span>                    <span class="string"><span class="delimiter">"</span><span class="content">The inventory should be empty on application start but it wasn't</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 82</span>
+<span class="line-numbers"> 83</span>        response.close();
+<span class="line-numbers"> 84</span>    }
+<span class="line-numbers"> 85</span>    <span class="comment">// end::testEmptyInventory[]</span>
+<span class="line-numbers"> 86</span>
+<span class="line-numbers"> 87</span>    <span class="comment">// tag::testHostRegistration[]</span>
+<span class="line-numbers"> 88</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 89</span>    <span class="annotation">@Order</span>(<span class="integer">2</span>)
+<span class="line-numbers"> 90</span>    <span class="directive">public</span> <span class="type">void</span> testHostRegistration() {
+<span class="line-numbers"> 91</span>        <span class="local-variable">this</span>.visitSystemService();
+<span class="line-numbers"> 92</span>
+<span class="line-numbers"> 93</span>        Response response = <span class="local-variable">this</span>.getResponse(invUrl);
+<span class="line-numbers"> 94</span>        <span class="local-variable">this</span>.assertResponse(invUrl, response);
+<span class="line-numbers"> 95</span>
+<span class="line-numbers"> 96</span>        JsonObject obj = response.readEntity(JsonObject.class);
+<span class="line-numbers"> 97</span>
+<span class="line-numbers"> 98</span>        <span class="type">int</span> expected = <span class="integer">1</span>;
+<span class="line-numbers"> 99</span>        <span class="type">int</span> actual = obj.getInt(<span class="string"><span class="delimiter">"</span><span class="content">total</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">100</span>        assertEquals(expected, actual,
+<span class="line-numbers">101</span>                        <span class="string"><span class="delimiter">"</span><span class="content">The inventory should have one entry for </span><span class="delimiter">"</span></span> + systemServiceIp);
+<span class="line-numbers">102</span>
+<span class="line-numbers">103</span>        <span class="type">boolean</span> serviceExists = obj.getJsonArray(<span class="string"><span class="delimiter">"</span><span class="content">systems</span><span class="delimiter">"</span></span>).getJsonObject(<span class="integer">0</span>)
+<span class="line-numbers">104</span>                        .get(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>).toString().contains(systemServiceIp);
+<span class="line-numbers">105</span>        assertTrue(serviceExists,
+<span class="line-numbers">106</span>                        <span class="string"><span class="delimiter">"</span><span class="content">A host was registered, but it was not </span><span class="delimiter">"</span></span> + systemServiceIp);
+<span class="line-numbers">107</span>
+<span class="line-numbers">108</span>        response.close();
+<span class="line-numbers">109</span>    }
+<span class="line-numbers">110</span>    <span class="comment">// end::testHostRegistration[]</span>
+<span class="line-numbers">111</span>
+<span class="line-numbers">112</span>    <span class="comment">// tag::testSystemPropertiesMatch[]</span>
+<span class="line-numbers">113</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">114</span>    <span class="annotation">@Order</span>(<span class="integer">3</span>)
+<span class="line-numbers">115</span>    <span class="directive">public</span> <span class="type">void</span> testSystemPropertiesMatch() {
+<span class="line-numbers">116</span>        Response invResponse = <span class="local-variable">this</span>.getResponse(invUrl);
+<span class="line-numbers">117</span>        Response sysResponse = <span class="local-variable">this</span>.getResponse(sysUrl);
+<span class="line-numbers">118</span>
+<span class="line-numbers">119</span>        <span class="local-variable">this</span>.assertResponse(invUrl, invResponse);
+<span class="line-numbers">120</span>        <span class="local-variable">this</span>.assertResponse(sysUrl, sysResponse);
+<span class="line-numbers">121</span>
+<span class="line-numbers">122</span>        JsonObject jsonFromInventory = (JsonObject) invResponse
+<span class="line-numbers">123</span>                        .readEntity(JsonObject.class).getJsonArray(<span class="string"><span class="delimiter">"</span><span class="content">systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">124</span>                        .getJsonObject(<span class="integer">0</span>).get(<span class="string"><span class="delimiter">"</span><span class="content">properties</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">125</span>
+<span class="line-numbers">126</span>        JsonObject jsonFromSystem = sysResponse.readEntity(JsonObject.class);
+<span class="line-numbers">127</span>
+<span class="line-numbers">128</span>        <span class="predefined-type">String</span> osNameFromInventory = jsonFromInventory.getString(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">129</span>        <span class="predefined-type">String</span> osNameFromSystem = jsonFromSystem.getString(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">130</span>        <span class="local-variable">this</span>.assertProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>, systemServiceIp, osNameFromSystem,
+<span class="line-numbers">131</span>                        osNameFromInventory);
+<span class="line-numbers">132</span>
+<span class="line-numbers">133</span>        <span class="predefined-type">String</span> userNameFromInventory = jsonFromInventory.getString(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">134</span>        <span class="predefined-type">String</span> userNameFromSystem = jsonFromSystem.getString(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">135</span>        <span class="local-variable">this</span>.assertProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>, systemServiceIp, userNameFromSystem,
+<span class="line-numbers">136</span>                        userNameFromInventory);
+<span class="line-numbers">137</span>
+<span class="line-numbers">138</span>        invResponse.close();
+<span class="line-numbers">139</span>        sysResponse.close();
+<span class="line-numbers">140</span>    }
+<span class="line-numbers">141</span>    <span class="comment">// end::testSystemPropertiesMatch[]</span>
+<span class="line-numbers">142</span>
+<span class="line-numbers">143</span>    <span class="comment">// tag::testUnknownHost[]</span>
+<span class="line-numbers">144</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">145</span>    <span class="annotation">@Order</span>(<span class="integer">4</span>)
+<span class="line-numbers">146</span>    <span class="directive">public</span> <span class="type">void</span> testUnknownHost() {
+<span class="line-numbers">147</span>        Response response = <span class="local-variable">this</span>.getResponse(invUrl);
+<span class="line-numbers">148</span>        <span class="local-variable">this</span>.assertResponse(invUrl, response);
+<span class="line-numbers">149</span>
+<span class="line-numbers">150</span>        Response badResponse = client.target(invUrl + <span class="string"><span class="delimiter">"</span><span class="content">badhostname</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">151</span>                        .request(MediaType.APPLICATION_JSON).get();
+<span class="line-numbers">152</span>
+<span class="line-numbers">153</span>        <span class="predefined-type">String</span> obj = badResponse.readEntity(<span class="predefined-type">String</span>.class);
+<span class="line-numbers">154</span>
+<span class="line-numbers">155</span>        <span class="type">boolean</span> isError = obj.contains(<span class="string"><span class="delimiter">"</span><span class="content">error</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">156</span>        assertTrue(isError,
+<span class="line-numbers">157</span>                        <span class="string"><span class="delimiter">"</span><span class="content">badhostname is not a valid host but it didn't raise an error</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">158</span>
+<span class="line-numbers">159</span>        response.close();
+<span class="line-numbers">160</span>        badResponse.close();
+<span class="line-numbers">161</span>    }
+<span class="line-numbers">162</span>    <span class="comment">// end::testUnknownHost[]</span>
+<span class="line-numbers">163</span>    <span class="comment">// end::tests[]</span>
+<span class="line-numbers">164</span>
+<span class="line-numbers">165</span>    <span class="comment">// Returns response information from the specified URL.</span>
+<span class="line-numbers">166</span>    <span class="directive">private</span> Response getResponse(<span class="predefined-type">String</span> url) {
+<span class="line-numbers">167</span>        <span class="keyword">return</span> client.target(url).request().get();
+<span class="line-numbers">168</span>    }
+<span class="line-numbers">169</span>
+<span class="line-numbers">170</span>
+<span class="line-numbers">171</span>    <span class="comment">// Asserts that the given URL has the correct response code of 200.</span>
+<span class="line-numbers">172</span>    <span class="directive">private</span> <span class="type">void</span> assertResponse(<span class="predefined-type">String</span> url, Response response) {
+<span class="line-numbers">173</span>        assertEquals(<span class="integer">200</span>, response.getStatus(), <span class="string"><span class="delimiter">"</span><span class="content">Incorrect response code from </span><span class="delimiter">"</span></span> + url);
+<span class="line-numbers">174</span>    }
+<span class="line-numbers">175</span>
+<span class="line-numbers">176</span>    <span class="comment">// Asserts that the specified JVM system property is equivalent in both the</span>
+<span class="line-numbers">177</span>    <span class="comment">// system and inventory services.</span>
+<span class="line-numbers">178</span>    <span class="directive">private</span> <span class="type">void</span> assertProperty(<span class="predefined-type">String</span> propertyName, <span class="predefined-type">String</span> hostname, <span class="predefined-type">String</span> expected,
+<span class="line-numbers">179</span>                    <span class="predefined-type">String</span> actual) {
+<span class="line-numbers">180</span>        assertEquals(expected, actual, <span class="string"><span class="delimiter">"</span><span class="content">JVM system property [</span><span class="delimiter">"</span></span> + propertyName + <span class="string"><span class="delimiter">"</span><span class="content">] </span><span class="delimiter">"</span></span>
+<span class="line-numbers">181</span>                        + <span class="string"><span class="delimiter">"</span><span class="content">in the system service does not match the one stored in </span><span class="delimiter">"</span></span>
+<span class="line-numbers">182</span>                        + <span class="string"><span class="delimiter">"</span><span class="content">the inventory service for </span><span class="delimiter">"</span></span> + hostname);
+<span class="line-numbers">183</span>    }
+<span class="line-numbers">184</span>
+<span class="line-numbers">185</span>    <span class="comment">// Makes a simple GET request to inventory/localhost.</span>
+<span class="line-numbers">186</span>    <span class="directive">private</span> <span class="type">void</span> visitSystemService() {
+<span class="line-numbers">187</span>        Response response = <span class="local-variable">this</span>.getResponse(sysUrl);
+<span class="line-numbers">188</span>        <span class="local-variable">this</span>.assertResponse(sysUrl, response);
+<span class="line-numbers">189</span>        response.close();
+<span class="line-numbers">190</span>
+<span class="line-numbers">191</span>        Response targetResponse = client.target(invUrl + systemServiceIp).request()
+<span class="line-numbers">192</span>                        .get();
+<span class="line-numbers">193</span>
+<span class="line-numbers">194</span>        targetResponse.close();
+<span class="line-numbers">195</span>    }
+<span class="line-numbers">196</span>}</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code class="hotspot=testEmptyInventory file=1">testEmptyInventory()</code> method checks that the <code>inventory</code> service has a total of 0 systems before anything is added to it.</p>
+</li>
+<li>
+<p>The <code class="hotspot=testHostRegistration file=1">testHostRegistration()</code> method checks that the <code>system</code> service was added to <code>inventory</code> properly.</p>
+</li>
+<li>
+<p>The <code class="hotspot=testSystemPropertiesMatch file=1">testSystemPropertiesMatch()</code> checks that the <code>system</code> properties match what was added into the <code>inventory</code> service.</p>
+</li>
+<li>
+<p>The <code class="hotspot=testUnknownHost file=1">testUnknownHost()</code> method checks that an error is raised if an unknown host name is being added into the <code>inventory</code> service.</p>
+</li>
+<li>
+<p>The <code class="hotspot=systemServiceIp file=1">systemServiceIp</code> variable has the same value as the IP address that you retrieved in the previous section when you manually added the <code>system</code> service into the <code>inventory</code> service. This value of the IP address is passed in when you run the tests.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Run the Maven <code>package</code> goal to compile the test classes. Run the Maven <code>failsafe</code> goal to test the services that are running in the Docker containers by replacing the <code>[system-ip-address]</code> with the IP address that you determined previously.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn package
+mvn failsafe:integration-test -Dsystem.ip=[system-ip-address] -Dinventory.http.port=9081 -Dsystem.http.port=9080</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the tests pass, you see output similar to the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.system.SystemEndpointIT
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.653 s - in it.io.openliberty.guides.system.SystemEndpointIT
+
+Results:
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.inventory.InventoryEndpointIT
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.935 s - in it.io.openliberty.guides.inventory.InventoryEndpointIT
+
+Results:
+
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you are finished with the services, run the following commands to stop and remove your containers:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker stop inventory system
+docker rm inventory system</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You have just built Docker images and run two microservices on Open Liberty in containers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Containerizing microservices <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-containerize/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-containerize/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-containerize/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/docker.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Using Docker containers to develop microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/kubernetes-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Deploying microservices to Kubernetes</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">25 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

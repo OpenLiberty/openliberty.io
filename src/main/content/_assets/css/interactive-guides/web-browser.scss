@@ -1,0 +1,104 @@
+/*******************************************************************************
+ * Copyright (c) 2017 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+.wb {
+    background:rgba(255,255,255,0.72);
+    border: 1px solid #c8d6fb;
+    border-radius: 4px 4px 4px 4px;
+    height: 100%;
+}
+
+.wbNavBar {
+    background-color: #5e6b8d;
+    width: 100%;
+    color: lightsteelblue;
+    padding: 6px;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+.wbStatusBar {
+    background-color: lightgrey;
+    height: 25px;
+    width: 100%;
+    padding: 5px;
+    color: black;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.wbNavButton {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    background-repeat: no-repeat;
+    position: relative;
+    top: 4px;
+    margin-right: 2px;
+    border-radius: 2px;
+}
+
+.wbNavButtonDisabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.wbNavButtonActive:hover {
+    background-color: lightsteelblue;
+    cursor: pointer;
+}
+
+.browserBack {
+    background-image: url(/guides/iguides-common/img/interactive-guides/left-arrow.svg);
+}
+.browserForward {
+    background-image: url(/guides/iguides-common/img/interactive-guides/right-arrow.svg);
+}
+.browserRefresh {
+    background-image: url(/guides/iguides-common/img/interactive-guides/refresh.svg);
+    top: 3px;
+}
+
+.wbNavURL {
+    padding: 2px;
+    width: calc( 100% - 68px );
+    color: #24243b;
+    background: #ffffff; 
+    &:focus {
+        opacity: 1;
+    }
+}
+
+.wbContent {
+    height: calc( 100% - 65px ); /* 65px = wbNavBar 40px + wbStatusBar 25px */
+}
+
+.wbOverlay:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 98.3%;
+    z-index: 2;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.wbOverlayText {
+    z-index: 3;
+    color: #ffffff;
+    position: absolute;
+    bottom: 0;
+    padding-left: 17px;
+    line-height: 40px;
+    font-size: 20px;
+}

@@ -1,0 +1,68 @@
+# tag::system[]
+apiVersion: apps.openliberty.io/v1
+# tag::olapp[]
+kind: OpenLibertyApplication
+# end::olapp[]
+metadata:
+  name: system
+  labels:
+    name: system
+spec:
+  # tag::sysImage[]
+  applicationImage: system:1.0-SNAPSHOT
+  # end::sysImage[]
+  # tag::service[]
+  service:
+    # tag::servicePort[]
+    port: 9443
+    # end::servicePort[]
+  # end::service[]
+  # tag::expose[]
+  expose: true
+  # end::expose[]
+  route:
+    pathType: ImplementationSpecific
+  # tag::systemEnv[]
+  env:
+    - name: WLP_LOGGING_MESSAGE_FORMAT
+      value: "json"
+    - name: WLP_LOGGING_MESSAGE_SOURCE
+      value: "message,trace,accessLog,ffdc,audit"
+  # end::systemEnv[]
+  # tag::healthProbes[]
+  # tag::startupProbe[]
+  probes:
+    startup:
+      failureThreshold: 12
+      httpGet:
+        path: /health/started
+        port: 9443
+        scheme: HTTPS
+      initialDelaySeconds: 30
+      periodSeconds: 2
+      timeoutSeconds: 10
+  # end::startupProbe[]
+  # tag::livenessProbe[]
+    liveness:
+      failureThreshold: 12
+      httpGet:
+        path: /health/live
+        port: 9443
+        scheme: HTTPS
+      initialDelaySeconds: 30
+      periodSeconds: 2
+      timeoutSeconds: 10
+  # end::livenessProbe[]
+  # tag::readinessProbe[]
+    readiness:
+      failureThreshold: 12
+      httpGet:
+        path: /health/ready
+        port: 9443
+        scheme: HTTPS
+      initialDelaySeconds: 30
+      periodSeconds: 2
+      timeoutSeconds: 10
+  # end::readinessProbe[]
+  # end::healthProbes[]
+# end::system[]

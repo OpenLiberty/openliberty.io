@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      
+        Guides - Open Liberty
+      
+    
+  </title>
+  <meta name="description" content="Guides, tutorials, examples on developing cloud-native Java microservices and applications with Open Liberty, MicroProfile, Jakarta EE, containers, Kubernetes, REST, Reactive and cloud deployments and more.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guides.css">
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Open Liberty" />
+  <meta name="twitter:description" content="Guides, tutorials, examples on developing cloud-native Java microservices and applications with Open Liberty, MicroProfile, Jakarta EE, containers, Kubernetes, REST, Reactive and cloud deployments and more." />
+
+  <meta property='og:title' content="Open Liberty" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="Guides, tutorials, examples on developing cloud-native Java microservices and applications with Open Liberty, MicroProfile, Jakarta EE, containers, Kubernetes, REST, Reactive and cloud deployments and more." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<!-- INTRODUCTION AND SEARCH BAR -->
+<div id="guides_information_container" class="container">
+  <div id="guides_border"></div>
+  <div class="row">
+    <div id="guide_search_information" class="col-xs-12 col-sm-7 col-md-6">
+      <h2 id="guides_title">指南</h2>
+      <p id="guides_description">
+        The quickest way to learn all things Open Liberty, and beyond!
+      </p>
+    </div>
+    <img id="clouds" src="/img/guides_clouds.png" alt="clouds">
+    <div id="guides_search_container" class="col-xs-12 col-sm-5 col-md-6">
+      <input id="guide_search_input" class="search-box" placeholder="Filter guides" autocomplete="off" data-toggle="popover" data-placement="bottom" data-html="true" aria-label="Search">
+      <button class="clear_btn" type="reset" tabindex="0" aria-label="Clear search bar"></button>
+      <div id="popover_content" class="hide" style="display: none">
+        <p class="tags_title">Suggested tags</p>
+        <button type="button" class="tag_button">new</button>
+        <button type="button" class="tag_button">microprofile</button>
+        <button type="button" class="tag_button">jakarta ee</button>
+        <button type="button" class="tag_button">run in cloud</button>
+        <button type="button" class="tag_button">interactive</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div role="menu" id="tablet_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column">
+  <div role="menuitem" id="tablet_toc_accordion">
+    <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span> <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <span>Table of contents</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div id="toc_column" class="collapse inline open">
+  <div id="toc_container">
+    <button id="tablet_toc_close" data-toggle="collapse" data-target="#toc_column" aria-expanded="true" aria-controls="toc_column">
+      <img src="/img/toc_close_navy.svg" alt="Table of contents close button">
+    </button>
+    <ul></ul>
+  </div>
+</div>
+
+<div id="guides_container">
+  <div class="row">
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/testcontainers.html" class="guide_item" data-title="building true-to-production integration tests with testcontainers" data-description="learn how to test your microservices with multiple containers using testcontainers and junit." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Building true-to-production integration tests with Testcontainers</h3>
+          <p class="guide_description" title="Learn how to test your microservices with multiple containers using Testcontainers and JUnit.">
+            Learn how to test your microservices with multiple containers using Testcontainers and JUnit.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+        <div class="new_guide_container">
+          <span class="guide_new">New</span>
+        </div>
+        
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/instanton-aws.html" class="guide_item" data-title="speeding up startup and improving cpu and memory usage of containers on amazon web services" data-description="learn how to speed up the startup of your containers using open liberty instanton and improve the cpu and memory usage using semeru cloud compiler on amazon web services (aws)." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Speeding up startup and improving CPU and memory usage of containers on Amazon Web Services</h3>
+          <p class="guide_description" title="Learn how to speed up the startup of your containers using Open Liberty InstantOn and improve the CPU and memory usage using Semeru Cloud Compiler on Amazon Web Services (AWS).">
+            Learn how to speed up the startup of your containers using Open Liberty InstantOn and improve the CPU and memory usage using Semeru Cloud Compiler on Amazon Web Services (AWS).
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">45 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+        <div class="new_guide_container">
+          <span class="guide_new">New</span>
+        </div>
+        
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-telemetry-jaeger.html" class="guide_item" data-title="enabling distributed tracing in microservices with opentelemetry and jaeger" data-description="explore how to enable and customize tracing of microservices using microprofile telemetry and jaeger tracing system." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Enabling distributed tracing in microservices with OpenTelemetry and Jaeger</h3>
+          <p class="guide_description" title="Explore how to enable and customize tracing of microservices using MicroProfile Telemetry and Jaeger tracing system.">
+            Explore how to enable and customize tracing of microservices using MicroProfile Telemetry and Jaeger tracing system.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+        <div class="new_guide_container">
+          <span class="guide_new">New</span>
+        </div>
+        
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-config-profile.html" class="guide_item" data-title="configuring microservices for multiple environments" data-description="learn how to use the config profile feature in microprofile config to provide configurations for different phases in the devops lifecycle." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Configuring microservices for multiple environments</h3>
+          <p class="guide_description" title="Learn how to use the config profile feature in MicroProfile Config to provide configurations for different phases in the DevOps lifecycle.">
+            Learn how to use the config profile feature in MicroProfile Config to provide configurations for different phases in the DevOps lifecycle.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+        <div class="new_guide_container">
+          <span class="guide_new">New</span>
+        </div>
+        
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/liberty-deep-dive-gradle.html" class="guide_item" data-title="a technical deep dive on liberty" data-description="learn how to use liberty to develop and run java microservices." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">A Technical Deep Dive on Liberty</h3>
+          <p class="guide_description" title="Learn how to use Liberty to develop and run Java microservices.">
+            Learn how to use Liberty to develop and run Java microservices.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">80 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-config-apis.html" class="guide_item" data-title="optimizing configuration for microservices" data-description="learn how to optimize configuration for microservices with microprofile config advanced features." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Optimizing configuration for microservices</h3>
+          <p class="guide_description" title="Learn how to optimize configuration for microservices with MicroProfile Config advanced features.">
+            Learn how to optimize configuration for microservices with MicroProfile Config advanced features.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">25 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/jakarta-websocket.html" class="guide_item" data-title="bidirectional communication between services using jakarta websocket" data-description="learn how to use jakarta websocket to stream messages between client and server services." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Bidirectional communication between services using Jakarta WebSocket</h3>
+          <p class="guide_description" title="Learn how to use Jakarta WebSocket to stream messages between client and server services.">
+            Learn how to use Jakarta WebSocket to stream messages between client and server services.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">25 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/grpc-intro.html" class="guide_item" data-title="streaming messages between client and server services using grpc" data-description="learn how to create grpc server and client services using java with open liberty." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Streaming messages between client and server services using gRPC</h3>
+          <p class="guide_description" title="Learn how to create gRPC server and client services using Java with Open Liberty.">
+            Learn how to create gRPC server and client services using Java with Open Liberty.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/graphql-client.html" class="guide_item" data-title="running graphql queries and mutations using a graphql client" data-description="learn how to use the smallrye graphql client's typesafe interface to query and mutate data from multiple microservices." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Running GraphQL queries and mutations using a GraphQL client</h3>
+          <p class="guide_description" title="Learn how to use the SmallRye GraphQL client's typesafe interface to query and mutate data from multiple microservices.">
+            Learn how to use the SmallRye GraphQL client's typesafe interface to query and mutate data from multiple microservices.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/paketo-buildpacks-intro.html" class="guide_item" data-title="building microservices with paketo buildpacks" data-description="learn how to build your microservices with paketo buildpacks and open liberty and run them in a container manager." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Building microservices with Paketo Buildpacks</h3>
+          <p class="guide_description" title="Learn how to build your microservices with Paketo Buildpacks and Open Liberty and run them in a container manager.">
+            Learn how to build your microservices with Paketo Buildpacks and Open Liberty and run them in a container manager.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">15 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/liberty-deep-dive.html" class="guide_item" data-title="a technical deep dive on liberty" data-description="learn how to use liberty to develop and run java microservices." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">A Technical Deep Dive on Liberty</h3>
+          <p class="guide_description" title="Learn how to use Liberty to develop and run Java microservices.">
+            Learn how to use Liberty to develop and run Java microservices.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">120 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/openliberty-operator-intro.html" class="guide_item" data-title="deploying a microservice to kubernetes using open liberty operator" data-description="explore how to deploy a microservice to kubernetes using open liberty operator." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Deploying a microservice to Kubernetes using Open Liberty Operator</h3>
+          <p class="guide_description" title="Explore how to deploy a microservice to Kubernetes using Open Liberty Operator.">
+            Explore how to deploy a microservice to Kubernetes using Open Liberty Operator.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/openliberty-operator-openshift.html" class="guide_item" data-title="deploying a microservice to openshift 4 using open liberty operator" data-description="explore how to deploy a microservice to red hat openshift 4 using the open liberty operator." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Deploying a microservice to OpenShift 4 using Open Liberty Operator</h3>
+          <p class="guide_description" title="Explore how to deploy a microservice to Red Hat OpenShift 4 using the Open Liberty Operator.">
+            Explore how to deploy a microservice to Red Hat OpenShift 4 using the Open Liberty Operator.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/containerize-podman.html" class="guide_item" data-title="containerizing microservices with podman" data-description="learn how to containerize and run your microservices on open liberty using podman" data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Containerizing microservices with Podman</h3>
+          <p class="guide_description" title="Learn how to containerize and run your microservices on Open Liberty using Podman">
+            Learn how to containerize and run your microservices on Open Liberty using Podman
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-graphql.html" class="guide_item" data-title="optimizing rest queries for microservices with graphql" data-description="learn how to use microprofile graphql to query and update data." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Optimizing REST queries for microservices with GraphQL</h3>
+          <p class="guide_description" title="Learn how to use MicroProfile GraphQL to query and update data.">
+            Learn how to use MicroProfile GraphQL to query and update data.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/openshift-codeready-containers.html" class="guide_item" data-title="deploying microservices to an openshift cluster using openshift local" data-description="explore how to deploy microservices to a local openshift cluster running with openshift local (formerly known as codeready containers)" data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Deploying microservices to an OpenShift cluster using OpenShift Local</h3>
+          <p class="guide_description" title="Explore how to deploy microservices to a local OpenShift cluster running with OpenShift Local (formerly known as CodeReady Containers)">
+            Explore how to deploy microservices to a local OpenShift cluster running with OpenShift Local (formerly known as CodeReady Containers)
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">45 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+        
+          
+        <div class="updated_guide_container">
+          <span class="guide_updated">Updated</span>
+        </div>
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/contract-testing.html" class="guide_item" data-title="testing microservices with consumer-driven contracts" data-description="learn how to implement contract testing to ensure compatibility for java microservices." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Testing microservices with consumer-driven contracts</h3>
+          <p class="guide_description" title="Learn how to implement contract testing to ensure compatibility for Java microservices.">
+            Learn how to implement contract testing to ensure compatibility for Java microservices.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/mongodb-intro.html" class="guide_item" data-title="persisting data with mongodb" data-description="learn how to persist data in java microservices to mongodb, a document-oriented nosql database." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Persisting data with MongoDB</h3>
+          <p class="guide_description" title="Learn how to persist data in Java microservices to MongoDB, a document-oriented NoSQL database.">
+            Learn how to persist data in Java microservices to MongoDB, a document-oriented NoSQL database.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">25 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/reactive-messaging-sse.html" class="guide_item" data-title="streaming updates to a client using server-sent events" data-description="learn how to push server-sent events from a reactive messaging application to a front-end client" data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Streaming updates to a client using Server-Sent Events</h3>
+          <p class="guide_description" title="Learn how to push Server-Sent Events from a reactive messaging application to a front-end client">
+            Learn how to push Server-Sent Events from a reactive messaging application to a front-end client
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/cloud-openshift-operator.html" class="guide_item" data-title="deploying microservices to openshift 4 using kubernetes operators" data-description="explore how to deploy microservices to red hat openshift 4 using kubernetes operators like the open liberty operator." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Deploying microservices to OpenShift 4 using Kubernetes Operators</h3>
+          <p class="guide_description" title="Explore how to deploy microservices to Red Hat OpenShift 4 using Kubernetes Operators like the Open Liberty Operator.">
+            Explore how to deploy microservices to Red Hat OpenShift 4 using Kubernetes Operators like the Open Liberty Operator.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/social-media-login.html" class="guide_item" data-title="authenticating users through social media providers" data-description="learn how to authenticate users with the open liberty social media login feature." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Authenticating users through social media providers</h3>
+          <p class="guide_description" title="Learn how to authenticate users with the Open Liberty Social Media Login feature.">
+            Learn how to authenticate users with the Open Liberty Social Media Login feature.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-reactive-messaging-acknowledgment.html" class="guide_item" data-title="acknowledging messages using microprofile reactive messaging" data-description="learn how to use microprofile reactive messaging acknowledgment strategies to acknowledge messages." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Acknowledging messages using MicroProfile Reactive Messaging</h3>
+          <p class="guide_description" title="Learn how to use MicroProfile Reactive Messaging acknowledgment strategies to acknowledge messages.">
+            Learn how to use MicroProfile Reactive Messaging acknowledgment strategies to acknowledge messages.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/reactive-rest-client.html" class="guide_item" data-title="consuming restful services using the reactive jax-rs client" data-description="learn how to use a reactive jax-rs client to asynchronously invoke restful microservices over http." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Consuming RESTful services using the reactive JAX-RS client</h3>
+          <p class="guide_description" title="Learn how to use a reactive JAX-RS client to asynchronously invoke RESTful microservices over HTTP.">
+            Learn how to use a reactive JAX-RS client to asynchronously invoke RESTful microservices over HTTP.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">25 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-opentracing-jaeger.html" class="guide_item" data-title="enabling distributed tracing in microservices with jaeger" data-description="explore how to enable and customize tracing of jax-rs and non-jax-rs endpoint methods by using jaeger and microprofile opentracing." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Enabling distributed tracing in microservices with Jaeger</h3>
+          <p class="guide_description" title="Explore how to enable and customize tracing of JAX-RS and non-JAX-RS endpoint methods by using Jaeger and MicroProfile OpenTracing.">
+            Explore how to enable and customize tracing of JAX-RS and non-JAX-RS endpoint methods by using Jaeger and MicroProfile OpenTracing.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-reactive-messaging-rest-integration.html" class="guide_item" data-title="integrating restful services with a reactive system" data-description="learn how to integrate restful services with a reactive system using microprofile reactive messaging." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Integrating RESTful services with a reactive system</h3>
+          <p class="guide_description" title="Learn how to integrate RESTful services with a reactive system using MicroProfile Reactive Messaging.">
+            Learn how to integrate RESTful services with a reactive system using MicroProfile Reactive Messaging.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">25 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/rest-client-reactjs.html" class="guide_item" data-title="consuming a restful web service with reactjs" data-description="explore how to access a simple restful web service and consume its resources with reactjs in open liberty." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Consuming a RESTful web service with ReactJS</h3>
+          <p class="guide_description" title="Explore how to access a simple RESTful web service and consume its resources with ReactJS in Open Liberty.">
+            Explore how to access a simple RESTful web service and consume its resources with ReactJS in Open Liberty.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/reactive-service-testing.html" class="guide_item" data-title="testing reactive java microservices" data-description="learn how to test reactive java microservices in true-to-production environments using microshed testing." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Testing reactive Java microservices</h3>
+          <p class="guide_description" title="Learn how to test reactive Java microservices in true-to-production environments using MicroShed Testing.">
+            Learn how to test reactive Java microservices in true-to-production environments using MicroShed Testing.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-reactive-messaging.html" class="guide_item" data-title="creating reactive java microservices" data-description="learn how to use microprofile reactive messaging to implement an application with a reactive architecture." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Creating reactive Java microservices</h3>
+          <p class="guide_description" title="Learn how to use MicroProfile Reactive Messaging to implement an application with a reactive architecture.">
+            Learn how to use MicroProfile Reactive Messaging to implement an application with a reactive architecture.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/cloud-google.html" class="guide_item" data-title="deploying microservices to google cloud platform" data-description="explore how to deploy microservices to google cloud platform kubernetes engine (gke)." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Deploying microservices to Google Cloud Platform</h3>
+          <p class="guide_description" title="Explore how to deploy microservices to Google Cloud Platform Kubernetes Engine (GKE).">
+            Explore how to deploy microservices to Google Cloud Platform Kubernetes Engine (GKE).
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">1 hour</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/intellij.html" class="guide_item" data-title="using intellij idea to develop a microservice" data-description="learn how to use the intellij idea to develop a microservice with open liberty." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Using IntelliJ IDEA to develop a microservice</h3>
+          <p class="guide_description" title="Learn how to use the IntelliJ IDEA to develop a microservice with Open Liberty.">
+            Learn how to use the IntelliJ IDEA to develop a microservice with Open Liberty.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/okd.html" class="guide_item" data-title="deploying microservices to an okd cluster using minishift" data-description="explore how to deploy microservices on an okd cluster using a virtual machine with minishift." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Deploying microservices to an OKD cluster using Minishift</h3>
+          <p class="guide_description" title="Explore how to deploy microservices on an OKD cluster using a virtual machine with Minishift.">
+            Explore how to deploy microservices on an OKD cluster using a virtual machine with Minishift.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">1 hour</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/spring-boot.html" class="guide_item" data-title="containerizing, packaging, and running a spring boot application" data-description="learn how to containerize, package, and run a spring boot application on open liberty." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Containerizing, packaging, and running a Spring Boot application</h3>
+          <p class="guide_description" title="Learn how to containerize, package, and run a Spring Boot application on Open Liberty.">
+            Learn how to containerize, package, and run a Spring Boot application on Open Liberty.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microshed-testing.html" class="guide_item" data-title="testing a microprofile or jakarta ee application" data-description="learn how to use microshed testing to test a microprofile or jakarta ee application." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Testing a MicroProfile or Jakarta EE application</h3>
+          <p class="guide_description" title="Learn how to use MicroShed Testing to test a MicroProfile or Jakarta EE application.">
+            Learn how to use MicroShed Testing to test a MicroProfile or Jakarta EE application.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-rest-client-async.html" class="guide_item" data-title="consuming restful services asynchronously with template interfaces" data-description="learn how to use microprofile rest client to invoke restful microservices asynchronously over http." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Consuming RESTful services asynchronously with template interfaces</h3>
+          <p class="guide_description" title="Learn how to use MicroProfile Rest Client to invoke RESTful microservices asynchronously over HTTP.">
+            Learn how to use MicroProfile Rest Client to invoke RESTful microservices asynchronously over HTTP.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">15 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/kafka-intro.html" class="guide_item" data-title="consuming data streams using apache kafka" data-description="learn how to deploy the apache kafka platform to implement real-time data streaming between systems" data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Consuming data streams using Apache Kafka</h3>
+          <p class="guide_description" title="Learn how to deploy the Apache Kafka platform to implement real-time data streaming between systems">
+            Learn how to deploy the Apache Kafka platform to implement real-time data streaming between systems
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">15 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-istio-retry-fallback.html" class="guide_item" data-title="developing fault-tolerant microservices with istio retry and microprofile fallback" data-description="explore how to use microprofile fault tolerance together with istio fault tolerance" data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Developing fault-tolerant microservices with Istio Retry and MicroProfile Fallback</h3>
+          <p class="guide_description" title="Explore how to use MicroProfile Fault Tolerance together with Istio Fault Tolerance">
+            Explore how to use MicroProfile Fault Tolerance together with Istio Fault Tolerance
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/cloud-azure.html" class="guide_item" data-title="deploying microservices to azure kubernetes service" data-description="explore how to deploy microservices to azure kubernetes service (aks)." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Deploying microservices to Azure Kubernetes Service</h3>
+          <p class="guide_description" title="Explore how to deploy microservices to Azure Kubernetes Service (AKS).">
+            Explore how to deploy microservices to Azure Kubernetes Service (AKS).
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">1 hour</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/sessions.html" class="guide_item" data-title="caching http session data using jcache and hazelcast" data-description="learn how to create, use and cache http session data." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Caching HTTP session data using JCache and Hazelcast</h3>
+          <p class="guide_description" title="Learn how to create, use and cache HTTP session data.">
+            Learn how to create, use and cache HTTP session data.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">25 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/containerize.html" class="guide_item" data-title="containerizing microservices" data-description="learn how to containerize and run your microservices with open liberty using docker" data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Containerizing microservices</h3>
+          <p class="guide_description" title="Learn how to containerize and run your microservices with Open Liberty using Docker">
+            Learn how to containerize and run your microservices with Open Liberty using Docker
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/rest-client-angular.html" class="guide_item" data-title="consuming a restful web service with angular" data-description="explore how to access a simple restful web service and consume its resources with angular in open liberty." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Consuming a RESTful web service with Angular</h3>
+          <p class="guide_description" title="Explore how to access a simple RESTful web service and consume its resources with Angular in Open Liberty.">
+            Explore how to access a simple RESTful web service and consume its resources with Angular in Open Liberty.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/cloud-aws.html" class="guide_item" data-title="deploying microservices to amazon web services" data-description="explore how to deploy microservices to amazon elastic container service for kubernetes (eks) on amazon web services (aws)." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Deploying microservices to Amazon Web Services</h3>
+          <p class="guide_description" title="Explore how to deploy microservices to Amazon Elastic Container Service for Kubernetes (EKS) on Amazon Web Services (AWS).">
+            Explore how to deploy microservices to Amazon Elastic Container Service for Kubernetes (EKS) on Amazon Web Services (AWS).
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">45 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/cloud-ibm.html" class="guide_item" data-title="deploying microservices to ibm cloud kubernetes service" data-description="explore how to deploy microservices to ibm cloud kubernetes service." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Deploying microservices to IBM Cloud Kubernetes Service</h3>
+          <p class="guide_description" title="Explore how to deploy microservices to IBM Cloud Kubernetes Service.">
+            Explore how to deploy microservices to IBM Cloud Kubernetes Service.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">1 hour</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+        
+          
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/arquillian-managed.html" class="guide_item" data-title="testing microservices with the arquillian managed container" data-description="learn how to test your microservices with the arquillian managed container and junit on open liberty." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Testing microservices with the Arquillian managed container</h3>
+          <p class="guide_description" title="Learn how to test your microservices with the Arquillian managed container and JUnit on Open Liberty.">
+            Learn how to test your microservices with the Arquillian managed container and JUnit on Open Liberty.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">15 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/caching-microservices-hazelcast.html" class="guide_item" data-title="caching microservices with hazelcast in kubernetes" data-description="explore how to use caching in microservices within kubernetes environment." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Caching Microservices with Hazelcast in Kubernetes</h3>
+          <p class="guide_description" title="Explore how to use caching in microservices within Kubernetes environment.">
+            Explore how to use caching in microservices within Kubernetes environment.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">25 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/istio-intro.html" class="guide_item" data-title="managing microservice traffic using istio" data-description="explore how to manage microservice traffic using istio." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Managing microservice traffic using Istio</h3>
+          <p class="guide_description" title="Explore how to manage microservice traffic using Istio.">
+            Explore how to manage microservice traffic using Istio.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/jpa-intro.html" class="guide_item" data-title="accessing and persisting data in microservices using java persistence api (jpa)" data-description="learn how to use java persistence api (jpa) to access and persist data to a database for your microservices." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Accessing and persisting data in microservices using Java Persistence API (JPA)</h3>
+          <p class="guide_description" title="Learn how to use Java Persistence API (JPA) to access and persist data to a database for your microservices.">
+            Learn how to use Java Persistence API (JPA) to access and persist data to a database for your microservices.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/kubernetes-microprofile-health.html" class="guide_item" data-title="checking the health of microservices on kubernetes" data-description="learn how to check the health of microservices on kubernetes by setting up readiness and liveness probes to inspect microprofile health check endpoints." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Checking the health of microservices on Kubernetes</h3>
+          <p class="guide_description" title="Learn how to check the health of microservices on Kubernetes by setting up readiness and liveness probes to inspect MicroProfile Health Check endpoints.">
+            Learn how to check the health of microservices on Kubernetes by setting up readiness and liveness probes to inspect MicroProfile Health Check endpoints.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/security-intro.html" class="guide_item" data-title="securing a web application" data-description="learn how to secure a web application through authentication and authorization." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Securing a web application</h3>
+          <p class="guide_description" title="Learn how to secure a web application through authentication and authorization.">
+            Learn how to secure a web application through authentication and authorization.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">15 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/kubernetes-microprofile-config.html" class="guide_item" data-title="configuring microservices running in kubernetes" data-description="externalize configuration and use kubernetes configmaps and secrets to configure your microservices." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Configuring microservices running in Kubernetes</h3>
+          <p class="guide_description" title="Externalize configuration and use Kubernetes ConfigMaps and Secrets to configure your microservices.">
+            Externalize configuration and use Kubernetes ConfigMaps and Secrets to configure your microservices.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">15 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/kubernetes-intro.html" class="guide_item" data-title="deploying microservices to kubernetes" data-description="explore how to deploy microservices to kubernetes and manage your cluster." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Deploying microservices to Kubernetes</h3>
+          <p class="guide_description" title="Explore how to deploy microservices to Kubernetes and manage your cluster.">
+            Explore how to deploy microservices to Kubernetes and manage your cluster.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">25 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/springboot-mvc.html" class="guide_item" data-title="running a spring boot mvc application as a war file" data-description="learn how to run a spring boot mvc application as a war file in open liberty instead of an embedded container." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Running a Spring Boot MVC application as a WAR file</h3>
+          <p class="guide_description" title="Learn how to run a Spring Boot MVC application as a WAR file in Open Liberty instead of an embedded container.">
+            Learn how to run a Spring Boot MVC application as a WAR file in Open Liberty instead of an embedded container.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/bean-validation.html" class="guide_item" data-title="validating constraints with microservices" data-description="explore the use of bean validation to validate user input data for microservices." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Validating constraints with microservices</h3>
+          <p class="guide_description" title="Explore the use of bean validation to validate user input data for microservices.">
+            Explore the use of bean validation to validate user input data for microservices.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/rest-client-java.html" class="guide_item" data-title="consuming a restful web service" data-description="explore how to access a simple restful web service and consume its resources in java using json-b and json-p." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Consuming a RESTful web service</h3>
+          <p class="guide_description" title="Explore how to access a simple RESTful web service and consume its resources in Java using JSON-B and JSON-P.">
+            Explore how to access a simple RESTful web service and consume its resources in Java using JSON-B and JSON-P.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">25 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/getting-started.html" class="guide_item" data-title="getting started with open liberty" data-description="learn how to develop a java application on open liberty with maven and docker." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Getting started with Open Liberty</h3>
+          <p class="guide_description" title="Learn how to develop a Java application on Open Liberty with Maven and Docker.">
+            Learn how to develop a Java application on Open Liberty with Maven and Docker.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">25 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/retry-timeout.html" class="guide_item" data-title="failing fast and recovering from errors" data-description="use microprofile's timeout and retry policies to fail fast and recover when running into failures." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Failing fast and recovering from errors</h3>
+          <p class="guide_description" title="Use MicroProfile's Timeout and Retry policies to fail fast and recover when running into failures.">
+            Use MicroProfile's Timeout and Retry policies to fail fast and recover when running into failures.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+        
+        <div class="guide_interactive_container">
+          <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
+          <span class="guide_interactive">Interactive</span>
+        </div>
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/websockets.html" class="guide_item" data-title="" data-description="" data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title"></h3>
+          <p class="guide_description" title="">
+            
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-rest-client.html" class="guide_item" data-title="consuming restful services with template interfaces" data-description="learn how to use microprofile rest client to invoke restful services over http in a type-safe way." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Consuming RESTful services with template interfaces</h3>
+          <p class="guide_description" title="Learn how to use MicroProfile Rest Client to invoke RESTful services over HTTP in a type-safe way.">
+            Learn how to use MicroProfile Rest Client to invoke RESTful services over HTTP in a type-safe way.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/rest-client-jquery.html" class="guide_item" data-title="" data-description="" data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title"></h3>
+          <p class="guide_description" title="">
+            
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/springboot-websocket.html" class="guide_item" data-title="" data-description="" data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title"></h3>
+          <p class="guide_description" title="">
+            
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/bulkhead.html" class="guide_item" data-title="limiting the number of concurrent requests to microservices" data-description="use a microprofile bulkhead policy to limit requests and prevent faults from cascading to the entire system." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Limiting the number of concurrent requests to microservices</h3>
+          <p class="guide_description" title="Use a MicroProfile Bulkhead policy to limit requests and prevent faults from cascading to the entire system.">
+            Use a MicroProfile Bulkhead policy to limit requests and prevent faults from cascading to the entire system.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+        
+        <div class="guide_interactive_container">
+          <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
+          <span class="guide_interactive">Interactive</span>
+        </div>
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-fallback.html" class="guide_item" data-title="building fault-tolerant microservices with the @fallback annotation" data-description="learn how to add fallback behavior to microservice dependencies to manage the impact of failures." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Building fault-tolerant microservices with the @Fallback annotation</h3>
+          <p class="guide_description" title="Learn how to add fallback behavior to microservice dependencies to manage the impact of failures.">
+            Learn how to add fallback behavior to microservice dependencies to manage the impact of failures.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-openapi.html" class="guide_item" data-title="documenting restful apis" data-description="explore how to document and filter restful apis from code or static files by using microprofile openapi." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Documenting RESTful APIs</h3>
+          <p class="guide_description" title="Explore how to document and filter RESTful APIs from code or static files by using MicroProfile OpenAPI.">
+            Explore how to document and filter RESTful APIs from code or static files by using MicroProfile OpenAPI.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-opentracing.html" class="guide_item" data-title="enabling distributed tracing in microservices with zipkin" data-description="explore how to enable and customize tracing of jax-rs and non-jax-rs methods by using zipkin and microprofile opentracing." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Enabling distributed tracing in microservices with Zipkin</h3>
+          <p class="guide_description" title="Explore how to enable and customize tracing of JAX-RS and non-JAX-RS methods by using Zipkin and MicroProfile OpenTracing.">
+            Explore how to enable and customize tracing of JAX-RS and non-JAX-RS methods by using Zipkin and MicroProfile OpenTracing.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-health.html" class="guide_item" data-title="adding health reports to microservices" data-description="learn how to use microprofile health to provide and check the health of a microservice." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Adding health reports to microservices</h3>
+          <p class="guide_description" title="Learn how to use MicroProfile Health to provide and check the health of a microservice.">
+            Learn how to use MicroProfile Health to provide and check the health of a microservice.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-metrics.html" class="guide_item" data-title="providing metrics from a microservice" data-description="learn how to use microprofile metrics to provide system and application metrics from a microservice." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Providing metrics from a microservice</h3>
+          <p class="guide_description" title="Learn how to use MicroProfile Metrics to provide system and application metrics from a microservice.">
+            Learn how to use MicroProfile Metrics to provide system and application metrics from a microservice.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">15 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/cdi-intro.html" class="guide_item" data-title="injecting dependencies into microservices" data-description="learn how to use contexts and dependency injection (cdi) to manage and inject dependencies into microservices." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Injecting dependencies into microservices</h3>
+          <p class="guide_description" title="Learn how to use Contexts and Dependency Injection (CDI) to manage and inject dependencies into microservices.">
+            Learn how to use Contexts and Dependency Injection (CDI) to manage and inject dependencies into microservices.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">15 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-jwt.html" class="guide_item" data-title="securing microservices with json web tokens" data-description="learn how to control user and role access to microservices by using microprofile jwt." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Securing microservices with JSON Web Tokens</h3>
+          <p class="guide_description" title="Learn how to control user and role access to microservices by using MicroProfile JWT.">
+            Learn how to control user and role access to microservices by using MicroProfile JWT.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">25 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-config.html" class="guide_item" data-title="configuring microservices" data-description="learn how to use the microprofile config specification to externalize configuration data for an application." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Configuring microservices</h3>
+          <p class="guide_description" title="Learn how to use the MicroProfile Config specification to externalize configuration data for an application.">
+            Learn how to use the MicroProfile Config specification to externalize configuration data for an application.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/microprofile-config-intro.html" class="guide_item" data-title="separating configuration from code in microservices" data-description="learn how to perform static configuration injection using microprofile config." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Separating configuration from code in microservices</h3>
+          <p class="guide_description" title="Learn how to perform static configuration injection using MicroProfile Config.">
+            Learn how to perform static configuration injection using MicroProfile Config.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">25 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+        
+        <div class="guide_interactive_container">
+          <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
+          <span class="guide_interactive">Interactive</span>
+        </div>
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/jsf-container.html" class="guide_item" data-title="bringing your own jsf implementation" data-description="learn how to get cdi integration when you bring your own jsf implementation using open liberty" data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Bringing your own JSF implementation</h3>
+          <p class="guide_description" title="Learn how to get CDI integration when you bring your own JSF implementation using Open Liberty">
+            Learn how to get CDI integration when you bring your own JSF implementation using Open Liberty
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">10 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/docker.html" class="guide_item" data-title="using docker containers to develop microservices" data-description="learn how to use docker containers for iterative development." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Using Docker containers to develop microservices</h3>
+          <p class="guide_description" title="Learn how to use Docker containers for iterative development.">
+            Learn how to use Docker containers for iterative development.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/gradle-intro.html" class="guide_item" data-title="building a web application with gradle" data-description="learn how to build and test a web application using a build configuration script, the gradle war plug-in and open liberty gradle plug-in." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Building a web application with Gradle</h3>
+          <p class="guide_description" title="Learn how to build and test a web application using a build configuration script, the Gradle War plug-in and Open Liberty Gradle plug-in.">
+            Learn how to build and test a web application using a build configuration script, the Gradle War plug-in and Open Liberty Gradle plug-in.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">15 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/rest-client-angularjs.html" class="guide_item" data-title="consuming a restful web service with angularjs" data-description="explore how to access a simple restful web service and consume its resources with angularjs in open liberty." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Consuming a RESTful web service with AngularJS</h3>
+          <p class="guide_description" title="Explore how to access a simple RESTful web service and consume its resources with AngularJS in Open Liberty.">
+            Explore how to access a simple RESTful web service and consume its resources with AngularJS in Open Liberty.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">20 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/cors.html" class="guide_item" data-title="enabling cross-origin resource sharing (cors)" data-description="learn how to enable cors in open liberty without writing java code to access resources from an external domain." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Enabling Cross-Origin Resource Sharing (CORS)</h3>
+          <p class="guide_description" title="Learn how to enable CORS in Open Liberty without writing Java code to access resources from an external domain.">
+            Learn how to enable CORS in Open Liberty without writing Java code to access resources from an external domain.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">15 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/maven-multimodules.html" class="guide_item" data-title="creating a multi-module application" data-description="learn how to build an application consisting of jar, war, and ear modules with maven" data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Creating a multi-module application</h3>
+          <p class="guide_description" title="Learn how to build an application consisting of JAR, WAR, and EAR modules with Maven">
+            Learn how to build an application consisting of JAR, WAR, and EAR modules with Maven
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+        
+          
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/circuit-breaker.html" class="guide_item" data-title="preventing repeated failed calls to microservices" data-description="learn how to create a fault-tolerant microservice using microprofile's circuitbreaker and fallback policies." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Preventing repeated failed calls to microservices</h3>
+          <p class="guide_description" title="Learn how to create a fault-tolerant microservice using MicroProfile's CircuitBreaker and Fallback policies.">
+            Learn how to create a fault-tolerant microservice using MicroProfile's CircuitBreaker and Fallback policies.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">25 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+        
+        <div class="guide_interactive_container">
+          <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
+          <span class="guide_interactive">Interactive</span>
+        </div>
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/maven-intro.html" class="guide_item" data-title="building a web application with maven" data-description="learn how to build and test a simple web application using maven and open liberty" data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Building a web application with Maven</h3>
+          <p class="guide_description" title="Learn how to build and test a simple web application using Maven and Open Liberty">
+            Learn how to build and test a simple web application using Maven and Open Liberty
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">15 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/rest-intro.html" class="guide_item" data-title="creating a restful web service" data-description="learn how to create a restful service with jakarta restful web services, json-b, and open liberty." data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Creating a RESTful web service</h3>
+          <p class="guide_description" title="Learn how to create a RESTful service with Jakarta Restful Web Services, JSON-B, and Open Liberty.">
+            Learn how to create a RESTful service with Jakarta Restful Web Services, JSON-B, and Open Liberty.
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+    <div class="guide_column col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden">
+      <a href="/guides/rest-hateoas.html" class="guide_item" data-title="creating a hypermedia-driven restful web service" data-description="learn how to use hypermedia as the engine of application state (hateoas) to drive your restful web service" data-tags="" data-search-keywords="">
+        <div class="guide_title_and_description_container">
+          <h3 class="guide_title">Creating a hypermedia-driven RESTful web service</h3>
+          <p class="guide_description" title="Learn how to use Hypermedia As The Engine Of Application State (HATEOAS) to drive your RESTful web service">
+            Learn how to use Hypermedia As The Engine Of Application State (HATEOAS) to drive your RESTful web service
+          </p>
+        </div>
+        <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+        <span class="guide_duration">30 minutes</span>
+        <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+        <!-- If new posts count is less than 4, use 4 most recent posts -->
+         
+
+        <!-- If new posts count is >= 4, use posts from last 30 days-->
+         
+        <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+        <!-- Count number of guides from past last 12 weeks that is 84 days-->
+        <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+        
+         
+      </a>
+    </div>
+    
+  </div>
+
+  <!-- Zero Search Results -->
+  <div class="no_results_section row">
+    <h2 id="no_results_title">
+      <b class="search_term"></b> - No results found
+    </h2>
+    <div id="no_search_results_container" class="container">
+      <div class="subtitle">
+        <p>
+          <b>Sorry, we couldn't find any guides matching
+            <span class="search_term"></span></b>
+        </p>
+        <p>
+          Want to see a guide on this topic?
+          <b><a href="https://github.com/OpenLiberty/guides-common/projects/1" class="orange_link_light_background" target="_blank" rel="noopener noreferrer">Check out our project board and raise an issue.</a></b>
+        </p>
+      </div>
+      <button id="back_to_guides_button" class="btn">
+        <img class="arrow" src="/img/guides_arrow_left.svg" alt=""><b>Back to all Open Liberty guides</b>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guides.js"></script>
+
+
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

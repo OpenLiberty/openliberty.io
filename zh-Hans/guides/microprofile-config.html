@@ -1,0 +1,2495 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Externalizing configuration for Java microservices using Eclipse MicroProfile Config
+    
+  </title>
+  <meta name="description" content="A tutorial and example on how to externalize and inject static and dynamic configuration properties for Java microservices through configuration sources using Eclipse MicroProfile Config.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/microprofile-config">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Externalizing configuration for Java microservices using Eclipse MicroProfile Config" />
+  <meta name="twitter:description" content="A tutorial and example on how to externalize and inject static and dynamic configuration properties for Java microservices through configuration sources using Eclipse MicroProfile Config." />
+
+  <meta property='og:title' content="Externalizing configuration for Java microservices using Eclipse MicroProfile Config" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A tutorial and example on how to externalize and inject static and dynamic configuration properties for Java microservices through configuration sources using Eclipse MicroProfile Config." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/microprofile-config" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li><a href="#ordering-multiple-configuration-sources">Ordering multiple configuration sources</a></li>
+<li><a href="#injecting-static-configuration">Injecting static configuration</a></li>
+<li>
+<a href="#injecting-dynamic-configuration">Injecting dynamic configuration</a>
+<ul class="sectlevel2">
+<li><a href="#creating-custom-configuration-sources">Creating custom configuration sources</a></li>
+<li><a href="#enabling-dynamic-configuration-injection">Enabling dynamic configuration injection</a></li>
+</ul>
+</li>
+<li><a href="#creating-custom-converters">Creating custom converters</a></li>
+<li><a href="#adding-configuration-to-the-microservice">Adding configuration to the microservice</a></li>
+<li><a href="#running-the-application">Running the application</a></li>
+<li>
+<a href="#testing-the-application">Testing the application</a>
+<ul class="sectlevel2">
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Configuring microservices</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">20 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/microprofile-config.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to provide external configuration to microservices using MicroProfile Config.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to externalize and inject both static and dynamic configuration properties for microservices using MicroProfile Config.</p>
+</div>
+<div class="paragraph">
+<p>You will learn to aggregate multiple configuration sources, assign prioritization values to these sources, merge configuration values, and create custom configuration sources.</p>
+</div>
+<div class="paragraph">
+<p>The application that you will be working with is an <code>inventory</code> service which stores the information about various JVMs running on different hosts. Whenever a request is made to the <code>inventory</code> service to retrieve the JVM system properties of a particular host, the <code>inventory</code> service will communicate with the <code>system</code> service on that host to get these system properties. You will add configuration properties to simulate if a service is down for maintenance.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-microprofile-config.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-microprofile-config.git
+cd guide-microprofile-config</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2 command">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>To try out the application, first go to the <code>finish</code> directory and run the following Maven goal to build the application and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd finish
+mvn liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>The defaultServer server is ready to run a smarter planet.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can access the following two microservices to test their availability:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://localhost:9080/system/properties" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/system/properties</a> retrieves the information for a specific host</p>
+</li>
+<li>
+<p><a href="http://localhost:9080/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/inventory/systems</a> retrieves the information for a list of all previously registered hosts</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In addition, you can access a third microservice, which retrieves and aggregates all of the configuration properties and sources that are added throughout this guide. This is available at:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://localhost:9080/config" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/config</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph command">
+<p>After you are finished checking out the application, stop the Liberty instance by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty. Alternatively, you can run the <code>liberty:stop</code> goal from the <code>finish</code> directory in another shell session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:stop</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ordering-multiple-configuration-sources">Ordering multiple configuration sources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now, navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph command">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following goal to start Open Liberty in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>MicroProfile Config combines configuration properties from multiple sources, each known as a ConfigSource. Each ConfigSource has a specified priority, defined by its <code>config_ordinal</code> value.</p>
+</div>
+<div class="paragraph">
+<p>A higher ordinal value means that the values taken from this ConfigSource will override values from ConfigSources with a lower ordinal value.</p>
+</div>
+<div class="paragraph">
+<p>The following four sources are the default configuration sources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <code>&lt;variable name="…​" value="…​"/&gt;</code> element in the server.xml file has a default ordinal of 500.</p>
+</li>
+<li>
+<p>System properties has a default ordinal of 400. (e.g. <code>bootstrap.properties</code> file)</p>
+</li>
+<li>
+<p>Environment variables have a default ordinal of 300. (e.g. <code>server.env</code> file)</p>
+</li>
+<li>
+<p>The <code class="hotspot=ordinal">META-INF/microprofile-config.properties</code> configuration property file on the classpath has a default ordinal of 100.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Access the <code class="hotspot">src/main/resources/META-INF/microprofile-config.properties</code> local configuration file. This configuration file is the default configuration source for an application that uses MicroProfile Config.</p>
+</div>
+<div class="paragraph">
+<p>microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties"><span class="line-numbers"> 1</span># tag::all-props[]
+<span class="line-numbers"> 2</span># tag::ordinal[]
+<span class="line-numbers"> 3</span>config_ordinal=100
+<span class="line-numbers"> 4</span># end::ordinal[]
+<span class="line-numbers"> 5</span># tag::inventory-port-number[]
+<span class="line-numbers"> 6</span>io_openliberty_guides_port_number=9080
+<span class="line-numbers"> 7</span># end::inventory-port-number[]
+<span class="line-numbers"> 8</span># tag::inventory-in-maintenance[]
+<span class="line-numbers"> 9</span>io_openliberty_guides_inventory_inMaintenance=false
+<span class="line-numbers">10</span># end::inventory-in-maintenance[]
+<span class="line-numbers">11</span># tag::system-in-maintenance[]
+<span class="line-numbers">12</span>io_openliberty_guides_system_inMaintenance=false
+<span class="line-numbers">13</span># tag::system-in-maintenance[]
+<span class="line-numbers">14</span># tag::test-config-overwrite[]
+<span class="line-numbers">15</span>io_openliberty_guides_testConfigOverwrite=DefaultSource
+<span class="line-numbers">16</span># tag::test-config-overwrite[]
+<span class="line-numbers">17</span># end::all-props[]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="injecting-static-configuration">Injecting static configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The MicroProfile Config API is included in the MicroProfile dependency that is specified in your <code class="hotspot file=0">pom.xml</code> file. Look for the dependency with the <code class="hotspot=microprofile file=0">microprofile</code> artifact ID. This dependency provides a library that allows you to use the MicroProfile Config API to externalize configurations for your microservices. The <code class="hotspot=config file=1">mpConfig</code> feature is also enabled in the <code class="hotspot file=1">src/main/liberty/config/server.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>pom.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version='1.0' encoding='utf-8'?&gt;</span>
+<span class="line-numbers">  2</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  3</span>
+<span class="line-numbers">  4</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  5</span>
+<span class="line-numbers">  6</span>    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">  7</span>    <span class="tag">&lt;artifactId&gt;</span>guide-microprofile-config<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">  8</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">  9</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers"> 10</span>
+<span class="line-numbers"> 11</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 12</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 13</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 14</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>11<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 15</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>11<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 16</span>        <span class="comment">&lt;!-- Liberty configuration --&gt;</span>
+<span class="line-numbers"> 17</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9080<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers"> 18</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9443<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers"> 19</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 20</span>
+<span class="line-numbers"> 21</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 22</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers"> 23</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 24</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 25</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 26</span>            <span class="tag">&lt;version&gt;</span>10.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 27</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 28</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 29</span>        <span class="comment">&lt;!-- tag::microprofile[] --&gt;</span>
+<span class="line-numbers"> 30</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 31</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 32</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 33</span>            <span class="tag">&lt;version&gt;</span>6.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 34</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 35</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 36</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 37</span>        <span class="comment">&lt;!-- end::microprofile[] --&gt;</span>
+<span class="line-numbers"> 38</span>        <span class="comment">&lt;!-- For tests --&gt;</span>
+<span class="line-numbers"> 39</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 40</span>            <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 41</span>            <span class="tag">&lt;artifactId&gt;</span>junit-jupiter<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 42</span>            <span class="tag">&lt;version&gt;</span>5.9.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 43</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 44</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 45</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 46</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 47</span>             <span class="tag">&lt;artifactId&gt;</span>resteasy-client<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 48</span>             <span class="tag">&lt;version&gt;</span>6.2.3.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 49</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 50</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 51</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 52</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 53</span>             <span class="tag">&lt;artifactId&gt;</span>resteasy-json-binding-provider<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 54</span>             <span class="tag">&lt;version&gt;</span>6.2.3.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 55</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 56</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 57</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 58</span>            <span class="tag">&lt;groupId&gt;</span>org.glassfish<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 59</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.json<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 60</span>             <span class="tag">&lt;version&gt;</span>2.0.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 61</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 62</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 63</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers"> 64</span>
+<span class="line-numbers"> 65</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers"> 66</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers"> 67</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers"> 68</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 69</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 70</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 71</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 72</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 73</span>            <span class="comment">&lt;!-- Plugin to run unit tests --&gt;</span>
+<span class="line-numbers"> 74</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 75</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 76</span>                <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 77</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 78</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 79</span>            <span class="comment">&lt;!-- Enable liberty-maven plugin --&gt;</span>
+<span class="line-numbers"> 80</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 81</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 82</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 83</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 84</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 85</span>            <span class="comment">&lt;!-- Plugin to run functional tests --&gt;</span>
+<span class="line-numbers"> 86</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 87</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 88</span>                <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 89</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 90</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 91</span>                    <span class="tag">&lt;systemPropertyVariables&gt;</span>
+<span class="line-numbers"> 92</span>                      <span class="tag">&lt;default.http.port&gt;</span>${liberty.var.default.http.port}<span class="tag">&lt;/default.http.port&gt;</span>
+<span class="line-numbers"> 93</span>                      <span class="tag">&lt;default.https.port&gt;</span>${liberty.var.default.https.port}<span class="tag">&lt;/default.https.port&gt;</span>
+<span class="line-numbers"> 94</span>                    <span class="tag">&lt;/systemPropertyVariables&gt;</span>
+<span class="line-numbers"> 95</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers"> 96</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 97</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers"> 98</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers"> 99</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>server.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">Sample Liberty server</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>  <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>    <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 5</span>    <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>    <span class="tag">&lt;feature&gt;</span>jsonp-2.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 7</span>    <span class="tag">&lt;feature&gt;</span>cdi-4.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 8</span>    <span class="tag">&lt;feature&gt;</span>mpRestClient-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 9</span>    <span class="comment">&lt;!-- tag::config[] --&gt;</span>
+<span class="line-numbers">10</span>    <span class="tag">&lt;feature&gt;</span>mpConfig-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">11</span>    <span class="comment">&lt;!-- end::config[] --&gt;</span>
+<span class="line-numbers">12</span>  <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span>  <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9080</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">15</span>  <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.https.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9443</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span>  <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">18</span>    <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span>  <span class="tag">&lt;webApplication</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-microprofile-config.war</span><span class="delimiter">"</span></span>
+<span class="line-numbers">21</span>    <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">22</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now navigate to the <code class="hotspot file=2">src/main/resources/META-INF/microprofile-config.properties</code> local configuration file to check some static configuration. This configuration file is the default configuration source for an application that uses MicroProfile Config.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=inventory-port-number file=2">io_openliberty_guides_port_number</code> property that has already been defined in this file, determines the port number of the REST service.</p>
+</div>
+<div class="paragraph">
+<p>microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties"><span class="line-numbers"> 1</span># tag::all-props[]
+<span class="line-numbers"> 2</span># tag::ordinal[]
+<span class="line-numbers"> 3</span>config_ordinal=100
+<span class="line-numbers"> 4</span># end::ordinal[]
+<span class="line-numbers"> 5</span># tag::inventory-port-number[]
+<span class="line-numbers"> 6</span>io_openliberty_guides_port_number=9080
+<span class="line-numbers"> 7</span># end::inventory-port-number[]
+<span class="line-numbers"> 8</span># tag::inventory-in-maintenance[]
+<span class="line-numbers"> 9</span>io_openliberty_guides_inventory_inMaintenance=false
+<span class="line-numbers">10</span># end::inventory-in-maintenance[]
+<span class="line-numbers">11</span># tag::system-in-maintenance[]
+<span class="line-numbers">12</span>io_openliberty_guides_system_inMaintenance=false
+<span class="line-numbers">13</span># tag::system-in-maintenance[]
+<span class="line-numbers">14</span># tag::test-config-overwrite[]
+<span class="line-numbers">15</span>io_openliberty_guides_testConfigOverwrite=DefaultSource
+<span class="line-numbers">16</span># tag::test-config-overwrite[]
+<span class="line-numbers">17</span># end::all-props[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To use this configuration property,</p>
+</div>
+<div class="listingblock code_command hotspot file=3">
+<div class="content">
+<pre><mark>Create the <code>InventoryConfig.java</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/InventoryConfig.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryConfig.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright,inject-inMaintenance,custom-converter,isInMaintenance,getEmail">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="comment">// tag::config-class[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.inject.Provider</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.config.Email</span>;
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers">22</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryConfig</span> {
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span>  <span class="comment">// tag::port-number[]</span>
+<span class="line-numbers">25</span>  <span class="comment">// tag::inject-port-number[]</span>
+<span class="line-numbers">26</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">27</span>  <span class="comment">// end::inject-port-number[]</span>
+<span class="line-numbers">28</span>  <span class="comment">// tag::guides-port-number[]</span>
+<span class="line-numbers">29</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">io_openliberty_guides_port_number</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">30</span>  <span class="comment">// end::guides-port-number[]</span>
+<span class="line-numbers">31</span>  <span class="directive">private</span> <span class="type">int</span> portNumber;
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span>  <span class="comment">// end::port-number[]</span>
+<span class="line-numbers">34</span>  <span class="comment">// tag::build-in-converter[]</span>
+<span class="line-numbers">35</span>  <span class="comment">// tag::inject-inMaintenance[]</span>
+<span class="line-numbers">36</span>  <span class="comment">// tag::inject[]</span>
+<span class="line-numbers">37</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">38</span>  <span class="comment">// end::inject[]</span>
+<span class="line-numbers">39</span>  <span class="comment">// tag::configPropety[]</span>
+<span class="line-numbers">40</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">io_openliberty_guides_inventory_inMaintenance</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">41</span>  <span class="comment">// end::configPropety[]</span>
+<span class="line-numbers">42</span>  <span class="comment">// end::inject-inMaintenance[]</span>
+<span class="line-numbers">43</span>  <span class="directive">private</span> <span class="predefined-type">Provider</span>&lt;<span class="predefined-type">Boolean</span>&gt; inMaintenance;
+<span class="line-numbers">44</span>
+<span class="line-numbers">45</span>  <span class="comment">// end::build-in-converter[]</span>
+<span class="line-numbers">46</span>  <span class="comment">// tag::custom-converter[]</span>
+<span class="line-numbers">47</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">48</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">io_openliberty_guides_email</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">49</span>  <span class="directive">private</span> <span class="predefined-type">Provider</span>&lt;Email&gt; email;
+<span class="line-numbers">50</span>  <span class="comment">// end::custom-converter[]</span>
+<span class="line-numbers">51</span>
+<span class="line-numbers">52</span>  <span class="comment">// tag::getPortNumber[]</span>
+<span class="line-numbers">53</span>  <span class="directive">public</span> <span class="type">int</span> getPortNumber() {
+<span class="line-numbers">54</span>    <span class="keyword">return</span> portNumber;
+<span class="line-numbers">55</span>  }
+<span class="line-numbers">56</span>  <span class="comment">// end::getPortNumber[]</span>
+<span class="line-numbers">57</span>
+<span class="line-numbers">58</span>  <span class="comment">// tag::isInMaintenance[]</span>
+<span class="line-numbers">59</span>  <span class="directive">public</span> <span class="type">boolean</span> isInMaintenance() {
+<span class="line-numbers">60</span>    <span class="comment">// tag::inMaintenanceGet[]</span>
+<span class="line-numbers">61</span>    <span class="keyword">return</span> inMaintenance.get();
+<span class="line-numbers">62</span>    <span class="comment">// end::inMaintenanceGet[]</span>
+<span class="line-numbers">63</span>  }
+<span class="line-numbers">64</span>  <span class="comment">// end::isInMaintenance[]</span>
+<span class="line-numbers">65</span>
+<span class="line-numbers">66</span>  <span class="comment">// tag::getEmail[]</span>
+<span class="line-numbers">67</span>  <span class="directive">public</span> Email getEmail() {
+<span class="line-numbers">68</span>    <span class="keyword">return</span> email.get();
+<span class="line-numbers">69</span>  }
+<span class="line-numbers">70</span>  <span class="comment">// end::getEmail[]</span>
+<span class="line-numbers">71</span>}
+<span class="line-numbers">72</span><span class="comment">// end::config-class[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Inject the <code class="hotspot=guides-port-number file=3">io_openliberty_guides_port_number</code> property, and add the <code class="hotspot=getPortNumber file=3">getPortNumber()</code> class method to the <code class="hotspot file=3">InventoryConfig.java</code> file.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=inject-port-number file=3">@Inject</code> annotation injects the port number directly, the injection value is static and fixed on application starting.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=getPortNumber file=3">getPortNumber()</code> method directly returns the value of <code>portNumber</code> because it has been injected.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="injecting-dynamic-configuration">Injecting dynamic configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Note that three default config sources mentioned above are static and fixed on application starting, so the properties within them cannot be modified while the Liberty is running. However, you can externalize configuration data out of the application package, through the creation of custom configuration sources, so that the service updates configuration changes dynamically.</p>
+</div>
+<div class="sect2">
+<h3 id="creating-custom-configuration-sources">Creating custom configuration sources</h3>
+<div class="paragraph">
+<p>CustomConfigSource.json</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Json"><span class="line-numbers">1</span>{
+<span class="line-numbers">2</span>  <span class="key"><span class="delimiter">"</span><span class="content">config_ordinal</span><span class="delimiter">"</span></span>: <span class="integer">150</span>,
+<span class="line-numbers">3</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_email</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">admin@guides.openliberty.io</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">4</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_inventory_inMaintenance</span><span class="delimiter">"</span></span>: <span class="value">false</span>,
+<span class="line-numbers">5</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_system_inMaintenance</span><span class="delimiter">"</span></span>: <span class="value">false</span>,
+<span class="line-numbers">6</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_testConfigOverwrite</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">CustomSource</span><span class="delimiter">"</span></span>
+<span class="line-numbers">7</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Custom configuration sources can be created by implementing the <code>org.eclipse.microprofile.config.spi.ConfigSource</code> interface and using the <code>java.util.ServiceLoader</code> mechanism.</p>
+</div>
+<div class="paragraph">
+<p>A <code class="hotspot file=0">CustomConfigSource.json</code> JSON file has already been created in the <code>resources</code> directory. This JSON file simulates a remote configuration resource in real life. This file contains 4 custom config properties and has an ordinal of <code class="hotspot=2 file=0">150</code>. To use these properties in the application, the data object needs to be transformed from this JSON file to the configuration for your application.</p>
+</div>
+<div class="paragraph">
+<p>To link this JSON file to your application and to implement the <code>ConfigSource</code> interface,</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the <code>CustomConfigSource</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/config/CustomConfigSource.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>CustomConfigSource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="comment">// tag::customConfig[]</span>
+<span class="line-numbers"> 13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.config</span>;
+<span class="line-numbers"> 14</span>
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">jakarta.json.stream.JsonParser</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">jakarta.json.stream.JsonParser.Event</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">jakarta.json.Json</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">java.math.BigDecimal</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">java.io.StringReader</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">java.util.HashMap</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">java.util.Map</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">java.util.Set</span>;
+<span class="line-numbers"> 23</span>
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">java.io.BufferedReader</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">java.io.FileReader</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.spi.ConfigSource</span>;
+<span class="line-numbers"> 27</span>
+<span class="line-numbers"> 28</span><span class="comment">/**</span>
+<span class="line-numbers"> 29</span><span class="comment"> * User-provided ConfigSources are dynamic.</span>
+<span class="line-numbers"> 30</span><span class="comment"> * The getProperties() method will be periodically invoked by the runtime</span>
+<span class="line-numbers"> 31</span><span class="comment"> * to retrieve up-to-date values. The frequency is controlled by</span>
+<span class="line-numbers"> 32</span><span class="comment"> * the microprofile.config.refresh.rate Java system property,</span>
+<span class="line-numbers"> 33</span><span class="comment"> * which is in milliseconds and can be customized.</span>
+<span class="line-numbers"> 34</span><span class="comment"> */</span>
+<span class="line-numbers"> 35</span><span class="directive">public</span> <span class="type">class</span> <span class="class">CustomConfigSource</span> <span class="directive">implements</span> ConfigSource {
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span>  <span class="predefined-type">String</span> fileLocation = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.dir</span><span class="delimiter">"</span></span>).split(<span class="string"><span class="delimiter">"</span><span class="content">target</span><span class="delimiter">"</span></span>)[<span class="integer">0</span>]
+<span class="line-numbers"> 38</span>      + <span class="string"><span class="delimiter">"</span><span class="content">resources/CustomConfigSource.json</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 39</span>
+<span class="line-numbers"> 40</span>  <span class="annotation">@Override</span>
+<span class="line-numbers"> 41</span>  <span class="directive">public</span> <span class="type">int</span> getOrdinal() {
+<span class="line-numbers"> 42</span>    <span class="keyword">return</span> <span class="predefined-type">Integer</span>.parseInt(getProperties().get(<span class="string"><span class="delimiter">"</span><span class="content">config_ordinal</span><span class="delimiter">"</span></span>));
+<span class="line-numbers"> 43</span>  }
+<span class="line-numbers"> 44</span>
+<span class="line-numbers"> 45</span>  <span class="annotation">@Override</span>
+<span class="line-numbers"> 46</span>  <span class="directive">public</span> <span class="predefined-type">Set</span>&lt;<span class="predefined-type">String</span>&gt; getPropertyNames() {
+<span class="line-numbers"> 47</span>    <span class="keyword">return</span> getProperties().keySet();
+<span class="line-numbers"> 48</span>  }
+<span class="line-numbers"> 49</span>
+<span class="line-numbers"> 50</span>  <span class="annotation">@Override</span>
+<span class="line-numbers"> 51</span>  <span class="directive">public</span> <span class="predefined-type">String</span> getValue(<span class="predefined-type">String</span> key) {
+<span class="line-numbers"> 52</span>    <span class="keyword">return</span> getProperties().get(key);
+<span class="line-numbers"> 53</span>  }
+<span class="line-numbers"> 54</span>
+<span class="line-numbers"> 55</span>  <span class="annotation">@Override</span>
+<span class="line-numbers"> 56</span>  <span class="directive">public</span> <span class="predefined-type">String</span> getName() {
+<span class="line-numbers"> 57</span>    <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">Custom Config Source: file:</span><span class="delimiter">"</span></span> + <span class="local-variable">this</span>.fileLocation;
+<span class="line-numbers"> 58</span>  }
+<span class="line-numbers"> 59</span>
+<span class="line-numbers"> 60</span>  <span class="comment">// tag::getProperties[]</span>
+<span class="line-numbers"> 61</span>  <span class="directive">public</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; getProperties() {
+<span class="line-numbers"> 62</span>    <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; m = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt;();
+<span class="line-numbers"> 63</span>    <span class="predefined-type">String</span> jsonData = <span class="local-variable">this</span>.readFile(<span class="local-variable">this</span>.fileLocation);
+<span class="line-numbers"> 64</span>    JsonParser parser = Json.createParser(<span class="keyword">new</span> <span class="predefined-type">StringReader</span>(jsonData));
+<span class="line-numbers"> 65</span>    <span class="predefined-type">String</span> key = <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 66</span>    <span class="keyword">while</span> (parser.hasNext()) {
+<span class="line-numbers"> 67</span>      <span class="directive">final</span> <span class="predefined-type">Event</span> event = parser.next();
+<span class="line-numbers"> 68</span>      <span class="keyword">switch</span> (event) {
+<span class="line-numbers"> 69</span>      <span class="keyword">case</span> KEY_NAME:
+<span class="line-numbers"> 70</span>        key = parser.getString();
+<span class="line-numbers"> 71</span>        <span class="keyword">break</span>;
+<span class="line-numbers"> 72</span>      <span class="keyword">case</span> VALUE_STRING:
+<span class="line-numbers"> 73</span>        <span class="predefined-type">String</span> string = parser.getString();
+<span class="line-numbers"> 74</span>        m.put(key, string);
+<span class="line-numbers"> 75</span>        <span class="keyword">break</span>;
+<span class="line-numbers"> 76</span>      <span class="keyword">case</span> VALUE_NUMBER:
+<span class="line-numbers"> 77</span>        <span class="predefined-type">BigDecimal</span> number = parser.getBigDecimal();
+<span class="line-numbers"> 78</span>        m.put(key, number.toString());
+<span class="line-numbers"> 79</span>        <span class="keyword">break</span>;
+<span class="line-numbers"> 80</span>      <span class="keyword">case</span> VALUE_TRUE:
+<span class="line-numbers"> 81</span>        m.put(key, <span class="string"><span class="delimiter">"</span><span class="content">true</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 82</span>        <span class="keyword">break</span>;
+<span class="line-numbers"> 83</span>      <span class="keyword">case</span> VALUE_FALSE:
+<span class="line-numbers"> 84</span>        m.put(key, <span class="string"><span class="delimiter">"</span><span class="content">false</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 85</span>        <span class="keyword">break</span>;
+<span class="line-numbers"> 86</span>      <span class="keyword">default</span>:
+<span class="line-numbers"> 87</span>        <span class="keyword">break</span>;
+<span class="line-numbers"> 88</span>      }
+<span class="line-numbers"> 89</span>    }
+<span class="line-numbers"> 90</span>    parser.close();
+<span class="line-numbers"> 91</span>    <span class="keyword">return</span> m;
+<span class="line-numbers"> 92</span>  }
+<span class="line-numbers"> 93</span>  <span class="comment">// end::getProperties[]</span>
+<span class="line-numbers"> 94</span>
+<span class="line-numbers"> 95</span>  <span class="directive">public</span> <span class="predefined-type">String</span> readFile(<span class="predefined-type">String</span> fileName) {
+<span class="line-numbers"> 96</span>    <span class="predefined-type">String</span> result = <span class="string"><span class="delimiter">"</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 97</span>    <span class="keyword">try</span> {
+<span class="line-numbers"> 98</span>      <span class="predefined-type">BufferedReader</span> br = <span class="keyword">new</span> <span class="predefined-type">BufferedReader</span>(<span class="keyword">new</span> <span class="predefined-type">FileReader</span>(fileName));
+<span class="line-numbers"> 99</span>      <span class="predefined-type">StringBuilder</span> sb = <span class="keyword">new</span> <span class="predefined-type">StringBuilder</span>();
+<span class="line-numbers">100</span>      <span class="predefined-type">String</span> line = br.readLine();
+<span class="line-numbers">101</span>      <span class="keyword">while</span> (line != <span class="predefined-constant">null</span>) {
+<span class="line-numbers">102</span>        sb.append(line);
+<span class="line-numbers">103</span>        line = br.readLine();
+<span class="line-numbers">104</span>      }
+<span class="line-numbers">105</span>      result = sb.toString();
+<span class="line-numbers">106</span>      br.close();
+<span class="line-numbers">107</span>    } <span class="keyword">catch</span> (<span class="exception">Exception</span> e) {
+<span class="line-numbers">108</span>      e.printStackTrace();
+<span class="line-numbers">109</span>    }
+<span class="line-numbers">110</span>    <span class="keyword">return</span> result;
+<span class="line-numbers">111</span>  }
+<span class="line-numbers">112</span>}
+<span class="line-numbers">113</span><span class="comment">// end::customConfig[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=getProperties file=1">getProperties()</code> method reads the key value pairs from the <code class="hotspot file=0">resources/CustomConfigSource.json</code> JSON file and writes the information into a map.</p>
+</div>
+<div class="paragraph">
+<p>Finally, register the custom configuration source.</p>
+</div>
+<div class="listingblock code_command hotspot file=2">
+<div class="content">
+<pre><mark>Create the configuration file.</mark>
+<code>src/main/resources/META-INF/services/org.eclipse.microprofile.config.spi.ConfigSource</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>org.eclipse.microprofile.config.spi.ConfigSource</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">1</span>io.openliberty.guides.config.CustomConfigSource</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Add the fully qualified class name of the configuration source into it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="enabling-dynamic-configuration-injection">Enabling dynamic configuration injection</h3>
+<div class="paragraph">
+<p>Now that the custom configuration source has successfully been set up, you can enable dynamic configuration injection of the properties being set in this ConfigSource. To enable this dynamic injection,</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Replace the <code>InventoryConfig.java</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/InventoryConfig.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryConfig.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright,custom-converter,getEmail">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="comment">// tag::config-class[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.inject.Provider</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.config.Email</span>;
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers">22</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryConfig</span> {
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span>  <span class="comment">// tag::port-number[]</span>
+<span class="line-numbers">25</span>  <span class="comment">// tag::inject-port-number[]</span>
+<span class="line-numbers">26</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">27</span>  <span class="comment">// end::inject-port-number[]</span>
+<span class="line-numbers">28</span>  <span class="comment">// tag::guides-port-number[]</span>
+<span class="line-numbers">29</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">io_openliberty_guides_port_number</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">30</span>  <span class="comment">// end::guides-port-number[]</span>
+<span class="line-numbers">31</span>  <span class="directive">private</span> <span class="type">int</span> portNumber;
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span>  <span class="comment">// end::port-number[]</span>
+<span class="line-numbers">34</span>  <span class="comment">// tag::build-in-converter[]</span>
+<span class="line-numbers">35</span>  <span class="comment">// tag::inject-inMaintenance[]</span>
+<span class="line-numbers">36</span>  <span class="comment">// tag::inject[]</span>
+<span class="line-numbers">37</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">38</span>  <span class="comment">// end::inject[]</span>
+<span class="line-numbers">39</span>  <span class="comment">// tag::configPropety[]</span>
+<span class="line-numbers">40</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">io_openliberty_guides_inventory_inMaintenance</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">41</span>  <span class="comment">// end::configPropety[]</span>
+<span class="line-numbers">42</span>  <span class="comment">// end::inject-inMaintenance[]</span>
+<span class="line-numbers">43</span>  <span class="directive">private</span> <span class="predefined-type">Provider</span>&lt;<span class="predefined-type">Boolean</span>&gt; inMaintenance;
+<span class="line-numbers">44</span>
+<span class="line-numbers">45</span>  <span class="comment">// end::build-in-converter[]</span>
+<span class="line-numbers">46</span>  <span class="comment">// tag::custom-converter[]</span>
+<span class="line-numbers">47</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">48</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">io_openliberty_guides_email</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">49</span>  <span class="directive">private</span> <span class="predefined-type">Provider</span>&lt;Email&gt; email;
+<span class="line-numbers">50</span>  <span class="comment">// end::custom-converter[]</span>
+<span class="line-numbers">51</span>
+<span class="line-numbers">52</span>  <span class="comment">// tag::getPortNumber[]</span>
+<span class="line-numbers">53</span>  <span class="directive">public</span> <span class="type">int</span> getPortNumber() {
+<span class="line-numbers">54</span>    <span class="keyword">return</span> portNumber;
+<span class="line-numbers">55</span>  }
+<span class="line-numbers">56</span>  <span class="comment">// end::getPortNumber[]</span>
+<span class="line-numbers">57</span>
+<span class="line-numbers">58</span>  <span class="comment">// tag::isInMaintenance[]</span>
+<span class="line-numbers">59</span>  <span class="directive">public</span> <span class="type">boolean</span> isInMaintenance() {
+<span class="line-numbers">60</span>    <span class="comment">// tag::inMaintenanceGet[]</span>
+<span class="line-numbers">61</span>    <span class="keyword">return</span> inMaintenance.get();
+<span class="line-numbers">62</span>    <span class="comment">// end::inMaintenanceGet[]</span>
+<span class="line-numbers">63</span>  }
+<span class="line-numbers">64</span>  <span class="comment">// end::isInMaintenance[]</span>
+<span class="line-numbers">65</span>
+<span class="line-numbers">66</span>  <span class="comment">// tag::getEmail[]</span>
+<span class="line-numbers">67</span>  <span class="directive">public</span> Email getEmail() {
+<span class="line-numbers">68</span>    <span class="keyword">return</span> email.get();
+<span class="line-numbers">69</span>  }
+<span class="line-numbers">70</span>  <span class="comment">// end::getEmail[]</span>
+<span class="line-numbers">71</span>}
+<span class="line-numbers">72</span><span class="comment">// end::config-class[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Inject the <code class="hotspot=inject-inMaintenance file=0">io_openliberty_guides_inventory_inMaintenance</code> property, and add the <code class="hotspot=isInMaintenance file=0">isInMaintenance()</code> class method.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=inject file=0">@Inject</code> and <code class="hotspot=configPropety file=0">@ConfigProperty</code> annotations inject the <code class="hotspot=4 file=1">io_openliberty_guides_inventory_inMaintenance</code> configuration property from the <code class="hotspot file=1">CustomConfigSource.json</code> file. The <code>Provider&lt;&gt;</code> interface used, forces the service to retrieve the inMaintenance value just in time. This retrieval of the value just in time makes the config injection dynamic and able to change without having to restart the application.</p>
+</div>
+<div class="paragraph">
+<p>Every time that you invoke the <code class="hotspot=inMaintenanceGet file=0">inMaintenance.get()</code> method, the <code>Provider&lt;&gt;</code> interface picks up the latest value of the <code class="hotspot=4 file=1">io_openliberty_guides_inventory_inMaintenance</code> property from configuration sources.</p>
+</div>
+<div class="paragraph">
+<p>CustomConfigSource.json</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Json"><span class="line-numbers">1</span>{
+<span class="line-numbers">2</span>  <span class="key"><span class="delimiter">"</span><span class="content">config_ordinal</span><span class="delimiter">"</span></span>: <span class="integer">150</span>,
+<span class="line-numbers">3</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_email</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">admin@guides.openliberty.io</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">4</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_inventory_inMaintenance</span><span class="delimiter">"</span></span>: <span class="value">false</span>,
+<span class="line-numbers">5</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_system_inMaintenance</span><span class="delimiter">"</span></span>: <span class="value">false</span>,
+<span class="line-numbers">6</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_testConfigOverwrite</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">CustomSource</span><span class="delimiter">"</span></span>
+<span class="line-numbers">7</span>}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-custom-converters">Creating custom converters</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Configuration values are purely Strings. MicroProfile Config API has built-in converters that automatically converts configured Strings into target types such as <code>int</code>, <code>Integer</code>, <code>boolean</code>, <code>Boolean</code>, <code>float</code>, <code>Float</code>, <code>double</code> and <code>Double</code>. Therefore, in the previous section, it is type-safe to directly set the variable type to <code>Provider&lt;Boolean&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>To convert configured Strings to an arbitrary class type, such as the <code>Email</code> class type,</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Replace the <code>Email</code> Class.</mark>
+<code>src/main/java/io/openliberty/guides/config/Email.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Email.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2019 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.config</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="comment">// tag::email[]</span>
+<span class="line-numbers">16</span><span class="directive">public</span> <span class="type">class</span> <span class="class">Email</span> {
+<span class="line-numbers">17</span>  <span class="directive">private</span> <span class="predefined-type">String</span> name;
+<span class="line-numbers">18</span>  <span class="directive">private</span> <span class="predefined-type">String</span> domain;
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span>  <span class="directive">public</span> Email(<span class="predefined-type">String</span> value) {
+<span class="line-numbers">21</span>    <span class="predefined-type">String</span><span class="type">[]</span> components = value.split(<span class="string"><span class="delimiter">"</span><span class="content">@</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">22</span>    <span class="keyword">if</span> (components.length == <span class="integer">2</span>) {
+<span class="line-numbers">23</span>      name = components[<span class="integer">0</span>];
+<span class="line-numbers">24</span>      domain = components[<span class="integer">1</span>];
+<span class="line-numbers">25</span>    }
+<span class="line-numbers">26</span>  }
+<span class="line-numbers">27</span>
+<span class="line-numbers">28</span>  <span class="directive">public</span> <span class="predefined-type">String</span> getEmailName() {
+<span class="line-numbers">29</span>    <span class="keyword">return</span> name;
+<span class="line-numbers">30</span>  }
+<span class="line-numbers">31</span>
+<span class="line-numbers">32</span>  <span class="directive">public</span> <span class="predefined-type">String</span> getEmailDomain() {
+<span class="line-numbers">33</span>    <span class="keyword">return</span> domain;
+<span class="line-numbers">34</span>  }
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span>  <span class="directive">public</span> <span class="predefined-type">String</span> toString() {
+<span class="line-numbers">37</span>    <span class="keyword">return</span> name + <span class="string"><span class="delimiter">"</span><span class="content">@</span><span class="delimiter">"</span></span> + domain;
+<span class="line-numbers">38</span>  }
+<span class="line-numbers">39</span>}
+<span class="line-numbers">40</span><span class="comment">// end::email[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To use this <code class="hotspot=email file=0">Email</code> class type, add a custom converter by implementing the generic interface <code>org.eclipse.microprofile.config.spi.Converter&lt;T&gt;</code>. The Type parameter of the interface is the target type the String is converted to.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the <code>CustomEmailConverter</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/config/CustomEmailConverter.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>CustomEmailConverter.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.config</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.spi.Converter</span>;
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span><span class="comment">// tag::customConfig[]</span>
+<span class="line-numbers">17</span><span class="directive">public</span> <span class="type">class</span> <span class="class">CustomEmailConverter</span> <span class="directive">implements</span> Converter&lt;Email&gt; {
+<span class="line-numbers">18</span>
+<span class="line-numbers">19</span>  <span class="annotation">@Override</span>
+<span class="line-numbers">20</span>  <span class="directive">public</span> Email convert(<span class="predefined-type">String</span> value) {
+<span class="line-numbers">21</span>    <span class="keyword">return</span> <span class="keyword">new</span> Email(value);
+<span class="line-numbers">22</span>  }
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span>}
+<span class="line-numbers">25</span><span class="comment">// end::customConfig[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This implements the <code>Converter&lt;T&gt;</code> interface.</p>
+</div>
+<div class="paragraph">
+<p>To register your implementation,</p>
+</div>
+<div class="listingblock code_command hotspot file=2">
+<div class="content">
+<pre><mark>Create the configuration file.</mark>
+<code>src/main/resources/META-INF/services/org.eclipse.microprofile.config.spi.Converter</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>org.eclipse.microprofile.config.spi.Converter</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">1</span>io.openliberty.guides.config.CustomEmailConverter</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Add the fully qualified class name of the custom converter into it.</p>
+</div>
+<div class="paragraph">
+<p>To use the custom <code class="hotspot=customConfig file=2">Email</code> converter,</p>
+</div>
+<div class="listingblock code_command hotspot file=3">
+<div class="content">
+<pre><mark>Replace the <code>InventoryConfig</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/InventoryConfig.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryConfig.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="comment">// tag::config-class[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.inject.Provider</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.config.Email</span>;
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers">22</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryConfig</span> {
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span>  <span class="comment">// tag::port-number[]</span>
+<span class="line-numbers">25</span>  <span class="comment">// tag::inject-port-number[]</span>
+<span class="line-numbers">26</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">27</span>  <span class="comment">// end::inject-port-number[]</span>
+<span class="line-numbers">28</span>  <span class="comment">// tag::guides-port-number[]</span>
+<span class="line-numbers">29</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">io_openliberty_guides_port_number</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">30</span>  <span class="comment">// end::guides-port-number[]</span>
+<span class="line-numbers">31</span>  <span class="directive">private</span> <span class="type">int</span> portNumber;
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span>  <span class="comment">// end::port-number[]</span>
+<span class="line-numbers">34</span>  <span class="comment">// tag::build-in-converter[]</span>
+<span class="line-numbers">35</span>  <span class="comment">// tag::inject-inMaintenance[]</span>
+<span class="line-numbers">36</span>  <span class="comment">// tag::inject[]</span>
+<span class="line-numbers">37</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">38</span>  <span class="comment">// end::inject[]</span>
+<span class="line-numbers">39</span>  <span class="comment">// tag::configPropety[]</span>
+<span class="line-numbers">40</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">io_openliberty_guides_inventory_inMaintenance</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">41</span>  <span class="comment">// end::configPropety[]</span>
+<span class="line-numbers">42</span>  <span class="comment">// end::inject-inMaintenance[]</span>
+<span class="line-numbers">43</span>  <span class="directive">private</span> <span class="predefined-type">Provider</span>&lt;<span class="predefined-type">Boolean</span>&gt; inMaintenance;
+<span class="line-numbers">44</span>
+<span class="line-numbers">45</span>  <span class="comment">// end::build-in-converter[]</span>
+<span class="line-numbers">46</span>  <span class="comment">// tag::custom-converter[]</span>
+<span class="line-numbers">47</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">48</span>  <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">io_openliberty_guides_email</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">49</span>  <span class="directive">private</span> <span class="predefined-type">Provider</span>&lt;Email&gt; email;
+<span class="line-numbers">50</span>  <span class="comment">// end::custom-converter[]</span>
+<span class="line-numbers">51</span>
+<span class="line-numbers">52</span>  <span class="comment">// tag::getPortNumber[]</span>
+<span class="line-numbers">53</span>  <span class="directive">public</span> <span class="type">int</span> getPortNumber() {
+<span class="line-numbers">54</span>    <span class="keyword">return</span> portNumber;
+<span class="line-numbers">55</span>  }
+<span class="line-numbers">56</span>  <span class="comment">// end::getPortNumber[]</span>
+<span class="line-numbers">57</span>
+<span class="line-numbers">58</span>  <span class="comment">// tag::isInMaintenance[]</span>
+<span class="line-numbers">59</span>  <span class="directive">public</span> <span class="type">boolean</span> isInMaintenance() {
+<span class="line-numbers">60</span>    <span class="comment">// tag::inMaintenanceGet[]</span>
+<span class="line-numbers">61</span>    <span class="keyword">return</span> inMaintenance.get();
+<span class="line-numbers">62</span>    <span class="comment">// end::inMaintenanceGet[]</span>
+<span class="line-numbers">63</span>  }
+<span class="line-numbers">64</span>  <span class="comment">// end::isInMaintenance[]</span>
+<span class="line-numbers">65</span>
+<span class="line-numbers">66</span>  <span class="comment">// tag::getEmail[]</span>
+<span class="line-numbers">67</span>  <span class="directive">public</span> Email getEmail() {
+<span class="line-numbers">68</span>    <span class="keyword">return</span> email.get();
+<span class="line-numbers">69</span>  }
+<span class="line-numbers">70</span>  <span class="comment">// end::getEmail[]</span>
+<span class="line-numbers">71</span>}
+<span class="line-numbers">72</span><span class="comment">// end::config-class[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Inject the <code class="hotspot=custom-converter file=3">io_openliberty_guides_email</code> property, and add the <code class="hotspot=getEmail file=3">getEmail()</code> method.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-configuration-to-the-microservice">Adding configuration to the microservice</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To use externalized configuration in the <code>inventory</code> service,</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Replace the <code>InventoryResource</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/InventoryResource.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="comment">// tag::config-methods[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="comment">// CDI</span>
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span>
+<span class="line-numbers">28</span>
+<span class="line-numbers">29</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers">30</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">31</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">34</span>  InventoryManager manager;
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span>  <span class="comment">// tag::config-injection[]</span>
+<span class="line-numbers">37</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">38</span>  InventoryConfig inventoryConfig;
+<span class="line-numbers">39</span>  <span class="comment">// end::config-injection[]</span>
+<span class="line-numbers">40</span>
+<span class="line-numbers">41</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">42</span>  <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">43</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">44</span>  <span class="directive">public</span> Response getPropertiesForHost(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">45</span>
+<span class="line-numbers">46</span>    <span class="keyword">if</span> (!inventoryConfig.isInMaintenance()) {
+<span class="line-numbers">47</span>      <span class="comment">// tag::config-port[]</span>
+<span class="line-numbers">48</span>      <span class="predefined-type">Properties</span> props = manager.get(hostname, inventoryConfig.getPortNumber());
+<span class="line-numbers">49</span>      <span class="comment">// end::config-port[]</span>
+<span class="line-numbers">50</span>      <span class="keyword">if</span> (props == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">51</span>        <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers">52</span>                       .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Unknown hostname or the system service </span><span class="delimiter">"</span></span>
+<span class="line-numbers">53</span>                       + <span class="string"><span class="delimiter">"</span><span class="content">may not be running on </span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">54</span>                       .build();
+<span class="line-numbers">55</span>      }
+<span class="line-numbers">56</span>
+<span class="line-numbers">57</span>      <span class="comment">// Add to inventory</span>
+<span class="line-numbers">58</span>      manager.add(hostname, props);
+<span class="line-numbers">59</span>      <span class="keyword">return</span> Response.ok(props).build();
+<span class="line-numbers">60</span>    } <span class="keyword">else</span> {
+<span class="line-numbers">61</span>      <span class="comment">// tag::email[]</span>
+<span class="line-numbers">62</span>      <span class="keyword">return</span> Response.status(Response.Status.SERVICE_UNAVAILABLE)
+<span class="line-numbers">63</span>                     .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Service is currently in maintenance. </span><span class="delimiter">"</span></span>
+<span class="line-numbers">64</span>                     + <span class="string"><span class="delimiter">"</span><span class="content">Contact: </span><span class="delimiter">"</span></span> + inventoryConfig.getEmail().toString() + <span class="string"><span class="delimiter">"</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">65</span>                     .build();
+<span class="line-numbers">66</span>      <span class="comment">// end::email[]</span>
+<span class="line-numbers">67</span>    }
+<span class="line-numbers">68</span>  }
+<span class="line-numbers">69</span>
+<span class="line-numbers">70</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">71</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">72</span>  <span class="directive">public</span> Response listContents() {
+<span class="line-numbers">73</span>    <span class="comment">// tag::isInMaintenance[]</span>
+<span class="line-numbers">74</span>    <span class="keyword">if</span> (!inventoryConfig.isInMaintenance()) {
+<span class="line-numbers">75</span>    <span class="comment">// end::isInMaintenance[]</span>
+<span class="line-numbers">76</span>      <span class="keyword">return</span> Response.ok(manager.list()).build();
+<span class="line-numbers">77</span>    } <span class="keyword">else</span> {
+<span class="line-numbers">78</span>      <span class="comment">// tag::email[]</span>
+<span class="line-numbers">79</span>      <span class="keyword">return</span> Response.status(Response.Status.SERVICE_UNAVAILABLE)
+<span class="line-numbers">80</span>                     .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Service is currently in maintenance. </span><span class="delimiter">"</span></span>
+<span class="line-numbers">81</span>                     + <span class="string"><span class="delimiter">"</span><span class="content">Contact: </span><span class="delimiter">"</span></span> + inventoryConfig.getEmail().toString() + <span class="string"><span class="delimiter">"</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">82</span>                     .build();
+<span class="line-numbers">83</span>      <span class="comment">// end::getEmail[]</span>
+<span class="line-numbers">84</span>    }
+<span class="line-numbers">85</span>  }
+<span class="line-numbers">86</span>
+<span class="line-numbers">87</span>}
+<span class="line-numbers">88</span>
+<span class="line-numbers">89</span><span class="comment">// end::config-methods[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To add configuration to the <code>inventory</code> service, the <code class="hotspot=config-injection file=0">InventoryConfig</code> object is injected to the existing class.</p>
+</div>
+<div class="paragraph">
+<p>The port number from the configuration is retrieved by the <code class="hotspot=config-port file=0">inventoryConfig.getPortNumber()</code> method and passed to the <code class="hotspot=config-port file=0">manager.get()</code> method as a parameter.</p>
+</div>
+<div class="paragraph">
+<p>To determine whether the inventory service is in maintenance or not (according to the configuration value), <code class="hotspot=isInMaintenance file=0">inventoryConfig.isInMaintenance()</code> class method is used. If you set the <code class="hotspot=4 file=1">io_openliberty_guides_inventory_inMaintenance</code> property to <code>true</code> in the configuration, the inventory service returns the message, <code>ERROR: Service is currently in maintenance</code>, along with the contact email. The email configuration value can be obtained by calling <code class="hotspot=getEmail file=0">inventoryConfig.getEmail()</code> method.</p>
+</div>
+<div class="paragraph">
+<p>CustomConfigSource.json</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Json"><span class="line-numbers">1</span>{
+<span class="line-numbers">2</span>  <span class="key"><span class="delimiter">"</span><span class="content">config_ordinal</span><span class="delimiter">"</span></span>: <span class="integer">150</span>,
+<span class="line-numbers">3</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_email</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">admin@guides.openliberty.io</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">4</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_inventory_inMaintenance</span><span class="delimiter">"</span></span>: <span class="value">false</span>,
+<span class="line-numbers">5</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_system_inMaintenance</span><span class="delimiter">"</span></span>: <span class="value">false</span>,
+<span class="line-numbers">6</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_testConfigOverwrite</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">CustomSource</span><span class="delimiter">"</span></span>
+<span class="line-numbers">7</span>}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="running-the-application">Running the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You started the Open Liberty in dev mode at the beginning of the guide, so all the changes were automatically picked up.</p>
+</div>
+<div class="paragraph">
+<p>While the Liberty is running, the following two microservices should be available to access:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://localhost:9080/system/properties" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/system/properties</a></p>
+</li>
+<li>
+<p><a href="http://localhost:9080/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/inventory/systems</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can find the service that retrieves configuration information that is specific to this guide at the following location:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://localhost:9080/config" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/config</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=2 file=0">config_ordinal</code> value of the custom configuration source is set to <code class="hotspot=2 file=0">150</code>. It overrides configuration values of the default <code class="hotspot file=1">microprofile-config.properties</code> source, which has a <code class="hotspot=ordinal file=1">config_ordinal</code> value of <code class="hotspot=ordinal file=1">100</code>.</p>
+</div>
+<div class="paragraph">
+<p>CustomConfigSource.json</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Json"><span class="line-numbers">1</span>{
+<span class="line-numbers">2</span>  <span class="key"><span class="delimiter">"</span><span class="content">config_ordinal</span><span class="delimiter">"</span></span>: <span class="integer">150</span>,
+<span class="line-numbers">3</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_email</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">admin@guides.openliberty.io</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">4</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_inventory_inMaintenance</span><span class="delimiter">"</span></span>: <span class="value">false</span>,
+<span class="line-numbers">5</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_system_inMaintenance</span><span class="delimiter">"</span></span>: <span class="value">false</span>,
+<span class="line-numbers">6</span>  <span class="key"><span class="delimiter">"</span><span class="content">io_openliberty_guides_testConfigOverwrite</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">CustomSource</span><span class="delimiter">"</span></span>
+<span class="line-numbers">7</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties"><span class="line-numbers"> 1</span># tag::all-props[]
+<span class="line-numbers"> 2</span># tag::ordinal[]
+<span class="line-numbers"> 3</span>config_ordinal=100
+<span class="line-numbers"> 4</span># end::ordinal[]
+<span class="line-numbers"> 5</span># tag::inventory-port-number[]
+<span class="line-numbers"> 6</span>io_openliberty_guides_port_number=9080
+<span class="line-numbers"> 7</span># end::inventory-port-number[]
+<span class="line-numbers"> 8</span># tag::inventory-in-maintenance[]
+<span class="line-numbers"> 9</span>io_openliberty_guides_inventory_inMaintenance=false
+<span class="line-numbers">10</span># end::inventory-in-maintenance[]
+<span class="line-numbers">11</span># tag::system-in-maintenance[]
+<span class="line-numbers">12</span>io_openliberty_guides_system_inMaintenance=false
+<span class="line-numbers">13</span># tag::system-in-maintenance[]
+<span class="line-numbers">14</span># tag::test-config-overwrite[]
+<span class="line-numbers">15</span>io_openliberty_guides_testConfigOverwrite=DefaultSource
+<span class="line-numbers">16</span># tag::test-config-overwrite[]
+<span class="line-numbers">17</span># end::all-props[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Play with this application by changing configuration values for each property in the <code class="hotspot file=0">resources/CustomConfigSource.json</code> file. Your changes are added dynamically, and you do not need to restart the Liberty. Refresh <a href="http://localhost:9080/config" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/config</a> to see the dynamic changes.</p>
+</div>
+<div class="paragraph">
+<p>For example, change <code class="hotspot=4 file=0">io_openliberty_guides_inventory_inMaintenance</code> from <code>false</code> to <code>true</code>, then try to access <a href="http://localhost:9080/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/inventory/systems</a> again. The following message displays: <code>ERROR: Service is currently in maintenance</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-application">Testing the application</h2>
+<div class="sectionbody">
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>ConfigurationIT</code> class.</mark>
+<code>src/test/java/it/io/openliberty/guides/config/ConfigurationIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ConfigurationIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="comment">// tag::test[]</span>
+<span class="line-numbers"> 13</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.config</span>;
+<span class="line-numbers"> 14</span>
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers"> 16</span>
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Client</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.ClientBuilder</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 20</span>
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.MethodOrderer.OrderAnnotation</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Order</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.TestMethodOrder</span>;
+<span class="line-numbers"> 27</span>
+<span class="line-numbers"> 28</span><span class="annotation">@TestMethodOrder</span>(OrderAnnotation.class)
+<span class="line-numbers"> 29</span><span class="directive">public</span> <span class="type">class</span> <span class="class">ConfigurationIT</span> {
+<span class="line-numbers"> 30</span>
+<span class="line-numbers"> 31</span>  <span class="directive">private</span> <span class="predefined-type">String</span> port;
+<span class="line-numbers"> 32</span>  <span class="directive">private</span> <span class="predefined-type">String</span> baseUrl;
+<span class="line-numbers"> 33</span>  <span class="directive">private</span> Client client;
+<span class="line-numbers"> 34</span>
+<span class="line-numbers"> 35</span>  <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> INVENTORY_HOSTS = <span class="string"><span class="delimiter">"</span><span class="content">inventory/systems</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 36</span>  <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> USER_DIR = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.dir</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 37</span>  <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> DEFAULT_CONFIG_FILE = USER_DIR
+<span class="line-numbers"> 38</span>      + <span class="string"><span class="delimiter">"</span><span class="content">/src/main/resources/META-INF/microprofile-config.properties</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 39</span>  <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> CUSTOM_CONFIG_FILE = USER_DIR.split(<span class="string"><span class="delimiter">"</span><span class="content">target</span><span class="delimiter">"</span></span>)[<span class="integer">0</span>]
+<span class="line-numbers"> 40</span>      + <span class="string"><span class="delimiter">"</span><span class="content">/resources/CustomConfigSource.json</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 41</span>  <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> INV_MAINTENANCE_PROP = <span class="string"><span class="delimiter">"</span><span class="content">io_openliberty_guides</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 42</span>      + <span class="string"><span class="delimiter">"</span><span class="content">_inventory_inMaintenance</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 43</span>
+<span class="line-numbers"> 44</span>  <span class="annotation">@BeforeEach</span>
+<span class="line-numbers"> 45</span>  <span class="comment">// tag::setup[]</span>
+<span class="line-numbers"> 46</span>  <span class="directive">public</span> <span class="type">void</span> setup() {
+<span class="line-numbers"> 47</span>    port = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 48</span>    baseUrl = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:</span><span class="delimiter">"</span></span> + port + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 49</span>    ConfigITUtil.setDefaultJsonFile(CUSTOM_CONFIG_FILE);
+<span class="line-numbers"> 50</span>
+<span class="line-numbers"> 51</span>    client = ClientBuilder.newClient();
+<span class="line-numbers"> 52</span>  }
+<span class="line-numbers"> 53</span>  <span class="comment">// end::setup[]</span>
+<span class="line-numbers"> 54</span>
+<span class="line-numbers"> 55</span>  <span class="annotation">@AfterEach</span>
+<span class="line-numbers"> 56</span>  <span class="directive">public</span> <span class="type">void</span> teardown() {
+<span class="line-numbers"> 57</span>    ConfigITUtil.setDefaultJsonFile(CUSTOM_CONFIG_FILE);
+<span class="line-numbers"> 58</span>    client.close();
+<span class="line-numbers"> 59</span>  }
+<span class="line-numbers"> 60</span>
+<span class="line-numbers"> 61</span>  <span class="annotation">@Test</span>
+<span class="line-numbers"> 62</span>  <span class="annotation">@Order</span>(<span class="integer">1</span>)
+<span class="line-numbers"> 63</span>  <span class="comment">// tag::testInitialServiceStatus[]</span>
+<span class="line-numbers"> 64</span>  <span class="directive">public</span> <span class="type">void</span> testInitialServiceStatus() {
+<span class="line-numbers"> 65</span>    <span class="type">boolean</span> status = <span class="predefined-type">Boolean</span>.valueOf(ConfigITUtil.readPropertyValueInFile(
+<span class="line-numbers"> 66</span>        INV_MAINTENANCE_PROP, DEFAULT_CONFIG_FILE));
+<span class="line-numbers"> 67</span>    <span class="keyword">if</span> (!status) {
+<span class="line-numbers"> 68</span>      Response response = ConfigITUtil.getResponse(client, baseUrl + INVENTORY_HOSTS);
+<span class="line-numbers"> 69</span>
+<span class="line-numbers"> 70</span>      <span class="type">int</span> expected = Response.Status.OK.getStatusCode();
+<span class="line-numbers"> 71</span>      <span class="type">int</span> actual = response.getStatus();
+<span class="line-numbers"> 72</span>      assertEquals(expected, actual);
+<span class="line-numbers"> 73</span>    } <span class="keyword">else</span> {
+<span class="line-numbers"> 74</span>      assertEquals(
+<span class="line-numbers"> 75</span>         <span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Service is currently in maintenance.</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 76</span>         + <span class="string"><span class="delimiter">"</span><span class="content">Contact: admin@guides.openliberty.io</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 77</span>          ConfigITUtil.getStringFromURL(client, baseUrl + INVENTORY_HOSTS),
+<span class="line-numbers"> 78</span>          <span class="string"><span class="delimiter">"</span><span class="content">The Inventory Service should be in maintenance</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 79</span>    }
+<span class="line-numbers"> 80</span>  }
+<span class="line-numbers"> 81</span>  <span class="comment">// end::testInitialServiceStatus[]</span>
+<span class="line-numbers"> 82</span>
+<span class="line-numbers"> 83</span>  <span class="annotation">@Test</span>
+<span class="line-numbers"> 84</span>  <span class="annotation">@Order</span>(<span class="integer">2</span>)
+<span class="line-numbers"> 85</span>  <span class="comment">// tag::testPutServiceInMaintenance[]</span>
+<span class="line-numbers"> 86</span>  <span class="directive">public</span> <span class="type">void</span> testPutServiceInMaintenance() {
+<span class="line-numbers"> 87</span>    Response response = ConfigITUtil.getResponse(client, baseUrl + INVENTORY_HOSTS);
+<span class="line-numbers"> 88</span>
+<span class="line-numbers"> 89</span>    <span class="type">int</span> expected = Response.Status.OK.getStatusCode();
+<span class="line-numbers"> 90</span>    <span class="type">int</span> actual = response.getStatus();
+<span class="line-numbers"> 91</span>    assertEquals(expected, actual);
+<span class="line-numbers"> 92</span>
+<span class="line-numbers"> 93</span>    ConfigITUtil.switchInventoryMaintenance(CUSTOM_CONFIG_FILE, <span class="predefined-constant">true</span>);
+<span class="line-numbers"> 94</span>
+<span class="line-numbers"> 95</span>    <span class="predefined-type">String</span> error = ConfigITUtil.getStringFromURL(client, baseUrl + INVENTORY_HOSTS);
+<span class="line-numbers"> 96</span>
+<span class="line-numbers"> 97</span>    assertEquals(
+<span class="line-numbers"> 98</span>         <span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Service is currently in maintenance. </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 99</span>         + <span class="string"><span class="delimiter">"</span><span class="content">Contact: admin@guides.openliberty.io</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">100</span>        error, <span class="string"><span class="delimiter">"</span><span class="content">The inventory service should be down in the end</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">101</span>  }
+<span class="line-numbers">102</span>  <span class="comment">// end::testPutServiceInMaintenance[]</span>
+<span class="line-numbers">103</span>
+<span class="line-numbers">104</span>  <span class="annotation">@Test</span>
+<span class="line-numbers">105</span>  <span class="annotation">@Order</span>(<span class="integer">3</span>)
+<span class="line-numbers">106</span>  <span class="comment">// tag::testChangeEmail[]</span>
+<span class="line-numbers">107</span>  <span class="directive">public</span> <span class="type">void</span> testChangeEmail() {
+<span class="line-numbers">108</span>    ConfigITUtil.switchInventoryMaintenance(CUSTOM_CONFIG_FILE, <span class="predefined-constant">true</span>);
+<span class="line-numbers">109</span>
+<span class="line-numbers">110</span>    <span class="predefined-type">String</span> error = ConfigITUtil.getStringFromURL(client, baseUrl + INVENTORY_HOSTS);
+<span class="line-numbers">111</span>
+<span class="line-numbers">112</span>    assertEquals(
+<span class="line-numbers">113</span>         <span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Service is currently in maintenance. </span><span class="delimiter">"</span></span>
+<span class="line-numbers">114</span>         + <span class="string"><span class="delimiter">"</span><span class="content">Contact: admin@guides.openliberty.io</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">115</span>        error, <span class="string"><span class="delimiter">"</span><span class="content">The email should be admin@guides.openliberty.io in the beginning</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">116</span>
+<span class="line-numbers">117</span>    ConfigITUtil.changeEmail(CUSTOM_CONFIG_FILE, <span class="string"><span class="delimiter">"</span><span class="content">service@guides.openliberty.io</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">118</span>
+<span class="line-numbers">119</span>    error = ConfigITUtil.getStringFromURL(client, baseUrl + INVENTORY_HOSTS);
+<span class="line-numbers">120</span>
+<span class="line-numbers">121</span>    assertEquals(
+<span class="line-numbers">122</span>         <span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Service is currently in maintenance. </span><span class="delimiter">"</span></span>
+<span class="line-numbers">123</span>         + <span class="string"><span class="delimiter">"</span><span class="content">Contact: service@guides.openliberty.io</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">124</span>        error, <span class="string"><span class="delimiter">"</span><span class="content">The email should be service@guides.openliberty.io in the beginning</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">125</span>  }
+<span class="line-numbers">126</span>  <span class="comment">// end::testChangeEmail[]</span>
+<span class="line-numbers">127</span>
+<span class="line-numbers">128</span>}
+<span class="line-numbers">129</span><span class="comment">// end::test[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties"><span class="line-numbers"> 1</span># tag::all-props[]
+<span class="line-numbers"> 2</span># tag::ordinal[]
+<span class="line-numbers"> 3</span>config_ordinal=100
+<span class="line-numbers"> 4</span># end::ordinal[]
+<span class="line-numbers"> 5</span># tag::inventory-port-number[]
+<span class="line-numbers"> 6</span>io_openliberty_guides_port_number=9080
+<span class="line-numbers"> 7</span># end::inventory-port-number[]
+<span class="line-numbers"> 8</span># tag::inventory-in-maintenance[]
+<span class="line-numbers"> 9</span>io_openliberty_guides_inventory_inMaintenance=false
+<span class="line-numbers">10</span># end::inventory-in-maintenance[]
+<span class="line-numbers">11</span># tag::system-in-maintenance[]
+<span class="line-numbers">12</span>io_openliberty_guides_system_inMaintenance=false
+<span class="line-numbers">13</span># tag::system-in-maintenance[]
+<span class="line-numbers">14</span># tag::test-config-overwrite[]
+<span class="line-numbers">15</span>io_openliberty_guides_testConfigOverwrite=DefaultSource
+<span class="line-numbers">16</span># tag::test-config-overwrite[]
+<span class="line-numbers">17</span># end::all-props[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=testInitialServiceStatus file=0">testInitialServiceStatus()</code> test case reads the value of the <code class="hotspot=inventory-in-maintenance file=1">io_openliberty_guides_inventory_inMaintenance</code> configuration property in the <code class="hotspot file=1">META-INF/microprofile-config.properties</code> file and checks the HTTP response of the inventory service. If the configuration value is <code>false</code>, the service returns a valid response. Otherwise, the service returns the following message: <code>ERROR: Service is currently in maintenance</code>.</p>
+</div>
+<div class="paragraph">
+<p>Because the <code class="hotspot=inventory-in-maintenance file=1">io_openliberty_guides_inventory_inMaintenance</code> configuration property is set to <code>false</code> by default, the <code class="hotspot=testPutServiceInMaintenance file=0">testPutServiceInMaintenance()</code> test case first checks that the inventory service is not in maintenance in the beginning. Next, this test switches the value of the <code class="hotspot=inventory-in-maintenance file=1">io_openliberty_guides_inventory_inMaintenance</code> configuration property to <code>true</code>. In the end, the inventory service returns the following message: <code>ERROR: Service is currently in maintenance</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=testChangeEmail file=0">testChangeEmail()</code> test case first puts the <code>inventory</code> service in maintenance, then it changes the email address in the configuration file. In the end, the <code>inventory</code> service should display the error message with the latest email address.</p>
+</div>
+<div class="paragraph">
+<p>In addition, a few endpoint tests have been provided for you to test the basic functionality of the <code>inventory</code> and <code>system</code> services. If a test failure occurs, then you must have introduced a bug into the code. Remember that you must register the custom configuration source and custom converter in the <code>src/main/resources/META-INF/services/</code> directory. If you don’t complete these steps, the tests will fail. These tests run automatically as a part of the integration test suite.</p>
+</div>
+<div class="sect2 command">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Because you started Open Liberty in dev mode, you can run the tests by pressing the <code>enter/return</code> key from the command-line session where you started dev mode.</p>
+</div>
+<div class="paragraph">
+<p>You see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.config.ConfigurationIT
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.92 s - in it.io.openliberty.guides.config.ConfigurationIT
+Running it.io.openliberty.guides.system.SystemEndpointIT
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.017 s - in it.io.openliberty.guides.system.SystemEndpointIT
+Running it.io.openliberty.guides.inventory.InventoryEndpointIT
+[WARNING ] Interceptor for {http://client.inventory.guides.openliberty.io/}SystemClient has thrown exception, unwinding now
+Could not send Message.
+[err] The specified host is unknown.
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.077 s - in it.io.openliberty.guides.inventory.InventoryEndpointIT
+
+Results:
+
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The warning and error messages are expected and result from a request to a bad or an unknown hostname. This request is made in the <code>testUnknownHost()</code> test from the <code>InventoryEndpointIT</code> integration test.</p>
+</div>
+<div class="paragraph">
+<p>To see whether the tests detect a failure, remove the configuration resetting line in the <code class="hotspot=setup file=0">setup()</code> method of the <code class="hotspot file=0">ConfigurationIT.java</code> file. Then, manually change some configuration values in the <code>resources/CustomConfigSource.json</code> file. Rerun the tests. You will see a test failure occur.</p>
+</div>
+<div class="paragraph command">
+<p>When you are done checking out the service, exit dev mode by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You just built and tested a MicroProfile application with MicroProfile Config in Open Liberty.</p>
+</div>
+<div class="paragraph">
+<p>Feel free to try one of the related guides. They demonstrate new technologies that you can learn and expand on top what you built in this guide.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Configuring microservices <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-microprofile-config/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-config/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-config/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/rest-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Creating a RESTful web service</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">30 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/cdi-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Injecting dependencies into microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">15 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-config-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Separating configuration from code in microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">25 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                                    <div class="guide_interactive_container">
+                                        <img class="interactive_bolt_icon" src="/img/guide_lightning_bolt.svg" alt="Interactive">
+                                        <span class="guide_interactive">Interactive</span>
+                                    </div>
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="inventory">
+
+    <featureManager>
+        <feature>jsonb-3.0</feature>
+        <feature>mpHealth-4.0</feature>
+        <feature>mpOpenAPI-3.1</feature>
+        <feature>persistence-3.1</feature>
+        <feature>transportSecurity-1.0</feature>
+        <feature>monitor-1.0</feature>
+    </featureManager>
+
+    <variable name="default.http.port" defaultValue="9080" />
+    <variable name="default.https.port" defaultValue="9443" />
+    <!-- tag::contextRoot[] -->
+    <variable name="default.context.root" defaultValue="/inventory" />
+    <!-- end::contextRoot[] -->
+    <!-- tag::variables[] -->
+    <variable name="db.hostname" defaultValue="localhost" />
+    <variable name="db.portnum" defaultValue="5432" />
+    <variable name="db.username" defaultValue="admin" />
+    <variable name="db.password" defaultValue="adminpwd" />
+    <!-- end::variables[] -->
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  httpPort="${default.http.port}" 
+                  httpsPort="${default.https.port}" />
+
+    <!-- Automatically expand WAR files and EAR files -->
+    <applicationManager autoExpand="true"/>
+
+    <keyStore id="defaultKeyStore" password="secret" />
+
+    <!-- Configures the application on a specified context root -->
+    <webApplication contextRoot="${default.context.root}"
+                    location="inventory.war"/>
+
+    <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
+
+    <library id="postgresql-library">
+        <fileset dir="${shared.resource.dir}/" includes="*.jar" />
+    </library>
+
+    <dataSource id="DefaultDataSource" jndiName="jdbc/postgresql">
+        <jdbcDriver libraryRef="postgresql-library" />
+        <!-- tag::postgresProperties[] -->
+        <properties.postgresql databaseName="admin"
+                               serverName="${db.hostname}"
+                               portNumber="${db.portnum}"
+                               user="${db.username}"
+                               password="${db.password}"/>
+        <!-- end::postgresProperties[] -->
+    </dataSource>
+</server>

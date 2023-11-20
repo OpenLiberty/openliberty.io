@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Deploying microservices to Red Hat OpenShift 4 using Kubernetes Operators
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples on how to deploy cloud-native Java applications and microservices to Red Hat OpenShift cluster by using Kubernetes Operators like the Open Liberty Operator.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/cloud-openshift-operator">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Deploying microservices to Red Hat OpenShift 4 using Kubernetes Operators" />
+  <meta name="twitter:description" content="A getting started tutorial with examples on how to deploy cloud-native Java applications and microservices to Red Hat OpenShift cluster by using Kubernetes Operators like the Open Liberty Operator." />
+
+  <meta property='og:title' content="Deploying microservices to Red Hat OpenShift 4 using Kubernetes Operators" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples on how to deploy cloud-native Java applications and microservices to Red Hat OpenShift cluster by using Kubernetes Operators like the Open Liberty Operator." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/cloud-openshift-operator" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#installing-the-operators">Installing the Operators</a></li>
+<li><a href="#adding-a-private-docker-credential">Adding a private Docker credential</a></li>
+<li><a href="#deploying-the-kafka-cluster-to-openshift">Deploying the Kafka cluster to OpenShift</a></li>
+<li>
+<a href="#deploying-the-system-and-inventory-microservices-to-openshift">Deploying the system and inventory microservices to OpenShift</a>
+<ul class="sectlevel2">
+<li><a href="#packaging-the-microservices">Packaging the microservices</a></li>
+<li><a href="#building-and-pushing-the-images">Building and pushing the images</a></li>
+<li><a href="#checking-the-images">Checking the images</a></li>
+<li><a href="#deploying-the-images">Deploying the images</a></li>
+</ul>
+</li>
+<li><a href="#accessing-the-inventory-microservice">Accessing the inventory microservice</a></li>
+<li><a href="#scaling-up-the-system-microservices">Scaling up the system microservices</a></li>
+<li><a href="#tearing-down-the-environment">Tearing down the environment</a></li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#related-links">Related Links</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Deploying microservices to OpenShift 4 using Kubernetes Operators</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">30 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/cloud-openshift-operator.html" target="_blank" rel="noopener">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Explore how to deploy microservices to Red Hat OpenShift 4 using Kubernetes Operators.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to deploy a cloud-native application with 2 microservices to Red Hat OpenShift 4 using Kubernetes Operators like the Open Liberty Operator.
+You will install two operators into an OpenShift cluster and use them to deploy and scale sample microservices.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://www.openshift.com/" target="_blank" rel="noopener noreferrer">OpenShift</a> is a Kubernetes-based platform with added functions. It streamlines the DevOps
+process by providing an intuitive development pipeline. It also provides integration with multiple tools to make the
+deployment and management of cloud applications easier.
+You can learn more about Kubernetes by checking out the <a href="https://openliberty.io/guides/kubernetes-intro.html" target="_blank" rel="noopener">Deploying microservices to Kubernetes</a> guide.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/#operators-in-kubernetes" target="_blank" rel="noopener noreferrer">Kubernetes operators</a>
+provide an easy way to automate the management and updating of applications by abstracting away some of the details of cloud application management.
+To learn more about operators, check out this <a href="https://www.openshift.com/learn/topics/operators" target="_blank" rel="noopener noreferrer">Operators tech topic article</a>.</p>
+</div>
+<div class="paragraph">
+<p>The application in this guide consists of two microservices, <code>system</code> and <code>inventory</code>. Every 15 seconds, the <code>system</code>
+microservice calculates and publishes events that contain its current average system load. The <code>inventory</code> microservice
+subscribes to that information so that it can keep an updated list of all the system microservices and their current system loads.</p>
+</div>
+<div class="paragraph">
+<p>The following figure shows the application that you deploy, which consists of two microservices, <code>system</code> and <code>inventory</code>, connected by a message broker:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/cloud-openshift-operator/reactive-messaging-system-inventory-rest.png" alt="Reactive system inventory">
+</div>
+</div>
+<div class="paragraph">
+<p>You will deploy the two Open Liberty microservices by using the Open Liberty Operator, and deploy Kafka using the Strimzi Operator.
+The <a href="https://github.com/OpenLiberty/open-liberty-operator" target="_blank" rel="noopener noreferrer">Open Liberty Operator</a> provides a method of packaging,
+deploying, and managing Open Liberty applications on Kubernetes-based clusters.
+The Open Liberty Operator watches Open Liberty resources and creates various Kubernetes resources,
+including <code>Deployments</code>, <code>Services</code>, and <code>Routes</code>, depending on the configurations.
+The Operator then continuously compares the current state of the resources, the desired state
+of application deployment, and reconciles them when necessary.
+To learn more about the Strimzi Operator, visit their <a href="https://strimzi.io/" target="_blank" rel="noopener noreferrer">official website</a>.
+You can learn more about how the reactive Java services used in this guide work by checking out the
+<a href="https://openliberty.io/guides/microprofile-reactive-messaging.html" target="_blank" rel="noopener">Creating reactive Java microservices</a> guide.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you can deploy your microservices, you must gain access to a cluster on OpenShift and have an OpenShift client installed.
+For client installation instructions, refer to <a href="https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html" target="_blank" rel="noopener noreferrer">the official OpenShift Online documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>There are various OpenShift offerings. You can gain access to an OpenShift cluster that is hosted on
+<a href="https://www.openshift.com/products/openshift-ibm-cloud" target="_blank" rel="noopener noreferrer">IBM Cloud</a>, or check out other offerings
+<a href="https://www.openshift.com/products" target="_blank" rel="noopener noreferrer">from OpenShift</a>.</p>
+</div>
+<div class="paragraph">
+<p>After you get access to a cluster, make sure you are logged in to the cluster
+as a cluster administrator by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc version</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Look for output similar to the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>Client Version: 4.13.0
+Server Version: 4.13.0
+Kubernetes Version: v1.26.3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Before you install any resources, you need to create a project on your OpenShift cluster.
+Create a project named <code>guide</code> by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc new-project guide</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ensure that you are working within the project <code>guide</code> by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc projects</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Look for an asterisk (*) with the <code>guide</code> project in the list of projects to confirm that you are in the <code>guide</code> project, as shown in the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>You have access to the following projects and can switch between them with 'oc project &lt;projectname&gt;':
+
+    default
+  * guide</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the <a href="https://cert-manager.io" target="_blank" rel="noopener noreferrer">cert-manager</a>  is not installed on your cluster yet, install it by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.12.0/cert-manager.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information, see the <a href="https://cert-manager.io/docs/installation" target="_blank" rel="noopener noreferrer">cert-manager installation</a> documentation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-cloud-openshift-operator.git" target="_blank" rel="noopener noreferrer">Git repository</a>
+into your cluster and use the projects that are provided inside:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-cloud-openshift-operator.git
+cd guide-cloud-openshift-operator
+cd start</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-the-operators">Installing the Operators</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you obtained your OpenShift cluster, you received login information for the
+<a href="https://docs.openshift.com/container-platform/latest/web_console/web-console.html" target="_blank" rel="noopener noreferrer">OpenShift web console</a>.
+The web console provides an interface to interact with your OpenShift cluster through your web browser.</p>
+</div>
+<div class="paragraph">
+<p>To install the two Operators, navigate to the web console and select <strong>Operators &gt; OperatorHub</strong> from the sidebar menu.
+Search for and install the <strong>Open Liberty Operator</strong> and the <strong>Strimzi Operator</strong>. For the Strimzi Operator, install the latest version, not the stable version.
+Make sure you install the Operators into the <code>guide</code> namespace.</p>
+</div>
+<div class="paragraph">
+<p>Run the following command to view all the supported API resources that are available through the Open Liberty Operator:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc api-resources --api-group=apps.openliberty.io</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Look for the following output, which shows the <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/" target="_blank" rel="noopener noreferrer">custom resource definitions</a> (CRDs) that can be used by the Open Liberty Operator:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                      SHORTNAMES         APIGROUP              NAMESPACED   KIND
+openlibertyapplications   olapp,olapps       apps.openliberty.io   true         OpenLibertyApplication
+openlibertydumps          oldump,oldumps     apps.openliberty.io   true         OpenLibertyDump
+openlibertytraces         oltrace,oltraces   apps.openliberty.io   true         OpenLibertyTrace</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each CRD defines a kind of object that can be used, which is specified in the previous example by the <code>KIND</code> value.
+The <code>SHORTNAME</code> value specifies alternative names that you can substitute in the configuration to refer to an object kind.
+For example, you can refer to the <code>OpenLibertyApplication</code> object kind by one of its specified shortnames, such as <code>olapps</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>openlibertyapplications</code> CRD defines a set of configurations for
+deploying an Open Liberty-based application, including the application image, number of instances, and storage settings.
+The Open Liberty Operator watches for changes to instances of the <code>OpenLibertyApplication</code> object kind and creates Kubernetes resources that are based on the configuration that is defined in the CRD.</p>
+</div>
+<div class="paragraph">
+<p>Run the following command to all CRDs that the Strimzi Operator uses:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc api-resources --api-group=kafka.strimzi.io</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Look for the following output, which lists the CRDs that the Strimzi Operator uses, along with object kinds and shortnames.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                 SHORTNAMES   APIGROUP           NAMESPACED   KIND
+kafkabridges         kb           kafka.strimzi.io   true         KafkaBridge
+kafkaconnectors      kctr         kafka.strimzi.io   true         KafkaConnector
+kafkaconnects        kc           kafka.strimzi.io   true         KafkaConnect
+kafkaconnects2is     kcs2i        kafka.strimzi.io   true         KafkaConnectS2I
+kafkamirrormaker2s   kmm2         kafka.strimzi.io   true         KafkaMirrorMaker2
+kafkamirrormakers    kmm          kafka.strimzi.io   true         KafkaMirrorMaker
+kafkarebalances      kr           kafka.strimzi.io   true         KafkaRebalance
+kafkas               k            kafka.strimzi.io   true         Kafka
+kafkatopics          kt           kafka.strimzi.io   true         KafkaTopic
+kafkausers           ku           kafka.strimzi.io   true         KafkaUser</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also confirm the installation of the operators from the web console.
+Navigate to the OperatorHub.
+From the categories on the left, you can filter to see only installed operators.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-a-private-docker-credential">Adding a private Docker credential</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Docker limits container image pull requests for free DockerHub subscriptions.
+For more information, see <a href="https://www.docker.com/increase-rate-limits" target="_blank" rel="noopener noreferrer">Understanding Docker Hub Rate Limiting</a>.
+If you have a Docker account with a Pro or Team subscription, you can add a private credential to avoid any errors as a result of the limits.</p>
+</div>
+<div class="paragraph">
+<p>To add a private credential, navigate to the OpenShift web console and select <strong>Workloads &gt; Secrets</strong> from the sidebar menu.
+Ensure that the selected project is <code>openshift-config</code>.
+Search for <code>pull-secret</code> and click the <strong>three vertical dots</strong> menu; then <strong>Edit Secret</strong>.
+Scroll down and click <strong>Add credentials</strong>.
+Enter <code>docker.io</code> to the <strong>Registry Server Address</strong> field,
+your Docker user ID to the <strong>Username</strong> field,
+and your Docker password to the <strong>Password</strong> field.
+Click the <strong>Save</strong> button to save the credential.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-the-kafka-cluster-to-openshift">Deploying the Kafka cluster to OpenShift</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>kafka.yaml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers"> 1</span><span class="key">apiVersion</span>: <span class="string"><span class="content">kafka.strimzi.io/v1beta2</span></span>
+<span class="line-numbers"> 2</span><span class="key">kind</span>: <span class="string"><span class="content">Kafka</span></span>
+<span class="line-numbers"> 3</span><span class="key">metadata</span>:
+<span class="line-numbers"> 4</span>  <span class="key">name</span>: <span class="string"><span class="content">kafka-cluster</span></span>
+<span class="line-numbers"> 5</span><span class="key">spec</span>:
+<span class="line-numbers"> 6</span>  <span class="key">kafka</span>:
+<span class="line-numbers"> 7</span>    <span class="key">version</span>: <span class="string"><span class="content">3.4.0</span></span>
+<span class="line-numbers"> 8</span>    <span class="key">replicas</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers"> 9</span>    <span class="key">listeners</span>:
+<span class="line-numbers">10</span>      - <span class="string"><span class="content">name: plain</span></span>
+<span class="line-numbers">11</span>        <span class="key">port</span>: <span class="string"><span class="content">9092</span></span>
+<span class="line-numbers">12</span>        <span class="key">type</span>: <span class="string"><span class="content">internal</span></span>
+<span class="line-numbers">13</span>        <span class="key">tls</span>: <span class="string"><span class="content">false</span></span>
+<span class="line-numbers">14</span>      - <span class="string"><span class="content">name: tls</span></span>
+<span class="line-numbers">15</span>        <span class="key">port</span>: <span class="string"><span class="content">9093</span></span>
+<span class="line-numbers">16</span>        <span class="key">type</span>: <span class="string"><span class="content">internal</span></span>
+<span class="line-numbers">17</span>        <span class="key">tls</span>: <span class="string"><span class="content">true</span></span>
+<span class="line-numbers">18</span>    <span class="key">config</span>:
+<span class="line-numbers">19</span>      <span class="key">offsets.topic.replication.factor</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers">20</span>      <span class="key">transaction.state.log.replication.factor</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers">21</span>      <span class="key">transaction.state.log.min.isr</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers">22</span>      <span class="key">default.replication.factor</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers">23</span>      <span class="key">min.insync.replicas</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers">24</span>      <span class="key">inter.broker.protocol.version</span>: <span class="string"><span class="delimiter">"</span><span class="content">3.4</span><span class="delimiter">"</span></span>
+<span class="line-numbers">25</span>    <span class="key">storage</span>:
+<span class="line-numbers">26</span>      <span class="key">type</span>: <span class="string"><span class="content">ephemeral</span></span>
+<span class="line-numbers">27</span>  <span class="key">zookeeper</span>:
+<span class="line-numbers">28</span>    <span class="key">replicas</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers">29</span>    <span class="key">storage</span>:
+<span class="line-numbers">30</span>      <span class="key">type</span>: <span class="string"><span class="content">ephemeral</span></span>
+<span class="line-numbers">31</span>  <span class="key">entityOperator</span>:
+<span class="line-numbers">32</span>    <span class="key">topicOperator</span>: <span class="string"><span class="content">{}</span></span>
+<span class="line-numbers">33</span>    <span class="key">userOperator</span>: <span class="string"><span class="content">{}</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Apache Kafka is the messaging broker that is used in this application. The Strimzi Operator simplifies the deployment
+and management of Kafka clusters.</p>
+</div>
+<div class="paragraph">
+<p>You can configure the specifics of the Strimzi Operator-controlled Kafka deployment with a YAML configuration file.</p>
+</div>
+<div class="paragraph">
+<p>Ensure that you are in the <code>start</code> directory.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>kafka.yaml</code> configuration file in the <code>start</code> directory.</mark>
+<code>kafka.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The provided Kafka cluster configuration is based on the
+<a href="https://github.com/strimzi/strimzi-kafka-operator/blob/main/examples/kafka/kafka-ephemeral-single.yaml" target="_blank" rel="noopener noreferrer">Strimzi Kafka ephemeral single example</a>.
+For more information about the Kafka configuration file, check out the
+<a href="https://strimzi.io/docs/operators/master/using.html#assembly-deployment-configuration-kafka-str" target="_blank" rel="noopener noreferrer">official Strimzi documentation</a></p>
+</div>
+<div class="paragraph">
+<p>Run the following command to deploy Kafka by using the newly created configuration file:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc apply -f kafka.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the following command to view the details of the deployment:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc get kafka/kafka-cluster -o yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the <code>status</code> section under <code>conditions</code> you can see a report similar to the following example when the cluster is ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>- lastTransitionTime: 2020-09-02T19:27:00+0000
+  status: "True"
+  type: Ready</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-the-system-and-inventory-microservices-to-openshift">Deploying the system and inventory microservices to OpenShift</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>build.yaml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers"> 1</span><span class="key">apiVersion</span>: <span class="string"><span class="content">template.openshift.io/v1</span></span>
+<span class="line-numbers"> 2</span><span class="key">kind</span>: <span class="string"><span class="content">Template</span></span>
+<span class="line-numbers"> 3</span><span class="key">metadata</span>:
+<span class="line-numbers"> 4</span>  <span class="key">name</span>: <span class="string"><span class="delimiter">"</span><span class="content">build-template</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 5</span>  <span class="key">annotations</span>:
+<span class="line-numbers"> 6</span>    <span class="key">description</span>: <span class="string"><span class="delimiter">"</span><span class="content">Build template for the system and inventory service</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 7</span>    <span class="key">tags</span>: <span class="string"><span class="delimiter">"</span><span class="content">build</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 8</span><span class="key">objects</span>:
+<span class="line-numbers"> 9</span>    <span class="comment"># tag::imageStream[]</span>
+<span class="line-numbers">10</span>  - <span class="string"><span class="content">apiVersion: v1</span></span>
+<span class="line-numbers">11</span>    <span class="key">kind</span>: <span class="string"><span class="content">ImageStream</span></span>
+<span class="line-numbers">12</span>    <span class="key">metadata</span>:
+<span class="line-numbers">13</span>      <span class="key">name</span>: <span class="string"><span class="delimiter">"</span><span class="content">${APP_NAME}-imagestream</span><span class="delimiter">"</span></span>
+<span class="line-numbers">14</span>      <span class="key">labels</span>:
+<span class="line-numbers">15</span>        <span class="key">name</span>: <span class="string"><span class="delimiter">"</span><span class="content">${APP_NAME}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">16</span>    <span class="comment"># end::imageStream[]</span>
+<span class="line-numbers">17</span>    <span class="comment"># tag::buildConfig[]</span>
+<span class="line-numbers">18</span>  - <span class="string"><span class="content">apiVersion: v1</span></span>
+<span class="line-numbers">19</span>    <span class="key">kind</span>: <span class="string"><span class="content">BuildConfig</span></span>
+<span class="line-numbers">20</span>    <span class="key">metadata</span>:
+<span class="line-numbers">21</span>      <span class="key">name</span>: <span class="string"><span class="delimiter">"</span><span class="content">${APP_NAME}-buildconfig</span><span class="delimiter">"</span></span>
+<span class="line-numbers">22</span>      <span class="key">labels</span>:
+<span class="line-numbers">23</span>        <span class="key">name</span>: <span class="string"><span class="delimiter">"</span><span class="content">${APP_NAME}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">24</span>    <span class="key">spec</span>:
+<span class="line-numbers">25</span>      <span class="comment"># tag::source[]</span>
+<span class="line-numbers">26</span>      <span class="key">source</span>:
+<span class="line-numbers">27</span>        <span class="comment"># tag::binary[]</span>
+<span class="line-numbers">28</span>        <span class="key">type</span>: <span class="string"><span class="content">Binary</span></span>
+<span class="line-numbers">29</span>        <span class="comment"># end::binary[]</span>
+<span class="line-numbers">30</span>      <span class="comment"># end::source[]</span>
+<span class="line-numbers">31</span>      <span class="comment"># tag::docker[]</span>
+<span class="line-numbers">32</span>      <span class="key">strategy</span>:
+<span class="line-numbers">33</span>        <span class="key">type</span>: <span class="string"><span class="content">Docker</span></span>
+<span class="line-numbers">34</span>      <span class="comment"># end::docker[]</span>
+<span class="line-numbers">35</span>      <span class="key">output</span>:
+<span class="line-numbers">36</span>        <span class="key">to</span>:
+<span class="line-numbers">37</span>          <span class="key">kind</span>: <span class="string"><span class="content">ImageStreamTag</span></span>
+<span class="line-numbers">38</span>          <span class="key">name</span>: <span class="string"><span class="delimiter">"</span><span class="content">${APP_NAME}-imagestream:1.0-SNAPSHOT</span><span class="delimiter">"</span></span>
+<span class="line-numbers">39</span>    <span class="comment"># end::buildConfig[]</span>
+<span class="line-numbers">40</span><span class="comment"># tag::appname[]</span>
+<span class="line-numbers">41</span><span class="key">parameters</span>:
+<span class="line-numbers">42</span>- <span class="string"><span class="content">description: The application name [system|inventory]</span></span>
+<span class="line-numbers">43</span>  <span class="key">name</span>: <span class="string"><span class="content">APP_NAME</span></span>
+<span class="line-numbers">44</span><span class="comment"># end::appname[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To deploy the <code>system</code> and <code>inventory</code> microservices, you must first package the microservices, then create and
+run an OpenShift build to produce runnable container images of the packaged microservices.</p>
+</div>
+<div class="sect2">
+<h3 id="packaging-the-microservices">Packaging the microservices</h3>
+<div class="paragraph">
+<p>Ensure that you are in the <code>start</code> directory and run the following commands to package the <code>system</code> and <code>inventory</code>
+microservices:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn -pl models clean install
+mvn clean package</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="building-and-pushing-the-images">Building and pushing the images</h3>
+<div class="paragraph">
+<p>Create a build template to configure how to build your container images.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>build.yaml</code> template file in the <code>start</code> directory.</mark>
+<code>build.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot file=0">build.yaml</code> template includes two objects.
+The <code class="hotspot=imageStream file=0">ImageStream</code> object provides an abstraction from the image in the image registry.
+This allows you to reference and tag the image.
+The image registry used is the integrated internal OpenShift Container Registry.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=buildConfig file=0">BuildConfig</code> object defines a single
+build definition and any triggers that kickstart the build. The <code class="hotspot=source file=0">source</code> spec defines the build input. In this case,
+the build inputs are your <code class="hotspot=binary file=0">binary</code> (local) files, which are streamed to OpenShift for the build.
+The uploaded files need to include the packaged <code>WAR</code> application binaries, which is why you needed to run the Maven commands. The template specifies
+a <code class="hotspot=docker file=0">Docker</code> strategy build, which invokes the <code>docker build</code> command, and creates a runnable container image of the microservice
+from the build input. The template is parameterized with the <code class="hotspot=appname file=0">APP_NAME</code> parameter so that you can use the same
+template to create the objects for the <code>system</code> and <code>inventory</code> microservices separately.</p>
+</div>
+<div class="paragraph">
+<p>Run the following commands to create the objects for the <code>system</code> and <code>inventory</code> microservices:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc process -f build.yaml -p APP_NAME=system | oc create -f -
+oc process -f build.yaml -p APP_NAME=inventory | oc create -f -</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, run the following commands to view the newly created <code>ImageStream</code> objects and the build configurations for each microservice:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc get all -l name=system
+oc get all -l name=inventory</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Look for the following resources:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                                                TYPE     FROM     LATEST
+buildconfig.build.openshift.io/system-buildconfig   Docker   Binary   0
+
+NAME                                                IMAGE REPOSITORY                                                            TAGS           UPDATED
+imagestream.image.openshift.io/system-imagestream   image-registry.openshift-image-registry.svc:5000/guide/system-imagestream   1.0-SNAPSHOT   2 days ago
+
+...
+
+NAME                                                   TYPE     FROM     LATEST
+buildconfig.build.openshift.io/inventory-buildconfig   Docker   Binary   2
+
+NAME                                                   IMAGE REPOSITORY                                                               TAGS           UPDATED
+imagestream.image.openshift.io/inventory-imagestream   image-registry.openshift-image-registry.svc:5000/guide/inventory-imagestream   1.0-SNAPSHOT   2 days ago</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ensure that you are in the <code>start</code> directory and trigger the builds by running the following commands:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc start-build system-buildconfig --from-dir=system/.
+oc start-build inventory-buildconfig --from-dir=inventory/.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The local <code>system</code> and <code>inventory</code> directories are uploaded to OpenShift to be built into the Docker images. Run the
+following command to list the builds and track their status:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc get builds</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Look for the output that is similar to the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                      TYPE     FROM             STATUS     STARTED
+system-buildconfig-1      Docker   Binary@f24cb58   Running    45 seconds ago
+inventory-buildconfig-1   Docker   Binary@f24cb58   Running    13 seconds ago</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may need to wait some time until the build is complete. To check whether the build is complete, run the following
+commands to view the build logs until the <code>Push successful</code> message appears:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc logs build/system-buildconfig-1
+oc logs build/inventory-buildconfig-1</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="checking-the-images">Checking the images</h3>
+<div class="paragraph">
+<p>During the build process, the images associated with the <code>ImageStream</code> objects that you created earlier
+were pushed to the image registry and tagged. Run the following command to view the newly updated <code>ImageStream</code> objects:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc get imagestreams</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the following commands to get more details on the newly pushed images within the streams:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc describe imagestream/system-imagestream
+oc describe imagestream/inventory-imagestream</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following example shows part of the <code>system-imagestream</code> output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>Name:                     system-imagestream
+Namespace:                guide
+Created:                  2 minutes ago
+Labels:                   name=system
+Annotations:              &lt;none&gt;
+Image Repository:         image-registry.openshift-image-registry.svc:5000/guide/system-imagestream
+Image Lookup:             local=false
+Unique Images:            1
+Tags:                     1
+
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Look for similar output for <code>inventory-imagestream</code>.</p>
+</div>
+<div class="paragraph">
+<p>Now you’re ready to deploy the images.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="deploying-the-images">Deploying the images</h3>
+<div class="paragraph">
+<p>deploy.yaml</p>
+</div>
+<div class="listingblock code_column hide_tags=replicas">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers"> 1</span><span class="comment"># tag::system[]</span>
+<span class="line-numbers"> 2</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps.openliberty.io/v1</span></span>
+<span class="line-numbers"> 3</span><span class="comment"># tag::olapp1[]</span>
+<span class="line-numbers"> 4</span><span class="key">kind</span>: <span class="string"><span class="content">OpenLibertyApplication</span></span>
+<span class="line-numbers"> 5</span><span class="comment"># end::olapp1[]</span>
+<span class="line-numbers"> 6</span><span class="key">metadata</span>:
+<span class="line-numbers"> 7</span>  <span class="key">name</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 8</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 9</span>    <span class="key">name</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers">10</span><span class="key">spec</span>:
+<span class="line-numbers">11</span>  <span class="comment"># tag::sysImage[]</span>
+<span class="line-numbers">12</span>  <span class="key">applicationImage</span>: <span class="string"><span class="content">guide/system-imagestream:1.0-SNAPSHOT</span></span>
+<span class="line-numbers">13</span>  <span class="comment"># end::sysImage[]</span>
+<span class="line-numbers">14</span>  <span class="comment"># tag::replicas[]</span>
+<span class="line-numbers">15</span>  <span class="key">replicas</span>: <span class="string"><span class="content">3</span></span>
+<span class="line-numbers">16</span>  <span class="comment"># end::replicas[]</span>
+<span class="line-numbers">17</span>  <span class="comment"># tag::systemEnv[]</span>
+<span class="line-numbers">18</span>  <span class="key">env</span>:
+<span class="line-numbers">19</span>    - <span class="string"><span class="content">name: WLP_LOGGING_MESSAGE_FORMAT</span></span>
+<span class="line-numbers">20</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">json</span><span class="delimiter">"</span></span>
+<span class="line-numbers">21</span>    - <span class="string"><span class="content">name: WLP_LOGGING_MESSAGE_SOURCE</span></span>
+<span class="line-numbers">22</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">message,trace,accessLog,ffdc,audit</span><span class="delimiter">"</span></span>
+<span class="line-numbers">23</span>    - <span class="string"><span class="content">name: MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS</span></span>
+<span class="line-numbers">24</span>      <span class="comment"># tag::bootstrap[]</span>
+<span class="line-numbers">25</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">[kafka-bootstrap-address]</span><span class="delimiter">"</span></span>
+<span class="line-numbers">26</span>      <span class="comment"># end::bootstrap[]</span>
+<span class="line-numbers">27</span>  <span class="comment"># end::systemEnv[]</span>
+<span class="line-numbers">28</span><span class="comment"># end::system[]</span>
+<span class="line-numbers">29</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">30</span><span class="comment"># tag::inventory[]</span>
+<span class="line-numbers">31</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps.openliberty.io/v1</span></span>
+<span class="line-numbers">32</span><span class="comment"># tag::olapp2[]</span>
+<span class="line-numbers">33</span><span class="key">kind</span>: <span class="string"><span class="content">OpenLibertyApplication</span></span>
+<span class="line-numbers">34</span><span class="comment"># end::olapp2[]</span>
+<span class="line-numbers">35</span><span class="key">metadata</span>:
+<span class="line-numbers">36</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers">37</span>  <span class="key">labels</span>:
+<span class="line-numbers">38</span>    <span class="key">name</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers">39</span><span class="key">spec</span>:
+<span class="line-numbers">40</span>  <span class="comment"># tag::invImage[]</span>
+<span class="line-numbers">41</span>  <span class="key">applicationImage</span>: <span class="string"><span class="content">guide/inventory-imagestream:1.0-SNAPSHOT</span></span>
+<span class="line-numbers">42</span>  <span class="comment"># end::invImage[]</span>
+<span class="line-numbers">43</span>  <span class="comment"># tag::service[]</span>
+<span class="line-numbers">44</span>  <span class="key">service</span>:
+<span class="line-numbers">45</span>    <span class="comment"># tag::servicePort[]</span>
+<span class="line-numbers">46</span>    <span class="key">port</span>: <span class="string"><span class="content">9448</span></span>
+<span class="line-numbers">47</span>    <span class="comment"># end::servicePort[]</span>
+<span class="line-numbers">48</span>  <span class="comment"># end::service[]</span>
+<span class="line-numbers">49</span>  <span class="comment"># tag::expose[]</span>
+<span class="line-numbers">50</span>  <span class="key">expose</span>: <span class="string"><span class="content">true</span></span>
+<span class="line-numbers">51</span>  <span class="comment"># end::expose[]</span>
+<span class="line-numbers">52</span>  <span class="key">env</span>:
+<span class="line-numbers">53</span>    - <span class="string"><span class="content">name: WLP_LOGGING_MESSAGE_FORMAT</span></span>
+<span class="line-numbers">54</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">json</span><span class="delimiter">"</span></span>
+<span class="line-numbers">55</span>    - <span class="string"><span class="content">name: WLP_LOGGING_MESSAGE_SOURCE</span></span>
+<span class="line-numbers">56</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">message,trace,accessLog,ffdc,audit</span><span class="delimiter">"</span></span>
+<span class="line-numbers">57</span>    - <span class="string"><span class="content">name: MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS</span></span>
+<span class="line-numbers">58</span>      <span class="comment"># tag::bootstrapInv[]</span>
+<span class="line-numbers">59</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">[kafka-bootstrap-address]</span><span class="delimiter">"</span></span>
+<span class="line-numbers">60</span>      <span class="comment"># end::bootstrapInv[]</span>
+<span class="line-numbers">61</span><span class="comment"># end::inventory[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can configure the specifics of the Open Liberty Operator-controlled deployment with a YAML configuration file.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>deploy.yaml</code> configuration file in the <code>start</code> directory.</mark>
+<code>deploy.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot file=0">deploy.yaml</code> file is configured to deploy two <code class="hotspot=olapp1 hotspot=olapp2 file=0">OpenLibertyApplication</code>
+resources, <code class="hotspot=system file=0">system</code> and <code class="hotspot=inventory file=0">inventory</code>, which are controlled by
+the Open Liberty Operator.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=sysImage hotspot=invImage file=0">applicationImage</code> parameter defines what container image is deployed as part of the <code>OpenLibertyApplication</code> CRD.
+This parameter follows the <code>&lt;project-name&gt;/&lt;image-stream-name&gt;[:tag]</code> format.
+The parameter can also point to an image hosted on an external registry, such as Docker Hub.
+The <code class="hotspot=system file=0">system</code> microservice is configured to use the <code class="hotspot=sysImage file=0">image</code> created from the earlier build.</p>
+</div>
+<div class="paragraph">
+<p>One of the benefits of using <code>ImageStream</code> objects is that the operator redeploys the application when it detects a new image is pushed.
+The <code class="hotspot=systemEnv file=0">env</code> parameter is used to specify environment variables that are passed to the container at runtime.
+You need to specify the bootstrap address required to communicate with the deployed Kafka cluster as an environment variable.</p>
+</div>
+<div class="paragraph">
+<p>Update the <code class="hotspot=bootstrap hotspot=bootstrapInv file=0">[kafka-bootstrap-address]</code> variable to the
+bootstrap address found by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc get kafka kafka-cluster -o=jsonpath='{.status.listeners[?(@.type=="plain")].bootstrapServers}{"\n"}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see output similar to the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>kafka-cluster-kafka-bootstrap.guide.svc:9092</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=inventory file=0">inventory</code> microservice is configured
+similarly to the <code class="hotspot=system file=0">system</code> microservice.
+Additionally, the <code>inventory</code> microservice includes the <code class="hotspot=service file=0">service</code>
+and <code class="hotspot=expose file=0">expose</code> parameters.
+The <code class="hotspot=servicePort file=0">service.port</code> parameter specifies which port is exposed by the container,
+allowing the microservice to be accessed from outside the container.
+To access the microservice from outside of the cluster,
+it must be exposed by setting the <code class="hotspot=expose file=0">expose</code> parameter to <code>true</code>.
+After you expose the microservice, the Operator automatically creates and configures routes for external access to your microservice.</p>
+</div>
+<div class="paragraph">
+<p>Run the following command to deploy the <code>system</code> and <code>inventory</code> microservices with the previously explained configurations:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc apply -f deploy.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, run the following command to view your newly created <code>OpenLibertyApplications</code> resources:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc get OpenLibertyApplications</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also replace <code>OpenLibertyApplications</code> with the shortname <code>olapps</code>.</p>
+</div>
+<div class="paragraph">
+<p>Look for output that is similar to the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME        IMAGE                                      EXPOSED   RECONCILED   AGE
+inventory   guide/inventory-imagestream:1.0-SNAPSHOT   true      True         10s
+system      guide/system-imagestream:1.0-SNAPSHOT                True         10s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A <code>RECONCILED</code> state value of <code>True</code> indicates that the operator was able to successfully process the <code>OpenLibertyApplications</code> instances.
+Run the following commands to view details of your microservices:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc describe olapps/system
+oc describe olapps/inventory</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example shows part of the <code>olapps/system</code> output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>Name:         system
+Namespace:    guide
+Labels:       app.kubernetes.io/part-of=system
+              name=system
+Annotations:  kubectl.kubernetes.io/last-applied-configuration:
+                {"apiVersion":"apps.openliberty.io/v1","kind":"OpenLibertyApplication","metadata":{"annotations":{},"labels":{"name":"system"},"name":"sys...
+API Version:  apps.openliberty.io/v1
+Kind:         OpenLibertyApplication
+
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Look for a similar output for <code>olapps/inventory</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="accessing-the-inventory-microservice">Accessing the inventory microservice</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To access the exposed <code>inventory</code> microservice, run the following command and make note of the <code>HOST</code>:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc get routes</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Look for an output that is similar to the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME        HOST/PORT                                    PATH   SERVICES    PORT       TERMINATION   WILDCARD
+inventory   inventory-guide.apps.lights.os.fyre.ibm.com         inventory   9448-tcp                 None</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Visit the <code>inventory</code> microservice by going to the following URL:
+<code>http://[HOST]/inventory/systems</code></p>
+</div>
+<div class="paragraph">
+<p>Make sure to substitute the appropriate <code>HOST</code> value.
+For example, using the output from the command above, <code>inventory-guide.apps.lights.os.fyre.ibm.com</code> is the <code>HOST</code>.
+The following example shows this value substituted for <code>HOST</code> in the URL:
+<code>http://inventory-guide.apps.lights.os.fyre.ibm.com/inventory/systems</code>.</p>
+</div>
+<div class="paragraph">
+<p>Look for a JSON response that is similar to the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>[
+    {
+        "hostname": "system-7cbc47455c-664wh",
+        "systemLoad": 1.15
+    }
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This sample output was formatted for readability. Your output might not be formatted.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="scaling-up-the-system-microservices">Scaling up the system microservices</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>deploy.yaml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers"> 1</span><span class="comment"># tag::system[]</span>
+<span class="line-numbers"> 2</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps.openliberty.io/v1</span></span>
+<span class="line-numbers"> 3</span><span class="comment"># tag::olapp1[]</span>
+<span class="line-numbers"> 4</span><span class="key">kind</span>: <span class="string"><span class="content">OpenLibertyApplication</span></span>
+<span class="line-numbers"> 5</span><span class="comment"># end::olapp1[]</span>
+<span class="line-numbers"> 6</span><span class="key">metadata</span>:
+<span class="line-numbers"> 7</span>  <span class="key">name</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 8</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 9</span>    <span class="key">name</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers">10</span><span class="key">spec</span>:
+<span class="line-numbers">11</span>  <span class="comment"># tag::sysImage[]</span>
+<span class="line-numbers">12</span>  <span class="key">applicationImage</span>: <span class="string"><span class="content">guide/system-imagestream:1.0-SNAPSHOT</span></span>
+<span class="line-numbers">13</span>  <span class="comment"># end::sysImage[]</span>
+<span class="line-numbers">14</span>  <span class="comment"># tag::replicas[]</span>
+<span class="line-numbers">15</span>  <span class="key">replicas</span>: <span class="string"><span class="content">3</span></span>
+<span class="line-numbers">16</span>  <span class="comment"># end::replicas[]</span>
+<span class="line-numbers">17</span>  <span class="comment"># tag::systemEnv[]</span>
+<span class="line-numbers">18</span>  <span class="key">env</span>:
+<span class="line-numbers">19</span>    - <span class="string"><span class="content">name: WLP_LOGGING_MESSAGE_FORMAT</span></span>
+<span class="line-numbers">20</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">json</span><span class="delimiter">"</span></span>
+<span class="line-numbers">21</span>    - <span class="string"><span class="content">name: WLP_LOGGING_MESSAGE_SOURCE</span></span>
+<span class="line-numbers">22</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">message,trace,accessLog,ffdc,audit</span><span class="delimiter">"</span></span>
+<span class="line-numbers">23</span>    - <span class="string"><span class="content">name: MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS</span></span>
+<span class="line-numbers">24</span>      <span class="comment"># tag::bootstrap[]</span>
+<span class="line-numbers">25</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">[kafka-bootstrap-address]</span><span class="delimiter">"</span></span>
+<span class="line-numbers">26</span>      <span class="comment"># end::bootstrap[]</span>
+<span class="line-numbers">27</span>  <span class="comment"># end::systemEnv[]</span>
+<span class="line-numbers">28</span><span class="comment"># end::system[]</span>
+<span class="line-numbers">29</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">30</span><span class="comment"># tag::inventory[]</span>
+<span class="line-numbers">31</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps.openliberty.io/v1</span></span>
+<span class="line-numbers">32</span><span class="comment"># tag::olapp2[]</span>
+<span class="line-numbers">33</span><span class="key">kind</span>: <span class="string"><span class="content">OpenLibertyApplication</span></span>
+<span class="line-numbers">34</span><span class="comment"># end::olapp2[]</span>
+<span class="line-numbers">35</span><span class="key">metadata</span>:
+<span class="line-numbers">36</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers">37</span>  <span class="key">labels</span>:
+<span class="line-numbers">38</span>    <span class="key">name</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers">39</span><span class="key">spec</span>:
+<span class="line-numbers">40</span>  <span class="comment"># tag::invImage[]</span>
+<span class="line-numbers">41</span>  <span class="key">applicationImage</span>: <span class="string"><span class="content">guide/inventory-imagestream:1.0-SNAPSHOT</span></span>
+<span class="line-numbers">42</span>  <span class="comment"># end::invImage[]</span>
+<span class="line-numbers">43</span>  <span class="comment"># tag::service[]</span>
+<span class="line-numbers">44</span>  <span class="key">service</span>:
+<span class="line-numbers">45</span>    <span class="comment"># tag::servicePort[]</span>
+<span class="line-numbers">46</span>    <span class="key">port</span>: <span class="string"><span class="content">9448</span></span>
+<span class="line-numbers">47</span>    <span class="comment"># end::servicePort[]</span>
+<span class="line-numbers">48</span>  <span class="comment"># end::service[]</span>
+<span class="line-numbers">49</span>  <span class="comment"># tag::expose[]</span>
+<span class="line-numbers">50</span>  <span class="key">expose</span>: <span class="string"><span class="content">true</span></span>
+<span class="line-numbers">51</span>  <span class="comment"># end::expose[]</span>
+<span class="line-numbers">52</span>  <span class="key">env</span>:
+<span class="line-numbers">53</span>    - <span class="string"><span class="content">name: WLP_LOGGING_MESSAGE_FORMAT</span></span>
+<span class="line-numbers">54</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">json</span><span class="delimiter">"</span></span>
+<span class="line-numbers">55</span>    - <span class="string"><span class="content">name: WLP_LOGGING_MESSAGE_SOURCE</span></span>
+<span class="line-numbers">56</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">message,trace,accessLog,ffdc,audit</span><span class="delimiter">"</span></span>
+<span class="line-numbers">57</span>    - <span class="string"><span class="content">name: MP_MESSAGING_CONNECTOR_LIBERTY_KAFKA_BOOTSTRAP_SERVERS</span></span>
+<span class="line-numbers">58</span>      <span class="comment"># tag::bootstrapInv[]</span>
+<span class="line-numbers">59</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">[kafka-bootstrap-address]</span><span class="delimiter">"</span></span>
+<span class="line-numbers">60</span>      <span class="comment"># end::bootstrapInv[]</span>
+<span class="line-numbers">61</span><span class="comment"># end::inventory[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>inventory</code> microservice displays the <code>hostname</code> and <code>systemLoad</code> of all <code>system</code> microservices that are publishing
+messages to the Kafka broker. Because only one <code>system</code> pod is running, only one element displays in the <code>inventory</code> microservice.
+Scaling up microservices is easy with Operators. Simply update the <code>deploy.yaml</code> file with the <code>replica: n</code> parameter,
+where <code>n</code> is the number of instances that you want.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Update the <code>deploy.yaml</code> configuration file in the <code>start</code> directory.</mark>
+<code>deploy.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>Add the <code class="hotspot=replicas file=0">replicas</code> parameter to the <code>system</code> configuration.</p>
+</div>
+<div class="paragraph">
+<p>Run the following command to update the <code>system</code> resource:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc apply -f deploy.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Look for the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>openlibertyapplications.apps.openliberty.io/system configured
+openlibertyapplications.apps.openliberty.io/inventory unchanged</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice that only the <code>system</code> resource was updated because there was a change in its specification. The <code>inventory</code>
+resource was left unchanged.</p>
+</div>
+<div class="paragraph">
+<p>Run the following command to see the newly scaled up <code>system</code> pods:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc get pods</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you see a status of <code>Running</code> on all of the <code>system</code> pods, your application is ready.
+Revisit the <code>inventory</code> microservice and you can now see three instances of the <code>system</code> microservice listed in the <code>inventory</code> endpoint:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>[
+    {
+        "hostname": "system-5bb7b86fd5-b5plz",
+        "systemLoad": 2.73
+    },
+    {
+        "hostname": "system-5bb7b86fd5-fkd5j",
+        "systemLoad": 2.95
+    },
+    {
+        "hostname": "system-5bb7b86fd5-pgcbf",
+        "systemLoad": 2.73
+    }
+]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tearing-down-the-environment">Tearing down the environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you no longer need your project, switch to another project and delete the project <code>guide</code> by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>oc delete project guide</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command deletes all the applications and resources.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You just deployed two microservices running in Open Liberty to OpenShift by using the Open Liberty Operator.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="related-links">Related Links</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Deploying microservices to OpenShift 4 using Kubernetes Operators <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-cloud-openshift-operator/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-cloud-openshift-operator/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-cloud-openshift-operator/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/okd.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Deploying microservices to an OKD cluster using Minishift</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">1 hour</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

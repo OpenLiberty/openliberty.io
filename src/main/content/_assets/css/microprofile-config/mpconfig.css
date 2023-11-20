@@ -1,0 +1,296 @@
+/**
+  Copyright (c) 2017,2021 IBM Corporation and others.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+
+  Contributors:
+      IBM Corporation - initial API and implementation
+*/
+.ordinalPriorities {
+    text-align: center; /* Align the image in the center of the div */
+}
+
+.ordinalPriorities > img,
+.devOpsPipeline > img  {
+    width: 100%;
+    max-width: 550px;
+}
+
+.propsTable {
+    width: 100%;
+    font-size: 12px;
+    table-layout: fixed;
+    background: #fff;
+    border:solid 1px #dedede;
+}
+
+.propsTableWrapper { /* wrapper for scrollbar */
+    max-height: 80px;
+    display: block;
+    overflow-y: auto;
+}
+
+.propsTable, .propsTable tr:focus {
+  outline: none;
+}
+
+.propsTable tr:nth-of-type(even) {
+    background: #f8f8f7;
+}
+
+.propsTable td {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.propsTable tr th, .propsTable tr td {
+    padding: 0em 1.625em;
+}
+
+.propsTable td:focus, .propsTable th:focus {
+  outline: 2px solid #F4BD9B;
+}
+
+.propertyRow {
+  cursor: pointer;
+}
+
+#guide_content tr.propertyRow:hover, #guide_content tr.propertyRow:hover td{
+ background-color: #F4BD9B ;
+ outline: none;
+}
+
+.carSite {
+    text-align: center;
+    margin: 0;
+    font-family: Asap;
+    background:#323752;
+    color: #ffffff;
+}
+
+.carLogo {
+    height: 42px;
+    width: 47px;
+}
+
+.carSiteTitle {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.topFlexContainer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: calc(100% - 3px); /* factor in the border in carSite when calculating the browser height */
+}
+
+.flexContainer {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.card {
+    background:#ffffff;
+    border:2px solid #f4b23e;
+    border-radius:4px;
+    width:106px;
+    height:70px;
+    text-align:center;
+    margin: 5px auto;
+}
+
+.cardText {
+    font-weight: 600;
+    font-size:16px;
+    color:#333851;
+    letter-spacing:0;
+    border-bottom: 2px solid #ffb000;
+    line-height: 70px; /* Important to center text vertically inside the card */
+}
+
+.devOpsPipeline {
+    text-align: center;
+}
+
+.ordinalCardContainer {
+    width: 100%;
+    height: 155px;
+}
+
+.ordinalCardContainer:focus {
+    outline: none;
+}
+
+.ordinalCard {
+   position: absolute;
+   height: 35px;
+   width: 25%;
+   color: black;
+   text-align: center;
+   font-size: 9px;
+   padding: 5px 10px;
+   border: .5px solid black;
+   transition: .25s all;
+   display: flex;
+   flex-flow: column;
+   justify-content: center;
+   overflow: hidden;
+}
+
+.ordinalCard:hover, .ordinalCard:focus {
+    z-index: 7;
+    font-size: 10px;
+    height: auto;
+    width: 26%;
+    border: 2px solid #E3700D;
+    cursor: pointer;
+    outline: none;
+    overflow: visible;
+    min-height: 40px;
+}
+
+.ordinal-0 {
+    z-index: 1;
+    top: 95px;
+    left: calc((100% - 25%)/7);
+}
+
+.ordinal-1 {
+    z-index: 2;
+    top: 80px;
+    left: calc((100% - 25%)/7 * 2);
+}
+
+.ordinal-2 {
+    z-index: 3;
+    top: 65px;
+    left: calc((100% - 25%)/7 * 3);
+}
+
+.ordinal-3 {
+    z-index: 4;
+    top: 50px;
+    left: calc((100% - 25%)/7 * 4);
+}
+
+.ordinal-4 {
+    z-index: 5;
+    top: 35px;
+    left: calc((100% - 25%)/7 * 5);
+}
+
+.ordinal-5 {
+    z-index: 6;
+    top: 20px;
+    left: calc((100% - 25%)/7 * 6);
+}
+
+p.errorSyntaxCss {
+    margin: 0px;
+    padding: 30px;
+    word-wrap: break-word;
+    line-height: inherit;
+}
+
+@media (max-width: 1170px) {
+    .propsTable {
+        margin-left: 0px;
+        margin-right: 0px;
+        width: 100%;
+    }
+
+    .propsTableWrapper {
+        display: table;  /* no scrollbar for single column view */
+    }
+}
+
+@media (max-width: 1169.98px) {
+    .ordinalPriorities > img,
+    .devOpsPipeline > img  {
+        max-width: 50% !important;
+    }
+}
+
+@media (max-width: 700px) {
+    .ordinalPriorities > img,
+    .devOpsPipeline > img  {
+        max-width: 75% !important;
+    }
+}
+
+@media (max-width: 575px) {
+
+    .ordinalCard {
+        width: 42%;
+        max-width: 175px;
+    }
+
+    .ordinalCard:hover, .ordinalCard:focus {
+        width: 43%;
+        max-width: 185px;
+    }
+
+    .ordinal-0 {
+        left: 5%;
+    }
+
+    .ordinal-1 {
+        left: 15%;
+    }
+
+    .ordinal-2 {
+        left: 25%;
+    }
+
+    .ordinal-3 {
+        left: 35%;
+    }
+
+    .ordinal-4 {
+        left: 45%;
+    }
+
+    .ordinal-5 {
+        left: 55%
+    }
+}
+
+@media (max-width: 525px) {
+    .ordinalPriorities > img,
+    .devOpsPipeline > img  {
+        max-width: 100% !important;
+    }
+}
+
+@media (max-width: 415px) {
+    .ordinal-0 {
+        left: 3%;
+    }
+
+    .ordinal-1 {
+        left: 13%;
+    }
+
+    .ordinal-2 {
+        left: 23%;
+    }
+
+    .ordinal-3 {
+        left: 33%;
+    }
+
+    .ordinal-4 {
+        left: 43%
+    }
+
+    .ordinal-5 {
+        left: 53%
+    }
+}

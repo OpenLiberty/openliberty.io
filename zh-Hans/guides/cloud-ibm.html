@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Deploying Java microservices to IBM Cloud Kubernetes Service
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples on how to deploy Java microservices to IBM Cloud Kubernetes Service using IBM Cloud Container Registry.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/cloud-ibm">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Deploying Java microservices to IBM Cloud Kubernetes Service" />
+  <meta name="twitter:description" content="A getting started tutorial with examples on how to deploy Java microservices to IBM Cloud Kubernetes Service using IBM Cloud Container Registry." />
+
+  <meta property='og:title' content="Deploying Java microservices to IBM Cloud Kubernetes Service" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples on how to deploy Java microservices to IBM Cloud Kubernetes Service using IBM Cloud Container Registry." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/cloud-ibm" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li>
+<a href="#creating-a-kubernetes-cluster-on-ibm-cloud">Creating a Kubernetes cluster on IBM Cloud</a>
+<ul class="sectlevel2">
+<li><a href="#configuring-ibm-cloud-cli">Configuring IBM Cloud CLI</a></li>
+<li><a href="#provisioning-a-cluster">Provisioning a cluster</a></li>
+</ul>
+</li>
+<li>
+<a href="#deploying-microservices-to-ibm-cloud-kubernetes-service">Deploying microservices to IBM Cloud Kubernetes Service</a>
+<ul class="sectlevel2">
+<li><a href="#building-and-containerizing-the-microservices">Building and containerizing the microservices</a></li>
+<li><a href="#pushing-the-images-to-a-container-registry">Pushing the images to a container registry</a></li>
+<li><a href="#deploying-the-microservices">Deploying the microservices</a></li>
+<li><a href="#finding-the-microservices-ip-address-and-ports">Finding the microservice’s IP address and ports</a></li>
+<li><a href="#making-requests-to-the-microservices">Making requests to the microservices</a></li>
+</ul>
+</li>
+<li><a href="#testing-microservices-that-are-running-on-ibm-cloud">Testing microservices that are running on IBM Cloud</a></li>
+<li><a href="#deploying-a-new-version-of-system-microservice">Deploying a new version of system microservice</a></li>
+<li><a href="#tearing-down-the-environment">Tearing down the environment</a></li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Deploying microservices to IBM Cloud Kubernetes Service</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">1 hour</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+          
+            
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/cloud-ibm.html" target="_blank" rel="noopener">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Explore how to deploy microservices to IBM Cloud Kubernetes Service.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to deploy two microservices in Open Liberty containers to a Kubernetes cluster on IBM Cloud.</p>
+</div>
+<div class="paragraph">
+<p>Kubernetes is an open source container orchestrator that automates many tasks involved in deploying, managing, and scaling containerized applications. If you would like to learn more about Kubernetes, check out the <a href="https://openliberty.io/guides/kubernetes-intro.html" target="_blank" rel="noopener">Deploying microservices to Kubernetes</a> guide.</p>
+</div>
+<div class="paragraph">
+<p>Different cloud-based solutions are available to run your Kubernetes workloads. A cloud-based infrastructure enables you to focus on developing your microservices without worrying about low-level infrastructure details for deployment. Using a cloud helps you to easily scale and manage your microservices in a high-availability setup.</p>
+</div>
+<div class="paragraph">
+<p>The IBM Cloud Kubernetes Service is part of IBM’s public cloud offerings. It provides a hosted Kubernetes cluster where you can deploy your microservices. In this guide, you will use it with the IBM Cloud Container Registry, which is a private registry that is used to store and distribute your container images.</p>
+</div>
+<div class="paragraph">
+<p>The two microservices you will deploy are called <code>system</code> and <code>inventory</code>. The <code>system</code> microservice returns the JVM system properties of the running container. It also returns the pod’s name in the HTTP header, making replicas easy to distinguish from each other. The <code>inventory</code> microservice adds the properties from the <code>system</code> microservice to the inventory. This configuration demonstrates how to establish communication between pods inside a cluster.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you begin, the following additional tools need to be installed:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Docker:</strong> You need a containerization software for building containers. Kubernetes supports various container types, but you will use Docker in this guide. For installation instructions, refer to the official <a href="https://docs.docker.com/install/" target="_blank" rel="noopener noreferrer">Docker</a> documentation.</p>
+</li>
+<li>
+<p><strong>kubectl:</strong> You need the Kubernetes command-line tool <code>kubectl</code> to interact with your Kubernetes cluster. See the official <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl" target="_blank" rel="noopener noreferrer">Install and Set Up kubectl</a> documentation for information about downloading and setting up <code>kubectl</code> on your platform.</p>
+</li>
+<li>
+<p><strong>IBM Cloud CLI:</strong> You will use the IBM Cloud CLI to interact with IBM Cloud. To install the IBM Cloud CLI for your platform, run one of the following commands:</p>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+</li>
+</ul>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="paragraph">
+<p>Open command prompt as an administrator and run the following command.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>powershell -command "Set-ExecutionPolicy Unrestricted; iex(New-Object Net.WebClient).DownloadString('https://clis.cloud.ibm.com/install/powershell')"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -fsSL https://clis.cloud.ibm.com/install/osx | sh</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -fsSL https://clis.cloud.ibm.com/install/linux | sh</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>IBM Cloud Container Registry plug-in:</strong>
+To install the container registry plug-in, run the following command:</p>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>ibmcloud plugin install container-registry</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>IBM Cloud Kubernetes Service plug-in:</strong>
+To install the Kubernetes registry plug-in, run the following command:</p>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>ibmcloud plugin install kubernetes-service</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-cloud-ibm.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-cloud-ibm.git
+cd guide-cloud-ibm</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-a-kubernetes-cluster-on-ibm-cloud">Creating a Kubernetes cluster on IBM Cloud</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you can deploy your microservices, you must create a Kubernetes cluster on IBM Cloud.</p>
+</div>
+<div class="sect2">
+<h3 id="configuring-ibm-cloud-cli">Configuring IBM Cloud CLI</h3>
+<div class="paragraph">
+<p>Log in to IBM Cloud by using the <code>ibmcloud</code> command line. When you are prompted to select a region, for example, choose <code>us-south</code>. This allows you to create a free cluster, which is limited to specific regions. Note that if you are using a federated user ID, you will have to use the <code>--sso</code> flag to get a one-time code for single sign-on.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>ibmcloud login</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="provisioning-a-cluster">Provisioning a cluster</h3>
+<div class="paragraph">
+<p>To create a Kubernetes cluster, you need <code>Administrator</code> access to IBM Cloud Kubernetes Service. To confirm that you have <code>Administrator</code> access, navigate to the <a href="https://cloud.ibm.com/" target="_blank" rel="noopener noreferrer">IBM Cloud Dashboard</a>. Then, navigate to <code>Manage &gt; Access (IAM) &gt; Users &gt; [Your Username] &gt; Access Policies</code> and confirm that <code>Administrator</code> is listed as a policy for all resources in the account or for the Kubernetes service.</p>
+</div>
+<div class="paragraph">
+<p>Once you have confirmed that you have appropriate permissions, use the following command to provision a cluster.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>ibmcloud ks cluster create classic --name guide-cluster</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command provisions a free cluster that expires in a month if you do not delete it.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>The 'flavor' flag was not specified. So a free cluster will be created.
+Creating cluster...
+OK
+Cluster created with ID [cluster-id]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Check the current status of your cluster.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>ibmcloud ks clusters</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Wait until your cluster is in the <code>normal</code> state before proceeding. It will start off in the <code>deploying</code> state.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>Name            ID                     State       Created          Workers   Location   Version       Resource Group Name   Provider
+guide-cluster   bpp5ge4f0ck66fue46vg   deploying   4 minutes ago    1         par01      1.16.8_1526   Default               classic</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, it will transition to the <code>pending</code> state.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>Name            ID                     State    Created          Workers   Location   Version       Resource Group Name   Provider
+guide-cluster   bpp5ge4f0ck66fue46vg   pending  16 minutes ago   1         par01      1.16.8_1526   Default               classic</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, it will transition to the <code>normal</code> state. It may take a while for the IBM Cloud Kubernetes Service to prepare your cluster.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>Name            ID                     State    Created      Workers   Location   Version       Resource Group Name   Provider
+guide-cluster   bpp5ge4f0ck66fue46vg   normal   1 hour ago   1         par01      1.16.8_1526   Default               classic</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once your cluster is ready, connect <code>kubectl</code> to the cluster.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>ibmcloud ks cluster config --cluster guide-cluster</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that you’re connected to the cluster by checking the cluster’s nodes.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get nodes</code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME           STATUS    ROLES     AGE       VERSION
+10.70.200.73   Ready     &lt;none&gt;    1h        v1.16.8+IKS</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-microservices-to-ibm-cloud-kubernetes-service">Deploying microservices to IBM Cloud Kubernetes Service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this section, you will learn how to deploy two microservices in Open Liberty containers to a Kubernetes cluster on IBM Cloud. You will build and containerize the <code>system</code> and <code>inventory</code> microservices, push them to a container registry, and then deploy them to your Kubernetes cluster.</p>
+</div>
+<div class="sect2">
+<h3 id="building-and-containerizing-the-microservices">Building and containerizing the microservices</h3>
+<div class="paragraph">
+<p>The first step of deploying to Kubernetes is to build and containerize your microservices.</p>
+</div>
+<div class="paragraph">
+<p>The starting Java project, which you can find in the <code>start</code> directory, is a multi-module Maven project. It’s made up of the <code>system</code> and <code>inventory</code> microservices. Each microservice resides in its own directory, <code>start/system</code> and <code>start/inventory</code>. Each of these directories also contains a Dockerfile, which is necessary for building Docker images. If you’re unfamiliar with Dockerfiles, check out the <a href="https://openliberty.io/guides/containerize.html" target="_blank" rel="noopener">Containerizing Microservices</a> guide.</p>
+</div>
+<div class="paragraph">
+<p>To build these microservices, navigate to the <code>start</code> directory and run the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, run the <code>docker build</code> commands to build container images for your application:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker build -t system:1.0-SNAPSHOT system/.
+docker build -t inventory:1.0-SNAPSHOT inventory/.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>-t</code> flag in the <code>docker build</code> command allows the Docker image to be labeled (tagged) in the <code>name[:tag]</code> format. The tag for an image describes the specific image version. If the optional <code>[:tag]</code> tag is not specified, the <code>latest</code> tag is created by default.</p>
+</div>
+<div class="paragraph">
+<p>During the build, you’ll see various Docker messages describing what images are being downloaded and built. When the build finishes, run the following command to list all local Docker images:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker images</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that the <code>system:1.0-SNAPSHOT</code> and <code>inventory:1.0-SNAPSHOT</code> images are listed among them, for example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>REPOSITORY                                   TAG
+system                                       1.0-SNAPSHOT
+inventory                                    1.0-SNAPSHOT
+icr.io/appcafe/open-liberty                  kernel-slim-java11-openj9-ubi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you don’t see the <code>system:1.0-SNAPSHOT</code> and <code>inventory:1.0-SNAPSHOT</code> images, then check the Maven build log for any potential errors.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="pushing-the-images-to-a-container-registry">Pushing the images to a container registry</h3>
+<div class="paragraph">
+<p>Pushing the images to a registry enables the cluster to create pods by using your container images. It’s a private repository so only users with access to your IBM Cloud account will have access to these images.</p>
+</div>
+<div class="paragraph">
+<p>The registry you will use is called IBM Cloud Container Registry. Use the container registry plug-in to create a namespace for your container images. The namespace must be unique within IBM Cloud for the region you selected, so choose something relevant that you’ll remember for the duration of the guide.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>ibmcloud cr namespace-add [your-namespace]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the plug-in again to log in to the container registry and find out your registry name, for example, <code>us.icr.io</code>.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>ibmcloud cr login</code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>Logging 'docker' in to 'us.icr.io'...
+Logged in to 'us.icr.io'.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, tag your container images with the relevant data about your registry. Remember to replace <code>us.icr.io</code> to your registry and <code>[your-namespace]</code> with the namespace you created earlier in the guide.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker tag system:1.0-SNAPSHOT us.icr.io/[your-namespace]/system:1.0-SNAPSHOT
+docker tag inventory:1.0-SNAPSHOT us.icr.io/[your-namespace]/inventory:1.0-SNAPSHOT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, push your images to the registry. Remember to replace <code>us.icr.io</code> to your registry and <code>[your-namespace]</code> with the namespace you created earlier in the guide.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker push us.icr.io/[your-namespace]/system:1.0-SNAPSHOT
+docker push us.icr.io/[your-namespace]/inventory:1.0-SNAPSHOT</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="deploying-the-microservices">Deploying the microservices</h3>
+<div class="paragraph">
+<p>Now that your container images are built, deploy them using a Kubernetes resource definition.</p>
+</div>
+<div class="paragraph">
+<p>A Kubernetes resource definition is a YAML file that contains a description of all your deployments, services, or any other resources that you want to deploy. All resources can also be deleted from the cluster by using the same YAML file that you used to deploy them. For this guide, the <code>kubernetes.yaml</code> resource definition file is provided for you. If you are interested in learning more about the Kubernetes resource definition, check out the <a href="https://openliberty.io/guides/kubernetes-intro.html" target="_blank" rel="noopener">Deploying microservices to Kubernetes</a> guide.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Update the <code>kubernetes.yaml</code> file in the <code>start</code> directory.</mark>
+<code>kubernetes.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>kubernetes.yaml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers"> 1</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="line-numbers"> 2</span><span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="line-numbers"> 3</span><span class="key">metadata</span>:
+<span class="line-numbers"> 4</span>  <span class="key">name</span>: <span class="string"><span class="content">system-deployment</span></span>
+<span class="line-numbers"> 5</span>  <span class="key">labels</span>:
+<span class="line-numbers"> 6</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 7</span><span class="key">spec</span>:
+<span class="line-numbers"> 8</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 9</span>    <span class="key">matchLabels</span>:
+<span class="line-numbers">10</span>      <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers">11</span>  <span class="key">template</span>:
+<span class="line-numbers">12</span>    <span class="key">metadata</span>:
+<span class="line-numbers">13</span>      <span class="key">labels</span>:
+<span class="line-numbers">14</span>        <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers">15</span>    <span class="key">spec</span>:
+<span class="line-numbers">16</span>      <span class="key">containers</span>:
+<span class="line-numbers">17</span>      - <span class="string"><span class="content">name: system-container</span></span>
+<span class="line-numbers">18</span>        <span class="key">image</span>: <span class="string"><span class="content">us.icr.io/[your-namespace]/system:1.0-SNAPSHOT</span></span>
+<span class="line-numbers">19</span>        <span class="key">ports</span>:
+<span class="line-numbers">20</span>        - <span class="string"><span class="content">containerPort: 9080</span></span>
+<span class="line-numbers">21</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">22</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="line-numbers">23</span><span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="line-numbers">24</span><span class="key">metadata</span>:
+<span class="line-numbers">25</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-deployment</span></span>
+<span class="line-numbers">26</span>  <span class="key">labels</span>:
+<span class="line-numbers">27</span>    <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers">28</span><span class="key">spec</span>:
+<span class="line-numbers">29</span>  <span class="key">selector</span>:
+<span class="line-numbers">30</span>    <span class="key">matchLabels</span>:
+<span class="line-numbers">31</span>      <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers">32</span>  <span class="key">template</span>:
+<span class="line-numbers">33</span>    <span class="key">metadata</span>:
+<span class="line-numbers">34</span>      <span class="key">labels</span>:
+<span class="line-numbers">35</span>        <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers">36</span>    <span class="key">spec</span>:
+<span class="line-numbers">37</span>      <span class="key">containers</span>:
+<span class="line-numbers">38</span>      - <span class="string"><span class="content">name: inventory-container</span></span>
+<span class="line-numbers">39</span>        <span class="key">image</span>: <span class="string"><span class="content">us.icr.io/[your-namespace]/inventory:1.0-SNAPSHOT</span></span>
+<span class="line-numbers">40</span>        <span class="key">ports</span>:
+<span class="line-numbers">41</span>        - <span class="string"><span class="content">containerPort: 9080</span></span>
+<span class="line-numbers">42</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">43</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers">44</span><span class="key">kind</span>: <span class="string"><span class="content">Service</span></span>
+<span class="line-numbers">45</span><span class="key">metadata</span>:
+<span class="line-numbers">46</span>  <span class="key">name</span>: <span class="string"><span class="content">system-service</span></span>
+<span class="line-numbers">47</span><span class="key">spec</span>:
+<span class="line-numbers">48</span>  <span class="key">type</span>: <span class="string"><span class="content">NodePort</span></span>
+<span class="line-numbers">49</span>  <span class="key">selector</span>:
+<span class="line-numbers">50</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers">51</span>  <span class="key">ports</span>:
+<span class="line-numbers">52</span>  - <span class="string"><span class="content">protocol: TCP</span></span>
+<span class="line-numbers">53</span>    <span class="key">port</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">54</span>    <span class="key">targetPort</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">55</span>    <span class="key">nodePort</span>: <span class="string"><span class="content">31000</span></span>
+<span class="line-numbers">56</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">57</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers">58</span><span class="key">kind</span>: <span class="string"><span class="content">Service</span></span>
+<span class="line-numbers">59</span><span class="key">metadata</span>:
+<span class="line-numbers">60</span>  <span class="key">name</span>: <span class="string"><span class="content">inventory-service</span></span>
+<span class="line-numbers">61</span><span class="key">spec</span>:
+<span class="line-numbers">62</span>  <span class="key">type</span>: <span class="string"><span class="content">NodePort</span></span>
+<span class="line-numbers">63</span>  <span class="key">selector</span>:
+<span class="line-numbers">64</span>    <span class="key">app</span>: <span class="string"><span class="content">inventory</span></span>
+<span class="line-numbers">65</span>  <span class="key">ports</span>:
+<span class="line-numbers">66</span>  - <span class="string"><span class="content">protocol: TCP</span></span>
+<span class="line-numbers">67</span>    <span class="key">port</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">68</span>    <span class="key">targetPort</span>: <span class="string"><span class="content">9080</span></span>
+<span class="line-numbers">69</span>    <span class="key">nodePort</span>: <span class="string"><span class="content">32000</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>The <code class="hotspot=18 hotspot=39">image</code> is the name and tag of the container image that you want to use for the container. Update the system <code class="hotspot=18">image</code> and the inventory <code class="hotspot=39">image</code> fields to point to your <code>system</code> and <code>inventory</code> container images. Remember to replace <code>us.icr.io</code> with your registry and <code>[your-namespace]</code> with the namespace you created earlier in the guide.</p>
+</div>
+<div class="paragraph">
+<p>Run the following commands to deploy the resources as defined in the <code>kubernetes.yaml</code> file:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl apply -f kubernetes.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the apps are deployed, run the following command to check the status of your pods:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get pods</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If all the pods are healthy and running, you see an output similar to the following:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                                    READY     STATUS    RESTARTS   AGE
+system-deployment-6bd97d9bf6-4ccds      1/1       Running   0          15s
+inventory-deployment-645767664f-nbtd9   1/1       Running   0          15s</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="finding-the-microservices-ip-address-and-ports">Finding the microservice’s IP address and ports</h3>
+<div class="paragraph">
+<p>The service used to expose your deployments has a type of <code>NodePort</code> service that enables you to access these services from outside of your cluster through a specific port. In this case, <code>nodePort</code> is not specified and the ports are randomized so you must obtain the ports before you make requests to the services. You must also obtain the public IP address of your cluster. Other ways to expose your services are available, such as by using a <code>LoadBalancer</code> service type or  an <code>Ingress</code> resource. In production, you typically use an <code>Ingress</code> resource.</p>
+</div>
+<div class="paragraph">
+<p>First, find the public IP address of your cluster.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>ibmcloud ks workers --cluster guide-cluster</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Take note of the <code>Public IP</code> in the command’s output. You will substitute this value as the hostname into commands later in this guide.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>OK
+ID                                                       Public IP         Private IP       Flavor   State    Status   Zone    Version
+kube-bpp5ge4f0ck66fue46vg-guidecluste-default-00000048   159.122.179.207   10.144.188.209   free     normal   Ready    mil01   1.16.8_1526</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Get the node port of the <code>system</code> microservice.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get service system-service -o jsonpath="{.spec.ports[0].nodePort}{'\n'}"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Get the node port of the <code>inventory</code> microservice.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get service inventory-service -o jsonpath="{.spec.ports[0].nodePort}{'\n'}"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Take note of the IP address and ports. They are required to make the HTTP requests.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="making-requests-to-the-microservices">Making requests to the microservices</h3>
+<div class="paragraph">
+<p>To make a request to the <code>system</code> and <code>inventory</code> microservices,  <code>curl</code> or visit the following URLs to access your microservices, substituting the appropriate hostname and node ports:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>http://[hostname]:[system-node-port]/system/properties</code></p>
+</li>
+<li>
+<p><code>http://[hostname]:[inventory-node-port]/inventory/systems/system-service</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The first URL returns system properties and the name of the pod in an HTTP header called <code>X-Pod-Name</code>. To view the header, you can use the <code>-I</code> option in the <code>curl</code> when making a request to  the <code>http://[hostname]:[system-node-port]/system/properties</code> URL. The second URL adds properties from <code>system-service</code> to the inventory.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-microservices-that-are-running-on-ibm-cloud">Testing microservices that are running on IBM Cloud</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A few tests are included for you to test the basic functionality of the microservices. If a test fails, then you might have introduced a bug into the code. To run the tests, wait until all pods are in the ready state before proceeding further. The default properties that are defined in the <code>pom.xml</code> file are:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 13.0434%;">
+<col style="width: 86.9566%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Property</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cluster.ip</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IP or hostname for your cluster</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>system.kube.service</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the Kubernetes Service wrapping the <code>system</code> pods, <code>system-service</code> by default.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>system.node.port</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The NodePort of the Kubernetes Service <code>system-service</code>, 31000 by default.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inventory.node.port</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The NodePort of the Kubernetes Service <code>inventory-service</code>, 32000 by default.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Use the following command to run the integration tests against your cluster. Substitute
+<code>[hostname]</code>, <code>[system-node-port]</code> and <code>[inventory-node-port]</code> with the appropriate values.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn failsafe:integration-test -Dcluster.ip=[hostname] -Dsystem.node.port=[system-node-port] -Dinventory.node.port=[inventory-node-port]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the tests pass, you’ll see an output similar to the following for each service respectively:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.system.SystemEndpointIT
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.673 sec - in it.io.openliberty.guides.system.SystemEndpointIT
+
+Results:
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.inventory.InventoryEndpointIT
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.222 sec - in it.io.openliberty.guides.inventory.InventoryEndpointIT
+
+Results:
+
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-a-new-version-of-system-microservice">Deploying a new version of system microservice</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Optionally, you might want to make changes to your microservice and redeploy the updated version. In this section, you will bump the version of the <code>system</code> microservice to <code>2.0-SNAPSHOT</code> and redeploy the new version of the microservice.</p>
+</div>
+<div class="paragraph">
+<p>Use Maven to repackage your microservice:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, build the new version of the container image as <code>2.0-SNAPSHOT</code>:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker build -t system:2.0-SNAPSHOT system/.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since you built a new image, you need to push it to the repository again. In the following <code>docker</code> and <code>kubectl</code> commands, remember to replace <code>us.icr.io</code> with your registry and <code>[your-namespace]</code> with the namespace you created earlier in the guide.</p>
+</div>
+<div class="paragraph">
+<p>Tag your container image with the relevant data about your registry.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker tag system:2.0-SNAPSHOT us.icr.io/[your-namespace]/system:2.0-SNAPSHOT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Push your image to the registry.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker push us.icr.io/[your-namespace]/system:2.0-SNAPSHOT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Update the <code>system-deployment</code> deployment to use the new container image that you just pushed to the registry:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl set image deployment/system-deployment system-container=us.icr.io/[your-namespace]/system:2.0-SNAPSHOT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the following command to find the name of the pod that is running the <code>system</code> microservice.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get pods</code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                                       READY    STATUS    RESTARTS   AGE
+inventory-app-ibm-open-l-994778cf7-fdkb5   1/1      Running   0          5m
+system-app-ibm-open-libe-85c85949c-lb49d   1/1      Running   0          23s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, the <code>system</code> microservice is running in the pod called <code>system-app-ibm-open-libe-85c85949c-lb49d</code>. Substitute the name of your pod into the following command to see more details about the pod.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl describe pod [pod-name]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Substitute the <code>[pod-name]</code> to your pod name into the following command. Run the command to view your pod events. Observe that the pod is using the new container image <code>system:2.0-SNAPSHOT</code>.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get event --field-selector involvedObject.name=[pod-name]</code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>LAST SEEN   TYPE     REASON      OBJECT                                         MESSAGE
+12m         Normal   Scheduled   pod/system-app-ibm-open-libe-85c85949c-lb49d   Successfully assigned default/system-app-ibm-open-libe-85c85949c-lb49d to 10.144.182.122
+12m         Normal   Pulling     pod/system-app-ibm-open-libe-85c85949c-lb49d   Pulling image "us.icr.io/[your-namespace]/system:2.0-SNAPSHOT"
+12m         Normal   Pulled      pod/system-app-ibm-open-libe-85c85949c-lb49d   Successfully pulled image "us.icr.io/[your-namespace]/system:2.0-SNAPSHOT" in 6.8103423s
+12m         Normal   Created     pod/system-app-ibm-open-libe-85c85949c-lb49d   Created container ibm-open-liberty
+12m         Normal   Started     pod/system-app-ibm-open-libe-85c85949c-lb49d   Started container ibm-open-liberty</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tearing-down-the-environment">Tearing down the environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you no longer need your deployed microservices, you can delete all Kubernetes resources by running the <code>kubectl delete</code> command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl delete -f kubernetes.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Remove your images from your container registry. Remember to replace <code>us.icr.io</code> to your registry and <code>[your-namespace]</code> with the namespace you created earlier in the guide.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>ibmcloud cr image-rm us.icr.io/[your-namespace]/system:1.0-SNAPSHOT
+ibmcloud cr image-rm us.icr.io/[your-namespace]/system:2.0-SNAPSHOT
+ibmcloud cr image-rm us.icr.io/[your-namespace]/inventory:1.0-SNAPSHOT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Remove the namespace you created in your container registry.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>ibmcloud cr namespace-rm [your-namespace]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Log out of your container registry. Remember to replace <code>us.icr.io</code> to your registry.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker logout us.icr.io
+docker logout registry.ng.bluemix.net</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Remove your IKS cluster.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>ibmcloud ks cluster rm --cluster guide-cluster</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Log out of the <code>ibmcloud</code> command line tool.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>ibmcloud logout</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You just deployed two microservices to IBM Cloud. You also learned how to use the <code>kubectl</code> command to deploy your microservices on a Kubernetes cluster.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Deploying microservices to IBM Cloud Kubernetes Service <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-cloud-ibm/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-cloud-ibm/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-cloud-ibm/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/kubernetes-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Deploying microservices to Kubernetes</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">25 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/kubernetes-microprofile-config.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Configuring microservices running in Kubernetes</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">15 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/kubernetes-microprofile-health.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Checking the health of microservices on Kubernetes</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/istio-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Managing microservice traffic using Istio</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">30 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

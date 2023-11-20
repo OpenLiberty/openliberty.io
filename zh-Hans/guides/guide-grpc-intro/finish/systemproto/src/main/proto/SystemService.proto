@@ -1,0 +1,66 @@
+// tag::copyright[]
+/*******************************************************************************
+ * Copyright (c) 2022, 2023 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *******************************************************************************/
+// end::copyright[]
+
+// tag::basicConfig[]
+syntax = "proto3";
+package io.openliberty.guides.systemproto;
+option java_multiple_files = true;
+// end::basicConfig[]
+
+// tag::SystemService[]
+service SystemService {
+  // tag::getProperty[]
+  rpc getProperty (SystemPropertyName) returns (SystemPropertyValue) {}
+  // end::getProperty[]
+
+  // tag::getServerStreamingProperties[]
+  rpc getServerStreamingProperties (SystemPropertyPrefix) returns (stream SystemProperty) {}
+  // end::getServerStreamingProperties[]
+
+  // tag::getClientStreamingProperties[]
+  rpc getClientStreamingProperties (stream SystemPropertyName) returns (SystemProperties) {}
+  // end::getClientStreamingProperties[]
+
+  // tag::getBidirectionalProperties[]
+  rpc getBidirectionalProperties (stream SystemPropertyName) returns (stream SystemProperty) {}
+  // end::getBidirectionalProperties[]
+}
+// end::SystemService[]
+
+// tag::SystemPropertyName[]
+message SystemPropertyName {
+    string propertyName = 1;
+}
+// end::SystemPropertyName[]
+
+message SystemPropertyPrefix {
+    string propertyPrefix = 1;
+}
+
+// tag::SystemPropertyValue[]
+message SystemPropertyValue {
+    string propertyValue = 1;
+}
+// end::SystemPropertyValue[]
+
+// tag::SystemProperty[]
+message SystemProperty {
+    string propertyName = 1;
+    string propertyValue = 2;
+}
+// end::SystemProperty[]
+
+// tag::SystemProperties[]
+message SystemProperties {
+    map<string, string> properties = 1;
+}
+// end::SystemProperties[]

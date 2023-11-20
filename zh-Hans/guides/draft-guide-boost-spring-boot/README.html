@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      
+        Contributing a guide - Open Liberty
+      
+    
+  </title>
+  <meta name="description" content="Open Liberty is the most flexible server runtime available to Earth’s Java developers.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/draft-guide-boost-spring-boot/README.html">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Open Liberty" />
+  <meta name="twitter:description" content="Open Liberty is the most flexible server runtime available to Earth’s Java developers." />
+
+  <meta property='og:title' content="Open Liberty" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="Open Liberty is the most flexible server runtime available to Earth’s Java developers." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/draft-guide-boost-spring-boot/README.html" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Welcome to Open Liberty! In order to contribute a guide for Open Liberty, follow the steps in this README.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step-1-set-up-your-computer">Step 1: Set up your computer.</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Install <a href="https://help.github.com/articles/set-up-git/" target="_blank" rel="noopener noreferrer">Git</a> and become familiar with the <a href="https://blog.github.com/2015-07-29-git-2-5-including-multiple-worktrees-and-triangular-workflows/#improved-support-for-triangular-workflows" target="_blank" rel="noopener noreferrer">Git triangular workflow</a>.</p>
+</li>
+<li>
+<p>Install and know the basics of <a href="https://maven.apache.org/index.html" target="_blank" rel="noopener noreferrer">Maven</a> or <a href="https://gradle.org" target="_blank" rel="noopener noreferrer">Gradle</a>.</p>
+</li>
+<li>
+<p>Install a text editor with the <a href="https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/" target="_blank" rel="noopener noreferrer">AsciiDoc</a> compiler plugin and learn the syntax of AsciiDoc.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step-2-optional-try-some-existing-guides">Step 2 (Optional): Try some existing guides.</h3>
+<div class="paragraph">
+<p>Use the guides on <a href="https://openliberty.io/guides/">openliberty.io</a> as examples.</p>
+</div>
+<div class="paragraph">
+<p>If you’re not sure where to start, try the <a href="https://openliberty.io/guides/rest-intro.html">Creating a RESTful web service</a> guide followed by the  <a href="https://openliberty.io/guides/cdi-intro.html">Injecting dependencies into microservices</a> guide.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step-3-know-the-structure-and-style">Step 3: Know the structure and style.</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Know your audience!</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If the guide is introductory, explain the basic concepts of the technology. At the same time, try to avoid overwhelming the reader with too much information. If you’re not sure if you’ve included the correct amount of info, consider asking a new user to try your guide.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Know the guide structure and the writing styles!</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Take a look at the <a href="https://github.com/OpenLiberty/guides-template/wiki/Guidelines-for-Structure-and-Styles" target="_blank" rel="noopener noreferrer">Guidelines for Structure and Styles</a>.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step-4-create-a-new-guide">Step 4: Create a new guide.</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Clone the <a href="https://github.com/OpenLiberty/guides-template" target="_blank" rel="noopener noreferrer"><code>guides-template</code></a> to your own workspace.</p>
+</li>
+<li>
+<p>Develop your guide in your own workspace.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Develop code and write tests that are based on the project structure in the <a href="https://github.com/OpenLiberty/guides-template" target="_blank" rel="noopener noreferrer"><code>guides-template</code></a>. To start, create your project in the <code>finish</code> directory. Make a simple application that demonstrates how to use your topic.</p>
+</li>
+<li>
+<p>Copy the code from the <code>finish</code> directory to the <code>start</code> directory. Then, from the copy in the <code>start</code> directory, remove the code that you want the user to focus on.</p>
+</li>
+<li>
+<p>Write a guide that follows the <code>README.adoc</code> template (APPENDIX A) in the <a href="https://github.com/OpenLiberty/guides-template" target="_blank" rel="noopener noreferrer"><code>guides-template</code></a> repository. Introduce and explain the parts of code that you removed during the last step and tell the users where to copy and paste the code. Walk through how to build the <code>finish</code> directory, run the tests, and perform any other steps that users need to run your project on their own.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Before proceeding further, you should review the <a href="https://github.com/OpenLiberty/guides-template/wiki/Self-Review-Checklist" target="_blank" rel="noopener noreferrer">checklist</a>.</p>
+</li>
+<li>
+<p>Open a new issue in the <a href="https://github.com/OpenLiberty/guides-common/issues" target="_blank" rel="noopener noreferrer">guides-commons</a> repository. Describe the topic you wrote, add a link to the repository that contains the complete draft of your guide, and the Open Liberty team will be notified.</p>
+</li>
+<li>
+<p>You must sign the <a href="https://github.com/OpenLiberty/open-liberty/blob/master/cla/open-liberty-cla-individual.pdf" target="_blank" rel="noopener noreferrer">Individual Contributor License Agreement</a> (CLA) in order to contribute. If you are writing the guide as part of your job, you might also want your employer to sign a <a href="https://github.com/OpenLiberty/open-liberty/blob/master/cla/open-liberty-cla-corporate.pdf" target="_blank" rel="noopener noreferrer">Corporate Contributor License Agreement</a> (CCLA). Instructions for how to sign and submit these agreements are provided in each document. You should send your signed CLA document (in PDF) to the email address <a href="mailto:cla@openliberty.io">cla@openliberty.io</a> before you move on to the next step.</p>
+</li>
+<li>
+<p>After the Open Liberty team approves your guide and obtains your signed CLA, they will create a draft guide repository in the Open Liberty Project on GitHub for you. Your new repository will be named as <code>draft-guide-{projectid}</code>. Then, you can open a pull request that contains your commits for the guide, and the team will be notified for review.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="step-5-the-open-liberty-team-will-review-your-guide">Step 5: The Open Liberty team will review your guide.</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>You can see your feedback from the <code>Issues</code> section in your <code>draft-guide-{projectid}</code> repository when it’s ready.</p>
+</li>
+<li>
+<p>Follow up with the team’s review discussions.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect1">
+<h2 id="appendix-a-a-template-readme-adoc">APPENDIX A: A template README.adoc</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Please remove all the instructions before <code>APPENDIX A</code> prior to commit. Most comments should be removed, although not the copyright.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>// INSTRUCTION: The copyright statement must appear at the top of the file
+//
+// Copyright (c) 2018 IBM Corporation and others.
+// Licensed under Creative Commons Attribution-NoDerivatives
+// 4.0 International (CC BY-ND 4.0)
+//   https://creativecommons.org/licenses/by-nd/4.0/
+//
+// Contributors:
+//     IBM Corporation
+//
+
+
+:page-layout: guide
+// INSTRUCTION: The project id is the part of the git repository after the guide- and must be specified
+// :projectid: github repo name without the `guide-` prefix
+:projectid: template
+// INSTRUCTION: Provide an estimate of how long the guide will take to go through.
+:page-duration: 15 minutes
+// INSTRUCTION: Provide the date when the guide is published.  Format is YYYY-MM-DD.
+:page-releasedate: 2018-05-14
+// INSTRUCTION: Provide a description for the guide index page.
+:page-description: Learn how to create a todo list API as a REST service using JAX-RS, and Open Liberty.
+// INSTUCTION: Please provide relevant tags, try to avoid inventing new ones.
+:page-tags: ['REST', 'Getting Started', 'CDI', 'JAX-RS']
+// INSTRUCTION: Specify the unique name of the guide that is used in the permalink.
+:page-related-guides: ['cdi-intro', 'rest-intro']
+// INSTRUCTION: Set 'basic', 'microprofile', 'none'
+:page-guide-category: microprofile
+ // INSTRUCTION:
+// Requirement: Must define :page-guide-category:
+// Places the guide into the essentials section of a category
+:page-essential: false
+ // INSTRUCTION:
+// Requirement: Must have :page-essential: true
+// Number is used to sort guide from left (lowest number) to right (highest number) in
+// the essentials section of a category
+:page-essential-order: 3
+// INSTRUCTION: Specify the slug in the website. This must be unique.
+:page-permalink: /guides/{projectid}
+// INSTRUCTION: Source the common page elements, clone git@github.com:OpenLiberty/guides-common.git.
+:common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
+// INSTRUCTION: Update the SEO title for the guide
+:page-seo-title: Creating a REST service
+// INSTRUCTION: Update the SEO desciption for the guide
+:page-seo-description: Find out how to create a REST service on Open Liberty
+// INSTRUCTION: You can't have a new line between the attributes and the title.
+
+
+
+
+= Title of guide, starting with a gerund (Creating, Administering, and so on)
+// EXAMPLE: Creating a REST API for a todo list application
+
+[.hidden]
+NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
+
+// Start the introduction with "You'll explore how to..." or something similarly catchy.
+// Write no more than two sentences, with meaningful information on what the user can accomplish
+// with this guide.
+// Do not start the introduction with "This guide...".
+// EXAMPLE: Learn how to create a todo list API as a REST service using JAX-RS, CDI, and Open Liberty.
+
+
+
+
+== What you'll learn
+
+// Write about what the user will learn in a meaningful intro paragraph.
+// Follow the intro paragraph with more details of what the user will learn, but still keep it brief.
+// See the REST guide at as an exemplar guide.
+// https://openliberty.io/guides/rest-intro.html
+// https://github.com/OpenLiberty/guide-rest-intro
+
+
+
+
+
+== Getting started
+
+// Add this getting started section to your guide if it is applicable.
+// Use the following include to pull in the git clone instructions from the guides-common repo.
+
+ include::{common-includes}/gitclone.adoc[]
+
+
+
+
+
+=== Try what you’ll build
+
+// This is a subsection of the "Getting started" section above. It should briefly walk the user
+// through how to setup everything in the "finish" directory and try out the finished version of
+// what they will be building.
+
+ include::{common-includes}/trywhatyoubuild-intro.adoc[]
+
+// Brief explanation on how to use the finished application.
+// Describe what user expects to see after running the complete version of the application.
+
+ include::{common-includes}/trywhatyoubuild-end.adoc[]
+
+
+
+
+== Section title for this section, starting with a gerund like Creating, Building, etc
+
+// Add the various sections that are needed for a particular guide.
+
+// Start each additional section title with a meaningful gerund such as Creating, Building, Testing.
+// Follow the gerund with a meaningful noun phrase. For example: Creating a JAX-RS application
+// Have as many sections and section titles as needed.
+// EXAMPLE: * Learning to use JAX-RS and CDI
+// EXAMPLE: * Learning how to build a REST service for a todo list application
+
+
+// Write a sentence with the context like "Navigate to the `start` directory to begin." in the section
+// where user starts working with the implementation.
+
+
+// What to add for each section:
+// Start each section with a meaningful description about what the user is doing in the section.
+// Include code snippets.
+// Avoid making all the documentation a series of steps and tasks, bullets, or numbered lists.
+// Use tick marks around directories, files, values, class names, method names, and so on.
+// Example: `this-is-a-file`, `this/is/a/path`, `thisIsAMethod`.
+
+
+
+
+
+// EXAMPLE: The following block demostrates how different sections look like for a todo application.
+======================================================================================================
+== Building the model
+
+* Navigate to the `start` directory
+* Represent an entry in a todo list
+
+Create the todo model class in the
+
+`src/main/java/io/openliberty/guides/todolistSample/models/TodoModel.java` file:
+
+[source, Java]
+----
+Unresolved directive in README.adoc - include::finish/src/main/java/io/openliberty/guides/todolistSample/models/TodoModel.java[tags=**;!copyright;]
+----
+
+* Getters, setters, and default constructor such that the model can be serialized/deserialized easily
+
+== Creating the Manager
+
+* Create a manager that is injected into the JAX-RS resource
+
+Create the todo manager interface in the
+
+`src/main/java/io/openliberty/guides/todo/managers/TodoManager.java` file:
+
+[source, Java]
+----
+Unresolved directive in README.adoc - include::finish/src/main/java/io/openliberty/guides/todolistSample/managers/TodoManager.java[tags=**;!copyright;]
+----
+
+Next, create the sample todo manager class in the
+
+`src/main/java/io/openliberty/guides/todolistSample/managers/samples/SampleTodoManager.java` file:
+
+[source, Java]
+----
+Unresolved directive in README.adoc - include::finish/src/main/java/io/openliberty/guides/todolistSample/managers/samples/SampleTodoManager.java[tags=**;]
+----
+
+* Implemented basic CRUD (Create, Read, Update, and Delete) operations.
+* Manager is ApplicationScoped, which essentially means that it is a singleton.
+
+== Creating the JAX-RS resource
+
+* Description of the technology, possibly with a link to learn more.
+* Use CDI to inject the todo manager into the resource
+
+Create the todo resource class in the
+
+`src/main/java/io/openliberty/guides/todolistSample/resources/TodoResource.java` file:
+
+[source, Java]
+----
+Unresolved directive in README.adoc - include::finish/src/main/java/io/openliberty/guides/todolistSample/resources/TodoResource.java[tags=**;!copyright;]
+----
+
+* The resource methods are accessible via HTTP
+* Use GET, POST, PUT, and DELETE verbs to handle reading, creating, updating, and deleting resources
+* Validate data models and send appropriate response accordingly
+======================================================================================================
+
+
+
+
+
+
+== Building and running the application
+
+// Use the following include to pull in the Maven build instructions from the guides-common repo.
+ include::{common-includes}/mvnbuild.adoc[]
+
+// In between here, you should state where you application can be found now that its running. ie. urls
+// Sample usage of the application
+// Suggestions for what changes the reader can make to explore the code
+
+// Use the following include to pull in the Maven rebuild instructions from the
+// guides-common repo.
+ include::{common-includes}/mvncompile.adoc[]
+
+
+
+== Testing the application
+
+// Show how to test your application.
+
+
+// EXAMPLE:
+======================================================================================================
+Create the todo test class in the
+
+`finish/src/test/java/it/io/openliberty/guides/todo/TodoTest.java` file:
+[source, Java]
+----
+Unresolved directive in README.adoc - include::finish/src/test/java/it/io/openliberty/guides/todolistSample/TodoTest.java[tags=**;!copyright;]
+----
+
+* Explain what each test case is testing
+* Explain key methods
+======================================================================================================
+
+// Include this for info on how to run the tests
+ include::{common-includes}/mvnverify.adoc[]
+
+// Including a listing block with test results here
+// Show console output of the test results
+
+// OPTIONAL: after listing the test results, mention a simple change a user can make/introduce that
+// will cause the tests to fail. Be brief and don't give the users all of the instructions.
+// At this point, they should be comfortable enough to figure it out on their own.
+
+
+
+
+
+
+== Great work! You're done!
+
+// Briefly summarize what the user achieved in this guide (1-2 sentences).
+
+// OPTIONAL: briefly state what the user could do next now that they've learned the
+// technologies in this guide.
+
+// Include the below from the guides-common repo to tell users how they can contribute to the guide
+ include::{common-includes}/finish.adoc[]
+
+// DO NO CREATE ANYMORE SECTIONS AT THIS POINT
+// Related guides will be added in automatically here if you included them in ":page-related-guides"</code></pre>
+</div>
+</div>
+</div>
+</div>
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

@@ -1,0 +1,18 @@
+<server description="Liberty Server for Bean Validation Guide">
+
+    <featureManager>
+        <feature>cdi-4.0</feature>
+        <feature>restfulWS-3.1</feature>
+        <feature>jsonb-3.0</feature>
+        <feature>mpOpenAPI-3.1</feature>
+    </featureManager>
+
+    <variable name="default.http.port" defaultValue="9080"/>
+    <variable name="default.https.port" defaultValue="9443"/>
+    <variable name="app.context.root" defaultValue="Spacecraft"/>
+
+    <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
+        id="defaultHttpEndpoint" host="*" />
+
+   <webApplication location="guide-bean-validation.war" contextRoot="${app.context.root}"/>
+</server>

@@ -1,0 +1,27 @@
+<server description="new server">
+
+    <featureManager>
+        <feature>restfulWS-3.1</feature>
+        <feature>jsonb-3.0</feature>
+        <feature>jsonp-2.1</feature>
+        <feature>cdi-4.0</feature>
+        <feature>mpConfig-3.0</feature>
+
+        <!--Enable the following features to run tests with Arquillian managed container-->
+        <!-- tag::localConnector[] -->
+        <feature>localConnector-1.0</feature>
+        <!-- end::localConnector[] -->
+        <!-- tag::Servlet[] -->
+        <feature>servlet-6.0</feature>
+        <!-- end::Servlet[] -->
+        
+    </featureManager>
+
+    <variable name="default.http.port" defaultValue="9080" />
+    <variable name="default.https.port" defaultValue="9443" />
+
+    <httpEndpoint id="defaultHttpEndpoint" httpPort="${default.http.port}"
+        httpsPort="${default.https.port}" />
+    <webApplication location="guide-arquillian-managed.war"
+        context-root="/" />
+</server>

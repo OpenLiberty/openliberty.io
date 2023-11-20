@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<server description="query service">
+
+    <featureManager>
+        <feature>restfulWS-3.1</feature>
+        <feature>jsonp-2.1</feature>
+        <feature>jsonb-3.0</feature>
+        <feature>cdi-4.0</feature>
+        <feature>mpConfig-3.0</feature>
+    </featureManager>
+
+    <variable defaultValue="9081" name="default.http.port"/>
+    <variable defaultValue="9444" name="default.https.port"/>
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  httpPort="${default.http.port}"
+                  httpsPort="${default.https.port}"
+                  host="*"/>
+
+    <applicationManager autoExpand="true"/>
+
+    <webApplication contextRoot="/" location="guide-grpc-intro-query.war"/>
+
+    <logging consoleLogLevel="INFO"/>
+</server>

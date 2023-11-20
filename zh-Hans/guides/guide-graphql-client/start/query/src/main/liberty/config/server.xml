@@ -1,0 +1,18 @@
+<server description="Query Service">
+
+  <featureManager>
+    <feature>restfulWS-3.1</feature>
+    <feature>cdi-4.0</feature>
+    <feature>jsonb-3.0</feature>
+    <feature>mpConfig-3.0</feature>
+    <feature>mpOpenAPI-3.1</feature>
+  </featureManager>
+
+  <variable name="default.http.port" defaultValue="9084"/>
+  <variable name="default.https.port" defaultValue="9447"/>
+
+  <httpEndpoint host="*" httpPort="${default.http.port}"
+      httpsPort="${default.https.port}" id="defaultHttpEndpoint"/>
+
+  <webApplication location="guide-graphql-client-query.war" contextRoot="/"/>
+</server>

@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Streaming updates from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples on how to stream updates as Server-Sent Events (SSE) to a front-end client from a cloud-native Java application using Jakarta RESTful Web Services (JAX-RS; formerly Java API for RESTful Web Services) and MicroProfile Reactive Messaging API.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/reactive-messaging-sse">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Streaming updates from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)" />
+  <meta name="twitter:description" content="A getting started tutorial with examples on how to stream updates as Server-Sent Events (SSE) to a front-end client from a cloud-native Java application using Jakarta RESTful Web Services (JAX-RS; formerly Java API for RESTful Web Services) and MicroProfile Reactive Messaging API." />
+
+  <meta property='og:title' content="Streaming updates from a MicroProfile Reactive Messaging microservice using Server-Sent Events (SSE)" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples on how to stream updates as Server-Sent Events (SSE) to a front-end client from a cloud-native Java application using Jakarta RESTful Web Services (JAX-RS; formerly Java API for RESTful Web Services) and MicroProfile Reactive Messaging API." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/reactive-messaging-sse" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li>
+<a href="#what-youll-learn">What you’ll learn</a>
+<ul class="sectlevel2">
+<li><a href="#what-is-sse">What is SSE?</a></li>
+</ul>
+</li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li>
+<a href="#setting-up-sse-in-the-bff-service">Setting up SSE in the bff service</a>
+<ul class="sectlevel2">
+<li><a href="#creating-the-sse-api-endpoint">Creating the SSE API endpoint</a></li>
+<li><a href="#reading-from-the-reactive-messaging-channel">Reading from the reactive messaging channel</a></li>
+<li><a href="#broadcasting-events">Broadcasting events</a></li>
+</ul>
+</li>
+<li><a href="#configuring-the-kafka-connector-for-the-bff-service">Configuring the Kafka connector for the bff service</a></li>
+<li>
+<a href="#configuring-the-frontend-service-to-subscribe-to-and-consume-events">Configuring the frontend service to subscribe to and consume events</a>
+<ul class="sectlevel2">
+<li><a href="#subscribing-to-sse">Subscribing to SSE</a></li>
+<li><a href="#consuming-the-sse">Consuming the SSE</a></li>
+</ul>
+</li>
+<li><a href="#building-and-running-the-application">Building and running the application</a></li>
+<li><a href="#tearing-down-the-environment">Tearing down the environment</a></li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#related-links">Related Links</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Streaming updates to a client using Server-Sent Events</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">30 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/reactive-messaging-sse.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to stream updates from a MicroProfile Reactive Messaging service to a front-end client by using Server-Sent Events (SSE).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to stream messages from a MicroProfile Reactive Messaging service to a front-end client by using Server-Sent Events (SSE).</p>
+</div>
+<div class="paragraph">
+<p>MicroProfile Reactive Messaging provides an easy way for Java services to send requests to other Java services, and asynchronously receive and process the responses as a stream of events. SSE provides a framework to stream the data in these events to a browser client.</p>
+</div>
+<div class="sect2">
+<h3 id="what-is-sse">What is SSE?</h3>
+<div class="paragraph">
+<p>Server-Sent Events is an API that allows clients to subscribe to a stream of events that is pushed from a server. First, the client makes a connection with the server over HTTP. The server continuously pushes events to the client as long as the connection persists. SSE differs from traditional HTTP requests, which use one request for one response. SSE also differs from Web Sockets in that SSE is unidirectional from the server to the client, and Web Sockets allow for bidirectional communication.</p>
+</div>
+<div class="paragraph">
+<p>For example, an application that provides real-time stock quotes might use SSE to push price updates from the server to the browser as soon as the server receives them. Such an application wouldn’t need Web Sockets because the data travels in only one direction, and polling the server by using HTTP requests wouldn’t provide real-time updates.</p>
+</div>
+<div class="paragraph">
+<p>The application that you will build in this guide consists of a <code>frontend</code> service, a <code>bff</code> (backend for frontend) service, and three instances of a <code>system</code> service. The <code>system</code> services periodically publish messages that contain their hostname and current system load. The <code>bff</code> service receives the messages from the <code>system</code> services and pushes the contents as SSE to a JavaScript client in the <code>frontend</code> service. This client uses the events to update a table in the UI that displays each system’s hostname and its periodically updating load. The following diagram depicts the application that is used in this guide:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/reactive-messaging-sse/SSE_Diagram.png" alt="SSE Diagram">
+</div>
+</div>
+<div class="paragraph">
+<p>In this guide, you will set up the <code>bff</code> service by creating an endpoint that clients can use to subscribe to events. You will also enable the service to read from the reactive messaging channel and push the contents to subscribers via SSE. After that, you will configure the Kafka connectors to allow the <code>bff</code> service to receive messages from the <code>system</code> services. Finally, you will configure the client in the <code>frontend</code> service to subscribe to these events, consume them, and display them in the UI.</p>
+</div>
+<div class="paragraph">
+<p>To learn more about the reactive Java services that are used in this guide, check out the <a href="https://openliberty.io/guides/microprofile-reactive-messaging.html" target="_blank" rel="noopener">Creating reactive Java microservices</a> guide.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will build and run the services in Docker containers. You can learn more about containerizing services with Docker in the <a href="https://openliberty.io/guides/containerize.html" target="_blank" rel="noopener">Containerizing microservices</a> guide.</p>
+</div>
+<div class="paragraph">
+<p>Install Docker and start your Docker environment by following <a href="https://docs.docker.com/engine/installation" target="_blank" rel="noopener noreferrer">the instructions from Docker</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-reactive-messaging-sse.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-reactive-messaging-sse.git
+cd guide-reactive-messaging-sse</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="setting-up-sse-in-the-bff-service">Setting up SSE in the bff service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this section, you will create a REST API for SSE in the <code>bff</code> service. When a client makes a request to this endpoint, the initial connection between the client and server is established and the client is subscribed to receive events that are pushed from the server. Later in this guide, the client in the <code>frontend</code> service uses this endpoint to subscribe to the events that are pushed from the <code>bff</code> service.</p>
+</div>
+<div class="paragraph">
+<p>Additionally, you will enable the <code>bff</code> service to read messages from the incoming stream and push the contents as events to subscribers via SSE.</p>
+</div>
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the BFFResource class.</mark>
+<code>bff/src/main/java/io/openliberty/guides/bff/BFFResource.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>BFFResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2020 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers"> 10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers"> 11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.bff</span>;
+<span class="line-numbers"> 14</span>
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.models.SystemLoad</span>;
+<span class="line-numbers"> 16</span>
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.reactive.messaging.Incoming</span>;
+<span class="line-numbers"> 18</span>
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">javax.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">javax.ws.rs.GET</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">javax.ws.rs.Path</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">javax.ws.rs.Produces</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">javax.ws.rs.core.Context</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">javax.ws.rs.core.MediaType</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">javax.ws.rs.sse.OutboundSseEvent</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">javax.ws.rs.sse.Sse</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">javax.ws.rs.sse.SseBroadcaster</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">javax.ws.rs.sse.SseEventSink</span>;
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">java.util.logging.Logger</span>;
+<span class="line-numbers"> 30</span>
+<span class="line-numbers"> 31</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers"> 32</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/sse</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 33</span><span class="comment">// tag::frontendResource[]</span>
+<span class="line-numbers"> 34</span><span class="directive">public</span> <span class="type">class</span> <span class="class">BFFResource</span> {
+<span class="line-numbers"> 35</span>
+<span class="line-numbers"> 36</span>    <span class="directive">private</span> <span class="predefined-type">Logger</span> logger = <span class="predefined-type">Logger</span>.getLogger(BFFResource.class.getName());
+<span class="line-numbers"> 37</span>
+<span class="line-numbers"> 38</span>    <span class="comment">// tag::sse[]</span>
+<span class="line-numbers"> 39</span>    <span class="directive">private</span> Sse sse;
+<span class="line-numbers"> 40</span>    <span class="comment">// end::sse[]</span>
+<span class="line-numbers"> 41</span>    <span class="comment">// tag::broadcaster[]</span>
+<span class="line-numbers"> 42</span>    <span class="directive">private</span> SseBroadcaster broadcaster;
+<span class="line-numbers"> 43</span>    <span class="comment">// end::broadcaster[]</span>
+<span class="line-numbers"> 44</span>
+<span class="line-numbers"> 45</span>    <span class="comment">// tag::subscribeToSystems[]</span>
+<span class="line-numbers"> 46</span>    <span class="annotation">@GET</span>
+<span class="line-numbers"> 47</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 48</span>    <span class="comment">// tag::sseMimeType[]</span>
+<span class="line-numbers"> 49</span>    <span class="annotation">@Produces</span>(MediaType.SERVER_SENT_EVENTS)
+<span class="line-numbers"> 50</span>    <span class="comment">// end::sseMimeType[]</span>
+<span class="line-numbers"> 51</span>    <span class="directive">public</span> <span class="type">void</span> subscribeToSystem(
+<span class="line-numbers"> 52</span>        <span class="comment">// tag::sseEventSinkParam[]</span>
+<span class="line-numbers"> 53</span>        <span class="annotation">@Context</span> SseEventSink sink,
+<span class="line-numbers"> 54</span>        <span class="comment">// end::sseEventSinkParam[]</span>
+<span class="line-numbers"> 55</span>        <span class="comment">// tag::sseParam[]</span>
+<span class="line-numbers"> 56</span>        <span class="annotation">@Context</span> Sse sse
+<span class="line-numbers"> 57</span>        <span class="comment">// end::sseParam[]</span>
+<span class="line-numbers"> 58</span>        ) {
+<span class="line-numbers"> 59</span>
+<span class="line-numbers"> 60</span>        <span class="keyword">if</span> (<span class="local-variable">this</span>.sse == <span class="predefined-constant">null</span> || <span class="local-variable">this</span>.broadcaster == <span class="predefined-constant">null</span>) { 
+<span class="line-numbers"> 61</span>            <span class="local-variable">this</span>.sse = sse;
+<span class="line-numbers"> 62</span>            <span class="comment">// tag::newBroadcaster[]</span>
+<span class="line-numbers"> 63</span>            <span class="local-variable">this</span>.broadcaster = sse.newBroadcaster();
+<span class="line-numbers"> 64</span>            <span class="comment">// end::newBroadcaster[]</span>
+<span class="line-numbers"> 65</span>        }
+<span class="line-numbers"> 66</span>        
+<span class="line-numbers"> 67</span>        <span class="comment">// tag::registerSink[]</span>
+<span class="line-numbers"> 68</span>        <span class="local-variable">this</span>.broadcaster.register(sink);
+<span class="line-numbers"> 69</span>        <span class="comment">// end::registerSink[]     </span>
+<span class="line-numbers"> 70</span>        logger.info(<span class="string"><span class="delimiter">"</span><span class="content">New sink registered to broadcaster.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 71</span>    }
+<span class="line-numbers"> 72</span>    <span class="comment">// end::subscribeToSystems</span>
+<span class="line-numbers"> 73</span>
+<span class="line-numbers"> 74</span>    <span class="comment">// tag::broadcastData[]</span>
+<span class="line-numbers"> 75</span>    <span class="directive">private</span> <span class="type">void</span> broadcastData(<span class="predefined-type">String</span> name, <span class="predefined-type">Object</span> data) {
+<span class="line-numbers"> 76</span>        <span class="comment">// tag::notNull[]</span>
+<span class="line-numbers"> 77</span>        <span class="keyword">if</span> (broadcaster != <span class="predefined-constant">null</span>) {
+<span class="line-numbers"> 78</span>        <span class="comment">// end::notNull[]</span>
+<span class="line-numbers"> 79</span>            <span class="comment">// tag::createEvent[]</span>
+<span class="line-numbers"> 80</span>            <span class="comment">// tag::newEventBuilder[]</span>
+<span class="line-numbers"> 81</span>            OutboundSseEvent event = sse.newEventBuilder()
+<span class="line-numbers"> 82</span>            <span class="comment">// end::newEventBuilder[]</span>
+<span class="line-numbers"> 83</span>                                        <span class="comment">// tag::name[]</span>
+<span class="line-numbers"> 84</span>                                        .name(name)
+<span class="line-numbers"> 85</span>                                        <span class="comment">// end::name[]</span>
+<span class="line-numbers"> 86</span>                                        <span class="comment">// tag::data[]</span>
+<span class="line-numbers"> 87</span>                                        .data(data.getClass(), data)
+<span class="line-numbers"> 88</span>                                        <span class="comment">// end::data[]</span>
+<span class="line-numbers"> 89</span>                                        <span class="comment">// tag::mediaType[]</span>
+<span class="line-numbers"> 90</span>                                        .mediaType(MediaType.APPLICATION_JSON_TYPE)
+<span class="line-numbers"> 91</span>                                        <span class="comment">// end::mediaType[]</span>
+<span class="line-numbers"> 92</span>                                        <span class="comment">// tag::build[]</span>
+<span class="line-numbers"> 93</span>                                        .build();
+<span class="line-numbers"> 94</span>                                        <span class="comment">// end::build[]</span>
+<span class="line-numbers"> 95</span>            <span class="comment">// end::createEvent[]</span>
+<span class="line-numbers"> 96</span>            <span class="comment">// tag::broadcastEvent[]        </span>
+<span class="line-numbers"> 97</span>            broadcaster.broadcast(event);
+<span class="line-numbers"> 98</span>            <span class="comment">// end::broadcastEvent[]</span>
+<span class="line-numbers"> 99</span>        } <span class="keyword">else</span> {
+<span class="line-numbers">100</span>            logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Unable to send SSE. Broadcaster context is not set up.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">101</span>        }
+<span class="line-numbers">102</span>    }
+<span class="line-numbers">103</span>    <span class="comment">// end::broadcastData[]</span>
+<span class="line-numbers">104</span>
+<span class="line-numbers">105</span>    <span class="comment">// tag::systemLoad[]</span>
+<span class="line-numbers">106</span>    <span class="annotation">@Incoming</span>(<span class="string"><span class="delimiter">"</span><span class="content">systemLoad</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">107</span>    <span class="comment">// end::systemLoad[]</span>
+<span class="line-numbers">108</span>    <span class="comment">// tag::getSystemLoadMessage[]</span>
+<span class="line-numbers">109</span>    <span class="directive">public</span> <span class="type">void</span> getSystemLoadMessage(SystemLoad sl)  {
+<span class="line-numbers">110</span>        logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Message received from system.load topic. </span><span class="delimiter">"</span></span> + sl.toString());
+<span class="line-numbers">111</span>        <span class="comment">// tag::broadcastCall[]</span>
+<span class="line-numbers">112</span>        broadcastData(<span class="string"><span class="delimiter">"</span><span class="content">systemLoad</span><span class="delimiter">"</span></span>, sl);
+<span class="line-numbers">113</span>        <span class="comment">// end::broadcastCall[]</span>
+<span class="line-numbers">114</span>    }
+<span class="line-numbers">115</span>    <span class="comment">// end::getSystemLoadMessage[]</span>
+<span class="line-numbers">116</span>}
+<span class="line-numbers">117</span><span class="comment">// end::frontendResource[]</span></code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="creating-the-sse-api-endpoint">Creating the SSE API endpoint</h3>
+<div class="paragraph">
+<p>The <code class="hotspot=subscribeToSystems file=0">subscribeToSystem()</code> method allows clients to subscribe to events via an HTTP <code>GET</code> request to the <code>/bff/sse/</code> endpoint. The <code class="hotspot=sseMimeType file=0">@Produces(MediaType.SERVER_SENT_EVENTS)</code> annotation sets the <code>Content-Type</code> in the response header to <code>text/event-stream</code>. This content type indicates that client requests that are made to this endpoint are to receive Server-Sent Events. Additionally, the method parameters take in an instance of the <code class="hotspot=sseEventSinkParam file=0">SseEventSink</code> class and the <code class="hotspot=sseParam file=0">Sse</code> class, both of which are injected using the <code>@Context</code> annotation. First, the method checks if the <code class="hotspot=sse file=0">sse</code> and <code class="hotspot=broadcaster file=0">broadcaster</code> instance variables are assigned. If these variables aren’t assigned, the <code class="hotspot=sse file=0">sse</code> variable is obtained from the <code class="hotspot=sseParam file=0">@Context</code> injection and the <code class="hotspot=broadcaster file=0">broadcaster</code> variable is obtained by using the <code class="hotspot=newBroadcaster file=0">Sse.newBroadcaster()</code> method. Then, the <code class="hotspot=registerSink file=0">register()</code> method is called to register the <code class="hotspot=sseEventSinkParam file=0">SseEventSink</code> instance to the <code class="hotspot=broadcaster file=0">SseBroadcaster</code> instance to subscribe to events.</p>
+</div>
+<div class="paragraph">
+<p>For more information about these interfaces, see the Javadocs for <a href="https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.html&amp;package=allclasses-frame.html" target="_blank" rel="noopener">OutboundSseEvent</a> and <a href="https://openliberty.io/docs/ref/javaee/8/#class=javax/ws/rs/sse/OutboundSseEvent.Builder.html&amp;package=allclasses-frame.html" target="_blank" rel="noopener">OutboundSseEvent.Builder</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="reading-from-the-reactive-messaging-channel">Reading from the reactive messaging channel</h3>
+<div class="paragraph">
+<p>The <code class="hotspot=getSystemLoadMessage file=0">getSystemLoadMessage()</code> method receives the message that contains the hostname and the average system load. The <code class="hotspot=systemLoad file=0">@Incoming("systemLoad")</code> annotation indicates that the method retrieves the message by connecting to the <code>systemLoad</code> channel in Kafka, which you configure in the next section.</p>
+</div>
+<div class="paragraph">
+<p>Each time a message is received, the <code class="hotspot=getSystemLoadMessage file=0">getSystemLoadMessage()</code> method is called, and the hostname and system load contained in that message are broadcasted in an event to all subscribers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="broadcasting-events">Broadcasting events</h3>
+<div class="paragraph">
+<p>Broadcasting events is handled in the <code class="hotspot=broadcastData file=0">broadcastData()</code> method. First, it checks whether the <code class="hotspot=broadcaster file=0">broadcaster</code> value is <code class="hotspot=notNull file=0">null</code>. The <code>broadcaster</code> value must include at least one subscriber or there’s no client to send the event to. If the <code>broadcaster</code> value is specified, the <code>OutboundSseEvent</code> interface is created by using the <code class="hotspot=newEventBuilder file=0">Sse.newEventBuilder()</code> method, where the <code class="hotspot=name file=0">name</code> of the event, the <code class="hotspot=data file=0">data</code> it contains, and the <code class="hotspot=mediaType file=0">mediaType</code> are set. The <code>OutboundSseEvent</code> interface is then broadcasted, or sent to all registered sinks, by invoking the <code class="hotspot=broadcastEvent file=0">SseBroadcaster.broadcast()</code> method.</p>
+</div>
+<div class="paragraph">
+<p>You just set up an endpoint in the <code>bff</code> service that the client in the <code>frontend</code> service can use to subscribe to events. You also enabled the service to read from the reactive messaging channel and broadcast the information as events to subscribers via SSE.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-the-kafka-connector-for-the-bff-service">Configuring the Kafka connector for the bff service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A complete <code>system</code> service is provided for you in the <code>start/system</code> directory. The <code>system</code> service is the producer of the messages that are published to the Kafka messaging system. The periodically published messages contain the system’s hostname and a calculation of the average system load (its CPU usage) for the last minute.</p>
+</div>
+<div class="paragraph">
+<p>Configure the Kafka connector in the <code>bff</code> service to receive the messages from the <code>system</code> service.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the microprofile-config.properties file.</mark>
+<code>bff/src/main/resources/META-INF/microprofile-config.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text"><span class="line-numbers"> 1</span>mp.messaging.connector.liberty-kafka.bootstrap.servers=localhost:9093
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span># tag::systemLoadChannel[]
+<span class="line-numbers"> 4</span>mp.messaging.incoming.systemLoad.connector=liberty-kafka
+<span class="line-numbers"> 5</span># tag::systemLoadTopic[]
+<span class="line-numbers"> 6</span>mp.messaging.incoming.systemLoad.topic=system.load
+<span class="line-numbers"> 7</span># end::systemLoadTopic[]
+<span class="line-numbers"> 8</span># tag::keyDeserializer[]
+<span class="line-numbers"> 9</span>mp.messaging.incoming.systemLoad.key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+<span class="line-numbers">10</span># end::keyDeserializer[]
+<span class="line-numbers">11</span># tag::valueDeserializer[]
+<span class="line-numbers">12</span>mp.messaging.incoming.systemLoad.value.deserializer=io.openliberty.guides.models.SystemLoad$SystemLoadDeserializer
+<span class="line-numbers">13</span># end::valueDeserializer[]
+<span class="line-numbers">14</span># tag::groupId[]
+<span class="line-numbers">15</span>mp.messaging.incoming.systemLoad.group.id=bff
+<span class="line-numbers">16</span># end::groupId[]
+<span class="line-numbers">17</span># end::systemLoadChannel[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>bff</code> service uses an incoming connector to receive messages through the <code class="hotspot=systemLoadChannel file=0">systemLoad</code> channel. The messages are then published by the <code>system</code> service to the <code class="hotspot=systemLoadTopic file=0">system.load</code>  topic in the Kafka message broker. The <code class="hotspot=keyDeserializer file=0">key.deserializer</code> and <code class="hotspot=valueDeserializer file=0">value.deserializer</code> properties define how to deserialize the messages. The <code class="hotspot=groupId file=0">group.id</code> property defines a unique name for the consumer group. All of these properties are required by the <a href="https://kafka.apache.org/documentation/#consumerconfigs" target="_blank" rel="noopener noreferrer">Apache Kafka Consumer Configs</a> documentation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-the-frontend-service-to-subscribe-to-and-consume-events">Configuring the frontend service to subscribe to and consume events</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this section, you will configure the client in the <code>frontend</code> service to subscribe to events and display their contents in a table in the UI.</p>
+</div>
+<div class="paragraph">
+<p>The front-end UI is a table where each row contains the hostname and load of one of the three <code>system</code> services. The HTML and styling for the UI is provided for you but you must populate the table with information that is received from the Server-Sent Events.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the index.js file.</mark>
+<code>frontend/src/main/webapp/js/index.js</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>index.js</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span class="line-numbers"> 1</span><span class="comment">// tag::initSSE[]</span>
+<span class="line-numbers"> 2</span><span class="keyword">function</span> <span class="function">initSSE</span>() {
+<span class="line-numbers"> 3</span>    <span class="comment">// tag::eventSource[]</span>
+<span class="line-numbers"> 4</span>    <span class="keyword">var</span> source = <span class="keyword">new</span> EventSource(<span class="string"><span class="delimiter">'</span><span class="content">http://localhost:9084/bff/sse</span><span class="delimiter">'</span></span>, { <span class="key">withCredentials</span>: <span class="predefined-constant">true</span> });
+<span class="line-numbers"> 5</span>    <span class="comment">// end::eventSource[]</span>
+<span class="line-numbers"> 6</span>    <span class="comment">// tag::eventListener[]</span>
+<span class="line-numbers"> 7</span>    source.addEventListener(
+<span class="line-numbers"> 8</span>        <span class="comment">// tag::systemLoad[]</span>
+<span class="line-numbers"> 9</span>        <span class="string"><span class="delimiter">'</span><span class="content">systemLoad</span><span class="delimiter">'</span></span>,
+<span class="line-numbers">10</span>        <span class="comment">// end::systemLoad[]</span>
+<span class="line-numbers">11</span>        <span class="comment">// tag::setHandler[]</span>
+<span class="line-numbers">12</span>        systemLoadHandler
+<span class="line-numbers">13</span>        <span class="comment">// end::setHandler[]</span>
+<span class="line-numbers">14</span>    );
+<span class="line-numbers">15</span>    <span class="comment">// end::eventListener[]</span>
+<span class="line-numbers">16</span>}
+<span class="line-numbers">17</span><span class="comment">// end::initSSE[]</span>
+<span class="line-numbers">18</span>
+<span class="line-numbers">19</span><span class="comment">// tag::systemLoadHandler[]</span>
+<span class="line-numbers">20</span><span class="keyword">function</span> <span class="function">systemLoadHandler</span>(event) {
+<span class="line-numbers">21</span>    <span class="comment">// tag::parse[]</span>
+<span class="line-numbers">22</span>    <span class="keyword">var</span> system = JSON.parse(event.data);
+<span class="line-numbers">23</span>    <span class="comment">// end::parse[]</span>
+<span class="line-numbers">24</span>    <span class="keyword">if</span> (document.getElementById(system.hostname)) {
+<span class="line-numbers">25</span>        document.getElementById(system.hostname).cells[<span class="integer">1</span>].innerHTML =
+<span class="line-numbers">26</span>                                        system.loadAverage.toFixed(<span class="integer">2</span>);
+<span class="line-numbers">27</span>    } <span class="keyword">else</span> {
+<span class="line-numbers">28</span>        <span class="keyword">var</span> tableRow = document.createElement(<span class="string"><span class="delimiter">'</span><span class="content">tr</span><span class="delimiter">'</span></span>);
+<span class="line-numbers">29</span>        tableRow.id = system.hostname;
+<span class="line-numbers">30</span>        tableRow.innerHTML = <span class="string"><span class="delimiter">'</span><span class="content">&lt;td&gt;</span><span class="delimiter">'</span></span> + system.hostname + <span class="string"><span class="delimiter">'</span><span class="content">&lt;/td&gt;&lt;td&gt;</span><span class="delimiter">'</span></span>
+<span class="line-numbers">31</span>                             + system.loadAverage.toFixed(<span class="integer">2</span>) + <span class="string"><span class="delimiter">'</span><span class="content">&lt;/td&gt;</span><span class="delimiter">'</span></span>;
+<span class="line-numbers">32</span>        document.getElementById(<span class="string"><span class="delimiter">'</span><span class="content">sysPropertiesTableBody</span><span class="delimiter">'</span></span>).appendChild(tableRow);
+<span class="line-numbers">33</span>    }
+<span class="line-numbers">34</span>}
+<span class="line-numbers">35</span><span class="comment">// end::systemLoadHandler[]</span>
+<span class="line-numbers">36</span></code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="subscribing-to-sse">Subscribing to SSE</h3>
+<div class="paragraph">
+<p>The <code class="hotspot=initSSE file=0">initSSE()</code> method is called when the page first loads. This method subscribes the client to the SSE by creating a new instance of the <code class="hotspot=eventSource file=0">EventSource</code> interface and specifying the <code>http://localhost:9084/bff/sse</code> URL in the parameters. To connect to the server, the <code class="hotspot=eventSource file=0">EventSource</code> interface makes a <code>GET</code> request to this endpoint with a request header of <code>Accept: text/event-stream</code>.</p>
+</div>
+<div class="paragraph">
+<p>Because this request comes from <code>localhost:9080</code> and is made to <code>localhost:9084</code>, it must follow the Cross-Origin Resource Sharing (CORS) specification to avoid being blocked by the browser. To enable CORS for the client, set the <code>withCredentials</code> configuration element to true in the parameters of the <code class="hotspot=eventSource file=0">EventSource</code> interface. CORS is already enabled for you in the <code>bff</code> service. To learn more about CORS, check out the <a href="https://openliberty.io/guides/cors.html" target="_blank" rel="noopener">CORS guide</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="consuming-the-sse">Consuming the SSE</h3>
+<div class="paragraph">
+<p>The <code class="hotspot=eventListener file=0">EventSource.addEventListener()</code> method is called to add an event listener. This event listener listens for events with the name of <code class="hotspot=systemLoad file=0">systemLoad</code>. The <code class="hotspot=systemLoadHandler file=0">systemLoadHandler()</code> function is set as the handler function, and each time an event is received, this function is called. The <code class="hotspot=systemLoadHandler file=0">systemLoadHandler()</code> function will take the event object and parse the event’s data property from a JSON string into a JavaScript object. The contents of this object are used to update the table with the system hostname and load. If a system is already present in the table, the load is updated, otherwise a new row is added for the system.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-and-running-the-application">Building and running the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To build the application, navigate to the <code>start</code> directory and run the following Maven <code>install</code> and <code>package</code> goals from the command line:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn -pl models install
+mvn package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the following commands to containerize the <code>frontend</code>, <code>bff</code>, and <code>system</code> services:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker build -t frontend:1.0-SNAPSHOT frontend/.
+docker build -t bff:1.0-SNAPSHOT bff/.
+docker build -t system:1.0-SNAPSHOT system/.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, use the following <code>startContainers.sh</code> script to start the application in Docker containers:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>.\scripts\startContainers.bat</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>./scripts/startContainers.sh</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>This script creates a network for the containers to communicate with each other. It also creates containers for Kafka, Zookeeper, the <code>frontend</code> service, the <code>bff</code> service , and three instances of the <code>system</code> service.</p>
+</div>
+<div class="paragraph">
+<p>The application might take some time to get ready. See the <a href="http://localhost:9084/health" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9084/health</a> URL to confirm that the <code>bff</code> microservice is up and running.</p>
+</div>
+<div class="paragraph">
+<p>Once your application is up and running, open your browser and check out your <code>frontend</code> service by going to <a href="http://localhost:9080" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080</a>.</p>
+</div>
+<div class="paragraph">
+<p>The latest version of most modern web browsers supports Server-Sent Events. The exception is Internet Explorer, which does not support SSE. When you visit the URL, look for a table similar to the following example:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/reactive-messaging-sse/system_table.png" alt="System table">
+</div>
+</div>
+<div class="paragraph">
+<p>The table contains three rows, one for each of the running <code>system</code> containers. If you can see the loads updating, you know that your <code>bff</code> service is successfully receiving messages and broadcasting them as SSE to the client in the <code>frontend</code> service.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tearing-down-the-environment">Tearing down the environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Run the following script to stop the application:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>.\scripts\stopContainers.bat</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>./scripts/stopContainers.sh</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You developed an application that subscribes to Server-Sent Events by using MicroProfile Reactive Messaging, Open Liberty, and Kafka.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="related-links">Related Links</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Learn more about MicroProfile.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://microprofile.io/" target="_blank" rel="noopener noreferrer">See the MicroProfile specs</a></p>
+</div>
+<div class="paragraph">
+<p><a href="https://openliberty.io/docs/ref/microprofile" target="_blank" rel="noopener">View the MicroProfile API</a></p>
+</div>
+<div class="paragraph">
+<p><a href="https://download.eclipse.org/microprofile/microprofile-reactive-messaging-1.0/microprofile-reactive-messaging-spec.html#_microprofile_reactive_messaging" target="_blank" rel="noopener noreferrer">View the MicroProfile Reactive Messaging Specification</a></p>
+</div>
+<div class="paragraph">
+<p><a href="https://openliberty.io/docs/ref/javaee/8/#package=javax/ws/rs/sse/package-frame.html&amp;class=javax/ws/rs/sse/package-summary.html" target="_blank" rel="noopener">View the JAX-RS Server-Sent Events API</a></p>
+</div>
+<div class="paragraph">
+<p><a href="https://html.spec.whatwg.org/multipage/server-sent-events.html" target="_blank" rel="noopener noreferrer">View the Server-Sent Events HTML Specification</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Streaming updates to a client using Server-Sent Events <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-reactive-messaging-sse/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-reactive-messaging-sse/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-reactive-messaging-sse/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-reactive-messaging.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Creating reactive Java microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-reactive-messaging-acknowledgment.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Acknowledging messages using MicroProfile Reactive Messaging</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-reactive-messaging-rest-integration.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Integrating RESTful services with a reactive system</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">25 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/reactive-service-testing.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Testing reactive Java microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/containerize.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Containerizing microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

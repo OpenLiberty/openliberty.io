@@ -1,0 +1,47 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: system-virtual-service
+spec:
+  hosts:
+  - "example.com"
+  gateways:
+  - sys-app-gateway
+  http:
+  - route:
+    - destination:
+        port:
+          number: 9080
+        host: system-service
+        subset: blue
+      weight: 0
+    - destination:
+        port:
+          number: 9080
+        host: system-service
+        subset: green
+      weight: 100
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: system-test-virtual-service
+spec:
+  hosts:
+  - "test.example.com"
+  gateways:
+  - sys-app-gateway
+  http:
+  - route:
+    - destination:
+        port:
+          number: 9080
+        host: system-service
+        subset: blue
+      weight: 100
+    - destination:
+        port:
+          number: 9080
+        host: system-service
+        subset: green
+      weight: 0

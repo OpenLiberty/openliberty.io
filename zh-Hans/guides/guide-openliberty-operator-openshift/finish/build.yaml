@@ -1,0 +1,39 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: "build-template"
+  annotations:
+    description: "Build template for the system service"
+    tags: "build"
+objects:
+    # tag::imageStream[]
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      name: "system-imagestream"
+      labels:
+        name: "system"
+    # end::imageStream[]
+    # tag::buildConfig[]
+  - apiVersion: v1
+    kind: BuildConfig
+    metadata:
+      name: "system-buildconfig"
+      labels:
+        name: "system"
+    spec:
+      # tag::source[]
+      source:
+        # tag::binary[]
+        type: Binary
+        # end::binary[]
+      # end::source[]
+      # tag::docker[]
+      strategy:
+        type: Docker
+      # end::docker[]
+      output:
+        to:
+          kind: ImageStreamTag
+          name: "system-imagestream:1.0-SNAPSHOT"
+    # end::buildConfig[]

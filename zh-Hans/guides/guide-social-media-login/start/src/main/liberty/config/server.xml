@@ -1,0 +1,33 @@
+<server description="Social Login Guide Server">
+    <featureManager>
+        <feature>pages-3.1</feature>
+        <feature>appSecurity-5.0</feature>
+        <feature>transportSecurity-1.0</feature>
+        <feature>mpConfig-3.0</feature>
+        <feature>restfulWSClient-3.1</feature>
+        <feature>cdi-4.0</feature>
+        <feature>jsonb-3.0</feature>
+        <feature>jwt-1.0</feature>
+    </featureManager>
+
+    <httpEndpoint httpPort="${default.http.port}"
+                  httpsPort="${default.https.port}"
+                  id="defaultHttpEndpoint"
+                  host="*" />
+
+    <keyStore id="defaultKeyStore"
+              password="changeit" />
+
+    <ssl id="defaultSSLConfig"
+         keyStoreRef="defaultKeyStore"
+         trustDefaultCerts="true" />
+
+    <webApplication location="guide-social-login.war"
+                    contextRoot="${app.context.root}">
+        <application-bnd>
+            <security-role name="users">
+                <special-subject type="ALL_AUTHENTICATED_USERS"/>
+            </security-role>
+        </application-bnd>
+    </webApplication>
+</server>

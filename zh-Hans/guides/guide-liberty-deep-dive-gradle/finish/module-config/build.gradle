@@ -1,0 +1,47 @@
+plugins {
+    id 'war'
+    // tag::libertyGradlePlugin[]
+    id 'io.openliberty.tools.gradle.Liberty' version '3.6.2'
+    // end::libertyGradlePlugin[]
+}
+
+version '1.0-SNAPSHOT'
+group 'io.openliberty.deepdive'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // provided dependencies
+    providedCompile 'jakarta.platform:jakarta.jakartaee-api:10.0.0'
+    providedCompile 'org.eclipse.microprofile:microprofile:6.0'
+}
+
+// tag::war[]
+war {
+    archiveVersion = ''
+}
+// end::war[]
+
+// tag::ext[]
+ext  {
+    // tag::httpPort[]
+    liberty.server.var.'default.http.port' = '9080'
+    // end::httpPort[]
+    // tag::httpsPort[]
+    liberty.server.var.'default.https.port' = '9443'
+    // end::httpsPort[]
+    // tag::contextRoot[]
+    liberty.server.var.'default.context.root' = '/inventory'
+    // end::contextRoot[]
+}
+// end::ext[]
+
+clean.dependsOn 'libertyStop'

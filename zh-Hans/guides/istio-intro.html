@@ -1,0 +1,2302 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Managing traffic in Java microservices using Istio
+    
+  </title>
+  <meta name="description" content="A getting started tutorial on how to manage Java microservice traffic with an Istio service mesh using Kubernetes blue-green deployment as an example.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/istio-intro">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Managing traffic in Java microservices using Istio" />
+  <meta name="twitter:description" content="A getting started tutorial on how to manage Java microservice traffic with an Istio service mesh using Kubernetes blue-green deployment as an example." />
+
+  <meta property='og:title' content="Managing traffic in Java microservices using Istio" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial on how to manage Java microservice traffic with an Istio service mesh using Kubernetes blue-green deployment as an example." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/istio-intro" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li>
+<a href="#what-youll-learn">What you’ll learn</a>
+<ul class="sectlevel2">
+<li><a href="#what-is-istio">What is Istio?</a></li>
+<li><a href="#why-istio">Why Istio?</a></li>
+<li><a href="#what-are-blue-green-deployments">What are blue-green deployments?</a></li>
+</ul>
+</li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#starting-and-preparing-your-cluster-for-deployment">Starting and preparing your cluster for deployment</a></li>
+<li><a href="#deploying-istio">Deploying Istio</a></li>
+<li><a href="#deploying-version-1-of-the-system-microservice">Deploying version 1 of the system microservice</a></li>
+<li><a href="#deploying-version-2-of-the-system-microservice">Deploying version 2 of the system microservice</a></li>
+<li><a href="#testing-microservices-that-are-running-on-kubernetes">Testing microservices that are running on Kubernetes</a></li>
+<li><a href="#tearing-down-your-environment">Tearing down your environment</a></li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Managing microservice traffic using Istio</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">30 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/istio-intro.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Explore how to manage microservice traffic using Istio.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to deploy an application to a Kubernetes cluster and enable Istio on it. You will also learn how to configure
+Istio to shift traffic to implement blue-green deployments for microservices.</p>
+</div>
+<div class="sect2">
+<h3 id="what-is-istio">What is Istio?</h3>
+<div class="paragraph">
+<p><a href="https://istio.io/" target="_blank" rel="noopener noreferrer">Istio</a> is a service mesh, meaning that it’s a platform for managing
+how microservices interact with each other and the outside world.
+Istio consists of a control plane and sidecars that are injected into application pods. The sidecars contain
+the <a href="https://www.envoyproxy.io/" target="_blank" rel="noopener noreferrer">Envoy</a> proxy. You can think of Envoy as a sidecar that intercepts
+and controls all the HTTP and TCP traffic to and from your container.</p>
+</div>
+<div class="paragraph">
+<p>While Istio runs on top of Kubernetes and that will be the focus of this guide, you can also use Istio with
+other environments such as <a href="https://docs.docker.com/compose/overview/" target="_blank" rel="noopener noreferrer">Docker Compose</a>. Istio has many features such as
+traffic shifting, request routing, access control, and distributed tracing, but the focus of this guide will be on traffic shifting.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="why-istio">Why Istio?</h3>
+<div class="paragraph">
+<p>Istio provides a collection of features that allows you to manage several aspects of your services.
+One example is Istio’s routing features. You can route HTTP requests based on several factors such as HTTP headers or cookies.
+Another use case for Istio is telemetry, which you can use to enable distributed tracing. Distributed tracing allows you
+to visualize how HTTP requests travel between different services in your cluster by using a tool such as <a href="https://www.jaegertracing.io/" target="_blank" rel="noopener noreferrer">Jaeger</a>.
+Additionally, as part of its collection of security features, Istio allows you to enable mutual TLS between pods in your cluster.
+Enabling TLS between pods secures communication between microservices internally.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://openliberty.io/guides/istio-intro.html#what-are-blue-green-deployments">Blue-green deployments</a> are a method of deploying your applications such that you have two nearly identical environments where one acts
+as a sort of staging environment and the other is a production environment. This allows you to switch traffic from staging to production
+once a new version of your application has been verified to work.
+You’ll use Istio to implement blue-green deployments. The traffic shifting feature allows you to allocate a percentage of
+traffic to certain versions of services. You can use this feature to shift 100 percent of live traffic to blue deployments and 100 percent
+of test traffic to green deployments. Then, you can shift the traffic to point to the opposite deployments as necessary to
+perform blue-green deployments.</p>
+</div>
+<div class="paragraph">
+<p>The microservice you’ll deploy is called <code>system</code>.
+It responds with your current system’s JVM properties and it returns the app version in the response header.
+You will increment the version number when you update the application.
+With this number, you can determine which version of the microservice is running in your production or test environments.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="what-are-blue-green-deployments">What are blue-green deployments?</h3>
+<div class="paragraph">
+<p>Blue-green deployments are a way of deploying your applications such that you have two environments where your application runs.
+In this scenario, you will have a production environment and a test environment.
+At any point in time, the blue deployment can accept production traffic and the green deployment can accept test traffic, or vice versa.
+When you want to deploy a new version of your application, you deploy to the color that is acting as your test environment.
+After the new version is verified on the test environment, the traffic is shifted over.
+Thus, your live traffic is now being handled by what used to be the test site.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you begin, you need a containerization software for building containers. Kubernetes supports various container runtimes. You will use <code>Docker</code> in this guide. For Docker installation instructions, refer to the official <a href="https://docs.docker.com/install/" target="_blank" rel="noopener noreferrer">Docker documentation</a>.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="paragraph">
+<p>Use Docker Desktop, where a local Kubernetes environment is pre-installed and enabled. If you do not see the <em>Kubernetes</em> tab, then upgrade to the latest version of Docker Desktop.</p>
+</div>
+<div class="paragraph">
+<p>Complete the setup for your operating system:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set up  <a href="https://docs.docker.com/docker-for-windows/#kubernetes" target="_blank" rel="noopener noreferrer">Docker for Windows</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>After you complete the Docker setup instructions for your operating system, ensure that Kubernetes (not Swarm) is selected as the orchestrator in Docker Preferences.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section">
+<div class="content">
+<div class="paragraph">
+<p>Use Docker Desktop, where a local Kubernetes environment is pre-installed and enabled. If you do not see the <em>Kubernetes</em> tab, then upgrade to the latest version of Docker Desktop.</p>
+</div>
+<div class="paragraph">
+<p>Complete the setup for your operating system:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set up <a href="https://docs.docker.com/docker-for-mac/#kubernetes" target="_blank" rel="noopener noreferrer">Docker for Mac</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>After you complete the Docker setup instructions for your operating system, ensure that Kubernetes (not Swarm) is selected as the orchestrator in Docker Preferences.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>You will use <code>Minikube</code> as a single-node Kubernetes cluster that runs locally in a virtual machine.
+Make sure you have <code>kubectl</code> installed. If you need to install <code>kubectl</code>, see the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-on-linux" target="_blank" rel="noopener noreferrer">kubectl installation instructions</a>.
+For Minikube installation instructions, see the <a href="https://github.com/kubernetes/minikube#installation" target="_blank" rel="noopener noreferrer">Minikube documentation</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-istio-intro.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-istio-intro.git
+cd guide-istio-intro</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="starting-and-preparing-your-cluster-for-deployment">Starting and preparing your cluster for deployment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Start your Kubernetes cluster.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="paragraph">
+<p>Start your Docker Desktop environment.</p>
+</div>
+<div class="paragraph">
+<p>Check your settings to ensure that you have an adequate amount of memory allocated to your Docker Desktop enviornment, 8GB is recommended but 4GB should be adequate if you don’t have enough RAM.</p>
+</div>
+<div class="paragraph">
+<p>Ensure that Kubernetes is running on Docker Desktop and that the context is set to <code>docker-desktop</code>.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>Run the following command from a command-line session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>minikube start --memory=8192 --cpus=4 --kubernetes-version=v1.19.0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>The memory flag allocates 8GB of memory to your Minikube cluster. If you don’t have enough RAM, then 4GB should be adequate.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, validate that you have a healthy Kubernetes environment by running the following command from the active command-line session.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get nodes</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command should return a <code>Ready</code> status for the master node.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="paragraph">
+<p>You do not need to do any other step.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>Run the following command to configure the Docker CLI to use Minikube’s Docker daemon.
+After you run this command, you will be able to interact with Minikube’s Docker daemon and build new
+images directly to it from your host machine:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>eval $(minikube docker-env)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-istio">Deploying Istio</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Install Istio by following the instructions in the official <a href="https://istio.io/latest/docs/setup/getting-started" target="_blank" rel="noopener noreferrer">Istio Getting started documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>Run the following command to verify that the <code>istioctl</code> path was set successfully:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>istioctl version</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output will be similar to the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>no running Istio pods in "istio-system"
+1.7.3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the following command to configure the Istio profile on Kubernetes:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>istioctl install --set profile=demo</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following output appears when the installation is complete:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>✔ Istio core installed
+✔ Istiod installed
+✔ Egress gateways installed
+✔ Ingress gateways installed
+✔ Installation complete</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that Istio was successfully deployed by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get deployments -n istio-system</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All the values in the <code>AVAILABLE</code> column will have a value of <code>1</code> after
+the deployment is complete.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+istio-egressgateway      1/1     1            1           2m48s
+istio-ingressgateway     1/1     1            1           2m48s
+istiod                   1/1     1            1           2m48s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ensure that the Istio deployments are all available before you continue. The deployments might take a few minutes to become available. If the deployments aren’t available after a few minutes, then increase the amount of memory available to your Kubernetes cluster. On Docker Desktop, you can increase the memory from your Docker preferences. On Minikube, you can increase the memory by using the <code>--memory</code> flag.</p>
+</div>
+<div class="paragraph">
+<p>Finally, create the <code>istio-injection</code> label and set its value to <code>enabled</code>:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl label namespace default istio-injection=enabled</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Adding this label enables automatic Istio sidecar injection. Automatic injection means that sidecars are automatically injected into your pods when you deploy your application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-version-1-of-the-system-microservice">Deploying version 1 of the system microservice</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Navigate to the <code>guide-istio-intro/start</code> directory and run the following command to build the application locally.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn clean package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, run the <code>docker build</code> commands to build the container image for your application:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker build -t system:1.0-SNAPSHOT .</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command builds a Docker image for the <code>system</code> microservice.
+The <code>-t</code> flag in the <code>docker build</code> command allows the Docker image to be labeled (tagged) in the <code>name[:tag]</code> format.
+The tag for an image describes the specific image version.
+If the optional <code>[:tag]</code> tag is not specified, the <code>latest</code> tag is created by default.
+You can verify that this image was created by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker images</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You’ll see an image called <code>system:1.0-SNAPSHOT</code> listed in a table similar to the output.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>REPOSITORY                     TAG                              IMAGE ID        CREATED          SIZE
+system                         1.0-SNAPSHOT                     8856039f4c42    9 minutes ago    745MB
+istio/proxyv2                  1.7.3                            7a3aaffcf645    3 weeks ago      347MB
+istio/pilot                    1.7.3                            4974b5b22dcc    3 weeks ago      261MB
+icr.io/appcafe/open-liberty    kernel-slim-java11-openj9-ubi    d6ef646493e1    8 days ago       729MB</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To deploy the <code>system</code> microservice to the Kubernetes cluster, use the following command to deploy the microservice.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl apply -f system.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can see that your resources are created:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>gateway.networking.istio.io/sys-app-gateway created
+service/system-service created
+deployment.apps/system-deployment-blue created
+deployment.apps/system-deployment-green created
+destinationrule.networking.istio.io/system-destination-rule created</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>system.yaml</p>
+</div>
+<div class="listingblock code_column no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers"> 1</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers"> 2</span><span class="key">kind</span>: <span class="string"><span class="content">Gateway</span></span>
+<span class="line-numbers"> 3</span><span class="key">metadata</span>:
+<span class="line-numbers"> 4</span>  <span class="key">name</span>: <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers"> 5</span><span class="key">spec</span>:
+<span class="line-numbers"> 6</span>  <span class="key">selector</span>:
+<span class="line-numbers"> 7</span>    <span class="key">istio</span>: <span class="string"><span class="content">ingressgateway</span></span>
+<span class="line-numbers"> 8</span>  <span class="key">servers</span>:
+<span class="line-numbers"> 9</span>  - <span class="string"><span class="content">port:</span><span class="content"></span></span>
+<span class="line-numbers">10</span><span class="string"><span class="content">      number: 80</span></span>
+<span class="line-numbers">11</span><span class="string"><span class="content">      name: http</span></span>
+<span class="line-numbers">12</span><span class="string"><span class="content">      protocol: HTTP</span></span>
+<span class="line-numbers">13</span>    <span class="key">hosts</span>:
+<span class="line-numbers">14</span>    - <span class="string"><span class="delimiter">"</span><span class="content">example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers">15</span>    - <span class="string"><span class="delimiter">"</span><span class="content">test.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers">16</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">17</span><span class="key">apiVersion</span>: <span class="string"><span class="content">v1</span></span>
+<span class="line-numbers">18</span><span class="key">kind</span>: <span class="string"><span class="content">Service</span></span>
+<span class="line-numbers">19</span><span class="key">metadata</span>:
+<span class="line-numbers">20</span>  <span class="key">name</span>: <span class="string"><span class="content">system-service</span></span>
+<span class="line-numbers">21</span>  <span class="key">labels</span>:
+<span class="line-numbers">22</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers">23</span><span class="key">spec</span>:
+<span class="line-numbers">24</span>  <span class="key">ports</span>:
+<span class="line-numbers">25</span>  - <span class="string"><span class="content">port: 9080</span></span>
+<span class="line-numbers">26</span>    <span class="key">name</span>: <span class="string"><span class="content">http</span></span>
+<span class="line-numbers">27</span>  <span class="key">selector</span>:
+<span class="line-numbers">28</span>    <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers">29</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">30</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="line-numbers">31</span><span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="line-numbers">32</span><span class="key">metadata</span>:
+<span class="line-numbers">33</span>  <span class="key">name</span>: <span class="string"><span class="content">system-deployment-blue</span></span>
+<span class="line-numbers">34</span><span class="key">spec</span>:
+<span class="line-numbers">35</span>  <span class="key">replicas</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers">36</span>  <span class="key">selector</span>:
+<span class="line-numbers">37</span>    <span class="key">matchLabels</span>:
+<span class="line-numbers">38</span>      <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers">39</span>      <span class="key">version</span>: <span class="string"><span class="content">blue</span></span>
+<span class="line-numbers">40</span>  <span class="key">template</span>:
+<span class="line-numbers">41</span>    <span class="key">metadata</span>:
+<span class="line-numbers">42</span>      <span class="key">labels</span>:
+<span class="line-numbers">43</span>        <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers">44</span>        <span class="key">version</span>: <span class="string"><span class="content">blue</span></span>
+<span class="line-numbers">45</span>    <span class="key">spec</span>:
+<span class="line-numbers">46</span>      <span class="key">containers</span>:
+<span class="line-numbers">47</span>      - <span class="string"><span class="content">name: system-container</span></span>
+<span class="line-numbers">48</span>        <span class="key">image</span>: <span class="string"><span class="content">system:1.0-SNAPSHOT</span></span>
+<span class="line-numbers">49</span>        <span class="key">ports</span>:
+<span class="line-numbers">50</span>        - <span class="string"><span class="content">containerPort: 9080</span></span>
+<span class="line-numbers">51</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">52</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps/v1</span></span>
+<span class="line-numbers">53</span><span class="key">kind</span>: <span class="string"><span class="content">Deployment</span></span>
+<span class="line-numbers">54</span><span class="key">metadata</span>:
+<span class="line-numbers">55</span>  <span class="key">name</span>: <span class="string"><span class="content">system-deployment-green</span></span>
+<span class="line-numbers">56</span><span class="key">spec</span>:
+<span class="line-numbers">57</span>  <span class="key">replicas</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers">58</span>  <span class="key">selector</span>:
+<span class="line-numbers">59</span>    <span class="key">matchLabels</span>:
+<span class="line-numbers">60</span>      <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers">61</span>      <span class="key">version</span>: <span class="string"><span class="content">green</span></span>
+<span class="line-numbers">62</span>  <span class="key">template</span>:
+<span class="line-numbers">63</span>    <span class="key">metadata</span>:
+<span class="line-numbers">64</span>      <span class="key">labels</span>:
+<span class="line-numbers">65</span>        <span class="key">app</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers">66</span>        <span class="key">version</span>: <span class="string"><span class="content">green</span></span>
+<span class="line-numbers">67</span>    <span class="key">spec</span>:
+<span class="line-numbers">68</span>      <span class="key">containers</span>:
+<span class="line-numbers">69</span>      - <span class="string"><span class="content">name: system-container</span></span>
+<span class="line-numbers">70</span>        <span class="key">image</span>: <span class="string"><span class="content">system:1.0-SNAPSHOT</span></span>
+<span class="line-numbers">71</span>        <span class="key">ports</span>:
+<span class="line-numbers">72</span>        - <span class="string"><span class="content">containerPort: 9080</span></span>
+<span class="line-numbers">73</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">74</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers">75</span><span class="key">kind</span>: <span class="string"><span class="content">DestinationRule</span></span>
+<span class="line-numbers">76</span><span class="key">metadata</span>:
+<span class="line-numbers">77</span>  <span class="key">name</span>: <span class="string"><span class="content">system-destination-rule</span></span>
+<span class="line-numbers">78</span><span class="key">spec</span>:
+<span class="line-numbers">79</span>  <span class="key">host</span>: <span class="string"><span class="content">system-service</span></span>
+<span class="line-numbers">80</span>  <span class="key">subsets</span>:
+<span class="line-numbers">81</span>  - <span class="string"><span class="content">name: blue</span></span>
+<span class="line-numbers">82</span>    <span class="key">labels</span>:
+<span class="line-numbers">83</span>      <span class="key">version</span>: <span class="string"><span class="content">blue</span></span>
+<span class="line-numbers">84</span>  - <span class="string"><span class="content">name: green</span></span>
+<span class="line-numbers">85</span>    <span class="key">labels</span>:
+<span class="line-numbers">86</span>      <span class="key">version</span>: <span class="string"><span class="content">green</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>View the <code class="hotspot file=0">system.yaml</code> file. It contains two <code class="hotspot=30-72 file=0">deployments</code>, a <code class="hotspot=17-28 file=0">service</code>, a <code class="hotspot=1-15 file=0">gateway</code>, and a <code class="hotspot=74-87 file=0">destination rule</code>. One of the deployments is labeled <code class="hotspot=33 hotspot=39 hotspot=44 file=0">blue</code> and the second deployment is labeled <code class="hotspot=55 hotspot=61 hotspot=66 file=0">green</code>. The service points to both of these deployments. The Istio gateway is the entry point for HTTP requests to the cluster. A destination rule is used to apply policies post-routing, in this situation it is used to define service subsets that can be specifically routed to.</p>
+</div>
+<div class="paragraph">
+<p>traffic.yaml</p>
+</div>
+<div class="listingblock code_column no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers"> 1</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers"> 2</span><span class="key">kind</span>: <span class="string"><span class="content">VirtualService</span></span>
+<span class="line-numbers"> 3</span><span class="key">metadata</span>:
+<span class="line-numbers"> 4</span>  <span class="key">name</span>: <span class="string"><span class="content">system-virtual-service</span></span>
+<span class="line-numbers"> 5</span><span class="key">spec</span>:
+<span class="line-numbers"> 6</span>  <span class="key">hosts</span>:
+<span class="line-numbers"> 7</span>  - <span class="string"><span class="delimiter">"</span><span class="content">example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 8</span>  <span class="key">gateways</span>:
+<span class="line-numbers"> 9</span>  - <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers">10</span>  <span class="key">http</span>:
+<span class="line-numbers">11</span>  - <span class="string"><span class="content">route:</span></span>
+<span class="line-numbers">12</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">13</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">14</span><span class="string"><span class="content">          number: 9080</span></span>
+<span class="line-numbers">15</span><span class="string"><span class="content">        host: system-service</span></span>
+<span class="line-numbers">16</span><span class="string"><span class="content">        subset: blue</span></span>
+<span class="line-numbers">17</span>      <span class="key">weight</span>: <span class="string"><span class="content">100</span></span>
+<span class="line-numbers">18</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">19</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">20</span><span class="string"><span class="content">          number: 9080</span></span>
+<span class="line-numbers">21</span><span class="string"><span class="content">        host: system-service</span></span>
+<span class="line-numbers">22</span><span class="string"><span class="content">        subset: green</span></span>
+<span class="line-numbers">23</span>      <span class="key">weight</span>: <span class="string"><span class="content">0</span></span>
+<span class="line-numbers">24</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">25</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers">26</span><span class="key">kind</span>: <span class="string"><span class="content">VirtualService</span></span>
+<span class="line-numbers">27</span><span class="key">metadata</span>:
+<span class="line-numbers">28</span>  <span class="key">name</span>: <span class="string"><span class="content">system-test-virtual-service</span></span>
+<span class="line-numbers">29</span><span class="key">spec</span>:
+<span class="line-numbers">30</span>  <span class="key">hosts</span>:
+<span class="line-numbers">31</span>  - <span class="string"><span class="delimiter">"</span><span class="content">test.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers">32</span>  <span class="key">gateways</span>:
+<span class="line-numbers">33</span>  - <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers">34</span>  <span class="key">http</span>:
+<span class="line-numbers">35</span>  - <span class="string"><span class="content">route:</span></span>
+<span class="line-numbers">36</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">37</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">38</span><span class="string"><span class="content">          number: 9080</span></span>
+<span class="line-numbers">39</span><span class="string"><span class="content">        host: system-service</span></span>
+<span class="line-numbers">40</span><span class="string"><span class="content">        subset: blue</span></span>
+<span class="line-numbers">41</span>      <span class="key">weight</span>: <span class="string"><span class="content">0</span></span>
+<span class="line-numbers">42</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">43</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">44</span><span class="string"><span class="content">          number: 9080</span></span>
+<span class="line-numbers">45</span><span class="string"><span class="content">        host: system-service</span></span>
+<span class="line-numbers">46</span><span class="string"><span class="content">        subset: green</span></span>
+<span class="line-numbers">47</span>      <span class="key">weight</span>: <span class="string"><span class="content">100</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>View the <code class="hotspot file=1">traffic.yaml</code> file. It contains two virtual services. A virtual service defines how requests are routed to your applications. In the virtual services, you can configure the weight, which controls the amount of traffic going to each deployment. In this case, the weights should be 100 or 0, which corresponds to which deployment is live.</p>
+</div>
+<div class="paragraph">
+<p>Deploy the resources defined in the <code>traffic.yaml</code> file.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl apply -f traffic.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can see that the virtual services have been created.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>virtualservice.networking.istio.io/system-virtual-service created
+virtualservice.networking.istio.io/system-test-virtual-service created</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can check that all of the deployments are available by running the following command.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get deployments</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command produces a list of deployments for your microservices that is similar to the following output.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                     DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+system-deployment-blue    1         1         1            1           1m
+system-deployment-green   1         1         1            1           1m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After all the deployments are available, you will make a request to version 1 of the deployed application. As defined in the <code class="hotspot file=0">system.yaml</code>, file the <code class="hotspot=1-15 file=0">gateway</code> is expecting the host to be <code>example.com</code>. However, requests to <code>example.com</code> won’t be routed to the appropriate IP address. To ensure that the gateway routes your requests appropriately, ensure that the Host header is set to <code>example.com</code>. For instance, you can set the <code>Host</code> header with the <code>-H</code> option of the <code>curl</code> command.</p>
+</div>
+<div class="paragraph">
+<p>Make a request to the service by running the following <code>curl</code> command.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H "Host:example.com" -I http://localhost/system/properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the <code>curl</code> command is unavailable, then use <a href="https://www.getpostman.com/" target="_blank" rel="noopener noreferrer">Postman</a>. Postman enables you
+to make requests using a graphical interface. To make a request with Postman, enter <code>http://localhost/system/properties</code>
+into the URL bar. Next, switch to the <code>Headers</code> tab and add a header with key of <code>Host</code> and value of <code>example.com</code>.
+Finally, click the blue <code>Send</code> button to make the request.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H "Host:example.com" -I http://localhost/system/properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the <code>curl</code> command is unavailable, then use <a href="https://www.getpostman.com/" target="_blank" rel="noopener noreferrer">Postman</a>. Postman enables you
+to make requests using a graphical interface. To make a request with Postman, enter <code>http://localhost/system/properties</code>
+into the URL bar. Next, switch to the <code>Headers</code> tab and add a header with key of <code>Host</code> and value of <code>example.com</code>.
+Finally, click the blue <code>Send</code> button to make the request.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
+curl -H "Host:example.com" -I http://`minikube ip`:$INGRESS_PORT/system/properties</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You’ll see a header called <code>x-app-version</code> along with the corresponding version.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>x-app-version: 1.0-SNAPSHOT</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-version-2-of-the-system-microservice">Deploying version 2 of the system microservice</h2>
+<div class="sectionbody">
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the <code>SystemResource</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/system/SystemResource.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.system</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="comment">// CDI</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers">17</span><span class="comment">// JAX-RS</span>
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers">24</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/properties</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">25</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemResource</span> {
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span>  <span class="comment">// tag::version[]</span>
+<span class="line-numbers">28</span>  <span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">String</span> appVersion = <span class="string"><span class="delimiter">"</span><span class="content">2.0-SNAPSHOT</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">29</span>  <span class="comment">// end::version[]</span>
+<span class="line-numbers">30</span>
+<span class="line-numbers">31</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">32</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">33</span>  <span class="directive">public</span> Response getProperties() {
+<span class="line-numbers">34</span>    <span class="keyword">return</span> Response.ok(<span class="predefined-type">System</span>.getProperties())
+<span class="line-numbers">35</span>      .header(<span class="string"><span class="delimiter">"</span><span class="content">X-Pod-Name</span><span class="delimiter">"</span></span>, <span class="predefined-type">System</span>.getenv(<span class="string"><span class="delimiter">"</span><span class="content">HOSTNAME</span><span class="delimiter">"</span></span>))
+<span class="line-numbers">36</span>      .header(<span class="string"><span class="delimiter">"</span><span class="content">X-App-Version</span><span class="delimiter">"</span></span>, appVersion)
+<span class="line-numbers">37</span>      .build();
+<span class="line-numbers">38</span>  }
+<span class="line-numbers">39</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>system</code> microservice is set up to respond with the version that is set in the <code>SystemResource.java</code> file.
+The tag for the Docker image is also dependent on the version that is specified in the <code>SystemResource.java</code> file.
+Manually update the <code class="hotspot=version">APP_VERSION</code> field of the microservice to <code>2.0-SNAPSHOT</code>.</p>
+</div>
+<div class="paragraph">
+<p>Use Maven to repackage your microservice:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn clean package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, build the new version of the container image as <code>2.0-SNAPSHOT</code>:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker build -t system:2.0-SNAPSHOT .</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Deploy the new image to the green deployment.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl set image deployment/system-deployment-green system-container=system:2.0-SNAPSHOT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will work with two environments.
+One of the environments is a test site that is located at <code>test.example.com</code>.
+The other environment is your production environment that is located at <code>example.com</code>.
+To begin with, the production environment is tied to the blue deployment and the test environment is tied to the green deployment.</p>
+</div>
+<div class="paragraph">
+<p>Test the updated microservice by making requests to the test site.
+The <code>x-app-version</code> header now has a value of <code>2.0-SNAPSHOT</code> on the test site and is still <code>1.0-SNAPSHOT</code> on the live site.</p>
+</div>
+<div class="paragraph">
+<p>Make a request to the service by running the following <code>curl</code> command.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H "Host:test.example.com" -I http://localhost/system/properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the <code>curl</code> command is unavailable, then use <a href="https://www.getpostman.com/" target="_blank" rel="noopener noreferrer">Postman</a>.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H "Host:test.example.com" -I http://`minikube ip`:$INGRESS_PORT/system/properties</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You’ll see the new version in the <code>x-app-version</code> response header.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>x-app-version: 2.0-SNAPSHOT</code></pre>
+</div>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Update the <code>traffic.yaml</code> file in the <code>start</code> directory.</mark>
+<code>traffic.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>traffic.yaml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers"> 1</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers"> 2</span><span class="key">kind</span>: <span class="string"><span class="content">VirtualService</span></span>
+<span class="line-numbers"> 3</span><span class="key">metadata</span>:
+<span class="line-numbers"> 4</span>  <span class="key">name</span>: <span class="string"><span class="content">system-virtual-service</span></span>
+<span class="line-numbers"> 5</span><span class="key">spec</span>:
+<span class="line-numbers"> 6</span>  <span class="key">hosts</span>:
+<span class="line-numbers"> 7</span>  - <span class="string"><span class="delimiter">"</span><span class="content">example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 8</span>  <span class="key">gateways</span>:
+<span class="line-numbers"> 9</span>  - <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers">10</span>  <span class="key">http</span>:
+<span class="line-numbers">11</span>  - <span class="string"><span class="content">route:</span></span>
+<span class="line-numbers">12</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">13</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">14</span><span class="string"><span class="content">          number: 9080</span></span>
+<span class="line-numbers">15</span><span class="string"><span class="content">        host: system-service</span></span>
+<span class="line-numbers">16</span><span class="string"><span class="content">        subset: blue</span></span>
+<span class="line-numbers">17</span>      <span class="key">weight</span>: <span class="string"><span class="content">0</span></span>
+<span class="line-numbers">18</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">19</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">20</span><span class="string"><span class="content">          number: 9080</span></span>
+<span class="line-numbers">21</span><span class="string"><span class="content">        host: system-service</span></span>
+<span class="line-numbers">22</span><span class="string"><span class="content">        subset: green</span></span>
+<span class="line-numbers">23</span>      <span class="key">weight</span>: <span class="string"><span class="content">100</span></span>
+<span class="line-numbers">24</span><span class="head"><span class="head">---</span></span>
+<span class="line-numbers">25</span><span class="key">apiVersion</span>: <span class="string"><span class="content">networking.istio.io/v1alpha3</span></span>
+<span class="line-numbers">26</span><span class="key">kind</span>: <span class="string"><span class="content">VirtualService</span></span>
+<span class="line-numbers">27</span><span class="key">metadata</span>:
+<span class="line-numbers">28</span>  <span class="key">name</span>: <span class="string"><span class="content">system-test-virtual-service</span></span>
+<span class="line-numbers">29</span><span class="key">spec</span>:
+<span class="line-numbers">30</span>  <span class="key">hosts</span>:
+<span class="line-numbers">31</span>  - <span class="string"><span class="delimiter">"</span><span class="content">test.example.com</span><span class="delimiter">"</span></span>
+<span class="line-numbers">32</span>  <span class="key">gateways</span>:
+<span class="line-numbers">33</span>  - <span class="string"><span class="content">sys-app-gateway</span></span>
+<span class="line-numbers">34</span>  <span class="key">http</span>:
+<span class="line-numbers">35</span>  - <span class="string"><span class="content">route:</span></span>
+<span class="line-numbers">36</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">37</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">38</span><span class="string"><span class="content">          number: 9080</span></span>
+<span class="line-numbers">39</span><span class="string"><span class="content">        host: system-service</span></span>
+<span class="line-numbers">40</span><span class="string"><span class="content">        subset: blue</span></span>
+<span class="line-numbers">41</span>      <span class="key">weight</span>: <span class="string"><span class="content">100</span></span>
+<span class="line-numbers">42</span>    - <span class="string"><span class="content">destination:</span><span class="content"></span></span>
+<span class="line-numbers">43</span><span class="string"><span class="content">        port:</span></span>
+<span class="line-numbers">44</span><span class="string"><span class="content">          number: 9080</span></span>
+<span class="line-numbers">45</span><span class="string"><span class="content">        host: system-service</span></span>
+<span class="line-numbers">46</span><span class="string"><span class="content">        subset: green</span></span>
+<span class="line-numbers">47</span>      <span class="key">weight</span>: <span class="string"><span class="content">0</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>After you see that the microservice is working on the test site, modify the <code class="hotspot=17 hotspot=23 hotspot=41 hotspot=47 file=1">weights</code> in the <code>traffic.yaml</code> file to shift 100 percent of the <code>example.com</code> traffic to the green deployment, and 100 percent of the <code>test.example.com</code> traffic to the blue deployment.</p>
+</div>
+<div class="paragraph">
+<p>Deploy the updated <code>traffic.yaml</code> file.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl apply -f traffic.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ensure that the live traffic is now being routed to version 2 of the microservice.</p>
+</div>
+<div class="paragraph">
+<p>Make a request to the service by running the following <code>curl</code> command.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H "Host:example.com" -I http://localhost/system/properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the <code>curl</code> command is unavailable, then use <a href="https://www.getpostman.com/" target="_blank" rel="noopener noreferrer">Postman</a>.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H "Host:example.com" -I http://localhost/system/properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the <code>curl</code> command is unavailable, then use <a href="https://www.getpostman.com/" target="_blank" rel="noopener noreferrer">Postman</a>.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -H "Host:example.com" -I http://`minikube ip`:$INGRESS_PORT/system/properties</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>You’ll see the new version in the <code>x-app-version</code> response header.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>x-app-version: 2.0-SNAPSHOT</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-microservices-that-are-running-on-kubernetes">Testing microservices that are running on Kubernetes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Next, you will create a test to verify that the correct version of your microservice is running.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>SystemEndpointIT</code> class.</mark>
+<code>src/test/java/it/io/openliberty/guides/system/SystemEndpointIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemEndpointIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2019, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.system</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertNotNull</span>;
+<span class="line-numbers"> 16</span>
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">javax.net.ssl.HostnameVerifier</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">javax.net.ssl.SSLSession</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Client</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.ClientBuilder</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.WebTarget</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 23</span>
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.system.SystemResource</span>;
+<span class="line-numbers"> 25</span>
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Order</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.TestMethodOrder</span>;
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeAll</span>;
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.MethodOrderer.OrderAnnotation</span>;
+<span class="line-numbers"> 32</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="line-numbers"> 33</span>
+<span class="line-numbers"> 34</span><span class="annotation">@TestMethodOrder</span>(OrderAnnotation.class)
+<span class="line-numbers"> 35</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemEndpointIT</span> {
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> clusterUrl;
+<span class="line-numbers"> 38</span>
+<span class="line-numbers"> 39</span>    <span class="directive">private</span> Client client;
+<span class="line-numbers"> 40</span>    <span class="directive">private</span> Response response;
+<span class="line-numbers"> 41</span>
+<span class="line-numbers"> 42</span>    <span class="annotation">@BeforeAll</span>
+<span class="line-numbers"> 43</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> oneTimeSetup() {
+<span class="line-numbers"> 44</span>        <span class="comment">// Allows for overriding the "Host" http header</span>
+<span class="line-numbers"> 45</span>        <span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">sun.net.http.allowRestrictedHeaders</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">true</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 46</span>
+<span class="line-numbers"> 47</span>        <span class="predefined-type">String</span> clusterIp = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">cluster.ip</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 48</span>        <span class="predefined-type">String</span> nodePort = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 49</span>
+<span class="line-numbers"> 50</span>        clusterUrl = <span class="string"><span class="delimiter">"</span><span class="content">http://</span><span class="delimiter">"</span></span> + clusterIp + <span class="string"><span class="delimiter">"</span><span class="content">:</span><span class="delimiter">"</span></span> + nodePort + <span class="string"><span class="delimiter">"</span><span class="content">/system/properties/</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 51</span>    }
+<span class="line-numbers"> 52</span>
+<span class="line-numbers"> 53</span>    <span class="annotation">@BeforeEach</span>
+<span class="line-numbers"> 54</span>    <span class="directive">public</span> <span class="type">void</span> setup() {
+<span class="line-numbers"> 55</span>        response = <span class="predefined-constant">null</span>;
+<span class="line-numbers"> 56</span>        client = ClientBuilder.newBuilder()
+<span class="line-numbers"> 57</span>                    .hostnameVerifier(<span class="keyword">new</span> <span class="predefined-type">HostnameVerifier</span>() {
+<span class="line-numbers"> 58</span>                        <span class="directive">public</span> <span class="type">boolean</span> verify(<span class="predefined-type">String</span> hostname, <span class="predefined-type">SSLSession</span> session) {
+<span class="line-numbers"> 59</span>                            <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers"> 60</span>                        }
+<span class="line-numbers"> 61</span>                    })
+<span class="line-numbers"> 62</span>                    .build();
+<span class="line-numbers"> 63</span>    }
+<span class="line-numbers"> 64</span>
+<span class="line-numbers"> 65</span>    <span class="annotation">@AfterEach</span>
+<span class="line-numbers"> 66</span>    <span class="directive">public</span> <span class="type">void</span> teardown() {
+<span class="line-numbers"> 67</span>        client.close();
+<span class="line-numbers"> 68</span>    }
+<span class="line-numbers"> 69</span>
+<span class="line-numbers"> 70</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 71</span>    <span class="annotation">@Order</span>(<span class="integer">1</span>)
+<span class="line-numbers"> 72</span>    <span class="directive">public</span> <span class="type">void</span> testPodNameNotNull() {
+<span class="line-numbers"> 73</span>        response = <span class="local-variable">this</span>.getResponse(clusterUrl);
+<span class="line-numbers"> 74</span>        <span class="local-variable">this</span>.assertResponse(clusterUrl, response);
+<span class="line-numbers"> 75</span>        <span class="predefined-type">String</span> greeting = response.getHeaderString(<span class="string"><span class="delimiter">"</span><span class="content">X-Pod-Name</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 76</span>
+<span class="line-numbers"> 77</span>        <span class="predefined-type">String</span> message = <span class="string"><span class="delimiter">"</span><span class="content">Container name should not be null but it was. </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 78</span>            + <span class="string"><span class="delimiter">"</span><span class="content">The service is probably not running inside a container</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 79</span>
+<span class="line-numbers"> 80</span>        assertNotNull(greeting, message);
+<span class="line-numbers"> 81</span>    }
+<span class="line-numbers"> 82</span>
+<span class="line-numbers"> 83</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 84</span>    <span class="annotation">@Order</span>(<span class="integer">2</span>)
+<span class="line-numbers"> 85</span>    <span class="comment">// tag::testAppVersion[]</span>
+<span class="line-numbers"> 86</span>    <span class="directive">public</span> <span class="type">void</span> testAppVersion() {
+<span class="line-numbers"> 87</span>        response = <span class="local-variable">this</span>.getResponse(clusterUrl);
+<span class="line-numbers"> 88</span>
+<span class="line-numbers"> 89</span>        <span class="predefined-type">String</span> expectedVersion = SystemResource.appVersion;
+<span class="line-numbers"> 90</span>        <span class="predefined-type">String</span> actualVersion = response.getHeaderString(<span class="string"><span class="delimiter">"</span><span class="content">X-App-Version</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 91</span>
+<span class="line-numbers"> 92</span>        assertEquals(expectedVersion, actualVersion);
+<span class="line-numbers"> 93</span>    }
+<span class="line-numbers"> 94</span>    <span class="comment">// end::testAppVersion[]</span>
+<span class="line-numbers"> 95</span>
+<span class="line-numbers"> 96</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 97</span>    <span class="annotation">@Order</span>(<span class="integer">3</span>)
+<span class="line-numbers"> 98</span>    <span class="directive">public</span> <span class="type">void</span> testGetProperties() {
+<span class="line-numbers"> 99</span>        Client client = ClientBuilder.newClient();
+<span class="line-numbers">100</span>
+<span class="line-numbers">101</span>        WebTarget target = client.target(clusterUrl);
+<span class="line-numbers">102</span>        Response response = target
+<span class="line-numbers">103</span>            .request()
+<span class="line-numbers">104</span>            .header(<span class="string"><span class="delimiter">"</span><span class="content">Host</span><span class="delimiter">"</span></span>, <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">host-header</span><span class="delimiter">"</span></span>))
+<span class="line-numbers">105</span>            .get();
+<span class="line-numbers">106</span>
+<span class="line-numbers">107</span>        assertEquals(<span class="integer">200</span>, response.getStatus(),
+<span class="line-numbers">108</span>            <span class="string"><span class="delimiter">"</span><span class="content">Incorrect response code from </span><span class="delimiter">"</span></span> + clusterUrl);
+<span class="line-numbers">109</span>
+<span class="line-numbers">110</span>        response.close();
+<span class="line-numbers">111</span>    }
+<span class="line-numbers">112</span>
+<span class="line-numbers">113</span>    <span class="directive">private</span> Response getResponse(<span class="predefined-type">String</span> url) {
+<span class="line-numbers">114</span>        <span class="keyword">return</span> client
+<span class="line-numbers">115</span>            .target(url)
+<span class="line-numbers">116</span>            .request()
+<span class="line-numbers">117</span>            .header(<span class="string"><span class="delimiter">"</span><span class="content">Host</span><span class="delimiter">"</span></span>, <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">host-header</span><span class="delimiter">"</span></span>))
+<span class="line-numbers">118</span>            .get();
+<span class="line-numbers">119</span>    }
+<span class="line-numbers">120</span>
+<span class="line-numbers">121</span>    <span class="directive">private</span> <span class="type">void</span> assertResponse(<span class="predefined-type">String</span> url, Response response) {
+<span class="line-numbers">122</span>        assertEquals(<span class="integer">200</span>, response.getStatus(),
+<span class="line-numbers">123</span>            <span class="string"><span class="delimiter">"</span><span class="content">Incorrect response code from </span><span class="delimiter">"</span></span> + url);
+<span class="line-numbers">124</span>    }
+<span class="line-numbers">125</span>
+<span class="line-numbers">126</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=testAppVersion">testAppVersion()</code> test case verifies that the correct version number is returned in the response headers.</p>
+</div>
+<div class="paragraph">
+<p>Run the following commands to compile and start the tests:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section mac_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn test-compile
+mvn failsafe:integration-test</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn test-compile
+mvn failsafe:integration-test -Dcluster.ip=`minikube ip` -Dport=$INGRESS_PORT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>cluster.ip</code> and <code>port</code> parameters refer to the IP address and port for the Istio gateway.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>If the tests pass, then you should see output similar to the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.system.SystemEndpointIT
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.503 s - in it.io.openliberty.guides.system.SystemEndpointIT
+
+Results:
+
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tearing-down-your-environment">Tearing down your environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You might want to teardown all the deployed resources as a cleanup step.</p>
+</div>
+<div class="paragraph">
+<p>Delete your resources from the cluster:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl delete -f system.yaml
+kubectl delete -f traffic.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Delete the <code>istio-injection</code> label from the default namespace. The hyphen immediately
+after the label name indicates that the label should be deleted.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl label namespace default istio-injection-</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Delete all Istio resources from the cluster:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>istioctl x uninstall --purge</code></pre>
+</div>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="paragraph">
+<p>Nothing more needs to be done for Docker Desktop.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section">
+<div class="content">
+<div class="paragraph">
+<p>Nothing more needs to be done for Docker Desktop.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="paragraph">
+<p>Perform the following steps to return your environment to a clean state.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Point the Docker daemon back to your local machine:</p>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>eval $(minikube docker-env -u)</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Stop and delete your Minikube cluster:</p>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>minikube stop
+minikube delete</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You have deployed a microservice that runs on Open Liberty to a Kubernetes cluster and used Istio to implement a blue-green deployment scheme.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Managing microservice traffic using Istio <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-istio-intro/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-istio-intro/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-istio-intro/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/docker.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Using Docker containers to develop microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/kubernetes-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Deploying microservices to Kubernetes</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">25 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/kubernetes-microprofile-config.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Configuring microservices running in Kubernetes</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">15 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/kubernetes-microprofile-health.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Checking the health of microservices on Kubernetes</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

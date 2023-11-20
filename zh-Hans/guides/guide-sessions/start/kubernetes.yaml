@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-deployment
+spec:
+  selector:
+    matchLabels:
+      app: cart
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: cart
+    spec:
+      containers:
+      - name: cart-container
+        image: cart-app:1.0-SNAPSHOT
+        ports:
+        - name: http
+          containerPort: 9080
+        - name: hazelcast
+          containerPort: 5701
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart-service
+spec:
+  type: NodePort
+  selector:
+    app: cart
+  ports:
+  - protocol: TCP
+    port: 9080
+    targetPort: 9080
+    nodePort: 31000

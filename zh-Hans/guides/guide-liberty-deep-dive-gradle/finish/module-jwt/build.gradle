@@ -1,0 +1,51 @@
+plugins {
+    id 'war'
+    id 'io.openliberty.tools.gradle.Liberty' version '3.6.2'
+}
+
+version '1.0-SNAPSHOT'
+group 'io.openliberty.deepdive'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    jdbcLib
+}
+
+dependencies {
+    // provided dependencies
+    providedCompile 'jakarta.platform:jakarta.jakartaee-api:10.0.0'
+    providedCompile 'org.eclipse.microprofile:microprofile:6.0'
+    jdbcLib 'org.postgresql:postgresql:42.3.8'
+}
+
+war {
+    archiveVersion = ''
+}
+
+ext  {
+    liberty.server.var.'default.http.port' = '9080'
+    liberty.server.var.'default.https.port' = '9443'
+    liberty.server.var.'default.context.root' = '/inventory'
+    // tag::https[]
+    liberty.server.var.'client.https.port' = '9444'
+    // end::https[]
+    sourceSets.main.output.resourcesDir = sourceSets.main.java.destinationDirectory
+}
+
+task copyJdbcLibs(type: Copy) {
+    from configurations.jdbcLib
+    into "${buildDir}/wlp/usr/shared/resources"
+}
+
+deploy.dependsOn 'copyJdbcLibs'
+
+clean.dependsOn 'libertyStop'

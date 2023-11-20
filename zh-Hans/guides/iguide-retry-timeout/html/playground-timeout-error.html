@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2018, 2021 IBM Corporation and others.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+
+  Contributors:
+      IBM Corporation - initial API and implementation
+-->
+<html lang="en">
+<head>
+    <title>Global eBank Recent Transactions</title>
+    <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
+    <link rel="stylesheet" href="/guides/iguides-common/css/interactive-guides/bankApp.css">
+    <script type="text/javascript">
+        var script = document.createElement('script');
+        script.onload = function() {
+            var guideRootDir = "/guides/iguide-retry-timeout/js/nls/retry-timeout/";
+            retrieveExternalizedStrings(guideRootDir);
+        };
+        script.src = '/guides/iguides-common/js/interactive-guides/externalized-string.js';
+        document.getElementsByTagName('head')[0].appendChild(script);
+    </script>
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        #errorImg {
+            vertical-align: middle;
+        }
+
+        #imgHolder {
+            margin-bottom: 16px;
+        }
+
+        .textHolder {
+            width: 200px;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        .flexWarningContainer {
+            margin: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bankHeadingBlockFlexContainer">
+        <div class="bankHeading" data-externalizedString="YOUR_ACCOUNT"></div>
+        <span>
+            <img src="/guides/iguides-common/img/interactive-guides/bank-info.svg" data-externalizedAlt="ABOUT">
+            <img src="/guides/iguides-common/img/interactive-guides/bank-user.svg" data-externalizedAlt="USER">
+        </span>
+    </div>
+
+    <main>
+        <div id="fail">
+            <div class="flexWarningContainer">
+                <div id="imgHolder">
+                    <img id="errorImg" src="/guides/iguide-retry-timeout/html/images/warning.svg" data-externalizedAlt="WARNING" data-externalizedAriaLabel="WARNING">
+                </div>
+                <div class="textHolder">
+                    <div data-externalizedString="TRANSACTION_UNABLE_TO_LOAD"></div>
+                    <div data-externalizedString="PLEASE_TRY_AGAIN"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

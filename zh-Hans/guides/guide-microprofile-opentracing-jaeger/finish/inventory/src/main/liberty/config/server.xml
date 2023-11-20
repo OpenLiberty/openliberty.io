@@ -1,0 +1,24 @@
+<server description="Sample Liberty server">
+
+    <featureManager>
+        <feature>restfulWS-3.0</feature>
+        <feature>jsonb-2.0</feature>
+        <feature>jsonp-2.0</feature>
+        <feature>cdi-3.0</feature>
+        <feature>mpConfig-3.0</feature>
+        <!-- tag::mpOpenTracing[] -->
+        <feature>mpOpenTracing-3.0</feature>
+        <!-- end::mpOpenTracing[] -->
+    </featureManager>
+
+    <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
+                  id="defaultHttpEndpoint" host="*" />
+
+    <webApplication location="guide-microprofile-opentracing-jaeger-inventory.war" contextRoot="/">
+        <!-- enable visibility to third party apis -->
+        <!-- tag::thirdParty[] -->
+        <classloader apiTypeVisibility="+third-party"/>
+        <!-- end::thirdParty[] -->
+    </webApplication>
+
+</server>

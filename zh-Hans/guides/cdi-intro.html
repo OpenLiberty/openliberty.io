@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Managing and injecting dependencies into Java microservices using Contexts and Dependency Injection (CDI)
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples of how to manage scopes and inject dependencies into Java microservices using Contexts and Dependency Injection (CDI).">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/cdi-intro">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Managing and injecting dependencies into Java microservices using Contexts and Dependency Injection (CDI)" />
+  <meta name="twitter:description" content="A getting started tutorial with examples of how to manage scopes and inject dependencies into Java microservices using Contexts and Dependency Injection (CDI)." />
+
+  <meta property='og:title' content="Managing and injecting dependencies into Java microservices using Contexts and Dependency Injection (CDI)" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples of how to manage scopes and inject dependencies into Java microservices using Contexts and Dependency Injection (CDI)." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/cdi-intro" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li>
+<a href="#what-youll-learn">What you’ll learn</a>
+<ul class="sectlevel2">
+<li><a href="#what-is-cdi">What is CDI?</a></li>
+</ul>
+</li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li>
+<a href="#handling-dependencies-in-the-application">Handling dependencies in the application</a>
+<ul class="sectlevel2">
+<li><a href="#managing-scopes-and-contexts">Managing scopes and contexts</a></li>
+<li><a href="#injecting-a-dependency">Injecting a dependency</a></li>
+</ul>
+</li>
+<li><a href="#running-the-application">Running the application</a></li>
+<li>
+<a href="#testing-the-inventory-application">Testing the inventory application</a>
+<ul class="sectlevel2">
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Injecting dependencies into microservices</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">15 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/cdi-intro.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to use Contexts and Dependency Injection (CDI) to manage scopes and inject dependencies into microservices.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to use Contexts and Dependency Injection (CDI) to manage scopes and inject dependencies in a simple inventory management application.</p>
+</div>
+<div class="paragraph">
+<p>The application that you will be working with is an <code>inventory</code> service, which stores the information about various JVMs that run on different systems. Whenever a request is made to the <code>inventory</code> service to retrieve the JVM system properties of a particular host, the <code>inventory</code> service communicates with the <code>system</code> service on that host to get these system properties. The system properties are then stored and returned.</p>
+</div>
+<div class="paragraph">
+<p>You will use scopes to bind objects in this application to their well-defined contexts. CDI provides a variety of scopes for you to work with and while you will not use all of them in this guide, there is one for almost every scenario that you may encounter. Scopes are defined by using CDI annotations. You will also use dependency injection to inject one bean into another to make use of its functionalities. This enables you to inject the bean in its specified context without having to instantiate it yourself.</p>
+</div>
+<div class="paragraph">
+<p>The implementation of the application and its services are provided for you in the <code>start/src</code> directory. The <code>system</code> service can be found in the <code>start/src/main/java/io/openliberty/guides/system</code> directory, and the <code>inventory</code> service can be found in the <code>start/src/main/java/io/openliberty/guides/inventory</code> directory. If you want to learn more about RESTful web services and how to build them, see <a href="https://openliberty.io/guides/rest-intro.html" target="_blank" rel="noopener">Creating a RESTful web service</a> for details about how to build the <code>system</code> service. The <code>inventory</code> service is built in a similar way.</p>
+</div>
+<div class="sect2">
+<h3 id="what-is-cdi">What is CDI?</h3>
+<div class="paragraph">
+<p>Contexts and Dependency Injection (CDI) defines a rich set of complementary services that improve the application structure. The most fundamental services that are provided by CDI are contexts that bind the lifecycle of stateful components to well-defined contexts, and dependency injection that is the ability to inject components into an application in a typesafe way. With CDI, the container does all the daunting work of instantiating dependencies, and controlling exactly when and how these components are instantiated and destroyed.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-cdi-intro.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-cdi-intro.git
+cd guide-cdi-intro</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2 command">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>To try out the application, first go to the <code>finish</code> directory and run the following Maven goal to build the application and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd finish
+mvn liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>The defaultServer server is ready to run a smarter planet.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Point your browser to the <a href="http://localhost:9080/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/inventory/systems</a> URL.
+This is the starting point of the <code>inventory</code> service and it displays the current contents of the inventory. As you might expect, these are empty because nothing is stored in the inventory yet. Next, point your browser to the <a href="http://localhost:9080/inventory/systems/localhost" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/inventory/systems/localhost</a> URL.
+You see a result in JSON format with the system properties of your local JVM. When you visit this URL, these system properties are automatically stored in the inventory. Go back to <a href="http://localhost:9080/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/inventory/systems</a>
+and you see a new entry for <code>localhost</code>. For simplicity, only the OS name and username are shown here for each host. You can repeat this process for your own hostname or any other machine that is running the <code>system</code> service.</p>
+</div>
+<div class="paragraph command">
+<p>After you are finished checking out the application, stop the Liberty instance by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty. Alternatively, you can run the <code>liberty:stop</code> goal from the <code>finish</code> directory in another shell session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:stop</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="handling-dependencies-in-the-application">Handling dependencies in the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will use CDI to inject dependencies into the inventory manager application and learn how to manage the life cycles of your objects.</p>
+</div>
+<div class="sect2">
+<h3 id="managing-scopes-and-contexts">Managing scopes and contexts</h3>
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph command">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following goal to start Open Liberty in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>InventoryManager</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/InventoryManager.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryManager.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.ArrayList</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.Collections</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.SystemData</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span><span class="comment">// tag::ApplicationScoped[]</span>
+<span class="line-numbers">23</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">24</span><span class="comment">// end::ApplicationScoped[]</span>
+<span class="line-numbers">25</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryManager</span> {
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span>  <span class="directive">private</span> <span class="predefined-type">List</span>&lt;SystemData&gt; systems = <span class="predefined-type">Collections</span>.synchronizedList(<span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;&gt;());
+<span class="line-numbers">28</span>
+<span class="line-numbers">29</span>  <span class="comment">// tag::add[]</span>
+<span class="line-numbers">30</span>  <span class="directive">public</span> <span class="type">void</span> add(<span class="predefined-type">String</span> hostname, <span class="predefined-type">Properties</span> systemProps) {
+<span class="line-numbers">31</span>    <span class="predefined-type">Properties</span> props = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+<span class="line-numbers">32</span>    props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">33</span>    props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">34</span>
+<span class="line-numbers">35</span>    SystemData system = <span class="keyword">new</span> SystemData(hostname, props);
+<span class="line-numbers">36</span>    <span class="keyword">if</span> (!systems.contains(system)) {
+<span class="line-numbers">37</span>      systems.add(system);
+<span class="line-numbers">38</span>    }
+<span class="line-numbers">39</span>  }
+<span class="line-numbers">40</span>  <span class="comment">// end::add[]</span>
+<span class="line-numbers">41</span>
+<span class="line-numbers">42</span>  <span class="comment">// tag::list[]</span>
+<span class="line-numbers">43</span>  <span class="directive">public</span> InventoryList list() {
+<span class="line-numbers">44</span>    <span class="keyword">return</span> <span class="keyword">new</span> InventoryList(systems);
+<span class="line-numbers">45</span>  }
+<span class="line-numbers">46</span>  <span class="comment">// end::list[]</span>
+<span class="line-numbers">47</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This bean contains two simple functions. The <code class="hotspot=add file=0">add()</code> function is for adding entries to the inventory. The <code class="hotspot=list file=0">list()</code> function is for listing all the entries currently stored in the inventory.</p>
+</div>
+<div class="paragraph">
+<p>This bean must be persistent between all of the clients, which means multiple clients need to share the same instance. To achieve this by using CDI, you can simply add the <code class="hotspot=ApplicationScoped file=0">@ApplicationScoped</code> annotation onto the class.</p>
+</div>
+<div class="paragraph">
+<p>This annotation indicates that this particular bean is to be initialized once per application. By making it application-scoped, the container ensures that the same instance of the bean is used whenever it is injected into the application.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the <code>InventoryResource</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/InventoryResource.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.SystemClient</span>;
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span><span class="comment">// tag::ApplicationScoped[]</span>
+<span class="line-numbers">27</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">28</span><span class="comment">// end::ApplicationScoped[]</span>
+<span class="line-numbers">29</span><span class="comment">// tag::endpoint[]</span>
+<span class="line-numbers">30</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">31</span><span class="comment">// end::endpoint[]</span>
+<span class="line-numbers">32</span><span class="comment">// tag::InventoryResource[]</span>
+<span class="line-numbers">33</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers">34</span>
+<span class="line-numbers">35</span>  <span class="comment">// tag::inject[]</span>
+<span class="line-numbers">36</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">37</span>  <span class="comment">// end::inject[]</span>
+<span class="line-numbers">38</span>  InventoryManager manager;
+<span class="line-numbers">39</span>
+<span class="line-numbers">40</span>  <span class="comment">// tag::inject2[]</span>
+<span class="line-numbers">41</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">42</span>  <span class="comment">// end::inject2[]</span>
+<span class="line-numbers">43</span>  SystemClient systemClient;
+<span class="line-numbers">44</span>
+<span class="line-numbers">45</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">46</span>  <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">47</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">48</span>  <span class="directive">public</span> Response getPropertiesForHost(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">49</span>    <span class="comment">// Get properties for host</span>
+<span class="line-numbers">50</span>    <span class="comment">// tag::properties[]</span>
+<span class="line-numbers">51</span>    <span class="predefined-type">Properties</span> props = systemClient.getProperties(hostname);
+<span class="line-numbers">52</span>    <span class="comment">// end::properties[]</span>
+<span class="line-numbers">53</span>    <span class="keyword">if</span> (props == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">54</span>      <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers">55</span>                     .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Unknown hostname </span><span class="delimiter">"</span></span> + hostname
+<span class="line-numbers">56</span>                             + <span class="string"><span class="delimiter">"</span><span class="content"> or the inventory service may not be running </span><span class="delimiter">"</span></span>
+<span class="line-numbers">57</span>                             + <span class="string"><span class="delimiter">"</span><span class="content">on the host machine </span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">58</span>                     .build();
+<span class="line-numbers">59</span>    }
+<span class="line-numbers">60</span>
+<span class="line-numbers">61</span>    <span class="comment">// Add to inventory</span>
+<span class="line-numbers">62</span>    <span class="comment">// tag::managerAdd[]</span>
+<span class="line-numbers">63</span>    manager.add(hostname, props);
+<span class="line-numbers">64</span>    <span class="comment">// end::managerAdd[]</span>
+<span class="line-numbers">65</span>    <span class="keyword">return</span> Response.ok(props).build();
+<span class="line-numbers">66</span>  }
+<span class="line-numbers">67</span>
+<span class="line-numbers">68</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">69</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">70</span>  <span class="directive">public</span> InventoryList listContents() {
+<span class="line-numbers">71</span>    <span class="comment">// tag::managerList[]</span>
+<span class="line-numbers">72</span>    <span class="keyword">return</span> manager.list();
+<span class="line-numbers">73</span>    <span class="comment">// end::managerList[]</span>
+<span class="line-numbers">74</span>  }
+<span class="line-numbers">75</span>}
+<span class="line-numbers">76</span><span class="comment">// tag::InventoryResource[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The inventory resource is a RESTful service that is served at the <code>inventory/systems</code> endpoint.</p>
+</div>
+<div class="paragraph">
+<p>Annotating a class with the <code class="hotspot=ApplicationScoped file=1">@ApplicationScoped</code> annotation indicates that the bean is initialized once and is shared between all requests while the application runs.</p>
+</div>
+<div class="paragraph">
+<p>If you want this bean to be initialized once for every request, you can annotate the class with the <code>@RequestScoped</code> annotation instead. With the <code>@RequestScoped</code> annotation, the bean is instantiated when the request is received and destroyed when a response is sent back to the client. A request scope is short-lived.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="injecting-a-dependency">Injecting a dependency</h3>
+<div class="paragraph">
+<p>Refer to the <code class="hotspot=InventoryResource file=0">InventoryResource</code> class you created above.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=inject hotspot=inject2 file=0">@Inject</code> annotation indicates a dependency injection. You are injecting your <code>InventoryManager</code> and <code>SystemClient</code> beans into the <code>InventoryResource</code> class. This injects the beans in their specified context and makes all of their functionalities available without the need of instantiating them yourself. The injected bean <code>InventoryManager</code> can then be invoked directly through the <code class="hotspot=managerAdd file=0">manager.add(hostname, props)</code> and <code class="hotspot=managerList file=0">manager.list()</code> function calls. The injected bean <code>SystemClient</code> can be invoked through the <code class="hotspot=properties file=0">systemClient.getProperties(hostname)</code> function call.</p>
+</div>
+<div class="paragraph">
+<p>Finally, you have a client component <code class="hotspot file=1">SystemClient</code> that can be found in the <code>src/main/java/io/openliberty/guides/inventory/client</code> directory. This class communicates with the <code>system</code> service to retrieve the JVM system properties for a particular host that exposes them. This class also contains detailed Javadocs that you can read for reference.</p>
+</div>
+<div class="paragraph">
+<p>Your inventory application is now completed.</p>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.SystemClient</span>;
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span><span class="comment">// tag::ApplicationScoped[]</span>
+<span class="line-numbers">27</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">28</span><span class="comment">// end::ApplicationScoped[]</span>
+<span class="line-numbers">29</span><span class="comment">// tag::endpoint[]</span>
+<span class="line-numbers">30</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">31</span><span class="comment">// end::endpoint[]</span>
+<span class="line-numbers">32</span><span class="comment">// tag::InventoryResource[]</span>
+<span class="line-numbers">33</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers">34</span>
+<span class="line-numbers">35</span>  <span class="comment">// tag::inject[]</span>
+<span class="line-numbers">36</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">37</span>  <span class="comment">// end::inject[]</span>
+<span class="line-numbers">38</span>  InventoryManager manager;
+<span class="line-numbers">39</span>
+<span class="line-numbers">40</span>  <span class="comment">// tag::inject2[]</span>
+<span class="line-numbers">41</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">42</span>  <span class="comment">// end::inject2[]</span>
+<span class="line-numbers">43</span>  SystemClient systemClient;
+<span class="line-numbers">44</span>
+<span class="line-numbers">45</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">46</span>  <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">47</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">48</span>  <span class="directive">public</span> Response getPropertiesForHost(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">49</span>    <span class="comment">// Get properties for host</span>
+<span class="line-numbers">50</span>    <span class="comment">// tag::properties[]</span>
+<span class="line-numbers">51</span>    <span class="predefined-type">Properties</span> props = systemClient.getProperties(hostname);
+<span class="line-numbers">52</span>    <span class="comment">// end::properties[]</span>
+<span class="line-numbers">53</span>    <span class="keyword">if</span> (props == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">54</span>      <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers">55</span>                     .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Unknown hostname </span><span class="delimiter">"</span></span> + hostname
+<span class="line-numbers">56</span>                             + <span class="string"><span class="delimiter">"</span><span class="content"> or the inventory service may not be running </span><span class="delimiter">"</span></span>
+<span class="line-numbers">57</span>                             + <span class="string"><span class="delimiter">"</span><span class="content">on the host machine </span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">58</span>                     .build();
+<span class="line-numbers">59</span>    }
+<span class="line-numbers">60</span>
+<span class="line-numbers">61</span>    <span class="comment">// Add to inventory</span>
+<span class="line-numbers">62</span>    <span class="comment">// tag::managerAdd[]</span>
+<span class="line-numbers">63</span>    manager.add(hostname, props);
+<span class="line-numbers">64</span>    <span class="comment">// end::managerAdd[]</span>
+<span class="line-numbers">65</span>    <span class="keyword">return</span> Response.ok(props).build();
+<span class="line-numbers">66</span>  }
+<span class="line-numbers">67</span>
+<span class="line-numbers">68</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">69</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">70</span>  <span class="directive">public</span> InventoryList listContents() {
+<span class="line-numbers">71</span>    <span class="comment">// tag::managerList[]</span>
+<span class="line-numbers">72</span>    <span class="keyword">return</span> manager.list();
+<span class="line-numbers">73</span>    <span class="comment">// end::managerList[]</span>
+<span class="line-numbers">74</span>  }
+<span class="line-numbers">75</span>}
+<span class="line-numbers">76</span><span class="comment">// tag::InventoryResource[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemClient.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory.client</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Client</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.ClientBuilder</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Invocation.Builder</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.HttpHeaders</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response.Status</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">java.net.URI</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">28</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemClient</span> {
+<span class="line-numbers">29</span>
+<span class="line-numbers">30</span>    <span class="comment">// Constants for building URI to the system service.</span>
+<span class="line-numbers">31</span>    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> SYSTEM_PROPERTIES = <span class="string"><span class="delimiter">"</span><span class="content">/system/properties</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">32</span>    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> PROTOCOL = <span class="string"><span class="delimiter">"</span><span class="content">http</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers">35</span>    <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">system.http.port</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">36</span>    <span class="predefined-type">String</span> SYS_HTTP_PORT;
+<span class="line-numbers">37</span>
+<span class="line-numbers">38</span>    <span class="comment">// Wrapper function that gets properties</span>
+<span class="line-numbers">39</span>    <span class="directive">public</span> <span class="predefined-type">Properties</span> getProperties(<span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">40</span>        <span class="predefined-type">Properties</span> properties = <span class="predefined-constant">null</span>;
+<span class="line-numbers">41</span>        Client client = ClientBuilder.newClient();
+<span class="line-numbers">42</span>        <span class="keyword">try</span> {
+<span class="line-numbers">43</span>            Builder builder = getBuilder(hostname, client);
+<span class="line-numbers">44</span>            properties = getPropertiesHelper(builder);
+<span class="line-numbers">45</span>        } <span class="keyword">catch</span> (<span class="exception">Exception</span> e) {
+<span class="line-numbers">46</span>            <span class="predefined-type">System</span>.err.println(
+<span class="line-numbers">47</span>            <span class="string"><span class="delimiter">"</span><span class="content">Exception thrown while getting properties: </span><span class="delimiter">"</span></span> + e.getMessage());
+<span class="line-numbers">48</span>        } <span class="keyword">finally</span> {
+<span class="line-numbers">49</span>            client.close();
+<span class="line-numbers">50</span>        }
+<span class="line-numbers">51</span>        <span class="keyword">return</span> properties;
+<span class="line-numbers">52</span>    }
+<span class="line-numbers">53</span>
+<span class="line-numbers">54</span>    <span class="comment">// Method that creates the client builder</span>
+<span class="line-numbers">55</span>    <span class="directive">private</span> Builder getBuilder(<span class="predefined-type">String</span> hostname, Client client) <span class="directive">throws</span> <span class="exception">Exception</span> {
+<span class="line-numbers">56</span>        <span class="predefined-type">URI</span> uri = <span class="keyword">new</span> <span class="predefined-type">URI</span>(
+<span class="line-numbers">57</span>                      PROTOCOL, <span class="predefined-constant">null</span>, hostname, <span class="predefined-type">Integer</span>.valueOf(SYS_HTTP_PORT),
+<span class="line-numbers">58</span>                      SYSTEM_PROPERTIES, <span class="predefined-constant">null</span>, <span class="predefined-constant">null</span>);
+<span class="line-numbers">59</span>        <span class="predefined-type">String</span> urlString = uri.toString();
+<span class="line-numbers">60</span>        Builder builder = client.target(urlString).request();
+<span class="line-numbers">61</span>        builder.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+<span class="line-numbers">62</span>        <span class="keyword">return</span> builder;
+<span class="line-numbers">63</span>    }
+<span class="line-numbers">64</span>
+<span class="line-numbers">65</span>    <span class="comment">// Helper method that processes the request</span>
+<span class="line-numbers">66</span>    <span class="directive">private</span> <span class="predefined-type">Properties</span> getPropertiesHelper(Builder builder) <span class="directive">throws</span> <span class="exception">Exception</span> {
+<span class="line-numbers">67</span>        Response response = builder.get();
+<span class="line-numbers">68</span>        <span class="keyword">if</span> (response.getStatus() == Status.OK.getStatusCode()) {
+<span class="line-numbers">69</span>            <span class="keyword">return</span> response.readEntity(<span class="predefined-type">Properties</span>.class);
+<span class="line-numbers">70</span>        } <span class="keyword">else</span> {
+<span class="line-numbers">71</span>            <span class="predefined-type">System</span>.err.println(<span class="string"><span class="delimiter">"</span><span class="content">Response Status is not OK.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">72</span>            <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+<span class="line-numbers">73</span>        }
+<span class="line-numbers">74</span>    }
+<span class="line-numbers">75</span>}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="running-the-application">Running the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You started the Open Liberty in dev mode at the beginning of the guide, so all the changes were automatically picked up.</p>
+</div>
+<div class="paragraph">
+<p>You can find the <code>inventory</code> and <code>system</code> services at the following URLs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://localhost:9080/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/inventory/systems</a></p>
+</li>
+<li>
+<p><a href="http://localhost:9080/system/properties" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/system/properties</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-inventory-application">Testing the inventory application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>While you can test your application manually, you should rely on automated tests because they trigger a failure whenever a code change introduces a defect. Because the application is a RESTful web service application, you can use JUnit and the RESTful web service Client API to write tests. In testing the functionality of the application, the scopes and dependencies are being tested.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>InventoryEndpointIT</code> class.</mark>
+<code>src/test/java/it/io/openliberty/guides/inventory/InventoryEndpointIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryEndpointIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="comment">// tag::testClass[]</span>
+<span class="line-numbers"> 13</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.inventory</span>;
+<span class="line-numbers"> 14</span>
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonArray</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObject</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Client</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.ClientBuilder</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 24</span>
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeAll</span>;
+<span class="line-numbers"> 28</span><span class="comment">// tag::MethodOrderer[]</span>
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.MethodOrderer.OrderAnnotation</span>;
+<span class="line-numbers"> 30</span><span class="comment">// end::MethodOrderer[]</span>
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Order</span>;
+<span class="line-numbers"> 32</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers"> 33</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.TestMethodOrder</span>;
+<span class="line-numbers"> 34</span>
+<span class="line-numbers"> 35</span><span class="comment">// tag::TestMethodOrder[]</span>
+<span class="line-numbers"> 36</span><span class="annotation">@TestMethodOrder</span>(OrderAnnotation.class)
+<span class="line-numbers"> 37</span><span class="comment">// end::TestMethodOrder[]</span>
+<span class="line-numbers"> 38</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryEndpointIT</span> {
+<span class="line-numbers"> 39</span>
+<span class="line-numbers"> 40</span>  <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> port;
+<span class="line-numbers"> 41</span>  <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> baseUrl;
+<span class="line-numbers"> 42</span>
+<span class="line-numbers"> 43</span>  <span class="directive">private</span> Client client;
+<span class="line-numbers"> 44</span>
+<span class="line-numbers"> 45</span>  <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> SYSTEM_PROPERTIES = <span class="string"><span class="delimiter">"</span><span class="content">system/properties</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 46</span>  <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> INVENTORY_SYSTEMS = <span class="string"><span class="delimiter">"</span><span class="content">inventory/systems</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 47</span>
+<span class="line-numbers"> 48</span>  <span class="comment">// tag::BeforeAll[]</span>
+<span class="line-numbers"> 49</span>  <span class="annotation">@BeforeAll</span>
+<span class="line-numbers"> 50</span>  <span class="comment">// end::BeforeAll[]</span>
+<span class="line-numbers"> 51</span>  <span class="comment">// tag::oneTimeSetup[]</span>
+<span class="line-numbers"> 52</span>  <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> oneTimeSetup() {
+<span class="line-numbers"> 53</span>    port = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">http.port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 54</span>    baseUrl = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:</span><span class="delimiter">"</span></span> + port + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 55</span>  }
+<span class="line-numbers"> 56</span>  <span class="comment">// end::oneTimeSetup[]</span>
+<span class="line-numbers"> 57</span>
+<span class="line-numbers"> 58</span>  <span class="comment">// tag::BeforeEach[]</span>
+<span class="line-numbers"> 59</span>  <span class="annotation">@BeforeEach</span>
+<span class="line-numbers"> 60</span>  <span class="comment">// end::BeforeEach[]</span>
+<span class="line-numbers"> 61</span>  <span class="comment">// tag::setup[]</span>
+<span class="line-numbers"> 62</span>  <span class="directive">public</span> <span class="type">void</span> setup() {
+<span class="line-numbers"> 63</span>    client = ClientBuilder.newClient();
+<span class="line-numbers"> 64</span>  }
+<span class="line-numbers"> 65</span>  <span class="comment">// end::setup[]</span>
+<span class="line-numbers"> 66</span>
+<span class="line-numbers"> 67</span>  <span class="comment">// tag::AfterEach[]</span>
+<span class="line-numbers"> 68</span>  <span class="annotation">@AfterEach</span>
+<span class="line-numbers"> 69</span>  <span class="comment">// end::AfterEach[]</span>
+<span class="line-numbers"> 70</span>  <span class="comment">// tag::teardown[]</span>
+<span class="line-numbers"> 71</span>  <span class="directive">public</span> <span class="type">void</span> teardown() {
+<span class="line-numbers"> 72</span>    client.close();
+<span class="line-numbers"> 73</span>  }
+<span class="line-numbers"> 74</span>  <span class="comment">// end::teardown[]</span>
+<span class="line-numbers"> 75</span>
+<span class="line-numbers"> 76</span>  <span class="comment">// tag::tests[]</span>
+<span class="line-numbers"> 77</span>  <span class="comment">// tag::Test1[]</span>
+<span class="line-numbers"> 78</span>  <span class="annotation">@Test</span>
+<span class="line-numbers"> 79</span>  <span class="comment">// end::Test1[]</span>
+<span class="line-numbers"> 80</span>  <span class="comment">// tag::Order1[]</span>
+<span class="line-numbers"> 81</span>  <span class="annotation">@Order</span>(<span class="integer">1</span>)
+<span class="line-numbers"> 82</span>  <span class="comment">// end::Order1[]</span>
+<span class="line-numbers"> 83</span>  <span class="comment">// tag::testHostRegistration[]</span>
+<span class="line-numbers"> 84</span>  <span class="directive">public</span> <span class="type">void</span> testHostRegistration() {
+<span class="line-numbers"> 85</span>    <span class="local-variable">this</span>.visitLocalhost();
+<span class="line-numbers"> 86</span>
+<span class="line-numbers"> 87</span>    Response response = <span class="local-variable">this</span>.getResponse(baseUrl + INVENTORY_SYSTEMS);
+<span class="line-numbers"> 88</span>    <span class="local-variable">this</span>.assertResponse(baseUrl, response);
+<span class="line-numbers"> 89</span>
+<span class="line-numbers"> 90</span>    JsonObject obj = response.readEntity(JsonObject.class);
+<span class="line-numbers"> 91</span>
+<span class="line-numbers"> 92</span>    JsonArray systems = obj.getJsonArray(<span class="string"><span class="delimiter">"</span><span class="content">systems</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 93</span>
+<span class="line-numbers"> 94</span>    <span class="type">boolean</span> localhostExists = <span class="predefined-constant">false</span>;
+<span class="line-numbers"> 95</span>    <span class="keyword">for</span> (<span class="type">int</span> n = <span class="integer">0</span>; n &lt; systems.size(); n++) {
+<span class="line-numbers"> 96</span>      localhostExists = systems.getJsonObject(n)
+<span class="line-numbers"> 97</span>                                .get(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>).toString()
+<span class="line-numbers"> 98</span>                                .contains(<span class="string"><span class="delimiter">"</span><span class="content">localhost</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 99</span>      <span class="keyword">if</span> (localhostExists) {
+<span class="line-numbers">100</span>          <span class="keyword">break</span>;
+<span class="line-numbers">101</span>      }
+<span class="line-numbers">102</span>    }
+<span class="line-numbers">103</span>    assertTrue(localhostExists,
+<span class="line-numbers">104</span>              <span class="string"><span class="delimiter">"</span><span class="content">A host was registered, but it was not localhost</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">105</span>
+<span class="line-numbers">106</span>    response.close();
+<span class="line-numbers">107</span>  }
+<span class="line-numbers">108</span>  <span class="comment">// end::testHostRegistration[]</span>
+<span class="line-numbers">109</span>
+<span class="line-numbers">110</span>  <span class="comment">// tag::Test2[]</span>
+<span class="line-numbers">111</span>  <span class="annotation">@Test</span>
+<span class="line-numbers">112</span>  <span class="comment">// end::Test2[]</span>
+<span class="line-numbers">113</span>  <span class="comment">// tag::Order2[]</span>
+<span class="line-numbers">114</span>  <span class="annotation">@Order</span>(<span class="integer">2</span>)
+<span class="line-numbers">115</span>  <span class="comment">// end::Order2[]</span>
+<span class="line-numbers">116</span>  <span class="comment">// tag::testSystemPropertiesMatch[]</span>
+<span class="line-numbers">117</span>  <span class="directive">public</span> <span class="type">void</span> testSystemPropertiesMatch() {
+<span class="line-numbers">118</span>    Response invResponse = <span class="local-variable">this</span>.getResponse(baseUrl + INVENTORY_SYSTEMS);
+<span class="line-numbers">119</span>    Response sysResponse = <span class="local-variable">this</span>.getResponse(baseUrl + SYSTEM_PROPERTIES);
+<span class="line-numbers">120</span>
+<span class="line-numbers">121</span>    <span class="local-variable">this</span>.assertResponse(baseUrl, invResponse);
+<span class="line-numbers">122</span>    <span class="local-variable">this</span>.assertResponse(baseUrl, sysResponse);
+<span class="line-numbers">123</span>
+<span class="line-numbers">124</span>    JsonObject jsonFromInventory = (JsonObject) invResponse.readEntity(JsonObject.class)
+<span class="line-numbers">125</span>                                                           .getJsonArray(<span class="string"><span class="delimiter">"</span><span class="content">systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">126</span>                                                           .getJsonObject(<span class="integer">0</span>)
+<span class="line-numbers">127</span>                                                           .get(<span class="string"><span class="delimiter">"</span><span class="content">properties</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">128</span>
+<span class="line-numbers">129</span>    JsonObject jsonFromSystem = sysResponse.readEntity(JsonObject.class);
+<span class="line-numbers">130</span>
+<span class="line-numbers">131</span>    <span class="predefined-type">String</span> osNameFromInventory = jsonFromInventory.getString(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">132</span>    <span class="predefined-type">String</span> osNameFromSystem = jsonFromSystem.getString(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">133</span>    <span class="local-variable">this</span>.assertProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">localhost</span><span class="delimiter">"</span></span>, osNameFromSystem,
+<span class="line-numbers">134</span>                        osNameFromInventory);
+<span class="line-numbers">135</span>
+<span class="line-numbers">136</span>    <span class="predefined-type">String</span> userNameFromInventory = jsonFromInventory.getString(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">137</span>    <span class="predefined-type">String</span> userNameFromSystem = jsonFromSystem.getString(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">138</span>    <span class="local-variable">this</span>.assertProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">localhost</span><span class="delimiter">"</span></span>, userNameFromSystem,
+<span class="line-numbers">139</span>                        userNameFromInventory);
+<span class="line-numbers">140</span>
+<span class="line-numbers">141</span>    invResponse.close();
+<span class="line-numbers">142</span>    sysResponse.close();
+<span class="line-numbers">143</span>  }
+<span class="line-numbers">144</span>  <span class="comment">// end::testSystemPropertiesMatch[]</span>
+<span class="line-numbers">145</span>
+<span class="line-numbers">146</span>  <span class="comment">// tag::Test3[]</span>
+<span class="line-numbers">147</span>  <span class="annotation">@Test</span>
+<span class="line-numbers">148</span>  <span class="comment">// end::Test3[]</span>
+<span class="line-numbers">149</span>  <span class="comment">// tag::Order3[]</span>
+<span class="line-numbers">150</span>  <span class="annotation">@Order</span>(<span class="integer">3</span>)
+<span class="line-numbers">151</span>  <span class="comment">// end::Order3[]</span>
+<span class="line-numbers">152</span>  <span class="comment">// tag::testUnknownHost[]</span>
+<span class="line-numbers">153</span>  <span class="directive">public</span> <span class="type">void</span> testUnknownHost() {
+<span class="line-numbers">154</span>    Response response = <span class="local-variable">this</span>.getResponse(baseUrl + INVENTORY_SYSTEMS);
+<span class="line-numbers">155</span>    <span class="local-variable">this</span>.assertResponse(baseUrl, response);
+<span class="line-numbers">156</span>
+<span class="line-numbers">157</span>    Response badResponse = client.target(baseUrl + INVENTORY_SYSTEMS + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span>
+<span class="line-numbers">158</span>        + <span class="string"><span class="delimiter">"</span><span class="content">badhostname</span><span class="delimiter">"</span></span>).request(MediaType.APPLICATION_JSON).get();
+<span class="line-numbers">159</span>
+<span class="line-numbers">160</span>    assertEquals(<span class="integer">404</span>, badResponse.getStatus(),
+<span class="line-numbers">161</span>        <span class="string"><span class="delimiter">"</span><span class="content">BadResponse expected status: 404. Response code not as expected.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">162</span>
+<span class="line-numbers">163</span>    <span class="predefined-type">String</span> obj = badResponse.readEntity(<span class="predefined-type">String</span>.class);
+<span class="line-numbers">164</span>
+<span class="line-numbers">165</span>    <span class="type">boolean</span> isError = obj.contains(<span class="string"><span class="delimiter">"</span><span class="content">error</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">166</span>    assertTrue(isError,
+<span class="line-numbers">167</span>              <span class="string"><span class="delimiter">"</span><span class="content">badhostname is not a valid host but it didn't raise an error</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">168</span>
+<span class="line-numbers">169</span>    response.close();
+<span class="line-numbers">170</span>    badResponse.close();
+<span class="line-numbers">171</span>  }
+<span class="line-numbers">172</span>  <span class="comment">// end::testUnknownHost[]</span>
+<span class="line-numbers">173</span>  <span class="comment">// end::tests[]</span>
+<span class="line-numbers">174</span>
+<span class="line-numbers">175</span>  <span class="directive">private</span> Response getResponse(<span class="predefined-type">String</span> url) {
+<span class="line-numbers">176</span>    <span class="keyword">return</span> client.target(url).request().get();
+<span class="line-numbers">177</span>  }
+<span class="line-numbers">178</span>
+<span class="line-numbers">179</span>  <span class="directive">private</span> <span class="type">void</span> assertResponse(<span class="predefined-type">String</span> url, Response response) {
+<span class="line-numbers">180</span>    assertEquals(<span class="integer">200</span>, response.getStatus(), <span class="string"><span class="delimiter">"</span><span class="content">Incorrect response code from </span><span class="delimiter">"</span></span> + url);
+<span class="line-numbers">181</span>  }
+<span class="line-numbers">182</span>
+<span class="line-numbers">183</span>  <span class="directive">private</span> <span class="type">void</span> assertProperty(<span class="predefined-type">String</span> propertyName, <span class="predefined-type">String</span> hostname,
+<span class="line-numbers">184</span>      <span class="predefined-type">String</span> expected, <span class="predefined-type">String</span> actual) {
+<span class="line-numbers">185</span>    assertEquals(expected, actual, <span class="string"><span class="delimiter">"</span><span class="content">JVM system property [</span><span class="delimiter">"</span></span> + propertyName + <span class="string"><span class="delimiter">"</span><span class="content">] </span><span class="delimiter">"</span></span>
+<span class="line-numbers">186</span>        + <span class="string"><span class="delimiter">"</span><span class="content">in the system service does not match the one stored in </span><span class="delimiter">"</span></span>
+<span class="line-numbers">187</span>        + <span class="string"><span class="delimiter">"</span><span class="content">the inventory service for </span><span class="delimiter">"</span></span> + hostname);
+<span class="line-numbers">188</span>  }
+<span class="line-numbers">189</span>
+<span class="line-numbers">190</span>  <span class="directive">private</span> <span class="type">void</span> visitLocalhost() {
+<span class="line-numbers">191</span>    Response response = <span class="local-variable">this</span>.getResponse(baseUrl + SYSTEM_PROPERTIES);
+<span class="line-numbers">192</span>    <span class="local-variable">this</span>.assertResponse(baseUrl, response);
+<span class="line-numbers">193</span>    response.close();
+<span class="line-numbers">194</span>
+<span class="line-numbers">195</span>    Response targetResponse = client.target(baseUrl + INVENTORY_SYSTEMS
+<span class="line-numbers">196</span>        + <span class="string"><span class="delimiter">"</span><span class="content">/localhost</span><span class="delimiter">"</span></span>).request().get();
+<span class="line-numbers">197</span>    targetResponse.close();
+<span class="line-numbers">198</span>  }
+<span class="line-numbers">199</span>}
+<span class="line-numbers">200</span><span class="comment">// end::testClass[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=BeforeAll file=0">@BeforeAll</code> annotation is placed on a method that runs before any of the test cases. In this case, the <code class="hotspot=oneTimeSetup file=0">oneTimeSetup()</code> method retrieves the port number for the Open Liberty and builds a base URL string that is used throughout the tests.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=BeforeEach file=0">@BeforeEach</code> and <code class="hotspot=AfterEach file=0">@AfterEach</code> annotations are placed on methods that run before and after every test case. These methods are generally used to perform any setup and teardown tasks. In this case, the <code class="hotspot=setup file=0">setup()</code> method creates a JAX-RS client, which makes HTTP requests to the <code>inventory</code> service. The <code class="hotspot=teardown file=0">teardown()</code> method simply destroys this client instance.</p>
+</div>
+<div class="paragraph">
+<p>See the following descriptions of the test cases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code class="hotspot=testHostRegistration file=0">testHostRegistration()</code> verifies that a host is correctly added to the inventory.</p>
+</li>
+<li>
+<p><code class="hotspot=testSystemPropertiesMatch file=0">testSystemPropertiesMatch()</code> verifies that the JVM system properties returned by the <code>system</code> service match the ones stored in the <code>inventory</code> service.</p>
+</li>
+<li>
+<p><code class="hotspot=testUnknownHost file=0">testUnknownHost()</code> verifies that an unknown host or a host that does not expose their JVM system properties is correctly handled as an error.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To force these test cases to run in a particular order, annotate your <code class="hotspot file=0">InventoryEndpointIT</code> test class with the <code class="hotspot=TestMethodOrder file=0">@TestMethodOrder(OrderAnnotation.class)</code> annotation. <code class="hotspot=TestMethodOrder file=0">OrderAnnotation.class</code> runs test methods in numerical order, according to the values specified in the <code class="hotspot=Order1 hotspot=Order2 hotspot=Order3 file=0">@Order</code> annotation. You can also create a custom <code>MethodOrderer</code> class or use built-in <code>MethodOrderer</code> implementations, such as <code>OrderAnnotation.class</code>, <code>Alphanumeric.class</code>, or <code>Random.class</code>. Label your test cases with the <code class="hotspot=Test1 hotspot=Test2 hotspot=Test3 file=0">@Test</code> annotation so that they automatically run when your test class runs.</p>
+</div>
+<div class="paragraph">
+<p>Finally, the <code class="hotspot file=1">src/test/java/it/io/openliberty/guides/system/SystemEndpointIT.java</code> file is included for you to test the basic functionality of the <code>system</code> service. If a test failure occurs, then you might have introduced a bug into the code.</p>
+</div>
+<div class="paragraph">
+<p>SystemEndpointIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.system</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObject</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Client</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.ClientBuilder</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.WebTarget</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemEndpointIT</span> {
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span> <span class="annotation">@Test</span>
+<span class="line-numbers">26</span> <span class="directive">public</span> <span class="type">void</span> testGetProperties() {
+<span class="line-numbers">27</span>     <span class="predefined-type">String</span> port = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">http.port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">28</span>     <span class="predefined-type">String</span> url = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:</span><span class="delimiter">"</span></span> + port + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">29</span>
+<span class="line-numbers">30</span>     Client client = ClientBuilder.newClient();
+<span class="line-numbers">31</span>
+<span class="line-numbers">32</span>     WebTarget target = client.target(url + <span class="string"><span class="delimiter">"</span><span class="content">system/properties</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">33</span>     Response response = target.request().get();
+<span class="line-numbers">34</span>
+<span class="line-numbers">35</span>     assertEquals(<span class="integer">200</span>, response.getStatus(), <span class="string"><span class="delimiter">"</span><span class="content">Incorrect response code from </span><span class="delimiter">"</span></span> + url);
+<span class="line-numbers">36</span>
+<span class="line-numbers">37</span>     JsonObject obj = response.readEntity(JsonObject.class);
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span>     assertEquals(<span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">40</span>                  obj.getString(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">41</span>                  <span class="string"><span class="delimiter">"</span><span class="content">The system property for the local and remote JVM should match</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">42</span>     response.close();
+<span class="line-numbers">43</span>     client.close();
+<span class="line-numbers">44</span> }
+<span class="line-numbers">45</span>}</code></pre>
+</div>
+</div>
+<div class="sect2 command">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Because you started Open Liberty in dev mode, you can run the tests by pressing the <code>enter/return</code> key from the command-line session where you started dev mode.</p>
+</div>
+<div class="paragraph">
+<p>If the tests pass, you see a similar output to the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.system.SystemEndpointIT
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.99 sec - in it.io.openliberty.guides.system.SystemEndpointIT
+Running it.io.openliberty.guides.inventory.InventoryEndpointIT
+[err] Runtime exception: RESTEASY004655: Unable to invoke request: java.net.UnknownHostException: badhostname: nodename nor servname provided, or not known
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.325 sec - in it.io.openliberty.guides.inventory.InventoryEndpointIT
+
+Results :
+
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The error messages are expected and result from a request to a bad or an unknown hostname. This request is made in the <code>testUnknownHost()</code> test from the <code>InventoryEndpointIT</code> integration test.</p>
+</div>
+<div class="paragraph">
+<p>To see whether the tests detect a failure, change the <code class="hotspot=endpoint file=0">endpoint</code> for the <code>inventory</code> service in the <code class="hotspot file=0">src/main/java/io/openliberty/guides/inventory/InventoryResource.java</code> file to something else. Then, run the tests again to see that a test failure occurs.</p>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.SystemClient</span>;
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span><span class="comment">// tag::ApplicationScoped[]</span>
+<span class="line-numbers">27</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">28</span><span class="comment">// end::ApplicationScoped[]</span>
+<span class="line-numbers">29</span><span class="comment">// tag::endpoint[]</span>
+<span class="line-numbers">30</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">31</span><span class="comment">// end::endpoint[]</span>
+<span class="line-numbers">32</span><span class="comment">// tag::InventoryResource[]</span>
+<span class="line-numbers">33</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers">34</span>
+<span class="line-numbers">35</span>  <span class="comment">// tag::inject[]</span>
+<span class="line-numbers">36</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">37</span>  <span class="comment">// end::inject[]</span>
+<span class="line-numbers">38</span>  InventoryManager manager;
+<span class="line-numbers">39</span>
+<span class="line-numbers">40</span>  <span class="comment">// tag::inject2[]</span>
+<span class="line-numbers">41</span>  <span class="annotation">@Inject</span>
+<span class="line-numbers">42</span>  <span class="comment">// end::inject2[]</span>
+<span class="line-numbers">43</span>  SystemClient systemClient;
+<span class="line-numbers">44</span>
+<span class="line-numbers">45</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">46</span>  <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">47</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">48</span>  <span class="directive">public</span> Response getPropertiesForHost(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">49</span>    <span class="comment">// Get properties for host</span>
+<span class="line-numbers">50</span>    <span class="comment">// tag::properties[]</span>
+<span class="line-numbers">51</span>    <span class="predefined-type">Properties</span> props = systemClient.getProperties(hostname);
+<span class="line-numbers">52</span>    <span class="comment">// end::properties[]</span>
+<span class="line-numbers">53</span>    <span class="keyword">if</span> (props == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">54</span>      <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers">55</span>                     .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Unknown hostname </span><span class="delimiter">"</span></span> + hostname
+<span class="line-numbers">56</span>                             + <span class="string"><span class="delimiter">"</span><span class="content"> or the inventory service may not be running </span><span class="delimiter">"</span></span>
+<span class="line-numbers">57</span>                             + <span class="string"><span class="delimiter">"</span><span class="content">on the host machine </span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">58</span>                     .build();
+<span class="line-numbers">59</span>    }
+<span class="line-numbers">60</span>
+<span class="line-numbers">61</span>    <span class="comment">// Add to inventory</span>
+<span class="line-numbers">62</span>    <span class="comment">// tag::managerAdd[]</span>
+<span class="line-numbers">63</span>    manager.add(hostname, props);
+<span class="line-numbers">64</span>    <span class="comment">// end::managerAdd[]</span>
+<span class="line-numbers">65</span>    <span class="keyword">return</span> Response.ok(props).build();
+<span class="line-numbers">66</span>  }
+<span class="line-numbers">67</span>
+<span class="line-numbers">68</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">69</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">70</span>  <span class="directive">public</span> InventoryList listContents() {
+<span class="line-numbers">71</span>    <span class="comment">// tag::managerList[]</span>
+<span class="line-numbers">72</span>    <span class="keyword">return</span> manager.list();
+<span class="line-numbers">73</span>    <span class="comment">// end::managerList[]</span>
+<span class="line-numbers">74</span>  }
+<span class="line-numbers">75</span>}
+<span class="line-numbers">76</span><span class="comment">// tag::InventoryResource[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph command">
+<p>When you are done checking out the service, exit dev mode by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You just used CDI services in Open Liberty to build a simple inventory application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Injecting dependencies into microservices <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-cdi-intro/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-cdi-intro/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-cdi-intro/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/rest-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Creating a RESTful web service</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">30 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

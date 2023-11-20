@@ -1,0 +1,73 @@
+/*******************************************************************************
+ * Copyright (c) 2017 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+ .teContainer>.nav-tabs>li>a {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;  
+    letter-spacing: 0;
+    height: 32px;
+    padding: 2px 5px 4px 5px;
+    border: 1px solid #acb3c6;
+    border-bottom: transparent;
+    margin-right: 0;           /* Overlay bootstrap's margin so tabs are condensed   */
+    color: #5D6A8E !important;
+    line-height: 26px;
+    @media (max-width: 768px) {
+        /* In single column output, allow the font to adjust to maximize the amount of filename shown */
+        font-size: calc(.70em + 4 * (100vw - 320px) / 447) !important;
+        font-size: -webkit-calc(70% + 4 * (100vw - 320px) / 447) !important;
+    }
+
+    &.active {
+        background-color: #c7ccd9 !important;
+        color: #3f465a !important;
+    }
+
+    &:hover {
+        background-color: #D6DAE6;
+    }
+
+    &.errorInTab {
+        background-color: #f2dede;
+        color: #a94442 !important;
+    }
+}
+
+.teTabContent {
+    display: none;  /* Default to hidden contents until tab selected */
+}
+
+.teTabContent div.editorButtonFrame {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid #acb3c6;
+    /*border-left-color: #ddd;    /* Change the border color of the menu bar in */
+    /*border-right-color: #ddd;   /* the editor to soften the transition from   */ 
+    /*border-bottom-color: #aaa;  /* the tabs to the editor frame.              */   
+}
+
+.teContents {
+    clear: left;    /* Clear the float from the tab <li> elements */
+    height: calc(100% - 31px);
+}
+
+.teContainer, .teTabContent {
+    height: 100%
+}
+
+.teContainer {
+    @media (min-width: 1170px) {
+       border-radius: 4px 4px 4px 4px;
+       border: 1px solid #c8d6fb;
+    }
+}

@@ -1,0 +1,44 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: "build-template"
+  annotations:
+    description: "Build template for the system and inventory service"
+    tags: "build"
+objects:
+    # tag::imageStream[]
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      name: "${APP_NAME}-imagestream"
+      labels:
+        name: "${APP_NAME}"
+    # end::imageStream[]
+    # tag::buildConfig[]
+  - apiVersion: v1
+    kind: BuildConfig
+    metadata:
+      name: "${APP_NAME}-buildconfig"
+      labels:
+        name: "${APP_NAME}"
+    spec:
+      # tag::source[]
+      source:
+        # tag::binary[]
+        type: Binary
+        # end::binary[]
+      # end::source[]
+      # tag::docker[]
+      strategy:
+        type: Docker
+      # end::docker[]
+      output:
+        to:
+          kind: ImageStreamTag
+          name: "${APP_NAME}-imagestream:1.0-SNAPSHOT"
+    # end::buildConfig[]
+# tag::appname[]
+parameters:
+- description: The application name [system|inventory]
+  name: APP_NAME
+# end::appname[]

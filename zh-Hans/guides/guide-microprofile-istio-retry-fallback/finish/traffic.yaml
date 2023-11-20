@@ -1,0 +1,42 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: system-virtual-service
+spec:
+  hosts:
+  - "system.example.com"
+  gateways:
+  - sys-app-gateway
+  http:
+  - route:
+    - destination:
+        port:
+          number: 9080
+        host: system-service
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: inventory-virtual-service
+spec:
+  hosts:
+  - "inventory.example.com"
+  gateways:
+  - sys-app-gateway
+  http:
+  # tag::route[]
+  - route:
+    - destination:
+        port:
+          number: 9081
+        host: inventory-service
+    # tag::istioRetry[]
+    retries:
+      # tag::attempts[]
+      attempts: 4
+      # end::attempts[]
+      # tag::retryOn[]
+      retryOn: 5xx
+      # end::retryOn[]
+    # end::istioRetry[]
+  # end::route[]

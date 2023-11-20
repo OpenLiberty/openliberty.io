@@ -1,0 +1,103 @@
+// tag::war[]
+apply plugin: 'war'
+// end::war[]
+// tag::liberty[]
+apply plugin: 'liberty'
+// end::liberty[]
+
+sourceCompatibility = 11
+targetCompatibility = 11
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// configure liberty-gradle-plugin 
+// tag::buildscript[]
+buildscript {
+    repositories {
+        // tag::buildmaven[]
+        mavenCentral()
+        // end::buildmaven[]
+    }
+    dependencies {
+        // tag::liberty-dependency[]
+        classpath 'io.openliberty.tools:liberty-gradle-plugin:3.5.2'
+        // end::liberty-dependency[]
+    }
+}
+// end::buildscript[]
+
+// tag::repositories[]
+repositories {
+    // tag::maven[]
+    mavenCentral()
+    // end::maven[]
+}
+// end::repositories[]
+
+// tag::dependencies[]
+dependencies {
+    // provided dependencies
+    // tag::providedcompile[]
+    providedCompile 'jakarta.platform:jakarta.jakartaee-api:10.0.0'
+    providedCompile 'org.eclipse.microprofile:microprofile:6.0'
+    // end::providedcompile[]
+
+    // test dependencies
+    // tag::testimplementation[]
+    // tag::junit[]
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    // end::junit[]
+    // tag::commons[]
+    testImplementation 'org.apache.httpcomponents:httpclient:4.5.14'
+    // end::commons[]
+    // end::testimplementation[]
+}
+// end::dependencies[]
+
+// tag::ext[]
+ext  {
+    liberty.server.var.'default.http.port' = '9080'
+    liberty.server.var.'default.https.port' = '9443'
+    liberty.server.var.'app.context.root' = project.name
+}
+// end::ext[]
+
+// tag::openbrowser[]
+task openBrowser {
+    description = 'Open browser to the running application'
+    doLast {
+        String port = liberty.server.var.'default.http.port'
+        String context = liberty.server.var.'app.context.root'
+        String URL = "http://localhost:" + port + "/" + context + "/" + "servlet"
+        java.awt.Desktop.desktop.browse URL.toURI()
+        java.awt.Desktop.desktop.browse file("$buildDir/reports/tests/test/index.html").toURI()
+    }
+}
+// end::openbrowser[]
+
+// tag::tests[]
+test {
+    // tag::junitplatform[]
+    useJUnitPlatform()
+    // end::junitplatform[]
+    testLogging {
+        events 'passed', 'skipped', 'failed', 'standardOut'
+        exceptionFormat 'full'
+    }
+    // tag::systemproperty[]
+    // tag::httpport[]
+    systemProperty 'http.port', liberty.server.var.'default.http.port'
+    // end::httpport[]
+    // tag::contextroot[]
+    systemProperty 'context.root',  liberty.server.var.'app.context.root'
+    // end::contextroot[]
+    // end::systemproperty[]
+}
+// end::tests[]
+
+// tag::depends[]
+test.dependsOn 'libertyStart'
+test.finalizedBy(openBrowser)
+clean.dependsOn 'libertyStop'
+// end::depends[]

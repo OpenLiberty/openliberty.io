@@ -1,0 +1,2430 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Validating constraints for JavaBeans in Java microservices
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples on how to validate JavaBeans in a Java EE or Jakarta EE application using the Java Bean Validation specification.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/bean-validation">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Validating constraints for JavaBeans in Java microservices" />
+  <meta name="twitter:description" content="A getting started tutorial with examples on how to validate JavaBeans in a Java EE or Jakarta EE application using the Java Bean Validation specification." />
+
+  <meta property='og:title' content="Validating constraints for JavaBeans in Java microservices" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples on how to validate JavaBeans in a Java EE or Jakarta EE application using the Java Bean Validation specification." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/bean-validation" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li><a href="#applying-constraints-on-the-javabeans">Applying constraints on the JavaBeans</a></li>
+<li><a href="#creating-custom-constraints">Creating custom constraints</a></li>
+<li><a href="#programmatically-validating-constraints">Programmatically validating constraints</a></li>
+<li><a href="#enabling-the-bean-validation-feature">Enabling the Bean Validation feature</a></li>
+<li><a href="#running-the-application">Running the application</a></li>
+<li>
+<a href="#testing-the-constraints">Testing the constraints</a>
+<ul class="sectlevel2">
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Validating constraints with microservices</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">20 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/bean-validation.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Explore how to use bean validation to validate user input data for microservices.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn the basics of writing and testing a microservice that uses bean validation and the new functionality of Bean Validation 2.0. The service uses bean validation to validate that the supplied JavaBeans meet the defined constraints.</p>
+</div>
+<div class="paragraph">
+<p>Bean Validation is a Java specification that simplifies data validation and error checking. Bean validation uses a standard way to validate data stored in JavaBeans. Validation can be performed manually or with integration with other specifications and frameworks, such as Contexts and Dependency Injection (CDI), Java Persistence API (JPA), or JavaServer Faces (JSF). To set rules on data, apply constraints by using annotations or XML configuration files. Bean validation provides both built-in constraints and the ability to create custom constraints. Bean validation allows for validation of both JavaBean fields and methods. For method-level validation, both the input parameters and return value can be validated.</p>
+</div>
+<div class="paragraph">
+<p>Several additional built-in constraints are included in Bean Validation 2.0, which reduces the need for custom validation in common validation scenarios. Some of the new built-in constraints include <code>@Email</code>, <code>@NotBlank</code>, <code>@Positive</code>, and <code>@Negative</code>. Also in Bean Validation 2.0, you can now specify constraints on type parameters.</p>
+</div>
+<div class="paragraph">
+<p>The example microservice uses both field-level and method-level validation as well as several of the built-in constraints and a custom constraint.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-bean-validation.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-bean-validation.git
+cd guide-bean-validation</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2 command">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>To try out the application, first go to the <code>finish</code> directory and run the following Maven goal to build the application and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd finish
+mvn liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>The defaultServer server is ready to run a smarter planet.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Go to the <a href="http://localhost:9080/openapi/ui" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/openapi/ui</a> URL.
+You see the OpenAPI user interface documenting the REST endpoints used in this guide. If you are interested in learning more about OpenAPI, read <a href="https://openliberty.io/guides/microprofile-openapi.html" target="_blank" rel="noopener">Documenting RESTful APIs</a>. Expand the <code>/beanvalidation/validatespacecraft POST request to validate your spacecraft bean</code> section and click <code>Try it out</code>. Copy the following example input into the text box:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "astronaut": {
+    "name": "Libby",
+    "age": 25,
+    "emailAddress": "libbybot@openliberty.io"
+  },
+  "destinations": {
+    "Mars": 500
+  },
+  "serialNumber": "Liberty0001"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Click <code>Execute</code> and you receive the response <code>No Constraint Violations</code> because the values specified pass the constraints you will create in this guide. Now try copying the following value into the box:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "astronaut": {
+    "name": "Libby",
+    "age": 12,
+    "emailAddress": "libbybot@openliberty.io"
+  },
+  "destinations": {
+    "Mars": 500
+  },
+  "serialNumber": "Liberty0001"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This time you receive <code>Constraint Violation Found: must be greater than or equal to 18</code> as a response because the age specified was under the minimum age of 18. Try other combinations of values to get a feel for the constraints that will be defined in this guide.</p>
+</div>
+<div class="paragraph command">
+<p>After you are finished checking out the application, stop the Liberty instance by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty. Alternatively, you can run the <code>liberty:stop</code> goal from the <code>finish</code> directory in another shell session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:stop</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="applying-constraints-on-the-javabeans">Applying constraints on the JavaBeans</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph command">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following goal to start Open Liberty in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>First, create the JavaBeans to be constrained.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>Astronaut</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/beanvalidation/Astronaut.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Astronaut.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.beanvalidation</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.io.Serializable</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.Max</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.Min</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.NotBlank</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.Email</span>;
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span><span class="comment">// tag::Astronaut[]</span>
+<span class="line-numbers">21</span><span class="directive">public</span> <span class="type">class</span> <span class="class">Astronaut</span> <span class="directive">implements</span> <span class="predefined-type">Serializable</span> {
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">long</span> serialVersionUID = <span class="integer">1L</span>;
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span>    <span class="comment">// tag::not-blank[]</span>
+<span class="line-numbers">26</span>    <span class="annotation">@NotBlank</span>
+<span class="line-numbers">27</span>    <span class="comment">// end::not-blank[]</span>
+<span class="line-numbers">28</span>    <span class="comment">// tag::Name[]</span>
+<span class="line-numbers">29</span>    <span class="directive">private</span> <span class="predefined-type">String</span> name;
+<span class="line-numbers">30</span>    <span class="comment">// end::Name[]</span>
+<span class="line-numbers">31</span>
+<span class="line-numbers">32</span>    <span class="comment">// tag::Min[]</span>
+<span class="line-numbers">33</span>    <span class="annotation">@Min</span>(<span class="integer">18</span>)
+<span class="line-numbers">34</span>    <span class="comment">// end::Min[]</span>
+<span class="line-numbers">35</span>    <span class="comment">// tag::Max[]</span>
+<span class="line-numbers">36</span>    <span class="annotation">@Max</span>(<span class="integer">100</span>)
+<span class="line-numbers">37</span>    <span class="comment">// end::Max[]</span>
+<span class="line-numbers">38</span>    <span class="comment">// tag::age[]</span>
+<span class="line-numbers">39</span>    <span class="directive">private</span> <span class="predefined-type">Integer</span> age;
+<span class="line-numbers">40</span>    <span class="comment">// end::age[]</span>
+<span class="line-numbers">41</span>
+<span class="line-numbers">42</span>    <span class="comment">// tag::Email[]</span>
+<span class="line-numbers">43</span>    <span class="annotation">@Email</span>
+<span class="line-numbers">44</span>    <span class="comment">// end::Email[]</span>
+<span class="line-numbers">45</span>    <span class="comment">// tag::emailAddress[]</span>
+<span class="line-numbers">46</span>    <span class="directive">private</span> <span class="predefined-type">String</span> emailAddress;
+<span class="line-numbers">47</span>    <span class="comment">// end::emailAddress[]</span>
+<span class="line-numbers">48</span>
+<span class="line-numbers">49</span>    <span class="directive">public</span> Astronaut() {
+<span class="line-numbers">50</span>    }
+<span class="line-numbers">51</span>
+<span class="line-numbers">52</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getName() {
+<span class="line-numbers">53</span>        <span class="keyword">return</span> name;
+<span class="line-numbers">54</span>    }
+<span class="line-numbers">55</span>
+<span class="line-numbers">56</span>    <span class="directive">public</span> <span class="predefined-type">Integer</span> getAge() {
+<span class="line-numbers">57</span>        <span class="keyword">return</span> age;
+<span class="line-numbers">58</span>    }
+<span class="line-numbers">59</span>
+<span class="line-numbers">60</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getEmailAddress() {
+<span class="line-numbers">61</span>        <span class="keyword">return</span> emailAddress;
+<span class="line-numbers">62</span>    }
+<span class="line-numbers">63</span>
+<span class="line-numbers">64</span>    <span class="directive">public</span> <span class="type">void</span> setName(<span class="predefined-type">String</span> name) {
+<span class="line-numbers">65</span>        <span class="local-variable">this</span>.name = name;
+<span class="line-numbers">66</span>    }
+<span class="line-numbers">67</span>
+<span class="line-numbers">68</span>    <span class="directive">public</span> <span class="type">void</span> setAge(<span class="predefined-type">Integer</span> age) {
+<span class="line-numbers">69</span>        <span class="local-variable">this</span>.age = age;
+<span class="line-numbers">70</span>    }
+<span class="line-numbers">71</span>
+<span class="line-numbers">72</span>    <span class="directive">public</span> <span class="type">void</span> setEmailAddress(<span class="predefined-type">String</span> emailAddress) {
+<span class="line-numbers">73</span>        <span class="local-variable">this</span>.emailAddress = emailAddress;
+<span class="line-numbers">74</span>    }
+<span class="line-numbers">75</span>}
+<span class="line-numbers">76</span><span class="comment">// end::Astronaut[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The bean stores the attributes of an astronaut, <code class="hotspot=Name file=0">name</code>, <code class="hotspot=age file=0">age</code>, and <code class="hotspot=emailAddress file=0">emailAddress</code>, and provides getters and setters to access and set the values.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=Astronaut file=0">Astronaut</code> class has the following constraints applied:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The astronaut needs to have a name. Bean Validation 2.0 provides a built-in <code class="hotspot=not-blank file=0">@NotBlank</code> constraint, which ensures the value is not null and contains one character that isn’t a blank space. The annotation constrains the <code class="hotspot=Name file=0">name</code> field.</p>
+</li>
+<li>
+<p>The email supplied needs to be a valid email address. Another built-in constraint in Bean Validation 2.0 is <code class="hotspot=Email file=0">@Email</code>, which can validate that the <code class="hotspot=Astronaut file=0">Astronaut</code> bean includes a correctly formatted email address. The annotation constrains the <code class="hotspot=emailAddress file=0">emailAddress</code> field.</p>
+</li>
+<li>
+<p>The astronaut needs to be between 18 and 100 years old. Bean validation allows you to specify multiple constraints on a single field. The <code class="hotspot=Min file=0">@Min</code> and <code class="hotspot=Max file=0">@Max</code> built-in constraints applied to the <code class="hotspot=age file=0">age</code> field check that the astronaut is between the ages of 18 and 100.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In this example, the annotation is on the field value itself. You can also place the annotation on the getter method, which has the same effect.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the <code>Spacecraft</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/beanvalidation/Spacecraft.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Spacecraft.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.beanvalidation</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.io.Serializable</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">java.util.Map</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.util.HashMap</span>;
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.NotBlank</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.Positive</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.NotNull</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.AssertTrue</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.inject.Named</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.validation.Valid</span>;
+<span class="line-numbers"> 25</span>
+<span class="line-numbers"> 26</span><span class="annotation">@Named</span>
+<span class="line-numbers"> 27</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers"> 28</span><span class="comment">// tag::Spacecraft[]</span>
+<span class="line-numbers"> 29</span><span class="directive">public</span> <span class="type">class</span> <span class="class">Spacecraft</span> <span class="directive">implements</span> <span class="predefined-type">Serializable</span> {
+<span class="line-numbers"> 30</span>
+<span class="line-numbers"> 31</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">long</span> serialVersionUID = <span class="integer">1L</span>;
+<span class="line-numbers"> 32</span>
+<span class="line-numbers"> 33</span>    <span class="comment">// tag::Valid[]</span>
+<span class="line-numbers"> 34</span>    <span class="annotation">@Valid</span>
+<span class="line-numbers"> 35</span>    <span class="comment">// end::Valid[]</span>
+<span class="line-numbers"> 36</span>    <span class="comment">// tag::Astronaut[]</span>
+<span class="line-numbers"> 37</span>    <span class="directive">private</span> Astronaut astronaut;
+<span class="line-numbers"> 38</span>    <span class="comment">// end::Astronaut[]</span>
+<span class="line-numbers"> 39</span>
+<span class="line-numbers"> 40</span>    <span class="comment">// tag::Map[]</span>
+<span class="line-numbers"> 41</span>    <span class="directive">private</span> <span class="predefined-type">Map</span>&lt;<span class="annotation">@NotBlank</span> <span class="predefined-type">String</span>, <span class="annotation">@Positive</span> <span class="predefined-type">Integer</span>&gt; destinations;
+<span class="line-numbers"> 42</span>    <span class="comment">// end::Map[]</span>
+<span class="line-numbers"> 43</span>
+<span class="line-numbers"> 44</span>    <span class="comment">// tag::serial-num[]</span>
+<span class="line-numbers"> 45</span>    <span class="annotation">@SerialNumber</span>
+<span class="line-numbers"> 46</span>    <span class="comment">// end::serial-num[]</span>
+<span class="line-numbers"> 47</span>    <span class="comment">// tag::serialNumber[]</span>
+<span class="line-numbers"> 48</span>    <span class="directive">private</span> <span class="predefined-type">String</span> serialNumber;
+<span class="line-numbers"> 49</span>    <span class="comment">// end::serialNumber[]</span>
+<span class="line-numbers"> 50</span>
+<span class="line-numbers"> 51</span>    <span class="directive">public</span> Spacecraft() {
+<span class="line-numbers"> 52</span>        destinations = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt;();
+<span class="line-numbers"> 53</span>    }
+<span class="line-numbers"> 54</span>
+<span class="line-numbers"> 55</span>    <span class="directive">public</span> <span class="type">void</span> setAstronaut(Astronaut astronaut) {
+<span class="line-numbers"> 56</span>        <span class="local-variable">this</span>.astronaut = astronaut;
+<span class="line-numbers"> 57</span>    }
+<span class="line-numbers"> 58</span>
+<span class="line-numbers"> 59</span>    <span class="directive">public</span> <span class="type">void</span> setDestinations(<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt; destinations) {
+<span class="line-numbers"> 60</span>        <span class="local-variable">this</span>.destinations = destinations;
+<span class="line-numbers"> 61</span>    }
+<span class="line-numbers"> 62</span>
+<span class="line-numbers"> 63</span>    <span class="directive">public</span> <span class="type">void</span> setSerialNumber(<span class="predefined-type">String</span> serialNumber) {
+<span class="line-numbers"> 64</span>        <span class="local-variable">this</span>.serialNumber = serialNumber;
+<span class="line-numbers"> 65</span>    }
+<span class="line-numbers"> 66</span>
+<span class="line-numbers"> 67</span>    <span class="directive">public</span> Astronaut getAstronaut() {
+<span class="line-numbers"> 68</span>        <span class="keyword">return</span> astronaut;
+<span class="line-numbers"> 69</span>    }
+<span class="line-numbers"> 70</span>
+<span class="line-numbers"> 71</span>    <span class="directive">public</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt; getDestinations() {
+<span class="line-numbers"> 72</span>        <span class="keyword">return</span> destinations;
+<span class="line-numbers"> 73</span>    }
+<span class="line-numbers"> 74</span>
+<span class="line-numbers"> 75</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getSerialNumber() {
+<span class="line-numbers"> 76</span>        <span class="keyword">return</span> serialNumber;
+<span class="line-numbers"> 77</span>    }
+<span class="line-numbers"> 78</span>
+<span class="line-numbers"> 79</span>    <span class="comment">// tag::AssertTrue[]</span>
+<span class="line-numbers"> 80</span>    <span class="annotation">@AssertTrue</span>
+<span class="line-numbers"> 81</span>    <span class="comment">// end::AssertTrue[]</span>
+<span class="line-numbers"> 82</span>    <span class="comment">// tag::launchSpacecraft[]</span>
+<span class="line-numbers"> 83</span>    <span class="comment">// tag::launchCode[]</span>
+<span class="line-numbers"> 84</span>    <span class="directive">public</span> <span class="type">boolean</span> launchSpacecraft(<span class="annotation">@NotNull</span> <span class="predefined-type">String</span> launchCode) {
+<span class="line-numbers"> 85</span>    <span class="comment">// end::launchCode[]</span>
+<span class="line-numbers"> 86</span>        <span class="comment">// tag::OpenLiberty[]</span>
+<span class="line-numbers"> 87</span>        <span class="keyword">if</span> (launchCode.equals(<span class="string"><span class="delimiter">"</span><span class="content">OpenLiberty</span><span class="delimiter">"</span></span>)) {
+<span class="line-numbers"> 88</span>            <span class="comment">// end::OpenLiberty[]</span>
+<span class="line-numbers"> 89</span>            <span class="comment">// tag::true[]</span>
+<span class="line-numbers"> 90</span>            <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers"> 91</span>            <span class="comment">// end::true[]</span>
+<span class="line-numbers"> 92</span>        }
+<span class="line-numbers"> 93</span>        <span class="comment">// tag::false[]</span>
+<span class="line-numbers"> 94</span>        <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers"> 95</span>        <span class="comment">// end::false[]</span>
+<span class="line-numbers"> 96</span>    }
+<span class="line-numbers"> 97</span>    <span class="comment">// end::launchSpacecraft[]</span>
+<span class="line-numbers"> 98</span>}
+<span class="line-numbers"> 99</span><span class="comment">// end::Spacecraft[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=Spacecraft file=1">Spacecraft</code> bean contains 3 fields, <code class="hotspot=Astronaut file=1">astronaut</code>, <code class="hotspot=serialNumber file=1">serialNumber</code>, and <code class="hotspot=Map file=1">destinations</code>. The JavaBean needs to be a CDI managed bean to allow for method-level validation, which uses CDI interceptions. Because the <code class="hotspot=Spacecraft file=1">Spacecraft</code> bean is a CDI managed bean, a scope is necessary. A request scope is used in this example. To learn more about CDI, see <a href="https://openliberty.io/guides/cdi-intro.html" target="_blank" rel="noopener">Injecting dependencies into microservices</a>.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=Spacecraft file=1">Spacecraft</code> class has the following constraints applied:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Every destination that is specified needs a name and a positive distance. In Bean Validation 2.0, you can specify constraints on type parameters. The <code class="hotspot=Map file=1">@NotBlank</code> and <code class="hotspot=Map file=1">@Positive</code> annotations constrain the <code class="hotspot=Map file=1">destinations</code> map so that the destination name is not blank, and the distance is positive. The <code class="hotspot=Map file=1">@Positive</code> constraint ensures that numeric value fields are greater than 0.</p>
+</li>
+<li>
+<p>A correctly formatted serial number is required. In addition to specifying the built-in constraints, you can create custom constraints to allow user-defined validation rules. The <code class="hotspot=serial-num file=1">@SerialNumber</code> annotation that constrains the <code class="hotspot=serialNumber file=1">serialNumber</code> field is a custom constraint, which you will create later.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Because you already specified constraints on the <code class="hotspot=Astronaut file=0">Astronaut</code> bean, the constraints do not need to be respecified in the <code class="hotspot=Spacecraft file=1">Spacecraft</code> bean. Instead, because of the <code class="hotspot=Valid file=1">@Valid</code> annotation on the field, all the nested constraints on the <code class="hotspot=Astronaut file=0">Astronaut</code> bean are validated.</p>
+</div>
+<div class="paragraph">
+<p>You can also use bean validation with CDI to provide method-level validation. The <code class="hotspot=launchSpacecraft file=1">launchSpacecraft()</code> method on the <code class="hotspot=Spacecraft file=1">Spacecraft</code> bean accepts a <code class="hotspot=launchCode file=1">launchCode</code> parameter, and if the <code class="hotspot=launchCode file=1">launchCode</code> parameter is <code class="hotspot=OpenLiberty file=1">OpenLiberty</code>, the method returns <code class="hotspot=true file=1">true</code> that the spacecraft is launched. Otherwise, the method returns <code class="hotspot=false file=1">false</code>. The <code class="hotspot=launchSpacecraft file=1">launchSpacecraft()</code> method uses both parameter and return value validation. The <code class="hotspot=launchCode file=1">@NotNull</code> constraint eliminates the need to manually check within the method that the parameter is not null. Additionally, the method has the <code class="hotspot=AssertTrue file=1">@AssertTrue</code> return-level constraint to enforce that the method must return the <code>true</code> boolean.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-custom-constraints">Creating custom constraints</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To create the custom constraint for <code class="hotspot=serial-num file=0">@SerialNumber</code>, begin by creating an annotation.</p>
+</div>
+<div class="paragraph">
+<p>Spacecraft.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.beanvalidation</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.io.Serializable</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">java.util.Map</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.util.HashMap</span>;
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.NotBlank</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.Positive</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.NotNull</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.AssertTrue</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.inject.Named</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.validation.Valid</span>;
+<span class="line-numbers"> 25</span>
+<span class="line-numbers"> 26</span><span class="annotation">@Named</span>
+<span class="line-numbers"> 27</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers"> 28</span><span class="comment">// tag::Spacecraft[]</span>
+<span class="line-numbers"> 29</span><span class="directive">public</span> <span class="type">class</span> <span class="class">Spacecraft</span> <span class="directive">implements</span> <span class="predefined-type">Serializable</span> {
+<span class="line-numbers"> 30</span>
+<span class="line-numbers"> 31</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">long</span> serialVersionUID = <span class="integer">1L</span>;
+<span class="line-numbers"> 32</span>
+<span class="line-numbers"> 33</span>    <span class="comment">// tag::Valid[]</span>
+<span class="line-numbers"> 34</span>    <span class="annotation">@Valid</span>
+<span class="line-numbers"> 35</span>    <span class="comment">// end::Valid[]</span>
+<span class="line-numbers"> 36</span>    <span class="comment">// tag::Astronaut[]</span>
+<span class="line-numbers"> 37</span>    <span class="directive">private</span> Astronaut astronaut;
+<span class="line-numbers"> 38</span>    <span class="comment">// end::Astronaut[]</span>
+<span class="line-numbers"> 39</span>
+<span class="line-numbers"> 40</span>    <span class="comment">// tag::Map[]</span>
+<span class="line-numbers"> 41</span>    <span class="directive">private</span> <span class="predefined-type">Map</span>&lt;<span class="annotation">@NotBlank</span> <span class="predefined-type">String</span>, <span class="annotation">@Positive</span> <span class="predefined-type">Integer</span>&gt; destinations;
+<span class="line-numbers"> 42</span>    <span class="comment">// end::Map[]</span>
+<span class="line-numbers"> 43</span>
+<span class="line-numbers"> 44</span>    <span class="comment">// tag::serial-num[]</span>
+<span class="line-numbers"> 45</span>    <span class="annotation">@SerialNumber</span>
+<span class="line-numbers"> 46</span>    <span class="comment">// end::serial-num[]</span>
+<span class="line-numbers"> 47</span>    <span class="comment">// tag::serialNumber[]</span>
+<span class="line-numbers"> 48</span>    <span class="directive">private</span> <span class="predefined-type">String</span> serialNumber;
+<span class="line-numbers"> 49</span>    <span class="comment">// end::serialNumber[]</span>
+<span class="line-numbers"> 50</span>
+<span class="line-numbers"> 51</span>    <span class="directive">public</span> Spacecraft() {
+<span class="line-numbers"> 52</span>        destinations = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt;();
+<span class="line-numbers"> 53</span>    }
+<span class="line-numbers"> 54</span>
+<span class="line-numbers"> 55</span>    <span class="directive">public</span> <span class="type">void</span> setAstronaut(Astronaut astronaut) {
+<span class="line-numbers"> 56</span>        <span class="local-variable">this</span>.astronaut = astronaut;
+<span class="line-numbers"> 57</span>    }
+<span class="line-numbers"> 58</span>
+<span class="line-numbers"> 59</span>    <span class="directive">public</span> <span class="type">void</span> setDestinations(<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt; destinations) {
+<span class="line-numbers"> 60</span>        <span class="local-variable">this</span>.destinations = destinations;
+<span class="line-numbers"> 61</span>    }
+<span class="line-numbers"> 62</span>
+<span class="line-numbers"> 63</span>    <span class="directive">public</span> <span class="type">void</span> setSerialNumber(<span class="predefined-type">String</span> serialNumber) {
+<span class="line-numbers"> 64</span>        <span class="local-variable">this</span>.serialNumber = serialNumber;
+<span class="line-numbers"> 65</span>    }
+<span class="line-numbers"> 66</span>
+<span class="line-numbers"> 67</span>    <span class="directive">public</span> Astronaut getAstronaut() {
+<span class="line-numbers"> 68</span>        <span class="keyword">return</span> astronaut;
+<span class="line-numbers"> 69</span>    }
+<span class="line-numbers"> 70</span>
+<span class="line-numbers"> 71</span>    <span class="directive">public</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt; getDestinations() {
+<span class="line-numbers"> 72</span>        <span class="keyword">return</span> destinations;
+<span class="line-numbers"> 73</span>    }
+<span class="line-numbers"> 74</span>
+<span class="line-numbers"> 75</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getSerialNumber() {
+<span class="line-numbers"> 76</span>        <span class="keyword">return</span> serialNumber;
+<span class="line-numbers"> 77</span>    }
+<span class="line-numbers"> 78</span>
+<span class="line-numbers"> 79</span>    <span class="comment">// tag::AssertTrue[]</span>
+<span class="line-numbers"> 80</span>    <span class="annotation">@AssertTrue</span>
+<span class="line-numbers"> 81</span>    <span class="comment">// end::AssertTrue[]</span>
+<span class="line-numbers"> 82</span>    <span class="comment">// tag::launchSpacecraft[]</span>
+<span class="line-numbers"> 83</span>    <span class="comment">// tag::launchCode[]</span>
+<span class="line-numbers"> 84</span>    <span class="directive">public</span> <span class="type">boolean</span> launchSpacecraft(<span class="annotation">@NotNull</span> <span class="predefined-type">String</span> launchCode) {
+<span class="line-numbers"> 85</span>    <span class="comment">// end::launchCode[]</span>
+<span class="line-numbers"> 86</span>        <span class="comment">// tag::OpenLiberty[]</span>
+<span class="line-numbers"> 87</span>        <span class="keyword">if</span> (launchCode.equals(<span class="string"><span class="delimiter">"</span><span class="content">OpenLiberty</span><span class="delimiter">"</span></span>)) {
+<span class="line-numbers"> 88</span>            <span class="comment">// end::OpenLiberty[]</span>
+<span class="line-numbers"> 89</span>            <span class="comment">// tag::true[]</span>
+<span class="line-numbers"> 90</span>            <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers"> 91</span>            <span class="comment">// end::true[]</span>
+<span class="line-numbers"> 92</span>        }
+<span class="line-numbers"> 93</span>        <span class="comment">// tag::false[]</span>
+<span class="line-numbers"> 94</span>        <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers"> 95</span>        <span class="comment">// end::false[]</span>
+<span class="line-numbers"> 96</span>    }
+<span class="line-numbers"> 97</span>    <span class="comment">// end::launchSpacecraft[]</span>
+<span class="line-numbers"> 98</span>}
+<span class="line-numbers"> 99</span><span class="comment">// end::Spacecraft[]</span></code></pre>
+</div>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Replace the annotation.</mark>
+<code>src/main/java/io/openliberty/guides/beanvalidation/SerialNumber.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SerialNumber.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.beanvalidation</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.lang.annotation.Documented</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.lang.annotation.Retention</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">java.lang.annotation.Target</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">java.lang.annotation.ElementType.FIELD</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">java.lang.annotation.RetentionPolicy.RUNTIME</span>;
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.validation.Constraint</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.validation.Payload</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="comment">// tag::Target[]</span>
+<span class="line-numbers">24</span><span class="annotation">@Target</span>({ FIELD })
+<span class="line-numbers">25</span><span class="comment">// end::Target[]</span>
+<span class="line-numbers">26</span><span class="comment">// tag::Retention[]</span>
+<span class="line-numbers">27</span><span class="annotation">@Retention</span>(RUNTIME)
+<span class="line-numbers">28</span><span class="comment">// end::Retention[]</span>
+<span class="line-numbers">29</span><span class="annotation">@Documented</span>
+<span class="line-numbers">30</span><span class="comment">// tag::Constraint[]</span>
+<span class="line-numbers">31</span><span class="annotation">@Constraint</span>(validatedBy = { SerialNumberValidator.class })
+<span class="line-numbers">32</span><span class="comment">// end::Constraint[]</span>
+<span class="line-numbers">33</span><span class="comment">// tag::SerialNumber[]</span>
+<span class="line-numbers">34</span><span class="directive">public</span> <span class="annotation">@interface</span> SerialNumber {
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span>    <span class="comment">// tag::message[]</span>
+<span class="line-numbers">37</span>    <span class="predefined-type">String</span> message() <span class="keyword">default</span> <span class="string"><span class="delimiter">"</span><span class="content">serial number is not valid.</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">38</span>    <span class="comment">// end::message[]</span>
+<span class="line-numbers">39</span>
+<span class="line-numbers">40</span>    <span class="comment">// tag::groups[]</span>
+<span class="line-numbers">41</span>    <span class="predefined-type">Class</span>&lt;?&gt;<span class="type">[]</span> groups() <span class="keyword">default</span> {};
+<span class="line-numbers">42</span>    <span class="comment">// end::groups[]</span>
+<span class="line-numbers">43</span>
+<span class="line-numbers">44</span>    <span class="comment">// tag::payload[]</span>
+<span class="line-numbers">45</span>    <span class="predefined-type">Class</span>&lt;? <span class="directive">extends</span> Payload&gt;<span class="type">[]</span> payload() <span class="keyword">default</span> {};
+<span class="line-numbers">46</span>    <span class="comment">// end::payload[]</span>
+<span class="line-numbers">47</span>}
+<span class="line-numbers">48</span><span class="comment">// end::SerialNumber[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=Target file=1">@Target</code> annotation indicates the element types to which you can apply the custom constraint. Because the <code class="hotspot=serial-num file=0">@SerialNumber</code> constraint is used only on a field, only the <code class="hotspot=Target file=1">FIELD</code> target is specified.</p>
+</div>
+<div class="paragraph">
+<p>When you define a constraint annotation, the specification requires the <code class="hotspot=Retention file=1">RUNTIME</code> retention policy.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=Constraint file=1">@Constraint</code> annotation specifies the class that contains the validation logic for the custom constraint.</p>
+</div>
+<div class="paragraph">
+<p>In the <code class="hotspot=SerialNumber file=1">SerialNumber</code> body, the <code class="hotspot=message file=1">message()</code> method provides the message that is output when a validation constraint is violated. The <code class="hotspot=groups file=1">groups()</code> and <code class="hotspot=payload file=1">payload()</code> methods associate this constraint only with certain groups or payloads. The defaults are used in the example.</p>
+</div>
+<div class="paragraph">
+<p>Now, create the class that provides the validation for the <code class="hotspot=serial-num file=0">@SerialNumber</code> constraint.</p>
+</div>
+<div class="listingblock code_command hotspot file=2">
+<div class="content">
+<pre><mark>Replace the <code>SerialNumberValidator</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/beanvalidation/SerialNumberValidator.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SerialNumberValidator.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.beanvalidation</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">jakarta.validation.ConstraintValidator</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.validation.ConstraintValidatorContext</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="comment">// tag::SerialNumberValidator[]</span>
+<span class="line-numbers">18</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SerialNumberValidator</span>
+<span class="line-numbers">19</span>    <span class="directive">implements</span> ConstraintValidator&lt;SerialNumber, <span class="predefined-type">Object</span>&gt; {
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">22</span>    <span class="comment">// tag::isValid[]</span>
+<span class="line-numbers">23</span>    <span class="directive">public</span> <span class="type">boolean</span> isValid(<span class="predefined-type">Object</span> arg0, ConstraintValidatorContext arg1) {
+<span class="line-numbers">24</span>        <span class="comment">//Serial Numbers must start with Liberty followed by four numbers</span>
+<span class="line-numbers">25</span>        <span class="type">boolean</span> isValid = <span class="predefined-constant">false</span>;
+<span class="line-numbers">26</span>        <span class="keyword">if</span> (arg0 == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">27</span>            <span class="keyword">return</span> isValid;
+<span class="line-numbers">28</span>        }
+<span class="line-numbers">29</span>        <span class="predefined-type">String</span> serialNumber = arg0.toString();
+<span class="line-numbers">30</span>        <span class="comment">// tag::Liberty[]</span>
+<span class="line-numbers">31</span>        isValid = serialNumber.length() == <span class="integer">11</span> &amp;&amp; serialNumber.startsWith(<span class="string"><span class="delimiter">"</span><span class="content">Liberty</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">32</span>        <span class="comment">// end::Liberty[]</span>
+<span class="line-numbers">33</span>        <span class="keyword">try</span> {
+<span class="line-numbers">34</span>            <span class="predefined-type">Integer</span>.parseInt(serialNumber.substring(<span class="integer">7</span>));
+<span class="line-numbers">35</span>        } <span class="keyword">catch</span> (<span class="exception">Exception</span> ex) {
+<span class="line-numbers">36</span>            isValid = <span class="predefined-constant">false</span>;
+<span class="line-numbers">37</span>        }
+<span class="line-numbers">38</span>        <span class="keyword">return</span> isValid;
+<span class="line-numbers">39</span>    }
+<span class="line-numbers">40</span>    <span class="comment">// end::isValid[]</span>
+<span class="line-numbers">41</span>}
+<span class="line-numbers">42</span><span class="comment">// end::SerialNumberValidator[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=SerialNumberValidator file=2">SerialNumberValidator</code> class has one method, <code class="hotspot=isValid file=2">isValid()</code>, which contains the custom validation logic. In this case, the serial number must start with <code class="hotspot=Liberty file=2">Liberty</code> followed by 4 numbers, such as <code>Liberty0001</code>. If the supplied serial number matches the constraint, <code class="hotspot=isValid file=2">isValid()</code> returns <code>true</code>. If the serial number does not match, it returns <code>false</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="programmatically-validating-constraints">Programmatically validating constraints</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Next, create a service to programmatically validate the constraints on the <code class="hotspot=Spacecraft file=0">Spacecraft</code> and <code class="hotspot=Astronaut file=1">Astronaut</code> JavaBeans.</p>
+</div>
+<div class="paragraph">
+<p>Spacecraft.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.beanvalidation</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.io.Serializable</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">java.util.Map</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.util.HashMap</span>;
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.NotBlank</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.Positive</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.NotNull</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.AssertTrue</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.inject.Named</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.validation.Valid</span>;
+<span class="line-numbers"> 25</span>
+<span class="line-numbers"> 26</span><span class="annotation">@Named</span>
+<span class="line-numbers"> 27</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers"> 28</span><span class="comment">// tag::Spacecraft[]</span>
+<span class="line-numbers"> 29</span><span class="directive">public</span> <span class="type">class</span> <span class="class">Spacecraft</span> <span class="directive">implements</span> <span class="predefined-type">Serializable</span> {
+<span class="line-numbers"> 30</span>
+<span class="line-numbers"> 31</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">long</span> serialVersionUID = <span class="integer">1L</span>;
+<span class="line-numbers"> 32</span>
+<span class="line-numbers"> 33</span>    <span class="comment">// tag::Valid[]</span>
+<span class="line-numbers"> 34</span>    <span class="annotation">@Valid</span>
+<span class="line-numbers"> 35</span>    <span class="comment">// end::Valid[]</span>
+<span class="line-numbers"> 36</span>    <span class="comment">// tag::Astronaut[]</span>
+<span class="line-numbers"> 37</span>    <span class="directive">private</span> Astronaut astronaut;
+<span class="line-numbers"> 38</span>    <span class="comment">// end::Astronaut[]</span>
+<span class="line-numbers"> 39</span>
+<span class="line-numbers"> 40</span>    <span class="comment">// tag::Map[]</span>
+<span class="line-numbers"> 41</span>    <span class="directive">private</span> <span class="predefined-type">Map</span>&lt;<span class="annotation">@NotBlank</span> <span class="predefined-type">String</span>, <span class="annotation">@Positive</span> <span class="predefined-type">Integer</span>&gt; destinations;
+<span class="line-numbers"> 42</span>    <span class="comment">// end::Map[]</span>
+<span class="line-numbers"> 43</span>
+<span class="line-numbers"> 44</span>    <span class="comment">// tag::serial-num[]</span>
+<span class="line-numbers"> 45</span>    <span class="annotation">@SerialNumber</span>
+<span class="line-numbers"> 46</span>    <span class="comment">// end::serial-num[]</span>
+<span class="line-numbers"> 47</span>    <span class="comment">// tag::serialNumber[]</span>
+<span class="line-numbers"> 48</span>    <span class="directive">private</span> <span class="predefined-type">String</span> serialNumber;
+<span class="line-numbers"> 49</span>    <span class="comment">// end::serialNumber[]</span>
+<span class="line-numbers"> 50</span>
+<span class="line-numbers"> 51</span>    <span class="directive">public</span> Spacecraft() {
+<span class="line-numbers"> 52</span>        destinations = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt;();
+<span class="line-numbers"> 53</span>    }
+<span class="line-numbers"> 54</span>
+<span class="line-numbers"> 55</span>    <span class="directive">public</span> <span class="type">void</span> setAstronaut(Astronaut astronaut) {
+<span class="line-numbers"> 56</span>        <span class="local-variable">this</span>.astronaut = astronaut;
+<span class="line-numbers"> 57</span>    }
+<span class="line-numbers"> 58</span>
+<span class="line-numbers"> 59</span>    <span class="directive">public</span> <span class="type">void</span> setDestinations(<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt; destinations) {
+<span class="line-numbers"> 60</span>        <span class="local-variable">this</span>.destinations = destinations;
+<span class="line-numbers"> 61</span>    }
+<span class="line-numbers"> 62</span>
+<span class="line-numbers"> 63</span>    <span class="directive">public</span> <span class="type">void</span> setSerialNumber(<span class="predefined-type">String</span> serialNumber) {
+<span class="line-numbers"> 64</span>        <span class="local-variable">this</span>.serialNumber = serialNumber;
+<span class="line-numbers"> 65</span>    }
+<span class="line-numbers"> 66</span>
+<span class="line-numbers"> 67</span>    <span class="directive">public</span> Astronaut getAstronaut() {
+<span class="line-numbers"> 68</span>        <span class="keyword">return</span> astronaut;
+<span class="line-numbers"> 69</span>    }
+<span class="line-numbers"> 70</span>
+<span class="line-numbers"> 71</span>    <span class="directive">public</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt; getDestinations() {
+<span class="line-numbers"> 72</span>        <span class="keyword">return</span> destinations;
+<span class="line-numbers"> 73</span>    }
+<span class="line-numbers"> 74</span>
+<span class="line-numbers"> 75</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getSerialNumber() {
+<span class="line-numbers"> 76</span>        <span class="keyword">return</span> serialNumber;
+<span class="line-numbers"> 77</span>    }
+<span class="line-numbers"> 78</span>
+<span class="line-numbers"> 79</span>    <span class="comment">// tag::AssertTrue[]</span>
+<span class="line-numbers"> 80</span>    <span class="annotation">@AssertTrue</span>
+<span class="line-numbers"> 81</span>    <span class="comment">// end::AssertTrue[]</span>
+<span class="line-numbers"> 82</span>    <span class="comment">// tag::launchSpacecraft[]</span>
+<span class="line-numbers"> 83</span>    <span class="comment">// tag::launchCode[]</span>
+<span class="line-numbers"> 84</span>    <span class="directive">public</span> <span class="type">boolean</span> launchSpacecraft(<span class="annotation">@NotNull</span> <span class="predefined-type">String</span> launchCode) {
+<span class="line-numbers"> 85</span>    <span class="comment">// end::launchCode[]</span>
+<span class="line-numbers"> 86</span>        <span class="comment">// tag::OpenLiberty[]</span>
+<span class="line-numbers"> 87</span>        <span class="keyword">if</span> (launchCode.equals(<span class="string"><span class="delimiter">"</span><span class="content">OpenLiberty</span><span class="delimiter">"</span></span>)) {
+<span class="line-numbers"> 88</span>            <span class="comment">// end::OpenLiberty[]</span>
+<span class="line-numbers"> 89</span>            <span class="comment">// tag::true[]</span>
+<span class="line-numbers"> 90</span>            <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers"> 91</span>            <span class="comment">// end::true[]</span>
+<span class="line-numbers"> 92</span>        }
+<span class="line-numbers"> 93</span>        <span class="comment">// tag::false[]</span>
+<span class="line-numbers"> 94</span>        <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers"> 95</span>        <span class="comment">// end::false[]</span>
+<span class="line-numbers"> 96</span>    }
+<span class="line-numbers"> 97</span>    <span class="comment">// end::launchSpacecraft[]</span>
+<span class="line-numbers"> 98</span>}
+<span class="line-numbers"> 99</span><span class="comment">// end::Spacecraft[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Astronaut.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.beanvalidation</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.io.Serializable</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.Max</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.Min</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.NotBlank</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.Email</span>;
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span><span class="comment">// tag::Astronaut[]</span>
+<span class="line-numbers">21</span><span class="directive">public</span> <span class="type">class</span> <span class="class">Astronaut</span> <span class="directive">implements</span> <span class="predefined-type">Serializable</span> {
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">long</span> serialVersionUID = <span class="integer">1L</span>;
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span>    <span class="comment">// tag::not-blank[]</span>
+<span class="line-numbers">26</span>    <span class="annotation">@NotBlank</span>
+<span class="line-numbers">27</span>    <span class="comment">// end::not-blank[]</span>
+<span class="line-numbers">28</span>    <span class="comment">// tag::Name[]</span>
+<span class="line-numbers">29</span>    <span class="directive">private</span> <span class="predefined-type">String</span> name;
+<span class="line-numbers">30</span>    <span class="comment">// end::Name[]</span>
+<span class="line-numbers">31</span>
+<span class="line-numbers">32</span>    <span class="comment">// tag::Min[]</span>
+<span class="line-numbers">33</span>    <span class="annotation">@Min</span>(<span class="integer">18</span>)
+<span class="line-numbers">34</span>    <span class="comment">// end::Min[]</span>
+<span class="line-numbers">35</span>    <span class="comment">// tag::Max[]</span>
+<span class="line-numbers">36</span>    <span class="annotation">@Max</span>(<span class="integer">100</span>)
+<span class="line-numbers">37</span>    <span class="comment">// end::Max[]</span>
+<span class="line-numbers">38</span>    <span class="comment">// tag::age[]</span>
+<span class="line-numbers">39</span>    <span class="directive">private</span> <span class="predefined-type">Integer</span> age;
+<span class="line-numbers">40</span>    <span class="comment">// end::age[]</span>
+<span class="line-numbers">41</span>
+<span class="line-numbers">42</span>    <span class="comment">// tag::Email[]</span>
+<span class="line-numbers">43</span>    <span class="annotation">@Email</span>
+<span class="line-numbers">44</span>    <span class="comment">// end::Email[]</span>
+<span class="line-numbers">45</span>    <span class="comment">// tag::emailAddress[]</span>
+<span class="line-numbers">46</span>    <span class="directive">private</span> <span class="predefined-type">String</span> emailAddress;
+<span class="line-numbers">47</span>    <span class="comment">// end::emailAddress[]</span>
+<span class="line-numbers">48</span>
+<span class="line-numbers">49</span>    <span class="directive">public</span> Astronaut() {
+<span class="line-numbers">50</span>    }
+<span class="line-numbers">51</span>
+<span class="line-numbers">52</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getName() {
+<span class="line-numbers">53</span>        <span class="keyword">return</span> name;
+<span class="line-numbers">54</span>    }
+<span class="line-numbers">55</span>
+<span class="line-numbers">56</span>    <span class="directive">public</span> <span class="predefined-type">Integer</span> getAge() {
+<span class="line-numbers">57</span>        <span class="keyword">return</span> age;
+<span class="line-numbers">58</span>    }
+<span class="line-numbers">59</span>
+<span class="line-numbers">60</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getEmailAddress() {
+<span class="line-numbers">61</span>        <span class="keyword">return</span> emailAddress;
+<span class="line-numbers">62</span>    }
+<span class="line-numbers">63</span>
+<span class="line-numbers">64</span>    <span class="directive">public</span> <span class="type">void</span> setName(<span class="predefined-type">String</span> name) {
+<span class="line-numbers">65</span>        <span class="local-variable">this</span>.name = name;
+<span class="line-numbers">66</span>    }
+<span class="line-numbers">67</span>
+<span class="line-numbers">68</span>    <span class="directive">public</span> <span class="type">void</span> setAge(<span class="predefined-type">Integer</span> age) {
+<span class="line-numbers">69</span>        <span class="local-variable">this</span>.age = age;
+<span class="line-numbers">70</span>    }
+<span class="line-numbers">71</span>
+<span class="line-numbers">72</span>    <span class="directive">public</span> <span class="type">void</span> setEmailAddress(<span class="predefined-type">String</span> emailAddress) {
+<span class="line-numbers">73</span>        <span class="local-variable">this</span>.emailAddress = emailAddress;
+<span class="line-numbers">74</span>    }
+<span class="line-numbers">75</span>}
+<span class="line-numbers">76</span><span class="comment">// end::Astronaut[]</span></code></pre>
+</div>
+</div>
+<div class="listingblock code_command hotspot file=2">
+<div class="content">
+<pre><mark>Create the <code>BeanValidationEndpoint</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/beanvalidation/BeanValidationEndpoint.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>BeanValidationEndpoint.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.beanvalidation</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.Set</span>;
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.validation.Validator</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.validation.ConstraintViolation</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.validation.ConstraintViolationException</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Consumes</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.POST</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.Operation</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.media.Content</span>;
+<span class="line-numbers">28</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.media.Schema</span>;
+<span class="line-numbers">29</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.parameters.RequestBody</span>;
+<span class="line-numbers">30</span>
+<span class="line-numbers">31</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">32</span><span class="directive">public</span> <span class="type">class</span> <span class="class">BeanValidationEndpoint</span> {
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers">35</span>    <span class="predefined-type">Validator</span> validator;
+<span class="line-numbers">36</span>
+<span class="line-numbers">37</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers">38</span>    <span class="comment">// tag::Spacecraft[]</span>
+<span class="line-numbers">39</span>    Spacecraft bean;
+<span class="line-numbers">40</span>    <span class="comment">// end::Spacecraft[]</span>
+<span class="line-numbers">41</span>
+<span class="line-numbers">42</span>    <span class="annotation">@POST</span>
+<span class="line-numbers">43</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/validatespacecraft</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">44</span>    <span class="annotation">@Produces</span>(MediaType.TEXT_PLAIN)
+<span class="line-numbers">45</span>    <span class="annotation">@Consumes</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">46</span>    <span class="annotation">@Operation</span>(summary = <span class="string"><span class="delimiter">"</span><span class="content">POST request to validate your spacecraft bean</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">47</span>    <span class="comment">// tag::validate-Spacecraft[]</span>
+<span class="line-numbers">48</span>    <span class="directive">public</span> <span class="predefined-type">String</span> validateSpacecraft(
+<span class="line-numbers">49</span>        <span class="annotation">@RequestBody</span>(description = <span class="string"><span class="delimiter">"</span><span class="content">Specify the values to create the </span><span class="delimiter">"</span></span>
+<span class="line-numbers">50</span>                + <span class="string"><span class="delimiter">"</span><span class="content">Astronaut and Spacecraft beans.</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">51</span>            content = <span class="annotation">@Content</span>(mediaType = <span class="string"><span class="delimiter">"</span><span class="content">application/json</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">52</span>                schema = <span class="annotation">@Schema</span>(implementation = Spacecraft.class)))
+<span class="line-numbers">53</span>        Spacecraft spacecraft) {
+<span class="line-numbers">54</span>
+<span class="line-numbers">55</span>            <span class="comment">// tag::ConstraintViolation[]</span>
+<span class="line-numbers">56</span>            <span class="predefined-type">Set</span>&lt;ConstraintViolation&lt;Spacecraft&gt;&gt; violations
+<span class="line-numbers">57</span>            <span class="comment">// end::ConstraintViolation[]</span>
+<span class="line-numbers">58</span>            <span class="comment">// tag::validate[]</span>
+<span class="line-numbers">59</span>                = validator.validate(spacecraft);
+<span class="line-numbers">60</span>            <span class="comment">// end::validate[]</span>
+<span class="line-numbers">61</span>
+<span class="line-numbers">62</span>            <span class="keyword">if</span> (violations.size() == <span class="integer">0</span>) {
+<span class="line-numbers">63</span>                <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">No Constraint Violations</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">64</span>            }
+<span class="line-numbers">65</span>
+<span class="line-numbers">66</span>            <span class="predefined-type">StringBuilder</span> sb = <span class="keyword">new</span> <span class="predefined-type">StringBuilder</span>();
+<span class="line-numbers">67</span>            <span class="keyword">for</span> (ConstraintViolation&lt;Spacecraft&gt; violation : violations) {
+<span class="line-numbers">68</span>                sb.append(<span class="string"><span class="delimiter">"</span><span class="content">Constraint Violation Found: </span><span class="delimiter">"</span></span>)
+<span class="line-numbers">69</span>                .append(violation.getMessage())
+<span class="line-numbers">70</span>                .append(<span class="predefined-type">System</span>.lineSeparator());
+<span class="line-numbers">71</span>            }
+<span class="line-numbers">72</span>            <span class="keyword">return</span> sb.toString();
+<span class="line-numbers">73</span>    }
+<span class="line-numbers">74</span>    <span class="comment">// end::validate-Spacecraft[]</span>
+<span class="line-numbers">75</span>
+<span class="line-numbers">76</span>    <span class="annotation">@POST</span>
+<span class="line-numbers">77</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/launchspacecraft</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">78</span>    <span class="annotation">@Produces</span>(MediaType.TEXT_PLAIN)
+<span class="line-numbers">79</span>    <span class="annotation">@Operation</span>(summary = <span class="string"><span class="delimiter">"</span><span class="content">POST request to specify a launch code</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">80</span>    <span class="comment">// tag::launchSpacecraft[]</span>
+<span class="line-numbers">81</span>    <span class="directive">public</span> <span class="predefined-type">String</span> launchSpacecraft(
+<span class="line-numbers">82</span>        <span class="annotation">@RequestBody</span>(description = <span class="string"><span class="delimiter">"</span><span class="content">Enter the launch code.  Must not be </span><span class="delimiter">"</span></span>
+<span class="line-numbers">83</span>                + <span class="string"><span class="delimiter">"</span><span class="content">null and must equal OpenLiberty for successful launch.</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">84</span>            content = <span class="annotation">@Content</span>(mediaType = <span class="string"><span class="delimiter">"</span><span class="content">text/plain</span><span class="delimiter">"</span></span>))
+<span class="line-numbers">85</span>        <span class="predefined-type">String</span> launchCode) {
+<span class="line-numbers">86</span>            <span class="keyword">try</span> {
+<span class="line-numbers">87</span>                bean.launchSpacecraft(launchCode);
+<span class="line-numbers">88</span>                <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">launched</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">89</span>            } <span class="keyword">catch</span> (ConstraintViolationException ex) {
+<span class="line-numbers">90</span>                <span class="keyword">return</span> ex.getMessage();
+<span class="line-numbers">91</span>            }
+<span class="line-numbers">92</span>    }
+<span class="line-numbers">93</span>    <span class="comment">// end::launchSpacecraft[]</span>
+<span class="line-numbers">94</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Two resources, a validator and an instance of the <code class="hotspot=Spacecraft file=2">Spacecraft</code> JavaBean, are injected into the class. The default validator is used and is obtained through CDI injection. However, you can also obtain the default validator with resource injection or a JNDI lookup. The <code class="hotspot=Spacecraft file=0">Spacecraft</code> JavaBean is injected so that the method-level constraints can be validated.</p>
+</div>
+<div class="paragraph">
+<p>The programmatic validation takes place in the <code class="hotspot=validate-Spacecraft file=2">validateSpacecraft()</code> method. To validate the data, the <code class="hotspot=validate file=2">validate()</code> method is called on the <code class="hotspot=Spacecraft file=0">Spacecraft</code> bean. Because the <code class="hotspot=Spacecraft file=0">Spacecraft</code> bean contains the <code class="hotspot=Valid file=0">@Valid</code> constraint on the <code class="hotspot=Astronaut file=1">Astronaut</code> bean, both JavaBeans are validated. Any constraint violations found during the call to the <code class="hotspot=validate file=2">validate()</code> method are returned as a set of <code class="hotspot=ConstraintViolation file=2">ConstraintViolation</code> objects.</p>
+</div>
+<div class="paragraph">
+<p>The method level validation occurs in the <code class="hotspot=launchSpacecraft file=2">launchSpacecraft()</code> method. A call is then made to the <code class="hotspot=launchSpacecraft file=0">launchSpacecraft()</code> method on the <code class="hotspot=Spacecraft file=0">Spacecraft</code> bean, which throws a <code>ConstraintViolationException</code> exception if either of the method-level constraints is violated.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="enabling-the-bean-validation-feature">Enabling the Bean Validation feature</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Finally, add the Bean Validation feature in the application by updating the Liberty <code>server.xml</code> configuration file.</p>
+</div>
+<div class="listingblock code_command">
+<div class="content">
+<pre><mark>Replace the Liberty <code>server.xml</code> configuration file.</mark>
+<code>src/main/liberty/config/server.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>server.xml</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">Liberty Server for Bean Validation Guide</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>    <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>        <span class="comment">&lt;!-- tag::beanValidation[] --&gt;</span>
+<span class="line-numbers"> 5</span>        <span class="tag">&lt;feature&gt;</span>beanValidation-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>        <span class="comment">&lt;!-- end::beanValidation[] --&gt;</span>
+<span class="line-numbers"> 7</span>        <span class="tag">&lt;feature&gt;</span>cdi-4.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 8</span>        <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 9</span>        <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">10</span>        <span class="tag">&lt;feature&gt;</span>mpOpenAPI-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">11</span>    <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">12</span>
+<span class="line-numbers">13</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9080</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">14</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.https.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9443</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">15</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">app.context.root</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">Spacecraft</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span>    <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span> <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">18</span>        <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span>   <span class="tag">&lt;webApplication</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-bean-validation.war</span><span class="delimiter">"</span></span> <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">${app.context.root}</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">21</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can now use the <code class="hotspot=beanValidation file=0">beanValidation</code> feature to validate that the supplied JavaBeans meet the defined constraints.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="running-the-application">Running the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You started the Open Liberty in dev mode at the beginning of the guide, so all the changes were automatically picked up.</p>
+</div>
+<div class="paragraph">
+<p>Go to the <a href="http://localhost:9080/openapi/ui" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/openapi/ui</a> URL.
+Expand the <code>/beanvalidation/validatespacecraft POST request to validate your spacecraft bean</code> section and click <code>Try it out</code>. Copy the following example input into the text box:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "astronaut": {
+    "name": "Libby",
+    "age": 25,
+    "emailAddress": "libbybot@openliberty.io"
+  },
+  "destinations": {
+    "Mars": 500
+  },
+  "serialNumber": "Liberty0001"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Click <code>Execute</code> and you receive the response <code>No Constraint Violations</code> because the values specified pass previously defined constraints.</p>
+</div>
+<div class="paragraph">
+<p>Next, modify the following values, all of which break the previously defined constraints:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>Age = 10
+Email = libbybot
+SerialNumber = Liberty1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you click <code>Execute</code>, the response contains the following constraint violations:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>Constraint Violation Found: serial number is not valid.
+Constraint Violation Found: must be greater than or equal to 18
+Constraint Violation Found: must be a well-formed email address</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To try the method-level validation, expand the <code>/beanvalidation/launchspacecraft POST request to specify a launch code</code> section. Enter <code>OpenLiberty</code> in the text box. Note that <code>launched</code> is returned because the launch code passes the defined constraints. Replace <code>OpenLiberty</code> with anything else to note that a constraint violation is returned.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-constraints">Testing the constraints</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now, write automated tests to drive the previously created service.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create <code>BeanValidationIT</code> class.</mark>
+<code>src/test/java/it/io/openliberty/guides/beanvalidation/BeanValidationIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>BeanValidationIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.beanvalidation</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
+<span class="line-numbers"> 16</span>
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.beanvalidation.Astronaut</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.beanvalidation.Spacecraft</span>;
+<span class="line-numbers"> 19</span>
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">java.util.HashMap</span>;
+<span class="line-numbers"> 21</span>
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.json.bind.Jsonb</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.json.bind.JsonbBuilder</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Client</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.ClientBuilder</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Entity</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 29</span>
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="line-numbers"> 32</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers"> 33</span>
+<span class="line-numbers"> 34</span><span class="directive">public</span> <span class="type">class</span> <span class="class">BeanValidationIT</span> {
+<span class="line-numbers"> 35</span>
+<span class="line-numbers"> 36</span>    <span class="directive">private</span> Client client;
+<span class="line-numbers"> 37</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> port;
+<span class="line-numbers"> 38</span>
+<span class="line-numbers"> 39</span>    <span class="comment">// tag::BeforeEach[]</span>
+<span class="line-numbers"> 40</span>    <span class="annotation">@BeforeEach</span>
+<span class="line-numbers"> 41</span>    <span class="comment">// end::BeforeEach[]</span>
+<span class="line-numbers"> 42</span>    <span class="comment">// tag::setup[]</span>
+<span class="line-numbers"> 43</span>    <span class="directive">public</span> <span class="type">void</span> setup() {
+<span class="line-numbers"> 44</span>        <span class="comment">// tag::Client[]</span>
+<span class="line-numbers"> 45</span>        client = ClientBuilder.newClient();
+<span class="line-numbers"> 46</span>        <span class="comment">// end::Client[]</span>
+<span class="line-numbers"> 47</span>        port = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">http.port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 48</span>    }
+<span class="line-numbers"> 49</span>    <span class="comment">// end::setup[]</span>
+<span class="line-numbers"> 50</span>
+<span class="line-numbers"> 51</span>    <span class="annotation">@AfterEach</span>
+<span class="line-numbers"> 52</span>    <span class="directive">public</span> <span class="type">void</span> teardown() {
+<span class="line-numbers"> 53</span>        client.close();
+<span class="line-numbers"> 54</span>    }
+<span class="line-numbers"> 55</span>
+<span class="line-numbers"> 56</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 57</span>    <span class="comment">// tag::testNoFieldLevelConstraintViolations[]</span>
+<span class="line-numbers"> 58</span>    <span class="directive">public</span> <span class="type">void</span> testNoFieldLevelConstraintViolations() <span class="directive">throws</span> <span class="exception">Exception</span> {
+<span class="line-numbers"> 59</span>        <span class="comment">// tag::Astronaut[]</span>
+<span class="line-numbers"> 60</span>        Astronaut astronaut = <span class="keyword">new</span> Astronaut();
+<span class="line-numbers"> 61</span>        astronaut.setAge(<span class="integer">25</span>);
+<span class="line-numbers"> 62</span>        astronaut.setEmailAddress(<span class="string"><span class="delimiter">"</span><span class="content">libby@openliberty.io</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 63</span>        astronaut.setName(<span class="string"><span class="delimiter">"</span><span class="content">Libby</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 64</span>        <span class="comment">// end::Astronaut[]</span>
+<span class="line-numbers"> 65</span>        <span class="comment">// tag::Spacecraft[]</span>
+<span class="line-numbers"> 66</span>        Spacecraft spacecraft = <span class="keyword">new</span> Spacecraft();
+<span class="line-numbers"> 67</span>        spacecraft.setAstronaut(astronaut);
+<span class="line-numbers"> 68</span>        spacecraft.setSerialNumber(<span class="string"><span class="delimiter">"</span><span class="content">Liberty1001</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 69</span>        <span class="comment">// end::Spacecraft[]</span>
+<span class="line-numbers"> 70</span>        <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt; destinations = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt;();
+<span class="line-numbers"> 71</span>        destinations.put(<span class="string"><span class="delimiter">"</span><span class="content">Mars</span><span class="delimiter">"</span></span>, <span class="integer">1500</span>);
+<span class="line-numbers"> 72</span>        destinations.put(<span class="string"><span class="delimiter">"</span><span class="content">Pluto</span><span class="delimiter">"</span></span>, <span class="integer">10000</span>);
+<span class="line-numbers"> 73</span>        spacecraft.setDestinations(destinations);
+<span class="line-numbers"> 74</span>
+<span class="line-numbers"> 75</span>        Jsonb jsonb = JsonbBuilder.create();
+<span class="line-numbers"> 76</span>        <span class="predefined-type">String</span> spacecraftJSON = jsonb.toJson(spacecraft);
+<span class="line-numbers"> 77</span>        Response response = postResponse(getURL(port, <span class="string"><span class="delimiter">"</span><span class="content">validatespacecraft</span><span class="delimiter">"</span></span>),
+<span class="line-numbers"> 78</span>                spacecraftJSON, <span class="predefined-constant">false</span>);
+<span class="line-numbers"> 79</span>        <span class="predefined-type">String</span> actualResponse = response.readEntity(<span class="predefined-type">String</span>.class);
+<span class="line-numbers"> 80</span>        <span class="predefined-type">String</span> expectedResponse = <span class="string"><span class="delimiter">"</span><span class="content">No Constraint Violations</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 81</span>
+<span class="line-numbers"> 82</span>        assertEquals(expectedResponse, actualResponse,
+<span class="line-numbers"> 83</span>                <span class="string"><span class="delimiter">"</span><span class="content">Unexpected response when validating beans.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 84</span>    }
+<span class="line-numbers"> 85</span>    <span class="comment">// end::testNoFieldLevelConstraintViolations[]</span>
+<span class="line-numbers"> 86</span>
+<span class="line-numbers"> 87</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 88</span>    <span class="comment">// tag::testFieldLevelConstraintViolation[]</span>
+<span class="line-numbers"> 89</span>    <span class="directive">public</span> <span class="type">void</span> testFieldLevelConstraintViolation() <span class="directive">throws</span> <span class="exception">Exception</span> {
+<span class="line-numbers"> 90</span>        Astronaut astronaut = <span class="keyword">new</span> Astronaut();
+<span class="line-numbers"> 91</span>        astronaut.setAge(<span class="integer">25</span>);
+<span class="line-numbers"> 92</span>        astronaut.setEmailAddress(<span class="string"><span class="delimiter">"</span><span class="content">libby</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 93</span>        astronaut.setName(<span class="string"><span class="delimiter">"</span><span class="content">Libby</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 94</span>
+<span class="line-numbers"> 95</span>        Spacecraft spacecraft = <span class="keyword">new</span> Spacecraft();
+<span class="line-numbers"> 96</span>        spacecraft.setAstronaut(astronaut);
+<span class="line-numbers"> 97</span>        spacecraft.setSerialNumber(<span class="string"><span class="delimiter">"</span><span class="content">Liberty123</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 98</span>
+<span class="line-numbers"> 99</span>        <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt; destinations = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt;();
+<span class="line-numbers">100</span>        destinations.put(<span class="string"><span class="delimiter">"</span><span class="content">Mars</span><span class="delimiter">"</span></span>, -<span class="integer">100</span>);
+<span class="line-numbers">101</span>        spacecraft.setDestinations(destinations);
+<span class="line-numbers">102</span>
+<span class="line-numbers">103</span>        Jsonb jsonb = JsonbBuilder.create();
+<span class="line-numbers">104</span>        <span class="predefined-type">String</span> spacecraftJSON = jsonb.toJson(spacecraft);
+<span class="line-numbers">105</span>        <span class="comment">// tag::Response[]</span>
+<span class="line-numbers">106</span>        Response response = postResponse(getURL(port, <span class="string"><span class="delimiter">"</span><span class="content">validatespacecraft</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">107</span>                spacecraftJSON, <span class="predefined-constant">false</span>);
+<span class="line-numbers">108</span>        <span class="comment">// end::Response[]</span>
+<span class="line-numbers">109</span>        <span class="predefined-type">String</span> actualResponse = response.readEntity(<span class="predefined-type">String</span>.class);
+<span class="line-numbers">110</span>        <span class="comment">// tag::expectedDestinationResponse[]</span>
+<span class="line-numbers">111</span>        <span class="predefined-type">String</span> expectedDestinationResponse = <span class="string"><span class="delimiter">"</span><span class="content">must be greater than 0</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">112</span>        <span class="comment">// end::expectedDestinationResponse[]</span>
+<span class="line-numbers">113</span>        assertTrue(actualResponse.contains(expectedDestinationResponse),
+<span class="line-numbers">114</span>                <span class="string"><span class="delimiter">"</span><span class="content">Expected response to contain: </span><span class="delimiter">"</span></span> + expectedDestinationResponse);
+<span class="line-numbers">115</span>        <span class="comment">// tag::expectedEmailResponse[]</span>
+<span class="line-numbers">116</span>        <span class="predefined-type">String</span> expectedEmailResponse = <span class="string"><span class="delimiter">"</span><span class="content">must be a well-formed email address</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">117</span>        <span class="comment">// end::expectedEmailResponse[]</span>
+<span class="line-numbers">118</span>        assertTrue(actualResponse.contains(expectedEmailResponse),
+<span class="line-numbers">119</span>                <span class="string"><span class="delimiter">"</span><span class="content">Expected response to contain: </span><span class="delimiter">"</span></span> + expectedEmailResponse);
+<span class="line-numbers">120</span>        <span class="comment">// tag::expectedSerialNumberResponse[]</span>
+<span class="line-numbers">121</span>        <span class="predefined-type">String</span> expectedSerialNumberResponse = <span class="string"><span class="delimiter">"</span><span class="content">serial number is not valid</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">122</span>        <span class="comment">// end::expectedSerialNumberResponse[]</span>
+<span class="line-numbers">123</span>        assertTrue(actualResponse.contains(expectedSerialNumberResponse),
+<span class="line-numbers">124</span>                <span class="string"><span class="delimiter">"</span><span class="content">Expected response to contain: </span><span class="delimiter">"</span></span> + expectedSerialNumberResponse);
+<span class="line-numbers">125</span>    }
+<span class="line-numbers">126</span>    <span class="comment">// end::testFieldLevelConstraintViolation[]</span>
+<span class="line-numbers">127</span>
+<span class="line-numbers">128</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">129</span>    <span class="comment">// tag::testNoMethodLevelConstraintViolations[]</span>
+<span class="line-numbers">130</span>    <span class="directive">public</span> <span class="type">void</span> testNoMethodLevelConstraintViolations() <span class="directive">throws</span> <span class="exception">Exception</span> {
+<span class="line-numbers">131</span>        <span class="comment">// tag::OpenLiberty[]</span>
+<span class="line-numbers">132</span>        <span class="predefined-type">String</span> launchCode = <span class="string"><span class="delimiter">"</span><span class="content">OpenLiberty</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">133</span>        <span class="comment">// end::OpenLiberty[]</span>
+<span class="line-numbers">134</span>        <span class="comment">// tag::launchSpacecraft[]</span>
+<span class="line-numbers">135</span>        Response response = postResponse(getURL(port, <span class="string"><span class="delimiter">"</span><span class="content">launchspacecraft</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">136</span>                launchCode, <span class="predefined-constant">true</span>);
+<span class="line-numbers">137</span>        <span class="comment">// end::launchSpacecraft[]</span>
+<span class="line-numbers">138</span>
+<span class="line-numbers">139</span>        <span class="predefined-type">String</span> actualResponse = response.readEntity(<span class="predefined-type">String</span>.class);
+<span class="line-numbers">140</span>        <span class="predefined-type">String</span> expectedResponse = <span class="string"><span class="delimiter">"</span><span class="content">launched</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">141</span>
+<span class="line-numbers">142</span>        assertEquals(expectedResponse, actualResponse,
+<span class="line-numbers">143</span>                <span class="string"><span class="delimiter">"</span><span class="content">Unexpected response from call to launchSpacecraft</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">144</span>
+<span class="line-numbers">145</span>    }
+<span class="line-numbers">146</span>    <span class="comment">// end::testNoMethodLevelConstraintViolations[]</span>
+<span class="line-numbers">147</span>
+<span class="line-numbers">148</span>    <span class="comment">// tag::testMethodLevelConstraintViolation[]</span>
+<span class="line-numbers">149</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">150</span>    <span class="directive">public</span> <span class="type">void</span> testMethodLevelConstraintViolation() <span class="directive">throws</span> <span class="exception">Exception</span> {
+<span class="line-numbers">151</span>        <span class="comment">// tag::incorrectCode[]</span>
+<span class="line-numbers">152</span>        <span class="predefined-type">String</span> launchCode = <span class="string"><span class="delimiter">"</span><span class="content">incorrectCode</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">153</span>        <span class="comment">// end::incorrectCode[]</span>
+<span class="line-numbers">154</span>        Response response = postResponse(getURL(port, <span class="string"><span class="delimiter">"</span><span class="content">launchspacecraft</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">155</span>                launchCode, <span class="predefined-constant">true</span>);
+<span class="line-numbers">156</span>
+<span class="line-numbers">157</span>        <span class="predefined-type">String</span> actualResponse = response.readEntity(<span class="predefined-type">String</span>.class);
+<span class="line-numbers">158</span>        assertTrue(
+<span class="line-numbers">159</span>                <span class="comment">// tag::actualResponse[]</span>
+<span class="line-numbers">160</span>                actualResponse.contains(<span class="string"><span class="delimiter">"</span><span class="content">must be true</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">161</span>                <span class="comment">// end::actualResponse[]</span>
+<span class="line-numbers">162</span>                <span class="string"><span class="delimiter">"</span><span class="content">Unexpected response from call to launchSpacecraft</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">163</span>    }
+<span class="line-numbers">164</span>    <span class="comment">// end::testMethodLevelConstraintViolation[]</span>
+<span class="line-numbers">165</span>
+<span class="line-numbers">166</span>    <span class="directive">private</span> Response postResponse(<span class="predefined-type">String</span> url, <span class="predefined-type">String</span> value,
+<span class="line-numbers">167</span>                                  <span class="type">boolean</span> isMethodLevel) {
+<span class="line-numbers">168</span>        <span class="keyword">if</span> (isMethodLevel) {
+<span class="line-numbers">169</span>                <span class="keyword">return</span> client.target(url).request().post(<span class="predefined-type">Entity</span>.text(value));
+<span class="line-numbers">170</span>        } <span class="keyword">else</span> {
+<span class="line-numbers">171</span>                <span class="keyword">return</span> client.target(url).request().post(<span class="predefined-type">Entity</span>.entity(value,
+<span class="line-numbers">172</span>                MediaType.APPLICATION_JSON));
+<span class="line-numbers">173</span>        }
+<span class="line-numbers">174</span>    }
+<span class="line-numbers">175</span>
+<span class="line-numbers">176</span>    <span class="directive">private</span> <span class="predefined-type">String</span> getURL(<span class="predefined-type">String</span> port, <span class="predefined-type">String</span> function) {
+<span class="line-numbers">177</span>        <span class="keyword">return</span> <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:</span><span class="delimiter">"</span></span> + port + <span class="string"><span class="delimiter">"</span><span class="content">/Spacecraft/beanvalidation/</span><span class="delimiter">"</span></span>
+<span class="line-numbers">178</span>                + function;
+<span class="line-numbers">179</span>    }
+<span class="line-numbers">180</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=BeforeEach file=0">@BeforeEach</code> annotation causes the <code class="hotspot=setup file=0">setup()</code> method to execute before the test cases. The <code class="hotspot=setup file=0">setup()</code> method retrieves the port number for the Open Liberty and creates a <code class="hotspot=Client file=0">Client</code> that is used throughout the tests, which are described as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code class="hotspot=testNoFieldLevelConstraintViolations file=0">testNoFieldLevelConstraintViolations()</code> test case verifies that constraint violations do not occur when valid data is supplied to the <code class="hotspot=Astronaut file=0">Astronaut</code> and <code class="hotspot=Spacecraft file=0">Spacecraft</code> bean attributes.</p>
+</li>
+<li>
+<p>The <code class="hotspot=testFieldLevelConstraintViolation file=0">testFieldLevelConstraintViolation()</code> test case verifies that the appropriate constraint violations occur when data that is supplied to the <code>Astronaut</code> and <code>Spacecraft</code> attributes violates the defined constraints. Because 3 constraint violations are defined, 3 <code>ConstraintViolation</code> objects are returned as a set from the <code class="hotspot=Response file=0">validate</code> call. The 3 expected messages are <code class="hotspot=expectedDestinationResponse file=0">"must be greater than 0"</code> for the negative distance specified in the destination map, <code class="hotspot=expectedEmailResponse file=0">"must be a well-formed email address"</code> for the incorrect email address, and the custom <code class="hotspot=expectedSerialNumberResponse file=0">"serial number is not valid"</code> message for the serial number.</p>
+</li>
+<li>
+<p>The <code class="hotspot=testNoMethodLevelConstraintViolations file=0">testNoMethodLevelConstraintViolations()</code> test case verifies that the method-level constraints that are specified on the <code class="hotspot=launchSpacecraft file=1">launchSpacecraft()</code> method of the <code class="hotspot=Spacecraft file=1">Spacecraft</code> bean are validated when the method is called with no violations. In this test, the call to the <code class="hotspot=launchSpacecraft file=0">launchSpacecraft()</code> method is made with the <code class="hotspot=OpenLiberty file=0">OpenLiberty</code> argument. A value of <code>true</code> is returned, which passes the specified constraints.</p>
+</li>
+<li>
+<p>The <code class="hotspot=testMethodLevelConstraintViolation file=0">testMethodLevelConstraintViolation()</code> test case verifies that a <code>ConstraintViolationException</code> exception is thrown when one of the method-level constraints is violated. A call with an incorrect parameter, <code class="hotspot=incorrectCode file=0">incorrectCode</code>, is made to the <code class="hotspot=launchSpacecraft file=1">launchSpacecraft()</code> method of the <code class="hotspot=Spacecraft file=1">Spacecraft</code> bean. The method returns <code>false</code>, which violates the defined constraint, and a <code>ConstraintViolationException</code> exception is thrown. The exception includes the constraint violation message, which in this example is <code class="hotspot=actualResponse file=0">must be true</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Spacecraft.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.beanvalidation</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.io.Serializable</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">java.util.Map</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.util.HashMap</span>;
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.NotBlank</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.Positive</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.NotNull</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.AssertTrue</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.inject.Named</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.validation.Valid</span>;
+<span class="line-numbers"> 25</span>
+<span class="line-numbers"> 26</span><span class="annotation">@Named</span>
+<span class="line-numbers"> 27</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers"> 28</span><span class="comment">// tag::Spacecraft[]</span>
+<span class="line-numbers"> 29</span><span class="directive">public</span> <span class="type">class</span> <span class="class">Spacecraft</span> <span class="directive">implements</span> <span class="predefined-type">Serializable</span> {
+<span class="line-numbers"> 30</span>
+<span class="line-numbers"> 31</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">long</span> serialVersionUID = <span class="integer">1L</span>;
+<span class="line-numbers"> 32</span>
+<span class="line-numbers"> 33</span>    <span class="comment">// tag::Valid[]</span>
+<span class="line-numbers"> 34</span>    <span class="annotation">@Valid</span>
+<span class="line-numbers"> 35</span>    <span class="comment">// end::Valid[]</span>
+<span class="line-numbers"> 36</span>    <span class="comment">// tag::Astronaut[]</span>
+<span class="line-numbers"> 37</span>    <span class="directive">private</span> Astronaut astronaut;
+<span class="line-numbers"> 38</span>    <span class="comment">// end::Astronaut[]</span>
+<span class="line-numbers"> 39</span>
+<span class="line-numbers"> 40</span>    <span class="comment">// tag::Map[]</span>
+<span class="line-numbers"> 41</span>    <span class="directive">private</span> <span class="predefined-type">Map</span>&lt;<span class="annotation">@NotBlank</span> <span class="predefined-type">String</span>, <span class="annotation">@Positive</span> <span class="predefined-type">Integer</span>&gt; destinations;
+<span class="line-numbers"> 42</span>    <span class="comment">// end::Map[]</span>
+<span class="line-numbers"> 43</span>
+<span class="line-numbers"> 44</span>    <span class="comment">// tag::serial-num[]</span>
+<span class="line-numbers"> 45</span>    <span class="annotation">@SerialNumber</span>
+<span class="line-numbers"> 46</span>    <span class="comment">// end::serial-num[]</span>
+<span class="line-numbers"> 47</span>    <span class="comment">// tag::serialNumber[]</span>
+<span class="line-numbers"> 48</span>    <span class="directive">private</span> <span class="predefined-type">String</span> serialNumber;
+<span class="line-numbers"> 49</span>    <span class="comment">// end::serialNumber[]</span>
+<span class="line-numbers"> 50</span>
+<span class="line-numbers"> 51</span>    <span class="directive">public</span> Spacecraft() {
+<span class="line-numbers"> 52</span>        destinations = <span class="keyword">new</span> <span class="predefined-type">HashMap</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt;();
+<span class="line-numbers"> 53</span>    }
+<span class="line-numbers"> 54</span>
+<span class="line-numbers"> 55</span>    <span class="directive">public</span> <span class="type">void</span> setAstronaut(Astronaut astronaut) {
+<span class="line-numbers"> 56</span>        <span class="local-variable">this</span>.astronaut = astronaut;
+<span class="line-numbers"> 57</span>    }
+<span class="line-numbers"> 58</span>
+<span class="line-numbers"> 59</span>    <span class="directive">public</span> <span class="type">void</span> setDestinations(<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt; destinations) {
+<span class="line-numbers"> 60</span>        <span class="local-variable">this</span>.destinations = destinations;
+<span class="line-numbers"> 61</span>    }
+<span class="line-numbers"> 62</span>
+<span class="line-numbers"> 63</span>    <span class="directive">public</span> <span class="type">void</span> setSerialNumber(<span class="predefined-type">String</span> serialNumber) {
+<span class="line-numbers"> 64</span>        <span class="local-variable">this</span>.serialNumber = serialNumber;
+<span class="line-numbers"> 65</span>    }
+<span class="line-numbers"> 66</span>
+<span class="line-numbers"> 67</span>    <span class="directive">public</span> Astronaut getAstronaut() {
+<span class="line-numbers"> 68</span>        <span class="keyword">return</span> astronaut;
+<span class="line-numbers"> 69</span>    }
+<span class="line-numbers"> 70</span>
+<span class="line-numbers"> 71</span>    <span class="directive">public</span> <span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Integer</span>&gt; getDestinations() {
+<span class="line-numbers"> 72</span>        <span class="keyword">return</span> destinations;
+<span class="line-numbers"> 73</span>    }
+<span class="line-numbers"> 74</span>
+<span class="line-numbers"> 75</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getSerialNumber() {
+<span class="line-numbers"> 76</span>        <span class="keyword">return</span> serialNumber;
+<span class="line-numbers"> 77</span>    }
+<span class="line-numbers"> 78</span>
+<span class="line-numbers"> 79</span>    <span class="comment">// tag::AssertTrue[]</span>
+<span class="line-numbers"> 80</span>    <span class="annotation">@AssertTrue</span>
+<span class="line-numbers"> 81</span>    <span class="comment">// end::AssertTrue[]</span>
+<span class="line-numbers"> 82</span>    <span class="comment">// tag::launchSpacecraft[]</span>
+<span class="line-numbers"> 83</span>    <span class="comment">// tag::launchCode[]</span>
+<span class="line-numbers"> 84</span>    <span class="directive">public</span> <span class="type">boolean</span> launchSpacecraft(<span class="annotation">@NotNull</span> <span class="predefined-type">String</span> launchCode) {
+<span class="line-numbers"> 85</span>    <span class="comment">// end::launchCode[]</span>
+<span class="line-numbers"> 86</span>        <span class="comment">// tag::OpenLiberty[]</span>
+<span class="line-numbers"> 87</span>        <span class="keyword">if</span> (launchCode.equals(<span class="string"><span class="delimiter">"</span><span class="content">OpenLiberty</span><span class="delimiter">"</span></span>)) {
+<span class="line-numbers"> 88</span>            <span class="comment">// end::OpenLiberty[]</span>
+<span class="line-numbers"> 89</span>            <span class="comment">// tag::true[]</span>
+<span class="line-numbers"> 90</span>            <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers"> 91</span>            <span class="comment">// end::true[]</span>
+<span class="line-numbers"> 92</span>        }
+<span class="line-numbers"> 93</span>        <span class="comment">// tag::false[]</span>
+<span class="line-numbers"> 94</span>        <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers"> 95</span>        <span class="comment">// end::false[]</span>
+<span class="line-numbers"> 96</span>    }
+<span class="line-numbers"> 97</span>    <span class="comment">// end::launchSpacecraft[]</span>
+<span class="line-numbers"> 98</span>}
+<span class="line-numbers"> 99</span><span class="comment">// end::Spacecraft[]</span></code></pre>
+</div>
+</div>
+<div class="sect2 command">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Because you started Open Liberty in dev mode, you can run the tests by pressing the <code>enter/return</code> key from the command-line session where you started dev mode.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.beanvalidation.BeanValidationIT
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.493 sec - in
+it.io.openliberty.guides.beanvalidation.BeanValidationIT
+
+Results :
+
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="paragraph command">
+<p>When you are done checking out the service, exit dev mode by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You developed and tested a Java microservice by using bean validation and Open Liberty.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Validating constraints with microservices <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-bean-validation/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-bean-validation/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-bean-validation/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/cdi-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Injecting dependencies into microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">15 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

@@ -1,0 +1,20 @@
+<server description="system service">
+
+    <featureManager>
+        <feature>cdi-4.0</feature>
+        <feature>jsonb-3.0</feature>
+        <feature>jsonp-2.1</feature>
+        <feature>restfulWS-3.1</feature>
+        <!-- tag::mpTelemetry[] -->
+        <feature>mpTelemetry-1.0</feature>
+        <!-- end::mpTelemetry[] -->
+    </featureManager>
+
+    <httpEndpoint httpPort="${default.http.port}"
+                  httpsPort="${default.https.port}"
+                  id="defaultHttpEndpoint" host="*" />
+
+    <webApplication location="guide-microprofile-telemetry-system.war"
+                    contextRoot="/" />
+
+</server>

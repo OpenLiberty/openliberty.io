@@ -1,0 +1,2192 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      
+        TCK Results - Open Liberty
+      
+    
+  </title>
+  <meta name="description" content="Open Liberty is the most flexible server runtime available to Earth’s Java developers.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/certification.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/certifications/microprofile/5.0/metrics/4.0/22.0.0.1-beta-TCKResults.html">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Open Liberty" />
+  <meta name="twitter:description" content="Open Liberty is the most flexible server runtime available to Earth’s Java developers." />
+
+  <meta property='og:title' content="Open Liberty" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="Open Liberty is the most flexible server runtime available to Earth’s Java developers." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/certifications/microprofile/5.0/metrics/4.0/22.0.0.1-beta-TCKResults.html" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <meta name="robots" content="noindex">
+
+<div id="article_container" class="container-fluid">
+    <article class="post" aria-label="article">
+        <header id="post_header">
+            <div class="container">
+                <h1 id="post_title">TCK Results</h1>
+            </div>
+        </header>
+        <div id="article_body" class="container">
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>As required by the <a href="https://www.eclipse.org/legal/tck.php" target="_blank" rel="noopener noreferrer">Eclipse Foundation Technology Compatibility Kit License</a>, following is a summary of the TCK results for releases of MicroProfile Metrics 4.0.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="open-liberty-22-0-0-1-beta-microprofile-metrics-4-0-certification-summary">Open Liberty 22.0.0.1-beta MicroProfile Metrics 4.0 Certification Summary</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Product Name, Version and download URL (if applicable):</p>
+<div class="paragraph">
+<p><a href="https://repo1.maven.org/maven2/io/openliberty/beta/openliberty-runtime/22.0.0.1-beta/openliberty-runtime-22.0.0.1-beta.zip" target="_blank" rel="noopener noreferrer">Open Liberty 22.0.0.1-beta</a></p>
+</div>
+</li>
+<li>
+<p>Specification Name, Version and download URL:</p>
+<div class="paragraph">
+<p><a href="https://download.eclipse.org/microprofile/microprofile-metrics-4.0-RC4/microprofile-metrics-spec-4.0-RC4.html" target="_blank" rel="noopener noreferrer">MicroProfile Metrics 4.0 RC4</a></p>
+</div>
+</li>
+<li>
+<p>Public URL of TCK Results Summary:</p>
+<div class="paragraph">
+<p><a href="22.0.0.1-beta-TCKResults.html">TCK results summary</a></p>
+</div>
+</li>
+<li>
+<p>Java runtime used to run the implementation:</p>
+<div class="paragraph">
+<p>Java 8: JRE 1.8.0 Linux amd64-64-Bit Compressed References 20210728_193 (JIT enabled, AOT enabled) OpenJ9 OMR JCL based on jdk8u302-b08</p>
+</div>
+<div class="paragraph">
+<p>Java 11: JRE 11 Linux amd64-64-Bit Compressed References 20210729_228 (JIT enabled, AOT enabled) OpenJ9 OMR based on jdk-11.0.12+7</p>
+</div>
+</li>
+<li>
+<p>Summary of the information for the certification environment, operating system, cloud, …​:</p>
+<div class="paragraph">
+<p>RHEL 8</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Java 8 Test results:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml">Test suite: org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTest.histogramTagFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTest.updateHistogramTagField PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTest.gaugesCalledWithDefaultValues PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTest.callGaugesAfterSetterCalls PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.getCountTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.incrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.decrementTest PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTest.overloadedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTest.callOverloadedTimedMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.SimplerTimerTagFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.SimplerTimerTagFieldBeanTest.simpleTimersTagFieldRegistered PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.TimedTagMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.TimedTagMethodBeanTest.timedTagMethodRegistered PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.TimerTagFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.TimerTagFieldBeanTest.timersTagFieldRegistered PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedConstructorBeanTest.simpleTimerConstructorCalled PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedConstructorBeanTest.countedConstructorCalled PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.extendedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.callExtendedTimedMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.test.MpMetricTestnull
+Tests:47 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationJsonResponseContentType PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testTextPlainResponseContentType PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBadSubTreeWillReturn404 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testListsAllJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBase PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseAttributeJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseSingularMetricsPresent PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseAttributeOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadata PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataSingluarItems PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataTypeAndUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOpenMetricsFormatNoBadChars PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataSingluarItemsOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataGarbageCollection PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataOkJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testSetupApplicationMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetricsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataItems PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataTypeAndUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTagJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTagOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMeterUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTimerUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationHistogramUnitBytesOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationHistogramUnitNoneOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOpenMetrics406ForOptions PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testConvertingToBaseUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNonStandardUnitsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNonStandardUnitsOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOptionalBaseMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testSetupPromNoBadCharsInNames PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testPromNoBadCharsInNames PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept1 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept2 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept3 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept4 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept5 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNoAcceptHeader PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testCustomUnitAppendToGaugeName PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNoCustomUnitForCounter PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testGcCountMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testGcTimeMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testMultipleTaggedMetricsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testTranslateSemiColonToUnderScoreJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationConcurrentGaugeOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationSimpleTimerUnitOpenMetrics PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.MetricRegistryTestnull
+Tests:7 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.nameTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.registerTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.removeTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.useExistingMetaDataTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.testMetricRegistryType PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.sanitizeMetadataTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.conflictingMetadataTest PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.MeteredTagMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.MeteredTagMethodBeanTest.meteredTagMethodRegistered PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.countedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.metricInjectionIntoTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.callCountedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.removeCounterFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFunctionalTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFunctionalTest.testMinMaxEqual PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTest.callTimedMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTest.callTimedMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.testTime PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.testTimerRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.timesCallableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.timesRunnableInstances PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTest.countedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTest.callCountedMethodsOnce PASSED
+Test suite: FATSuite2021-11-19T20:10:50
+Tests:1 Failures:0 Errors:0
+   io.openliberty.microprofile.metrics30.internal.tck.launcher.MetricsTCKLauncher.launchTck PASSED
+Test suite: MetricFilterTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.MetricFilterTest.theAllFilterMatchesAllMetrics PASSED
+Test suite: MetricIDTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.MetricIDTest.removalTest PASSED
+Test suite: MetricRegistryTestnull
+Tests:7 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.nameTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.registerTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.removeTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.useExistingMetaDataTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.testMetricRegistryType PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.sanitizeMetadataTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.conflictingMetadataTest PASSED
+Test suite: ApplicationScopedTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTest.callTimedMethodOnce PASSED
+Test suite: GaugeInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTest.gaugeCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTest.callGaugeAfterSetterCall PASSED
+Test suite: MeterInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTest.meteredMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTest.callMeteredMethodOnce PASSED
+Test suite: SimpleTimerInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTest.callSimplyTimedMethodOnce PASSED
+Test suite: TimerInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTest.callTimedMethodOnce PASSED
+Test suite: StereotypeCountedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTest.testWithMetadata PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTest.testPlainAnnotation PASSED
+Test suite: InheritedGaugeMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTest.gaugesCalledWithDefaultValues PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTest.callGaugesAfterSetterCalls PASSED
+Test suite: InheritedSimplyTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTest.callSimplyTimedMethodsOnce PASSED
+Test suite: InheritedTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTest.callTimedMethodsOnce PASSED
+Test suite: VisibilitySimplyTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTest.callSimplyTimedMethodsOnce PASSED
+Test suite: VisibilityTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTest.callTimedMethodsOnce PASSED
+Test suite: ConcreteExtendedTimedBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.extendedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.callExtendedTimedMethodOnce PASSED
+Test suite: ConcreteTimedBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.extendedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.callExtendedTimedMethodOnce PASSED
+Test suite: ConcurrentGaugeFunctionalTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTest.testMinMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTest.testConcurrentInvocations PASSED
+Test suite: ConcurrentGaugeTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.getCountTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.incrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.decrementTest PASSED
+Test suite: ConcurrentGaugedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTest.countedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTest.callCountedMethodsOnce PASSED
+Test suite: ConcurrentGaugedConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedConstructorBeanTest.countedConstructorCalled PASSED
+Test suite: ConcurrentGaugedMethodBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.countedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.metricInjectionIntoTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.callCountedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.removeCounterFromRegistry PASSED
+Test suite: CountedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTest.countedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTest.callCountedMethodsOnce PASSED
+Test suite: CountedMethodBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.countedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.metricInjectionIntoTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.callCountedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.removeCounterFromRegistry PASSED
+Test suite: CountedMethodTagBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTest.counterTagMethodsRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTest.countedTagMethodNotCalledYet PASSED
+Test suite: CounterFieldBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTest.counterFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTest.incrementCounterField PASSED
+Test suite: CounterTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.getCountTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.incrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.incrementLongTest PASSED
+Test suite: DefaultNameMetricMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.DefaultNameMetricMethodBeanTest.metricMethodsWithDefaultNamingConvention PASSED
+Test suite: GaugeMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTest.gaugeCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTest.callGaugeAfterSetterCall PASSED
+Test suite: GaugeTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeTest.testManualGauge PASSED
+Test suite: HistogramFieldBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTest.histogramFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTest.updateHistogramField PASSED
+Test suite: HistogramTestnull
+Tests:15 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSum PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testCount PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot99thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMin PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot98thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMean PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotSize PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot95thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testMetricRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMedian PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotStdDev PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotValues PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot999thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot75thPercentile PASSED
+Test suite: MeterTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeterTest.testCount PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeterTest.testRates PASSED
+Test suite: MeteredClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTest.meteredMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTest.callMeteredMethodsOnce PASSED
+Test suite: MeteredConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredConstructorBeanTest.meteredConstructorCalled PASSED
+Test suite: MeteredMethodBeanTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.meteredMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.callMeteredMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.removeMeterFromRegistry PASSED
+Test suite: MultipleMetricsConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsConstructorBeanTest.metricsConstructorCalled PASSED
+Test suite: MultipleMetricsMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTest.metricsMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTest.callMetricsMethodOnce PASSED
+Test suite: OverloadedTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTest.overloadedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTest.callOverloadedTimedMethodOnce PASSED
+Test suite: SimpleTimerFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFieldBeanTest.simpleTimerFieldsWithDefaultNamingConvention PASSED
+Test suite: SimpleTimerFunctionalTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFunctionalTest.testMinMaxEqual PASSED
+Test suite: SimpleTimerTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.testTime PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.testTimerRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.timesCallableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.timesRunnableInstances PASSED
+Test suite: SimplyTimedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTest.callSimplyTimedMethodsOnce PASSED
+Test suite: SimplyTimedConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedConstructorBeanTest.simpleTimerConstructorCalled PASSED
+Test suite: SimplyTimedMethodBeanLookupTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.removeSimplyTimedFromRegistry PASSED
+Test suite: SimplyTimedMethodBeanTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.removeSimpleTimerFromRegistry PASSED
+Test suite: TimedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTest.callTimedMethodsOnce PASSED
+Test suite: TimedConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedConstructorBeanTest.timedConstructorCalled PASSED
+Test suite: TimedMethodBeanLookupTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.removeTimerFromRegistry PASSED
+Test suite: TimedMethodBeanTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.removeTimerFromRegistry PASSED
+Test suite: TimerFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimerFieldBeanTest.timerFieldsWithDefaultNamingConvention PASSED
+Test suite: TimerTestnull
+Tests:17 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot99thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMin PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot98thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMean PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotSize PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot95thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMedian PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotStdDev PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotValues PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot999thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot75thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testRate PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testTime PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testTimerRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.timesCallableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.timesRunnableInstances PASSED
+Test suite: CounterFieldTagBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTest.counterTagFieldsRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTest.incrementCounterTagFields PASSED
+Test suite: GaugeTagMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTest.gaugeTagCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTest.callGaugeTagAfterSetterCall PASSED
+Test suite: HistogramTagFieldBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTest.histogramTagFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTest.updateHistogramTagField PASSED
+Test suite: MeteredTagMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.MeteredTagMethodBeanTest.meteredTagMethodRegistered PASSED
+Test suite: SimplerTimerTagFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.SimplerTimerTagFieldBeanTest.simpleTimersTagFieldRegistered PASSED
+Test suite: SimplyTimedTagMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.SimplyTimedTagMethodBeanTest.simplyTimedTagMethodRegistered PASSED
+Test suite: TagsTestnull
+Tests:8 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.simpleTagTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.lastTagValueTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.counterTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.meterTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.timerTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.histogramTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.simpleTimerTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.concurrentGuageTagsTest PASSED
+Test suite: TimedTagMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.TimedTagMethodBeanTest.timedTagMethodRegistered PASSED
+Test suite: TimerTagFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.TimerTagFieldBeanTest.timersTagFieldRegistered PASSED
+Test suite: MpMetricTestnull
+Tests:47 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationJsonResponseContentType PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testTextPlainResponseContentType PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBadSubTreeWillReturn404 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testListsAllJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBase PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseAttributeJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseSingularMetricsPresent PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseAttributeOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadata PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataSingluarItems PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataTypeAndUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOpenMetricsFormatNoBadChars PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataSingluarItemsOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataGarbageCollection PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataOkJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testSetupApplicationMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetricsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataItems PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataTypeAndUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTagJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTagOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMeterUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTimerUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationHistogramUnitBytesOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationHistogramUnitNoneOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOpenMetrics406ForOptions PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testConvertingToBaseUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNonStandardUnitsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNonStandardUnitsOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOptionalBaseMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testSetupPromNoBadCharsInNames PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testPromNoBadCharsInNames PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept1 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept2 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept3 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept4 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept5 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNoAcceptHeader PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testCustomUnitAppendToGaugeName PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNoCustomUnitForCounter PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testGcCountMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testGcTimeMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testMultipleTaggedMetricsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testTranslateSemiColonToUnderScoreJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationConcurrentGaugeOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationSimpleTimerUnitOpenMetrics PASSED
+Test suite: ReusedMetricsTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.setA PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.testSharedCounter PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.setB PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.testSharedCounterAgain PASSED
+Test suite: MultipleBeanInstancesTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testMeter PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testTimer PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testCounter PASSED
+Test suite: MpMetricOptionalTestnull
+Tests:20 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTGet PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTGetExplicit PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTOptions PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTHead PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTPut PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTPost PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testDeleteNoParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetSingleParams PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetContextParams PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetListParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetMultiParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetNameObject PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetAsync PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostMultiParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testValidateGetJSONnoParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testValidateGetJSONParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetMappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostMappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetUnmappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostUnmappedArithException PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTest.metricsMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTest.callMetricsMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTest.testWithMetadata PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTest.testPlainAnnotation PASSED
+Test suite: org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testMeter PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testTimer PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testCounter PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.removeTimerFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.TimedConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedConstructorBeanTest.timedConstructorCalled PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.TimerFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimerFieldBeanTest.timerFieldsWithDefaultNamingConvention PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTest.histogramFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTest.updateHistogramField PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.meteredMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.callMeteredMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.removeMeterFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTestnull
+Tests:20 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTGet PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTGetExplicit PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTOptions PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTHead PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTPut PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTPost PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testDeleteNoParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetSingleParams PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetContextParams PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetListParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetMultiParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetNameObject PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetAsync PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostMultiParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testValidateGetJSONnoParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testValidateGetJSONParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetMappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostMappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetUnmappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostUnmappedArithException PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.removeTimerFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTest.gaugeCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTest.callGaugeAfterSetterCall PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.extendedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.callExtendedTimedMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTest.counterFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTest.incrementCounterField PASSED
+Test suite: io.openliberty.microprofile.metrics.internal.4.0_fat_tck FAT testsnull
+Tests:234 Failures:0 Errors:0
+   io.openliberty.microprofile.metrics30.internal.tck.launcher.MetricsTCKLauncher.launchTck PASSED
+   org.eclipse.microprofile.metrics.tck.MetricFilterTest.theAllFilterMatchesAllMetrics PASSED
+   org.eclipse.microprofile.metrics.tck.MetricIDTest.removalTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.nameTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.registerTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.removeTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.useExistingMetaDataTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.testMetricRegistryType PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.sanitizeMetadataTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.conflictingMetadataTest PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTest.gaugeCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTest.callGaugeAfterSetterCall PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTest.meteredMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTest.callMeteredMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTest.testWithMetadata PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTest.testPlainAnnotation PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTest.gaugesCalledWithDefaultValues PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTest.callGaugesAfterSetterCalls PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTest.callSimplyTimedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTest.callTimedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTest.callSimplyTimedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTest.callTimedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.extendedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.callExtendedTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.extendedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.callExtendedTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTest.testMinMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTest.testConcurrentInvocations PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.getCountTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.incrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.decrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTest.countedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTest.callCountedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedConstructorBeanTest.countedConstructorCalled PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.countedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.metricInjectionIntoTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.callCountedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.removeCounterFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTest.countedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTest.callCountedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.countedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.metricInjectionIntoTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.callCountedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.removeCounterFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTest.counterTagMethodsRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTest.countedTagMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTest.counterFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTest.incrementCounterField PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.getCountTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.incrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.incrementLongTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.DefaultNameMetricMethodBeanTest.metricMethodsWithDefaultNamingConvention PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTest.gaugeCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTest.callGaugeAfterSetterCall PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeTest.testManualGauge PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTest.histogramFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTest.updateHistogramField PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSum PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testCount PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot99thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMin PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot98thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMean PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotSize PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot95thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testMetricRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMedian PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotStdDev PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotValues PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot999thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot75thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeterTest.testCount PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeterTest.testRates PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTest.meteredMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTest.callMeteredMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredConstructorBeanTest.meteredConstructorCalled PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.meteredMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.callMeteredMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.removeMeterFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsConstructorBeanTest.metricsConstructorCalled PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTest.metricsMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTest.callMetricsMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTest.overloadedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTest.callOverloadedTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFieldBeanTest.simpleTimerFieldsWithDefaultNamingConvention PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFunctionalTest.testMinMaxEqual PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.testTime PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.testTimerRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.timesCallableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.timesRunnableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTest.callSimplyTimedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedConstructorBeanTest.simpleTimerConstructorCalled PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.removeSimplyTimedFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.removeSimpleTimerFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTest.callTimedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedConstructorBeanTest.timedConstructorCalled PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.removeTimerFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.removeTimerFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerFieldBeanTest.timerFieldsWithDefaultNamingConvention PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot99thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMin PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot98thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMean PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotSize PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot95thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMedian PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotStdDev PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotValues PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot999thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot75thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testRate PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testTime PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testTimerRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.timesCallableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.timesRunnableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTest.counterTagFieldsRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTest.incrementCounterTagFields PASSED
+   org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTest.gaugeTagCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTest.callGaugeTagAfterSetterCall PASSED
+   org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTest.histogramTagFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTest.updateHistogramTagField PASSED
+   org.eclipse.microprofile.metrics.tck.tags.MeteredTagMethodBeanTest.meteredTagMethodRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.SimplerTimerTagFieldBeanTest.simpleTimersTagFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.SimplyTimedTagMethodBeanTest.simplyTimedTagMethodRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.simpleTagTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.lastTagValueTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.counterTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.meterTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.timerTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.histogramTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.simpleTimerTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.concurrentGuageTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TimedTagMethodBeanTest.timedTagMethodRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TimerTagFieldBeanTest.timersTagFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationJsonResponseContentType PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testTextPlainResponseContentType PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBadSubTreeWillReturn404 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testListsAllJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBase PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseAttributeJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseSingularMetricsPresent PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseAttributeOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadata PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataSingluarItems PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataTypeAndUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOpenMetricsFormatNoBadChars PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataSingluarItemsOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataGarbageCollection PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataOkJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testSetupApplicationMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetricsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataItems PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataTypeAndUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTagJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTagOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMeterUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTimerUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationHistogramUnitBytesOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationHistogramUnitNoneOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOpenMetrics406ForOptions PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testConvertingToBaseUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNonStandardUnitsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNonStandardUnitsOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOptionalBaseMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testSetupPromNoBadCharsInNames PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testPromNoBadCharsInNames PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept1 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept2 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept3 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept4 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept5 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNoAcceptHeader PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testCustomUnitAppendToGaugeName PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNoCustomUnitForCounter PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testGcCountMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testGcTimeMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testMultipleTaggedMetricsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testTranslateSemiColonToUnderScoreJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationConcurrentGaugeOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationSimpleTimerUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.setA PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.testSharedCounter PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.setB PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.testSharedCounterAgain PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testMeter PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testTimer PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testCounter PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTGet PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTGetExplicit PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTOptions PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTHead PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTPut PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTPost PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testDeleteNoParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetSingleParams PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetContextParams PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetListParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetMultiParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetNameObject PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetAsync PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostMultiParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testValidateGetJSONnoParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testValidateGetJSONParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetMappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostMappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetUnmappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostUnmappedArithException PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.TimerTestnull
+Tests:17 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot99thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMin PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot98thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMean PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotSize PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot95thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMedian PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotStdDev PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotValues PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot999thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot75thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testRate PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testTime PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testTimerRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.timesCallableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.timesRunnableInstances PASSED
+Test suite: io.openliberty.microprofile.metrics30.internal.tck.launcher.FATSuite2021-11-19T20:10:50
+Tests:1 Failures:0 Errors:0
+   io.openliberty.microprofile.metrics30.internal.tck.launcher.MetricsTCKLauncher.launchTck PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.TagsTestnull
+Tests:8 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.simpleTagTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.lastTagValueTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.counterTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.meterTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.timerTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.histogramTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.simpleTimerTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.concurrentGuageTagsTest PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTest.gaugeTagCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTest.callGaugeTagAfterSetterCall PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.CounterTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.getCountTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.incrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.incrementLongTest PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTest.counterTagMethodsRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTest.countedTagMethodNotCalledYet PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsConstructorBeanTest.metricsConstructorCalled PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTest.callSimplyTimedMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.MetricFilterTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.MetricFilterTest.theAllFilterMatchesAllMetrics PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.DefaultNameMetricMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.DefaultNameMetricMethodBeanTest.metricMethodsWithDefaultNamingConvention PASSED
+Test suite: org.eclipse.microprofile.metrics.test.ReusedMetricsTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.setA PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.testSharedCounter PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.setB PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.testSharedCounterAgain PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTest.meteredMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTest.callMeteredMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.MetricIDTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.MetricIDTest.removalTest PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFieldBeanTest.simpleTimerFieldsWithDefaultNamingConvention PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTest.testMinMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTest.testConcurrentInvocations PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTest.counterTagFieldsRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTest.incrementCounterTagFields PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTest.gaugeCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTest.callGaugeAfterSetterCall PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.GaugeTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeTest.testManualGauge PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.removeSimpleTimerFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTest.callTimedMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.HistogramTestnull
+Tests:15 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSum PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testCount PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot99thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMin PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot98thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMean PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotSize PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot95thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testMetricRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMedian PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotStdDev PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotValues PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot999thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot75thPercentile PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTest.callSimplyTimedMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.SimplyTimedTagMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.SimplyTimedTagMethodBeanTest.simplyTimedTagMethodRegistered PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTest.meteredMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTest.callMeteredMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.MeteredConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredConstructorBeanTest.meteredConstructorCalled PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTest.callTimedMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.removeSimplyTimedFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTest.callSimplyTimedMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTest.countedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTest.callCountedMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.MeterTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeterTest.testCount PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeterTest.testRates PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.countedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.metricInjectionIntoTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.callCountedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.removeCounterFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTest.callTimedMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTest.callSimplyTimedMethodsOnce PASSED</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Java 11 Test results:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml">Test suite: org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTest.histogramTagFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTest.updateHistogramTagField PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTest.gaugesCalledWithDefaultValues PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTest.callGaugesAfterSetterCalls PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.getCountTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.incrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.decrementTest PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTest.overloadedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTest.callOverloadedTimedMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.SimplerTimerTagFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.SimplerTimerTagFieldBeanTest.simpleTimersTagFieldRegistered PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.TimedTagMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.TimedTagMethodBeanTest.timedTagMethodRegistered PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.TimerTagFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.TimerTagFieldBeanTest.timersTagFieldRegistered PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedConstructorBeanTest.simpleTimerConstructorCalled PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedConstructorBeanTest.countedConstructorCalled PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.extendedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.callExtendedTimedMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.test.MpMetricTestnull
+Tests:47 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationJsonResponseContentType PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testTextPlainResponseContentType PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBadSubTreeWillReturn404 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testListsAllJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBase PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseAttributeJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseSingularMetricsPresent PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseAttributeOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadata PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataSingluarItems PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataTypeAndUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOpenMetricsFormatNoBadChars PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataSingluarItemsOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataGarbageCollection PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataOkJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testSetupApplicationMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetricsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataItems PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataTypeAndUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTagJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTagOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMeterUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTimerUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationHistogramUnitBytesOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationHistogramUnitNoneOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOpenMetrics406ForOptions PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testConvertingToBaseUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNonStandardUnitsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNonStandardUnitsOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOptionalBaseMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testSetupPromNoBadCharsInNames PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testPromNoBadCharsInNames PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept1 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept2 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept3 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept4 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept5 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNoAcceptHeader PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testCustomUnitAppendToGaugeName PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNoCustomUnitForCounter PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testGcCountMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testGcTimeMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testMultipleTaggedMetricsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testTranslateSemiColonToUnderScoreJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationConcurrentGaugeOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationSimpleTimerUnitOpenMetrics PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.MetricRegistryTestnull
+Tests:7 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.nameTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.registerTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.removeTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.useExistingMetaDataTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.testMetricRegistryType PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.sanitizeMetadataTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.conflictingMetadataTest PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.MeteredTagMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.MeteredTagMethodBeanTest.meteredTagMethodRegistered PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.countedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.metricInjectionIntoTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.callCountedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.removeCounterFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFunctionalTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFunctionalTest.testMinMaxEqual PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTest.callTimedMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTest.callTimedMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.testTime PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.testTimerRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.timesCallableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.timesRunnableInstances PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTest.countedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTest.callCountedMethodsOnce PASSED
+Test suite: FATSuite2021-11-21T02:08:08
+Tests:1 Failures:0 Errors:0
+   io.openliberty.microprofile.metrics30.internal.tck.launcher.MetricsTCKLauncher.launchTck PASSED
+Test suite: MetricFilterTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.MetricFilterTest.theAllFilterMatchesAllMetrics PASSED
+Test suite: MetricIDTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.MetricIDTest.removalTest PASSED
+Test suite: MetricRegistryTestnull
+Tests:7 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.nameTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.registerTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.removeTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.useExistingMetaDataTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.testMetricRegistryType PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.sanitizeMetadataTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.conflictingMetadataTest PASSED
+Test suite: ApplicationScopedTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTest.callTimedMethodOnce PASSED
+Test suite: GaugeInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTest.gaugeCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTest.callGaugeAfterSetterCall PASSED
+Test suite: MeterInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTest.meteredMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTest.callMeteredMethodOnce PASSED
+Test suite: SimpleTimerInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTest.callSimplyTimedMethodOnce PASSED
+Test suite: TimerInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTest.callTimedMethodOnce PASSED
+Test suite: StereotypeCountedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTest.testWithMetadata PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTest.testPlainAnnotation PASSED
+Test suite: InheritedGaugeMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTest.gaugesCalledWithDefaultValues PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTest.callGaugesAfterSetterCalls PASSED
+Test suite: InheritedSimplyTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTest.callSimplyTimedMethodsOnce PASSED
+Test suite: InheritedTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTest.callTimedMethodsOnce PASSED
+Test suite: VisibilitySimplyTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTest.callSimplyTimedMethodsOnce PASSED
+Test suite: VisibilityTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTest.callTimedMethodsOnce PASSED
+Test suite: ConcreteExtendedTimedBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.extendedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.callExtendedTimedMethodOnce PASSED
+Test suite: ConcreteTimedBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.extendedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.callExtendedTimedMethodOnce PASSED
+Test suite: ConcurrentGaugeFunctionalTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTest.testMinMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTest.testConcurrentInvocations PASSED
+Test suite: ConcurrentGaugeTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.getCountTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.incrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.decrementTest PASSED
+Test suite: ConcurrentGaugedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTest.countedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTest.callCountedMethodsOnce PASSED
+Test suite: ConcurrentGaugedConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedConstructorBeanTest.countedConstructorCalled PASSED
+Test suite: ConcurrentGaugedMethodBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.countedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.metricInjectionIntoTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.callCountedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.removeCounterFromRegistry PASSED
+Test suite: CountedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTest.countedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTest.callCountedMethodsOnce PASSED
+Test suite: CountedMethodBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.countedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.metricInjectionIntoTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.callCountedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.removeCounterFromRegistry PASSED
+Test suite: CountedMethodTagBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTest.counterTagMethodsRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTest.countedTagMethodNotCalledYet PASSED
+Test suite: CounterFieldBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTest.counterFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTest.incrementCounterField PASSED
+Test suite: CounterTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.getCountTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.incrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.incrementLongTest PASSED
+Test suite: DefaultNameMetricMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.DefaultNameMetricMethodBeanTest.metricMethodsWithDefaultNamingConvention PASSED
+Test suite: GaugeMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTest.gaugeCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTest.callGaugeAfterSetterCall PASSED
+Test suite: GaugeTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeTest.testManualGauge PASSED
+Test suite: HistogramFieldBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTest.histogramFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTest.updateHistogramField PASSED
+Test suite: HistogramTestnull
+Tests:15 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSum PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testCount PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot99thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMin PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot98thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMean PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotSize PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot95thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testMetricRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMedian PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotStdDev PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotValues PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot999thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot75thPercentile PASSED
+Test suite: MeterTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeterTest.testCount PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeterTest.testRates PASSED
+Test suite: MeteredClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTest.meteredMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTest.callMeteredMethodsOnce PASSED
+Test suite: MeteredConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredConstructorBeanTest.meteredConstructorCalled PASSED
+Test suite: MeteredMethodBeanTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.meteredMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.callMeteredMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.removeMeterFromRegistry PASSED
+Test suite: MultipleMetricsConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsConstructorBeanTest.metricsConstructorCalled PASSED
+Test suite: MultipleMetricsMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTest.metricsMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTest.callMetricsMethodOnce PASSED
+Test suite: OverloadedTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTest.overloadedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTest.callOverloadedTimedMethodOnce PASSED
+Test suite: SimpleTimerFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFieldBeanTest.simpleTimerFieldsWithDefaultNamingConvention PASSED
+Test suite: SimpleTimerFunctionalTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFunctionalTest.testMinMaxEqual PASSED
+Test suite: SimpleTimerTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.testTime PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.testTimerRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.timesCallableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.timesRunnableInstances PASSED
+Test suite: SimplyTimedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTest.callSimplyTimedMethodsOnce PASSED
+Test suite: SimplyTimedConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedConstructorBeanTest.simpleTimerConstructorCalled PASSED
+Test suite: SimplyTimedMethodBeanLookupTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.removeSimplyTimedFromRegistry PASSED
+Test suite: SimplyTimedMethodBeanTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.removeSimpleTimerFromRegistry PASSED
+Test suite: TimedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTest.callTimedMethodsOnce PASSED
+Test suite: TimedConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedConstructorBeanTest.timedConstructorCalled PASSED
+Test suite: TimedMethodBeanLookupTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.removeTimerFromRegistry PASSED
+Test suite: TimedMethodBeanTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.removeTimerFromRegistry PASSED
+Test suite: TimerFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimerFieldBeanTest.timerFieldsWithDefaultNamingConvention PASSED
+Test suite: TimerTestnull
+Tests:17 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot99thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMin PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot98thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMean PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotSize PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot95thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMedian PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotStdDev PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotValues PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot999thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot75thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testRate PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testTime PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testTimerRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.timesCallableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.timesRunnableInstances PASSED
+Test suite: CounterFieldTagBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTest.counterTagFieldsRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTest.incrementCounterTagFields PASSED
+Test suite: GaugeTagMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTest.gaugeTagCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTest.callGaugeTagAfterSetterCall PASSED
+Test suite: HistogramTagFieldBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTest.histogramTagFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTest.updateHistogramTagField PASSED
+Test suite: MeteredTagMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.MeteredTagMethodBeanTest.meteredTagMethodRegistered PASSED
+Test suite: SimplerTimerTagFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.SimplerTimerTagFieldBeanTest.simpleTimersTagFieldRegistered PASSED
+Test suite: SimplyTimedTagMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.SimplyTimedTagMethodBeanTest.simplyTimedTagMethodRegistered PASSED
+Test suite: TagsTestnull
+Tests:8 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.simpleTagTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.lastTagValueTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.counterTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.meterTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.timerTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.histogramTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.simpleTimerTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.concurrentGuageTagsTest PASSED
+Test suite: TimedTagMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.TimedTagMethodBeanTest.timedTagMethodRegistered PASSED
+Test suite: TimerTagFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.TimerTagFieldBeanTest.timersTagFieldRegistered PASSED
+Test suite: MpMetricTestnull
+Tests:47 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationJsonResponseContentType PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testTextPlainResponseContentType PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBadSubTreeWillReturn404 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testListsAllJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBase PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseAttributeJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseSingularMetricsPresent PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseAttributeOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadata PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataSingluarItems PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataTypeAndUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOpenMetricsFormatNoBadChars PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataSingluarItemsOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataGarbageCollection PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataOkJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testSetupApplicationMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetricsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataItems PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataTypeAndUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTagJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTagOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMeterUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTimerUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationHistogramUnitBytesOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationHistogramUnitNoneOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOpenMetrics406ForOptions PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testConvertingToBaseUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNonStandardUnitsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNonStandardUnitsOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOptionalBaseMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testSetupPromNoBadCharsInNames PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testPromNoBadCharsInNames PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept1 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept2 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept3 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept4 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept5 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNoAcceptHeader PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testCustomUnitAppendToGaugeName PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNoCustomUnitForCounter PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testGcCountMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testGcTimeMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testMultipleTaggedMetricsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testTranslateSemiColonToUnderScoreJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationConcurrentGaugeOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationSimpleTimerUnitOpenMetrics PASSED
+Test suite: ReusedMetricsTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.setA PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.testSharedCounter PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.setB PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.testSharedCounterAgain PASSED
+Test suite: MultipleBeanInstancesTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testMeter PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testTimer PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testCounter PASSED
+Test suite: MpMetricOptionalTestnull
+Tests:20 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTGet PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTGetExplicit PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTOptions PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTHead PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTPut PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTPost PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testDeleteNoParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetSingleParams PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetContextParams PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetListParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetMultiParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetNameObject PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetAsync PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostMultiParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testValidateGetJSONnoParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testValidateGetJSONParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetMappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostMappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetUnmappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostUnmappedArithException PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTest.metricsMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTest.callMetricsMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTest.testWithMetadata PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTest.testPlainAnnotation PASSED
+Test suite: org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testMeter PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testTimer PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testCounter PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.removeTimerFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.TimedConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedConstructorBeanTest.timedConstructorCalled PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.TimerFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimerFieldBeanTest.timerFieldsWithDefaultNamingConvention PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTest.histogramFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTest.updateHistogramField PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.meteredMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.callMeteredMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.removeMeterFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTestnull
+Tests:20 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTGet PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTGetExplicit PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTOptions PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTHead PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTPut PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTPost PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testDeleteNoParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetSingleParams PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetContextParams PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetListParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetMultiParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetNameObject PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetAsync PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostMultiParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testValidateGetJSONnoParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testValidateGetJSONParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetMappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostMappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetUnmappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostUnmappedArithException PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.removeTimerFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTest.gaugeCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTest.callGaugeAfterSetterCall PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.extendedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.callExtendedTimedMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTest.counterFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTest.incrementCounterField PASSED
+Test suite: io.openliberty.microprofile.metrics.internal.4.0_fat_tck FAT testsnull
+Tests:234 Failures:0 Errors:0
+   io.openliberty.microprofile.metrics30.internal.tck.launcher.MetricsTCKLauncher.launchTck PASSED
+   org.eclipse.microprofile.metrics.tck.MetricFilterTest.theAllFilterMatchesAllMetrics PASSED
+   org.eclipse.microprofile.metrics.tck.MetricIDTest.removalTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.nameTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.registerTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.removeTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.useExistingMetaDataTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.testMetricRegistryType PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.sanitizeMetadataTest PASSED
+   org.eclipse.microprofile.metrics.tck.MetricRegistryTest.conflictingMetadataTest PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTest.gaugeCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTest.callGaugeAfterSetterCall PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTest.meteredMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTest.callMeteredMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.TimerInjectionBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTest.testWithMetadata PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.stereotype.StereotypeCountedClassBeanTest.testPlainAnnotation PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTest.gaugesCalledWithDefaultValues PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedGaugeMethodBeanTest.callGaugesAfterSetterCalls PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTest.callSimplyTimedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedTimedMethodBeanTest.callTimedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTest.callSimplyTimedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTest.callTimedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.extendedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteExtendedTimedBeanTest.callExtendedTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.extendedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcreteTimedBeanTest.callExtendedTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTest.testMinMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTest.testConcurrentInvocations PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.getCountTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.incrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeTest.decrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTest.countedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedClassBeanTest.callCountedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedConstructorBeanTest.countedConstructorCalled PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.countedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.metricInjectionIntoTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.callCountedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.removeCounterFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTest.countedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTest.callCountedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.countedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.metricInjectionIntoTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.callCountedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodBeanTest.removeCounterFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTest.counterTagMethodsRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTest.countedTagMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTest.counterFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterFieldBeanTest.incrementCounterField PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.getCountTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.incrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.incrementLongTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.DefaultNameMetricMethodBeanTest.metricMethodsWithDefaultNamingConvention PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTest.gaugeCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeMethodBeanTest.callGaugeAfterSetterCall PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeTest.testManualGauge PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTest.histogramFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramFieldBeanTest.updateHistogramField PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSum PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testCount PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot99thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMin PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot98thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMean PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotSize PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot95thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testMetricRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMedian PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotStdDev PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotValues PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot999thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot75thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeterTest.testCount PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeterTest.testRates PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTest.meteredMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTest.callMeteredMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredConstructorBeanTest.meteredConstructorCalled PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.meteredMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.callMeteredMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredMethodBeanTest.removeMeterFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsConstructorBeanTest.metricsConstructorCalled PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTest.metricsMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsMethodBeanTest.callMetricsMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTest.overloadedTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.OverloadedTimedMethodBeanTest.callOverloadedTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFieldBeanTest.simpleTimerFieldsWithDefaultNamingConvention PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFunctionalTest.testMinMaxEqual PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.testTime PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.testTimerRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.timesCallableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerTest.timesRunnableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTest.callSimplyTimedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedConstructorBeanTest.simpleTimerConstructorCalled PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.removeSimplyTimedFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.removeSimpleTimerFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTest.callTimedMethodsOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedConstructorBeanTest.timedConstructorCalled PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanLookupTest.removeTimerFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.callTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedMethodBeanTest.removeTimerFromRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerFieldBeanTest.timerFieldsWithDefaultNamingConvention PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot99thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMin PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot98thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMean PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotSize PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot95thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMedian PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotStdDev PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotValues PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot999thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot75thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testRate PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testTime PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testTimerRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.timesCallableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.timesRunnableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTest.counterTagFieldsRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTest.incrementCounterTagFields PASSED
+   org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTest.gaugeTagCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTest.callGaugeTagAfterSetterCall PASSED
+   org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTest.histogramTagFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.HistogramTagFieldBeanTest.updateHistogramTagField PASSED
+   org.eclipse.microprofile.metrics.tck.tags.MeteredTagMethodBeanTest.meteredTagMethodRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.SimplerTimerTagFieldBeanTest.simpleTimersTagFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.SimplyTimedTagMethodBeanTest.simplyTimedTagMethodRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.simpleTagTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.lastTagValueTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.counterTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.meterTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.timerTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.histogramTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.simpleTimerTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.concurrentGuageTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TimedTagMethodBeanTest.timedTagMethodRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TimerTagFieldBeanTest.timersTagFieldRegistered PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationJsonResponseContentType PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testTextPlainResponseContentType PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBadSubTreeWillReturn404 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testListsAllJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBase PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseAttributeJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseSingularMetricsPresent PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseAttributeOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadata PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataSingluarItems PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataTypeAndUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOpenMetricsFormatNoBadChars PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataSingluarItemsOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testBaseMetadataGarbageCollection PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataOkJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testSetupApplicationMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetricsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataItems PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMetadataTypeAndUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTagJson PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTagOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationMeterUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationTimerUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationHistogramUnitBytesOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationHistogramUnitNoneOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOpenMetrics406ForOptions PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testConvertingToBaseUnit PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNonStandardUnitsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNonStandardUnitsOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testOptionalBaseMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testSetupPromNoBadCharsInNames PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testPromNoBadCharsInNames PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept1 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept2 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept3 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept4 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testAccept5 PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNoAcceptHeader PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testCustomUnitAppendToGaugeName PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testNoCustomUnitForCounter PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testGcCountMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testGcTimeMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testMultipleTaggedMetricsJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testTranslateSemiColonToUnderScoreJSON PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationConcurrentGaugeOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.MpMetricTest.testApplicationSimpleTimerUnitOpenMetrics PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.setA PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.testSharedCounter PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.setB PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.testSharedCounterAgain PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testMeter PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testTimer PASSED
+   org.eclipse.microprofile.metrics.test.multipleinstances.MultipleBeanInstancesTest.testCounter PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTGet PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTGetExplicit PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTOptions PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTHead PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTPut PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testSimpleRESTPost PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testDeleteNoParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetSingleParams PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetContextParams PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetListParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetMultiParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetNameObject PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetAsync PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostMultiParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testValidateGetJSONnoParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testValidateGetJSONParam PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetMappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostMappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testGetUnmappedArithException PASSED
+   org.eclipse.microprofile.metrics.test.optional.MpMetricOptionalTest.testPostUnmappedArithException PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.TimerTestnull
+Tests:17 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot99thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMin PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot98thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMean PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotSize PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot95thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotMedian PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotStdDev PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshotValues PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot999thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testSnapshot75thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testRate PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testTime PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.testTimerRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.timesCallableInstances PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimerTest.timesRunnableInstances PASSED
+Test suite: io.openliberty.microprofile.metrics30.internal.tck.launcher.FATSuite2021-11-21T02:08:08
+Tests:1 Failures:0 Errors:0
+   io.openliberty.microprofile.metrics30.internal.tck.launcher.MetricsTCKLauncher.launchTck PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.TagsTestnull
+Tests:8 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.simpleTagTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.lastTagValueTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.counterTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.meterTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.timerTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.histogramTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.simpleTimerTagsTest PASSED
+   org.eclipse.microprofile.metrics.tck.tags.TagsTest.concurrentGuageTagsTest PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTest.gaugeTagCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.tags.GaugeTagMethodBeanTest.callGaugeTagAfterSetterCall PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.CounterTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.getCountTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.incrementTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CounterTest.incrementLongTest PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTest.counterTagMethodsRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedMethodTagBeanTest.countedTagMethodNotCalledYet PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MultipleMetricsConstructorBeanTest.metricsConstructorCalled PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.SimpleTimerInjectionBeanTest.callSimplyTimedMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.MetricFilterTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.MetricFilterTest.theAllFilterMatchesAllMetrics PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.DefaultNameMetricMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.DefaultNameMetricMethodBeanTest.metricMethodsWithDefaultNamingConvention PASSED
+Test suite: org.eclipse.microprofile.metrics.test.ReusedMetricsTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.setA PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.testSharedCounter PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.setB PASSED
+   org.eclipse.microprofile.metrics.test.ReusedMetricsTest.testSharedCounterAgain PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTest.meteredMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredClassBeanTest.callMeteredMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.MetricIDTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.MetricIDTest.removalTest PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFieldBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimpleTimerFieldBeanTest.simpleTimerFieldsWithDefaultNamingConvention PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTest.testMinMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugeFunctionalTest.testConcurrentInvocations PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTest.counterTagFieldsRegistered PASSED
+   org.eclipse.microprofile.metrics.tck.tags.CounterFieldTagBeanTest.incrementCounterTagFields PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTest.gaugeCalledWithDefaultValue PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.GaugeInjectionBeanTest.callGaugeAfterSetterCall PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.GaugeTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.GaugeTest.testManualGauge PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanTest.removeSimpleTimerFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTest.timedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.ApplicationScopedTimedMethodBeanTest.callTimedMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.HistogramTestnull
+Tests:15 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSum PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testCount PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot99thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMax PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMin PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot98thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMean PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotSize PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot95thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testMetricRegistry PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotMedian PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotStdDev PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshotValues PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot999thPercentile PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.HistogramTest.testSnapshot75thPercentile PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedClassBeanTest.callSimplyTimedMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.tags.SimplyTimedTagMethodBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.tags.SimplyTimedTagMethodBeanTest.simplyTimedTagMethodRegistered PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTest.meteredMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.cdi.MeterInjectionBeanTest.callMeteredMethodOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.MeteredConstructorBeanTestnull
+Tests:1 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeteredConstructorBeanTest.meteredConstructorCalled PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilityTimedMethodBeanTest.callTimedMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTestnull
+Tests:3 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.simplyTimedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.callSimplyTimedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.SimplyTimedMethodBeanLookupTest.removeSimplyTimedFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.VisibilitySimplyTimedMethodBeanTest.callSimplyTimedMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTest.countedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.CountedClassBeanTest.callCountedMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.MeterTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.MeterTest.testCount PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.MeterTest.testRates PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTestnull
+Tests:4 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.countedMethodNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.metricInjectionIntoTest PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.callCountedMethodOnce PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.ConcurrentGaugedMethodBeanTest.removeCounterFromRegistry PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTest.timedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.metrics.TimedClassBeanTest.callTimedMethodsOnce PASSED
+Test suite: org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTestnull
+Tests:2 Failures:0 Errors:0
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTest.simplyTimedMethodsNotCalledYet PASSED
+   org.eclipse.microprofile.metrics.tck.inheritance.InheritedSimplyTimedMethodBeanTest.callSimplyTimedMethodsOnce PASSED</code></pre>
+</div>
+</div>
+</div>
+</div>
+        </div>
+    </article>
+    <br>
+</div>
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

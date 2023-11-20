@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      
+        Running a Spring Boot MVC application as a WAR file - Open Liberty
+      
+    
+  </title>
+  <meta name="description" content="Learn how to run a Spring Boot MVC application as a WAR file in Open Liberty instead of an embedded container.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-singlepane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/springboot-mvc">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Open Liberty" />
+  <meta name="twitter:description" content="Learn how to run a Spring Boot MVC application as a WAR file in Open Liberty instead of an embedded container." />
+
+  <meta property='og:title' content="Open Liberty" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="Learn how to run a Spring Boot MVC application as a WAR file in Open Liberty instead of an embedded container." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/springboot-mvc" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div class="toc_hotspot">
+    <!-- Guide's table of contents section -->
+    <div id="toc_column" class="collapse inline open">
+      <div id="toc_inner">
+         
+        <div id="close_container">
+          <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+        </div>
+        <h3 id="toc_title">Contents</h3>
+        <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#running-the-application-in-embedded-tomcat">Running the application in embedded Tomcat</a></li>
+</ul>
+</li>
+<li>
+<a href="#modifying-the-pom">Modifying the POM</a>
+<ul class="sectlevel2">
+<li><a href="#changing-the-packaging-type">Changing the packaging type</a></li>
+<li><a href="#adding-pom-properties">Adding POM properties</a></li>
+<li><a href="#adding-and-modifying-dependencies">Adding and modifying dependencies</a></li>
+<li><a href="#adding-the-liberty-maven-plugin">Adding the Liberty Maven Plugin</a></li>
+<li><a href="#completed-pom-xml">Completed pom.xml</a></li>
+</ul>
+</li>
+<li><a href="#configuring-the-server">Configuring the server</a></li>
+<li><a href="#changing-the-application-startup-process">Changing the application startup process</a></li>
+<li><a href="#building-and-running-the-application">Building and running the application</a></li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#contribute-to-this-guide">Contribute to this guide</a></li>
+</ul></div>
+        <div id="toc_separator"></div>
+        
+        <h3 id="tag_title">标签</h3>
+        <div id="tags_container"></div>
+      </div>
+    </div>
+    <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+      <img src="/img/arrow_white.svg" alt="arrow">
+    </div>
+    <div id="toc_line" class="open"></div>
+    <!-- Entire guide section -->
+    <div id="guide_column" class="position_relative open">
+      <div id="guide_content">
+        <!-- Guide header section -->
+        <div id="guide_meta" class="sect1" tabindex="0">
+          <h1 id="guide_title">Running a Spring Boot MVC application as a WAR file</h1>
+          <div id="duration_container">
+            <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+            <span id="guide_duration">20 minutes</span>
+
+            <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+            <!-- If new posts count is less than 4, use 4 most recent posts -->
+             
+            <!-- If new posts count is >= 4, use posts from last 30 days-->
+            
+            <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+            <!-- Count number of guides from past last 12 weeks that is 84 days-->
+            <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+            
+          </div>
+          <div id="mobile_prereqs_section">
+            <p id="mobile_prereqs_title">Prerequisites:</p>
+            <div class="prereqs_list"></div>
+          </div>
+        </div>
+
+        <div class="scroller_anchor"></div>
+        <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+          <div role="menuitem" id="mobile_toc_accordion">
+            <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <img src="/img/toc_close_green.svg" class="hidden img-responsive" alt="Table of contents close button">
+            </button>
+            <span>Table of contents</span>
+          </div>
+        </div>
+
+        <!-- Guide content section -->
+        <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/springboot-mvc.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to run a Spring Boot Model-View-Controller (MVC) application as a WAR file in Open Liberty instead of an embedded container.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to use Maven to run a sample Spring Boot Model-View-Controller (MVC) application as a WAR file in Open Liberty. The sample application that you will be working with is from Spring’s <a href="https://spring.io/guides/gs/serving-web-content/" target="_blank" rel="noopener noreferrer">Serving Web Content with Spring MVC</a> guide. If you are not familiar with Spring Boot or Spring MVC, it will be helpful to to complete that guide before proceeding.</p>
+</div>
+<div class="paragraph">
+<p>Three main steps are required to build the WAR file from the Spring Boot MVC application. First, you will modify the project POM, primarily to remove Tomcat and add the Liberty Maven Plugin. Next, you will configure the Open Liberty server through a <code>server.xml</code> file. Finally, you will modify the application to run from a traditional WAR deployment. After these steps are complete, you will package and deploy the application to Open Liberty. This guide will not cover running the Spring Boot MVC test cases in Open Liberty, and the starting project does not include test code or dependencies.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-springboot-mvc.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-springboot-mvc.git
+cd guide-springboot-mvc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2">
+<h3 id="running-the-application-in-embedded-tomcat">Running the application in embedded Tomcat</h3>
+<div class="paragraph">
+<p>You might first want to run the initial Spring Boot application without modifications. Move to the <code>start</code> directory and run the sample application in embedded Tomcat. Java 8 or later is required.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cd start
+mvn spring-boot:run</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice that the console output will display that the application is running in Tomcat on port 8080. Now access the application at the following URL: <a href="http://localhost:8080/greeting?name=GreetingApplication" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:8080/greeting?name=GreetingApplication</a></p>
+</div>
+<div class="paragraph">
+<p>You’ll see from the page output that the <code>name</code> request parameter from the URL was received and handled:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Hello, GreetingApplication!</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You are now ready to build the application into a WAR file and run in Open Liberty instead of embedded Tomcat.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="modifying-the-pom">Modifying the POM</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will modify the <code>pom.xml</code> file in several steps. For reference, the completed <code>pom.xml</code> is provided at the end of this section.</p>
+</div>
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="sect2">
+<h3 id="changing-the-packaging-type">Changing the packaging type</h3>
+<div class="paragraph">
+<p>Start by setting the application packaging type to liberty-assembly. No packaging type is specified in the starting project, so add <code>&lt;packaging&gt;liberty-assembly&lt;/packaging&gt;</code> after <code>&lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</code> in the POM.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-pom-properties">Adding POM properties</h3>
+<div class="paragraph">
+<p>Next, add the <code>&lt;start-class&gt;hello.Application&lt;/start-class&gt;</code> property to the <code>properties</code> block, which should look this afterwards:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;properties&gt;</span>
+    <span class="tag">&lt;java.version&gt;</span>1.8<span class="tag">&lt;/java.version&gt;</span>
+    <span class="tag">&lt;start-class&gt;</span>hello.Application<span class="tag">&lt;/start-class&gt;</span>
+<span class="tag">&lt;/properties&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start-class</code> property references the fully qualified Spring Boot startup class; in this case <code>src/main/java/hello/Application.java</code>. This property indicates the main class to use for the runnable JAR.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-and-modifying-dependencies">Adding and modifying dependencies</h3>
+<div class="paragraph">
+<p>In the project dependencies, the <code>spring-boot-starter-thymeleaf</code> artifact depends on the <code>spring-boot-starter-web</code> dependency. Because <code>spring-boot-starter-web</code> uses Tomcat as the default embedded server, you will need to exclude it in your configuration to run your application on Open Liberty. Modify the <code>spring-boot-starter-thymeleaf</code> dependency definition to look like this:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-thymeleaf<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;exclusions&gt;</span>
+        <span class="tag">&lt;exclusion&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-tomcat<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;/exclusion&gt;</span>
+    <span class="tag">&lt;/exclusions&gt;</span>
+<span class="tag">&lt;/dependency&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also remove the <code>spring-boot-devtools</code> dependency since you are running on Open Liberty.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-the-liberty-maven-plugin">Adding the Liberty Maven Plugin</h3>
+<div class="paragraph">
+<p>Finally, replace the <code>spring-boot-maven-plugin</code> configuration with the <code>liberty-maven-plugin</code> configuration inside the <code>&lt;build&gt; &lt;plugins&gt;</code> block:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;plugin&gt;</span>
+    <span class="tag">&lt;groupId&gt;</span>net.wasdev.wlp.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>2.6<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;extensions&gt;</span>true<span class="tag">&lt;/extensions&gt;</span>
+    <span class="comment">&lt;!-- Specify configuration, executions for liberty-maven-plugin --&gt;</span>
+    <span class="tag">&lt;configuration&gt;</span>
+        <span class="tag">&lt;serverName&gt;</span>MVCServer<span class="tag">&lt;/serverName&gt;</span>
+        <span class="tag">&lt;assemblyArtifact&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>io.openliberty<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>openliberty-runtime<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;version&gt;</span>RELEASE<span class="tag">&lt;/version&gt;</span>
+            <span class="tag">&lt;type&gt;</span>zip<span class="tag">&lt;/type&gt;</span>
+        <span class="tag">&lt;/assemblyArtifact&gt;</span>
+        <span class="tag">&lt;configFile&gt;</span>src/main/liberty/config/server.xml<span class="tag">&lt;/configFile&gt;</span>
+        <span class="tag">&lt;assemblyInstallDirectory&gt;</span>${project.build.directory}/liberty<span class="tag">&lt;/assemblyInstallDirectory&gt;</span>
+        <span class="tag">&lt;packageFile&gt;</span>${project.build.directory}/MVCServerPackage.jar<span class="tag">&lt;/packageFile&gt;</span>
+        <span class="tag">&lt;features&gt;</span>
+            <span class="tag">&lt;acceptLicense&gt;</span>true<span class="tag">&lt;/acceptLicense&gt;</span>
+        <span class="tag">&lt;/features&gt;</span>
+        <span class="tag">&lt;include&gt;</span>runnable<span class="tag">&lt;/include&gt;</span>
+        <span class="tag">&lt;installAppPackages&gt;</span>all<span class="tag">&lt;/installAppPackages&gt;</span>
+        <span class="tag">&lt;appsDirectory&gt;</span>apps<span class="tag">&lt;/appsDirectory&gt;</span>
+        <span class="tag">&lt;stripVersion&gt;</span>true<span class="tag">&lt;/stripVersion&gt;</span>
+        <span class="tag">&lt;looseApplication&gt;</span>true<span class="tag">&lt;/looseApplication&gt;</span>
+        <span class="tag">&lt;skipTestServer&gt;</span>true<span class="tag">&lt;/skipTestServer&gt;</span>
+    <span class="tag">&lt;/configuration&gt;</span>
+<span class="tag">&lt;/plugin&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this plugin, you specify an Open Liberty server called <code>MVCServer</code> which the application will be deployed to. You also set <code>&lt;include&gt;runnable&lt;/include&gt;</code> to indicate that the application will be packaged into a runnable JAR, which is set to be called <code>MVCServerPackage.jar</code> in the <code>&lt;packageFile&gt;</code> parameter.</p>
+</div>
+<div class="paragraph">
+<p>Further documentation of the plugin configuration is provided in the <a href="https://github.com/WASdev/ci.maven" target="_blank" rel="noopener noreferrer">ci.maven</a> repository.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="completed-pom-xml">Completed pom.xml</h3>
+<div class="paragraph">
+<p>After updating your <code>pom.xml</code>, it should look as shown in the following example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span>
+    <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+
+    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+    <span class="tag">&lt;artifactId&gt;</span>guide-spring-boot-mvc<span class="tag">&lt;/artifactId&gt;</span>
+    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;packaging&gt;</span>liberty-assembly<span class="tag">&lt;/packaging&gt;</span>
+
+    <span class="tag">&lt;parent&gt;</span>
+        <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+        <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;version&gt;</span>2.0.1.RELEASE<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;/parent&gt;</span>
+
+    <span class="tag">&lt;dependencies&gt;</span>
+        <span class="tag">&lt;dependency&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-web<span class="tag">&lt;/artifactId&gt;</span>
+        <span class="tag">&lt;/dependency&gt;</span>
+        <span class="tag">&lt;dependency&gt;</span>
+            <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+            <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-thymeleaf<span class="tag">&lt;/artifactId&gt;</span>
+            <span class="tag">&lt;exclusions&gt;</span>
+                <span class="tag">&lt;exclusion&gt;</span>
+                    <span class="tag">&lt;groupId&gt;</span>org.springframework.boot<span class="tag">&lt;/groupId&gt;</span>
+                    <span class="tag">&lt;artifactId&gt;</span>spring-boot-starter-tomcat<span class="tag">&lt;/artifactId&gt;</span>
+                <span class="tag">&lt;/exclusion&gt;</span>
+            <span class="tag">&lt;/exclusions&gt;</span>
+        <span class="tag">&lt;/dependency&gt;</span>
+    <span class="tag">&lt;/dependencies&gt;</span>
+
+    <span class="tag">&lt;properties&gt;</span>
+        <span class="tag">&lt;java.version&gt;</span>1.8<span class="tag">&lt;/java.version&gt;</span>
+        <span class="tag">&lt;start-class&gt;</span>hello.Application<span class="tag">&lt;/start-class&gt;</span>
+    <span class="tag">&lt;/properties&gt;</span>
+
+    <span class="tag">&lt;build&gt;</span>
+        <span class="tag">&lt;plugins&gt;</span>
+            <span class="tag">&lt;plugin&gt;</span>
+                <span class="tag">&lt;groupId&gt;</span>net.wasdev.wlp.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+                <span class="tag">&lt;version&gt;</span>2.6<span class="tag">&lt;/version&gt;</span>
+                <span class="tag">&lt;extensions&gt;</span>true<span class="tag">&lt;/extensions&gt;</span>
+                <span class="comment">&lt;!-- Specify configuration, executions for liberty-maven-plugin --&gt;</span>
+                <span class="tag">&lt;configuration&gt;</span>
+                    <span class="tag">&lt;serverName&gt;</span>MVCServer<span class="tag">&lt;/serverName&gt;</span>
+                    <span class="tag">&lt;assemblyArtifact&gt;</span>
+                        <span class="tag">&lt;groupId&gt;</span>io.openliberty<span class="tag">&lt;/groupId&gt;</span>
+                        <span class="tag">&lt;artifactId&gt;</span>openliberty-runtime<span class="tag">&lt;/artifactId&gt;</span>
+                        <span class="tag">&lt;version&gt;</span>RELEASE<span class="tag">&lt;/version&gt;</span>
+                        <span class="tag">&lt;type&gt;</span>zip<span class="tag">&lt;/type&gt;</span>
+                    <span class="tag">&lt;/assemblyArtifact&gt;</span>
+                    <span class="tag">&lt;configFile&gt;</span>src/main/liberty/config/server.xml<span class="tag">&lt;/configFile&gt;</span>
+                    <span class="tag">&lt;assemblyInstallDirectory&gt;</span>${project.build.directory}/liberty<span class="tag">&lt;/assemblyInstallDirectory&gt;</span>
+                    <span class="tag">&lt;packageFile&gt;</span>${project.build.directory}/MVCServerPackage.jar<span class="tag">&lt;/packageFile&gt;</span>
+                    <span class="tag">&lt;features&gt;</span>
+                        <span class="tag">&lt;acceptLicense&gt;</span>true<span class="tag">&lt;/acceptLicense&gt;</span>
+                    <span class="tag">&lt;/features&gt;</span>
+                    <span class="tag">&lt;include&gt;</span>runnable<span class="tag">&lt;/include&gt;</span>
+                    <span class="tag">&lt;installAppPackages&gt;</span>all<span class="tag">&lt;/installAppPackages&gt;</span>
+                    <span class="tag">&lt;appsDirectory&gt;</span>apps<span class="tag">&lt;/appsDirectory&gt;</span>
+                    <span class="tag">&lt;stripVersion&gt;</span>true<span class="tag">&lt;/stripVersion&gt;</span>
+                    <span class="tag">&lt;looseApplication&gt;</span>true<span class="tag">&lt;/looseApplication&gt;</span>
+                    <span class="tag">&lt;skipTestServer&gt;</span>true<span class="tag">&lt;/skipTestServer&gt;</span>
+                <span class="tag">&lt;/configuration&gt;</span>
+            <span class="tag">&lt;/plugin&gt;</span>
+        <span class="tag">&lt;/plugins&gt;</span>
+    <span class="tag">&lt;/build&gt;</span>
+    
+<span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-the-server">Configuring the server</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Next, provide the configuration for the Open Liberty server. Create a <code>src/main/liberty/config/server.xml</code> server configuration file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="preprocessor">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">new server</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+    <span class="tag">&lt;application</span> <span class="attribute-name">context-root</span>=<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span>
+        <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-spring-boot-mvc.war</span><span class="delimiter">"</span></span><span class="tag">&gt;</span><span class="tag">&lt;/application&gt;</span>
+
+    <span class="tag">&lt;featureManager&gt;</span>
+        <span class="tag">&lt;feature&gt;</span>servlet-4.0<span class="tag">&lt;/feature&gt;</span>
+    <span class="tag">&lt;/featureManager&gt;</span>
+
+    <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">9080</span><span class="delimiter">"</span></span>
+        <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">9443</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;applicationManager</span> <span class="attribute-name">autoExpand</span>=<span class="string"><span class="delimiter">"</span><span class="content">true</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+
+    <span class="tag">&lt;webContainer</span> <span class="attribute-name">deferServletLoad</span>=<span class="string"><span class="delimiter">"</span><span class="content">false</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+
+<span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the server configuration, the application context root is mapped to the server root directory. The <code>servlet-3.1</code> feature is also needed for running the application. The <code>&lt;applicationManager autoExpand="true" /&gt;</code> configuration automatically expands the WAR file and the <code>&lt;webContainer deferServletLoad="false"/&gt;</code> configuration automatically loads the Spring application endpont once the server is ready.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="changing-the-application-startup-process">Changing the application startup process</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Traditionally, a Spring Boot application running on an embedded server such as Tomcat calls <code>SpringApplication.run(…​)</code> in its main class. In this case, the main class is <code>hello.Application</code>. However, your class needs to extend <code>SpringBootServletInitializer</code> when being deployed to an Open Liberty server. Replace the original code in <code>src/main/java/hello/Application.java</code> with the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="keyword">package</span> <span class="namespace">hello</span>;
+
+<span class="keyword">import</span> <span class="include">org.springframework.boot.autoconfigure.SpringBootApplication</span>;
+<span class="keyword">import</span> <span class="include">org.springframework.boot.builder.SpringApplicationBuilder</span>;
+<span class="keyword">import</span> <span class="include">org.springframework.boot.web.servlet.support.SpringBootServletInitializer</span>;
+
+<span class="annotation">@SpringBootApplication</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">Application</span> <span class="directive">extends</span> SpringBootServletInitializer {
+
+    <span class="annotation">@Override</span>
+    <span class="directive">protected</span> SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        <span class="keyword">return</span> application.sources(Application.class);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also recall that you previously set the <code>&lt;start-class&gt;</code> parameter in the POM properties above to <code>hello.Application</code>. This tells the server that your application starts its execution from this class.</p>
+</div>
+<div class="paragraph">
+<p>This concludes the code changes; you are now ready to build and run your application in Open Liberty.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-and-running-the-application">Building and running the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To build the application, run the Maven <code>install</code> phase from the active command-line session in the <code>start</code> directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command builds the application and creates a <code>.war</code> file in the target directory. It also configures and installs Open Liberty into the <code>target/liberty/wlp</code> directory.</p>
+</div>
+<div class="paragraph">
+<p>Next, run the Maven <code>liberty:start-server</code> goal:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:start-server</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This goal starts an Open Liberty server instance. Your Maven <code>pom.xml</code> is already configured to start the application in this server instance.</p>
+</div>
+<div class="paragraph">
+<p>Now verify that your Spring Boot application is running in Open Liberty. Navigate to the following URL: <a href="http://localhost:9080/greeting?name=GreetingApplication" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080/greeting?name=GreetingApplication</a>. Notice that the port has changed to 9080, as this is the default port used by Open Liberty. You will see the same output on this page as in the starting application.</p>
+</div>
+<div class="paragraph">
+<p>If you make changes to the code, use the Maven <code>compile</code> goal to rebuild the application and have the
+running Open Liberty instance pick them up automatically:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn compile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To stop the Open Liberty instance, run the Maven <code>liberty:stop-server</code> goal:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:stop-server</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You built a WAR file from a basic Spring Boot MVC application to run in Open Liberty.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="contribute-to-this-guide">Contribute to this guide</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Is something missing or broken? Raise an <a href="https://github.com/OpenLiberty/guide-springboot-mvc/issues" target="_blank" rel="noopener noreferrer">issue</a>,
+or send us a <a href="https://github.com/OpenLiberty/guide-springboot-mvc/pulls" target="_blank" rel="noopener noreferrer">pull request</a>.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/OpenLiberty/guide-springboot-mvc" target="_blank" rel="noopener noreferrer">View this guide on GitHub</a>.</p>
+</div>
+</div>
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="end_of_guide_background">
+  <div class="centered_content">
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-springboot-mvc/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-springboot-mvc/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-springboot-mvc/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+        </div>
+    </div>
+</div>
+</div>
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

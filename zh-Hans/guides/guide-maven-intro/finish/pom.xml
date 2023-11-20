@@ -1,0 +1,132 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- tag::project[] -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<!-- end::project[] -->
+    <!-- tag::modelVersion[] -->
+    <modelVersion>4.0.0</modelVersion>
+    <!-- end::modelVersion[] -->
+
+    <groupId>io.openliberty.guides</groupId>
+    <!-- tag::artifactID[] -->
+    <artifactId>ServletSample</artifactId>
+    <!-- end::artifactID[] -->
+    <!-- tag::packaging[] -->
+    <packaging>war</packaging>
+    <!-- end::packaging[] -->
+    <version>1.0-SNAPSHOT</version>
+
+    <!-- tag::properties[] -->
+    <properties>
+        <!-- tag::encoding[] -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- end::encoding[] -->
+        <!-- tag::java-version[] -->
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <!-- end::java-version[] -->
+        <!-- Liberty configuration -->
+        <!-- tag::default-http-port[] -->
+        <liberty.var.default.http.port>9080</liberty.var.default.http.port>
+        <!-- end::default-http-port[] -->
+        <liberty.var.default.https.port>9443</liberty.var.default.https.port>
+        <liberty.var.app.context.root>${project.artifactId}</liberty.var.app.context.root>
+    </properties>
+    <!-- end::properties[] -->
+
+    <!-- tag::dependencies[] -->
+    <dependencies>
+        <!-- Provided dependencies -->
+        <!-- tag::jakarta.jakartaee-api[] -->
+        <dependency>
+            <!-- tag::groupID-api[] -->
+            <groupId>jakarta.platform</groupId>
+            <!-- end::groupID-api[] -->
+            <!-- tag::artifactID-api[] -->
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <!-- end::artifactID-api[] -->
+            <!-- tag::version-api[] -->
+            <version>10.0.0</version>
+            <!-- end::version-api[] -->
+            <!-- tag::scope-api[] -->
+            <scope>provided</scope>
+            <!-- end::scope-api[] -->
+        </dependency>
+        <!-- end::jakarta.jakartaee-api[] -->
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>6.0</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+        <!-- For testing -->
+        <!-- tag::commons-httpclient[] -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.14</version>
+            <!-- tag::test1[] -->
+            <scope>test</scope>
+            <!-- end::test1[] -->
+        </dependency>
+        <!-- end::commons-httpclient[] -->
+        <!-- tag::junit[] -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.2</version>
+            <!-- tag::test2[] -->
+            <scope>test</scope>
+            <!-- end::test2[] -->
+        </dependency>
+        <!-- end::junit[] -->
+    </dependencies>
+    <!-- end::dependencies[] -->
+
+    <!-- tag::build[] -->
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+            </plugin>
+            <!-- tag::liberty-maven-plugin[] -->
+            <plugin>
+                <groupId>io.openliberty.tools</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+                <version>3.8.2</version>
+                <!-- tag::configuration[] -->
+                <configuration>
+                    <!-- tag::serverName[] -->
+                    <serverName>guideServer</serverName>
+                    <!-- end::serverName[] -->
+                </configuration>
+                <!-- end::configuration[] -->
+            </plugin>
+            <!-- end::liberty-maven-plugin[] -->
+            <!-- tag::maven-failsafe-plugin[] -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <!-- tag::system-property-variables[] -->
+                    <systemPropertyVariables>
+                        <!-- tag::http-port[] -->
+                        <http.port>${liberty.var.default.http.port}</http.port>
+                        <!-- end::http-port[] -->
+                        <!-- tag::war-name[] -->
+                        <war.name>${liberty.var.app.context.root}</war.name>
+                        <!-- end::war-name[] -->
+                    </systemPropertyVariables>
+                    <!-- end::system-property-variables[] -->
+                </configuration>
+            </plugin>
+            <!-- end::maven-failsafe-plugin[] -->
+        </plugins>
+    </build>
+    <!-- end::build[] -->
+</project>

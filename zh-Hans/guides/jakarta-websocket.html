@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Streaming messages between client and server services using Jakarta WebSocket
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples on how to stream messages between frontend clients and backend services for full-duplex communication in Java using Jakarta WebSocket API.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/jakarta-websocket">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Streaming messages between client and server services using Jakarta WebSocket" />
+  <meta name="twitter:description" content="A getting started tutorial with examples on how to stream messages between frontend clients and backend services for full-duplex communication in Java using Jakarta WebSocket API." />
+
+  <meta property='og:title' content="Streaming messages between client and server services using Jakarta WebSocket" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples on how to stream messages between frontend clients and backend services for full-duplex communication in Java using Jakarta WebSocket API." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/jakarta-websocket" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li><a href="#creating-the-websocket-server-service">Creating the WebSocket server service</a></li>
+<li><a href="#creating-the-client-service">Creating the client service</a></li>
+<li><a href="#running-the-application">Running the application</a></li>
+<li>
+<a href="#testing-the-application">Testing the application</a>
+<ul class="sectlevel2">
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Bidirectional communication between services using Jakarta WebSocket</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">25 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/jakarta-websocket.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to use Jakarta WebSocket to send and receive messages between services without closing the connection.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Jakarta WebSocket enables two-way communication between client and server endpoints. First, each client makes an HTTP connection to a Jakarta WebSocket server. The server can then broadcast messages to the clients. <a href="https://openliberty.io/guides/reactive-messaging-sse.html" target="_blank" rel="noopener">Server-Sent Events (SSE)</a> also enables a client to receive automatic updates from a server via an HTTP connection however WebSocket differs from Server-Sent Events in that SSE is unidirectional from server to client, whereas WebSocket is bidirectional. WebSocket also enables real-time updates over a smaller bandwidth than SSE. The connection isn’t closed meaning that the client can continue to send and receive messages with the server, without having to poll the server to receive any replies.</p>
+</div>
+<div class="paragraph">
+<p>The application that you will build in this guide consists of the <code>client</code> service and the <code>system</code> server service. The following diagram depicts the application that is used in this guide.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/jakarta-websocket/architecture.png" alt="Application architecture where system and client services use the Jakarta Websocket API to connect and communicate.">
+</div>
+</div>
+<div class="paragraph">
+<p>You’ll learn how to use the <a href="https://openliberty.io/docs/latest/reference/javadoc/liberty-jakartaee9.1-javadoc.html?package=jakarta/websocket/package-frame.html&amp;class=overview-summary.html" target="_blank" rel="noopener">Jakarta WebSocket API</a> to build the <code>system</code> service and the scheduler in the <code>client</code> service. The scheduler pushes messages to the system service every 10 seconds, then the system service broadcasts the messages to any connected clients. You will also learn how to use a JavaScript <code>WebSocket</code> object in an HTML file to build a WebSocket connection, subscribe to different events, and display the broadcasting messages from the <code>system</code> service in a table.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-jakarta-websocket.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-jakarta-websocket.git
+cd guide-jakarta-websocket</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>To try out the application, go to the finish directory and run the following Maven goal to build the <code>system</code> service and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn -pl system liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, open another command-line session and run the following command to start the <code>client</code> service:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn -pl client liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message in both command-line sessions, both your services are ready.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>The defaultServer is ready to run a smarter planet.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Check out the service at the <a href="http://localhost:9080" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080</a> URL. See that the table is being updated for every 10 seconds.</p>
+</div>
+<div class="paragraph">
+<p>After you are finished checking out the application, stop both the <code>system</code> and <code>client</code> services by pressing <code>CTRL+C</code> in the command-line sessions where you ran them. Alternatively, you can run the following goals from the <code>finish</code> directory in another command-line session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn -pl system liberty:stop
+mvn -pl client liberty:stop</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-websocket-server-service">Creating the WebSocket server service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this section, you will create the <code>system</code> WebSocket server service that broadcasts messages to clients.</p>
+</div>
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following command to start the <code>system</code> service in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn -pl system liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>**************************************************
+*     Liberty is running in dev mode.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>system</code> service is responsible for handling the messages produced by the <code>client</code> scheduler, building system load messages, and forwarding them to clients.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the SystemService class.</mark>
+<code>system/src/main/java/io/openliberty/guides/system/SystemService.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemService.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2022, 2023 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.system</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.lang.management.ManagementFactory</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">java.lang.management.MemoryMXBean</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.lang.management.OperatingSystemMXBean</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">java.util.Calendar</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">java.util.HashSet</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">java.util.Set</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">java.util.logging.Logger</span>;
+<span class="line-numbers"> 21</span>
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.json.Json</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObject</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObjectBuilder</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">jakarta.websocket.CloseReason</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">jakarta.websocket.OnClose</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">jakarta.websocket.OnError</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">jakarta.websocket.OnMessage</span>;
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">jakarta.websocket.OnOpen</span>;
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">jakarta.websocket.Session</span>;
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">jakarta.websocket.server.ServerEndpoint</span>;
+<span class="line-numbers"> 32</span>
+<span class="line-numbers"> 33</span><span class="comment">// tag::serverEndpoint[]</span>
+<span class="line-numbers"> 34</span><span class="annotation">@ServerEndpoint</span>(value = <span class="string"><span class="delimiter">"</span><span class="content">/systemLoad</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 35</span>                decoders = { SystemLoadDecoder.class },
+<span class="line-numbers"> 36</span>                encoders = { SystemLoadEncoder.class })
+<span class="line-numbers"> 37</span><span class="comment">// end::serverEndpoint[]</span>
+<span class="line-numbers"> 38</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemService</span> {
+<span class="line-numbers"> 39</span>
+<span class="line-numbers"> 40</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">Logger</span> logger = <span class="predefined-type">Logger</span>.getLogger(SystemService.class.getName());
+<span class="line-numbers"> 41</span>
+<span class="line-numbers"> 42</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">Set</span>&lt;Session&gt; sessions = <span class="keyword">new</span> <span class="predefined-type">HashSet</span>&lt;&gt;();
+<span class="line-numbers"> 43</span>
+<span class="line-numbers"> 44</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">OperatingSystemMXBean</span> OS =
+<span class="line-numbers"> 45</span>        <span class="predefined-type">ManagementFactory</span>.getOperatingSystemMXBean();
+<span class="line-numbers"> 46</span>
+<span class="line-numbers"> 47</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">MemoryMXBean</span> MEM =
+<span class="line-numbers"> 48</span>        <span class="predefined-type">ManagementFactory</span>.getMemoryMXBean();
+<span class="line-numbers"> 49</span>
+<span class="line-numbers"> 50</span>    <span class="comment">// tag::sendToAllSessionseMethod[]</span>
+<span class="line-numbers"> 51</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> sendToAllSessions(JsonObject systemLoad) {
+<span class="line-numbers"> 52</span>        <span class="keyword">for</span> (Session session : sessions) {
+<span class="line-numbers"> 53</span>            <span class="keyword">try</span> {
+<span class="line-numbers"> 54</span>                session.getBasicRemote().sendObject(systemLoad);
+<span class="line-numbers"> 55</span>            } <span class="keyword">catch</span> (<span class="exception">Exception</span> e) {
+<span class="line-numbers"> 56</span>                e.printStackTrace();
+<span class="line-numbers"> 57</span>            }
+<span class="line-numbers"> 58</span>        }
+<span class="line-numbers"> 59</span>    }
+<span class="line-numbers"> 60</span>    <span class="comment">// end::sendToAllSessionseMethod[]</span>
+<span class="line-numbers"> 61</span>
+<span class="line-numbers"> 62</span>    <span class="comment">// tag::onOpenMethod[]</span>
+<span class="line-numbers"> 63</span>    <span class="comment">// tag::onOpen[]</span>
+<span class="line-numbers"> 64</span>    <span class="annotation">@OnOpen</span>
+<span class="line-numbers"> 65</span>    <span class="comment">// end::onOpen[]</span>
+<span class="line-numbers"> 66</span>    <span class="directive">public</span> <span class="type">void</span> onOpen(Session session) {
+<span class="line-numbers"> 67</span>        logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Server connected to session: </span><span class="delimiter">"</span></span> + session.getId());
+<span class="line-numbers"> 68</span>        sessions.add(session);
+<span class="line-numbers"> 69</span>    }
+<span class="line-numbers"> 70</span>    <span class="comment">// end::onOpenMethod[]</span>
+<span class="line-numbers"> 71</span>
+<span class="line-numbers"> 72</span>    <span class="comment">// tag::onMessageMethod[]</span>
+<span class="line-numbers"> 73</span>    <span class="comment">// tag::onMessage[]</span>
+<span class="line-numbers"> 74</span>    <span class="annotation">@OnMessage</span>
+<span class="line-numbers"> 75</span>    <span class="comment">// end::onMessage[]</span>
+<span class="line-numbers"> 76</span>    <span class="directive">public</span> <span class="type">void</span> onMessage(<span class="predefined-type">String</span> option, Session session) {
+<span class="line-numbers"> 77</span>        logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Server received message </span><span class="char">\"</span><span class="delimiter">"</span></span> + option + <span class="string"><span class="delimiter">"</span><span class="char">\"</span><span class="content"> </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 78</span>                    + <span class="string"><span class="delimiter">"</span><span class="content">from session: </span><span class="delimiter">"</span></span> + session.getId());
+<span class="line-numbers"> 79</span>        <span class="keyword">try</span> {
+<span class="line-numbers"> 80</span>            JsonObjectBuilder builder = Json.createObjectBuilder();
+<span class="line-numbers"> 81</span>            builder.add(<span class="string"><span class="delimiter">"</span><span class="content">time</span><span class="delimiter">"</span></span>, <span class="predefined-type">Calendar</span>.getInstance().getTime().toString());
+<span class="line-numbers"> 82</span>            <span class="comment">// tag::loadAverage[]</span>
+<span class="line-numbers"> 83</span>            <span class="keyword">if</span> (option.equalsIgnoreCase(<span class="string"><span class="delimiter">"</span><span class="content">loadAverage</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 84</span>                || option.equalsIgnoreCase(<span class="string"><span class="delimiter">"</span><span class="content">both</span><span class="delimiter">"</span></span>)) {
+<span class="line-numbers"> 85</span>            <span class="comment">// end::loadAverage[]</span>
+<span class="line-numbers"> 86</span>                builder.add(<span class="string"><span class="delimiter">"</span><span class="content">loadAverage</span><span class="delimiter">"</span></span>, <span class="predefined-type">Double</span>.valueOf(OS.getSystemLoadAverage()));
+<span class="line-numbers"> 87</span>            }
+<span class="line-numbers"> 88</span>            <span class="comment">// tag::memoryUsageOrBoth[]</span>
+<span class="line-numbers"> 89</span>            <span class="keyword">if</span> (option.equalsIgnoreCase(<span class="string"><span class="delimiter">"</span><span class="content">memoryUsage</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 90</span>                || option.equalsIgnoreCase(<span class="string"><span class="delimiter">"</span><span class="content">both</span><span class="delimiter">"</span></span>)) {
+<span class="line-numbers"> 91</span>            <span class="comment">// end::memoryUsageOrBoth[]</span>
+<span class="line-numbers"> 92</span>                <span class="type">long</span> heapMax = MEM.getHeapMemoryUsage().getMax();
+<span class="line-numbers"> 93</span>                <span class="type">long</span> heapUsed = MEM.getHeapMemoryUsage().getUsed();
+<span class="line-numbers"> 94</span>                builder.add(<span class="string"><span class="delimiter">"</span><span class="content">memoryUsage</span><span class="delimiter">"</span></span>, <span class="predefined-type">Double</span>.valueOf(heapUsed * <span class="float">100.0</span> / heapMax));
+<span class="line-numbers"> 95</span>            }
+<span class="line-numbers"> 96</span>            <span class="comment">// tag::sendToAllSessions[]</span>
+<span class="line-numbers"> 97</span>            JsonObject systemLoad = builder.build();
+<span class="line-numbers"> 98</span>            sendToAllSessions(systemLoad);
+<span class="line-numbers"> 99</span>            <span class="comment">// end::sendToAllSessions[]</span>
+<span class="line-numbers">100</span>        } <span class="keyword">catch</span> (<span class="exception">Exception</span> e) {
+<span class="line-numbers">101</span>            e.printStackTrace();
+<span class="line-numbers">102</span>        }
+<span class="line-numbers">103</span>    }
+<span class="line-numbers">104</span>    <span class="comment">// end::onMessageMethod[]</span>
+<span class="line-numbers">105</span>
+<span class="line-numbers">106</span>    <span class="comment">// tag::onCloseMethod[]</span>
+<span class="line-numbers">107</span>    <span class="comment">// tag::onClose[]</span>
+<span class="line-numbers">108</span>    <span class="annotation">@OnClose</span>
+<span class="line-numbers">109</span>    <span class="comment">// end::onClose[]</span>
+<span class="line-numbers">110</span>    <span class="directive">public</span> <span class="type">void</span> onClose(Session session, CloseReason closeReason) {
+<span class="line-numbers">111</span>        logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Session </span><span class="delimiter">"</span></span> + session.getId()
+<span class="line-numbers">112</span>                    + <span class="string"><span class="delimiter">"</span><span class="content"> was closed with reason </span><span class="delimiter">"</span></span> + closeReason.getCloseCode());
+<span class="line-numbers">113</span>        sessions.remove(session);
+<span class="line-numbers">114</span>    }
+<span class="line-numbers">115</span>    <span class="comment">// end::onCloseMethod[]</span>
+<span class="line-numbers">116</span>
+<span class="line-numbers">117</span>    <span class="comment">// tag::onError[]</span>
+<span class="line-numbers">118</span>    <span class="annotation">@OnError</span>
+<span class="line-numbers">119</span>    <span class="comment">// end::onError[]</span>
+<span class="line-numbers">120</span>    <span class="directive">public</span> <span class="type">void</span> onError(Session session, <span class="predefined-type">Throwable</span> throwable) {
+<span class="line-numbers">121</span>        logger.info(<span class="string"><span class="delimiter">"</span><span class="content">WebSocket error for </span><span class="delimiter">"</span></span> + session.getId() + <span class="string"><span class="delimiter">"</span><span class="content"> </span><span class="delimiter">"</span></span>
+<span class="line-numbers">122</span>                    + throwable.getMessage());
+<span class="line-numbers">123</span>    }
+<span class="line-numbers">124</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Annotate the <code>SystemService</code> class with a <code class="hotspot=serverEndpoint file=0">@ServerEndpoint</code> annotation to make it a WebSocket server. The <code>@ServerEndpoint</code>  <code>value</code> attribute specifies the URI where the endpoint will be deployed. The <code>encoders</code> attribute specifies the classes to encode messages and the <code>decoders</code> attribute specifies the classes to decode messages. Provide methods that define the parts of the WebSocket lifecycle like establishing a connection, receiving a message, and closing the connection by annotating them with the <code class="hotspot=onOpen file=0">@OnOpen</code>, <code class="hotspot=onMessage file=0">@OnMessage</code> and <code class="hotspot=onClose file=0">@OnClose</code> annotations respectively. The method that is annotated with the <code class="hotspot=onError file=0">@OnError</code> annotation is responsible for tackling errors.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=onOpenMethod file=0">onOpen()</code> method stores up the client sessions. The <code class="hotspot=onCloseMethod file=0">onClose()</code> method displays the reason for closing the connection and removes the closing session from the client sessions.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=onMessageMethod file=0">onMessage()</code> method is called when receiving a message through the <code>option</code> parameter. The <code class="hotspot=loadAverage hotspot=memoryUsageOrBoth file=0">option</code> parameter signifies which message to construct, either system load, memory usage data, or both, and sends out the <code class="hotspot=sendToAllSessions file=0">JsonObject</code> message. The <code class="hotspot=sendToAllSessionseMethod file=0">sendToAllSessions()</code> method uses the WebSocket API to broadcast the message to all client sessions.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the SystemLoadEncoder class.</mark>
+<code>system/src/main/java/io/openliberty/guides/system/SystemLoadEncoder.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemLoadEncoder.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.system</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObject</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.websocket.EncodeException</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.websocket.Encoder</span>;
+<span class="line-numbers">17</span>
+<span class="line-numbers">18</span><span class="comment">// tag::SystemLoadEncoder[]</span>
+<span class="line-numbers">19</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemLoadEncoder</span> <span class="directive">implements</span> <span class="predefined-type">Encoder</span>.Text&lt;JsonObject&gt; {
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">22</span>    <span class="comment">// tag::encode[]</span>
+<span class="line-numbers">23</span>    <span class="directive">public</span> <span class="predefined-type">String</span> encode(JsonObject object) <span class="directive">throws</span> EncodeException {
+<span class="line-numbers">24</span>        <span class="keyword">return</span> object.toString();
+<span class="line-numbers">25</span>    }
+<span class="line-numbers">26</span>    <span class="comment">// end::encode[]</span>
+<span class="line-numbers">27</span>}
+<span class="line-numbers">28</span><span class="comment">// end::SystemLoadEncoder[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=SystemLoadEncoder file=1">SystemLoadEncoder</code> class implements the <code>Encoder.Text</code> interface. Override the <code class="hotspot=encode file=1">encode()</code> method that accepts the <code>JsonObject</code> message and converts the message to a string.</p>
+</div>
+<div class="listingblock code_command hotspot file=2">
+<div class="content">
+<pre><mark>Create the SystemLoadDecoder class.</mark>
+<code>system/src/main/java/io/openliberty/guides/system/SystemLoadDecoder.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemLoadDecoder.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2022, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.system</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.io.StringReader</span>;
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.json.Json</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObject</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonReader</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.websocket.DecodeException</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.websocket.Decoder</span>;
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span><span class="comment">// tag::SystemLoadDecoder[]</span>
+<span class="line-numbers">23</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemLoadDecoder</span> <span class="directive">implements</span> Decoder.Text&lt;JsonObject&gt; {
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">26</span>    <span class="comment">// tag::decode[]</span>
+<span class="line-numbers">27</span>    <span class="directive">public</span> JsonObject decode(<span class="predefined-type">String</span> s) <span class="directive">throws</span> DecodeException {
+<span class="line-numbers">28</span>        <span class="keyword">try</span> (JsonReader reader = Json.createReader(<span class="keyword">new</span> <span class="predefined-type">StringReader</span>(s))) {
+<span class="line-numbers">29</span>            <span class="keyword">return</span> reader.readObject();
+<span class="line-numbers">30</span>        } <span class="keyword">catch</span> (<span class="exception">Exception</span> e) {
+<span class="line-numbers">31</span>            JsonObject error = Json.createObjectBuilder()
+<span class="line-numbers">32</span>                    .add(<span class="string"><span class="delimiter">"</span><span class="content">error</span><span class="delimiter">"</span></span>, e.getMessage())
+<span class="line-numbers">33</span>                    .build();
+<span class="line-numbers">34</span>            <span class="keyword">return</span> error;
+<span class="line-numbers">35</span>        }
+<span class="line-numbers">36</span>    }
+<span class="line-numbers">37</span>    <span class="comment">// end::decode[]</span>
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">40</span>    <span class="comment">// tag::willDecode[]</span>
+<span class="line-numbers">41</span>    <span class="directive">public</span> <span class="type">boolean</span> willDecode(<span class="predefined-type">String</span> s) {
+<span class="line-numbers">42</span>        <span class="keyword">try</span> (JsonReader reader = Json.createReader(<span class="keyword">new</span> <span class="predefined-type">StringReader</span>(s))) {
+<span class="line-numbers">43</span>            reader.readObject();
+<span class="line-numbers">44</span>            <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers">45</span>        } <span class="keyword">catch</span> (<span class="exception">Exception</span> e) {
+<span class="line-numbers">46</span>            <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">47</span>        }
+<span class="line-numbers">48</span>    }
+<span class="line-numbers">49</span>    <span class="comment">// end::willDecode[]</span>
+<span class="line-numbers">50</span>
+<span class="line-numbers">51</span>}
+<span class="line-numbers">52</span><span class="comment">// end::SystemLoadDecoder[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=SystemLoadDecoder file=2">SystemLoadDecoder</code> class implements the <code>Decoder.Text</code> interface.
+Override the <code class="hotspot=decode file=2">decode()</code> method that accepts string message and decodes the string back into a <code>JsonObject</code>. The <code class="hotspot=willDecode file=2">willDecode()</code> override method checks out whether the string can be decoded into a JSON object and returns a Boolean value.</p>
+</div>
+<div class="paragraph">
+<p>system/server.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">system Service</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>    <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>        <span class="comment">&lt;!-- tag::webSocket[] --&gt;</span>
+<span class="line-numbers"> 5</span>        <span class="tag">&lt;feature&gt;</span>websocket-2.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>        <span class="comment">&lt;!-- end::webSocket[] --&gt;</span>
+<span class="line-numbers"> 7</span>        <span class="comment">&lt;!-- tag::jsonB[] --&gt;</span>
+<span class="line-numbers"> 8</span>        <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 9</span>        <span class="comment">&lt;!-- end::jsonB[] --&gt;</span>
+<span class="line-numbers">10</span>    <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">11</span>
+<span class="line-numbers">12</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9081</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">13</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.https.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9444</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span>    <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">16</span>        <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">17</span>
+<span class="line-numbers">18</span>    <span class="tag">&lt;webApplication</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-jakarta-websocket-system.war</span><span class="delimiter">"</span></span> <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span>    <span class="tag">&lt;logging</span> <span class="attribute-name">consoleLogLevel</span>=<span class="string"><span class="delimiter">"</span><span class="content">INFO</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The required <code class="hotspot=webSocket file=3">websocket</code> and <code class="hotspot=jsonB file=3">jsonb</code> features for the <code>system</code> service have been enabled for you in the Liberty <code>server.xml</code> configuration file.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-client-service">Creating the client service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this section, you will create the WebSocket client that communicates with the WebSocket server and the scheduler that uses the WebSocket client to send messages to the server. You’ll also create an HTML file that uses a JavaScript <code>WebSocket</code> object to build a WebSocket connection, subscribe to different events, and display the broadcasting messages from the <code>system</code> service in a table.</p>
+</div>
+<div class="paragraph">
+<p>On another command-line session, navigate to the <code>start</code> directory and run the following goal to start the <code>client</code> service in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn -pl client liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>**************************************************
+*     Liberty is running in dev mode.</code></pre>
+</div>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the SystemClient class.</mark>
+<code>client/src/main/java/io/openliberty/guides/client/scheduler/SystemClient.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>client/SystemClient.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2022, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.client.scheduler</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.io.IOException</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.net.URI</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">java.util.logging.Logger</span>;
+<span class="line-numbers">17</span>
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.websocket.ClientEndpoint</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.websocket.ContainerProvider</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.websocket.OnMessage</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.websocket.OnOpen</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">jakarta.websocket.Session</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">jakarta.websocket.WebSocketContainer</span>;
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span><span class="comment">// tag::clientEndpoint[]</span>
+<span class="line-numbers">26</span><span class="annotation">@ClientEndpoint</span>()
+<span class="line-numbers">27</span><span class="comment">// end::clientEndpoint[]</span>
+<span class="line-numbers">28</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemClient</span> {
+<span class="line-numbers">29</span>
+<span class="line-numbers">30</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">Logger</span> logger = <span class="predefined-type">Logger</span>.getLogger(SystemClient.class.getName());
+<span class="line-numbers">31</span>
+<span class="line-numbers">32</span>    <span class="directive">private</span> Session session;
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="comment">// tag::constructor[]</span>
+<span class="line-numbers">35</span>    <span class="directive">public</span> SystemClient(<span class="predefined-type">URI</span> endpoint) {
+<span class="line-numbers">36</span>        <span class="keyword">try</span> {
+<span class="line-numbers">37</span>            <span class="comment">// tag::webSocketAPI[]</span>
+<span class="line-numbers">38</span>            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+<span class="line-numbers">39</span>            container.connectToServer(<span class="local-variable">this</span>, endpoint);
+<span class="line-numbers">40</span>            <span class="comment">// end::webSocketAPI[]</span>
+<span class="line-numbers">41</span>        } <span class="keyword">catch</span> (<span class="exception">Exception</span> e) {
+<span class="line-numbers">42</span>            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="exception">RuntimeException</span>(e);
+<span class="line-numbers">43</span>        }
+<span class="line-numbers">44</span>    }
+<span class="line-numbers">45</span>    <span class="comment">// end::constructor[]</span>
+<span class="line-numbers">46</span>
+<span class="line-numbers">47</span>    <span class="comment">// tag::onOpen[]</span>
+<span class="line-numbers">48</span>    <span class="annotation">@OnOpen</span>
+<span class="line-numbers">49</span>    <span class="directive">public</span> <span class="type">void</span> onOpen(Session session) {
+<span class="line-numbers">50</span>        <span class="local-variable">this</span>.session = session;
+<span class="line-numbers">51</span>        logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Scheduler connected to the server.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">52</span>    }
+<span class="line-numbers">53</span>    <span class="comment">// end::onOpen[]</span>
+<span class="line-numbers">54</span>
+<span class="line-numbers">55</span>    <span class="comment">// tag::onMessage[]</span>
+<span class="line-numbers">56</span>    <span class="annotation">@OnMessage</span>
+<span class="line-numbers">57</span>    <span class="directive">public</span> <span class="type">void</span> onMessage(<span class="predefined-type">String</span> message, Session session) <span class="directive">throws</span> <span class="exception">Exception</span> {
+<span class="line-numbers">58</span>        logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Scheduler received message from the server: </span><span class="delimiter">"</span></span> + message);
+<span class="line-numbers">59</span>    }
+<span class="line-numbers">60</span>    <span class="comment">// end::onMessage[]</span>
+<span class="line-numbers">61</span>
+<span class="line-numbers">62</span>    <span class="directive">public</span> <span class="type">void</span> sendMessage(<span class="predefined-type">String</span> message) {
+<span class="line-numbers">63</span>        session.getAsyncRemote().sendText(message);
+<span class="line-numbers">64</span>        logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Scheduler sent message </span><span class="char">\"</span><span class="delimiter">"</span></span> + message + <span class="string"><span class="delimiter">"</span><span class="char">\"</span><span class="content"> to the server.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">65</span>    }
+<span class="line-numbers">66</span>
+<span class="line-numbers">67</span>    <span class="directive">public</span> <span class="type">void</span> close() {
+<span class="line-numbers">68</span>        <span class="keyword">try</span> {
+<span class="line-numbers">69</span>            session.close();
+<span class="line-numbers">70</span>        } <span class="keyword">catch</span> (<span class="exception">IOException</span> e) {
+<span class="line-numbers">71</span>            e.printStackTrace();
+<span class="line-numbers">72</span>        }
+<span class="line-numbers">73</span>        logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Scheduler closed the session.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">74</span>    }
+<span class="line-numbers">75</span>
+<span class="line-numbers">76</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Annotate the <code>SystemClient</code> class with <code class="hotspot=clientEndpoint file=0">@ClientEndpoint</code> annotation to make it as a WebSocket client. Create a constructor that uses the <code class="hotspot=webSocketAPI file=0">websocket</code> APIs to establish connection with the server. Provide a method with the <code class="hotspot=onOpen file=0">@OnOpen</code> annotation that persists the client session when the connection is established. The <code>onMessage()</code> method that is annotated with the <code class="hotspot=onMessage file=0">@OnMessage</code> annotation handles messages from the server.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the SystemLoadScheduler class.</mark>
+<code>client/src/main/java/io/openliberty/guides/client/scheduler/SystemLoadScheduler.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemLoadScheduler.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2022, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.client.scheduler</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.net.URI</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.Random</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.annotation.PostConstruct</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.annotation.PreDestroy</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.ejb.Schedule</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.ejb.Singleton</span>;
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span><span class="annotation">@Singleton</span>
+<span class="line-numbers">23</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemLoadScheduler</span> {
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span>    <span class="directive">private</span> SystemClient client;
+<span class="line-numbers">26</span>    <span class="comment">// tag::messages[]</span>
+<span class="line-numbers">27</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span><span class="type">[]</span> MESSAGES = <span class="keyword">new</span> <span class="predefined-type">String</span><span class="type">[]</span> {
+<span class="line-numbers">28</span>        <span class="string"><span class="delimiter">"</span><span class="content">loadAverage</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">memoryUsage</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">both</span><span class="delimiter">"</span></span> };
+<span class="line-numbers">29</span>    <span class="comment">// end::messages[]</span>
+<span class="line-numbers">30</span>
+<span class="line-numbers">31</span>    <span class="comment">// tag::postConstruct[]</span>
+<span class="line-numbers">32</span>    <span class="annotation">@PostConstruct</span>
+<span class="line-numbers">33</span>    <span class="directive">public</span> <span class="type">void</span> init() {
+<span class="line-numbers">34</span>        <span class="keyword">try</span> {
+<span class="line-numbers">35</span>            <span class="comment">// tag::systemClient[]</span>
+<span class="line-numbers">36</span>            client = <span class="keyword">new</span> SystemClient(<span class="keyword">new</span> <span class="predefined-type">URI</span>(<span class="string"><span class="delimiter">"</span><span class="content">ws://localhost:9081/systemLoad</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">37</span>            <span class="comment">// end::systemClient[]</span>
+<span class="line-numbers">38</span>        } <span class="keyword">catch</span> (<span class="exception">Exception</span> e) {
+<span class="line-numbers">39</span>            e.printStackTrace();
+<span class="line-numbers">40</span>        }
+<span class="line-numbers">41</span>    }
+<span class="line-numbers">42</span>    <span class="comment">// end::postConstruct[]</span>
+<span class="line-numbers">43</span>
+<span class="line-numbers">44</span>    <span class="comment">// tag::schedule[]</span>
+<span class="line-numbers">45</span>    <span class="annotation">@Schedule</span>(second = <span class="string"><span class="delimiter">"</span><span class="content">*/10</span><span class="delimiter">"</span></span>, minute = <span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span>, hour = <span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span>, persistent = <span class="predefined-constant">false</span>)
+<span class="line-numbers">46</span>    <span class="comment">// end::schedule[]</span>
+<span class="line-numbers">47</span>    <span class="comment">// tag::sendSystemLoad[]</span>
+<span class="line-numbers">48</span>    <span class="directive">public</span> <span class="type">void</span> sendSystemLoad() {
+<span class="line-numbers">49</span>        <span class="predefined-type">Random</span> r = <span class="keyword">new</span> <span class="predefined-type">Random</span>();
+<span class="line-numbers">50</span>        client.sendMessage(MESSAGES[r.nextInt(MESSAGES.length)]);
+<span class="line-numbers">51</span>    }
+<span class="line-numbers">52</span>    <span class="comment">// end::sendSystemLoad[]</span>
+<span class="line-numbers">53</span>
+<span class="line-numbers">54</span>    <span class="annotation">@PreDestroy</span>
+<span class="line-numbers">55</span>    <span class="directive">public</span> <span class="type">void</span> close() {
+<span class="line-numbers">56</span>        client.close();
+<span class="line-numbers">57</span>    }
+<span class="line-numbers">58</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>SystemLoadScheduler</code> class uses the <code class="hotspot=systemClient file=1">SystemClient</code> class to establish a connection to the server by the <code>ws://localhost:9081/systemLoad</code> URI at the <code class="hotspot=postConstruct file=1">@PostConstruct</code> annotated method. The <code class="hotspot=sendSystemLoad file=1">sendSystemLoad()</code> method calls the client to send a random string from either <code class="hotspot=messages file=1">loadAverage</code>, <code class="hotspot=messages file=1">memoryUsage</code>, or <code class="hotspot=messages file=1">both</code> to the <code>system</code> service. Using the <a href="https://openliberty.io/docs/latest/reference/javadoc/liberty-jakartaee9.1-javadoc.html?package=jakarta/ejb/package-frame.html&amp;class=jakarta/ejb/TimerService.html" target="_blank" rel="noopener">Jakarta Enterprise Beans Timer Service</a>, annotate the <code>sendSystemLoad()</code> method with the <code class="hotspot=schedule file=1">@Schedule</code> annotation so that it sends out a message every 10 seconds.</p>
+</div>
+<div class="paragraph">
+<p>Now, create the front-end UI. The images and styles for the UI are provided for you.</p>
+</div>
+<div class="listingblock code_command hotspot file=2">
+<div class="content">
+<pre><mark>Create the index.html file.</mark>
+<code>client/src/main/webapp/index.html</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>index.html</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="javascript"><span class="line-numbers"> 1</span>&lt;!-- tag::copyright[] --&gt;
+<span class="line-numbers"> 2</span>&lt;!--
+<span class="line-numbers"> 3</span>  Copyright (c) <span class="integer">2022</span>, <span class="integer">2023</span> IBM Corp.
+<span class="line-numbers"> 4</span>
+<span class="line-numbers"> 5</span>  Licensed under the Apache License, Version <span class="float">2.0</span> (the <span class="string"><span class="delimiter">"</span><span class="content">License</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 6</span>  you may not use <span class="local-variable">this</span> file except <span class="keyword">in</span> compliance <span class="keyword">with</span> the License.
+<span class="line-numbers"> 7</span>  You may obtain a copy of the License at
+<span class="line-numbers"> 8</span>
+<span class="line-numbers"> 9</span>    http:<span class="comment">//www.apache.org/licenses/LICENSE-2.0</span>
+<span class="line-numbers">10</span>
+<span class="line-numbers">11</span>  Unless required by applicable law or agreed to <span class="keyword">in</span> writing, software
+<span class="line-numbers">12</span>  distributed under the License is distributed on an <span class="string"><span class="delimiter">"</span><span class="content">AS IS</span><span class="delimiter">"</span></span> BASIS,
+<span class="line-numbers">13</span>  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+<span class="line-numbers">14</span>  See the License <span class="keyword">for</span> the specific language governing permissions and
+<span class="line-numbers">15</span>  limitations under the License.
+<span class="line-numbers">16</span>--&gt;
+<span class="line-numbers">17</span>&lt;!-- end::copyright[] --&gt;
+<span class="line-numbers">18</span>&lt;!DOCTYPE html&gt;
+<span class="line-numbers">19</span><span class="tag">&lt;html&gt;</span>
+<span class="line-numbers">20</span>    <span class="tag">&lt;head&gt;</span>
+<span class="line-numbers">21</span>        <span class="tag">&lt;meta</span> <span class="attribute-name">charset</span>=<span class="string"><span class="delimiter">"</span><span class="content">UTF-8</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">22</span>        <span class="tag">&lt;title&gt;</span>Open Liberty System Load<span class="tag">&lt;/title&gt;</span>
+<span class="line-numbers">23</span>        <span class="tag">&lt;link</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">"</span><span class="content">https://fonts.googleapis.com/css?family=Asap</span><span class="delimiter">"</span></span> <span class="attribute-name">rel</span>=<span class="string"><span class="delimiter">"</span><span class="content">stylesheet</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">24</span>        <span class="tag">&lt;link</span> <span class="attribute-name">rel</span>=<span class="string"><span class="delimiter">"</span><span class="content">stylesheet</span><span class="delimiter">"</span></span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">"</span><span class="content">css/styles.css</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">25</span>        <span class="tag">&lt;link</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">"</span><span class="content">favicon.ico</span><span class="delimiter">"</span></span> <span class="attribute-name">rel</span>=<span class="string"><span class="delimiter">"</span><span class="content">icon</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">26</span>        <span class="tag">&lt;link</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">"</span><span class="content">favicon.ico</span><span class="delimiter">"</span></span> <span class="attribute-name">rel</span>=<span class="string"><span class="delimiter">"</span><span class="content">shortcut icon</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">27</span>    <span class="tag">&lt;/head&gt;</span>
+<span class="line-numbers">28</span>    <span class="tag">&lt;body&gt;</span>
+<span class="line-numbers">29</span>        <span class="tag">&lt;section</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">appIntro</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">30</span>            <span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">titleSection</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">31</span>                <span class="tag">&lt;h1</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">appTitle</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>Open Liberty System Load<span class="tag">&lt;/h1&gt;</span>
+<span class="line-numbers">32</span>                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">line</span><span class="delimiter">"</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">33</span>                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">headerImage</span><span class="delimiter">"</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">34</span>            <span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span>            <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">msSection</span><span class="delimiter">"</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">systemLoads</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">37</span>                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">headerRow</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">38</span>                    <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">headerIcon</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">39</span>                      <span class="tag">&lt;img</span> <span class="attribute-name">src</span>=<span class="string"><span class="delimiter">"</span><span class="content">img/sysProps.svg</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">40</span>                    <span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">41</span>                    <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">headerTitle</span><span class="delimiter">"</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">sysPropTitle</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">42</span>                      <span class="tag">&lt;h2&gt;</span>System Loads<span class="tag">&lt;/h2&gt;</span>
+<span class="line-numbers">43</span>                    <span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">44</span>                <span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">45</span>                <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">sectionContent</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">46</span>                    <span class="tag">&lt;table</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">systemLoadsTable</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">47</span>                        <span class="tag">&lt;tbody</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">systemLoadsTableBody</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">48</span>                            <span class="tag">&lt;tr&gt;</span>
+<span class="line-numbers">49</span>                                <span class="tag">&lt;th&gt;</span>Time<span class="tag">&lt;/th&gt;</span><span class="tag">&lt;th&gt;</span>System Load<span class="tag">&lt;/th&gt;</span>
+<span class="line-numbers">50</span>                                <span class="tag">&lt;th&gt;</span>Memory Usage (%)<span class="tag">&lt;/th&gt;</span>
+<span class="line-numbers">51</span>                            <span class="tag">&lt;/tr&gt;</span>
+<span class="line-numbers">52</span>                        <span class="tag">&lt;/tbody&gt;</span>
+<span class="line-numbers">53</span>                    <span class="tag">&lt;/table&gt;</span>
+<span class="line-numbers">54</span>                <span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">55</span>            <span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">56</span>        <span class="tag">&lt;/section&gt;</span>
+<span class="line-numbers">57</span>        <span class="tag">&lt;footer</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">bodyFooter</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">58</span>            <span class="tag">&lt;div</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">"</span><span class="content">bodyFooterLink</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">59</span>                <span class="tag">&lt;a</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">licenseLink</span><span class="delimiter">"</span></span>
+<span class="line-numbers">60</span>                   <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">"</span><span class="content">https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE</span><span class="delimiter">"</span></span>
+<span class="line-numbers">61</span>                <span class="tag">&gt;</span>License<span class="tag">&lt;/a&gt;</span>
+<span class="line-numbers">62</span>                <span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">"</span><span class="content">https://twitter.com/OpenLibertyIO</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>Twitter<span class="tag">&lt;/a&gt;</span>
+<span class="line-numbers">63</span>                <span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">"</span><span class="content">https://github.com/OpenLiberty</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>GitHub<span class="tag">&lt;/a&gt;</span>
+<span class="line-numbers">64</span>                <span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">"</span><span class="content">https://openliberty.io/</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>openliberty.io<span class="tag">&lt;/a&gt;</span>
+<span class="line-numbers">65</span>            <span class="tag">&lt;/div&gt;</span>
+<span class="line-numbers">66</span>            <span class="tag">&lt;p</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">footer_text</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>an IBM open source project<span class="tag">&lt;/p&gt;</span>
+<span class="line-numbers">67</span>            <span class="tag">&lt;p</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">footer_copyright</span><span class="delimiter">"</span></span><span class="tag">&gt;</span><span class="entity">&amp;copy;</span>Copyright IBM Corp. 2022, 2023<span class="tag">&lt;/p&gt;</span>
+<span class="line-numbers">68</span>        <span class="tag">&lt;/footer&gt;</span>
+<span class="line-numbers">69</span>        <span class="tag">&lt;script&gt;</span>
+<span class="line-numbers">70</span><span class="inline">    const webSocket = <span class="keyword">new</span> WebSocket(<span class="string"><span class="delimiter">'</span><span class="content">ws://localhost:9081/systemLoad</span><span class="delimiter">'</span></span>)</span>
+<span class="line-numbers">71</span><span class="inline"></span>
+<span class="line-numbers">72</span><span class="inline">    webSocket.<span class="function">onopen</span> = <span class="keyword">function</span> (event) {</span>
+<span class="line-numbers">73</span><span class="inline">        console.log(event);</span>
+<span class="line-numbers">74</span><span class="inline">    };</span>
+<span class="line-numbers">75</span><span class="inline"></span>
+<span class="line-numbers">76</span><span class="inline">    webSocket.<span class="function">onmessage</span> = <span class="keyword">function</span> (event) {</span>
+<span class="line-numbers">77</span><span class="inline">        <span class="keyword">var</span> data = JSON.parse(event.data);</span>
+<span class="line-numbers">78</span><span class="inline">        <span class="keyword">var</span> tableRow = document.createElement(<span class="string"><span class="delimiter">'</span><span class="content">tr</span><span class="delimiter">'</span></span>);</span>
+<span class="line-numbers">79</span><span class="inline">        <span class="keyword">var</span> loadAverage = data.loadAverage == <span class="predefined-constant">null</span> ? <span class="string"><span class="delimiter">'</span><span class="content">-</span><span class="delimiter">'</span></span> : data.loadAverage.toFixed(<span class="integer">2</span>);</span>
+<span class="line-numbers">80</span><span class="inline">        <span class="keyword">var</span> memoryUsage = data.memoryUsage == <span class="predefined-constant">null</span> ? <span class="string"><span class="delimiter">'</span><span class="content">-</span><span class="delimiter">'</span></span> : data.memoryUsage.toFixed(<span class="integer">2</span>);</span>
+<span class="line-numbers">81</span><span class="inline">        tableRow.innerHTML = <span class="string"><span class="delimiter">'</span><span class="content">&lt;td&gt;</span><span class="delimiter">'</span></span> + data.time + <span class="string"><span class="delimiter">'</span><span class="content">&lt;/td&gt;</span><span class="delimiter">'</span></span> +</span>
+<span class="line-numbers">82</span><span class="inline">                             <span class="string"><span class="delimiter">'</span><span class="content">&lt;td&gt;</span><span class="delimiter">'</span></span> + loadAverage + <span class="string"><span class="delimiter">'</span><span class="content">&lt;/td&gt;</span><span class="delimiter">'</span></span> +</span>
+<span class="line-numbers">83</span><span class="inline">                             <span class="string"><span class="delimiter">'</span><span class="content">&lt;td&gt;</span><span class="delimiter">'</span></span> + memoryUsage + <span class="string"><span class="delimiter">'</span><span class="content">&lt;/td&gt;</span><span class="delimiter">'</span></span>;</span>
+<span class="line-numbers">84</span><span class="inline">        document.getElementById(<span class="string"><span class="delimiter">'</span><span class="content">systemLoadsTableBody</span><span class="delimiter">'</span></span>).appendChild(tableRow);</span>
+<span class="line-numbers">85</span><span class="inline">    };</span>
+<span class="line-numbers">86</span><span class="inline">    </span>
+<span class="line-numbers">87</span><span class="inline">    webSocket.<span class="function">onerror</span> = <span class="keyword">function</span> (event) {</span>
+<span class="line-numbers">88</span><span class="inline">        console.log(event);</span>
+<span class="line-numbers">89</span><span class="inline">    };</span>
+<span class="line-numbers">90</span>        <span class="tag">&lt;/script&gt;</span>
+<span class="line-numbers">91</span>    <span class="tag">&lt;/body&gt;</span>
+<span class="line-numbers">92</span><span class="tag">&lt;/html&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>index.html</code> front-end UI displays a table in which each row contains a time, system load, and the memory usage of the <code>system</code> service. Use a JavaScript <code class="hotspot=70 file=2">WebSocket</code> object to establish a connection to the server by the <code>ws://localhost:9081/systemLoad</code> URI. The <code class="hotspot=72-74 file=2">webSocket.onopen</code> event is triggered when the connection is established. The <code class="hotspot=76-85 file=2">webSocket.onmessage</code> event receives messages from the server and inserts a row with the data from the message into the table. The <code class="hotspot=87-89 file=2">webSocket.onerror</code> event defines how to tackle errors.</p>
+</div>
+<div class="paragraph">
+<p>client/server.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">client service</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>    <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>        <span class="comment">&lt;!-- tag::features[] --&gt;</span>
+<span class="line-numbers"> 5</span>        <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>        <span class="tag">&lt;feature&gt;</span>websocket-2.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 7</span>        <span class="tag">&lt;feature&gt;</span>enterpriseBeansLite-4.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 8</span>        <span class="comment">&lt;!-- end::features[] --&gt;</span>
+<span class="line-numbers"> 9</span>    <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">10</span>
+<span class="line-numbers">11</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9080</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">12</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.https.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9443</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span>    <span class="tag">&lt;httpEndpoint</span>
+<span class="line-numbers">15</span>        <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span>
+<span class="line-numbers">16</span>        <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">17</span>        <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">18</span>        <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span>
+<span class="line-numbers">19</span>    <span class="tag">/&gt;</span>
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span>    <span class="tag">&lt;webApplication</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-jakarta-websocket-client.war</span><span class="delimiter">"</span></span> <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span>    <span class="tag">&lt;logging</span> <span class="attribute-name">consoleLogLevel</span>=<span class="string"><span class="delimiter">"</span><span class="content">INFO</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The required features for the <code>client</code> service are enabled for you in the Liberty <code class="hotspot=features file=3">server.xml</code> configuration file.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-the-application">Running the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Because you are running the <code>system</code> and <code>client</code> services in dev mode, the changes that you made are automatically picked up. You’re now ready to check out your application in your browser.</p>
+</div>
+<div class="paragraph">
+<p>Point your browser to the <a href="http://localhost:9080" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080</a> URL to test out the <code>client</code> service. Notice that the table is updated every 10 seconds.</p>
+</div>
+<div class="paragraph">
+<p>Visit the <a href="http://localhost:9080" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080</a> URL again on a different tab or browser and verify that both sessions are updated every 10 seconds.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-application">Testing the application</h2>
+<div class="sectionbody">
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the SystemClient class.</mark>
+<code>system/src/test/java/it/io/openliberty/guides/system/SystemClient.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>system/test/SystemClient.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2022, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.system</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.net.URI</span>;
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.system.SystemLoadDecoder</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObject</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.websocket.ClientEndpoint</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.websocket.ContainerProvider</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.websocket.OnMessage</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.websocket.OnOpen</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">jakarta.websocket.Session</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">jakarta.websocket.WebSocketContainer</span>;
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span><span class="annotation">@ClientEndpoint</span>()
+<span class="line-numbers">26</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemClient</span> {
+<span class="line-numbers">27</span>
+<span class="line-numbers">28</span>    <span class="directive">private</span> Session session;
+<span class="line-numbers">29</span>
+<span class="line-numbers">30</span>    <span class="directive">public</span> SystemClient(<span class="predefined-type">URI</span> endpoint) {
+<span class="line-numbers">31</span>        <span class="keyword">try</span> {
+<span class="line-numbers">32</span>            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+<span class="line-numbers">33</span>            container.connectToServer(<span class="local-variable">this</span>, endpoint);
+<span class="line-numbers">34</span>        } <span class="keyword">catch</span> (<span class="exception">Exception</span> e) {
+<span class="line-numbers">35</span>            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="exception">RuntimeException</span>(e);
+<span class="line-numbers">36</span>        }
+<span class="line-numbers">37</span>    }
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span>    <span class="annotation">@OnOpen</span>
+<span class="line-numbers">40</span>    <span class="directive">public</span> <span class="type">void</span> onOpen(Session session) {
+<span class="line-numbers">41</span>        <span class="local-variable">this</span>.session = session;
+<span class="line-numbers">42</span>    }
+<span class="line-numbers">43</span>
+<span class="line-numbers">44</span>    <span class="comment">// tag::onMessage[]</span>
+<span class="line-numbers">45</span>    <span class="annotation">@OnMessage</span>
+<span class="line-numbers">46</span>    <span class="directive">public</span> <span class="type">void</span> onMessage(<span class="predefined-type">String</span> message, Session userSession) <span class="directive">throws</span> <span class="exception">Exception</span> {
+<span class="line-numbers">47</span>        SystemLoadDecoder decoder = <span class="keyword">new</span> SystemLoadDecoder();
+<span class="line-numbers">48</span>        JsonObject systemLoad = decoder.decode(message);
+<span class="line-numbers">49</span>        SystemServiceIT.verify(systemLoad);
+<span class="line-numbers">50</span>    }
+<span class="line-numbers">51</span>    <span class="comment">// end::onMessage[]</span>
+<span class="line-numbers">52</span>
+<span class="line-numbers">53</span>    <span class="directive">public</span> <span class="type">void</span> sendMessage(<span class="predefined-type">String</span> message) {
+<span class="line-numbers">54</span>        session.getAsyncRemote().sendText(message);
+<span class="line-numbers">55</span>    }
+<span class="line-numbers">56</span>
+<span class="line-numbers">57</span>    <span class="directive">public</span> <span class="type">void</span> close() <span class="directive">throws</span> <span class="exception">Exception</span> {
+<span class="line-numbers">58</span>        session.close();
+<span class="line-numbers">59</span>    }
+<span class="line-numbers">60</span>
+<span class="line-numbers">61</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>SystemClient</code> class is used to communicate and test the <code>system</code> service. Its implementation is similar to the client class from the <code>client</code> service that you created in the previous section. At the <code class="hotspot=onMessage file=0">onMessage()</code> method, decode and verify the message.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the SystemServiceIT class.</mark>
+<code>system/src/test/java/it/io/openliberty/guides/system/SystemServiceIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemServiceIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2022, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.system</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertNotNull</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
+<span class="line-numbers">17</span>
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">java.net.URI</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">java.util.concurrent.CountDownLatch</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">java.util.concurrent.TimeUnit</span>;
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.MethodOrderer.OrderAnnotation</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Order</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.TestMethodOrder</span>;
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObject</span>;
+<span class="line-numbers">28</span>
+<span class="line-numbers">29</span><span class="annotation">@TestMethodOrder</span>(OrderAnnotation.class)
+<span class="line-numbers">30</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemServiceIT</span> {
+<span class="line-numbers">31</span>
+<span class="line-numbers">32</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">CountDownLatch</span> countDown;
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="comment">// tag::testSystem[]</span>
+<span class="line-numbers">35</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">36</span>    <span class="annotation">@Order</span>(<span class="integer">1</span>)
+<span class="line-numbers">37</span>    <span class="directive">public</span> <span class="type">void</span> testSystem() <span class="directive">throws</span> <span class="exception">Exception</span> {
+<span class="line-numbers">38</span>        startCountDown(<span class="integer">1</span>);
+<span class="line-numbers">39</span>        <span class="predefined-type">URI</span> uri = <span class="keyword">new</span> <span class="predefined-type">URI</span>(<span class="string"><span class="delimiter">"</span><span class="content">ws://localhost:9081/systemLoad</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">40</span>        SystemClient client = <span class="keyword">new</span> SystemClient(uri);
+<span class="line-numbers">41</span>        client.sendMessage(<span class="string"><span class="delimiter">"</span><span class="content">both</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">42</span>        countDown.await(<span class="integer">5</span>, <span class="predefined-type">TimeUnit</span>.SECONDS);
+<span class="line-numbers">43</span>        client.close();
+<span class="line-numbers">44</span>        assertEquals(<span class="integer">0</span>, countDown.getCount(),
+<span class="line-numbers">45</span>                <span class="string"><span class="delimiter">"</span><span class="content">The countDown was not 0.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">46</span>    }
+<span class="line-numbers">47</span>    <span class="comment">// end::testSystem[]</span>
+<span class="line-numbers">48</span>
+<span class="line-numbers">49</span>    <span class="comment">// tag::testSystemMultipleSessions[]</span>
+<span class="line-numbers">50</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">51</span>    <span class="annotation">@Order</span>(<span class="integer">2</span>)
+<span class="line-numbers">52</span>    <span class="directive">public</span> <span class="type">void</span> testSystemMultipleSessions() <span class="directive">throws</span> <span class="exception">Exception</span> {
+<span class="line-numbers">53</span>        startCountDown(<span class="integer">3</span>);
+<span class="line-numbers">54</span>        <span class="predefined-type">URI</span> uri = <span class="keyword">new</span> <span class="predefined-type">URI</span>(<span class="string"><span class="delimiter">"</span><span class="content">ws://localhost:9081/systemLoad</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">55</span>        SystemClient client1 = <span class="keyword">new</span> SystemClient(uri);
+<span class="line-numbers">56</span>        SystemClient client2 = <span class="keyword">new</span> SystemClient(uri);
+<span class="line-numbers">57</span>        SystemClient client3 = <span class="keyword">new</span> SystemClient(uri);
+<span class="line-numbers">58</span>        client2.sendMessage(<span class="string"><span class="delimiter">"</span><span class="content">loadAverage</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">59</span>        countDown.await(<span class="integer">5</span>, <span class="predefined-type">TimeUnit</span>.SECONDS);
+<span class="line-numbers">60</span>        client1.close();
+<span class="line-numbers">61</span>        client2.close();
+<span class="line-numbers">62</span>        client3.close();
+<span class="line-numbers">63</span>        assertEquals(<span class="integer">0</span>, countDown.getCount(),
+<span class="line-numbers">64</span>            <span class="string"><span class="delimiter">"</span><span class="content">The countDown was not 0.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">65</span>    }
+<span class="line-numbers">66</span>    <span class="comment">// end::testSystemMultipleSessions[]</span>
+<span class="line-numbers">67</span>
+<span class="line-numbers">68</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="type">void</span> startCountDown(<span class="type">int</span> count) {
+<span class="line-numbers">69</span>        countDown = <span class="keyword">new</span> <span class="predefined-type">CountDownLatch</span>(count);
+<span class="line-numbers">70</span>    }
+<span class="line-numbers">71</span>
+<span class="line-numbers">72</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> verify(JsonObject systemLoad) {
+<span class="line-numbers">73</span>        assertNotNull(systemLoad.getString(<span class="string"><span class="delimiter">"</span><span class="content">time</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">74</span>        assertTrue(
+<span class="line-numbers">75</span>            systemLoad.getJsonNumber(<span class="string"><span class="delimiter">"</span><span class="content">loadAverage</span><span class="delimiter">"</span></span>) != <span class="predefined-constant">null</span>
+<span class="line-numbers">76</span>            || systemLoad.getJsonNumber(<span class="string"><span class="delimiter">"</span><span class="content">memoryUsage</span><span class="delimiter">"</span></span>) != <span class="predefined-constant">null</span>
+<span class="line-numbers">77</span>        );
+<span class="line-numbers">78</span>        countDown.countDown();
+<span class="line-numbers">79</span>    }
+<span class="line-numbers">80</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are two test cases to ensure correct functionality of the <code>system</code> service. The <code class="hotspot=testSystem file=1">testSystem()</code> method verifies one client connection and the <code class="hotspot=testSystemMultipleSessions file=1">testSystemMultipleSessions()</code> method verifies multiple client connections.</p>
+</div>
+<div class="sect2">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Because you started Open Liberty in dev mode, you can run the tests by pressing the <code>enter/return</code> key from the command-line session where you started the <code>system</code> service.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.system.SystemServiceIT
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.247 s - in it.io.openliberty.guides.system.SystemServiceIT
+
+Results:
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you are done checking out the services, exit dev mode by pressing <code>CTRL+C</code> in the command-line sessions where you ran the <code>system</code> and <code>client</code> services, or by typing <code>q</code> and then pressing the <code>enter/return</code> key. Alternatively, you can run the <code>liberty:stop</code> goal from the <code>start</code> directory in another command-line session for the <code>system</code> and <code>client</code> services:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn -pl system liberty:stop
+mvn -pl client liberty:stop</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You developed an application that subscribes to real time updates by using Jakarta WebSocket and Open Liberty.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Bidirectional communication between services using Jakarta WebSocket <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-jakarta-websocket/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-jakarta-websocket/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-jakarta-websocket/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/grpc-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Streaming messages between client and server services using gRPC</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">30 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

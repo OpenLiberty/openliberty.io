@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Documenting RESTful APIs using MicroProfile OpenAPI
+    
+  </title>
+  <meta name="description" content="A tutorial on how to document and filter RESTful APIs by using MicroProfile OpenAPI">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/microprofile-openapi">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Documenting RESTful APIs using MicroProfile OpenAPI" />
+  <meta name="twitter:description" content="A tutorial on how to document and filter RESTful APIs by using MicroProfile OpenAPI" />
+
+  <meta property='og:title' content="Documenting RESTful APIs using MicroProfile OpenAPI" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A tutorial on how to document and filter RESTful APIs by using MicroProfile OpenAPI" />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/microprofile-openapi" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li>
+<a href="#generating-the-openapi-document-for-the-inventory-service">Generating the OpenAPI document for the inventory service</a>
+<ul class="sectlevel2">
+<li><a href="#augmenting-the-existing-jakarta-restful-web-services-annotations-with-openapi-annotations">Augmenting the existing Jakarta Restful Web Services annotations with OpenAPI annotations</a></li>
+<li><a href="#filtering-the-openapi-tree-elements">Filtering the OpenAPI tree elements</a></li>
+</ul>
+</li>
+<li><a href="#using-pregenerated-openapi-documents">Using pregenerated OpenAPI documents</a></li>
+<li>
+<a href="#testing-the-service">Testing the service</a>
+<ul class="sectlevel2">
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Documenting RESTful APIs</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">20 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/microprofile-openapi.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Explore how to document and filter RESTful APIs from code or static files by using MicroProfile OpenAPI.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to document and filter RESTful APIs from annotations, POJOs, and static OpenAPI files by using MicroProfile OpenAPI.</p>
+</div>
+<div class="paragraph">
+<p>The OpenAPI specification, previously known as the Swagger specification, defines a standard interface for documenting and exposing RESTful APIs. This specification allows both humans and computers to understand or process the functionalities of services without requiring direct access to underlying source code or documentation. The MicroProfile OpenAPI specification provides a set of Java interfaces and programming models that allow Java developers to natively produce OpenAPI v3 documents from their JAX-RS applications.</p>
+</div>
+<div class="paragraph">
+<p>You will document the RESTful APIs of the provided <code>inventory</code> service, which serves two endpoints, <code>inventory/systems</code> and <code>inventory/properties</code>. These two endpoints function the same way as in the other MicroProfile guides.</p>
+</div>
+<div class="paragraph">
+<p>Before you proceed, note that the 1.0 version of the MicroProfile OpenAPI specification does not define how the <code>/openapi</code> endpoint may be partitioned in the event of multiple JAX-RS applications running on the same server. In other words, you must stick to one JAX-RS application per server instance as the behaviour for handling multiple applications is currently undefined.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-microprofile-openapi.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-microprofile-openapi.git
+cd guide-microprofile-openapi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2 command">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>To try out the application, first go to the <code>finish</code> directory and run the following Maven goal to build the application and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd finish
+mvn liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>The defaultServer server is ready to run a smarter planet.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, point your browser to the <a href="http://localhost:9080/openapi" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/openapi</a> URL and you’ll see the RESTful APIs of the <code>inventory</code> service. You can also point to the <a href="http://localhost:9080/openapi/ui" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/openapi/ui</a> URL for a more interactive view of the deployed APIs. This UI is built from the <a href="https://swagger.io/tools/swagger-ui/" target="_blank" rel="noopener noreferrer">Open Source Swagger UI</a> and renders the generated <code>/openapi</code> document into a very user friendly page.</p>
+</div>
+<div class="paragraph command">
+<p>After you are finished checking out the application, stop the Liberty instance by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty. Alternatively, you can run the <code>liberty:stop</code> goal from the <code>finish</code> directory in another shell session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:stop</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="generating-the-openapi-document-for-the-inventory-service">Generating the OpenAPI document for the inventory service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can generate an OpenAPI document in various ways. First, because all Jakarta Restful Web Services annotations are processed by default, you can augment your existing Jakarta Restful Web Services annotations with OpenAPI annotations to enrich your APIs with a minimal amount of work. Second, you can use a set of predefined models to manually create all elements of the OpenAPI tree. Finally, you can filter various elements of the OpenAPI tree, changing them to your liking or removing them entirely.</p>
+</div>
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph command">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following goal to start Open Liberty in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>Because the Jakarta Restful Web Services framework handles basic API generation for Jakarta Restful Web Services annotations, a skeleton OpenAPI tree will be generated from the <code>inventory</code> service. You can use this tree as a starting point and augment it with annotations and code to produce a complete OpenAPI document.</p>
+</div>
+<div class="paragraph">
+<p>Now, visit the <a href="http://localhost:9080/openapi" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/openapi</a> URL to see the generated OpenAPI tree. You can also visit the <a href="http://localhost:9080/openapi/ui" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/openapi/ui</a> URL for a more interactive view of the APIs.</p>
+</div>
+<div class="sect2">
+<h3 id="augmenting-the-existing-jakarta-restful-web-services-annotations-with-openapi-annotations">Augmenting the existing Jakarta Restful Web Services annotations with OpenAPI annotations</h3>
+<div class="paragraph">
+<p>Because all Jakarta Restful Web Services annotations are processed by default, you can augment the existing code with OpenAPI annotations without needing to rewrite portions of the OpenAPI document that are already covered by the Jakarta Restful Web Services framework.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Update the <code>InventoryResource</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/InventoryResource.java</code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>Add OpenAPI <code class="hotspot=APIResponse file=0">@APIResponse</code>, <code class="hotspot=APIResponseSchema file=0">@APIResponseSchema</code>, <code class="hotspot=Operation file=0">@Operation</code>, and <code class="hotspot=Parameter file=0">@Parameter</code> annotations to the two JAX-RS endpoint methods, <code class="hotspot=host-property hotspot=Parameter file=0">getPropertiesForHost()</code> and <code class="hotspot=listContents file=0">listContents()</code>.</p>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 23</span>
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.Operation</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.enums.SchemaType</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.media.Content</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.media.Schema</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.parameters.Parameter</span>;
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.responses.APIResponse</span>;
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.responses.APIResponseSchema</span>;
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers"> 32</span>
+<span class="line-numbers"> 33</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers"> 34</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 35</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers"> 38</span>    InventoryManager manager;
+<span class="line-numbers"> 39</span>
+<span class="line-numbers"> 40</span>    <span class="annotation">@GET</span>
+<span class="line-numbers"> 41</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 42</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 43</span>    <span class="comment">// tag::host-property[]</span>
+<span class="line-numbers"> 44</span>    <span class="comment">// tag::APIResponse[]</span>
+<span class="line-numbers"> 45</span>    <span class="annotation">@APIResponse</span>(
+<span class="line-numbers"> 46</span>        responseCode = <span class="string"><span class="delimiter">"</span><span class="content">404</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 47</span>        description = <span class="string"><span class="delimiter">"</span><span class="content">Missing description</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 48</span>        content = <span class="annotation">@Content</span>(mediaType = <span class="string"><span class="delimiter">"</span><span class="content">application/json</span><span class="delimiter">"</span></span>))
+<span class="line-numbers"> 49</span>    <span class="comment">// end::APIResponse[]</span>
+<span class="line-numbers"> 50</span>    <span class="comment">//tag::APIResponseSchema[]</span>
+<span class="line-numbers"> 51</span>    <span class="annotation">@APIResponseSchema</span>(value = <span class="predefined-type">Properties</span>.class,
+<span class="line-numbers"> 52</span>        responseDescription = <span class="string"><span class="delimiter">"</span><span class="content">JVM system properties of a particular host.</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 53</span>        responseCode = <span class="string"><span class="delimiter">"</span><span class="content">200</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 54</span>    <span class="comment">// end::APIResponseSchema[]</span>
+<span class="line-numbers"> 55</span>    <span class="comment">// tag::Operation[]</span>
+<span class="line-numbers"> 56</span>    <span class="annotation">@Operation</span>(
+<span class="line-numbers"> 57</span>        summary = <span class="string"><span class="delimiter">"</span><span class="content">Get JVM system properties for particular host</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 58</span>        description = <span class="string"><span class="delimiter">"</span><span class="content">Retrieves and returns the JVM system properties from the system </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 59</span>        + <span class="string"><span class="delimiter">"</span><span class="content">service running on the particular host.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 60</span>    <span class="comment">// end::Operation[]</span>
+<span class="line-numbers"> 61</span>    <span class="comment">// end::host-property[]</span>
+<span class="line-numbers"> 62</span>    <span class="directive">public</span> Response getPropertiesForHost(
+<span class="line-numbers"> 63</span>        <span class="comment">// tag::Parameter[]</span>
+<span class="line-numbers"> 64</span>        <span class="annotation">@Parameter</span>(
+<span class="line-numbers"> 65</span>            description = <span class="string"><span class="delimiter">"</span><span class="content">The host for whom to retrieve </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 66</span>                + <span class="string"><span class="delimiter">"</span><span class="content">the JVM system properties for.</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 67</span>            required = <span class="predefined-constant">true</span>,
+<span class="line-numbers"> 68</span>            example = <span class="string"><span class="delimiter">"</span><span class="content">foo</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 69</span>            schema = <span class="annotation">@Schema</span>(type = SchemaType.STRING))
+<span class="line-numbers"> 70</span>        <span class="comment">// end::Parameter[]</span>
+<span class="line-numbers"> 71</span>        <span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers"> 72</span>        <span class="comment">// Get properties for host</span>
+<span class="line-numbers"> 73</span>        <span class="predefined-type">Properties</span> props = manager.get(hostname);
+<span class="line-numbers"> 74</span>        <span class="keyword">if</span> (props == <span class="predefined-constant">null</span>) {
+<span class="line-numbers"> 75</span>            <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers"> 76</span>                           .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 77</span>                                   + <span class="string"><span class="delimiter">"</span><span class="char">\"</span><span class="content">Unknown hostname </span><span class="delimiter">"</span></span> + hostname
+<span class="line-numbers"> 78</span>                                   + <span class="string"><span class="delimiter">"</span><span class="content"> or the resource may not be </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 79</span>                                   + <span class="string"><span class="delimiter">"</span><span class="content">running on the host machine</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 80</span>                           .build();
+<span class="line-numbers"> 81</span>        }
+<span class="line-numbers"> 82</span>
+<span class="line-numbers"> 83</span>        <span class="comment">//Add to inventory to host</span>
+<span class="line-numbers"> 84</span>        manager.add(hostname, props);
+<span class="line-numbers"> 85</span>        <span class="keyword">return</span> Response.ok(props).build();
+<span class="line-numbers"> 86</span>    }
+<span class="line-numbers"> 87</span>
+<span class="line-numbers"> 88</span>    <span class="annotation">@GET</span>
+<span class="line-numbers"> 89</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 90</span>    <span class="comment">// tag::listContents[]</span>
+<span class="line-numbers"> 91</span>    <span class="annotation">@APIResponseSchema</span>(value = InventoryList.class,
+<span class="line-numbers"> 92</span>        responseDescription = <span class="string"><span class="delimiter">"</span><span class="content">host:properties pairs stored in the inventory.</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 93</span>        responseCode = <span class="string"><span class="delimiter">"</span><span class="content">200</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 94</span>    <span class="annotation">@Operation</span>(
+<span class="line-numbers"> 95</span>        summary = <span class="string"><span class="delimiter">"</span><span class="content">List inventory contents.</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 96</span>        description = <span class="string"><span class="delimiter">"</span><span class="content">Returns the currently stored host:properties pairs in the </span><span class="delimiter">"</span></span>
+<span class="line-numbers"> 97</span>        + <span class="string"><span class="delimiter">"</span><span class="content">inventory.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 98</span>    <span class="comment">// end::listContents[]</span>
+<span class="line-numbers"> 99</span>    <span class="directive">public</span> InventoryList listContents() {
+<span class="line-numbers">100</span>        <span class="keyword">return</span> manager.list();
+<span class="line-numbers">101</span>    }
+<span class="line-numbers">102</span>
+<span class="line-numbers">103</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Clearly, there are many more OpenAPI annotations now, so let’s break them down:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.8936%;">
+<col style="width: 85.1064%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Annotation</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code class="hotspot=APIResponse file=0">@APIResponse</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes a single response from an API operation.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code class="hotspot=APIResponseSchema file=0">@APIResponseSchema</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Convenient short-hand way to specify a simple response with a Java class that could otherwise be specified using @APIResponse.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code class="hotspot=Operation file=0">@Operation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes a single API operation on a path.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code class="hotspot=Parameter file=0">@Parameter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Describes a single operation parameter.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Because the Open Liberty instance was started in dev mode at the beginning of the guide, your changes were automatically picked up. Refresh the <a href="http://localhost:9080/openapi" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/openapi</a> URL to see the updated OpenAPI tree. The two endpoints at which your JAX-RS endpoint methods are served are now more meaningful:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="YAML"><span class="key">/inventory/systems</span>:
+  <span class="key">get</span>:
+    <span class="key">summary</span>: <span class="string"><span class="content">List inventory contents.</span></span>
+    <span class="key">description</span>: <span class="string"><span class="content">Returns the currently stored host:properties pairs in the inventory.</span></span>
+    <span class="key">responses</span>:
+      <span class="key"><span class="delimiter">"</span><span class="content">200</span><span class="delimiter">"</span></span>:
+        <span class="key">description</span>: <span class="string"><span class="content">host:properties pairs stored in the inventory.</span></span>
+        <span class="key">content</span>:
+          <span class="key">application/json</span>:
+            <span class="key">schema</span>:
+              <span class="error">$ref</span>: <span class="error">'#/components/schemas/InventoryList'</span>
+<span class="error">/inventory/systems/{hostname}</span>:
+  <span class="key">get</span>:
+    <span class="key">summary</span>: <span class="string"><span class="content">Get JVM system properties for particular host</span></span>
+    <span class="key">description</span>: <span class="string"><span class="content">Retrieves and returns the JVM system properties from the system</span><span class="content">
+      service running on the particular host.</span></span>
+    <span class="key">parameters</span>:
+    - <span class="string"><span class="content">name: hostname</span></span>
+      <span class="key">in</span>: <span class="string"><span class="content">path</span></span>
+      <span class="key">description</span>: <span class="string"><span class="content">The host for whom to retrieve the JVM system properties for.</span></span>
+      <span class="key">required</span>: <span class="string"><span class="content">true</span></span>
+      <span class="key">schema</span>:
+        <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
+      <span class="key">example</span>: <span class="string"><span class="content">foo</span></span>
+    <span class="key">responses</span>:
+      <span class="key"><span class="delimiter">"</span><span class="content">404</span><span class="delimiter">"</span></span>:
+        <span class="key">description</span>: <span class="string"><span class="content">Missing description</span></span>
+        <span class="key">content</span>:
+          <span class="key">application/json</span>: <span class="string"><span class="content">{}</span></span>
+      <span class="key"><span class="delimiter">"</span><span class="content">200</span><span class="delimiter">"</span></span>:
+        <span class="key">description</span>: <span class="string"><span class="content">JVM system properties of a particular host.</span></span>
+        <span class="key">content</span>:
+          <span class="key">application/json</span>:
+            <span class="key">schema</span>:
+              <span class="key">type</span>: <span class="string"><span class="content">object</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OpenAPI annotations can also be added to POJOs to describe what they represent. Currently, your OpenAPI document doesn’t have a very meaningful description of the <code class="hotspot=InventoryListClass file=1">InventoryList</code> POJO and hence it’s very difficult to tell exactly what that POJO is used for. To describe the <code class="hotspot=InventoryListClass file=1">InventoryList</code> POJO in more detail, augment the <code class="hotspot file=1">src/main/java/io/openliberty/guides/inventory/model/InventoryList.java</code> file with some OpenAPI annotations.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Update the <code>InventoryList</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/model/InventoryList.java</code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>Add OpenAPI <code class="hotspot=InventoryList hotspot=Systems file=1">@Schema</code> annotations to the <code class="hotspot=InventoryList file=1">InventoryList</code> class and the <code class="hotspot=Systems file=1">systems</code> variable.</p>
+</div>
+<div class="paragraph">
+<p>InventoryList.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory.model</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.media.Schema</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="comment">// tag::InventoryList[]</span>
+<span class="line-numbers">18</span><span class="annotation">@Schema</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">InventoryList</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">19</span>description = <span class="string"><span class="delimiter">"</span><span class="content">POJO that represents the inventory contents.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">20</span><span class="comment">// end::InventoryList[]</span>
+<span class="line-numbers">21</span><span class="comment">// tag::InventoryListClass[]</span>
+<span class="line-numbers">22</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryList</span> {
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span>    <span class="comment">// tag::Systems[]</span>
+<span class="line-numbers">25</span>    <span class="annotation">@Schema</span>(required = <span class="predefined-constant">true</span>)
+<span class="line-numbers">26</span>    <span class="comment">// end::Systems[]</span>
+<span class="line-numbers">27</span>    <span class="directive">private</span> <span class="predefined-type">List</span>&lt;SystemData&gt; systems;
+<span class="line-numbers">28</span>
+<span class="line-numbers">29</span>    <span class="directive">public</span> InventoryList(<span class="predefined-type">List</span>&lt;SystemData&gt; systems) {
+<span class="line-numbers">30</span>        <span class="local-variable">this</span>.systems = systems;
+<span class="line-numbers">31</span>    }
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span>    <span class="directive">public</span> <span class="predefined-type">List</span>&lt;SystemData&gt; getSystems() {
+<span class="line-numbers">34</span>        <span class="keyword">return</span> systems;
+<span class="line-numbers">35</span>    }
+<span class="line-numbers">36</span>
+<span class="line-numbers">37</span>    <span class="directive">public</span> <span class="type">int</span> getTotal() {
+<span class="line-numbers">38</span>        <span class="keyword">return</span> systems.size();
+<span class="line-numbers">39</span>    }
+<span class="line-numbers">40</span>}
+<span class="line-numbers">41</span><span class="comment">// end::InventoryListClass[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Likewise, annotate the <code class="hotspot file=2">src/main/java/io/openliberty/guides/inventory/model/SystemData.java</code> POJO, which is referenced in the <code class="hotspot file=1">InventoryList</code> class.</p>
+</div>
+<div class="listingblock code_command hotspot file=2">
+<div class="content">
+<pre><mark>Update the <code>SystemData</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/model/SystemData.java</code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>Add OpenAPI <code class="hotspot=SystemData hotspot=Hostname hotspot=Properties file=2">@Schema</code> annotations to the <code class="hotspot=SystemData file=2">SystemData</code> class, the <code class="hotspot=Hostname file=2">hostname</code> variable and the <code class="hotspot=Properties file=2">properties</code> variable.</p>
+</div>
+<div class="paragraph">
+<p>SystemData.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory.model</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.media.Schema</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="comment">// tag::SystemData[]</span>
+<span class="line-numbers">18</span><span class="annotation">@Schema</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">SystemData</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">19</span>       description = <span class="string"><span class="delimiter">"</span><span class="content">POJO that represents a single inventory entry.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">20</span><span class="comment">// end::SystemData[]</span>
+<span class="line-numbers">21</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemData</span> {
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span>    <span class="comment">// tag::Hostname[]</span>
+<span class="line-numbers">24</span>    <span class="annotation">@Schema</span>(required = <span class="predefined-constant">true</span>)
+<span class="line-numbers">25</span>    <span class="comment">// end::Hostname[]</span>
+<span class="line-numbers">26</span>    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> hostname;
+<span class="line-numbers">27</span>
+<span class="line-numbers">28</span>    <span class="comment">// tag::Properties[]</span>
+<span class="line-numbers">29</span>    <span class="annotation">@Schema</span>(required = <span class="predefined-constant">true</span>)
+<span class="line-numbers">30</span>    <span class="comment">// end::Properties[]</span>
+<span class="line-numbers">31</span>    <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">Properties</span> properties;
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span>    <span class="directive">public</span> SystemData(<span class="predefined-type">String</span> hostname, <span class="predefined-type">Properties</span> properties) {
+<span class="line-numbers">34</span>        <span class="local-variable">this</span>.hostname = hostname;
+<span class="line-numbers">35</span>        <span class="local-variable">this</span>.properties = properties;
+<span class="line-numbers">36</span>    }
+<span class="line-numbers">37</span>
+<span class="line-numbers">38</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getHostname() {
+<span class="line-numbers">39</span>        <span class="keyword">return</span> hostname;
+<span class="line-numbers">40</span>    }
+<span class="line-numbers">41</span>
+<span class="line-numbers">42</span>    <span class="directive">public</span> <span class="predefined-type">Properties</span> getProperties() {
+<span class="line-numbers">43</span>        <span class="keyword">return</span> properties;
+<span class="line-numbers">44</span>    }
+<span class="line-numbers">45</span>
+<span class="line-numbers">46</span>    <span class="annotation">@Override</span>
+<span class="line-numbers">47</span>    <span class="directive">public</span> <span class="type">boolean</span> equals(<span class="predefined-type">Object</span> host) {
+<span class="line-numbers">48</span>        <span class="keyword">if</span> (host <span class="keyword">instanceof</span> SystemData) {
+<span class="line-numbers">49</span>            <span class="keyword">return</span> hostname.equals(((SystemData) host).getHostname());
+<span class="line-numbers">50</span>        }
+<span class="line-numbers">51</span>        <span class="keyword">return</span> <span class="predefined-constant">false</span>;
+<span class="line-numbers">52</span>    }
+<span class="line-numbers">53</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Refresh the <a href="http://localhost:9080/openapi" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/openapi</a> URL to see the updated OpenAPI tree:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="YAML"><span class="key">components</span>:
+  <span class="key">schemas</span>:
+    <span class="key">InventoryList</span>:
+      <span class="key">description</span>: <span class="string"><span class="content">POJO that represents the inventory contents.</span></span>
+      <span class="key">required</span>:
+      - <span class="string"><span class="content">systems</span></span>
+      <span class="key">type</span>: <span class="string"><span class="content">object</span></span>
+      <span class="key">properties</span>:
+        <span class="key">systems</span>:
+          <span class="key">type</span>: <span class="string"><span class="content">array</span></span>
+          <span class="key">items</span>:
+            <span class="error">$ref</span>: <span class="error">'#/components/schemas/SystemData'</span>
+        <span class="key">total</span>:
+          <span class="key">format</span>: <span class="string"><span class="content">int32</span></span>
+          <span class="key">type</span>: <span class="string"><span class="content">integer</span></span>
+    <span class="key">SystemData</span>:
+      <span class="key">description</span>: <span class="string"><span class="content">POJO that represents a single inventory entry.</span></span>
+      <span class="key">required</span>:
+      - <span class="string"><span class="content">hostname</span></span>
+      - <span class="string"><span class="content">properties</span></span>
+      <span class="key">type</span>: <span class="string"><span class="content">object</span></span>
+      <span class="key">properties</span>:
+        <span class="key">hostname</span>:
+          <span class="key">type</span>: <span class="string"><span class="content">string</span></span>
+        <span class="key">properties</span>:
+          <span class="key">type</span>: <span class="string"><span class="content">object</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="filtering-the-openapi-tree-elements">Filtering the OpenAPI tree elements</h3>
+<div class="paragraph">
+<p>Filtering of certain elements and fields of the generated OpenAPI document can be done by using the <code>OASFilter</code> interface.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>InventoryOASFilter</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/inventory/filter/InventoryOASFilter.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryOASFilter.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2018, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory.filter</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.Arrays</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.Collections</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.OASFactory</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.OASFilter</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.models.OpenAPI</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.models.info.License</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.models.info.Info</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.models.responses.APIResponse</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.models.servers.Server</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.models.servers.ServerVariable</span>;
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryOASFilter</span> <span class="directive">implements</span> OASFilter {
+<span class="line-numbers">27</span>
+<span class="line-numbers">28</span>  <span class="annotation">@Override</span>
+<span class="line-numbers">29</span>  <span class="comment">// tag::filterAPIResponse[]</span>
+<span class="line-numbers">30</span>  <span class="directive">public</span> APIResponse filterAPIResponse(APIResponse apiResponse) {
+<span class="line-numbers">31</span>    <span class="keyword">if</span> (<span class="string"><span class="delimiter">"</span><span class="content">Missing description</span><span class="delimiter">"</span></span>.equals(apiResponse.getDescription())) {
+<span class="line-numbers">32</span>      apiResponse.setDescription(<span class="string"><span class="delimiter">"</span><span class="content">Invalid hostname or the system service may not </span><span class="delimiter">"</span></span>
+<span class="line-numbers">33</span>          + <span class="string"><span class="delimiter">"</span><span class="content">be running on the particular host.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">34</span>    }
+<span class="line-numbers">35</span>    <span class="keyword">return</span> apiResponse;
+<span class="line-numbers">36</span>  }
+<span class="line-numbers">37</span>  <span class="comment">// end::filterAPIResponse[]</span>
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span>  <span class="annotation">@Override</span>
+<span class="line-numbers">40</span>  <span class="comment">// tag::filterOpenAPI[]</span>
+<span class="line-numbers">41</span>  <span class="comment">// tag::OpenAPI[]</span>
+<span class="line-numbers">42</span>  <span class="directive">public</span> <span class="type">void</span> filterOpenAPI(OpenAPI openAPI) {
+<span class="line-numbers">43</span>  <span class="comment">// end::OpenAPI[]</span>
+<span class="line-numbers">44</span>    <span class="comment">// tag::oasfactory[]</span>
+<span class="line-numbers">45</span>    openAPI.setInfo(
+<span class="line-numbers">46</span>        OASFactory.createObject(Info.class).title(<span class="string"><span class="delimiter">"</span><span class="content">Inventory App</span><span class="delimiter">"</span></span>).version(<span class="string"><span class="delimiter">"</span><span class="content">1.0</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">47</span>                  .description(
+<span class="line-numbers">48</span>                      <span class="string"><span class="delimiter">"</span><span class="content">App for storing JVM system properties of various hosts.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">49</span>                  .license(
+<span class="line-numbers">50</span>                      OASFactory.createObject(License.class)
+<span class="line-numbers">51</span>                                .name(<span class="string"><span class="delimiter">"</span><span class="content">Eclipse Public License - v 1.0</span><span class="delimiter">"</span></span>).url(
+<span class="line-numbers">52</span>                                    <span class="string"><span class="delimiter">"</span><span class="content">https://www.eclipse.org/legal/epl-v10.html</span><span class="delimiter">"</span></span>)));
+<span class="line-numbers">53</span>
+<span class="line-numbers">54</span>    openAPI.addServer(
+<span class="line-numbers">55</span>        OASFactory.createServer()
+<span class="line-numbers">56</span>                  .url(<span class="string"><span class="delimiter">"</span><span class="content">http://localhost:{port}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">57</span>                  .description(<span class="string"><span class="delimiter">"</span><span class="content">Simple Open Liberty.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">58</span>                  .variables(<span class="predefined-type">Collections</span>.singletonMap(<span class="string"><span class="delimiter">"</span><span class="content">port</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">59</span>                                 OASFactory.createServerVariable()
+<span class="line-numbers">60</span>                                           .defaultValue(<span class="string"><span class="delimiter">"</span><span class="content">9080</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">61</span>                                           .description(<span class="string"><span class="delimiter">"</span><span class="content">Server HTTP port.</span><span class="delimiter">"</span></span>))));
+<span class="line-numbers">62</span>    <span class="comment">// end::oasfactory[]</span>
+<span class="line-numbers">63</span>  }
+<span class="line-numbers">64</span>  <span class="comment">// end::filterOpenAPI[]</span>
+<span class="line-numbers">65</span>
+<span class="line-numbers">66</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=filterAPIResponse file=0">filterAPIResponse()</code> method allows filtering of <code>APIResponse</code> elements. When you override this method, it will be called once for every <code>APIResponse</code> element in the OpenAPI tree. In this case, you are matching the <code>404</code> response that is returned by the <code>/inventory/systems/{hostname}</code> endpoint and setting the previously missing description. To remove an <code>APIResponse</code> element or another filterable element, simply return <code>null</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=filterOpenAPI file=0">filterOpenAPI()</code> method allows filtering of the singleton <code class="hotspot=OpenAPI file=0">OpenAPI</code> element. Unlike other filter methods, when you override <code class="hotspot=filterOpenAPI file=0">filterOpenAPI()</code>, it is called only once as the last method for a particular filter. Hence, make sure that it doesn’t override any other filter operations that are called before it. Your current OpenAPI document doesn’t provide much information on the application itself or on what server and port it runs on. This information is usually provided in the <code>info</code> and <code>servers</code> elements, which are currently missing. Use the <code>OASFactory</code> class to manually set these and other elements of the OpenAPI tree from the <code>org.eclipse.microprofile.openapi.models</code> package. The <code class="hotspot=OpenAPI file=0">OpenAPI</code> element is the only element that cannot be removed, because that would mean removing the whole OpenAPI tree.</p>
+</div>
+<div class="paragraph">
+<p>Each filtering method is called once for each corresponding element in the model tree. You can think of each method as a callback for various key OpenAPI elements.</p>
+</div>
+<div class="paragraph">
+<p>Before you can use the filter class that you created, you need to create the <code class="hotspot file=1">microprofile-config.properties</code> file.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Create the configuration file.</mark>
+<code>src/main/webapp/META-INF/microprofile-config.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column hide_tags=Scan">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text"><span class="line-numbers">1</span># tag::Scan[]
+<span class="line-numbers">2</span>mp.openapi.scan.disable = true
+<span class="line-numbers">3</span># end::Scan[]
+<span class="line-numbers">4</span># tag::Config[]
+<span class="line-numbers">5</span>mp.openapi.filter = io.openliberty.guides.inventory.filter.InventoryOASFilter
+<span class="line-numbers">6</span># end::Config[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This configuration file is picked up automatically by MicroProfile Config and registers your filter by passing in the fully qualified name of the filter class into the <code class="hotspot=Config file=1">mp.openapi.filter</code> property.</p>
+</div>
+<div class="paragraph">
+<p>Refresh the <a href="http://localhost:9080/openapi" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/openapi</a> URL to see the updated OpenAPI tree:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">info</span>:
+  <span class="key">title</span>: <span class="string"><span class="content">Inventory App</span></span>
+  <span class="key">description</span>: <span class="string"><span class="content">App for storing JVM system properties of various hosts.</span></span>
+  <span class="key">license</span>:
+    <span class="key">name</span>: <span class="string"><span class="content">Eclipse Public License - v 1.0</span></span>
+    <span class="key">url</span>: <span class="string"><span class="content">https://www.eclipse.org/legal/epl-v10.html</span></span>
+  <span class="key">version</span>: <span class="string"><span class="delimiter">"</span><span class="content">1.0</span><span class="delimiter">"</span></span>
+<span class="key">servers</span>:
+- <span class="string"><span class="content">url: "http://localhost:{port}"</span></span>
+  <span class="key">description</span>: <span class="string"><span class="content">Simple Open Liberty.</span></span>
+  <span class="key">variables</span>:
+    <span class="key">port</span>:
+      <span class="key">default</span>: <span class="string"><span class="delimiter">"</span><span class="content">9080</span><span class="delimiter">"</span></span>
+      <span class="key">description</span>: <span class="string"><span class="content">Server HTTP port.</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">responses</span>:
+  <span class="key"><span class="delimiter">"</span><span class="content">404</span><span class="delimiter">"</span></span>:
+    <span class="key">description</span>: <span class="string"><span class="content">Invalid hostname or the system service may not be running on</span><span class="content">
+      the particular host.</span></span>
+    <span class="key">content</span>:
+      <span class="key">application/json</span>: <span class="string"><span class="content">{}</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about which elements you can filter, see the <a href="https://openliberty.io/docs/ref/microprofile/" target="_blank" rel="noopener">MicroProfile API documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>To learn more about MicroProfile Config, visit the MicroProfile Config <a href="https://github.com/eclipse/microprofile-config" target="_blank" rel="noopener noreferrer">GitHub repository</a> and try one of the MicroProfile Config <a href="https://openliberty.io/guides/?search=Config" target="_blank" rel="noopener">guides</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-pregenerated-openapi-documents">Using pregenerated OpenAPI documents</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As an alternative to generating the OpenAPI model tree from code, you can provide a valid pregenerated OpenAPI document to describe your APIs. This document must be named <code>openapi</code> with a <code>yml</code>, <code>yaml</code>, or <code>json</code> extension and be placed under the <code>META-INF</code> directory. Depending on the scenario, the document might be fully or partially complete. If the document is fully complete, then you can disable annotation scanning entirely by setting the <code>mp.openapi.scan.disable</code> MicroProfile Config property to <code>true</code>. If the document is partially complete, then you can augment it with code.</p>
+</div>
+<div class="paragraph">
+<p>To use the pre-generated OpenAPI document, create the OpenAPI document YAML file.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the OpenAPI document file.</mark>
+<code>src/main/webapp/META-INF/openapi.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>openapi.yaml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text"><span class="line-numbers"> 1</span>---
+<span class="line-numbers"> 2</span>openapi: 3.0.3
+<span class="line-numbers"> 3</span>info:
+<span class="line-numbers"> 4</span>  title: Inventory App
+<span class="line-numbers"> 5</span>  description: App for storing JVM system properties of various hosts.
+<span class="line-numbers"> 6</span>  license:
+<span class="line-numbers"> 7</span>    name: Eclipse Public License - v 1.0
+<span class="line-numbers"> 8</span>    url: https://www.eclipse.org/legal/epl-v10.html
+<span class="line-numbers"> 9</span>  version: "1.0"
+<span class="line-numbers">10</span>paths:
+<span class="line-numbers">11</span>  /inventory/properties:
+<span class="line-numbers">12</span>    get:
+<span class="line-numbers">13</span>      operationId: getProperties
+<span class="line-numbers">14</span>      responses:
+<span class="line-numbers">15</span>        "200":
+<span class="line-numbers">16</span>          description: JVM system properties of the host running this service.
+<span class="line-numbers">17</span>          content:
+<span class="line-numbers">18</span>            application/json:
+<span class="line-numbers">19</span>              schema:
+<span class="line-numbers">20</span>                type: object
+<span class="line-numbers">21</span>                additionalProperties:
+<span class="line-numbers">22</span>                  type: string
+<span class="line-numbers">23</span>  /inventory/systems:
+<span class="line-numbers">24</span>    get:
+<span class="line-numbers">25</span>      summary: List inventory contents.
+<span class="line-numbers">26</span>      description: Returns the currently stored host:properties pairs in the inventory.
+<span class="line-numbers">27</span>      responses:
+<span class="line-numbers">28</span>        "200":
+<span class="line-numbers">29</span>          description: host:properties pairs stored in the inventory.
+<span class="line-numbers">30</span>          content:
+<span class="line-numbers">31</span>            application/json:
+<span class="line-numbers">32</span>              schema:
+<span class="line-numbers">33</span>                $ref: '#/components/schemas/InventoryList'
+<span class="line-numbers">34</span>  /inventory/systems/{hostname}:
+<span class="line-numbers">35</span>    get:
+<span class="line-numbers">36</span>      summary: Get JVM system properties for particular host
+<span class="line-numbers">37</span>      description: Retrieves and returns the JVM system properties from the system
+<span class="line-numbers">38</span>        service running on the particular host.
+<span class="line-numbers">39</span>      parameters:
+<span class="line-numbers">40</span>      - name: hostname
+<span class="line-numbers">41</span>        in: path
+<span class="line-numbers">42</span>        description: The host for whom to retrieve the JVM system properties for.
+<span class="line-numbers">43</span>        required: true
+<span class="line-numbers">44</span>        schema:
+<span class="line-numbers">45</span>          type: string
+<span class="line-numbers">46</span>        example: foo
+<span class="line-numbers">47</span>      responses:
+<span class="line-numbers">48</span>        "404":
+<span class="line-numbers">49</span>          description: Invalid hostname or the system service may not be running on
+<span class="line-numbers">50</span>            the particular host.
+<span class="line-numbers">51</span>          content:
+<span class="line-numbers">52</span>            application/json: {}
+<span class="line-numbers">53</span>        "200":
+<span class="line-numbers">54</span>          description: JVM system properties of a particular host.
+<span class="line-numbers">55</span>          content:
+<span class="line-numbers">56</span>            application/json:
+<span class="line-numbers">57</span>              schema:
+<span class="line-numbers">58</span>                type: object
+<span class="line-numbers">59</span>components:
+<span class="line-numbers">60</span>  schemas:
+<span class="line-numbers">61</span>    InventoryList:
+<span class="line-numbers">62</span>      description: POJO that represents the inventory contents.
+<span class="line-numbers">63</span>      required:
+<span class="line-numbers">64</span>      - systems
+<span class="line-numbers">65</span>      type: object
+<span class="line-numbers">66</span>      properties:
+<span class="line-numbers">67</span>        systems:
+<span class="line-numbers">68</span>          type: array
+<span class="line-numbers">69</span>          items:
+<span class="line-numbers">70</span>            $ref: '#/components/schemas/SystemData'
+<span class="line-numbers">71</span>        total:
+<span class="line-numbers">72</span>          format: int32
+<span class="line-numbers">73</span>          type: integer
+<span class="line-numbers">74</span>    SystemData:
+<span class="line-numbers">75</span>      description: POJO that represents a single inventory entry.
+<span class="line-numbers">76</span>      required:
+<span class="line-numbers">77</span>      - hostname
+<span class="line-numbers">78</span>      - properties
+<span class="line-numbers">79</span>      type: object
+<span class="line-numbers">80</span>      properties:
+<span class="line-numbers">81</span>        hostname:
+<span class="line-numbers">82</span>          type: string
+<span class="line-numbers">83</span>        properties:
+<span class="line-numbers">84</span>          type: object</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This document is the same as your current OpenAPI document with extra APIs for the <code>/inventory/properties</code> endpoint. This document is complete so you can also add the <code class="hotspot=Scan file=1">mp.openapi.scan.disable</code> property and set it to <code>true</code> in the <code class="hotspot file=1">src/main/webapp/META-INF/microprofile-config.properties</code> file.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Update the configuration file.</mark>
+<code>src/main/webapp/META-INF/microprofile-config.properties</code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>Add and set the <code class="hotspot=Scan file=1">mp.openapi.scan.disable</code> property to <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text"><span class="line-numbers">1</span># tag::Scan[]
+<span class="line-numbers">2</span>mp.openapi.scan.disable = true
+<span class="line-numbers">3</span># end::Scan[]
+<span class="line-numbers">4</span># tag::Config[]
+<span class="line-numbers">5</span>mp.openapi.filter = io.openliberty.guides.inventory.filter.InventoryOASFilter
+<span class="line-numbers">6</span># end::Config[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Refresh the <a href="http://localhost:9080/openapi" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/openapi</a> URL to see the updated OpenAPI tree:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yml"><span class="key">/inventory/properties</span>:
+  <span class="key">get</span>:
+    <span class="key">operationId</span>: <span class="string"><span class="content">getProperties</span></span>
+    <span class="key">responses</span>:
+      <span class="key"><span class="delimiter">"</span><span class="content">200</span><span class="delimiter">"</span></span>:
+        <span class="key">description</span>: <span class="string"><span class="content">JVM system properties of the host running this service.</span></span>
+        <span class="key">content</span>:
+          <span class="key">application/json</span>:
+            <span class="key">schema</span>:
+              <span class="key">type</span>: <span class="string"><span class="content">object</span></span>
+              <span class="key">additionalProperties</span>:
+                <span class="key">type</span>: <span class="string"><span class="content">string</span></span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-service">Testing the service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>No automated tests are provided to verify the correctness of the generated OpenAPI document. Manually verify the document by visiting the <a href="http://localhost:9080/openapi" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/openapi</a> or the <a href="http://localhost:9080/openapi/ui" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/openapi/ui</a> URL.</p>
+</div>
+<div class="paragraph">
+<p>A few tests are included for you to test the basic functionality of the <code>inventory</code> service. If a test failure occurs, then you might have introduced a bug into the code. These tests will run automatically as a part of the integration test suite.</p>
+</div>
+<div class="sect2 command">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Because you started Open Liberty in dev mode, you can run the tests by pressing the <code>enter/return</code> key from the command-line session where you started dev mode.</p>
+</div>
+<div class="paragraph">
+<p>You will see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.system.SystemEndpointIT
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.4 sec - in it.io.openliberty.guides.system.SystemEndpointIT
+Running it.io.openliberty.guides.inventory.InventoryEndpointIT
+[WARNING ] Interceptor for {http://client.inventory.guides.openliberty.io/}SystemClient has thrown exception, unwinding now
+Could not send Message.
+[err] The specified host is unknown: java.net.UnknownHostException: UnknownHostException invoking http://badhostname:9080/inventory/properties: badhostname
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.264 sec - in it.io.openliberty.guides.inventory.InventoryEndpointIT
+
+Results :
+
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The warning and error messages are expected and result from a request to a bad or an unknown hostname. This request is made in the <code>testUnknownHost()</code> test from the <code>InventoryEndpointIT</code> integration test.</p>
+</div>
+<div class="paragraph command">
+<p>When you are done checking out the service, exit dev mode by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You have just documented and filtered the APIs of the <code>inventory</code> service from both the code and a static file by using MicroProfile OpenAPI in Open Liberty.</p>
+</div>
+<div class="paragraph">
+<p>Feel free to try one of the related MicroProfile guides. They demonstrate additional technologies that you can learn and expand on top of what you built here.</p>
+</div>
+<div class="paragraph">
+<p>For more in-depth examples of MicroProfile OpenAPI, try one of the demo applications available in the MicroProfile OpenAPI <a href="https://github.com/eclipse/microprofile-open-api/tree/master/tck/src/main/java/org/eclipse/microprofile/openapi/apps" target="_blank" rel="noopener noreferrer">GitHub repository</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Documenting RESTful APIs <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-microprofile-openapi/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-openapi/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-openapi/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/cdi-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Injecting dependencies into microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">15 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-config.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Configuring microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

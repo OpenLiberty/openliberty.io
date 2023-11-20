@@ -1,0 +1,84 @@
+---
+openapi: 3.0.3
+info:
+  title: Inventory App
+  description: App for storing JVM system properties of various hosts.
+  license:
+    name: Eclipse Public License - v 1.0
+    url: https://www.eclipse.org/legal/epl-v10.html
+  version: "1.0"
+paths:
+  /inventory/properties:
+    get:
+      operationId: getProperties
+      responses:
+        "200":
+          description: JVM system properties of the host running this service.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+  /inventory/systems:
+    get:
+      summary: List inventory contents.
+      description: Returns the currently stored host:properties pairs in the inventory.
+      responses:
+        "200":
+          description: host:properties pairs stored in the inventory.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryList'
+  /inventory/systems/{hostname}:
+    get:
+      summary: Get JVM system properties for particular host
+      description: Retrieves and returns the JVM system properties from the system
+        service running on the particular host.
+      parameters:
+      - name: hostname
+        in: path
+        description: The host for whom to retrieve the JVM system properties for.
+        required: true
+        schema:
+          type: string
+        example: foo
+      responses:
+        "404":
+          description: Invalid hostname or the system service may not be running on
+            the particular host.
+          content:
+            application/json: {}
+        "200":
+          description: JVM system properties of a particular host.
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  schemas:
+    InventoryList:
+      description: POJO that represents the inventory contents.
+      required:
+      - systems
+      type: object
+      properties:
+        systems:
+          type: array
+          items:
+            $ref: '#/components/schemas/SystemData'
+        total:
+          format: int32
+          type: integer
+    SystemData:
+      description: POJO that represents a single inventory entry.
+      required:
+      - hostname
+      - properties
+      type: object
+      properties:
+        hostname:
+          type: string
+        properties:
+          type: object

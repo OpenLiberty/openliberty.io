@@ -1,0 +1,31 @@
+<!-- tag::copyright[] -->
+<!-- 
+     Copyright (c) 2019, 2023 IBM Corporation and others. 
+     All rights reserved. This program and the accompanying materials 
+     are made available under the terms of the Eclipse Public License 2.0
+     which accompanies this distribution, and is available at
+     http://www.eclipse.org/legal/epl-2.0/
+     
+     SPDX-License-Identifier: EPL-2.0
+-->
+<!-- end::copyright[] -->
+<hazelcast xmlns="http://www.hazelcast.com/schema/config"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.hazelcast.com/schema/config
+       https://hazelcast.com/schema/config/hazelcast-config-5.3.xsd">
+
+    <!-- tag::cartCluster[] -->
+    <cluster-name>CartCluster</cluster-name>
+    <!-- end::cartCluster[] -->
+
+    <!-- tag::network[] -->
+    <network>
+        <join>
+           <!-- tag::multicast[] -->
+           <multicast enabled="true"/>
+           <!-- end::multicast[] -->
+        </join>
+    </network>
+    <!-- end::network[] -->
+
+</hazelcast>

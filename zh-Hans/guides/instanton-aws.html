@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Speeding up startup time using Open Liberty InstantOn and improving CPU and memory usage by enabling Semeru Cloud Compiler (SCC) in your deployment to Amazon Elastic Container Service for Kubernetes (EKS) on Amazon Web Services (AWS).
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples on how to containerize a Java microservice with Open Liberty InstantOn feature to speed up the startup time. To improve the CPU and memory usage, deploy your application by enabling Semeru Cloud Compiler (SCC) in your deplyoment to Amazon Elastic Kubernetes Service (EKS) on Amazon Web Services (AWS) by using Amazon Elastic Container Registry (ECR) as your private container registry.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/instanton-aws">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Speeding up startup time using Open Liberty InstantOn and improving CPU and memory usage by enabling Semeru Cloud Compiler (SCC) in your deployment to Amazon Elastic Container Service for Kubernetes (EKS) on Amazon Web Services (AWS)." />
+  <meta name="twitter:description" content="A getting started tutorial with examples on how to containerize a Java microservice with Open Liberty InstantOn feature to speed up the startup time. To improve the CPU and memory usage, deploy your application by enabling Semeru Cloud Compiler (SCC) in your deplyoment to Amazon Elastic Kubernetes Service (EKS) on Amazon Web Services (AWS) by using Amazon Elastic Container Registry (ECR) as your private container registry." />
+
+  <meta property='og:title' content="Speeding up startup time using Open Liberty InstantOn and improving CPU and memory usage by enabling Semeru Cloud Compiler (SCC) in your deployment to Amazon Elastic Container Service for Kubernetes (EKS) on Amazon Web Services (AWS)." />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples on how to containerize a Java microservice with Open Liberty InstantOn feature to speed up the startup time. To improve the CPU and memory usage, deploy your application by enabling Semeru Cloud Compiler (SCC) in your deplyoment to Amazon Elastic Kubernetes Service (EKS) on Amazon Web Services (AWS) by using Amazon Elastic Container Registry (ECR) as your private container registry." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/instanton-aws" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#building-your-instanton-image">Building your InstantOn image</a></li>
+<li>
+<a href="#creating-a-kubernetes-cluster-on-eks">Creating a Kubernetes cluster on EKS</a>
+<ul class="sectlevel2">
+<li><a href="#configuring-the-aws-cli">Configuring the AWS CLI</a></li>
+<li><a href="#provisioning-a-cluster">Provisioning a cluster</a></li>
+</ul>
+</li>
+<li><a href="#installing-the-operator">Installing the Operator</a></li>
+<li>
+<a href="#deploying-your-instanton-image-to-amazon-elastic-container-service-for-kubernetes-eks">Deploying your InstantOn image to Amazon Elastic Container Service for Kubernetes (EKS)</a>
+<ul class="sectlevel2">
+<li><a href="#pushing-the-image-to-a-container-registry">Pushing the image to a container registry</a></li>
+<li><a href="#deploying-the-image">Deploying the image</a></li>
+<li><a href="#making-requests-to-the-microservices">Making requests to the microservices</a></li>
+</ul>
+</li>
+<li><a href="#testing-microservices-that-are-running-on-aws-eks">Testing microservices that are running on AWS EKS</a></li>
+<li><a href="#tearing-down-the-environment">Tearing down the environment</a></li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Speeding up startup and improving CPU and memory usage of containers on Amazon Web Services</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">45 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <div class="new_guide_container">
+            <span class="guide_new">New</span>
+          </div>
+          
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/instanton-aws.html" target="_blank" rel="noopener">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Explore how to speed up your containers startup time by using Open Liberty InstantOn and improve the CPU and memory usage by enabling Semeru Cloud Compiler in your deployment to Amazon Elastic Container Service for Kubernetes (EKS) on Amazon Web Services (AWS).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to containize a microservice with Open Liberty InstantOn and deploy the container with Semeru Cloud Compiler enablement to a Kubernetes cluster on Amazon Elastic Container Service for Kubernetes (EKS).</p>
+</div>
+<div class="paragraph">
+<p><a href="https://openliberty.io/docs/latest/instanton.html" target="_blank" rel="noopener">Open Liberty InstantOn</a> provides fast startup times for MicroProfile and Jakarta EE applications. Your applications can start in milliseconds, without compromising on throughput, memory, development-production parity, or Java language features.</p>
+</div>
+<div class="paragraph">
+<p>Semeru Cloud Compiler uses the <a href="https://eclipse.dev/openj9/docs/jitserver" target="_blank" rel="noopener noreferrer">JITServer</a> (Just-in-Time Server) technology that is included in the <a href="https://www.eclipse.org/openj9/" target="_blank" rel="noopener noreferrer">Eclipse OpenJ9 JVM</a>. It decouples the JIT compiler from the JVM to prevent your Java application from suffering possible negative effects due to CPU and memory consumption caused by JIT compilation in the JVM.</p>
+</div>
+<div class="paragraph">
+<p>Amazon Web Services (AWS) offers a managed Kubernetes service called Amazon Elastic Container Service for kubernetes (EKS). EKS simplifies the process of running Kubernetes on AWS without needing to install or maintain your Kubernetes control plane. It provides a hosted kubernetes cluster where you can deploy your microservices. You will use EKS with Amazon Elastic Container Registry (ECR). Amazon ECR is a private registry that is used to store and distribute your container images. Note, because EKS is not free, there is a small cost that is associated with running this guide. See the official <a href="https://aws.amazon.com/eks/pricing/" target="_blank" rel="noopener noreferrer">Amazon EKS pricing</a> documentation for more information.</p>
+</div>
+<div class="paragraph">
+<p>The microservice you will deploy is called <code>system</code>. The <code>system</code> microservice returns the JVM system properties of the running container. It also returns the pod’s name in the HTTP header, making replicas easy to distinguish from each other.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/instanton-aws/deployment_diagram.png" alt="Deployment">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You must run this guide in a Linux environment with the X86-64/AMD64 processor and the following version:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Ubuntu:</strong> kernel version must be 5.9 or greater</p>
+</li>
+<li>
+<p><strong>RHEL:</strong>   version must be 9.0 or greater</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Before you begin, the following additional tools need to be installed on your Linux:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Podman:</strong> You need containerization software for building containers. Kubernetes supports various container types, but you will need the latest available version of Podman in this guide. For installation instructions, refer to the official <a href="https://podman.io/docs/installation" class="bare" target="_blank" rel="noopener noreferrer">https://podman.io/docs/installation</a> documentation.</p>
+</li>
+<li>
+<p><strong>kubectl:</strong> You need the Kubernetes command-line tool <code>kubectl</code> to interact with your Kubernetes cluster. See the official <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl" target="_blank" rel="noopener noreferrer">Install and Set Up kubectl</a> documentation for information about downloading and setting up <code>kubectl</code> on your platform.</p>
+</li>
+<li>
+<p><strong>IAM Authenticator:</strong> You need to install the AWS IAM Authenticator for Kubernetes to allow IAM authentication for your Amazon EKS cluster. Follow the <a href="https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html" target="_blank" rel="noopener noreferrer">Installing aws-iam-authenticator</a> instructions to install the AWS IAM Authenticator on your platform.</p>
+</li>
+<li>
+<p><strong>eksctl:</strong> In this guide, you will need to use the <code>eksctl</code> Command Line Interface (CLI) tool for provisioning your EKS cluster. Navigate to the <a href="https://github.com/weaveworks/eksctl/releases" target="_blank" rel="noopener noreferrer">eksctl releases page</a> and download the latest stable release. Extract the archive and add the directory with the extracted files to your path.</p>
+</li>
+<li>
+<p><strong>AWS CLI:</strong> You will need to use the AWS Command Line Interface (CLI). For this guide, use AWS CLI Version 2, which is intended for use in production environment. All installers for AWS CLI version 2 include and use an embedded copy of Python, independent of any other Python version that you might have installed. Install the AWS CLI by following the instructions in the official <a href="https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html" target="_blank" rel="noopener noreferrer">Installing the AWS CLI</a> documentation.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-instanton-aws.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-instanton-aws.git
+cd guide-instanton-aws</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-your-instanton-image">Building your InstantOn image</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To speed up your container startup time, build your container image with the Open Liberty InstantOn.</p>
+</div>
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory. Run the following command to build and package the <code>system</code> microservice to a war file:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To containize your microservice, use the <code>kernel-slim-java17-openj9-ubi</code> Liberty container image that uses the Open Liberty basic runtime with the Semeru Runtime 17.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the <code>Containerfile</code>.</mark>
+<code>system/Containerfile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Containerfile</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="text"><span class="line-numbers"> 1</span># tag::kernel-slim[]
+<span class="line-numbers"> 2</span>FROM icr.io/appcafe/open-liberty:kernel-slim-java17-openj9-ubi
+<span class="line-numbers"> 3</span># end::kernel-slim[]
+<span class="line-numbers"> 4</span>
+<span class="line-numbers"> 5</span>ARG VERSION=1.0
+<span class="line-numbers"> 6</span>ARG REVISION=SNAPSHOT
+<span class="line-numbers"> 7</span>LABEL \
+<span class="line-numbers"> 8</span>  org.opencontainers.image.authors="Your Name" \
+<span class="line-numbers"> 9</span>  org.opencontainers.image.vendor="Open Liberty" \
+<span class="line-numbers">10</span>  org.opencontainers.image.url="local" \
+<span class="line-numbers">11</span>  org.opencontainers.image.source="https://github.com/OpenLiberty/guide-instanton-aws" \
+<span class="line-numbers">12</span>  org.opencontainers.image.version="$VERSION" \
+<span class="line-numbers">13</span>  org.opencontainers.image.revision="$REVISION" \
+<span class="line-numbers">14</span>  vendor="Open Liberty" \
+<span class="line-numbers">15</span>  name="system" \
+<span class="line-numbers">16</span>  version="$VERSION-$REVISION" \
+<span class="line-numbers">17</span>  summary="The system microservice from the InstantOn AWS guide" \
+<span class="line-numbers">18</span>  description="This image contains the system microservice running with the Open Liberty runtime."
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span># tag::config[]
+<span class="line-numbers">21</span>COPY --chown=1001:0 src/main/liberty/config/ /config/
+<span class="line-numbers">22</span># end::config[]
+<span class="line-numbers">23</span># tag::features[]
+<span class="line-numbers">24</span>RUN features.sh
+<span class="line-numbers">25</span># end::features[]
+<span class="line-numbers">26</span># tag::war[]
+<span class="line-numbers">27</span>COPY --chown=1001:0 target/guide-instanton-aws-system.war /config/apps
+<span class="line-numbers">28</span># end::war[]
+<span class="line-numbers">29</span># tag::configure[]
+<span class="line-numbers">30</span>RUN configure.sh
+<span class="line-numbers">31</span># end::configure[]
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span># tag::checkpoint[]
+<span class="line-numbers">34</span>RUN checkpoint.sh afterAppStart
+<span class="line-numbers">35</span># end::checkpoint[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Starting from the <code class="hotspot=kernel-slim file=0">kernel-slim-java17-openj9-ubi</code> Liberty container image, build the container image by copying the local <code class="hotspot=config file=0">config</code> directory to the container <code>config</code> directory, running the <code class="hotspot=features file=0">features.sh</code> script to add the Liberty features that your microservice is required to operate, copying your microservice <code class="hotspot=war file=0">war</code> file, and running the <code class="hotspot=configure file=0">configure.sh</code> script to get a pre-warmed container image.</p>
+</div>
+<div class="paragraph">
+<p>Finally, run the <code class="hotspot=checkpoint file=0">checkpoint.sh</code> script to make a checkpoint. The execution of the <code>checkpoint.sh</code> must be the last instruction during your container image build. This configuration performs the application process checkpoint and stores the process data as the last layer of the application container image. In this guide, use the <code>afterAppStart</code> checkpoint option. For more information about the checkpoint options, see the <a href="https://openliberty.io/docs/latest/instanton.html#beforeAppStart" target="_blank" rel="noopener">Faster startup with InstantOn</a> documentation.</p>
+</div>
+<div class="paragraph">
+<p>Use the following command to build the InstantOn container image. To grant the necessary Linux capabilities to the container image build, this command must be run either as the <code>root</code> user or by using the <code>sudo</code> utility.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>podman build \
+   -t dev.local/system:1.0-SNAPSHOT \
+   --cap-add=CHECKPOINT_RESTORE \
+   --cap-add=SYS_PTRACE \
+   --cap-add=SETPCAP \
+   --security-opt seccomp=unconfined \
+   system/.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The three <code>--cap-add</code> options grant the three Linux capabilities that CRIU requires to perform the application process checkpoint during the container image build. The <code>--security-opt</code> option grants access to all Linux system calls to the container image build.</p>
+</div>
+<div class="paragraph">
+<p>For more information to build the InstantOn image by Docker, see the <a href="https://openliberty.io/docs/latest/instanton.html#three_step_process" target="_blank" rel="noopener">Building the InstantOn image by using the three-step process with Docker or Podman</a> documentation.</p>
+</div>
+<div class="paragraph">
+<p>To verify that the image is built, run the following command to list all local container images:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>podman images</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify that the <code>system:1.0-SNAPSHOT</code> image is listed among them, for example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>REPOSITORY                        TAG
+dev.local/system                  1.0-SNAPSHOT
+icr.io/appcafe/open-liberty       kernel-slim-java17-openj9-ubi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you don’t see the <code>system:1.0-SNAPSHOT</code> image, then check the Maven build log for any potential errors.</p>
+</div>
+<div class="paragraph">
+<p>Now, you can run your InstantOn container image locally by the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>podman run \
+  --rm \
+  --cap-add=CHECKPOINT_RESTORE \
+  --cap-add=SETPCAP \
+  --security-opt seccomp=unconfined \
+  -p 9080:9080 \
+  system:1.0-SNAPSHOT</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>--cap-add</code> option grants the <code>CHECKPOINT_RESTORE</code> and <code>SETPCAP</code> capabilities. The <code>SYS_PTRACE</code> capability is not required to run the InstantOn container image.</p>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your application server is ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>[AUDIT   ] CWWKF0011I: The defaultServer server is ready to run a smarter planet. The defaultServer server started in 0.298 seconds.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice that the startup time is less than 1 second. Point your browser to the <a href="http://localhost:9080/system/properties" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080/system/properties</a> URL. You see a result in JSON format with the system properties of your container JVM. After you finish checking out the application, stop the Open Liberty server by pressing <code>CTRL+C</code> in the command-line session where you ran the container.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-a-kubernetes-cluster-on-eks">Creating a Kubernetes cluster on EKS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you can deploy your microservice, you must create a Kubernetes cluster.</p>
+</div>
+<div class="sect2">
+<h3 id="configuring-the-aws-cli">Configuring the AWS CLI</h3>
+<div class="paragraph">
+<p>Before you configure the AWS CLI, you need to create an AWS Identity and Access Management (IAM) user. Navigate to the <a href="https://console.aws.amazon.com/iam/home#/users" target="_blank" rel="noopener noreferrer">Identity and Access Management</a> users dashboard and create a user through the UI. While creating a user, you must give the user <code>programmatic access</code> when selecting the AWS access type. You will also be prompted to add the user to a group. A group allows you to specify permissions for multiple users. If you do not have an existing group, you need to create a new one. Be sure to take note of the <code>AWS Access Key ID</code> and <code>AWS Secret Access Key</code>. After the AWS CLI is installed, it must be configured by running the AWS configure command.</p>
+</div>
+<div class="paragraph">
+<p>You will be prompted for several pieces of information, including an <code>AWS Access Key ID</code> and an <code>AWS Secret Access Key</code>. These keys are associated with the AWS Identity and Access Management (IAM) user that you created.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>aws configure</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, you will be prompted to enter a region. This region will be the region of the servers where your requests are sent. Select the region that is closest to you. For a full list of regions, see the <a href="https://docs.aws.amazon.com/general/latest/gr/rande.html#eks_region" target="_blank" rel="noopener noreferrer">AWS Regions and Endpoints</a>.</p>
+</div>
+<div class="paragraph">
+<p>Finally, enter <code>json</code> when you are prompted to enter the output format.</p>
+</div>
+<div class="paragraph">
+<p>After you are done filling out this information, the settings are stored in the default profile. Anytime that you run an AWS CLI command without specifying a profile, the default profile is used.</p>
+</div>
+<div class="paragraph">
+<p>You can verify your current configuration values by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>aws configure list</code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>     Name                    Value             Type    Location
+      ----                    -----             ----    --------
+   profile                &lt;not set&gt;             None    None
+access_key     ****************OABC shared-credentials-file
+secret_key     ****************ABc0 shared-credentials-file
+    region                us-east-2      config-file    ~/.aws/config</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="provisioning-a-cluster">Provisioning a cluster</h3>
+<div class="paragraph">
+<p>The <code>eksctl</code> CLI tool greatly simplifies the process of creating clusters on EKS. To create your cluster, use the <code>eksctl create cluster</code> command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>eksctl create cluster --name=guide-cluster --nodes=1 --node-type=t2.small</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running this command creates a cluster that is called <code>guide-cluster</code> that uses a single <code>t2.small</code> Amazon Elastic Compute Cloud (EC2) instance as the worker node. The <code>t2.small</code> EC2 instance is not included in the AWS free tier. See the official <a href="https://aws.amazon.com/ec2/pricing/on-demand/" target="_blank" rel="noopener noreferrer">Amazon EC2 pricing</a> documentation for more details. When the cluster is created, you see an output similar to the following:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>[✔]  EKS cluster "guide-cluster" in "us-east-2" region is ready</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After your cluster is ready, EKS connects <code>kubectl</code> to the cluster. Verify that you’re connected to the cluster by checking the cluster’s nodes:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get nodes</code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                            STATUS    ROLES     AGE       VERSION
+ip.us-east-2.compute.internal   Ready     &lt;none&gt;    7m        v1.11.5</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-the-operator">Installing the Operator</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you can deploy your microservice, you must install the <a href="https://cert-manager.io" target="_blank" rel="noopener noreferrer">cert-manager</a> and the Open Liberty Operator. For more information, see the <a href="https://github.com/OpenLiberty/open-liberty-operator/tree/main/deploy/releases/1.2.1#readme" target="_blank" rel="noopener noreferrer">installation instructions</a>.</p>
+</div>
+<div class="paragraph">
+<p>First, install the cert-manager to your Kubernetes cluster by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.12.1/cert-manager.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, install Custom Resource Definitions (CRDs) for the Open Liberty Operator by running the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl apply --server-side -f https://raw.githubusercontent.com/OpenLiberty/open-liberty-operator/main/deploy/releases/1.2.1/kubectl/openliberty-app-crd.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Custom Resources extend the Kubernetes API and enhance its functionality.</p>
+</div>
+<div class="paragraph">
+<p>Set environment variables for namespaces for the Operator by running the following commands:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>OPERATOR_NAMESPACE=default
+WATCH_NAMESPACE='""'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, run the following commands to install cluster-level role-based access:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -L https://raw.githubusercontent.com/OpenLiberty/open-liberty-operator/main/deploy/releases/1.2.1/kubectl/openliberty-app-rbac-watch-all.yaml \
+  | sed -e "s/OPEN_LIBERTY_OPERATOR_NAMESPACE/${OPERATOR_NAMESPACE}/" \
+  | kubectl apply -f -</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, run the following commands to install the Operator:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -L https://raw.githubusercontent.com/OpenLiberty/open-liberty-operator/main/deploy/releases/1.2.1/kubectl/openliberty-app-operator.yaml \
+  | sed -e "s/OPEN_LIBERTY_WATCH_NAMESPACE/${WATCH_NAMESPACE}/" \
+  | kubectl apply -n ${OPERATOR_NAMESPACE} -f -</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To check that the Open Liberty Operator has been installed successfully, run the following command to view all the supported API resources that are available through the Open Liberty Operator:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl api-resources --api-group=apps.openliberty.io</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Look for the following output, which shows the <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/" target="_blank" rel="noopener noreferrer">custom resource definitions</a> (CRDs) that can be used by the Open Liberty Operator:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                      SHORTNAMES         APIGROUP              NAMESPACED   KIND
+openlibertyapplications   olapp,olapps       apps.openliberty.io   true         OpenLibertyApplication
+openlibertydumps          oldump,oldumps     apps.openliberty.io   true         OpenLibertyDump
+openlibertytraces         oltrace,oltraces   apps.openliberty.io   true         OpenLibertyTrace</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each CRD defines a kind of object that can be used, which is specified in the previous example by the <code>KIND</code> value. The <code>SHORTNAME</code> value specifies alternative names that you can substitute in the configuration to refer to an object kind. For example, you can refer to the <code>OpenLibertyApplication</code> object kind by one of its specified shortnames, such as <code>olapps</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>openlibertyapplications</code> CRD defines a set of configurations for deploying an Open Liberty-based application, including the application image, number of instances, and storage settings. The Open Liberty Operator watches for changes to instances of the <code>OpenLibertyApplication</code> object kind and creates Kubernetes resources that are based on the configuration that is defined in the CRD.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-your-instanton-image-to-amazon-elastic-container-service-for-kubernetes-eks">Deploying your InstantOn image to Amazon Elastic Container Service for Kubernetes (EKS)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this section, you will learn how to push your InstantOn image built in the previous section to a container registry, and then deploy it to your Kubernetes cluster on EKS by using Open Liberty Operator with Semeru Cloud Compiler enablement.</p>
+</div>
+<div class="sect2">
+<h3 id="pushing-the-image-to-a-container-registry">Pushing the image to a container registry</h3>
+<div class="paragraph">
+<p>Pushing the image to a registry allows the cluster to create pods by using your container image. The registry that you are using is called Amazon Elastic Container Registry (ECR).</p>
+</div>
+<div class="paragraph">
+<p>Authenticate to the registry using the following command so you can push or pull image using Podman:</p>
+</div>
+<div class="paragraph">
+<p>Start by running the <code>get-login</code> command. The <code>get-login</code> command returns the <code>[password_string]</code>. The <code>password-stdin</code> flag provides the password returned by <code>get-login</code>. Replace the <code>[aws_account_id]</code> and the <code>[region]</code> your account is configured under in the following <code>podman</code> command, that is used to authenticate your Podman client.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>aws ecr get-login-password | podman login --username AWS --password-stdin [aws_account_id].dkr.ecr.[region].amazonaws.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you are authenticated, create a repository for the instanton container image, in the private Amazon ECR registry.
+Next, make a repository to store the <code>system</code> image:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>aws ecr create-repository --repository-name instantonaws/system</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see an output similar to the following:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+    "repository": {
+        "repositoryArn": "arn:aws:ecr:us-east-2:439159788015:repository/instantonaws/system",
+        "registryId": "439159788015",
+        "repositoryName": "instantonaws/system",
+        "repositoryUri": "439159788015.dkr.ecr.us-east-2.amazonaws.com/instantonaws/system",
+        "createdAt": "2023-07-20T10:30:04-07:00",
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, you need to tag your container image with the relevant data about your registry:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>podman tag dev.local/system:1.0-SNAPSHOT [system-repository-uri]:1.0-SNAPSHOT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, push your image to the registry:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>podman push [system-repository-uri]:1.0-SNAPSHOT</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="deploying-the-image">Deploying the image</h3>
+<div class="paragraph">
+<p>You can configure the specifics of the Open Liberty Operator-controlled deployment with a YAML configuration file.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the deploy.yaml configuration file in the start directory.</mark>
+<code>deploy.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>deploy.yaml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="line-numbers"> 1</span><span class="comment"># tag::system[]</span>
+<span class="line-numbers"> 2</span><span class="key">apiVersion</span>: <span class="string"><span class="content">apps.openliberty.io/v1</span></span>
+<span class="line-numbers"> 3</span><span class="comment"># tag::olapp[]</span>
+<span class="line-numbers"> 4</span><span class="key">kind</span>: <span class="string"><span class="content">OpenLibertyApplication</span></span>
+<span class="line-numbers"> 5</span><span class="comment"># end::olapp[]</span>
+<span class="line-numbers"> 6</span><span class="key">metadata</span>:
+<span class="line-numbers"> 7</span>  <span class="key">name</span>: <span class="string"><span class="content">system</span></span>
+<span class="line-numbers"> 8</span><span class="key">spec</span>:
+<span class="line-numbers"> 9</span>  <span class="comment"># tag::sysImage[]</span>
+<span class="line-numbers">10</span>  <span class="key">applicationImage</span>: <span class="string"><span class="content">[system-repository-uri]:1.0-SNAPSHOT</span></span>
+<span class="line-numbers">11</span>  <span class="comment"># end::sysImage[]</span>
+<span class="line-numbers">12</span>  <span class="key">pullPolicy</span>: <span class="string"><span class="content">Always</span></span>
+<span class="line-numbers">13</span>  <span class="key">manageTLS</span>: <span class="string"><span class="content">false</span></span>
+<span class="line-numbers">14</span>  <span class="key">replicas</span>: <span class="string"><span class="content">3</span></span>
+<span class="line-numbers">15</span>  <span class="key">resources</span>:
+<span class="line-numbers">16</span>    <span class="key">limits</span>:
+<span class="line-numbers">17</span>      <span class="key">cpu</span>: <span class="string"><span class="content">1</span></span>
+<span class="line-numbers">18</span>      <span class="key">memory</span>: <span class="string"><span class="content">512Mi</span></span>
+<span class="line-numbers">19</span>    <span class="key">requests</span>:
+<span class="line-numbers">20</span>      <span class="key">cpu</span>: <span class="string"><span class="content">500m</span></span>
+<span class="line-numbers">21</span>      <span class="key">memory</span>: <span class="string"><span class="content">256Mi</span></span>
+<span class="line-numbers">22</span>  <span class="key">service</span>:
+<span class="line-numbers">23</span>    <span class="key">type</span>: <span class="string"><span class="content">ClusterIP</span></span>
+<span class="line-numbers">24</span>    <span class="key">port</span>: <span class="string"><span class="content">9443</span></span>
+<span class="line-numbers">25</span>  <span class="key">expose</span>: <span class="string"><span class="content">true</span></span>
+<span class="line-numbers">26</span>  <span class="key">env</span>:
+<span class="line-numbers">27</span>    - <span class="string"><span class="content">name: WLP_LOGGING_MESSAGE_FORMAT</span></span>
+<span class="line-numbers">28</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">json</span><span class="delimiter">"</span></span>
+<span class="line-numbers">29</span>    - <span class="string"><span class="content">name: WLP_LOGGING_MESSAGE_SOURCE</span></span>
+<span class="line-numbers">30</span>      <span class="key">value</span>: <span class="string"><span class="delimiter">"</span><span class="content">message,trace,accessLog,ffdc,audit</span><span class="delimiter">"</span></span>
+<span class="line-numbers">31</span>  <span class="comment"># tag::securityContext[]</span>
+<span class="line-numbers">32</span>  <span class="key">securityContext</span>:
+<span class="line-numbers">33</span>    <span class="key">runAsNonRoot</span>: <span class="string"><span class="content">true</span></span>
+<span class="line-numbers">34</span>    <span class="key">privileged</span>: <span class="string"><span class="content">false</span></span>
+<span class="line-numbers">35</span>    <span class="key">allowPrivilegeEscalation</span>: <span class="string"><span class="content">true</span></span>
+<span class="line-numbers">36</span>    <span class="key">capabilities</span>:
+<span class="line-numbers">37</span>      <span class="key">add</span>:
+<span class="line-numbers">38</span>      - <span class="string"><span class="content">CHECKPOINT_RESTORE</span></span>
+<span class="line-numbers">39</span>      - <span class="string"><span class="content">SETPCAP</span></span>
+<span class="line-numbers">40</span>      <span class="key">drop</span>:
+<span class="line-numbers">41</span>      - <span class="string"><span class="content">ALL</span></span>
+<span class="line-numbers">42</span>  <span class="comment"># end::securityContext[]</span>
+<span class="line-numbers">43</span>  <span class="comment"># tag::semeruCloudCompiler[]</span>
+<span class="line-numbers">44</span>  <span class="key">semeruCloudCompiler</span>:
+<span class="line-numbers">45</span>    <span class="key">enable</span>: <span class="string"><span class="content">true</span></span>
+<span class="line-numbers">46</span>    <span class="key">replicas</span>: <span class="string"><span class="content">3</span></span>
+<span class="line-numbers">47</span>  <span class="comment"># end::semeruCloudCompiler[]</span>
+<span class="line-numbers">48</span><span class="comment"># end::system[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot file=0">deploy.yaml</code> file is configured to deploy one <code class="hotspot=olapp file=0">OpenLibertyApplication</code> resource, <code class="hotspot=system file=0">system</code>, which is controlled by the Open Liberty Operator.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=sysImage file=0">applicationImage</code> parameter defines what container image is deployed as part of the <code>OpenLibertyApplication</code> CRD. Update <code class="hotspot=sysImage file=0">[system-repository-uri]</code> in the <code>applicationImage</code> field to point to your <code>system</code> repository URI.</p>
+</div>
+<div class="paragraph">
+<p>TODO: need a paragraph to describe <code class="hotspot=securityContext file=0">securityContext</code> configuration.</p>
+</div>
+<div class="paragraph">
+<p>TODO: need a paragraph to describe <code class="hotspot=semeruCloudCompiler file=0">semeruCloudCompiler</code> configuration.</p>
+</div>
+<div class="paragraph">
+<p>Run the following command to deploy the <code>system</code> InstantOn image:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl apply -f deploy.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the image is deployed, run the following command to check the status of your pods:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get pods</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If all the pods are healthy and running, you see an output similar to the following:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                                        READY   STATUS    RESTARTS   AGE
+olo-controller-manager-58d7788bd-nk7cc      1/1     Running   0          44m
+system-deployment-6d559bbcf9-xt7t6          1/1     Running   0          8m40s
+system-semeru-compiler-1-58666f5d56-dmhm8   0/1     Pending   0          2m39s
+system-semeru-compiler-1-58666f5d56-hs85x   1/1     Running   0          2m39s
+system-semeru-compiler-1-58666f5d56-s2pds   0/1     Pending   0          2m39s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>first</code> pod refers to the Open Liberty Operator. The <code>second</code> one is the <code>system</code> microservice and the <code>last three</code> for the three replicas of Semeru Cloud Compiler.</p>
+</div>
+<div class="paragraph">
+<p>To check the Semeru Cloud Compiler and InstantOn deployments, execute the following command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get deployments</code></pre>
+</div>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+olo-controller-manager     1/1     1            1           50m
+system-deployment          1/1     1            1           14m
+system-semeru-compiler-1   1/3     3            1           8m56s</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="making-requests-to-the-microservices">Making requests to the microservices</h3>
+<div class="paragraph">
+<p>Before you can make a request to <code>[hostname]:31000</code>, you must modify the security group to allow incoming traffic through ports <code>31000</code>. To get the <code>group-id</code> of the security group, use the <code>aws ec2 describe-security-groups</code> command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>aws ec2 describe-security-groups --filters Name=group-name,Values="*eksctl-guide-cluster-cluster-*" --query "SecurityGroups[*].IpPermissions[*].UserIdGroupPairs"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will see an output similar to the following:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>...
+    {
+        "Description": "Allow nodes to communicate with each other (all ports)",
+        "GroupId": "sg-035c858e1ff9c52f1",
+        "UserId": "208872073932"
+    },
+    {
+        "Description": "Allow managed and unmanaged nodes to communicate with each other (all ports)",
+        "GroupId": "sg-04a0c50049c10ae54",
+        "UserId": "208872073932"
+    }
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Copy the value of the <code>GroupId</code> which description is "Allow managed and unmanaged nodes to communicate with each other (all ports)". In this example output, the value is <code>sg-04a0c50049c10ae54</code>.</p>
+</div>
+<div class="paragraph">
+<p>Then, add the following rules to the security group to allow incoming traffic through port <code>31000</code>. Don’t forget to substitute <code>[security-group-id]</code> for the <code>GroupId</code> in the output of the previous command.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>aws ec2 authorize-security-group-ingress --protocol tcp --port 31000 --group-id [security-group-id] --cidr 0.0.0.0/0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you finish adding the inbound rules to the security group, you might need to wait a few minutes before you try to access the <code>system</code> microservice.</p>
+</div>
+<div class="paragraph">
+<p>Take note of the <code>EXTERNAL-IP</code> in the output of the following command. It is the hostname you will later substitute into <code>[hostname]</code>:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl get nodes -o wide</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, <code>curl</code> or visit the following URLs to access your microservices, substituting the appropriate hostname:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>http://[hostname]:31000/system/properties</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This URL returns system properties and the name of the pod in an HTTP header called <code>X-Pod-Name</code>. To view the header, you can use the <code>-I</code> option in the <code>curl</code> when you make a request to <code>http://[hostname]:31000/system/properties</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-microservices-that-are-running-on-aws-eks">Testing microservices that are running on AWS EKS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>pom.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="line-numbers">  2</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">  3</span>    <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">  4</span>    <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  5</span>
+<span class="line-numbers">  6</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  7</span>
+<span class="line-numbers">  8</span>    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">  9</span>    
+<span class="line-numbers"> 10</span>    <span class="tag">&lt;artifactId&gt;</span>guide-instanton-aws-system<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 11</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 12</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 15</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 16</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 17</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>11<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 18</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>11<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 19</span>        <span class="comment">&lt;!-- Default test properties --&gt;</span>
+<span class="line-numbers"> 20</span>        <span class="comment">&lt;!-- tag::cluster[] --&gt;</span>
+<span class="line-numbers"> 21</span>        <span class="tag">&lt;cluster.ip&gt;</span>localhost<span class="tag">&lt;/cluster.ip&gt;</span>
+<span class="line-numbers"> 22</span>        <span class="comment">&lt;!-- end::cluster[] --&gt;</span>
+<span class="line-numbers"> 23</span>        <span class="comment">&lt;!-- tag::system-service[] --&gt;</span>
+<span class="line-numbers"> 24</span>         <span class="tag">&lt;system.kube.service&gt;</span>system-service<span class="tag">&lt;/system.kube.service&gt;</span>
+<span class="line-numbers"> 25</span>         <span class="comment">&lt;!-- end::system-service[] --&gt;</span>
+<span class="line-numbers"> 26</span>         <span class="comment">&lt;!-- tag::system-node-port[] --&gt;</span>
+<span class="line-numbers"> 27</span>        <span class="tag">&lt;system.node.port&gt;</span>31000<span class="tag">&lt;/system.node.port&gt;</span>
+<span class="line-numbers"> 28</span>        <span class="comment">&lt;!-- end::system-node-port[] --&gt;</span>
+<span class="line-numbers"> 29</span>        <span class="comment">&lt;!-- Liberty configuration[] --&gt;</span>
+<span class="line-numbers"> 30</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9080<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers"> 31</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9443<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers"> 32</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 33</span>
+<span class="line-numbers"> 34</span>    <span class="comment">&lt;!-- Provided dependancies --&gt;</span>
+<span class="line-numbers"> 35</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 36</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 37</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 38</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 39</span>            <span class="tag">&lt;version&gt;</span>10.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 40</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 41</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 42</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 43</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 44</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 45</span>            <span class="tag">&lt;version&gt;</span>6.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 46</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 47</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 48</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 49</span>       <span class="comment">&lt;!-- For tests --&gt;</span>
+<span class="line-numbers"> 50</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 51</span>            <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 52</span>            <span class="tag">&lt;artifactId&gt;</span>junit-jupiter<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 53</span>            <span class="tag">&lt;version&gt;</span>5.9.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 54</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 55</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 56</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 57</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 58</span>            <span class="tag">&lt;artifactId&gt;</span>resteasy-json-binding-provider<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 59</span>            <span class="tag">&lt;version&gt;</span>6.2.3.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 60</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 61</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 62</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 63</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 64</span>            <span class="tag">&lt;artifactId&gt;</span>resteasy-client<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 65</span>            <span class="tag">&lt;version&gt;</span>6.2.3.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 66</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 67</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 68</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers"> 69</span>
+<span class="line-numbers"> 70</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers"> 71</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers"> 72</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers"> 73</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 74</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 75</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 76</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 77</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 78</span>            <span class="comment">&lt;!-- Enable Liberty Maven plugin --&gt;</span>
+<span class="line-numbers"> 79</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 80</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 81</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 82</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 83</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 84</span>            <span class="comment">&lt;!-- Plugin to run unit tests --&gt;</span>
+<span class="line-numbers"> 85</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 86</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 87</span>                <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 88</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 89</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 90</span>            <span class="comment">&lt;!-- Plugin to run functional tests --&gt;</span>
+<span class="line-numbers"> 91</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 92</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 93</span>                <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 94</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 95</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers"> 96</span>                    <span class="tag">&lt;systemPropertyVariables&gt;</span>
+<span class="line-numbers"> 97</span>                        <span class="tag">&lt;cluster.ip&gt;</span>${cluster.ip}<span class="tag">&lt;/cluster.ip&gt;</span>
+<span class="line-numbers"> 98</span>                        <span class="tag">&lt;system.kube.service&gt;</span>${system.kube.service}<span class="tag">&lt;/system.kube.service&gt;</span>
+<span class="line-numbers"> 99</span>                        <span class="tag">&lt;system.node.port&gt;</span>${system.node.port}<span class="tag">&lt;/system.node.port&gt;</span>
+<span class="line-numbers">100</span>                    <span class="tag">&lt;/systemPropertyVariables&gt;</span>
+<span class="line-numbers">101</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">102</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">103</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">104</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">105</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A few tests are included for you to test the basic functionality of the microservices. If a test failure occurs, then you might have introduced a bug into the code. To run the tests, wait for all pods to be in the ready state before you proceed further. The default properties defined in the <code class="hotspot file=0">pom.xml</code> file are:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 13.0434%;">
+<col style="width: 86.9566%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><strong>Property</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code class="hotspot=cluster file=0">cluster.ip</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IP or hostname for your cluster.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code class="hotspot=system-service file=0">system.kube.service</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the Kubernetes Service wrapping the <code>system-service</code> pods.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code class="hotspot=system-node-port file=0">system.node.port</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The NodePort of the Kubernetes Service <code>system-service</code>, 31000 by default.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Use the following command to run the integration tests against your cluster. Substitute <code>[hostname]</code> with the appropriate value:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn failsafe:integration-test -Dcluster.ip=[hostname]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the tests pass, you see an output for each service similar to the following:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.system.SystemEndpointIT
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.673 sec - in it.io.openliberty.guides.system.SystemEndpointIT
+
+Results:
+
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tearing-down-the-environment">Tearing down the environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It is important to clean up your resources when you are finished with the guide so that you do not incur additional charges for ongoing service.</p>
+</div>
+<div class="paragraph">
+<p>When you no longer need your deployed microservices, you can delete all kubernetes resources by running the <code>kubectl delete</code> command:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>kubectl delete -f deploy.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Delete the ECR repositories used to store the <code>system</code> image:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>aws ecr delete-repository --repository-name instantonaws/system --force</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Remove your EKS cluster:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>eksctl delete cluster --name guide-cluster</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You just deployed two microservices running in Open Liberty to AWS EKS. You also learned how to use the <code>kubectl</code> command to deploy your microservices on a kubernetes cluster.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Speeding up startup and improving CPU and memory usage of containers on Amazon Web Services <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-instanton-aws/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-instanton-aws/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-instanton-aws/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

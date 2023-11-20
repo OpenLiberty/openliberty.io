@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Building and testing a Java web application with Maven and Open Liberty
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples of how to build and test a simple Java EE or Jakarta EE web application using a Maven Project Object Model (POM) file.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/maven-intro">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Building and testing a Java web application with Maven and Open Liberty" />
+  <meta name="twitter:description" content="A getting started tutorial with examples of how to build and test a simple Java EE or Jakarta EE web application using a Maven Project Object Model (POM) file." />
+
+  <meta property='og:title' content="Building and testing a Java web application with Maven and Open Liberty" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples of how to build and test a simple Java EE or Jakarta EE web application using a Maven Project Object Model (POM) file." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/maven-intro" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#installing-maven">Installing Maven</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li><a href="#creating-a-simple-application">Creating a simple application</a></li>
+<li><a href="#creating-the-project-pom-file">Creating the project POM file</a></li>
+<li><a href="#running-the-application">Running the application</a></li>
+<li>
+<a href="#testing-the-web-application">Testing the web application</a>
+<ul class="sectlevel2">
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Building a web application with Maven</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">15 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/maven-intro.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to build and test a simple web application using Maven and Open Liberty.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to configure a simple web servlet application using <a href="https://maven.apache.org/what-is-maven.html" target="_blank" rel="noopener noreferrer">Maven</a> and the <a href="https://github.com/OpenLiberty/ci.maven/blob/main/README.md" target="_blank" rel="noopener noreferrer">Liberty Maven plugin</a>. When you compile and build the application code, Maven downloads and installs Open Liberty. If you run the application, Maven creates an Open Liberty instance and runs the application on it. The application displays a simple web page with a link that, when clicked, calls the servlet to return a simple response of <code>Hello! How are you today?</code>.</p>
+</div>
+<div class="paragraph">
+<p>One benefit of using a build tool like Maven is that you can define the details of the project and any dependencies it has, and Maven automatically downloads and installs the dependencies. Another benefit of using Maven is that it can run repeatable, automated tests on the application. You can, of course, test your application manually by starting a Liberty instance and pointing a web browser at the application URL. However, automated tests are a much better approach because you can easily rerun the same tests each time the application is built. If the tests don’t pass after you change the application, the build fails, and you know that you introduced a regression that requires a fix to your code.</p>
+</div>
+<div class="paragraph">
+<p>Choosing a build tool often comes down to personal or organizational preference, but you might choose to use Maven for several reasons. Maven defines its builds by using XML, which is probably familiar to you already. As a mature, commonly used build tool, Maven probably integrates with whichever IDE you prefer to use. Maven also has an extensive plug-in library that offers various ways to quickly customize your build. Maven can be a good choice if your team is already familiar with it.</p>
+</div>
+<div class="paragraph">
+<p>You will create a Maven build definition file that’s called a <code>pom.xml</code> file, which stands for Project Object Model, and use it to build your web application. You will then create a simple, automated test and configure Maven to automatically run the test.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-maven">Installing Maven</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If Maven isn’t already installed, <a href="https://maven.apache.org/download.cgi" target="_blank" rel="noopener noreferrer">download the binary zip or tar.gz file</a>. Then, follow the <a href="https://maven.apache.org/install.html" target="_blank" rel="noopener noreferrer">installation instructions for your operating system</a> to extract the <code>.zip</code> file and add the <code>bin</code> directory, which contains the <code>mvn</code> command to the <code>PATH</code> on your computer.</p>
+</div>
+<div class="paragraph">
+<p>Run the following command to test that Maven is installed:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn -v</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If Maven is installed properly, you see information about the Maven installation similar to the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>Apache Maven 3.8.1 (05c21c65bdfed0f71a2f2ada8b84da59348c4c5d)
+Maven home: /Applications/Maven/apache-maven-3.8.1
+Java version: 11.0.12, vendor: International Business Machines Corporation, runtime: /Library/Java/JavaVirtualMachines/ibm-semeru-open-11.jdk/Contents/Home
+Default locale: en_US, platform encoding: UTF-8
+OS name: "mac os x", version: "11.6", arch: "x86_64", family: "mac"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-maven-intro.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-maven-intro.git
+cd guide-maven-intro</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>To try out the application, first go to the <code>finish</code> directory and run Maven with the <code>liberty:run</code> goal to build the application and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd finish
+mvn liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready.</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>The guideServer server is ready to run a smarter planet.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Navigate your browser to the <a href="http://localhost:9080/ServletSample/servlet" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080/ServletSample/servlet</a> URL to access the application. The servlet returns a simple response of <code>Hello! How are you today?</code>.</p>
+</div>
+<div class="paragraph command">
+<p>After you are finished checking out the application, stop the Liberty instance by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty. Alternatively, you can run the <code>liberty:stop</code> goal from the <code>finish</code> directory in another shell session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:stop</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-a-simple-application">Creating a simple application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The simple web application that you will build using Maven and Open Liberty is provided for you in the <code>start</code> directory so that you can focus on learning about Maven. This application uses a standard Maven directory structure, eliminating the need to customize the <code>pom.xml</code> file so that Maven understands your project layout.</p>
+</div>
+<div class="paragraph">
+<p>All the application source code, including the Open Liberty <code>server.xml</code> configuration file, is in the <code>src/main/liberty/config</code> directory:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>    └── src
+        └── main
+           └── java
+           └── resources
+           └── webapp
+           └── liberty
+                  └── config</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="creating-the-project-pom-file">Creating the project POM file</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph">
+<p>Before you can build the project, define the Maven Project Object Model (POM) file, the <code>pom.xml</code>.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the pom.xml file in the <code>start</code> directory.</mark>
+<code>pom.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>pom.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version='1.0' encoding='utf-8'?&gt;</span>
+<span class="line-numbers">  2</span><span class="comment">&lt;!-- tag::project[] --&gt;</span>
+<span class="line-numbers">  3</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  4</span><span class="comment">&lt;!-- end::project[] --&gt;</span>
+<span class="line-numbers">  5</span>    <span class="comment">&lt;!-- tag::modelVersion[] --&gt;</span>
+<span class="line-numbers">  6</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  7</span>    <span class="comment">&lt;!-- end::modelVersion[] --&gt;</span>
+<span class="line-numbers">  8</span>
+<span class="line-numbers">  9</span>    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 10</span>    <span class="comment">&lt;!-- tag::artifactID[] --&gt;</span>
+<span class="line-numbers"> 11</span>    <span class="tag">&lt;artifactId&gt;</span>ServletSample<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 12</span>    <span class="comment">&lt;!-- end::artifactID[] --&gt;</span>
+<span class="line-numbers"> 13</span>    <span class="comment">&lt;!-- tag::packaging[] --&gt;</span>
+<span class="line-numbers"> 14</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers"> 15</span>    <span class="comment">&lt;!-- end::packaging[] --&gt;</span>
+<span class="line-numbers"> 16</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span>    <span class="comment">&lt;!-- tag::properties[] --&gt;</span>
+<span class="line-numbers"> 19</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 20</span>        <span class="comment">&lt;!-- tag::encoding[] --&gt;</span>
+<span class="line-numbers"> 21</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 22</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 23</span>        <span class="comment">&lt;!-- end::encoding[] --&gt;</span>
+<span class="line-numbers"> 24</span>        <span class="comment">&lt;!-- tag::java-version[] --&gt;</span>
+<span class="line-numbers"> 25</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>11<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 26</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>11<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 27</span>        <span class="comment">&lt;!-- end::java-version[] --&gt;</span>
+<span class="line-numbers"> 28</span>        <span class="comment">&lt;!-- Liberty configuration --&gt;</span>
+<span class="line-numbers"> 29</span>        <span class="comment">&lt;!-- tag::default-http-port[] --&gt;</span>
+<span class="line-numbers"> 30</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9080<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers"> 31</span>        <span class="comment">&lt;!-- end::default-http-port[] --&gt;</span>
+<span class="line-numbers"> 32</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9443<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers"> 33</span>        <span class="tag">&lt;liberty.var.app.context.root&gt;</span>${project.artifactId}<span class="tag">&lt;/liberty.var.app.context.root&gt;</span>
+<span class="line-numbers"> 34</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 35</span>    <span class="comment">&lt;!-- end::properties[] --&gt;</span>
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span>    <span class="comment">&lt;!-- tag::dependencies[] --&gt;</span>
+<span class="line-numbers"> 38</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 39</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers"> 40</span>        <span class="comment">&lt;!-- tag::jakarta.jakartaee-api[] --&gt;</span>
+<span class="line-numbers"> 41</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 42</span>            <span class="comment">&lt;!-- tag::groupID-api[] --&gt;</span>
+<span class="line-numbers"> 43</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 44</span>            <span class="comment">&lt;!-- end::groupID-api[] --&gt;</span>
+<span class="line-numbers"> 45</span>            <span class="comment">&lt;!-- tag::artifactID-api[] --&gt;</span>
+<span class="line-numbers"> 46</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 47</span>            <span class="comment">&lt;!-- end::artifactID-api[] --&gt;</span>
+<span class="line-numbers"> 48</span>            <span class="comment">&lt;!-- tag::version-api[] --&gt;</span>
+<span class="line-numbers"> 49</span>            <span class="tag">&lt;version&gt;</span>10.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 50</span>            <span class="comment">&lt;!-- end::version-api[] --&gt;</span>
+<span class="line-numbers"> 51</span>            <span class="comment">&lt;!-- tag::scope-api[] --&gt;</span>
+<span class="line-numbers"> 52</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 53</span>            <span class="comment">&lt;!-- end::scope-api[] --&gt;</span>
+<span class="line-numbers"> 54</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 55</span>        <span class="comment">&lt;!-- end::jakarta.jakartaee-api[] --&gt;</span>
+<span class="line-numbers"> 56</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 57</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 58</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 59</span>            <span class="tag">&lt;version&gt;</span>6.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 60</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 61</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 62</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 63</span>        <span class="comment">&lt;!-- For testing --&gt;</span>
+<span class="line-numbers"> 64</span>        <span class="comment">&lt;!-- tag::commons-httpclient[] --&gt;</span>
+<span class="line-numbers"> 65</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 66</span>            <span class="tag">&lt;groupId&gt;</span>org.apache.httpcomponents<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 67</span>            <span class="tag">&lt;artifactId&gt;</span>httpclient<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 68</span>            <span class="tag">&lt;version&gt;</span>4.5.14<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 69</span>            <span class="comment">&lt;!-- tag::test1[] --&gt;</span>
+<span class="line-numbers"> 70</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 71</span>            <span class="comment">&lt;!-- end::test1[] --&gt;</span>
+<span class="line-numbers"> 72</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 73</span>        <span class="comment">&lt;!-- end::commons-httpclient[] --&gt;</span>
+<span class="line-numbers"> 74</span>        <span class="comment">&lt;!-- tag::junit[] --&gt;</span>
+<span class="line-numbers"> 75</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 76</span>            <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 77</span>            <span class="tag">&lt;artifactId&gt;</span>junit-jupiter<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 78</span>            <span class="tag">&lt;version&gt;</span>5.9.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 79</span>            <span class="comment">&lt;!-- tag::test2[] --&gt;</span>
+<span class="line-numbers"> 80</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 81</span>            <span class="comment">&lt;!-- end::test2[] --&gt;</span>
+<span class="line-numbers"> 82</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 83</span>        <span class="comment">&lt;!-- end::junit[] --&gt;</span>
+<span class="line-numbers"> 84</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers"> 85</span>    <span class="comment">&lt;!-- end::dependencies[] --&gt;</span>
+<span class="line-numbers"> 86</span>
+<span class="line-numbers"> 87</span>    <span class="comment">&lt;!-- tag::build[] --&gt;</span>
+<span class="line-numbers"> 88</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers"> 89</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers"> 90</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers"> 91</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 92</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 93</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 94</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 95</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 96</span>            <span class="comment">&lt;!-- tag::liberty-maven-plugin[] --&gt;</span>
+<span class="line-numbers"> 97</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 98</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 99</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">100</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">101</span>                <span class="comment">&lt;!-- tag::configuration[] --&gt;</span>
+<span class="line-numbers">102</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">103</span>                    <span class="comment">&lt;!-- tag::serverName[] --&gt;</span>
+<span class="line-numbers">104</span>                    <span class="tag">&lt;serverName&gt;</span>guideServer<span class="tag">&lt;/serverName&gt;</span>
+<span class="line-numbers">105</span>                    <span class="comment">&lt;!-- end::serverName[] --&gt;</span>
+<span class="line-numbers">106</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">107</span>                <span class="comment">&lt;!-- end::configuration[] --&gt;</span>
+<span class="line-numbers">108</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">109</span>            <span class="comment">&lt;!-- end::liberty-maven-plugin[] --&gt;</span>
+<span class="line-numbers">110</span>            <span class="comment">&lt;!-- tag::maven-failsafe-plugin[] --&gt;</span>
+<span class="line-numbers">111</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">112</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">113</span>                <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">114</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">115</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">116</span>                    <span class="comment">&lt;!-- tag::system-property-variables[] --&gt;</span>
+<span class="line-numbers">117</span>                    <span class="tag">&lt;systemPropertyVariables&gt;</span>
+<span class="line-numbers">118</span>                        <span class="comment">&lt;!-- tag::http-port[] --&gt;</span>
+<span class="line-numbers">119</span>                        <span class="tag">&lt;http.port&gt;</span>${liberty.var.default.http.port}<span class="tag">&lt;/http.port&gt;</span>
+<span class="line-numbers">120</span>                        <span class="comment">&lt;!-- end::http-port[] --&gt;</span>
+<span class="line-numbers">121</span>                        <span class="comment">&lt;!-- tag::war-name[] --&gt;</span>
+<span class="line-numbers">122</span>                        <span class="tag">&lt;war.name&gt;</span>${liberty.var.app.context.root}<span class="tag">&lt;/war.name&gt;</span>
+<span class="line-numbers">123</span>                        <span class="comment">&lt;!-- end::war-name[] --&gt;</span>
+<span class="line-numbers">124</span>                    <span class="tag">&lt;/systemPropertyVariables&gt;</span>
+<span class="line-numbers">125</span>                    <span class="comment">&lt;!-- end::system-property-variables[] --&gt;</span>
+<span class="line-numbers">126</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">127</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">128</span>            <span class="comment">&lt;!-- end::maven-failsafe-plugin[] --&gt;</span>
+<span class="line-numbers">129</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">130</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">131</span>    <span class="comment">&lt;!-- end::build[] --&gt;</span>
+<span class="line-numbers">132</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot file=0">pom.xml</code> file starts with a root <code class="hotspot=project file=0">project</code> element and a <code class="hotspot=modelVersion file=0">modelversion</code> element, which is always set to <code>4.0.0</code>.</p>
+</div>
+<div class="paragraph">
+<p>A typical POM for a Liberty application contains the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Project coordinates</strong>: The identifiers for this application.</p>
+</li>
+<li>
+<p><strong>Properties</strong> (<code class="hotspot=properties file=0">properties</code>): Any properties for the project go here, including compilation details and any values that are referenced during compilation of the Java source code and generating the application.</p>
+</li>
+<li>
+<p><strong>Dependencies</strong> (<code class="hotspot=dependencies file=0">dependencies</code>): Any Java dependencies that are required for compiling, testing, and running the application are listed here.</p>
+</li>
+<li>
+<p><strong>Build plugins</strong> (<code class="hotspot=build file=0">build</code>): Maven is modular and each of its capabilities is provided by a separate plugin. This is where you specify which Maven plugins should be used to build this project and any configuration information needed by those plugins.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The project coordinates describe the name and version of the application. The <code class="hotspot=artifactID file=0">artifactId</code> gives a name to the web application project, which is used to name the output files that are generated by the build (e.g. the WAR file) and the Open Liberty instance that is created. You’ll notice that other fields in the <code class="hotspot file=0">pom.xml</code> file use variables that are resolved by the <code class="hotspot=artifactID file=0">artifactId</code> field. This is so that you can update the name of the sample application, including files generated by Maven, in a single place in the <code class="hotspot file=0">pom.xml</code> file. The value of the <code class="hotspot=packaging file=0">packaging</code> field is <code>war</code> so that the project output artifact is a WAR file.</p>
+</div>
+<div class="paragraph">
+<p>The first four properties in the properties section of the project, just define the encoding (<code class="hotspot=encoding file=0">UTF-8</code>) and version of Java (<code class="hotspot=java-version file=0">Java 11</code>) that Maven uses to compile the application source code.</p>
+</div>
+<div class="paragraph">
+<p>Open Liberty configuration properties provide you with a single place to specify values that are used in multiple places throughout the application. For example, the <code class="hotspot=default-http-port file=0">default.http.port</code> value is used in both the Liberty <code class="hotspot=httpEndpoint file=2">server.xml</code> configuration file and will be used in the test class that you will add (<code>EndpointIT.java</code>) to the application. Because the <code class="hotspot=default-http-port file=0">default.http.port</code> value is specified in the <code class="hotspot file=0">pom.xml</code> file, you can easily change the port number that the Liberty instance runs on without updating the application code in multiple places.</p>
+</div>
+<div class="paragraph">
+<p>HelloServlet.java</p>
+</div>
+<div class="listingblock code_column hide_tags=comment,javadoc1,javadoc2">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.hello</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.io.IOException</span>;
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.servlet.ServletException</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.servlet.annotation.WebServlet</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.servlet.http.HttpServlet</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.servlet.http.HttpServletRequest</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.servlet.http.HttpServletResponse</span>;
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span><span class="annotation">@WebServlet</span>(urlPatterns = <span class="string"><span class="delimiter">"</span><span class="content">/servlet</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">23</span><span class="directive">public</span> <span class="type">class</span> <span class="class">HelloServlet</span> <span class="directive">extends</span> HttpServlet {
+<span class="line-numbers">24</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">long</span> serialVersionUID = <span class="integer">1L</span>;
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span>    <span class="comment">// tag::javadoc1[]</span>
+<span class="line-numbers">27</span>    <span class="comment">/**</span>
+<span class="line-numbers">28</span><span class="comment">     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)</span>
+<span class="line-numbers">29</span><span class="comment">     */</span>
+<span class="line-numbers">30</span>    <span class="comment">// end::javadoc1[]</span>
+<span class="line-numbers">31</span>    <span class="directive">protected</span> <span class="type">void</span> doGet(HttpServletRequest request, HttpServletResponse response)
+<span class="line-numbers">32</span>        <span class="directive">throws</span> ServletException, <span class="exception">IOException</span> {
+<span class="line-numbers">33</span>        <span class="comment">// tag::responseString[]</span>
+<span class="line-numbers">34</span>        response.getWriter().append(<span class="string"><span class="delimiter">"</span><span class="content">Hello! How are you today?</span><span class="char">\n</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">35</span>        <span class="comment">// end::responseString[]</span>
+<span class="line-numbers">36</span>    }
+<span class="line-numbers">37</span>
+<span class="line-numbers">38</span>    <span class="comment">// tag::javadoc2[]</span>
+<span class="line-numbers">39</span>    <span class="comment">/**</span>
+<span class="line-numbers">40</span><span class="comment">     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)</span>
+<span class="line-numbers">41</span><span class="comment">     */</span>
+<span class="line-numbers">42</span>    <span class="comment">// end::javadoc2[]</span>
+<span class="line-numbers">43</span>    <span class="directive">protected</span> <span class="type">void</span> doPost(HttpServletRequest request, HttpServletResponse response)
+<span class="line-numbers">44</span>        <span class="directive">throws</span> ServletException, <span class="exception">IOException</span> {
+<span class="line-numbers">45</span>        doGet(request, response);
+<span class="line-numbers">46</span>    }
+<span class="line-numbers">47</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot file=1">HelloServlet.java</code> class depends on <code class="hotspot=jakarta.jakartaee-api file=0">jakarta.jakartaee-api</code> to compile. Maven will download this dependency from the Maven Central repository using the <code class="hotspot=groupID-api file=0">groupId</code>, <code class="hotspot=artifactID-api file=0">artifactId</code>, and <code class="hotspot=version-api file=0">version</code> details that you provide here. The dependency is set to <code class="hotspot=scope-api file=0">provided</code>, which means that the API is in the Liberty runtime and doesn’t need to be packaged by the application.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=build file=0">build</code> section gives details of the two plugins that Maven uses to build this project.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The Maven plugin for generating a WAR file as one of the output files.</p>
+</li>
+<li>
+<p>The Liberty Maven plug-in, which allows you to install applications into Open Liberty and manage the associated Liberty instances.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In the <code class="hotspot=liberty-maven-plugin file=0">liberty-maven-plugin</code> plug-in section, you can add a <code class="hotspot=configuration file=0">configuration</code> element to specify Open Liberty configuration details. For example, the <code class="hotspot=serverName file=0">serverName</code> field defines the name of the Open Liberty instance that Maven creates. You specified <code>guideServer</code> as the value for <code class="hotspot=serverName file=0">serverName</code>. If the <code class="hotspot=serverName file=0">serverName</code> field is not included, the default value is <code>defaultServer</code>.</p>
+</div>
+<div class="paragraph">
+<p>server.xml</p>
+</div>
+<div class="listingblock code_column hide_tags=comment">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">Sample Servlet server</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>    <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 3</span>        <span class="tag">&lt;feature&gt;</span>servlet-6.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 4</span>    <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers"> 5</span>
+<span class="line-numbers"> 6</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9080</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers"> 7</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.https.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9443</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers"> 8</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">app.context.root</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">ServletSample</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers"> 9</span>
+<span class="line-numbers">10</span>    <span class="comment">&lt;!-- tag::httpEndpoint[] --&gt;</span>
+<span class="line-numbers">11</span>    <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">12</span>    <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span>  <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">13</span>    <span class="comment">&lt;!-- end::httpEndpoint[] --&gt;</span>
+<span class="line-numbers">14</span>    <span class="tag">&lt;webApplication</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">ServletSample</span><span class="delimiter">"</span></span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">ServletSample.war</span><span class="delimiter">"</span></span> <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">${app.context.root}</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">15</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-the-application">Running the application</h2>
+<div class="sectionbody">
+<div class="paragraph command">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following goal to start Open Liberty in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>Navigate your browser to the <a href="http://localhost:9080/ServletSample/servlet" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080/ServletSample/servlet</a> URL to access the application. The servlet returns a simple response of <code>Hello! How are you today?</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-web-application">Testing the web application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>One of the benefits of building an application with Maven is that Maven can be configured to run a set of tests. You can write tests for the individual units of code outside of a running Liberty instance (unit tests), or you can write them to call the Liberty instance directly (integration tests). In this example you will create a simple integration test that checks that the web page opens and that the correct response is returned when the link is clicked.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>EndpointIT</code> class.</mark>
+<code>src/test/java/io/openliberty/guides/hello/it/EndpointIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>EndpointIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.hello.it</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="comment">//tag::import[]</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertTrue</span>;
+<span class="line-numbers">17</span>
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">java.io.BufferedReader</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">java.io.InputStreamReader</span>;
+<span class="line-numbers">20</span>
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.apache.http.HttpStatus</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">org.apache.http.client.methods.CloseableHttpResponse</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">org.apache.http.client.methods.HttpGet</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.apache.http.impl.client.CloseableHttpClient</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">org.apache.http.impl.client.HttpClientBuilder</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeAll</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers">28</span><span class="comment">//end::import[]</span>
+<span class="line-numbers">29</span>
+<span class="line-numbers">30</span><span class="comment">// tag::EndpointIT[]</span>
+<span class="line-numbers">31</span><span class="directive">public</span> <span class="type">class</span> <span class="class">EndpointIT</span> {
+<span class="line-numbers">32</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> siteURL;
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="annotation">@BeforeAll</span>
+<span class="line-numbers">35</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> init() {
+<span class="line-numbers">36</span>        <span class="comment">// tag::URL[]</span>
+<span class="line-numbers">37</span>        <span class="predefined-type">String</span> port = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">http.port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">38</span>        <span class="predefined-type">String</span> war = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">war.name</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">39</span>        siteURL = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:</span><span class="delimiter">"</span></span> + port + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span> + war + <span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span> + <span class="string"><span class="delimiter">"</span><span class="content">servlet</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">40</span>        <span class="comment">// end::URL[]</span>
+<span class="line-numbers">41</span>    }
+<span class="line-numbers">42</span>
+<span class="line-numbers">43</span>    <span class="comment">// tag::Test[]</span>
+<span class="line-numbers">44</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">45</span>    <span class="comment">// end::Test[]</span>
+<span class="line-numbers">46</span>    <span class="directive">public</span> <span class="type">void</span> testServlet() <span class="directive">throws</span> <span class="exception">Exception</span> {
+<span class="line-numbers">47</span>
+<span class="line-numbers">48</span>        CloseableHttpClient client = HttpClientBuilder.create().build();
+<span class="line-numbers">49</span>        HttpGet httpGet = <span class="keyword">new</span> HttpGet(siteURL);
+<span class="line-numbers">50</span>        CloseableHttpResponse response = <span class="predefined-constant">null</span>;
+<span class="line-numbers">51</span>
+<span class="line-numbers">52</span>        <span class="comment">// tag::link[]</span>
+<span class="line-numbers">53</span>        <span class="keyword">try</span> {
+<span class="line-numbers">54</span>            response = client.execute(httpGet);
+<span class="line-numbers">55</span>
+<span class="line-numbers">56</span>            <span class="type">int</span> statusCode = response.getStatusLine().getStatusCode();
+<span class="line-numbers">57</span>            assertEquals(HttpStatus.SC_OK, statusCode, <span class="string"><span class="delimiter">"</span><span class="content">HTTP GET failed</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">58</span>
+<span class="line-numbers">59</span>            <span class="predefined-type">BufferedReader</span> reader = <span class="keyword">new</span> <span class="predefined-type">BufferedReader</span>(<span class="keyword">new</span> <span class="predefined-type">InputStreamReader</span>(
+<span class="line-numbers">60</span>                                        response.getEntity().getContent()));
+<span class="line-numbers">61</span>            <span class="predefined-type">String</span> line;
+<span class="line-numbers">62</span>            <span class="predefined-type">StringBuffer</span> buffer = <span class="keyword">new</span> <span class="predefined-type">StringBuffer</span>();
+<span class="line-numbers">63</span>            <span class="keyword">while</span> ((line = reader.readLine()) != <span class="predefined-constant">null</span>) {
+<span class="line-numbers">64</span>                buffer.append(line);
+<span class="line-numbers">65</span>            }
+<span class="line-numbers">66</span>            reader.close();
+<span class="line-numbers">67</span>            assertTrue(buffer.toString().contains(<span class="string"><span class="delimiter">"</span><span class="content">Hello! How are you today?</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">68</span>                <span class="string"><span class="delimiter">"</span><span class="content">Unexpected response body: </span><span class="delimiter">"</span></span> + buffer.toString());
+<span class="line-numbers">69</span>        } <span class="keyword">finally</span> {
+<span class="line-numbers">70</span>            response.close();
+<span class="line-numbers">71</span>            httpGet.releaseConnection();
+<span class="line-numbers">72</span>        }
+<span class="line-numbers">73</span>        <span class="comment">// end::link[]</span>
+<span class="line-numbers">74</span>    }
+<span class="line-numbers">75</span>}
+<span class="line-numbers">76</span><span class="comment">// end::EndpointIT[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The test class name ends in <code>IT</code> to indicate that it contains an integration test.</p>
+</div>
+<div class="paragraph">
+<p>Maven is configured to run the integration test using the <code class="hotspot=maven-failsafe-plugin file=1">maven-failsafe-plugin</code>. The <code class="hotspot=system-property-variables file=1">systemPropertyVariables</code> section defines some variables that the test class uses. The test code needs to know where to find the application that it is testing. While the port number and context root information can be hardcoded in the test class, it is better to specify it in a single place like the Maven <code class="hotspot file=1">pom.xml</code> file because this information is also used by other files in the project. The <code class="hotspot=system-property-variables file=1">systemPropertyVariables</code> section passes these details to the Java test program as a series of system properties, resolving the <code class="hotspot=http-port file=1">http.port</code> and <code class="hotspot=war-name file=1">war.name</code> variables.</p>
+</div>
+<div class="paragraph">
+<p>pom.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version='1.0' encoding='utf-8'?&gt;</span>
+<span class="line-numbers">  2</span><span class="comment">&lt;!-- tag::project[] --&gt;</span>
+<span class="line-numbers">  3</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  4</span><span class="comment">&lt;!-- end::project[] --&gt;</span>
+<span class="line-numbers">  5</span>    <span class="comment">&lt;!-- tag::modelVersion[] --&gt;</span>
+<span class="line-numbers">  6</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  7</span>    <span class="comment">&lt;!-- end::modelVersion[] --&gt;</span>
+<span class="line-numbers">  8</span>
+<span class="line-numbers">  9</span>    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 10</span>    <span class="comment">&lt;!-- tag::artifactID[] --&gt;</span>
+<span class="line-numbers"> 11</span>    <span class="tag">&lt;artifactId&gt;</span>ServletSample<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 12</span>    <span class="comment">&lt;!-- end::artifactID[] --&gt;</span>
+<span class="line-numbers"> 13</span>    <span class="comment">&lt;!-- tag::packaging[] --&gt;</span>
+<span class="line-numbers"> 14</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers"> 15</span>    <span class="comment">&lt;!-- end::packaging[] --&gt;</span>
+<span class="line-numbers"> 16</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span>    <span class="comment">&lt;!-- tag::properties[] --&gt;</span>
+<span class="line-numbers"> 19</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 20</span>        <span class="comment">&lt;!-- tag::encoding[] --&gt;</span>
+<span class="line-numbers"> 21</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 22</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 23</span>        <span class="comment">&lt;!-- end::encoding[] --&gt;</span>
+<span class="line-numbers"> 24</span>        <span class="comment">&lt;!-- tag::java-version[] --&gt;</span>
+<span class="line-numbers"> 25</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>11<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 26</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>11<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 27</span>        <span class="comment">&lt;!-- end::java-version[] --&gt;</span>
+<span class="line-numbers"> 28</span>        <span class="comment">&lt;!-- Liberty configuration --&gt;</span>
+<span class="line-numbers"> 29</span>        <span class="comment">&lt;!-- tag::default-http-port[] --&gt;</span>
+<span class="line-numbers"> 30</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9080<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers"> 31</span>        <span class="comment">&lt;!-- end::default-http-port[] --&gt;</span>
+<span class="line-numbers"> 32</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9443<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers"> 33</span>        <span class="tag">&lt;liberty.var.app.context.root&gt;</span>${project.artifactId}<span class="tag">&lt;/liberty.var.app.context.root&gt;</span>
+<span class="line-numbers"> 34</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 35</span>    <span class="comment">&lt;!-- end::properties[] --&gt;</span>
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span>    <span class="comment">&lt;!-- tag::dependencies[] --&gt;</span>
+<span class="line-numbers"> 38</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 39</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers"> 40</span>        <span class="comment">&lt;!-- tag::jakarta.jakartaee-api[] --&gt;</span>
+<span class="line-numbers"> 41</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 42</span>            <span class="comment">&lt;!-- tag::groupID-api[] --&gt;</span>
+<span class="line-numbers"> 43</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 44</span>            <span class="comment">&lt;!-- end::groupID-api[] --&gt;</span>
+<span class="line-numbers"> 45</span>            <span class="comment">&lt;!-- tag::artifactID-api[] --&gt;</span>
+<span class="line-numbers"> 46</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 47</span>            <span class="comment">&lt;!-- end::artifactID-api[] --&gt;</span>
+<span class="line-numbers"> 48</span>            <span class="comment">&lt;!-- tag::version-api[] --&gt;</span>
+<span class="line-numbers"> 49</span>            <span class="tag">&lt;version&gt;</span>10.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 50</span>            <span class="comment">&lt;!-- end::version-api[] --&gt;</span>
+<span class="line-numbers"> 51</span>            <span class="comment">&lt;!-- tag::scope-api[] --&gt;</span>
+<span class="line-numbers"> 52</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 53</span>            <span class="comment">&lt;!-- end::scope-api[] --&gt;</span>
+<span class="line-numbers"> 54</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 55</span>        <span class="comment">&lt;!-- end::jakarta.jakartaee-api[] --&gt;</span>
+<span class="line-numbers"> 56</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 57</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 58</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 59</span>            <span class="tag">&lt;version&gt;</span>6.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 60</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 61</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 62</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 63</span>        <span class="comment">&lt;!-- For testing --&gt;</span>
+<span class="line-numbers"> 64</span>        <span class="comment">&lt;!-- tag::commons-httpclient[] --&gt;</span>
+<span class="line-numbers"> 65</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 66</span>            <span class="tag">&lt;groupId&gt;</span>org.apache.httpcomponents<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 67</span>            <span class="tag">&lt;artifactId&gt;</span>httpclient<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 68</span>            <span class="tag">&lt;version&gt;</span>4.5.14<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 69</span>            <span class="comment">&lt;!-- tag::test1[] --&gt;</span>
+<span class="line-numbers"> 70</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 71</span>            <span class="comment">&lt;!-- end::test1[] --&gt;</span>
+<span class="line-numbers"> 72</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 73</span>        <span class="comment">&lt;!-- end::commons-httpclient[] --&gt;</span>
+<span class="line-numbers"> 74</span>        <span class="comment">&lt;!-- tag::junit[] --&gt;</span>
+<span class="line-numbers"> 75</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 76</span>            <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 77</span>            <span class="tag">&lt;artifactId&gt;</span>junit-jupiter<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 78</span>            <span class="tag">&lt;version&gt;</span>5.9.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 79</span>            <span class="comment">&lt;!-- tag::test2[] --&gt;</span>
+<span class="line-numbers"> 80</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 81</span>            <span class="comment">&lt;!-- end::test2[] --&gt;</span>
+<span class="line-numbers"> 82</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 83</span>        <span class="comment">&lt;!-- end::junit[] --&gt;</span>
+<span class="line-numbers"> 84</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers"> 85</span>    <span class="comment">&lt;!-- end::dependencies[] --&gt;</span>
+<span class="line-numbers"> 86</span>
+<span class="line-numbers"> 87</span>    <span class="comment">&lt;!-- tag::build[] --&gt;</span>
+<span class="line-numbers"> 88</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers"> 89</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers"> 90</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers"> 91</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 92</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 93</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 94</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 95</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers"> 96</span>            <span class="comment">&lt;!-- tag::liberty-maven-plugin[] --&gt;</span>
+<span class="line-numbers"> 97</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 98</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 99</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">100</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">101</span>                <span class="comment">&lt;!-- tag::configuration[] --&gt;</span>
+<span class="line-numbers">102</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">103</span>                    <span class="comment">&lt;!-- tag::serverName[] --&gt;</span>
+<span class="line-numbers">104</span>                    <span class="tag">&lt;serverName&gt;</span>guideServer<span class="tag">&lt;/serverName&gt;</span>
+<span class="line-numbers">105</span>                    <span class="comment">&lt;!-- end::serverName[] --&gt;</span>
+<span class="line-numbers">106</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">107</span>                <span class="comment">&lt;!-- end::configuration[] --&gt;</span>
+<span class="line-numbers">108</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">109</span>            <span class="comment">&lt;!-- end::liberty-maven-plugin[] --&gt;</span>
+<span class="line-numbers">110</span>            <span class="comment">&lt;!-- tag::maven-failsafe-plugin[] --&gt;</span>
+<span class="line-numbers">111</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">112</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">113</span>                <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">114</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">115</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">116</span>                    <span class="comment">&lt;!-- tag::system-property-variables[] --&gt;</span>
+<span class="line-numbers">117</span>                    <span class="tag">&lt;systemPropertyVariables&gt;</span>
+<span class="line-numbers">118</span>                        <span class="comment">&lt;!-- tag::http-port[] --&gt;</span>
+<span class="line-numbers">119</span>                        <span class="tag">&lt;http.port&gt;</span>${liberty.var.default.http.port}<span class="tag">&lt;/http.port&gt;</span>
+<span class="line-numbers">120</span>                        <span class="comment">&lt;!-- end::http-port[] --&gt;</span>
+<span class="line-numbers">121</span>                        <span class="comment">&lt;!-- tag::war-name[] --&gt;</span>
+<span class="line-numbers">122</span>                        <span class="tag">&lt;war.name&gt;</span>${liberty.var.app.context.root}<span class="tag">&lt;/war.name&gt;</span>
+<span class="line-numbers">123</span>                        <span class="comment">&lt;!-- end::war-name[] --&gt;</span>
+<span class="line-numbers">124</span>                    <span class="tag">&lt;/systemPropertyVariables&gt;</span>
+<span class="line-numbers">125</span>                    <span class="comment">&lt;!-- end::system-property-variables[] --&gt;</span>
+<span class="line-numbers">126</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">127</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">128</span>            <span class="comment">&lt;!-- end::maven-failsafe-plugin[] --&gt;</span>
+<span class="line-numbers">129</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">130</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">131</span>    <span class="comment">&lt;!-- end::build[] --&gt;</span>
+<span class="line-numbers">132</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following lines in the <code class="hotspot=URL file=0">EndpointIT</code> test class uses these system variables to build up the URL of the application.</p>
+</div>
+<div class="paragraph">
+<p>In the test class, after defining how to build the application URL, the <code class="hotspot=Test file=0">@Test</code> annotation indicates the start of the test method.</p>
+</div>
+<div class="paragraph">
+<p>In the <code class="hotspot=link file=0">try block</code> of the test method, an HTTP <code>GET</code> request to the URL of the application returns a status code. If the response to the request includes the string <code>Hello! How are you today?</code>, the test passes. If that string is not in the response, the test fails.  The HTTP client then disconnects from the application.</p>
+</div>
+<div class="paragraph">
+<p>In the <code class="hotspot=import file=0">import</code> statements of this test class, you’ll notice that the test has some new dependencies. Before the test can be compiled by Maven, you need to update the <code class="hotspot file=1">pom.xml</code> to include these dependencies.</p>
+</div>
+<div class="paragraph">
+<p>The Apache <code class="hotspot=commons-httpclient file=1">httpclient</code> and <code class="hotspot=junit file=1">junit-jupiter-engine</code> dependencies are needed to compile and run the integration test <code class="hotspot=EndpointIT file=0">EndpointIT</code> class. The scope for each of the dependencies is set to <code class="hotspot=test1 hotspot=test2 file=1">test</code> because the libraries are needed only during the Maven build and do not needed to be packaged with the application.</p>
+</div>
+<div class="paragraph">
+<p>Now, the created WAR file contains the web application, and dev mode can run any integration test classes that it finds. Integration test classes are classes with names that end in <code>IT</code>.</p>
+</div>
+<div class="paragraph">
+<p>The directory structure of the project should now look like this:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>    └── src
+        ├── main
+        │  └── java
+        │  └── resources
+        │  └── webapp
+        │  └── liberty
+        │         └── config
+        └── test
+            └── java</code></pre>
+</div>
+</div>
+<div class="sect2 command">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Because you started Open Liberty in dev mode, you can run the tests by pressing the <code>enter/return</code> key from the command-line session where you started dev mode.</p>
+</div>
+<div class="paragraph">
+<p>You see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running io.openliberty.guides.hello.it.EndpointIT
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.255 sec - in io.openliberty.guides.hello.it.EndpointIT
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To see whether the test detects a failure, change the <code class="hotspot=responseString file=0">response string</code> in the servlet <code class="hotspot">src/main/java/io/openliberty/guides/hello/HelloServlet.java</code> so that it doesn’t match the string that the test is looking for. Then re-run the tests and check that the test fails.</p>
+</div>
+<div class="paragraph">
+<p>HelloServlet.java</p>
+</div>
+<div class="listingblock code_column hide_tags=comment,javadoc1,javadoc2">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.hello</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.io.IOException</span>;
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">jakarta.servlet.ServletException</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.servlet.annotation.WebServlet</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.servlet.http.HttpServlet</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.servlet.http.HttpServletRequest</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.servlet.http.HttpServletResponse</span>;
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span><span class="annotation">@WebServlet</span>(urlPatterns = <span class="string"><span class="delimiter">"</span><span class="content">/servlet</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">23</span><span class="directive">public</span> <span class="type">class</span> <span class="class">HelloServlet</span> <span class="directive">extends</span> HttpServlet {
+<span class="line-numbers">24</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="type">long</span> serialVersionUID = <span class="integer">1L</span>;
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span>    <span class="comment">// tag::javadoc1[]</span>
+<span class="line-numbers">27</span>    <span class="comment">/**</span>
+<span class="line-numbers">28</span><span class="comment">     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)</span>
+<span class="line-numbers">29</span><span class="comment">     */</span>
+<span class="line-numbers">30</span>    <span class="comment">// end::javadoc1[]</span>
+<span class="line-numbers">31</span>    <span class="directive">protected</span> <span class="type">void</span> doGet(HttpServletRequest request, HttpServletResponse response)
+<span class="line-numbers">32</span>        <span class="directive">throws</span> ServletException, <span class="exception">IOException</span> {
+<span class="line-numbers">33</span>        <span class="comment">// tag::responseString[]</span>
+<span class="line-numbers">34</span>        response.getWriter().append(<span class="string"><span class="delimiter">"</span><span class="content">Hello! How are you today?</span><span class="char">\n</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">35</span>        <span class="comment">// end::responseString[]</span>
+<span class="line-numbers">36</span>    }
+<span class="line-numbers">37</span>
+<span class="line-numbers">38</span>    <span class="comment">// tag::javadoc2[]</span>
+<span class="line-numbers">39</span>    <span class="comment">/**</span>
+<span class="line-numbers">40</span><span class="comment">     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)</span>
+<span class="line-numbers">41</span><span class="comment">     */</span>
+<span class="line-numbers">42</span>    <span class="comment">// end::javadoc2[]</span>
+<span class="line-numbers">43</span>    <span class="directive">protected</span> <span class="type">void</span> doPost(HttpServletRequest request, HttpServletResponse response)
+<span class="line-numbers">44</span>        <span class="directive">throws</span> ServletException, <span class="exception">IOException</span> {
+<span class="line-numbers">45</span>        doGet(request, response);
+<span class="line-numbers">46</span>    }
+<span class="line-numbers">47</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph command">
+<p>When you are done checking out the service, exit dev mode by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You built and tested a web application project with an Open Liberty instance using Maven.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Building a web application with Maven <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-maven-intro/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-maven-intro/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-maven-intro/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/maven-multimodules.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Creating a multi-module application</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">30 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                                  
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/gradle-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Building a web application with Gradle</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">15 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

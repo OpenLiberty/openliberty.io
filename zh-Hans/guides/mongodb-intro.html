@@ -1,0 +1,2663 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Persisting data in your Java microservices to MongoDB, a document-oriented NoSQL database
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples on how to connect, access and persist data to MongoDB, a document-oriented NoSQL database, in cloud-native Java applications using Contexts and Dependency Injection (CDI) and Eclipse MicroProfile Config with Open Liberty.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/mongodb-intro">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Persisting data in your Java microservices to MongoDB, a document-oriented NoSQL database" />
+  <meta name="twitter:description" content="A getting started tutorial with examples on how to connect, access and persist data to MongoDB, a document-oriented NoSQL database, in cloud-native Java applications using Contexts and Dependency Injection (CDI) and Eclipse MicroProfile Config with Open Liberty." />
+
+  <meta property='og:title' content="Persisting data in your Java microservices to MongoDB, a document-oriented NoSQL database" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples on how to connect, access and persist data to MongoDB, a document-oriented NoSQL database, in cloud-native Java applications using Contexts and Dependency Injection (CDI) and Eclipse MicroProfile Config with Open Liberty." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/mongodb-intro" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#setting-up-mongodb">Setting up MongoDB</a></li>
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li><a href="#providing-a-mongodatabase">Providing a MongoDatabase</a></li>
+<li><a href="#implementing-the-create-retrieve-update-and-delete-operations">Implementing the Create, Retrieve, Update, and Delete operations</a></li>
+<li><a href="#configuring-the-mongodb-driver-and-the-liberty">Configuring the MongoDB driver and the Liberty</a></li>
+<li><a href="#running-the-application">Running the application</a></li>
+<li>
+<a href="#testing-the-application">Testing the application</a>
+<ul class="sectlevel2">
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#tearing-down-the-environment">Tearing down the environment</a></li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#related-links">Related Links</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Persisting data with MongoDB</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">25 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/mongodb-intro.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to persist data in your microservices to MongoDB, a document-oriented NoSQL database.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to use MongoDB to build and test a simple microservice that manages the members of a crew. The microservice will respond to <code>POST</code>, <code>GET</code>, <code>PUT</code>, and <code>DELETE</code> requests that manipulate the database.</p>
+</div>
+<div class="paragraph">
+<p>The crew members will be stored in MongoDB as documents in the following JSON format:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="json">{
+  <span class="key"><span class="delimiter">"</span><span class="content">_id</span><span class="delimiter">"</span></span>: {
+    <span class="key"><span class="delimiter">"</span><span class="content">$oid</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">5dee6b079503234323db2ebc</span><span class="delimiter">"</span></span>
+  },
+  <span class="key"><span class="delimiter">"</span><span class="content">Name</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">Member1</span><span class="delimiter">"</span></span>,
+  <span class="key"><span class="delimiter">"</span><span class="content">Rank</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">Captain</span><span class="delimiter">"</span></span>,
+  <span class="key"><span class="delimiter">"</span><span class="content">CrewID</span><span class="delimiter">"</span></span>: <span class="string"><span class="delimiter">"</span><span class="content">000001</span><span class="delimiter">"</span></span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This microservice connects to MongoDB by using Transport Layer Security (TLS) and injects a <code>MongoDatabase</code> instance into the service with a Contexts and Dependency Injection (CDI) producer. Additionally, MicroProfile Config is used to easily configure the MongoDB driver.</p>
+</div>
+<div class="paragraph">
+<p>For more information about CDI and MicroProfile Config, see the guides on <a href="https://openliberty.io/guides/cdi-intro.html" target="_blank" rel="noopener">Injecting dependencies into microservices</a> and <a href="https://openliberty.io/guides/microprofile-config-intro.html" target="_blank" rel="noopener">Separating configuration from code in microservices</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will use Docker to run an instance of MongoDB for a fast installation and setup. Install Docker by following the instructions in the official <a href="https://docs.docker.com/engine/installation" target="_blank" rel="noopener noreferrer">Docker documentation</a>, and start your Docker environment.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-mongodb-intro.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-mongodb-intro.git
+cd guide-mongodb-intro</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2">
+<h3 id="setting-up-mongodb">Setting up MongoDB</h3>
+<div class="paragraph">
+<p>This guide uses Docker to run an instance of MongoDB. A multi-stage Dockerfile is provided for you. This Dockerfile uses the <code>mongo</code> image as the base image of the final stage and gathers the required configuration files. The resulting <code>mongo</code> image runs in a Docker container, and you must set up a new database for the microservice. Lastly, the truststore that’s generated in the Docker image is copied from the container and placed into the Open Liberty configuration.</p>
+</div>
+<div class="paragraph">
+<p>You can find more details and configuration options on the <a href="https://docs.mongodb.com/manual/reference/configuration-options/" target="_blank" rel="noopener noreferrer">MongoDB website</a>. For more information about the <code>mongo</code> image, see <a href="https://hub.docker.com/_/mongo" target="_blank" rel="noopener noreferrer">mongo</a> in Docker Hub.</p>
+</div>
+<div class="paragraph">
+<p><strong>Running MongoDB in a Docker container</strong></p>
+</div>
+<div class="paragraph">
+<p>Run the following commands to use the Dockerfile to build the image, run the image in a Docker container, and map port <code>27017</code> from the container to your host machine:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker build -t mongo-sample -f assets/Dockerfile .
+docker run --name mongo-guide -p 27017:27017 -d mongo-sample</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Adding the truststore to the Open Liberty configuration</strong></p>
+</div>
+<div class="paragraph">
+<p>The truststore that’s created in the container needs to be added to the Open Liberty configuration so that the Liberty can trust the certificate that MongoDB presents when they connect. Run the following command to copy the <code>truststore.p12</code> file from the container to the <code>start</code> and <code>finish</code> directories:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker cp ^
+  mongo-guide:/home/mongodb/certs/truststore.p12 ^
+  start/src/main/liberty/config/resources/security
+docker cp ^
+  mongo-guide:/home/mongodb/certs/truststore.p12 ^
+  finish/src/main/liberty/config/resources/security</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker cp \
+  mongo-guide:/home/mongodb/certs/truststore.p12 \
+  start/src/main/liberty/config/resources/security
+docker cp \
+  mongo-guide:/home/mongodb/certs/truststore.p12 \
+  finish/src/main/liberty/config/resources/security</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker cp \
+  mongo-guide:/home/mongodb/certs/truststore.p12 \
+  start/src/main/liberty/config/resources/security
+docker cp \
+  mongo-guide:/home/mongodb/certs/truststore.p12 \
+  finish/src/main/liberty/config/resources/security</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2 command">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>To try out the application, first go to the <code>finish</code> directory and run the following Maven goal to build the application and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd finish
+mvn liberty:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>The defaultServer server is ready to run a smarter planet.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can now check out the service by going to the <a href="http://localhost:9080/mongo/" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080/mongo/</a> URL.</p>
+</div>
+<div class="paragraph command">
+<p>After you are finished checking out the application, stop the Liberty instance by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty. Alternatively, you can run the <code>liberty:stop</code> goal from the <code>finish</code> directory in another shell session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:stop</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="providing-a-mongodatabase">Providing a MongoDatabase</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph command">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, dev mode listens for file changes and automatically recompiles and deploys your updates whenever you save a new change. Run the following goal to start Open Liberty in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn liberty:dev</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your Liberty instance is ready in dev mode:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>With a CDI producer, you can easily provide a <code>MongoDatabase</code> to your microservice.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>MongoProducer</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/mongo/MongoProducer.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>MongoProducer.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2020, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.mongo</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.inject.Disposes</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.inject.Produces</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">javax.net.ssl.SSLContext</span>;
+<span class="line-numbers"> 19</span>
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">com.ibm.websphere.ssl.JSSEHelper</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">com.ibm.websphere.ssl.SSLException</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers"> 23</span>
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">com.ibm.websphere.crypto.PasswordUtil</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">com.mongodb.MongoClient</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">com.mongodb.MongoClientOptions</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">com.mongodb.MongoCredential</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">com.mongodb.ServerAddress</span>;
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">com.mongodb.client.MongoDatabase</span>;
+<span class="line-numbers"> 30</span>
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">java.util.Collections</span>;
+<span class="line-numbers"> 32</span>
+<span class="line-numbers"> 33</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers"> 34</span><span class="directive">public</span> <span class="type">class</span> <span class="class">MongoProducer</span> {
+<span class="line-numbers"> 35</span>
+<span class="line-numbers"> 36</span>    <span class="comment">// tag::mongoProducerInjections[]</span>
+<span class="line-numbers"> 37</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers"> 38</span>    <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">mongo.hostname</span><span class="delimiter">"</span></span>, defaultValue = <span class="string"><span class="delimiter">"</span><span class="content">localhost</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 39</span>    <span class="predefined-type">String</span> hostname;
+<span class="line-numbers"> 40</span>
+<span class="line-numbers"> 41</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers"> 42</span>    <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">mongo.port</span><span class="delimiter">"</span></span>, defaultValue = <span class="string"><span class="delimiter">"</span><span class="content">27017</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 43</span>    <span class="type">int</span> port;
+<span class="line-numbers"> 44</span>
+<span class="line-numbers"> 45</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers"> 46</span>    <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">mongo.dbname</span><span class="delimiter">"</span></span>, defaultValue = <span class="string"><span class="delimiter">"</span><span class="content">testdb</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 47</span>    <span class="predefined-type">String</span> dbName;
+<span class="line-numbers"> 48</span>
+<span class="line-numbers"> 49</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers"> 50</span>    <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">mongo.user</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 51</span>    <span class="predefined-type">String</span> user;
+<span class="line-numbers"> 52</span>
+<span class="line-numbers"> 53</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers"> 54</span>    <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">mongo.pass.encoded</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 55</span>    <span class="predefined-type">String</span> encodedPass;
+<span class="line-numbers"> 56</span>    <span class="comment">// end::mongoProducerInjections[]</span>
+<span class="line-numbers"> 57</span>
+<span class="line-numbers"> 58</span>    <span class="comment">// tag::produces1[]</span>
+<span class="line-numbers"> 59</span>    <span class="annotation">@Produces</span>
+<span class="line-numbers"> 60</span>    <span class="comment">// end::produces1[]</span>
+<span class="line-numbers"> 61</span>    <span class="comment">// tag::createMongo[]</span>
+<span class="line-numbers"> 62</span>    <span class="directive">public</span> MongoClient createMongo() <span class="directive">throws</span> <span class="exception">SSLException</span> {
+<span class="line-numbers"> 63</span>        <span class="comment">// tag::decode[]</span>
+<span class="line-numbers"> 64</span>        <span class="predefined-type">String</span> password = PasswordUtil.passwordDecode(encodedPass);
+<span class="line-numbers"> 65</span>        <span class="comment">// end::decode[]</span>
+<span class="line-numbers"> 66</span>        <span class="comment">// tag::createCredential[]</span>
+<span class="line-numbers"> 67</span>        MongoCredential creds = MongoCredential.createCredential(
+<span class="line-numbers"> 68</span>                user,
+<span class="line-numbers"> 69</span>                dbName,
+<span class="line-numbers"> 70</span>                password.toCharArray()
+<span class="line-numbers"> 71</span>        );
+<span class="line-numbers"> 72</span>        <span class="comment">// end::createCredential[]</span>
+<span class="line-numbers"> 73</span>
+<span class="line-numbers"> 74</span>        <span class="comment">// tag::sslContext[]</span>
+<span class="line-numbers"> 75</span>        <span class="predefined-type">SSLContext</span> sslContext = JSSEHelper.getInstance().getSSLContext(
+<span class="line-numbers"> 76</span>                <span class="comment">// tag::outboundSSLContext[]</span>
+<span class="line-numbers"> 77</span>                <span class="string"><span class="delimiter">"</span><span class="content">outboundSSLContext</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 78</span>                <span class="comment">// end::outboundSSLContext[]</span>
+<span class="line-numbers"> 79</span>                <span class="predefined-type">Collections</span>.emptyMap(),
+<span class="line-numbers"> 80</span>                <span class="predefined-constant">null</span>
+<span class="line-numbers"> 81</span>        );
+<span class="line-numbers"> 82</span>        <span class="comment">// end::sslContext[]</span>
+<span class="line-numbers"> 83</span>
+<span class="line-numbers"> 84</span>        <span class="comment">// tag::mongoClient[]</span>
+<span class="line-numbers"> 85</span>        <span class="keyword">return</span> <span class="keyword">new</span> MongoClient(
+<span class="line-numbers"> 86</span>                <span class="comment">// tag::serverAddress[]</span>
+<span class="line-numbers"> 87</span>                <span class="keyword">new</span> ServerAddress(hostname, port),
+<span class="line-numbers"> 88</span>                <span class="comment">// end::serverAddress[]</span>
+<span class="line-numbers"> 89</span>                <span class="comment">// tag::creds[]</span>
+<span class="line-numbers"> 90</span>                creds,
+<span class="line-numbers"> 91</span>                <span class="comment">// end::creds[]</span>
+<span class="line-numbers"> 92</span>                <span class="comment">// tag::optionsBuilder[]</span>
+<span class="line-numbers"> 93</span>                <span class="keyword">new</span> MongoClientOptions.Builder()
+<span class="line-numbers"> 94</span>                        .sslEnabled(<span class="predefined-constant">true</span>)
+<span class="line-numbers"> 95</span>                        .sslContext(sslContext)
+<span class="line-numbers"> 96</span>                        .build()
+<span class="line-numbers"> 97</span>                <span class="comment">// end::optionsBuilder[]</span>
+<span class="line-numbers"> 98</span>        );
+<span class="line-numbers"> 99</span>        <span class="comment">// end::mongoClient[]</span>
+<span class="line-numbers">100</span>    }
+<span class="line-numbers">101</span>    <span class="comment">// end::createMongo[]</span>
+<span class="line-numbers">102</span>
+<span class="line-numbers">103</span>    <span class="comment">// tag::produces2[]</span>
+<span class="line-numbers">104</span>    <span class="annotation">@Produces</span>
+<span class="line-numbers">105</span>    <span class="comment">// end::produces2[]</span>
+<span class="line-numbers">106</span>    <span class="comment">// tag::createDB[]</span>
+<span class="line-numbers">107</span>    <span class="directive">public</span> MongoDatabase createDB(
+<span class="line-numbers">108</span>            <span class="comment">// tag::injectMongoClient[]</span>
+<span class="line-numbers">109</span>            MongoClient client) {
+<span class="line-numbers">110</span>            <span class="comment">// end::injectMongoClient[]</span>
+<span class="line-numbers">111</span>        <span class="comment">// tag::getDatabase[]</span>
+<span class="line-numbers">112</span>        <span class="keyword">return</span> client.getDatabase(dbName);
+<span class="line-numbers">113</span>        <span class="comment">// end::getDatabase[]</span>
+<span class="line-numbers">114</span>    }
+<span class="line-numbers">115</span>    <span class="comment">// end::createDB[]</span>
+<span class="line-numbers">116</span>
+<span class="line-numbers">117</span>    <span class="comment">// tag::close[]</span>
+<span class="line-numbers">118</span>    <span class="directive">public</span> <span class="type">void</span> close(
+<span class="line-numbers">119</span>            <span class="comment">// tag::disposes[]</span>
+<span class="line-numbers">120</span>            <span class="annotation">@Disposes</span> MongoClient toClose) {
+<span class="line-numbers">121</span>            <span class="comment">// end::disposes[]</span>
+<span class="line-numbers">122</span>        <span class="comment">// tag::toClose[]</span>
+<span class="line-numbers">123</span>        toClose.close();
+<span class="line-numbers">124</span>        <span class="comment">// end::toClose[]</span>
+<span class="line-numbers">125</span>    }
+<span class="line-numbers">126</span>    <span class="comment">// end::close[]</span>
+<span class="line-numbers">127</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties"><span class="line-numbers"> 1</span># tag::hostname[]
+<span class="line-numbers"> 2</span>mongo.hostname=localhost
+<span class="line-numbers"> 3</span># end::hostname[]
+<span class="line-numbers"> 4</span># tag::port[]
+<span class="line-numbers"> 5</span>mongo.port=27017
+<span class="line-numbers"> 6</span># end::port[]
+<span class="line-numbers"> 7</span># tag::dbname[]
+<span class="line-numbers"> 8</span>mongo.dbname=testdb
+<span class="line-numbers"> 9</span># end::dbname[]
+<span class="line-numbers">10</span># tag::mongoUser[]
+<span class="line-numbers">11</span>mongo.user=sampleUser
+<span class="line-numbers">12</span># end::mongoUser[]
+<span class="line-numbers">13</span># tag::passEncoded[]
+<span class="line-numbers">14</span>mongo.pass.encoded={aes}APtt+/vYxxPa0jE1rhmZue9wBm3JGqFK3JR4oJdSDGWM1wLr1ckvqkqKjSB2Voty8g==
+<span class="line-numbers">15</span># tag::passEncoded[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>pom.xml</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="line-numbers">  2</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  3</span>
+<span class="line-numbers">  4</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  5</span>
+<span class="line-numbers">  6</span>    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">  7</span>    <span class="tag">&lt;artifactId&gt;</span>guide-mongodb-intro<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">  8</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">  9</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers"> 10</span>
+<span class="line-numbers"> 11</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 12</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 13</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 14</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>11<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 15</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>11<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 16</span>        <span class="comment">&lt;!-- OpenLiberty runtime --&gt;</span>
+<span class="line-numbers"> 17</span>        <span class="tag">&lt;version.openliberty-runtime&gt;</span>RELEASE<span class="tag">&lt;/version.openliberty-runtime&gt;</span>
+<span class="line-numbers"> 18</span>        <span class="comment">&lt;!-- tag::defaultHttpPort[] --&gt;</span>
+<span class="line-numbers"> 19</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9080<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers"> 20</span>        <span class="comment">&lt;!-- end::defaultHttpPort[] --&gt;</span>
+<span class="line-numbers"> 21</span>        <span class="comment">&lt;!-- tag::defaultHttpsPort[] --&gt;</span>
+<span class="line-numbers"> 22</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9443<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers"> 23</span>        <span class="comment">&lt;!-- end::defaultHttpsPort[] --&gt;</span>
+<span class="line-numbers"> 24</span>        <span class="tag">&lt;app.name&gt;</span>${project.artifactId}<span class="tag">&lt;/app.name&gt;</span>
+<span class="line-numbers"> 25</span>        <span class="comment">&lt;!-- tag::appContextRoot[] --&gt;</span>
+<span class="line-numbers"> 26</span>        <span class="tag">&lt;liberty.var.app.context.root&gt;</span>/mongo<span class="tag">&lt;/liberty.var.app.context.root&gt;</span>
+<span class="line-numbers"> 27</span>        <span class="comment">&lt;!-- end::appContextRoot[] --&gt;</span>
+<span class="line-numbers"> 28</span>        <span class="tag">&lt;package.file&gt;</span>${project.build.directory}/${app.name}.zip<span class="tag">&lt;/package.file&gt;</span>
+<span class="line-numbers"> 29</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 30</span>
+<span class="line-numbers"> 31</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 32</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers"> 33</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 34</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 35</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 36</span>            <span class="tag">&lt;version&gt;</span>10.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 37</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 38</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 39</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 40</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 41</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 42</span>            <span class="tag">&lt;version&gt;</span>6.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 43</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 44</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 45</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 46</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 47</span>            <span class="tag">&lt;groupId&gt;</span>javax.validation<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 48</span>            <span class="tag">&lt;artifactId&gt;</span>validation-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 49</span>            <span class="tag">&lt;version&gt;</span>2.0.1.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 50</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 51</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 52</span>        <span class="comment">&lt;!-- tag::passwordUtilDependency[] --&gt;</span>
+<span class="line-numbers"> 53</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 54</span>            <span class="tag">&lt;groupId&gt;</span>com.ibm.websphere.appserver.api<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 55</span>            <span class="tag">&lt;artifactId&gt;</span>com.ibm.websphere.appserver.api.passwordUtil<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 56</span>            <span class="tag">&lt;version&gt;</span>1.0.75<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 57</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 58</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 59</span>        <span class="comment">&lt;!-- end::passwordUtilDependency[] --&gt;</span>
+<span class="line-numbers"> 60</span>        <span class="comment">&lt;!-- tag::sslDependency[] --&gt;</span>
+<span class="line-numbers"> 61</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 62</span>            <span class="tag">&lt;groupId&gt;</span>com.ibm.websphere.appserver.api<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 63</span>            <span class="tag">&lt;artifactId&gt;</span>com.ibm.websphere.appserver.api.ssl<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 64</span>            <span class="tag">&lt;version&gt;</span>1.5.75<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 65</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 66</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 67</span>        <span class="comment">&lt;!-- end::sslDependency[] --&gt;</span>
+<span class="line-numbers"> 68</span>        <span class="comment">&lt;!-- Required dependencies --&gt;</span>
+<span class="line-numbers"> 69</span>        <span class="comment">&lt;!-- tag::mongoDriver[] --&gt;</span>
+<span class="line-numbers"> 70</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 71</span>            <span class="tag">&lt;groupId&gt;</span>org.mongodb<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 72</span>            <span class="tag">&lt;artifactId&gt;</span>mongo-java-driver<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 73</span>            <span class="tag">&lt;version&gt;</span>3.12.13<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 74</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 75</span>        <span class="comment">&lt;!-- end::mongoDriver[] --&gt;</span>
+<span class="line-numbers"> 76</span>        <span class="comment">&lt;!-- For tests --&gt;</span>
+<span class="line-numbers"> 77</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 78</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 79</span>            <span class="tag">&lt;artifactId&gt;</span>resteasy-client<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 80</span>            <span class="tag">&lt;version&gt;</span>6.2.3.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 81</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 82</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 83</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 84</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 85</span>            <span class="tag">&lt;artifactId&gt;</span>resteasy-json-binding-provider<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 86</span>            <span class="tag">&lt;version&gt;</span>6.2.3.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 87</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 88</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 89</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 90</span>            <span class="tag">&lt;groupId&gt;</span>org.glassfish<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 91</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.json<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 92</span>            <span class="tag">&lt;version&gt;</span>2.0.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 93</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 94</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 95</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 96</span>            <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 97</span>            <span class="tag">&lt;artifactId&gt;</span>junit-jupiter<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 98</span>            <span class="tag">&lt;version&gt;</span>5.9.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 99</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers">100</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers">101</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers">102</span>            <span class="tag">&lt;groupId&gt;</span>javax.xml.bind<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">103</span>            <span class="tag">&lt;artifactId&gt;</span>jaxb-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">104</span>            <span class="tag">&lt;version&gt;</span>2.3.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">105</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers">106</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers">107</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers">108</span>
+<span class="line-numbers">109</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers">110</span>        <span class="tag">&lt;defaultGoal&gt;</span>clean package liberty:run-server<span class="tag">&lt;/defaultGoal&gt;</span>
+<span class="line-numbers">111</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers">112</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers">113</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">114</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">115</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">116</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">117</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">118</span>            <span class="comment">&lt;!-- Enable liberty-maven plugin --&gt;</span>
+<span class="line-numbers">119</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">120</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">121</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">122</span>                <span class="tag">&lt;version&gt;</span>3.8.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">123</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">124</span>            <span class="comment">&lt;!-- Plugin to run unit tests --&gt;</span>
+<span class="line-numbers">125</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">126</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">127</span>                <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">128</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">129</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">130</span>            <span class="comment">&lt;!-- Plugin to run functional tests --&gt;</span>
+<span class="line-numbers">131</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">132</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">133</span>                <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">134</span>                <span class="tag">&lt;version&gt;</span>3.0.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">135</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">136</span>                    <span class="comment">&lt;!-- tag::testsysprops[] --&gt;</span>
+<span class="line-numbers">137</span>                    <span class="tag">&lt;systemPropertyVariables&gt;</span>
+<span class="line-numbers">138</span>                        <span class="tag">&lt;app.http.port&gt;</span>${liberty.var.default.http.port}<span class="tag">&lt;/app.http.port&gt;</span>
+<span class="line-numbers">139</span>                        <span class="tag">&lt;app.context.root&gt;</span>${liberty.var.app.context.root}<span class="tag">&lt;/app.context.root&gt;</span>
+<span class="line-numbers">140</span>                    <span class="tag">&lt;/systemPropertyVariables&gt;</span>
+<span class="line-numbers">141</span>                    <span class="comment">&lt;!-- end::testsysprops[] --&gt;</span>
+<span class="line-numbers">142</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">143</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">144</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">145</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">146</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>server.xml</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">Sample Liberty server</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>    <span class="comment">&lt;!-- tag::featureManager[] --&gt;</span>
+<span class="line-numbers"> 3</span>    <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>        <span class="comment">&lt;!-- tag::cdiFeature[] --&gt;</span>
+<span class="line-numbers"> 5</span>        <span class="tag">&lt;feature&gt;</span>cdi-4.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>        <span class="comment">&lt;!-- end::cdiFeature[] --&gt;</span>
+<span class="line-numbers"> 7</span>        <span class="comment">&lt;!-- tag::sslFeature[] --&gt;</span>
+<span class="line-numbers"> 8</span>        <span class="tag">&lt;feature&gt;</span>ssl-1.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 9</span>        <span class="comment">&lt;!-- end::sslFeature[] --&gt;</span>
+<span class="line-numbers">10</span>        <span class="comment">&lt;!-- tag::mpConfigFeature[] --&gt;</span>
+<span class="line-numbers">11</span>        <span class="tag">&lt;feature&gt;</span>mpConfig-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">12</span>        <span class="comment">&lt;!-- end::mpConfigFeature[] --&gt;</span>
+<span class="line-numbers">13</span>        <span class="comment">&lt;!-- tag::passwordUtilFeature[] --&gt;</span>
+<span class="line-numbers">14</span>        <span class="tag">&lt;feature&gt;</span>passwordUtilities-1.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">15</span>        <span class="comment">&lt;!-- end::passwordUtilFeature[] --&gt;</span>
+<span class="line-numbers">16</span>        <span class="tag">&lt;feature&gt;</span>beanValidation-3.0<span class="tag">&lt;/feature&gt;</span>           
+<span class="line-numbers">17</span>        <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">18</span>        <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">19</span>        <span class="tag">&lt;feature&gt;</span>mpOpenAPI-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">20</span>    <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">21</span>    <span class="comment">&lt;!-- end::featureManager[] --&gt;</span>
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9080</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">24</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.https.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9443</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">25</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">app.context.root</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">/mongo</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span>    <span class="comment">&lt;!-- tag::httpEndpoint[] --&gt;</span>
+<span class="line-numbers">28</span>    <span class="tag">&lt;httpEndpoint</span>
+<span class="line-numbers">29</span>        <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">30</span>        <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">31</span>        <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">32</span>        <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span>
+<span class="line-numbers">33</span>    <span class="tag">/&gt;</span>
+<span class="line-numbers">34</span>    <span class="comment">&lt;!-- end::httpEndpoint[] --&gt;</span>
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span>    <span class="comment">&lt;!-- tag::webApplication[] --&gt;</span>
+<span class="line-numbers">37</span>    <span class="tag">&lt;webApplication</span> 
+<span class="line-numbers">38</span>        <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-mongodb-intro.war</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">39</span>        <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">${app.context.root}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">40</span>    <span class="tag">/&gt;</span>
+<span class="line-numbers">41</span>    <span class="comment">&lt;!-- end::webApplication[] --&gt;</span>
+<span class="line-numbers">42</span>    <span class="comment">&lt;!-- tag::sslContext[] --&gt;</span>
+<span class="line-numbers">43</span>    <span class="comment">&lt;!-- tag::keyStore[] --&gt;</span>
+<span class="line-numbers">44</span>    <span class="tag">&lt;keyStore</span>
+<span class="line-numbers">45</span>        <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">outboundTrustStore</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">46</span>        <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">${server.output.dir}/resources/security/truststore.p12</span><span class="delimiter">"</span></span>
+<span class="line-numbers">47</span>        <span class="attribute-name">password</span>=<span class="string"><span class="delimiter">"</span><span class="content">mongodb</span><span class="delimiter">"</span></span>
+<span class="line-numbers">48</span>        <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">"</span><span class="content">PKCS12</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">49</span>    <span class="tag">/&gt;</span>
+<span class="line-numbers">50</span>    <span class="comment">&lt;!-- end::keyStore[] --&gt;</span>
+<span class="line-numbers">51</span>    <span class="comment">&lt;!-- tag::ssl[] --&gt;</span>
+<span class="line-numbers">52</span>    <span class="tag">&lt;ssl</span> 
+<span class="line-numbers">53</span>        <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">outboundSSLContext</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">54</span>        <span class="attribute-name">keyStoreRef</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultKeyStore</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">55</span>        <span class="attribute-name">trustStoreRef</span>=<span class="string"><span class="delimiter">"</span><span class="content">outboundTrustStore</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">56</span>        <span class="attribute-name">sslProtocol</span>=<span class="string"><span class="delimiter">"</span><span class="content">TLS</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">57</span>    <span class="tag">/&gt;</span>
+<span class="line-numbers">58</span>    <span class="comment">&lt;!-- end::ssl[] --&gt;</span>
+<span class="line-numbers">59</span>    <span class="comment">&lt;!-- end::sslContext[] --&gt;</span>
+<span class="line-numbers">60</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The values from the <code class="hotspot file=1">microprofile-config.properties</code> file are injected into the <code class="hotspot=mongoProducerInjections file=0">MongoProducer</code> class. The <code>MongoProducer</code> class requires the following methods for the <code>MongoClient</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code class="hotspot=createMongo file=0">createMongo()</code> producer method returns an instance of <code>MongoClient</code>. In this method, the username, database name, and decoded password are passed into the <code class="hotspot=createCredential file=0">MongoCredential.createCredential()</code> method to get an instance of <code>MongoCredential</code>. The <code class="hotspot=sslContext file=0">JSSEHelper</code> gets the <code>SSLContext</code> from the <code>outboundSSLContext</code> in the <code>server.xml</code> configuration file. Then, a <code class="hotspot=mongoClient file=0">MongoClient</code> instance is created.</p>
+</li>
+<li>
+<p>The <code class="hotspot=createDB file=0">createDB()</code> producer method returns an instance of <code>MongoDatabase</code> that depends on the <code>MongoClient</code>. This method injects the <code>MongoClient</code> in its parameters and passes the database name into the <code class="hotspot=getDatabase file=0">MongoClient.getDatabase()</code> method to get a <code>MongoDatabase</code> instance.</p>
+</li>
+<li>
+<p>The <code class="hotspot=close file=0">close()</code> method is a clean-up function for the <code>MongoClient</code> that closes the connection to the <code>MongoDatabase</code> instance.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="implementing-the-create-retrieve-update-and-delete-operations">Implementing the Create, Retrieve, Update, and Delete operations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You are going to implement the basic create, retrieve, update, and delete (CRUD) operations in the <code>CrewService</code> class. The <code class="hotspot=mongoImports1">com.mongodb.client</code> and <code class="hotspot=mongoImports2">com.mongodb.client.result</code> packages are used to help implement these operations for the microservice. For more information about these packages, see the <a href="https://mongodb.github.io/mongo-java-driver/3.12/javadoc/com/mongodb/client/package-summary.html" target="_blank" rel="noopener noreferrer">com.mongodb.client</a> and <a href="https://mongodb.github.io/mongo-java-driver/3.12/javadoc/com/mongodb/client/result/package-summary.html" target="_blank" rel="noopener noreferrer">com.mongodb.client.result</a> Javadoc. For more information about creating a RESTful service with JAX-RS, JSON-B, and Open Liberty, see the guide on <a href="https://openliberty.io/guides/rest-intro.html" target="_blank" rel="noopener">Creating a RESTful web serivce</a>.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>CrewService</code> class.</mark>
+<code>src/main/java/io/openliberty/guides/application/CrewService.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>CrewService.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2020, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.application</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">java.util.Set</span>;
+<span class="line-numbers"> 15</span>
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.io.StringWriter</span>;
+<span class="line-numbers"> 17</span>
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonArray</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonArrayBuilder</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">jakarta.json.Json</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.POST</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PUT</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Consumes</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.DELETE</span>;
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers"> 32</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 33</span>
+<span class="line-numbers"> 34</span><span class="keyword">import</span> <span class="include">jakarta.validation.Validator</span>;
+<span class="line-numbers"> 35</span><span class="keyword">import</span> <span class="include">jakarta.validation.ConstraintViolation</span>;
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span><span class="keyword">import</span> <span class="include">com.mongodb.client.FindIterable</span>;
+<span class="line-numbers"> 38</span><span class="comment">// tag::bsonDocument[]</span>
+<span class="line-numbers"> 39</span><span class="keyword">import</span> <span class="include">org.bson.Document</span>;
+<span class="line-numbers"> 40</span><span class="comment">// end::bsonDocument[]</span>
+<span class="line-numbers"> 41</span><span class="keyword">import</span> <span class="include">org.bson.types.ObjectId</span>;
+<span class="line-numbers"> 42</span>
+<span class="line-numbers"> 43</span><span class="comment">// tag::mongoImports1[]</span>
+<span class="line-numbers"> 44</span><span class="keyword">import</span> <span class="include">com.mongodb.client.MongoCollection</span>;
+<span class="line-numbers"> 45</span><span class="keyword">import</span> <span class="include">com.mongodb.client.MongoDatabase</span>;
+<span class="line-numbers"> 46</span><span class="comment">// end::mongoImports1[]</span>
+<span class="line-numbers"> 47</span><span class="comment">// tag::mongoImports2[]</span>
+<span class="line-numbers"> 48</span><span class="keyword">import</span> <span class="include">com.mongodb.client.result.DeleteResult</span>;
+<span class="line-numbers"> 49</span><span class="keyword">import</span> <span class="include">com.mongodb.client.result.UpdateResult</span>;
+<span class="line-numbers"> 50</span><span class="comment">// end::mongoImports2[]</span>
+<span class="line-numbers"> 51</span>
+<span class="line-numbers"> 52</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.Operation</span>;
+<span class="line-numbers"> 53</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.parameters.Parameter</span>;
+<span class="line-numbers"> 54</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.responses.APIResponse</span>;
+<span class="line-numbers"> 55</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.openapi.annotations.responses.APIResponses</span>;
+<span class="line-numbers"> 56</span>
+<span class="line-numbers"> 57</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/crew</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 58</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers"> 59</span><span class="directive">public</span> <span class="type">class</span> <span class="class">CrewService</span> {
+<span class="line-numbers"> 60</span>
+<span class="line-numbers"> 61</span>    <span class="comment">// tag::dbInjection[]</span>
+<span class="line-numbers"> 62</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers"> 63</span>    MongoDatabase db;
+<span class="line-numbers"> 64</span>    <span class="comment">// end::dbInjection[]</span>
+<span class="line-numbers"> 65</span>
+<span class="line-numbers"> 66</span>    <span class="comment">// tag::beanValidator[]</span>
+<span class="line-numbers"> 67</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers"> 68</span>    <span class="predefined-type">Validator</span> validator;
+<span class="line-numbers"> 69</span>    <span class="comment">// end::beanValidator[]</span>
+<span class="line-numbers"> 70</span>
+<span class="line-numbers"> 71</span>    <span class="comment">// tag::getViolations[]</span>
+<span class="line-numbers"> 72</span>    <span class="directive">private</span> JsonArray getViolations(CrewMember crewMember) {
+<span class="line-numbers"> 73</span>        <span class="predefined-type">Set</span>&lt;ConstraintViolation&lt;CrewMember&gt;&gt; violations = validator.validate(
+<span class="line-numbers"> 74</span>                crewMember);
+<span class="line-numbers"> 75</span>
+<span class="line-numbers"> 76</span>        JsonArrayBuilder messages = Json.createArrayBuilder();
+<span class="line-numbers"> 77</span>
+<span class="line-numbers"> 78</span>        <span class="keyword">for</span> (ConstraintViolation&lt;CrewMember&gt; v : violations) {
+<span class="line-numbers"> 79</span>            messages.add(v.getMessage());
+<span class="line-numbers"> 80</span>        }
+<span class="line-numbers"> 81</span>
+<span class="line-numbers"> 82</span>        <span class="keyword">return</span> messages.build();
+<span class="line-numbers"> 83</span>    }
+<span class="line-numbers"> 84</span>    <span class="comment">// end::getViolations[]</span>
+<span class="line-numbers"> 85</span>
+<span class="line-numbers"> 86</span>    <span class="annotation">@POST</span>
+<span class="line-numbers"> 87</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 88</span>    <span class="annotation">@Consumes</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 89</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 90</span>    <span class="annotation">@APIResponses</span>({
+<span class="line-numbers"> 91</span>        <span class="annotation">@APIResponse</span>(
+<span class="line-numbers"> 92</span>            responseCode = <span class="string"><span class="delimiter">"</span><span class="content">200</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 93</span>            description = <span class="string"><span class="delimiter">"</span><span class="content">Successfully added crew member.</span><span class="delimiter">"</span></span>),
+<span class="line-numbers"> 94</span>        <span class="annotation">@APIResponse</span>(
+<span class="line-numbers"> 95</span>            responseCode = <span class="string"><span class="delimiter">"</span><span class="content">400</span><span class="delimiter">"</span></span>,
+<span class="line-numbers"> 96</span>            description = <span class="string"><span class="delimiter">"</span><span class="content">Invalid crew member configuration.</span><span class="delimiter">"</span></span>) })
+<span class="line-numbers"> 97</span>    <span class="annotation">@Operation</span>(summary = <span class="string"><span class="delimiter">"</span><span class="content">Add a new crew member to the database.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 98</span>    <span class="comment">// tag::add[]</span>
+<span class="line-numbers"> 99</span>    <span class="directive">public</span> Response add(CrewMember crewMember) {
+<span class="line-numbers">100</span>        JsonArray violations = getViolations(crewMember);
+<span class="line-numbers">101</span>
+<span class="line-numbers">102</span>        <span class="keyword">if</span> (!violations.isEmpty()) {
+<span class="line-numbers">103</span>            <span class="keyword">return</span> Response
+<span class="line-numbers">104</span>                    .status(Response.Status.BAD_REQUEST)
+<span class="line-numbers">105</span>                    .entity(violations.toString())
+<span class="line-numbers">106</span>                    .build();
+<span class="line-numbers">107</span>        }
+<span class="line-numbers">108</span>
+<span class="line-numbers">109</span>        <span class="comment">// tag::getCollection[]</span>
+<span class="line-numbers">110</span>        MongoCollection&lt;<span class="predefined-type">Document</span>&gt; crew = db.getCollection(<span class="string"><span class="delimiter">"</span><span class="content">Crew</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">111</span>        <span class="comment">// end::getCollection[]</span>
+<span class="line-numbers">112</span>
+<span class="line-numbers">113</span>        <span class="comment">// tag::crewMemberCreation[]</span>
+<span class="line-numbers">114</span>        <span class="predefined-type">Document</span> newCrewMember = <span class="keyword">new</span> <span class="predefined-type">Document</span>();
+<span class="line-numbers">115</span>        newCrewMember.put(<span class="string"><span class="delimiter">"</span><span class="content">Name</span><span class="delimiter">"</span></span>, crewMember.getName());
+<span class="line-numbers">116</span>        newCrewMember.put(<span class="string"><span class="delimiter">"</span><span class="content">Rank</span><span class="delimiter">"</span></span>, crewMember.getRank());
+<span class="line-numbers">117</span>        newCrewMember.put(<span class="string"><span class="delimiter">"</span><span class="content">CrewID</span><span class="delimiter">"</span></span>, crewMember.getCrewID());
+<span class="line-numbers">118</span>        <span class="comment">// end::crewMemberCreation[]</span>
+<span class="line-numbers">119</span>
+<span class="line-numbers">120</span>        <span class="comment">// tag::insertOne[]</span>
+<span class="line-numbers">121</span>        crew.insertOne(newCrewMember);
+<span class="line-numbers">122</span>        <span class="comment">// end::insertOne[]</span>
+<span class="line-numbers">123</span>
+<span class="line-numbers">124</span>        <span class="keyword">return</span> Response
+<span class="line-numbers">125</span>            .status(Response.Status.OK)
+<span class="line-numbers">126</span>            .entity(newCrewMember.toJson())
+<span class="line-numbers">127</span>            .build();
+<span class="line-numbers">128</span>    }
+<span class="line-numbers">129</span>    <span class="comment">// end::add[]</span>
+<span class="line-numbers">130</span>
+<span class="line-numbers">131</span>    <span class="annotation">@GET</span>
+<span class="line-numbers">132</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">133</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">134</span>    <span class="annotation">@APIResponses</span>({
+<span class="line-numbers">135</span>        <span class="annotation">@APIResponse</span>(
+<span class="line-numbers">136</span>            responseCode = <span class="string"><span class="delimiter">"</span><span class="content">200</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">137</span>            description = <span class="string"><span class="delimiter">"</span><span class="content">Successfully listed the crew members.</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">138</span>        <span class="annotation">@APIResponse</span>(
+<span class="line-numbers">139</span>            responseCode = <span class="string"><span class="delimiter">"</span><span class="content">500</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">140</span>            description = <span class="string"><span class="delimiter">"</span><span class="content">Failed to list the crew members.</span><span class="delimiter">"</span></span>) })
+<span class="line-numbers">141</span>    <span class="annotation">@Operation</span>(summary = <span class="string"><span class="delimiter">"</span><span class="content">List the crew members from the database.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">142</span>    <span class="comment">// tag::retrieve[]</span>
+<span class="line-numbers">143</span>    <span class="directive">public</span> Response retrieve() {
+<span class="line-numbers">144</span>        <span class="predefined-type">StringWriter</span> sb = <span class="keyword">new</span> <span class="predefined-type">StringWriter</span>();
+<span class="line-numbers">145</span>
+<span class="line-numbers">146</span>        <span class="keyword">try</span> {
+<span class="line-numbers">147</span>            <span class="comment">// tag::getCollectionRead[]</span>
+<span class="line-numbers">148</span>            MongoCollection&lt;<span class="predefined-type">Document</span>&gt; crew = db.getCollection(<span class="string"><span class="delimiter">"</span><span class="content">Crew</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">149</span>            <span class="comment">// end::getCollectionRead[]</span>
+<span class="line-numbers">150</span>            sb.append(<span class="string"><span class="delimiter">"</span><span class="content">[</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">151</span>            <span class="type">boolean</span> first = <span class="predefined-constant">true</span>;
+<span class="line-numbers">152</span>            <span class="comment">// tag::find[]</span>
+<span class="line-numbers">153</span>            FindIterable&lt;<span class="predefined-type">Document</span>&gt; docs = crew.find();
+<span class="line-numbers">154</span>            <span class="comment">// end::find[]</span>
+<span class="line-numbers">155</span>            <span class="keyword">for</span> (<span class="predefined-type">Document</span> d : docs) {
+<span class="line-numbers">156</span>                <span class="keyword">if</span> (!first) {
+<span class="line-numbers">157</span>                    sb.append(<span class="string"><span class="delimiter">"</span><span class="content">,</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">158</span>                } <span class="keyword">else</span> {
+<span class="line-numbers">159</span>                    first = <span class="predefined-constant">false</span>;
+<span class="line-numbers">160</span>                }
+<span class="line-numbers">161</span>                sb.append(d.toJson());
+<span class="line-numbers">162</span>            }
+<span class="line-numbers">163</span>            sb.append(<span class="string"><span class="delimiter">"</span><span class="content">]</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">164</span>        } <span class="keyword">catch</span> (<span class="exception">Exception</span> e) {
+<span class="line-numbers">165</span>            e.printStackTrace(<span class="predefined-type">System</span>.out);
+<span class="line-numbers">166</span>            <span class="keyword">return</span> Response
+<span class="line-numbers">167</span>                .status(Response.Status.INTERNAL_SERVER_ERROR)
+<span class="line-numbers">168</span>                .entity(<span class="string"><span class="delimiter">"</span><span class="content">[</span><span class="char">\"</span><span class="content">Unable to list crew members!</span><span class="char">\"</span><span class="content">]</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">169</span>                .build();
+<span class="line-numbers">170</span>        }
+<span class="line-numbers">171</span>
+<span class="line-numbers">172</span>        <span class="keyword">return</span> Response
+<span class="line-numbers">173</span>            .status(Response.Status.OK)
+<span class="line-numbers">174</span>            .entity(sb.toString())
+<span class="line-numbers">175</span>            .build();
+<span class="line-numbers">176</span>    }
+<span class="line-numbers">177</span>    <span class="comment">// end::retrieve[]</span>
+<span class="line-numbers">178</span>
+<span class="line-numbers">179</span>    <span class="annotation">@PUT</span>
+<span class="line-numbers">180</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{id}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">181</span>    <span class="annotation">@Consumes</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">182</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">183</span>    <span class="annotation">@APIResponses</span>({
+<span class="line-numbers">184</span>        <span class="annotation">@APIResponse</span>(
+<span class="line-numbers">185</span>            responseCode = <span class="string"><span class="delimiter">"</span><span class="content">200</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">186</span>            description = <span class="string"><span class="delimiter">"</span><span class="content">Successfully updated crew member.</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">187</span>        <span class="annotation">@APIResponse</span>(
+<span class="line-numbers">188</span>            responseCode = <span class="string"><span class="delimiter">"</span><span class="content">400</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">189</span>            description = <span class="string"><span class="delimiter">"</span><span class="content">Invalid object id or crew member configuration.</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">190</span>        <span class="annotation">@APIResponse</span>(
+<span class="line-numbers">191</span>            responseCode = <span class="string"><span class="delimiter">"</span><span class="content">404</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">192</span>            description = <span class="string"><span class="delimiter">"</span><span class="content">Crew member object id was not found.</span><span class="delimiter">"</span></span>) })
+<span class="line-numbers">193</span>    <span class="annotation">@Operation</span>(summary = <span class="string"><span class="delimiter">"</span><span class="content">Update a crew member in the database.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">194</span>    <span class="comment">// tag::update[]</span>
+<span class="line-numbers">195</span>    <span class="directive">public</span> Response update(CrewMember crewMember,
+<span class="line-numbers">196</span>        <span class="annotation">@Parameter</span>(
+<span class="line-numbers">197</span>            description = <span class="string"><span class="delimiter">"</span><span class="content">Object id of the crew member to update.</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">198</span>            required = <span class="predefined-constant">true</span>
+<span class="line-numbers">199</span>        )
+<span class="line-numbers">200</span>        <span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> id) {
+<span class="line-numbers">201</span>
+<span class="line-numbers">202</span>        JsonArray violations = getViolations(crewMember);
+<span class="line-numbers">203</span>
+<span class="line-numbers">204</span>        <span class="keyword">if</span> (!violations.isEmpty()) {
+<span class="line-numbers">205</span>            <span class="keyword">return</span> Response
+<span class="line-numbers">206</span>                    .status(Response.Status.BAD_REQUEST)
+<span class="line-numbers">207</span>                    .entity(violations.toString())
+<span class="line-numbers">208</span>                    .build();
+<span class="line-numbers">209</span>        }
+<span class="line-numbers">210</span>
+<span class="line-numbers">211</span>        ObjectId oid;
+<span class="line-numbers">212</span>
+<span class="line-numbers">213</span>        <span class="keyword">try</span> {
+<span class="line-numbers">214</span>            oid = <span class="keyword">new</span> ObjectId(id);
+<span class="line-numbers">215</span>        } <span class="keyword">catch</span> (<span class="exception">Exception</span> e) {
+<span class="line-numbers">216</span>            <span class="keyword">return</span> Response
+<span class="line-numbers">217</span>                .status(Response.Status.BAD_REQUEST)
+<span class="line-numbers">218</span>                .entity(<span class="string"><span class="delimiter">"</span><span class="content">[</span><span class="char">\"</span><span class="content">Invalid object id!</span><span class="char">\"</span><span class="content">]</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">219</span>                .build();
+<span class="line-numbers">220</span>        }
+<span class="line-numbers">221</span>
+<span class="line-numbers">222</span>        <span class="comment">// tag::getCollectionUpdate[]</span>
+<span class="line-numbers">223</span>        MongoCollection&lt;<span class="predefined-type">Document</span>&gt; crew = db.getCollection(<span class="string"><span class="delimiter">"</span><span class="content">Crew</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">224</span>        <span class="comment">// end::getCollectionUpdate[]</span>
+<span class="line-numbers">225</span>
+<span class="line-numbers">226</span>        <span class="comment">// tag::queryUpdate[]</span>
+<span class="line-numbers">227</span>        <span class="predefined-type">Document</span> query = <span class="keyword">new</span> <span class="predefined-type">Document</span>(<span class="string"><span class="delimiter">"</span><span class="content">_id</span><span class="delimiter">"</span></span>, oid);
+<span class="line-numbers">228</span>        <span class="comment">// end::queryUpdate[]</span>
+<span class="line-numbers">229</span>
+<span class="line-numbers">230</span>        <span class="comment">// tag::crewMemberUpdate[]</span>
+<span class="line-numbers">231</span>        <span class="predefined-type">Document</span> newCrewMember = <span class="keyword">new</span> <span class="predefined-type">Document</span>();
+<span class="line-numbers">232</span>        newCrewMember.put(<span class="string"><span class="delimiter">"</span><span class="content">Name</span><span class="delimiter">"</span></span>, crewMember.getName());
+<span class="line-numbers">233</span>        newCrewMember.put(<span class="string"><span class="delimiter">"</span><span class="content">Rank</span><span class="delimiter">"</span></span>, crewMember.getRank());
+<span class="line-numbers">234</span>        newCrewMember.put(<span class="string"><span class="delimiter">"</span><span class="content">CrewID</span><span class="delimiter">"</span></span>, crewMember.getCrewID());
+<span class="line-numbers">235</span>        <span class="comment">// end::crewMemberUpdate[]</span>
+<span class="line-numbers">236</span>
+<span class="line-numbers">237</span>        <span class="comment">// tag::replaceOne[]</span>
+<span class="line-numbers">238</span>        UpdateResult updateResult = crew.replaceOne(query, newCrewMember);
+<span class="line-numbers">239</span>        <span class="comment">// end::replaceOne[]</span>
+<span class="line-numbers">240</span>
+<span class="line-numbers">241</span>        <span class="comment">// tag::getMatchedCount[]</span>
+<span class="line-numbers">242</span>        <span class="keyword">if</span> (updateResult.getMatchedCount() == <span class="integer">0</span>) {
+<span class="line-numbers">243</span>        <span class="comment">// end::getMatchedCount[]</span>
+<span class="line-numbers">244</span>            <span class="keyword">return</span> Response
+<span class="line-numbers">245</span>                .status(Response.Status.NOT_FOUND)
+<span class="line-numbers">246</span>                .entity(<span class="string"><span class="delimiter">"</span><span class="content">[</span><span class="char">\"</span><span class="content">_id was not found!</span><span class="char">\"</span><span class="content">]</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">247</span>                .build();
+<span class="line-numbers">248</span>        }
+<span class="line-numbers">249</span>
+<span class="line-numbers">250</span>        newCrewMember.put(<span class="string"><span class="delimiter">"</span><span class="content">_id</span><span class="delimiter">"</span></span>, oid);
+<span class="line-numbers">251</span>
+<span class="line-numbers">252</span>        <span class="keyword">return</span> Response
+<span class="line-numbers">253</span>            .status(Response.Status.OK)
+<span class="line-numbers">254</span>            .entity(newCrewMember.toJson())
+<span class="line-numbers">255</span>            .build();
+<span class="line-numbers">256</span>    }
+<span class="line-numbers">257</span>    <span class="comment">// end::update[]</span>
+<span class="line-numbers">258</span>
+<span class="line-numbers">259</span>    <span class="annotation">@DELETE</span>
+<span class="line-numbers">260</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{id}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">261</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">262</span>    <span class="annotation">@APIResponses</span>({
+<span class="line-numbers">263</span>        <span class="annotation">@APIResponse</span>(
+<span class="line-numbers">264</span>            responseCode = <span class="string"><span class="delimiter">"</span><span class="content">200</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">265</span>            description = <span class="string"><span class="delimiter">"</span><span class="content">Successfully deleted crew member.</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">266</span>        <span class="annotation">@APIResponse</span>(
+<span class="line-numbers">267</span>            responseCode = <span class="string"><span class="delimiter">"</span><span class="content">400</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">268</span>            description = <span class="string"><span class="delimiter">"</span><span class="content">Invalid object id.</span><span class="delimiter">"</span></span>),
+<span class="line-numbers">269</span>        <span class="annotation">@APIResponse</span>(
+<span class="line-numbers">270</span>            responseCode = <span class="string"><span class="delimiter">"</span><span class="content">404</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">271</span>            description = <span class="string"><span class="delimiter">"</span><span class="content">Crew member object id was not found.</span><span class="delimiter">"</span></span>) })
+<span class="line-numbers">272</span>    <span class="annotation">@Operation</span>(summary = <span class="string"><span class="delimiter">"</span><span class="content">Delete a crew member from the database.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">273</span>    <span class="comment">// tag::remove[]</span>
+<span class="line-numbers">274</span>    <span class="directive">public</span> Response remove(
+<span class="line-numbers">275</span>        <span class="annotation">@Parameter</span>(
+<span class="line-numbers">276</span>            description = <span class="string"><span class="delimiter">"</span><span class="content">Object id of the crew member to delete.</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">277</span>            required = <span class="predefined-constant">true</span>
+<span class="line-numbers">278</span>        )
+<span class="line-numbers">279</span>        <span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">id</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> id) {
+<span class="line-numbers">280</span>
+<span class="line-numbers">281</span>        ObjectId oid;
+<span class="line-numbers">282</span>
+<span class="line-numbers">283</span>        <span class="keyword">try</span> {
+<span class="line-numbers">284</span>            oid = <span class="keyword">new</span> ObjectId(id);
+<span class="line-numbers">285</span>        } <span class="keyword">catch</span> (<span class="exception">Exception</span> e) {
+<span class="line-numbers">286</span>            <span class="keyword">return</span> Response
+<span class="line-numbers">287</span>                .status(Response.Status.BAD_REQUEST)
+<span class="line-numbers">288</span>                .entity(<span class="string"><span class="delimiter">"</span><span class="content">[</span><span class="char">\"</span><span class="content">Invalid object id!</span><span class="char">\"</span><span class="content">]</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">289</span>                .build();
+<span class="line-numbers">290</span>        }
+<span class="line-numbers">291</span>
+<span class="line-numbers">292</span>        <span class="comment">// tag::getCollectionDelete[]</span>
+<span class="line-numbers">293</span>        MongoCollection&lt;<span class="predefined-type">Document</span>&gt; crew = db.getCollection(<span class="string"><span class="delimiter">"</span><span class="content">Crew</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">294</span>        <span class="comment">// end::getCollectionDelete[]</span>
+<span class="line-numbers">295</span>
+<span class="line-numbers">296</span>        <span class="comment">// tag::queryDelete[]</span>
+<span class="line-numbers">297</span>        <span class="predefined-type">Document</span> query = <span class="keyword">new</span> <span class="predefined-type">Document</span>(<span class="string"><span class="delimiter">"</span><span class="content">_id</span><span class="delimiter">"</span></span>, oid);
+<span class="line-numbers">298</span>        <span class="comment">// end::queryDelete[]</span>
+<span class="line-numbers">299</span>
+<span class="line-numbers">300</span>        <span class="comment">// tag::deleteOne[]</span>
+<span class="line-numbers">301</span>        DeleteResult deleteResult = crew.deleteOne(query);
+<span class="line-numbers">302</span>        <span class="comment">// end::deleteOne[]</span>
+<span class="line-numbers">303</span>
+<span class="line-numbers">304</span>        <span class="comment">// tag::getDeletedCount[]</span>
+<span class="line-numbers">305</span>        <span class="keyword">if</span> (deleteResult.getDeletedCount() == <span class="integer">0</span>) {
+<span class="line-numbers">306</span>        <span class="comment">// end::getDeletedCount[]</span>
+<span class="line-numbers">307</span>            <span class="keyword">return</span> Response
+<span class="line-numbers">308</span>                .status(Response.Status.NOT_FOUND)
+<span class="line-numbers">309</span>                .entity(<span class="string"><span class="delimiter">"</span><span class="content">[</span><span class="char">\"</span><span class="content">_id was not found!</span><span class="char">\"</span><span class="content">]</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">310</span>                .build();
+<span class="line-numbers">311</span>        }
+<span class="line-numbers">312</span>
+<span class="line-numbers">313</span>        <span class="keyword">return</span> Response
+<span class="line-numbers">314</span>            .status(Response.Status.OK)
+<span class="line-numbers">315</span>            .entity(query.toJson())
+<span class="line-numbers">316</span>            .build();
+<span class="line-numbers">317</span>    }
+<span class="line-numbers">318</span>    <span class="comment">// end::remove[]</span>
+<span class="line-numbers">319</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>CrewMember.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2020, 2022 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.application</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.NotEmpty</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">jakarta.validation.constraints.Pattern</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="comment">// tag::crewMember[]</span>
+<span class="line-numbers">18</span><span class="directive">public</span> <span class="type">class</span> <span class="class">CrewMember</span> {
+<span class="line-numbers">19</span>
+<span class="line-numbers">20</span>    <span class="annotation">@NotEmpty</span>(message = <span class="string"><span class="delimiter">"</span><span class="content">All crew members must have a name!</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">21</span>    <span class="directive">private</span> <span class="predefined-type">String</span> name;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span>    <span class="annotation">@Pattern</span>(regexp = <span class="string"><span class="delimiter">"</span><span class="content">(Captain|Officer|Engineer)</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">24</span>            message = <span class="string"><span class="delimiter">"</span><span class="content">Crew member must be one of the listed ranks!</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">25</span>    <span class="directive">private</span> <span class="predefined-type">String</span> rank;
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span>    <span class="annotation">@Pattern</span>(regexp = <span class="string"><span class="delimiter">"</span><span class="content">^</span><span class="char">\\</span><span class="content">d+$</span><span class="delimiter">"</span></span>,
+<span class="line-numbers">28</span>            message = <span class="string"><span class="delimiter">"</span><span class="content">ID Number must be a non-negative integer!</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">29</span>    <span class="directive">private</span> <span class="predefined-type">String</span> crewID;
+<span class="line-numbers">30</span>
+<span class="line-numbers">31</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getName() {
+<span class="line-numbers">32</span>        <span class="keyword">return</span> name;
+<span class="line-numbers">33</span>    }
+<span class="line-numbers">34</span>
+<span class="line-numbers">35</span>    <span class="directive">public</span> <span class="type">void</span> setName(<span class="predefined-type">String</span> name) {
+<span class="line-numbers">36</span>        <span class="local-variable">this</span>.name = name;
+<span class="line-numbers">37</span>    }
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getRank() {
+<span class="line-numbers">40</span>        <span class="keyword">return</span> rank;
+<span class="line-numbers">41</span>    }
+<span class="line-numbers">42</span>
+<span class="line-numbers">43</span>    <span class="directive">public</span> <span class="type">void</span> setRank(<span class="predefined-type">String</span> rank) {
+<span class="line-numbers">44</span>        <span class="local-variable">this</span>.rank = rank;
+<span class="line-numbers">45</span>    }
+<span class="line-numbers">46</span>
+<span class="line-numbers">47</span>    <span class="directive">public</span> <span class="predefined-type">String</span> getCrewID() {
+<span class="line-numbers">48</span>        <span class="keyword">return</span> crewID;
+<span class="line-numbers">49</span>    }
+<span class="line-numbers">50</span>
+<span class="line-numbers">51</span>    <span class="directive">public</span> <span class="type">void</span> setCrewID(<span class="predefined-type">String</span> crewID) {
+<span class="line-numbers">52</span>        <span class="local-variable">this</span>.crewID = crewID;
+<span class="line-numbers">53</span>    }
+<span class="line-numbers">54</span>
+<span class="line-numbers">55</span>}
+<span class="line-numbers">56</span><span class="comment">// end::crewMember[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this class, a <code class="hotspot=beanValidator">Validator</code> is used to validate a <code class="hotspot=crewMember file=1">CrewMember</code> before the database is updated. The CDI producer is used to inject a <code class="hotspot=dbInjection">MongoDatabase</code> into the CrewService class.</p>
+</div>
+<div class="paragraph">
+<p><strong>Implementing the Create operation</strong></p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=add">add()</code> method handles the implementation of the create operation. An instance of <code>MongoCollection</code> is retrieved with the <code class="hotspot=getCollection">MongoDatabase.getCollection()</code> method. The <code>Document</code> type parameter specifies that the <code>Document</code> type is used to store data in the <code>MongoCollection</code>. Each crew member is converted into a <code class="hotspot=crewMemberCreation">Document</code>, and the <code class="hotspot=insertOne">MongoCollection.insertOne()</code> method inserts a new crew member document.</p>
+</div>
+<div class="paragraph">
+<p><strong>Implementing the Retrieve operation</strong></p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=retrieve">retrieve()</code> method handles the implementation of the retrieve operation. The <code>Crew</code> collection is retrieved with the <code class="hotspot=getCollectionRead">MongoDatabase.getCollection()</code> method. Then, the <code class="hotspot=find">MongoCollection.find()</code> method retrieves a <code>FindIterable</code> object. This object is iterable for all the crew members documents in the collection, so each crew member document is concatenated into a String array and returned.</p>
+</div>
+<div class="paragraph">
+<p><strong>Implementing the Update operation</strong></p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=update">update()</code> method handles the implementation of the update operation. After the <code>Crew</code> collection is retrieved, a document is created with the specified object <code>id</code> and is used to query the collection. Next, a new crew member <code class="hotspot=crewMemberUpdate">Document</code> is created with the updated configuration. The <code class="hotspot=replaceOne">MongoCollection.replaceOne()</code> method is called with the query and new crew member document. This method updates all of the matching queries with the new document. Because the object <code>id</code> is unique in the <code>Crew</code> collection, only one document is updated. The <code>MongoCollection.replaceOne()</code> method also returns an <code>UpdateResult</code> instance, which determines how many documents matched the query. If there are zero matches, then the object <code>id</code> doesn’t exist.</p>
+</div>
+<div class="paragraph">
+<p><strong>Implementing the Delete operation</strong></p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=remove">remove()</code> method handles the implementation of the delete operation. After the <code>Crew</code> collection is retrieved, a <code class="hotspot=queryDelete">Document</code> is created with the specified object <code>id</code> and is used to query the collection. Because the object <code>id</code> is unique in the <code>Crew</code> collection, only one document is deleted. After the document is deleted, the <code class="hotspot=deleteOne">MongoCollection.deleteOne()</code> method returns a <code>DeleteResult</code> instance, which determines how many documents were deleted. If zero documents were deleted, then the object <code>id</code> doesn’t exist.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-the-mongodb-driver-and-the-liberty">Configuring the MongoDB driver and the Liberty</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>MicroProfile Config makes configuring the MongoDB driver simple because all of the configuration can be set in one place and injected into the CDI producer.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Create the configuration file.</mark>
+<code>src/main/webapp/META-INF/microprofile-config.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties"><span class="line-numbers"> 1</span># tag::hostname[]
+<span class="line-numbers"> 2</span>mongo.hostname=localhost
+<span class="line-numbers"> 3</span># end::hostname[]
+<span class="line-numbers"> 4</span># tag::port[]
+<span class="line-numbers"> 5</span>mongo.port=27017
+<span class="line-numbers"> 6</span># end::port[]
+<span class="line-numbers"> 7</span># tag::dbname[]
+<span class="line-numbers"> 8</span>mongo.dbname=testdb
+<span class="line-numbers"> 9</span># end::dbname[]
+<span class="line-numbers">10</span># tag::mongoUser[]
+<span class="line-numbers">11</span>mongo.user=sampleUser
+<span class="line-numbers">12</span># end::mongoUser[]
+<span class="line-numbers">13</span># tag::passEncoded[]
+<span class="line-numbers">14</span>mongo.pass.encoded={aes}APtt+/vYxxPa0jE1rhmZue9wBm3JGqFK3JR4oJdSDGWM1wLr1ckvqkqKjSB2Voty8g==
+<span class="line-numbers">15</span># tag::passEncoded[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Values such as the hostname, port, and database name for the running MongoDB instance are set in this file. The user’s username and password are also set here. For added security, the password was encoded by using the <a href="https://openliberty.io/docs/latest/reference/command/securityUtility-encode.html" target="_blank" rel="noopener">securityUtility encode command</a>.</p>
+</div>
+<div class="paragraph">
+<p>To create a CDI producer for MongoDB and connect over TLS, the Open Liberty needs to be correctly configured.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Replace the Liberty <code>server.xml</code> configuration file.</mark>
+<code>src/main/liberty/config/server.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>server.xml</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">Sample Liberty server</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>    <span class="comment">&lt;!-- tag::featureManager[] --&gt;</span>
+<span class="line-numbers"> 3</span>    <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>        <span class="comment">&lt;!-- tag::cdiFeature[] --&gt;</span>
+<span class="line-numbers"> 5</span>        <span class="tag">&lt;feature&gt;</span>cdi-4.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>        <span class="comment">&lt;!-- end::cdiFeature[] --&gt;</span>
+<span class="line-numbers"> 7</span>        <span class="comment">&lt;!-- tag::sslFeature[] --&gt;</span>
+<span class="line-numbers"> 8</span>        <span class="tag">&lt;feature&gt;</span>ssl-1.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 9</span>        <span class="comment">&lt;!-- end::sslFeature[] --&gt;</span>
+<span class="line-numbers">10</span>        <span class="comment">&lt;!-- tag::mpConfigFeature[] --&gt;</span>
+<span class="line-numbers">11</span>        <span class="tag">&lt;feature&gt;</span>mpConfig-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">12</span>        <span class="comment">&lt;!-- end::mpConfigFeature[] --&gt;</span>
+<span class="line-numbers">13</span>        <span class="comment">&lt;!-- tag::passwordUtilFeature[] --&gt;</span>
+<span class="line-numbers">14</span>        <span class="tag">&lt;feature&gt;</span>passwordUtilities-1.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">15</span>        <span class="comment">&lt;!-- end::passwordUtilFeature[] --&gt;</span>
+<span class="line-numbers">16</span>        <span class="tag">&lt;feature&gt;</span>beanValidation-3.0<span class="tag">&lt;/feature&gt;</span>           
+<span class="line-numbers">17</span>        <span class="tag">&lt;feature&gt;</span>restfulWS-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">18</span>        <span class="tag">&lt;feature&gt;</span>jsonb-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">19</span>        <span class="tag">&lt;feature&gt;</span>mpOpenAPI-3.1<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">20</span>    <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">21</span>    <span class="comment">&lt;!-- end::featureManager[] --&gt;</span>
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.http.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9080</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">24</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">default.https.port</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">9443</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">25</span>    <span class="tag">&lt;variable</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">"</span><span class="content">app.context.root</span><span class="delimiter">"</span></span> <span class="attribute-name">defaultValue</span>=<span class="string"><span class="delimiter">"</span><span class="content">/mongo</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span>    <span class="comment">&lt;!-- tag::httpEndpoint[] --&gt;</span>
+<span class="line-numbers">28</span>    <span class="tag">&lt;httpEndpoint</span>
+<span class="line-numbers">29</span>        <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">30</span>        <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">31</span>        <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">32</span>        <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span>
+<span class="line-numbers">33</span>    <span class="tag">/&gt;</span>
+<span class="line-numbers">34</span>    <span class="comment">&lt;!-- end::httpEndpoint[] --&gt;</span>
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span>    <span class="comment">&lt;!-- tag::webApplication[] --&gt;</span>
+<span class="line-numbers">37</span>    <span class="tag">&lt;webApplication</span> 
+<span class="line-numbers">38</span>        <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-mongodb-intro.war</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">39</span>        <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">${app.context.root}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">40</span>    <span class="tag">/&gt;</span>
+<span class="line-numbers">41</span>    <span class="comment">&lt;!-- end::webApplication[] --&gt;</span>
+<span class="line-numbers">42</span>    <span class="comment">&lt;!-- tag::sslContext[] --&gt;</span>
+<span class="line-numbers">43</span>    <span class="comment">&lt;!-- tag::keyStore[] --&gt;</span>
+<span class="line-numbers">44</span>    <span class="tag">&lt;keyStore</span>
+<span class="line-numbers">45</span>        <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">outboundTrustStore</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">46</span>        <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">${server.output.dir}/resources/security/truststore.p12</span><span class="delimiter">"</span></span>
+<span class="line-numbers">47</span>        <span class="attribute-name">password</span>=<span class="string"><span class="delimiter">"</span><span class="content">mongodb</span><span class="delimiter">"</span></span>
+<span class="line-numbers">48</span>        <span class="attribute-name">type</span>=<span class="string"><span class="delimiter">"</span><span class="content">PKCS12</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">49</span>    <span class="tag">/&gt;</span>
+<span class="line-numbers">50</span>    <span class="comment">&lt;!-- end::keyStore[] --&gt;</span>
+<span class="line-numbers">51</span>    <span class="comment">&lt;!-- tag::ssl[] --&gt;</span>
+<span class="line-numbers">52</span>    <span class="tag">&lt;ssl</span> 
+<span class="line-numbers">53</span>        <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">outboundSSLContext</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">54</span>        <span class="attribute-name">keyStoreRef</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultKeyStore</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">55</span>        <span class="attribute-name">trustStoreRef</span>=<span class="string"><span class="delimiter">"</span><span class="content">outboundTrustStore</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">56</span>        <span class="attribute-name">sslProtocol</span>=<span class="string"><span class="delimiter">"</span><span class="content">TLS</span><span class="delimiter">"</span></span> 
+<span class="line-numbers">57</span>    <span class="tag">/&gt;</span>
+<span class="line-numbers">58</span>    <span class="comment">&lt;!-- end::ssl[] --&gt;</span>
+<span class="line-numbers">59</span>    <span class="comment">&lt;!-- end::sslContext[] --&gt;</span>
+<span class="line-numbers">60</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The features that are required to create the CDI producer for MongoDB are <a href="https://openliberty.io/docs/latest/reference/feature/cdi-4.0.html" target="_blank" rel="noopener">Contexts and Dependency Injection</a> (<code>cdi-4.0</code>), <a href="https://openliberty.io/docs/latest/reference/feature/ssl-1.0.html" target="_blank" rel="noopener">Secure Socket Layer</a> (<code>ssl-1.0</code>), <a href="https://openliberty.io/docs/latest/reference/feature/mpConfig-3.0.html" target="_blank" rel="noopener">MicroProfile Config</a> (<code>mpConfig-3.0</code>), and <a href="https://openliberty.io/docs/latest/reference/feature/passwordUtilities-1.1.html" target="_blank" rel="noopener">Password Utilities</a> (<code>passwordUtilities-1.1</code>). These features are specified in the <code class="hotspot=featureManager file=1">featureManager</code> element. The Secure Socket Layer (SSL) context is configured in the <code>server.xml</code> configuration file so that the application can connect to MongoDB with TLS. The <code class="hotspot=keyStore file=1">keyStore</code> element points to the <code>truststore.p12</code> keystore file that was created in one of the previous sections. The <code class="hotspot=ssl file=1">ssl</code> element specifies the <code>defaultKeyStore</code> as the keystore and <code>outboundTrustStore</code> as the truststore.</p>
+</div>
+<div class="paragraph">
+<p>After you replace the <code>server.xml</code> file, the Open Liberty configuration is automatically reloaded.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="running-the-application">Running the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You started the Open Liberty in dev mode at the beginning of the guide, so all the changes were automatically picked up.</p>
+</div>
+<div class="paragraph">
+<p>Go to the <a href="http://localhost:9080/openapi/ui/" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080/openapi/ui/</a> URL to see the OpenAPI user interface (UI) that provides API documentation and a client to test the API endpoints that you create after you see a message similar to the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>CWWKZ0001I: Application guide-mongodb-intro started in 5.715 seconds.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Try the Create operation</strong></p>
+</div>
+<div class="paragraph">
+<p>From the OpenAPI UI, test the create operation at the <code>POST /api/crew</code> endpoint by using the following code as the request body:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "name": "Member1",
+  "rank": "Officer",
+  "crewID": "000001"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This request creates a new document in the <code>Crew</code> collection with a name of <code>Member1</code>, rank of <code>Officer</code>, and crew ID of <code>000001</code>.</p>
+</div>
+<div class="paragraph">
+<p>You’ll receive a response that contains the JSON object of the new crew member, as shown in the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "Name": "Member1",
+  "Rank": "Officer",
+  "CrewID": "000001",
+  "_id": {
+    "$oid": "&lt;&lt;ID&gt;&gt;"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>&lt;&lt;ID&gt;&gt;</code> that you receive is a unique identifier in the collection. Save this value for future commands.</p>
+</div>
+<div class="paragraph">
+<p><strong>Try the Retrieve operation</strong></p>
+</div>
+<div class="paragraph">
+<p>From the OpenAPI UI, test the read operation at the <code>GET /api/crew</code> endpoint. This request gets all crew member documents from the collection.</p>
+</div>
+<div class="paragraph">
+<p>You’ll receive a response that contains an array of all the members in your crew. The response might include crew members that were created in the <strong>Try what you’ll build</strong> section of this guide:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>[
+  {
+    "_id": {
+      "$oid": "&lt;&lt;ID&gt;&gt;"
+    },
+    "Name": "Member1",
+    "Rank": "Officer",
+    "CrewID": "000001"
+  }
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Try the Update operation</strong></p>
+</div>
+<div class="paragraph">
+<p>From the OpenAPI UI, test the update operation at the <code>PUT /api/crew/{id}</code> endpoint, where the <code>{id}</code> parameter is the <code>&lt;&lt;ID&gt;&gt;</code> that you saved from the create operation. Use the following code as the request body:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "name": "Member1",
+  "rank": "Captain",
+  "crewID": "000001"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This request updates the rank of the crew member that you created from <code>Officer</code> to <code>Captain</code>.</p>
+</div>
+<div class="paragraph">
+<p>You’ll receive a response that contains the JSON object of the updated crew member, as shown in the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "Name": "Member1",
+  "Rank": "Captain",
+  "CrewID": "000001",
+  "_id": {
+    "$oid": "&lt;&lt;ID&gt;&gt;"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Try the Delete operation</strong></p>
+</div>
+<div class="paragraph">
+<p>From the OpenAPI UI, test the delete operation at the <code>DELETE/api/crew/{id}</code> endpoint, where the <code>{id}</code> parameter is the <code>&lt;&lt;ID&gt;&gt;</code> that you saved from the create operation. This request removes the document that contains the specified crew member object <code>id</code> from the collection.</p>
+</div>
+<div class="paragraph">
+<p>You’ll receive a response that contains the object <code>id</code> of the deleted crew member, as shown in the following example:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "_id": {
+    "$oid": "&lt;&lt;ID&gt;&gt;"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, you can check out the microservice that you created by going to the <a href="http://localhost:9080/mongo/" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9080/mongo/</a> URL.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-application">Testing the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Next, you’ll create integration tests to ensure that the basic operations you implemented function correctly.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>CrewServiceIT</code> class.</mark>
+<code>src/test/java/it/io/openliberty/guides/application/CrewServiceIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>CrewServiceIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2020, 2022 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers"> 10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 12</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.application</span>;
+<span class="line-numbers"> 13</span>
+<span class="line-numbers"> 14</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.jupiter.api.Assertions.assertEquals</span>;
+<span class="line-numbers"> 15</span>
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.io.StringReader</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">java.util.ArrayList</span>;
+<span class="line-numbers"> 18</span>
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterAll</span>;
+<span class="line-numbers"> 20</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeAll</span>;
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Order</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.MethodOrderer</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">org.junit.jupiter.api.TestMethodOrder</span>;
+<span class="line-numbers"> 25</span>
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">jakarta.json.Json</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonArray</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonArrayBuilder</span>;
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObject</span>;
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonObjectBuilder</span>;
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonReader</span>;
+<span class="line-numbers"> 32</span><span class="keyword">import</span> <span class="include">jakarta.json.JsonValue</span>;
+<span class="line-numbers"> 33</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Client</span>;
+<span class="line-numbers"> 34</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.ClientBuilder</span>;
+<span class="line-numbers"> 35</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers"> 36</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.client.Entity</span>;
+<span class="line-numbers"> 37</span>
+<span class="line-numbers"> 38</span><span class="annotation">@TestMethodOrder</span>(MethodOrderer.OrderAnnotation.class)
+<span class="line-numbers"> 39</span><span class="directive">public</span> <span class="type">class</span> <span class="class">CrewServiceIT</span> {
+<span class="line-numbers"> 40</span>
+<span class="line-numbers"> 41</span>    <span class="directive">private</span> <span class="directive">static</span> Client client;
+<span class="line-numbers"> 42</span>    <span class="directive">private</span> <span class="directive">static</span> JsonArray testData;
+<span class="line-numbers"> 43</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> rootURL;
+<span class="line-numbers"> 44</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">ArrayList</span>&lt;<span class="predefined-type">String</span>&gt; testIDs = <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;&gt;(<span class="integer">2</span>);
+<span class="line-numbers"> 45</span>
+<span class="line-numbers"> 46</span>    <span class="annotation">@BeforeAll</span>
+<span class="line-numbers"> 47</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> setup() {
+<span class="line-numbers"> 48</span>        client = ClientBuilder.newClient();
+<span class="line-numbers"> 49</span>
+<span class="line-numbers"> 50</span>        <span class="predefined-type">String</span> port = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">app.http.port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 51</span>        <span class="predefined-type">String</span> context = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">app.context.root</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 52</span>        rootURL = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:</span><span class="delimiter">"</span></span> + port + context;
+<span class="line-numbers"> 53</span>
+<span class="line-numbers"> 54</span>        <span class="comment">// test data</span>
+<span class="line-numbers"> 55</span>        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+<span class="line-numbers"> 56</span>        JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+<span class="line-numbers"> 57</span>        jsonBuilder.add(<span class="string"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">Member1</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 58</span>        jsonBuilder.add(<span class="string"><span class="delimiter">"</span><span class="content">crewID</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">000001</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 59</span>        jsonBuilder.add(<span class="string"><span class="delimiter">"</span><span class="content">rank</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">Captain</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 60</span>        arrayBuilder.add(jsonBuilder.build());
+<span class="line-numbers"> 61</span>        jsonBuilder = Json.createObjectBuilder();
+<span class="line-numbers"> 62</span>        jsonBuilder.add(<span class="string"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">Member2</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 63</span>        jsonBuilder.add(<span class="string"><span class="delimiter">"</span><span class="content">crewID</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">000002</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 64</span>        jsonBuilder.add(<span class="string"><span class="delimiter">"</span><span class="content">rank</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">Engineer</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 65</span>        arrayBuilder.add(jsonBuilder.build());
+<span class="line-numbers"> 66</span>        testData = arrayBuilder.build();
+<span class="line-numbers"> 67</span>    }
+<span class="line-numbers"> 68</span>
+<span class="line-numbers"> 69</span>    <span class="annotation">@AfterAll</span>
+<span class="line-numbers"> 70</span>    <span class="directive">public</span> <span class="directive">static</span> <span class="type">void</span> teardown() {
+<span class="line-numbers"> 71</span>        client.close();
+<span class="line-numbers"> 72</span>    }
+<span class="line-numbers"> 73</span>
+<span class="line-numbers"> 74</span>    <span class="comment">// tag::testAddCrewMember[]</span>
+<span class="line-numbers"> 75</span>    <span class="comment">// tag::test1[]</span>
+<span class="line-numbers"> 76</span>    <span class="annotation">@Test</span>
+<span class="line-numbers"> 77</span>    <span class="comment">// end::test1[]</span>
+<span class="line-numbers"> 78</span>    <span class="annotation">@Order</span>(<span class="integer">1</span>)
+<span class="line-numbers"> 79</span>    <span class="directive">public</span> <span class="type">void</span> testAddCrewMember() {
+<span class="line-numbers"> 80</span>        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">"</span><span class="content">   === Adding </span><span class="delimiter">"</span></span> + testData.size()
+<span class="line-numbers"> 81</span>                + <span class="string"><span class="delimiter">"</span><span class="content"> crew members to the database. ===</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 82</span>
+<span class="line-numbers"> 83</span>        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="integer">0</span>; i &lt; testData.size(); i++) {
+<span class="line-numbers"> 84</span>            JsonObject member = (JsonObject) testData.get(i);
+<span class="line-numbers"> 85</span>            <span class="predefined-type">String</span> url = rootURL + <span class="string"><span class="delimiter">"</span><span class="content">/api/crew</span><span class="delimiter">"</span></span>;
+<span class="line-numbers"> 86</span>            Response response = client.target(url).request().post(<span class="predefined-type">Entity</span>.json(member));
+<span class="line-numbers"> 87</span>            <span class="local-variable">this</span>.assertResponse(url, response);
+<span class="line-numbers"> 88</span>
+<span class="line-numbers"> 89</span>            JsonObject newMember = response.readEntity(JsonObject.class);
+<span class="line-numbers"> 90</span>            testIDs.add(newMember.getJsonObject(<span class="string"><span class="delimiter">"</span><span class="content">_id</span><span class="delimiter">"</span></span>).getString(<span class="string"><span class="delimiter">"</span><span class="content">$oid</span><span class="delimiter">"</span></span>));
+<span class="line-numbers"> 91</span>
+<span class="line-numbers"> 92</span>            response.close();
+<span class="line-numbers"> 93</span>        }
+<span class="line-numbers"> 94</span>        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">"</span><span class="content">      === Done. ===</span><span class="delimiter">"</span></span>);
+<span class="line-numbers"> 95</span>    }
+<span class="line-numbers"> 96</span>    <span class="comment">// end::testAddCrewMember[]</span>
+<span class="line-numbers"> 97</span>
+<span class="line-numbers"> 98</span>    <span class="comment">// tag::testUpdateCrewMember[]</span>
+<span class="line-numbers"> 99</span>    <span class="comment">// tag::test2[]</span>
+<span class="line-numbers">100</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">101</span>    <span class="comment">// end::test2[]</span>
+<span class="line-numbers">102</span>    <span class="annotation">@Order</span>(<span class="integer">2</span>)
+<span class="line-numbers">103</span>    <span class="directive">public</span> <span class="type">void</span> testUpdateCrewMember() {
+<span class="line-numbers">104</span>        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">"</span><span class="content">   === Updating crew member with id </span><span class="delimiter">"</span></span> + testIDs.get(<span class="integer">0</span>)
+<span class="line-numbers">105</span>                + <span class="string"><span class="delimiter">"</span><span class="content">. ===</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">106</span>
+<span class="line-numbers">107</span>        JsonObject oldMember = (JsonObject) testData.get(<span class="integer">0</span>);
+<span class="line-numbers">108</span>
+<span class="line-numbers">109</span>        JsonObjectBuilder newMember = Json.createObjectBuilder();
+<span class="line-numbers">110</span>        newMember.add(<span class="string"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>, oldMember.get(<span class="string"><span class="delimiter">"</span><span class="content">name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">111</span>        newMember.add(<span class="string"><span class="delimiter">"</span><span class="content">crewID</span><span class="delimiter">"</span></span>, oldMember.get(<span class="string"><span class="delimiter">"</span><span class="content">crewID</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">112</span>        newMember.add(<span class="string"><span class="delimiter">"</span><span class="content">rank</span><span class="delimiter">"</span></span>, <span class="string"><span class="delimiter">"</span><span class="content">Officer</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">113</span>
+<span class="line-numbers">114</span>        <span class="predefined-type">String</span> url = rootURL + <span class="string"><span class="delimiter">"</span><span class="content">/api/crew/</span><span class="delimiter">"</span></span> + testIDs.get(<span class="integer">0</span>);
+<span class="line-numbers">115</span>        Response response = client.target(url).request()
+<span class="line-numbers">116</span>                .put(<span class="predefined-type">Entity</span>.json(newMember.build()));
+<span class="line-numbers">117</span>
+<span class="line-numbers">118</span>        <span class="local-variable">this</span>.assertResponse(url, response);
+<span class="line-numbers">119</span>
+<span class="line-numbers">120</span>        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">"</span><span class="content">      === Done. ===</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">121</span>    }
+<span class="line-numbers">122</span>    <span class="comment">// end::testUpdateCrewMember[]</span>
+<span class="line-numbers">123</span>
+<span class="line-numbers">124</span>    <span class="comment">// tag::testGetCrewMembers[]</span>
+<span class="line-numbers">125</span>    <span class="comment">// tag::test3[]</span>
+<span class="line-numbers">126</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">127</span>    <span class="comment">// end::test3[]</span>
+<span class="line-numbers">128</span>    <span class="annotation">@Order</span>(<span class="integer">3</span>)
+<span class="line-numbers">129</span>    <span class="directive">public</span> <span class="type">void</span> testGetCrewMembers() {
+<span class="line-numbers">130</span>        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">"</span><span class="content">   === Listing crew members from the database. ===</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">131</span>
+<span class="line-numbers">132</span>        <span class="predefined-type">String</span> url = rootURL + <span class="string"><span class="delimiter">"</span><span class="content">/api/crew</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">133</span>        Response response = client.target(url).request().get();
+<span class="line-numbers">134</span>
+<span class="line-numbers">135</span>        <span class="local-variable">this</span>.assertResponse(url, response);
+<span class="line-numbers">136</span>
+<span class="line-numbers">137</span>        <span class="predefined-type">String</span> responseText = response.readEntity(<span class="predefined-type">String</span>.class);
+<span class="line-numbers">138</span>        JsonReader reader = Json.createReader(<span class="keyword">new</span> <span class="predefined-type">StringReader</span>(responseText));
+<span class="line-numbers">139</span>        JsonArray crew = reader.readArray();
+<span class="line-numbers">140</span>        reader.close();
+<span class="line-numbers">141</span>
+<span class="line-numbers">142</span>        <span class="type">int</span> testMemberCount = <span class="integer">0</span>;
+<span class="line-numbers">143</span>        <span class="keyword">for</span> (JsonValue value : crew) {
+<span class="line-numbers">144</span>            JsonObject member = (JsonObject) value;
+<span class="line-numbers">145</span>            <span class="predefined-type">String</span> id = member.getJsonObject(<span class="string"><span class="delimiter">"</span><span class="content">_id</span><span class="delimiter">"</span></span>).getString(<span class="string"><span class="delimiter">"</span><span class="content">$oid</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">146</span>            <span class="keyword">if</span> (testIDs.contains(id)) {
+<span class="line-numbers">147</span>                testMemberCount++;
+<span class="line-numbers">148</span>            }
+<span class="line-numbers">149</span>        }
+<span class="line-numbers">150</span>
+<span class="line-numbers">151</span>        assertEquals(testIDs.size(), testMemberCount,
+<span class="line-numbers">152</span>                <span class="string"><span class="delimiter">"</span><span class="content">Incorrect number of testing members.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">153</span>
+<span class="line-numbers">154</span>        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">"</span><span class="content">      === Done. There are </span><span class="delimiter">"</span></span> + crew.size()
+<span class="line-numbers">155</span>                + <span class="string"><span class="delimiter">"</span><span class="content"> crew members. ===</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">156</span>
+<span class="line-numbers">157</span>        response.close();
+<span class="line-numbers">158</span>    }
+<span class="line-numbers">159</span>    <span class="comment">// end::testGetCrewMembers[]</span>
+<span class="line-numbers">160</span>
+<span class="line-numbers">161</span>    <span class="comment">// tag::testDeleteCrewMember[]</span>
+<span class="line-numbers">162</span>    <span class="comment">// tag::test4[]</span>
+<span class="line-numbers">163</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">164</span>    <span class="comment">// end::test4[]</span>
+<span class="line-numbers">165</span>    <span class="annotation">@Order</span>(<span class="integer">4</span>)
+<span class="line-numbers">166</span>    <span class="directive">public</span> <span class="type">void</span> testDeleteCrewMember() {
+<span class="line-numbers">167</span>        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">"</span><span class="content">   === Removing </span><span class="delimiter">"</span></span> + testIDs.size()
+<span class="line-numbers">168</span>                + <span class="string"><span class="delimiter">"</span><span class="content"> crew members from the database. ===</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">169</span>
+<span class="line-numbers">170</span>        <span class="keyword">for</span> (<span class="predefined-type">String</span> id : testIDs) {
+<span class="line-numbers">171</span>            <span class="predefined-type">String</span> url = rootURL + <span class="string"><span class="delimiter">"</span><span class="content">/api/crew/</span><span class="delimiter">"</span></span> + id;
+<span class="line-numbers">172</span>            Response response = client.target(url).request().delete();
+<span class="line-numbers">173</span>            <span class="local-variable">this</span>.assertResponse(url, response);
+<span class="line-numbers">174</span>            response.close();
+<span class="line-numbers">175</span>        }
+<span class="line-numbers">176</span>
+<span class="line-numbers">177</span>        <span class="predefined-type">System</span>.out.println(<span class="string"><span class="delimiter">"</span><span class="content">      === Done. ===</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">178</span>    }
+<span class="line-numbers">179</span>    <span class="comment">// end::testDeleteCrewMember[]</span>
+<span class="line-numbers">180</span>
+<span class="line-numbers">181</span>    <span class="directive">private</span> <span class="type">void</span> assertResponse(<span class="predefined-type">String</span> url, Response response) {
+<span class="line-numbers">182</span>        assertEquals(<span class="integer">200</span>, response.getStatus(), <span class="string"><span class="delimiter">"</span><span class="content">Incorrect response code from </span><span class="delimiter">"</span></span> + url);
+<span class="line-numbers">183</span>    }
+<span class="line-numbers">184</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The test methods are annotated with the <code class="hotspot=test1 hotspot=test2 hotspot=test3 hotspot=test4 file=0">@Test</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>The following test cases are included in this class:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code class="hotspot=testAddCrewMember file=0">testAddCrewMember()</code> verifies that new members are correctly added to the database.</p>
+</li>
+<li>
+<p><code class="hotspot=testUpdateCrewMember file=0">testUpdateCrewMember()</code> verifies that a crew member’s information is correctly updated.</p>
+</li>
+<li>
+<p><code class="hotspot=testGetCrewMembers file=0">testGetCrewMembers()</code> verifies that a list of crew members is returned by the microservice API.</p>
+</li>
+<li>
+<p><code class="hotspot=testDeleteCrewMember file=0">testDeleteCrewMember()</code> verifies that the crew members are correctly removed from the database.</p>
+</li>
+</ul>
+</div>
+<div class="sect2 command">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Because you started Open Liberty in dev mode, you can run the tests by pressing the <code>enter/return</code> key from the command-line session where you started dev mode.</p>
+</div>
+<div class="paragraph">
+<p>You’ll see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running it.io.openliberty.guides.application.CrewServiceIT
+   === Adding 2 crew members to the database. ===
+      === Done. ===
+   === Updating crew member with id 5df8e0a004ccc019976c7d0a. ===
+      === Done. ===
+   === Listing crew members from the database. ===
+      === Done. There are 2 crew members. ===
+   === Removing 2 crew members from the database. ===
+      === Done. ===
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.411 s - in it.io.openliberty.guides.application.CrewServiceIT
+Results:
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tearing-down-the-environment">Tearing down the environment</h2>
+<div class="sectionbody">
+<div class="paragraph command">
+<p>When you are done checking out the service, exit dev mode by pressing <code>CTRL+C</code> in the command-line session where you ran Liberty, or by typing <code>q</code> and then pressing the <code>enter/return</code> key.</p>
+</div>
+<div class="paragraph">
+<p>Then, run the following commands to stop and remove the <code>mongo-guide</code> container and to remove the <code>mongo-sample</code> and <code>mongo</code> images.</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker stop mongo-guide
+docker rm mongo-guide
+docker rmi mongo-sample
+docker rmi mongo</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You’ve successfully accessed and persisted data to a MongoDB database from a Java microservice using Contexts and Dependency Injection (CDI) and MicroProfile Config with Open Liberty.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="related-links">Related Links</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Learn more about MicroProfile.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://microprofile.io/" target="_blank" rel="noopener noreferrer">See the MicroProfile specs</a></p>
+</div>
+<div class="paragraph">
+<p><a href="https://openliberty.io/docs/ref/microprofile" target="_blank" rel="noopener">View the MicroProfile API</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Persisting data with MongoDB <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-mongodb-intro/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-mongodb-intro/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-mongodb-intro/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/cdi-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Injecting dependencies into microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">15 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-config.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Configuring microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/rest-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Creating a RESTful web service</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">30 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Consuming data streams using Apache Kafka
+    
+  </title>
+  <meta name="description" content="A tutorial on how to use Apache Kafka to enable real-time data streaming between systems in an application">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/kafka-intro">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Consuming data streams using Apache Kafka" />
+  <meta name="twitter:description" content="A tutorial on how to use Apache Kafka to enable real-time data streaming between systems in an application" />
+
+  <meta property='og:title' content="Consuming data streams using Apache Kafka" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A tutorial on how to use Apache Kafka to enable real-time data streaming between systems in an application" />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/kafka-intro" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#what-is-kafka">What is Kafka</a></li>
+<li><a href="#application">Application</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#configuring-the-producer">Configuring the producer</a></li>
+<li><a href="#configuring-the-consumer">Configuring the consumer</a></li>
+<li><a href="#big-picture">Big Picture</a></li>
+<li><a href="#running-the-application">Running the application</a></li>
+<li><a href="#testing-the-application">Testing the application</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Consuming data streams using Apache Kafka</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">15 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/kafka-intro.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to deploy the Apache Kafka platform to implement real-time data streaming between systems</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn about Kafka, a platform that handles real-time data streams that allows for more elegant and efficient communication between systems. You will then learn to implement a Kafka solution. First, you will create a producer that will generate records and push them to a Kafka server. Then you will create a consumer that will pull those records from the server and process them.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-is-kafka">What is Kafka</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://kafka.apache.org/" target="_blank" rel="noopener noreferrer">Apache Kafka</a> is a stream-processing platform that manages communication in distributed systems. Communication is message-oriented, and follows the publish-subscribe model. Kafka allows for real-time stream processing and distributed, replicated storage of streams and messages.</p>
+</div>
+<div class="paragraph">
+<p>A stream of records is called a topic which is stored as a partitioned log. Records are added to the logs by the producer, which will add records to the ends of each partition along with a timestamp. Consumers will then read data from these logs, starting from the beginning of each one. Once a record has been consumed, it will be removed after a configured retention period, typically 24 hours, has passed. Records are removed starting from the head of the partition (FIFO). Simply put, a topic is a collection of different queues of records.
+Multiple consumers can read from the same partition and each consumer will have its own offset value to keep track of where it is reading from the partition. Each record will only be read once and there are multiple consumers active in the same partition, so you may wonder if this system is error prone and the answer is no. Kafka uses Apache Zookeeper to store data about the consumers and partition. Zookeeper keeps track of, among other things, the already consumed records, meaning we can avoid duplicate consumptions and avoid faults in this respect.</p>
+</div>
+<div class="paragraph">
+<p>Topics run on servers that are called Kafka brokers, and groups of these brokers form a cluster. These brokers then act as the contact points for the producers and the consumers. The producers will, in batches, push messages to the broker and similarly, the consumers will pull records from the broker. In your application, you will have to create a producer and consumer that will interact with each other through the Kafka server.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="application">Application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The application you will be working with is a job manager that maintains an inventory of available systems.
+It consists of four microservices, <code>gateway</code>, <code>job</code>, <code>system</code>, and <code>inventory</code>.
+The <code>job</code> microservice allows you to dispatch jobs that will be run by the <code>system</code> microservice.
+The job is a sleep operation used to represent a slow task that lasts for a duration of 5 to 10 seconds. When it completes, the <code>system</code> microservice
+reports the sleep time as the result of this job. In addition to running jobs, the <code>system</code> microservice also registers
+itself on startup with the <code>inventory</code> microservice that keeps track of all instances of the <code>system</code> microservice. Finally,
+the <code>gateway</code> microservice is a <a href="https://microservices.io/patterns/apigateway.html#variation-backends-for-frontends" target="_blank" rel="noopener noreferrer">backend for frontend</a> service.
+It communicates with the backend <code>job</code> and <code>inventory</code> microservices on the caller’s behalf.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/reactive-inventory-system.png" alt="Reactive Inventoryx System">
+</div>
+</div>
+<div class="paragraph">
+<p>The two microservices you will modify are the <code>system</code> and <code>inventory</code> services. The <code>inventory</code> service monitors the status of instances of the <code>system</code> service.</p>
+</div>
+<div class="paragraph">
+<p>The implementations of the application and its services are provided for you in the <code>start/src</code> directory.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-kafka-intro.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-kafka-intro.git
+cd guide-kafka-intro</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-the-producer">Configuring the producer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To begin, we have to set up our producer so that we can generate data for our system. The producer has to generate records and push them to the Kafka broker.</p>
+</div>
+<div class="listingblock code_command hotspot file=0”, subs=">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="quotes”">#Replace the `SystemProducer` class.#
+`system/src/main/java/io/openliberty/guides/system/SystemProducer.java`</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemProducer.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.system</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">javax.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.producer.KafkaProducer</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.producer.Producer</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.producer.ProducerConfig</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.producer.ProducerRecord</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">24</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemProducer</span> {
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span>  <span class="directive">private</span> Producer&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; producer;
+<span class="line-numbers">27</span>
+<span class="line-numbers">28</span>  <span class="directive">public</span> SystemProducer() {
+<span class="line-numbers">29</span>    <span class="predefined-type">String</span> kafkaServer = <span class="predefined-type">System</span>.getenv(<span class="string"><span class="delimiter">"</span><span class="content">KAFKA_SERVER</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">30</span>
+<span class="line-numbers">31</span>    <span class="predefined-type">Properties</span> properties = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+<span class="line-numbers">32</span>    <span class="comment">// tag::serverConfig[]</span>
+<span class="line-numbers">33</span>    properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer);
+<span class="line-numbers">34</span>    <span class="comment">// end::serverConfig[]</span>
+<span class="line-numbers">35</span>    <span class="comment">// tag::keySerialConfig[]</span>
+<span class="line-numbers">36</span>    properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, <span class="string"><span class="delimiter">"</span><span class="content">org.apache.kafka.common.serialization.StringSerializer</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">37</span>    <span class="comment">// end::keySerialConfig[]</span>
+<span class="line-numbers">38</span>    <span class="comment">// tag::valueSerialConfig[]</span>
+<span class="line-numbers">39</span>    properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, <span class="string"><span class="delimiter">"</span><span class="content">org.apache.kafka.common.serialization.StringSerializer</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">40</span>    <span class="comment">// end::valueSerialConfig[]</span>
+<span class="line-numbers">41</span>
+<span class="line-numbers">42</span>    <span class="comment">// tag::producerCreate[]</span>
+<span class="line-numbers">43</span>    <span class="local-variable">this</span>.producer = <span class="keyword">new</span> KafkaProducer&lt;&gt;(properties);
+<span class="line-numbers">44</span>    <span class="comment">// end::producerCreate[]</span>
+<span class="line-numbers">45</span>  }
+<span class="line-numbers">46</span>
+<span class="line-numbers">47</span>  <span class="comment">// tag::sendMessage[]</span>
+<span class="line-numbers">48</span>  <span class="directive">public</span> <span class="type">void</span> sendMessage(<span class="predefined-type">String</span> topic, <span class="predefined-type">String</span> message) {
+<span class="line-numbers">49</span>    producer.send(<span class="keyword">new</span> ProducerRecord&lt;<span class="predefined-type">String</span>,<span class="predefined-type">String</span>&gt;(topic, message));
+<span class="line-numbers">50</span>  } 
+<span class="line-numbers">51</span>  <span class="comment">// end::sendMessage[]</span>
+<span class="line-numbers">52</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>First, we have to configure the properties of the producer of which we require at least three. The first is setting the bootstrap server property. This property is set with the <code class="hotspot=serverConfig file=0">ProducerConfig.BOOTSTRAP_SERVERS_CONFIG</code> which creates the connection between the cluster and the producer. The next two properties are the <code class="hotspot=keySerialConfig file=0">ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG</code> and the <code class="hotspot=valueSerialConfig file=0">ProducerConfig.VALUE_SERIALIZER_CONFIG</code>. These are required so that the system knows what kind of serializer to use to convert your records into bytes. In this case, we are using <code>StringSerializer</code> because the keys and values of our produced records will be of type <code>String</code>. These properties are then used to create the actual producer by calling <code class="hotspot=producerCreate file=0">KafkaProducer()</code></p>
+</div>
+<div class="paragraph">
+<p>Finally, we create the <code class="hotspot file=0">sendMessage()</code> method to create a ProducerRecord, which will be serialized and sent to the broker. Notice how the actual sending is performed by the built-in <code class="hotspot file=0">send()</code> and not our defined <code class="hotspot file=0">sendMessage()</code> method. The former is asynchronous and will have a result containing the partition the record was sent to, its offset within the partition as well as its timestamp.</p>
+</div>
+<div class="paragraph">
+<p>Producers can batch records before they are actually sent. Once <code class="hotspot=sendMessage file=0">send()</code> completes, records are put in the buffer and the method immediately returns so more records may be fetched. This means that multiple records can be grouped together and sent at once instead of sending one at a time. This allows Kafka to achieve better overall throughput while only paying a small latency penalty.</p>
+</div>
+<div class="paragraph">
+<p>Producers support a lot more functionality that is not shown in this example. We can set an <code>acks</code> configuration so that transactions are only complete if we receive an acknowledgement, allowing us to trade speed for consistency. We can also configure the buffer size, allowing us to reduce our total number of transactions with the broker and increasing efficiency. You can read about these configurations and more in the <a href="https://kafka.apache.org/23/javadoc/index.html?org/apache/kafka/clients/producer/KafkaProducer.html" target="_blank" rel="noopener noreferrer">KafkaProducer documentation</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-the-consumer">Configuring the consumer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Similarly to the producer, we must first set some basic configurations before actually creating an instance of the <code>KafkaConsumer</code> class.</p>
+</div>
+<div class="listingblock “code_command hotspot file=0”">
+<div class="content">
+<pre>#Replace the `SystemConsumer` class.#
+`inventory/src/main/java/io/openliberty/guides/inventory/SystemConsumer.java`</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemConsumer.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.time.Duration</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">java.util.ArrayList</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">java.util.Arrays</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">java.util.UUID</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">java.util.stream.Collectors</span>;
+<span class="line-numbers">22</span>
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">javax.json.bind.Jsonb</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">javax.json.bind.JsonbBuilder</span>;
+<span class="line-numbers">25</span>
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.consumer.Consumer</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.consumer.ConsumerConfig</span>;
+<span class="line-numbers">28</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.consumer.ConsumerRecord</span>;
+<span class="line-numbers">29</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.consumer.ConsumerRecords</span>;
+<span class="line-numbers">30</span><span class="keyword">import</span> <span class="include">org.apache.kafka.clients.consumer.KafkaConsumer</span>;
+<span class="line-numbers">31</span><span class="keyword">import</span> <span class="include">org.apache.kafka.common.serialization.StringDeserializer</span>;
+<span class="line-numbers">32</span>
+<span class="line-numbers">33</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemConsumer</span> <span class="directive">implements</span> <span class="predefined-type">Runnable</span> {
+<span class="line-numbers">34</span>  <span class="directive">private</span> Consumer&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; consumer;
+<span class="line-numbers">35</span>  <span class="directive">private</span> InventoryManager manager;
+<span class="line-numbers">36</span>
+<span class="line-numbers">37</span>  <span class="directive">private</span> <span class="directive">final</span> <span class="predefined-type">String</span> OFFSET_RESET_CONFIG = <span class="string"><span class="delimiter">"</span><span class="content">earliest</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span>  <span class="directive">public</span> SystemConsumer(InventoryManager manager, <span class="predefined-type">String</span> kafkaServer, <span class="predefined-type">String</span> groupIdPrefix) {
+<span class="line-numbers">40</span>    <span class="predefined-type">Properties</span> props = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+<span class="line-numbers">41</span>    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServer);
+<span class="line-numbers">42</span>    props.put(ConsumerConfig.GROUP_ID_CONFIG, <span class="predefined-type">String</span>.format(<span class="string"><span class="delimiter">"</span><span class="content">%s-%s</span><span class="delimiter">"</span></span>, groupIdPrefix, <span class="predefined-type">UUID</span>.randomUUID().toString()));
+<span class="line-numbers">43</span>    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+<span class="line-numbers">44</span>    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+<span class="line-numbers">45</span>    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, OFFSET_RESET_CONFIG);
+<span class="line-numbers">46</span>
+<span class="line-numbers">47</span>    <span class="local-variable">this</span>.consumer = <span class="keyword">new</span> KafkaConsumer&lt;&gt;(props);
+<span class="line-numbers">48</span>    <span class="local-variable">this</span>.consumer.subscribe(<span class="predefined-type">Arrays</span>.asList(<span class="string"><span class="delimiter">"</span><span class="content">system-topic</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">49</span>    <span class="local-variable">this</span>.manager = manager;
+<span class="line-numbers">50</span>  }
+<span class="line-numbers">51</span>
+<span class="line-numbers">52</span>  <span class="directive">public</span> <span class="predefined-type">List</span>&lt;<span class="predefined-type">String</span>&gt; consumeMessages() {
+<span class="line-numbers">53</span>    <span class="predefined-type">List</span>&lt;<span class="predefined-type">String</span>&gt; result = <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;<span class="predefined-type">String</span>&gt;();
+<span class="line-numbers">54</span>    ConsumerRecords&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; records = consumer.poll(<span class="predefined-type">Duration</span>.ofSeconds(<span class="integer">3</span>));
+<span class="line-numbers">55</span>
+<span class="line-numbers">56</span>    <span class="keyword">for</span> (ConsumerRecord&lt;<span class="predefined-type">String</span>, <span class="predefined-type">String</span>&gt; record : records) {
+<span class="line-numbers">57</span>      result.add(record.value());
+<span class="line-numbers">58</span>    }
+<span class="line-numbers">59</span>
+<span class="line-numbers">60</span>    consumer.commitAsync();
+<span class="line-numbers">61</span>    <span class="keyword">return</span> result;
+<span class="line-numbers">62</span>  }
+<span class="line-numbers">63</span>
+<span class="line-numbers">64</span>  <span class="annotation">@Override</span>
+<span class="line-numbers">65</span>  <span class="directive">public</span> <span class="type">void</span> run() {
+<span class="line-numbers">66</span>    <span class="keyword">while</span> (<span class="predefined-constant">true</span>) {
+<span class="line-numbers">67</span>      Jsonb jsonb = JsonbBuilder.create();
+<span class="line-numbers">68</span>      <span class="predefined-type">List</span>&lt;<span class="predefined-type">Properties</span>&gt; propertiesList = consumeMessages()
+<span class="line-numbers">69</span>          .stream()
+<span class="line-numbers">70</span>          .map(m -&gt; jsonb.fromJson(m, <span class="predefined-type">Properties</span>.class))
+<span class="line-numbers">71</span>          .collect(Collectors.toList());
+<span class="line-numbers">72</span>
+<span class="line-numbers">73</span>      <span class="keyword">for</span> (<span class="predefined-type">Properties</span> p : propertiesList) {
+<span class="line-numbers">74</span>        <span class="predefined-type">String</span> hostname = p.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">75</span>        p.remove(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">76</span>
+<span class="line-numbers">77</span>        <span class="keyword">if</span> (manager.containsHostname(hostname)) {
+<span class="line-numbers">78</span>          manager.updateSystem(hostname, p.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">system.busy</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">79</span>        } <span class="keyword">else</span> {
+<span class="line-numbers">80</span>          manager.add(hostname, p);
+<span class="line-numbers">81</span>        }
+<span class="line-numbers">82</span>      }
+<span class="line-numbers">83</span>    }
+<span class="line-numbers">84</span>  }
+<span class="line-numbers">85</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We have the three equivalent minimal required configurations: <code class="hotspot=serverConfig file=0">ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG</code>, <code class="hotspot=keyDeserialConfig file=0">ConsumerConfig.KEY_SERIALIZER_CLASS_CONFIG</code> and <code class="hotspot=valueDeserialConfig file=0">ConsumerConfig.VALUE_SERIALIZER_CLASS_CONFIG</code>. On top of these three, we need some additional configurations. One required configuration is the <code class="hotspot=groupIdConfig file=0">ConsumerConfig.GROUP_ID_CONFIG</code>, which allows you to group your various consumers for better synchronization. The final configuration in this consumer is the <code class="hotspot=offsetConfig file=0">ConsumerConfig.AUTO_OFFSET_RESET_CONFIG</code> which defines the behaviour of the consumer when its offset (index in partition) is not valid or defined. So it helps handle the offset when the consumer is initialized or when its offset is out of index. In this case, we reset the offset its <code class="hotspot=offsetValue file=0">earliest</code> valid offset. You can add additional configurations to suit your needs in the <a href="https://kafka.apache.org/23/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html" target="_blank" rel="noopener noreferrer">KafkaConsumer documentation</a></p>
+</div>
+<div class="paragraph">
+<p>After the properties have been set and the consumer created, the consumer is connected to the producer via the <code class="hotspot=subscribe file=0">subscribe()</code> method. The consumer subscribes to the producer, so that it can retrieve records after they are created. Subscribers are not explicitly informed of updates, instead they must poll the Kafka server for changes. This is done using the <code class="hotspot=consumerPoll file=0">Consumer.poll()</code> method in the <code class="hotspot=consumerInstance file=0">Kafka.clients.consumer.Consumer</code> class. In this case, the method is called in the <code class="hotspot=consumeMessages file=0">consumeMessages()</code> method and takes an argument of <code class="hotspot=consumerPoll file=0">Duration.ofSeconds(3)</code> which tells the consumer to only poll every 3 seconds. Records are stored as <code>ConsumerRecords&lt;T&gt;</code> objects and can then be manipulated however we want. The consumer will then commit its offset to the broker to indicate the number of consecutive records that have been committed. This is done using the <code class="hotspot=commitAsync file=0">commitAsync()</code> method. Kafka also supports automatic commits with the <code>enable.auto.commit = true</code> property as well as synchronous manual commits with the <code>commitSync()</code> method. Without this call, the consumers index in each partition will never be updated.</p>
+</div>
+<div class="paragraph">
+<p>The retrieved records are then parsed from JSON into a <code>Properties</code> class and the system status will be updated depending on the results in the record.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="big-picture">Big Picture</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>What you have made is a simple connection that moves a service status from one service to another. In the overall application, there are more Kafka connections in the whole application that we have not explicitly shown you. There are two more sets of producers and consumers between the <code>Job</code> and <code>System</code> services. The <code>Job</code> service has a producer (<code>JobProducer</code>) that creates new jobs that are published to a Kafka broker, and <code>SystemRunnable</code> contains the <code>System</code> service’s consumer that will take those jobs, and process them. <code>SystemProducer</code> (note: same producer as before) will then reciprocate and push the results to the Kafka broker. Then the <code>SystemConsumer</code> class and the <code>JobConsumer</code> class will consume their respective data. So in total, there are 3 Kafka connections in this application, of which you created one.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-the-application">Running the application</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-application">Testing the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A test has been provided for you to test the basic functionality of the consumer. If the test fails, then you may have introduced a bug into the code.</p>
+</div>
+<div class="listingblock code_command hotspot">
+<div class="content">
+<pre><mark>Create the <code>InventoryEndpointIT</code> class.</mark>
+<code>inventory/src/test/java/it/io/openliberty/guides/inventory/InventoryEndpointIT.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryEndpointIT.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2019 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">it.io.openliberty.guides.inventory</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.Assert.assertEquals</span>;
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">java.io.IOException</span>;
+<span class="line-numbers">18</span>
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">javax.json.JsonArray</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">javax.json.JsonObject</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">javax.net.ssl.HostnameVerifier</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">javax.net.ssl.SSLSession</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">javax.ws.rs.client.Client</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">javax.ws.rs.client.ClientBuilder</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">javax.ws.rs.core.Response</span>;
+<span class="line-numbers">26</span>
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">org.apache.cxf.jaxrs.provider.jsrjsonp.JsrJsonpProvider</span>;
+<span class="line-numbers">28</span><span class="keyword">import</span> <span class="include">org.junit.After</span>;
+<span class="line-numbers">29</span><span class="keyword">import</span> <span class="include">org.junit.Before</span>;
+<span class="line-numbers">30</span><span class="keyword">import</span> <span class="include">org.junit.Test</span>;
+<span class="line-numbers">31</span>
+<span class="line-numbers">32</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryEndpointIT</span> {
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> port = <span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">test.http.port</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">35</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> BASE_URL = <span class="string"><span class="delimiter">"</span><span class="content">http://localhost:</span><span class="delimiter">"</span></span> + port + <span class="string"><span class="delimiter">"</span><span class="content">/inventory/systems</span><span class="delimiter">"</span></span>;
+<span class="line-numbers">36</span>
+<span class="line-numbers">37</span>    <span class="directive">private</span> Client client;
+<span class="line-numbers">38</span>
+<span class="line-numbers">39</span>    <span class="annotation">@Before</span>
+<span class="line-numbers">40</span>    <span class="directive">public</span> <span class="type">void</span> setup() <span class="directive">throws</span> <span class="exception">InterruptedException</span> {
+<span class="line-numbers">41</span>        client = ClientBuilder.newBuilder()
+<span class="line-numbers">42</span>                    .hostnameVerifier(<span class="keyword">new</span> <span class="predefined-type">HostnameVerifier</span>() {
+<span class="line-numbers">43</span>                        <span class="directive">public</span> <span class="type">boolean</span> verify(<span class="predefined-type">String</span> hostname, <span class="predefined-type">SSLSession</span> session) {
+<span class="line-numbers">44</span>                            <span class="keyword">return</span> <span class="predefined-constant">true</span>;
+<span class="line-numbers">45</span>                        }
+<span class="line-numbers">46</span>                    })
+<span class="line-numbers">47</span>                    .register(JsrJsonpProvider.class)
+<span class="line-numbers">48</span>                    .build();
+<span class="line-numbers">49</span>    }
+<span class="line-numbers">50</span>
+<span class="line-numbers">51</span>    <span class="annotation">@After</span>
+<span class="line-numbers">52</span>    <span class="directive">public</span> <span class="type">void</span> teardown() {
+<span class="line-numbers">53</span>        client.close();
+<span class="line-numbers">54</span>    }
+<span class="line-numbers">55</span>
+<span class="line-numbers">56</span>    <span class="annotation">@Test</span>
+<span class="line-numbers">57</span>    <span class="directive">public</span> <span class="type">void</span> testConsumeSystem() <span class="directive">throws</span> <span class="exception">InterruptedException</span>, <span class="exception">IOException</span> {
+<span class="line-numbers">58</span>
+<span class="line-numbers">59</span>        Response response = client
+<span class="line-numbers">60</span>            .target(BASE_URL)
+<span class="line-numbers">61</span>            .request()
+<span class="line-numbers">62</span>            .get();
+<span class="line-numbers">63</span>        assertEquals(<span class="integer">200</span>, response.getStatus());
+<span class="line-numbers">64</span>
+<span class="line-numbers">65</span>        JsonObject obj = response.readEntity(JsonObject.class);
+<span class="line-numbers">66</span>        <span class="type">int</span> initialTotal = obj.getInt(<span class="string"><span class="delimiter">"</span><span class="content">total</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">67</span>        assertEquals(<span class="integer">0</span>,initialTotal);
+<span class="line-numbers">68</span>        JsonArray systems = obj.getJsonArray(<span class="string"><span class="delimiter">"</span><span class="content">systems</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">69</span>        assertEquals(<span class="integer">0</span>,systems.size());
+<span class="line-numbers">70</span>    }
+<span class="line-numbers">71</span>
+<span class="line-numbers">72</span>}</code></pre>
+</div>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-kafka-intro/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-kafka-intro/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-kafka-intro/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-rest-client.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Consuming RESTful services with template interfaces</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-rest-client-async.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Consuming RESTful services asynchronously with template interfaces</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">15 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

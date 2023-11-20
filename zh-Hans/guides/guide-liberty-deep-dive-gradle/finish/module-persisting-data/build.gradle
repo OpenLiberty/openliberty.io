@@ -1,0 +1,64 @@
+plugins {
+    id 'war'
+    // tag::libertyGradlePlugin[]
+    id 'io.openliberty.tools.gradle.Liberty' version '3.6.2'
+    // end::libertyGradlePlugin[]
+}
+
+version '1.0-SNAPSHOT'
+group 'io.openliberty.deepdive'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+}
+
+// tag::configurations[]
+configurations {
+    jdbcLib
+}
+// end::configurations[]
+
+dependencies {
+    // provided dependencies
+    providedCompile 'jakarta.platform:jakarta.jakartaee-api:10.0.0'
+    providedCompile 'org.eclipse.microprofile:microprofile:6.0'
+    // tag::postgresql[]
+    jdbcLib 'org.postgresql:postgresql:42.3.8'
+    // end::postgresql[]
+}
+
+war {
+    archiveVersion = ''
+}
+
+ext  {
+    // tag::httpPort[]
+    liberty.server.var.'default.http.port' = '9080'
+    // end::httpPort[]
+    // tag::httpsPort[]
+    liberty.server.var.'default.https.port' = '9443'
+    // end::httpsPort[]
+    // tag::contextRoot[]
+    liberty.server.var.'default.context.root' = '/inventory'
+    // end::contextRoot[]
+    // tag::setResourcesDir[]
+    sourceSets.main.output.resourcesDir = sourceSets.main.java.destinationDirectory
+    // end::setResourcesDir[]
+}
+
+// tag::copyJDBC[]
+task copyJdbcLibs(type: Copy) {
+    from configurations.jdbcLib
+    into "${buildDir}/wlp/usr/shared/resources"
+}
+
+deploy.dependsOn 'copyJdbcLibs'
+// end::copyJDBC[]
+
+clean.dependsOn 'libertyStop'

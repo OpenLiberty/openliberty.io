@@ -1,0 +1,28 @@
+<server description="inventory service">
+
+    <featureManager>
+        <feature>cdi-4.0</feature>
+        <feature>jsonb-3.0</feature>
+        <feature>jsonp-2.1</feature>
+        <feature>restfulWS-3.1</feature>
+        <feature>mpConfig-3.0</feature>
+        <!-- tag::mpTelemetry[] -->
+        <feature>mpTelemetry-1.0</feature>
+        <!-- end::mpTelemetry[] -->
+    </featureManager>
+
+    <httpEndpoint httpPort="${default.http.port}"
+                  httpsPort="${default.https.port}"
+                  id="defaultHttpEndpoint" host="*" />
+
+    <webApplication location="guide-microprofile-telemetry-inventory.war"
+                    contextRoot="/">
+        <!-- tag::thirdPartyComment[] -->
+        <!-- enable visibility to third party apis -->
+        <!-- end::thirdPartyComment[] -->
+        <!-- tag::thirdParty[] -->
+        <classloader apiTypeVisibility="+third-party"/>
+        <!-- end::thirdParty[] -->
+    </webApplication>
+
+</server>

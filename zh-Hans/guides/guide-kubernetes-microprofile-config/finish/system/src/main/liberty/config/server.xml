@@ -1,0 +1,32 @@
+<server description="Sample Liberty server">
+
+  <featureManager>
+    <feature>restfulWS-3.1</feature>
+    <feature>jsonb-3.0</feature>
+    <feature>cdi-4.0</feature>
+    <feature>jsonp-2.1</feature>
+    <feature>mpConfig-3.0</feature>
+    <feature>mpHealth-4.0</feature>
+    <feature>appSecurity-5.0</feature>
+  </featureManager>
+
+  <variable name="default.http.port" defaultValue="9080"/>
+  <variable name="default.https.port" defaultValue="9443"/>
+  <variable name="system.app.username" defaultValue="bob"/>
+  <variable name="system.app.password" defaultValue="bobpwd"/>
+  <!-- tag::context.root[] -->
+  <variable name="context.root" defaultValue="/"/>
+  <!-- end::context.root[] -->
+
+  <httpEndpoint host="*" httpPort="${default.http.port}" 
+    httpsPort="${default.https.port}" id="defaultHttpEndpoint" />
+
+  <!-- tag::webApplication[] -->
+  <webApplication location="guide-kubernetes-microprofile-config-system.war" contextRoot="${context.root}"/>
+  <!-- end::webApplication[] -->
+
+  <basicRegistry id="basic" realm="BasicRegistry">
+    <user name="${system.app.username}" password="${system.app.password}" />
+  </basicRegistry>
+
+</server>

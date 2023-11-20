@@ -1,0 +1,32 @@
+<server description="Sample Liberty server">
+
+<featureManager>
+    <feature>restfulWS-3.1</feature>
+    <feature>jsonb-3.0</feature>
+</featureManager>
+
+<variable name="default.http.port" defaultValue="9080"/>
+<variable name="default.https.port" defaultValue="9443"/>
+
+<httpEndpoint host="*" httpPort="${default.http.port}" httpsPort="${default.https.port}"
+    id="defaultHttpEndpoint"/>
+
+<webApplication location="guide-cors.war" contextRoot="/"/>
+
+<!-- tag::simple-config[] -->
+<cors domain="/configurations/simple"
+    allowedOrigins="openliberty.io"
+    allowedMethods="GET"
+    allowCredentials="true"
+    exposeHeaders="MyHeader"/>
+<!-- end::simple-config[] -->
+
+<!-- tag::preflight-config[] -->
+<cors domain="/configurations/preflight"
+    allowedOrigins="*"
+    allowedMethods="OPTIONS, DELETE"
+    allowCredentials="true"
+    allowedHeaders="MyOwnHeader1, MyOwnHeader2"
+    maxAge="10"/>
+<!-- end::preflight-config[] -->
+</server>

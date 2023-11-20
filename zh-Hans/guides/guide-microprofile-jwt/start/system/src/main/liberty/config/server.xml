@@ -1,0 +1,24 @@
+<server description="Sample Liberty server">
+
+  <featureManager>
+    <feature>restfulWS-3.1</feature>
+    <feature>jsonb-3.0</feature>
+    <feature>jsonp-2.1</feature>
+    <feature>cdi-4.0</feature>
+    <feature>mpConfig-3.0</feature>
+    <feature>mpRestClient-3.0</feature>
+    <feature>appSecurity-5.0</feature>
+    <feature>servlet-6.0</feature>
+  </featureManager>
+
+  <variable name="default.http.port" defaultValue="8080"/>
+  <variable name="default.https.port" defaultValue="8443"/>
+
+  <keyStore id="defaultKeyStore" password="secret"/>
+
+  <httpEndpoint host="*" httpPort="${default.http.port}" httpsPort="${default.https.port}"
+                id="defaultHttpEndpoint"/>
+
+  <webApplication location="system.war" contextRoot="/"/>
+
+</server>

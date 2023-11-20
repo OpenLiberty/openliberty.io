@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: system-deployment
+  labels:
+    app: system
+spec:
+  selector:
+    matchLabels:
+      app: system
+  template:
+    metadata:
+      labels:
+        app: system
+    spec:
+      containers:
+      - name: system-container
+        image: [registry-server]/system:1.0-SNAPSHOT
+        ports:
+        - containerPort: 9080
+      imagePullSecrets:
+      - name: guidesecret
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-deployment
+  labels:
+    app: inventory
+spec:
+  selector:
+    matchLabels:
+      app: inventory
+  template:
+    metadata:
+      labels:
+        app: inventory
+    spec:
+      containers:
+      - name: inventory-container
+        image: [registry-server]/inventory:1.0-SNAPSHOT
+        ports:
+        - containerPort: 9081
+      imagePullSecrets:
+      - name: guidesecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: system-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: system
+  ports:
+  - protocol: TCP
+    port: 9080
+    targetPort: 9080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: inventory
+  ports:
+  - protocol: TCP
+    port: 9081
+    targetPort: 9081

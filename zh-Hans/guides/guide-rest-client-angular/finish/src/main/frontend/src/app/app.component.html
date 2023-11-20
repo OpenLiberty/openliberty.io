@@ -1,0 +1,16 @@
+<!-- tag::artistsDiv[] -->
+<div *ngFor="let artist of artists">
+  <!-- tag::artistNameAndAlbumsLengthPlaceholders[] -->
+  <p>{{ artist.name }} wrote {{ artist.albums.length }} albums: </p>
+  <!-- end::artistNameAndAlbumsLengthPlaceholders[] -->
+  <!-- tag::albumDiv[] -->
+  <div *ngFor="let album of artist.albums">
+    <p style="text-indent: 20px">
+      Album titled <b>{{ album.title }}</b> by
+                   <b>{{ album.artist }}</b> contains
+                   <b>{{ album.ntracks }}</b> tracks
+    </p>
+  </div>
+  <!-- end::albumDiv[] -->
+</div>
+<!-- end::artistsDiv[] -->

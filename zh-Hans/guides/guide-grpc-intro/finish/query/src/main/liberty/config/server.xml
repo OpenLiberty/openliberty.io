@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<server description="query service">
+
+    <featureManager>
+        <feature>restfulWS-3.1</feature>
+        <feature>jsonp-2.1</feature>
+        <feature>jsonb-3.0</feature>
+        <feature>cdi-4.0</feature>
+        <feature>mpConfig-3.0</feature>
+        <!-- tag::grpc[] -->
+        <feature>grpc-1.0</feature>
+        <!-- end::grpc[] -->
+        <!-- tag::grpcClient[] -->
+        <feature>grpcClient-1.0</feature>
+        <!-- end::grpcClient[] -->
+    </featureManager>
+
+    <variable defaultValue="9081" name="default.http.port"/>
+    <variable defaultValue="9444" name="default.https.port"/>
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  httpPort="${default.http.port}"
+                  httpsPort="${default.https.port}"
+                  host="*"/>
+
+    <!-- tag::grpcClientConfig[] -->
+    <!-- Due to host="*", this configuration will be applied to every gRPC client call
+         that gets made. This configuration registers a ClientInterceptor, and it directs
+         Cookie headers to get forwarded with any outbound RPC calls, in this case, that
+         enables authorization propagation. -->
+    <grpcClient headersToPropagate="Cookie" host="*"/>
+    <!-- end::grpcClientConfig[] -->
+
+    <applicationManager autoExpand="true"/>
+
+    <webApplication contextRoot="/" location="guide-grpc-intro-query.war"/>
+
+    <logging consoleLogLevel="INFO"/>
+</server>

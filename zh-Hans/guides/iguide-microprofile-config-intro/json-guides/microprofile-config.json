@@ -1,0 +1,1156 @@
+{
+    "name": "MicroprofileConfig",
+    "title": "Microprofile Config",
+    "description": "Use MicroProfile Config to separate configuration from code",
+    "duration": "25 minutes",
+    "audience": "developer",
+    "repo": "https://github.com/OpenLiberty/iguide-microprofile-config-intro",
+    "defaultWidgets": [
+        {
+            "displayType": "webBrowser",
+            "url": "https://mycarvendor.openliberty.io/car-types",
+            "browserContent": "/guides/iguide-microprofile-config-intro/html/welcome.html",
+            "enable": false
+        },
+        {
+            "displayType": "tabbedEditor",
+            "enable": false,
+            "editorList": [
+            {
+                "displayType": "fileEditor",
+                "fileName": "server.xml",
+                "preload": [
+                    "<?xml version=\"1.0\"?>",
+                    "<server description=\"Sample Liberty server\">",
+                    "   <featureManager>",
+                    "      <feature>cdi-2.0</feature>",
+                    "      <feature>jaxrs-2.1</feature>",
+                    "",
+                    "   </featureManager>",
+                    "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\"",
+                    "      httpPort=\"{default.http.port}\"/>",
+                    "   <webApplication id=\"displayCarTypes\"",
+                    "      location=\"displayCarTypes.war\" contextRoot=\"/\">",
+                    "   </webApplication>",
+                    "</server>"
+                ]
+            }
+            ]
+        }
+    ],
+    "configWidgets": [
+        {
+            "displayType": "webBrowser",
+            "height": "300px",
+            "singleColumnHeight": "450px"
+        },
+        {
+            "displayType": "pod",
+            "height": "250px"
+        },
+        {
+            "displayType": "tabbedEditor",
+            "height": "400px"
+        }
+    ],
+    "steps": [
+        {
+            "name": "Intro",
+            "title": "What you'll learn",
+            "guide_duration" : "25 minutes",
+            "description": [
+              "Explore how to inject configuration data into a microservice without repackaging the application each time the underlying runtime environment changes. <a href='https://microprofile.io/' target='_blank' rel='noopener noreferrer'>MicroProfile</a> makes building configurable microservices easy with its <a href='https://github.com/eclipse/microprofile-config' target='_blank' rel='noopener noreferrer'>MicroProfile Config</a> feature. Application configuration properties from multiple sources are combined into a single set of configuration properties and accessed from a single API by your application.",
+              "Using the MicroProfile Config API, the sample application illustrates how a configuration property can be assigned a value in multiple configuration sources. Each source is assigned a priority. The value from the source with the highest priority takes precedence over that from a lower priority. This method allows code to run unchanged under different configurations for prototyping, development, test, quality assurance, staging, and production environments since an existing configuration value can easily be overridden as the need arises.",
+              "When you arrive at the section about the Default ConfigSources playground, you can create your own properties and update the configuration sources with values or change the source's priority.  A chart will show you which value the property is assigned."
+            ],
+            "sections" : [
+                {
+                  "name": "backgroundConcepts",
+                  "title": "Background concepts",
+                  "description": [
+                    "MicroProfile Config uses Contexts and Dependency Injection <b><i>(CDI)</i></b> to inject configuration property values directly into an application without requiring user code to retrieve them. The injected values are defined as <b><i>static</i></b> because they are set only at application startup.",
+                    "The API combines configuration values from multiple sources, each known as a <b><i>ConfigSource</b></i>. Each ConfigSource has a specified priority, defined by its <b><i>ordinal</i></b> value. A higher ordinal means that the values taken from this ConfigSource will override values from ConfigSources with a lower ordinal value.",
+                    "MicroProfile Config has 5 default ConfigSources:",
+                    "<ul><li>All <code>META-INF/microprofile-config.properties</code> found on the class path (default ordinal = 100).</li><li>Environment variables (default ordinal = 300).</li><li>System properties (default ordinal = 400).</li><li>Defined as a <code>variable</code> element in the Liberty <code>server.xml</code> file (default ordinal = 500).</li><li>Defined as an <code>appProperties property</code> element in the Liberty <code>server.xml</code> file (default ordinal = 600).</li></ul>",
+                    "An optional default value can be specified using Java annotations. The optional default value applies if the application does not find configuration values in any of the ConfigSources. The priority of each ConfigSource and the optional default value is shown in the following diagram:",
+                    "<div class='ordinalPriorities'><img src='/guides/iguide-microprofile-config-intro/html/images/ordinalPriorities.svg' alt='Ordinal Priorities'></div>"
+                  ]
+                }
+            ]
+        },
+        {
+            "name": "ExampleScenario",
+            "title": "Example: DevOps pipeline",
+            "description": [
+                "Imagine that you're developing and deploying a DisplayCarTypes microservice so that you can display the types of cars that are currently available for purchase from your business. This microservice has a dependency on another microservice called ObtainCarTypes, which provides the currently available list. As you develop your DisplayCarTypes microservice, you need to ensure that it works correctly when it interacts with the ObtainCarTypes microservice. For stability and security reasons, you don't want to test against the production version of ObtainCarTypes during the development pipeline. Instead, you run six instances of the ObtainCarTypes microservice, one for each stage of the devOps pipeline as shown in the following diagram:",
+                "",
+                "<div class=\"devOpsPipeline\"><img src=\"/guides/iguide-microprofile-config-intro/html/images/intro.svg\" alt=\"DisplayCarTypes microservice can connect to one of the ObtainCarTypes instances: Development on port 9080, Test on port 9081, Quality Assurance on port 9082, Production on port 9083\"></div>",
+                "As you progress through this guide, you will set a configuration property for the port value to specify which of the six ObtainCarTypes instances the DisplayCarTypes microservice should connect to. "
+            ]
+        },
+        {
+            "name": "EnableMPConfig",
+            "title": "Enabling MicroProfile Config in Open Liberty",
+            "description": [
+                "Begin by enabling the MicroProfile Config 1.3 feature in the <code>server.xml</code> file of the Open Liberty server. This feature allows you to use the MicroProfile Config API to externalize configuration data."
+            ],
+            "instruction": [
+              "In the editor, add the following element declaration to the <code>featureManager</code> element that is in the <code>server.xml</code> file.<br><codeblock>&lt;feature&gtmpConfig-1.4&lt;/feature&gt;</codeblock><br>Alternatively, click <action tabindex='0' role='button' title='Add feature to enable MicroProfile Config' aria-label='Add feature to enable MicroProfile Config' onkeypress=\"microprofileConfigCallBack.addMicroProfileConfigFeatureButton(event, 'EnableMPConfig')\" onclick=\"microprofileConfigCallBack.addMicroProfileConfigFeatureButton(event, 'EnableMPConfig')\">Add</action>.<br>Then, click <action tabindex='0' role='button' title='Run' aria-label='Run' onkeypress=\"microprofileConfigCallBack.saveTabbedEditorButton(event, 'EnableMPConfig')\" onclick=\"microprofileConfigCallBack.saveTabbedEditorButton(event, 'EnableMPConfig')\">Run</action> on the editor menu pane."
+            ],
+            "content":[
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://mycarvendor.openliberty.io/car-types",
+                    "browserContent": "/guides/iguide-microprofile-config-intro/html/welcome.html",
+                    "enable": false
+                },
+                {
+                  "displayType":"tabbedEditor",
+                  "active": true,
+                  "activeTab": "server.xml",
+                  "editorList": [
+                    {
+                        "displayType":"fileEditor",
+                        "fileName": "server.xml",
+                        "preload": [
+                          "<?xml version=\"1.0\"?>",
+                          "<server description=\"Sample Liberty server\">",
+                          "   <featureManager>",
+                          "      <feature>cdi-2.0</feature>",
+                          "      <feature>jaxrs-2.1</feature>",
+                          "",
+                          "   </featureManager>",
+                          "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\"",
+                          "      httpPort=\"${default.http.port}\"/>",
+                          "   <webApplication id=\"displayCarTypes\"",
+                          "      location=\"displayCarTypes.war\" contextRoot=\"/\">",
+                          "   </webApplication>",
+                          "</server>"
+                        ],
+                        "readonly": [
+                          {
+                              "from": "1",
+                              "to": "5"
+                          },
+                          {
+                              "from": "7",
+                              "to": "13"
+                          }
+                        ],
+                        "writable": [
+                            {
+                                "from": "6",
+                                "to": "6"
+                            }
+                        ],
+                        "callback": "(function test(editor) {microprofileConfigCallBack.listenToEditorForFeatureInServerXML(editor); })"
+                    }
+                  ]
+              }
+            ]
+        },
+        {
+            "name": "ConfigureViaInject",
+            "title": "Injecting configuration through @ConfigProperty annotation",
+            "description": [
+                "After you modify your <code>server.xml</code> file to <a href='#enabling-microprofile-config-in-open-liberty'>include the mpConfig feature</a>, inject a single configuration property value directly into your code with the <code>@Inject</code> and the <code>@ConfigProperty</code> annotations. The injected value is static and does not change after the application starts.",
+                "",
+                "You can specify a value in the runtime environment for mandatory configuration properties. Properties are mandatory when the annotation does not specify an optional default value. When the mandatory configuration property value is not found in any of the ConfigSources, a <code>NoSuchElementException</code> is thrown during application startup."
+            ],
+            "instruction": [
+                "To inject a mandatory <code>port</code> configuration property into the code, add the following <code>@Inject</code> and <code>@ConfigProperty</code> annotations to line 9 before declaring the <code>private int port</code>.<br><codeblock>@Inject @ConfigProperty(name=\"port\")</codeblock><br>Alternatively, click  <action title='Add code to inject a ConfigProperty' onclick='microprofileConfigCallBack.addInjectConfigButton(event, \"ConfigureViaInject\")'>Add</action>.<br>Then, click <action title='Run' onclick=\"microprofileConfigCallBack.saveTabbedEditorButton(event, 'ConfigureViaInject')\">Run</action> on the editor menu pane to see the exception occur."
+            ],
+            "content":[
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://mycarvendor.openliberty.io/car-types",
+                    "browserContent": "/guides/iguide-microprofile-config-intro/html/welcome.html",
+                    "enable": false
+                },
+                {
+                    "displayType": "pod",
+                    "height": "185px",
+                    "hidden": true,
+                    "content": "<p  class='errorSyntaxCss'>The following exception occurs during application startup because no default value is set:<br><br><span style='color:#a94442'>[ERROR&nbsp;&nbsp;] CWMCG5003E</span>: The [BackedAnnotatedField] @Inject @ConfigProperty private io.openliberty.guides.mpconfig.InventoryConfig.port InjectionPoint dependency was not resolved. Error: java.util.NoSuchElementException: CWMCG0015E: The property port was not found in the configuration. at com.ibm.ws.microprofile.config.impl.AbstractConfig.getValue(AbstractConfig.java:129) at [internal classes]</p>"
+                },
+                {
+                    "displayType":"tabbedEditor",
+                    "active": true,
+                    "activeTab": "InventoryConfig.java",
+                    "editorList": [
+                        {
+                            "displayType":"fileEditor",
+                            "fileName": "InventoryConfig.java",
+                            "preload": [
+                                "package io.openliberty.guides.mpconfig;",
+                                "",
+                                "import javax.inject.Inject;",
+                                "import javax.enterprise.context.ApplicationScoped;",
+                                "import org.eclipse.microprofile.config.inject.ConfigProperty;",
+                                "",
+                                "@ApplicationScoped",
+                                "public class InventoryConfig {",
+                                "",
+                                "    private int port;",
+                                "",
+                                "    public int getPort() {",
+                                "      return port;",
+                                "    }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "8"
+                                },
+                                {
+                                    "from": "10",
+                                    "to": "15"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "9",
+                                    "to": "9"
+                                }
+                            ],
+                            "callback": "(function test(editor) {microprofileConfigCallBack.listenToEditorForInjectConfig(editor); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>jaxrs-2.1</feature>",
+                                "      <feature>mpConfig-1.4</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\"",
+                                "      httpPort=\"${default.http.port}\"/>",
+                                "   <webApplication id=\"displayCarTypes\"",
+                                "      location=\"displayCarTypes.war\" contextRoot=\"/\">",
+                                "   </webApplication>",
+                                "</server>"
+                            ],
+                            "readonly": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "InjectWithDefaultValue",
+            "title": "Providing optional default values",
+            "TOCIndent": 1,
+            "description": [
+                "You can specify a default value for a configuration property using the <b>defaultValue</b> parameter in the <code>@ConfigProperty</code> annotation. This value is used when a value is not specified in any MicroProfile Config configuration source."
+            ],
+            "instruction": [
+                "Change the <code>@ConfigProperty</code> annotation on line 9 to the following code.<br><codeblock>@Inject @ConfigProperty(name=\"port\"<span class='actionAddedText'>,\n defaultValue=\"9080\"</span>)</codeblock><br>Alternatively, click <action title='Change ConfigProperty annotation to provide default value' onclick=\"microprofileConfigCallBack.addInjectDefaultConfigButton(event, 'InjectWithDefaultValue')\">Change</action>.<br>Then, click <action title='Run' onclick=\"microprofileConfigCallBack.saveTabbedEditorButton(event, 'InjectWithDefaultValue')\">Run</action> on the editor menu pane.",
+                "Click <action title='Refresh' onclick=\"microprofileConfigCallBack.refreshBrowserButton(event, 'InjectWithDefaultValue')\">Refresh</action> in the browser. The prototype port (9080) of the ObtainCarTypes microservice returns the car type values <code>A</code>, <code>B</code>, <code>C</code> and <code>D</code>."
+            ],
+            "content":[
+                {
+                    "displayType":"webBrowser",
+                    "url": "https://mycarvendor.openliberty.io/car-types",
+                    "browserContent": "/guides/iguide-microprofile-config-intro/html/welcome.html",
+                    "callback": "(function test(webBrowser) {microprofileConfigCallBack.listenToBrowserForInjectDefaultConfig(webBrowser); })",
+                    "enable": true
+                },
+                {
+                    "displayType":"tabbedEditor",
+                    "active": true,
+                    "activeTab": "InventoryConfig.java",
+                    "editorList": [
+                        {
+                            "displayType":"fileEditor",
+                            "fileName": "InventoryConfig.java",
+                            "preload": [
+                                "package io.openliberty.guides.mpconfig;",
+                                "",
+                                "import javax.inject.Inject;",
+                                "import javax.enterprise.context.ApplicationScoped;",
+                                "import org.eclipse.microprofile.config.inject.ConfigProperty;",
+                                "",
+                                "@ApplicationScoped",
+                                "public class InventoryConfig {",
+                                "    @Inject @ConfigProperty(name=\"port\")",
+                                "    private int port;",
+                                "",
+                                "    public int getPort() {",
+                                "      return port;",
+                                "    }",
+                                "}"
+                            ],
+                            "readonly": [
+                               {
+                                    "from": "1",
+                                    "to": "8"
+                               },
+                               {
+                                    "from": "10",
+                                    "to": "15"
+                               }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "9",
+                                    "to": "9"
+                                }
+                            ],
+                            "callback": "(function test(editor) {microprofileConfigCallBack.listenToEditorForInjectDefaultConfig(editor); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>jaxrs-2.1</feature>",
+                                "      <feature>mpConfig-1.4</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\"",
+                                "      httpPort=\"${default.http.port}\"/>",
+                                "   <webApplication id=\"displayCarTypes\"",
+                                "      location=\"displayCarTypes.war\" contextRoot=\"/\">",
+                                "   </webApplication>",
+                                "</server>"
+                            ],
+                            "readonly": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "ConfigurePropsFile",
+            "title": "Configuring with the properties file",
+            "description": [
+                "You can provide the <code>/META-INF/microprofile-config.properties</code> file as part of your packaged application. The <code>/META-INF/microprofile-config.properties</code> file may be created in multiple locations, but you must specify these file locations in your class path. Do not specify the same configuration property in multiple <code>/META-INF/microprofile-config.properties</code> files that have the same ordinal value, or the application returns an indeterminate property value.",
+                "",
+                "The properties file contains settings with a default ordinal of 100, which overrides the injected default values with the same key so the <code>port</code> property value in the <code>microprofile-config.properties</code> file is used."
+            ],
+            "instruction": [
+                "In <code>/META-INF/microprofile-config.properties</code>, add the following on line 1.<br><codeblock>port=9081</codeblock><br>Alternatively, click <action title='Add port configuration in microprofile-config.properties' onclick=\"microprofileConfigCallBack.addPropToConfigPropsButton(event, 'ConfigurePropsFile')\">Add</action>.<br>Then, click <action title='Run' onclick=\"microprofileConfigCallBack.saveTabbedEditorButton(event, 'ConfigurePropsFile')\">Run</action> on the editor menu pane.",
+                "Click <action title='Refresh' onclick=\"microprofileConfigCallBack.refreshBrowserButton(event, 'ConfigurePropsFile')\">Refresh</action> in the browser to see that the port value in the <code>/META-INF/microprofile-config.properties</code> file is used. The development port (9081) of the ObtainCarTypes microservice returns the values <code>carA</code> and <code>carB</code>."
+            ],
+            "content":[
+                {
+                    "displayType":"webBrowser",
+                    "url": "https://mycarvendor.openliberty.io/car-types",
+                    "browserContent": "/guides/iguide-microprofile-config-intro/html/download-from-injection.html",
+                    "statusBarText": "Retrieved data for Prototype on port 9080.",
+                    "callback": "(function test(webBrowser) {microprofileConfigCallBack.listenToBrowserForPropFileConfig(webBrowser); })"
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "activeTab": "META-INF/microprofile-config.properties",
+                    "editorList": [
+                      {
+                        "displayType":"fileEditor",
+                        "fileName": "InventoryConfig.java",
+                        "preload": [
+                            "package io.openliberty.guides.mpconfig;",
+                            "",
+                            "import javax.inject.Inject;",
+                            "import javax.enterprise.context.ApplicationScoped;",
+                            "import org.eclipse.microprofile.config.inject.ConfigProperty;",
+                            "",
+                            "@ApplicationScoped",
+                            "public class InventoryConfig {",
+                              "    @Inject",
+                              "    @ConfigProperty(name=\"port\", ",
+                              "                   defaultValue=\"9080\")",
+                              "    private int port;",
+                              "",
+                              "    public int getPort() {",
+                              "      return port;",
+                              "    }",
+                              "}"
+                        ],
+                        "readonly": true
+                      },
+                      {
+                        "displayType":"fileEditor",
+                        "fileName": "META-INF/microprofile-config.properties",
+                        "readonly": false,
+                        "preload": [
+                            ""
+                        ],
+                        "writable": [
+                            {
+                                "from": "1",
+                                "to": "1"
+                            }
+                        ],
+                        "callback": "(function test(editor) {microprofileConfigCallBack.listenToEditorForPropConfig(editor); })"
+                      },
+                      {
+                        "displayType": "fileEditor",
+                        "fileName": "server.xml",
+                        "preload": [
+                            "<?xml version=\"1.0\"?>",
+                            "<server description=\"Sample Liberty server\">",
+                            "   <featureManager>",
+                            "      <feature>cdi-2.0</feature>",
+                            "      <feature>jaxrs-2.1</feature>",
+                            "      <feature>mpConfig-1.4</feature>",
+                            "   </featureManager>",
+                            "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\"",
+                            "      httpPort=\"${default.http.port}\"/>",
+                            "   <webApplication id=\"displayCarTypes\"",
+                            "      location=\"displayCarTypes.war\" contextRoot=\"/\">",
+                            "   </webApplication>",
+                            "</server>"
+                        ],
+                        "readonly": true
+                      }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "ConfigureAsEnvVar",
+            "title": "Configuring with an environment variable",
+            "description": [
+                "In Open Liberty, you can use <code>server.env</code> files at the installation and server levels to specify environment variables. The installation level file is located at <code>${wlp.install.dir}/etc/server.env</code>, and the server level file is located at <code>${server.config.dir}/server.env</code>. If both files exist, the contents of the two files are merged. If the same environment variable is in both files, the value in the server level file takes precedence over the value in the installation level file.",
+                "",
+                "Environment variables can also be set using the command line.",
+                "",
+                "Some operating systems impose character restrictions on the name of an environment variable.  For example, Linux environments do not support full stops (<code>.</code>) in environment variable names so you can not have property names like <code>user.name</code> in <code>server.env</code>.  To set a value for a config property that has a name containing disallowed characters from an environment variable, this configsource maps config property names to environment variable names using the following rules and the first match is returned: ",
+                "<ul><li>An exact match<li>An environment variable name in which all characters that are not alphanumeric or the underscore (<code>_</code>) character are replaced with an underscore character (eg <code>user_name</code>)<li>An environment variable name in which all characters that are not alphanumeric or the underscore (<code>_</code>) character are replaced with an underscore character and the name is converted to upper case (eg <code> USER_NAME</code>).</ul>",
+                "",
+                "Use the <code>${server.config.dir}/server.env</code> file to configure the <code>port</code> environment variable. The <code>server.env</code> file contains the environment settings with a default ordinal value of 300 which is higher than the default ordinal value of 100 for the <code>/META-INF/microprofile-config.properties</code> file. Thus, the <code>port</code> property value in <code>server.env</code> is used."
+            ],
+            "instruction": [
+              "In <code>server.env</code>, add the following on line 1.<br><codeblock>port=9082</codeblock><br>Alternatively, click <action title='Add port configuration in server.env' onclick=\"microprofileConfigCallBack.addPropToServerEnvButton(event, 'ConfigureAsEnvVar')\">Add</action>.<br>Then, click <action title='Run' onclick=\"microprofileConfigCallBack.saveTabbedEditorButton(event, 'ConfigureAsEnvVar')\">Run</action> on the editor menu pane to save the file and restart the server.",
+              "Click <action title='Refresh' onclick=\"microprofileConfigCallBack.refreshBrowserButton(event, 'ConfigureAsEnvVar')\">Refresh</action> in the browser to see that the port value in the server.env file is used. The test port (9082) of the ObtainCarTypes microservice returns the values <code>typeA</code>, <code>typeB</code>, and <code>typeC</code>."
+            ],
+            "content":[
+                {
+                    "displayType":"webBrowser",
+                    "url": "https://mycarvendor.openliberty.io/car-types",
+                    "browserContent": "/guides/iguide-microprofile-config-intro/html/download-from-properties-file.html",
+                    "statusBarText": "Retrieved data for Development on port 9081.",
+                    "callback": "(function test(webBrowser) {microprofileConfigCallBack.listenToBrowserForServerEnvConfig(webBrowser); })"
+                },
+              {
+                "displayType": "tabbedEditor",
+                "active": true,
+                "activeTab": "server.env",
+                "editorList": [
+                  {
+                    "displayType":"fileEditor",
+                    "fileName": "InventoryConfig.java",
+                    "preload": [
+                        "package io.openliberty.guides.mpconfig;",
+                        "",
+                        "import javax.inject.Inject;",
+                        "import javax.enterprise.context.ApplicationScoped;",
+                        "import org.eclipse.microprofile.config.inject.ConfigProperty;",
+                        "",
+                        "@ApplicationScoped",
+                        "public class InventoryConfig {",
+                          "    @Inject",
+                          "    @ConfigProperty(name=\"port\", ",
+                          "                   defaultValue=\"9080\")",
+                          "    private int port;",
+                          "",
+                          "    public int getPort() {",
+                          "      return port;",
+                          "    }",
+                          "}"
+                    ],
+                    "readonly": true
+                  },
+                  {
+                    "displayType":"fileEditor",
+                    "fileName": "META-INF/microprofile-config.properties",
+                    "preload": [
+                        "port=9081"
+                    ],
+                    "readonly": true
+                  },
+                  {
+                    "displayType":"fileEditor",
+                    "fileName": "server.env",
+                    "preload": [
+                      ""
+                    ],
+                    "writable": [
+                        {
+                            "from": "1",
+                            "to": "1"
+                        }
+                    ],
+                    "callback": "(function test(editor) {microprofileConfigCallBack.listenToEditorForServerEnv(editor); })"
+                  },
+                  {
+                    "displayType": "fileEditor",
+                    "fileName": "server.xml",
+                    "preload": [
+                        "<?xml version=\"1.0\"?>",
+                        "<server description=\"Sample Liberty server\">",
+                        "   <featureManager>",
+                        "      <feature>cdi-2.0</feature>",
+                        "      <feature>jaxrs-2.1</feature>",
+                        "      <feature>mpConfig-1.4</feature>",
+                        "   </featureManager>",
+                        "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\"",
+                        "      httpPort=\"${default.http.port}\"/>",
+                        "   <webApplication id=\"displayCarTypes\"",
+                        "      location=\"displayCarTypes.war\" contextRoot=\"/\">",
+                        "   </webApplication>",
+                        "</server>"
+                    ],
+                    "readonly": true
+                  }
+                ]
+              }
+            ]
+        },
+        {
+            "name": "ConfigureAsSysProp",
+            "title": "Configuring with a system property",
+            "description": [
+                "Configuration variables can be retrieved from the Java system properties, which have a default ordinal of 400. Open Liberty adds properties from the server’s <code>bootstrap.properties</code> and <code>jvm.options</code> files to the Java system properties. You can create and configure the <code>jvm.options</code> file in multiple locations within your Open Liberty installation directory.",
+                "",
+                "The following list shows the different locations where Open Liberty checks for <code>jvm.options</code> files:",
+                "<ol><li><code>${wlp.install.dir}/usr/shared/jvm.options</code></li><li><code>${server.config.dir}/configDropins/defaults/jvm.options</code></li> <li><code>${server.config.dir}/jvm.options</code></li> <li><code>${server.config.dir}/configDropins/overrides/jvm.options</code></li></ol>",
+                "The contents of these files are merged. The latter files take precedence in the case of duplicate properties. If none of these files are present, then the <code>${wlp.install.dir}/etc/jvm.options</code> file is used. If a property exists in both <code>bootstrap.properties</code> and <code>jvm.options</code>, then the value from <code>jvm.options</code> takes precedence.",
+                "",
+                "In this example, use the <code>${server.config.dir}/bootstrap.properties</code> file to configure the <code>port</code> system property."
+            ],
+            "instruction": [
+                "Add the following port value on line 1 of <code>bootstrap.properties</code>.<br><codeblock>port=9083</codeblock><br>Alternatively, click <action title='Add port configuration in System Properties' onclick=\"microprofileConfigCallBack.addPropToSystemPropertiesButton(event,'ConfigureAsSysProp')\">Add</action>.<br>Then, click <action title='Run' onclick=\"microprofileConfigCallBack.saveTabbedEditorButton(event, 'ConfigureAsSysProp')\">Run</action> on the editor menu pane to save the file and restart the server.",
+                "Click <action title='Refresh' onclick=\"microprofileConfigCallBack.refreshBrowserButton(event, 'ConfigureAsSysProp')\">Refresh</action> in the browser to see that the port value in the <code>bootstrap.properties</code> file is used. The quality assurance port (9083) of the ObtainCarTypes microservice returns values <code>SUV</code>, <code>Crossover</code>, <code>Coupe</code>, and <code>Truck</code>."
+            ],
+            "content":[
+                {
+                    "displayType":"webBrowser",
+                    "url": "https://mycarvendor.openliberty.io/car-types",
+                    "browserContent": "/guides/iguide-microprofile-config-intro/html/download-from-property-in-server-env.html",
+                    "statusBarText": "Retrieved data for Test on port 9082.",
+                    "callback": "(function test(webBrowser) {microprofileConfigCallBack.listenToBrowserForSystemPropConfig(webBrowser); })"
+                },
+                {
+                  "displayType": "tabbedEditor",
+                  "active": true,
+                  "activeTab": "bootstrap.properties",
+                  "editorList": [
+                    {
+                      "displayType":"fileEditor",
+                      "fileName": "InventoryConfig.java",
+                      "preload": [
+                        "package io.openliberty.guides.mpconfig;",
+                        "",
+                        "import javax.inject.Inject;",
+                        "import javax.enterprise.context.ApplicationScoped;",
+                        "import org.eclipse.microprofile.config.inject.ConfigProperty;",
+                        "",
+                        "@ApplicationScoped",
+                        "public class InventoryConfig {",
+                          "    @Inject",
+                          "    @ConfigProperty(name=\"port\", ",
+                          "                   defaultValue=\"9080\")",
+                          "    private int port;",
+                          "",
+                          "    public int getPort() {",
+                          "      return port;",
+                          "    }",
+                          "}"
+                      ],
+                      "readonly": true
+                    },
+                    {
+                      "displayType":"fileEditor",
+                      "fileName": "META-INF/microprofile-config.properties",
+                      "preload": [
+                          "port=9081"
+                      ],
+                      "readonly": true
+                    },
+                    {
+                      "displayType":"fileEditor",
+                      "fileName": "server.env",
+                      "preload": [
+                        "port=9082"
+                      ],
+                      "readonly": true
+                    },
+                    {
+                        "displayType":"fileEditor",
+                        "fileName": "bootstrap.properties",
+                        "preload": [
+                              ""
+                        ],
+                        "writable": [
+                            {
+                                "from": "1",
+                                "to": "1"
+                            }
+                        ],
+                        "callback": "(function test(editor) {microprofileConfigCallBack.listenToEditorForSystemProperties(editor); })"
+                    },
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "server.xml",
+                        "preload": [
+                            "<?xml version=\"1.0\"?>",
+                            "<server description=\"Sample Liberty server\">",
+                            "   <featureManager>",
+                            "      <feature>cdi-2.0</feature>",
+                            "      <feature>jaxrs-2.1</feature>",
+                            "      <feature>mpConfig-1.4</feature>",
+                            "   </featureManager>",
+                            "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\"",
+                            "      httpPort=\"${default.http.port}\"/>",
+                            "   <webApplication id=\"displayCarTypes\"",
+                            "      location=\"displayCarTypes.war\" contextRoot=\"/\">",
+                            "   </webApplication>",
+                            "</server>"
+                        ],
+                        "readonly": true
+                    }
+                  ]
+                }
+            ]
+        },
+        {
+            "name": "ConfigureAsVariableElement",
+            "title": "Configuring as a variable element in server.xml",
+            "description": [
+                "With the Open Liberty implementation of MicroProfile Config 1.3 you can define configuration values as a variable in the Liberty server's <code>server.xml</code> configuration file.  Including a <code>variable</code> element in the <code>server.xml</code> file assigns a value to the configuration entity that may be accessed by any application running on the server.",
+                "",
+                "Properties declared as <code>variable</code> elements in the Liberty <code>server.xml</code> file have an ordinal value of 500.  They override configuration values from ConfigSources with lower ordinal values. If duplicate properties exist in the <code>server.xml</code> file, the last value specified is used by MicroProfile Config."
+            ],
+            "instruction": [
+                "Specify the following port value as a <code>variable</code> element on line 10 of the <code>server.xml</code> file.<br><codeblock>&lt;variable name=&quot;port&quot; value=&quot;9084&quot;/&gt;</codeblock><br>Alternatively, click <action title='Add port configuration as as variable element in server.xml' onclick=\"microprofileConfigCallBack.addVariableToServerXMLButton(event,'ConfigureAsVariableElement')\">Add</action>.<br>Then, click <action title='Run' onclick=\"microprofileConfigCallBack.saveTabbedEditorButton(event, 'ConfigureAsVariableElement')\">Run</action> on the editor menu pane to save the file and restart the server.",
+                "Click <action title='Refresh' onclick=\"microprofileConfigCallBack.refreshBrowserButton(event, 'ConfigureAsVariableElement')\">Refresh</action> in the browser to see that the port value specified as a <code>variable</code> element in the  <code>server.xml</code> file is used. The staging port (9084) of the ObtainCarTypes microservice returns values <code>SUV</code>, <code>Crossover</code>, <code>Coupe</code>, <code>Truck</code>, and <code>Convertible</code>."
+            ],
+            "content":[
+                {
+                    "displayType":"webBrowser",
+                    "url": "https://mycarvendor.openliberty.io/car-types",
+                    "browserContent": "/guides/iguide-microprofile-config-intro/html/download-from-property-in-system-props.html",
+                    "statusBarText": "Retrieved data for Quality Assurance on port 9083.",
+                    "callback": "(function test(webBrowser) {microprofileConfigCallBack.listenToBrowserForVariableElementConfig(webBrowser); })"
+                },
+                {
+                  "displayType": "tabbedEditor",
+                  "active": true,
+                  "activeTab": "server.xml",
+                  "editorList": [
+                    {
+                      "displayType":"fileEditor",
+                      "fileName": "InventoryConfig.java",
+                      "preload": [
+                        "package io.openliberty.guides.mpconfig;",
+                        "",
+                        "import javax.inject.Inject;",
+                        "import javax.enterprise.context.ApplicationScoped;",
+                        "import org.eclipse.microprofile.config.inject.ConfigProperty;",
+                        "",
+                        "@ApplicationScoped",
+                        "public class InventoryConfig {",
+                          "    @Inject",
+                          "    @ConfigProperty(name=\"port\", ",
+                          "                   defaultValue=\"9080\")",
+                          "    private int port;",
+                          "",
+                          "    public int getPort() {",
+                          "      return port;",
+                          "    }",
+                          "}"
+                      ],
+                      "readonly": true
+                    },
+                    {
+                      "displayType":"fileEditor",
+                      "fileName": "META-INF/microprofile-config.properties",
+                      "preload": [
+                          "port=9081"
+                      ],
+                      "readonly": true
+                    },
+                    {
+                      "displayType":"fileEditor",
+                      "fileName": "server.env",
+                      "preload": [
+                          "port=9082"
+                      ],
+                      "readonly": true
+                    },
+                    {
+                        "displayType":"fileEditor",
+                        "fileName": "bootstrap.properties",
+                        "preload": [
+                            "port=9083"
+                        ],
+                        "readonly": true
+                    },
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "server.xml",
+                        "preload": [
+                            "<?xml version=\"1.0\"?>",
+                            "<server description=\"Sample Liberty server\">",
+                            "   <featureManager>",
+                            "      <feature>cdi-2.0</feature>",
+                            "      <feature>jaxrs-2.1</feature>",
+                            "      <feature>mpConfig-1.4</feature>",
+                            "   </featureManager>",
+                            "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\"",
+                            "      httpPort=\"${default.http.port}\"/>",
+                            "",
+                            "   <webApplication id=\"displayCarTypes\"",
+                            "      location=\"displayCarTypes.war\" contextRoot=\"/\">",
+                            "   </webApplication>",
+                            "</server>"
+                        ],
+                        "readonly": [
+                            {
+                                "from": "1",
+                                "to": "9"
+                            },
+                            {
+                                "from": "11",
+                                "to": "14"
+                            }
+                          ],
+                          "writable": [
+                            {
+                                "from": "10",
+                                "to": "10"
+                            }
+                        ],
+                        "callback": "(function test(editor) {microprofileConfigCallBack.listenToEditorForVariableElement(editor); })"
+                    }
+                  ]
+                }
+            ]
+        },
+        {
+            "name": "ConfigureAsappPropElement",
+            "title": "Configuring as an appProperties element scoped by application",
+            "description": [
+                "You can also define a configuration value as an  <code>appProperties</code> <code>property</code> element in the Liberty server's <code>server.xml</code> configuration file.  This assigns a value to the configuration property that may be accessed by the specified application. The <code>appProperties</code> element can be specified in either an <code>application</code> or a <code>webApplication</code> element.",
+                "",
+                "Properties defined in <code>appProperties</code> elements in the Liberty <code>server.xml</code> file have an ordinal value of 600. If duplicate <code>property</code> elements exist, the last value specified will be used by MicroProfile Config."
+            ],
+            "instruction": [
+                "Specify the following port value as an <code>appProperties</code> <code>property</code> element on line 13 of the <code>server.xml</code> file.<br><codeblock>&lt;appProperties&gt;\n    &lt;property name=&quot;port&quot; value=&quot;9085&quot;/&gt;\n&lt;/appProperties&gt;</codeblock><br>Alternatively, click <action title='Add port configuration as an appProperty property element in server.xml' onclick=\"microprofileConfigCallBack.addappPropertiesToServerXMLButton(event,'ConfigureAsappPropElement')\">Add</action>.<br>Then, click <action title='Run' onclick=\"microprofileConfigCallBack.saveTabbedEditorButton(event, 'ConfigureAsappPropElement')\">Run</action> on the editor menu pane to save the file and restart the server.",
+                "Click <action title='Refresh' onclick=\"microprofileConfigCallBack.refreshBrowserButton(event, 'ConfigureAsappPropElement')\">Refresh</action> in the browser to see that the port value specified as an <code>appProperties</code> <code>property</code> element in the  <code>server.xml</code> file is used. The production port (9085) of the ObtainCarTypes microservice returns values <code>SUV</code>, <code>Crossover</code>, <code>Coupe</code>, <code>Truck</code>, <code>Convertible</code>, and <code>Van</code>."
+            ],
+            "content":[
+                {
+                    "displayType":"webBrowser",
+                    "url": "https://mycarvendor.openliberty.io/car-types",
+                    "browserContent": "/guides/iguide-microprofile-config-intro/html/download-from-variable-in-server-xml.html",
+                    "statusBarText": "Retrieved data for Staging on port 9084.",
+                    "callback": "(function test(webBrowser) {microprofileConfigCallBack.listenToBrowserForappPropertiesConfig(webBrowser); })"
+                },
+                {
+                  "displayType": "tabbedEditor",
+                  "active": true,
+                  "activeTab": "server.xml",
+                  "editorList": [
+                    {
+                      "displayType":"fileEditor",
+                      "fileName": "InventoryConfig.java",
+                      "preload": [
+                        "package io.openliberty.guides.mpconfig;",
+                        "",
+                        "import javax.inject.Inject;",
+                        "import javax.enterprise.context.ApplicationScoped;",
+                        "import org.eclipse.microprofile.config.inject.ConfigProperty;",
+                        "",
+                        "@ApplicationScoped",
+                        "public class InventoryConfig {",
+                          "    @Inject",
+                          "    @ConfigProperty(name=\"port\", ",
+                          "                   defaultValue=\"9080\")",
+                          "    private int port;",
+                          "",
+                          "    public int getPort() {",
+                          "      return port;",
+                          "    }",
+                          "}"
+                      ],
+                      "readonly": true
+                    },
+                    {
+                      "displayType":"fileEditor",
+                      "fileName": "META-INF/microprofile-config.properties",
+                      "preload": [
+                          "port=9081"
+                      ],
+                      "readonly": true
+                    },
+                    {
+                      "displayType":"fileEditor",
+                      "fileName": "server.env",
+                      "preload": [
+                          "port=9082"
+                      ],
+                      "readonly": true
+                    },
+                    {
+                        "displayType":"fileEditor",
+                        "fileName": "bootstrap.properties",
+                        "preload": [
+                            "port=9083"
+                        ],
+                        "readonly": true
+                    },
+                    {
+                        "displayType": "fileEditor",
+                        "fileName": "server.xml",
+                        "preload": [
+                            "<?xml version=\"1.0\"?>",
+                            "<server description=\"Sample Liberty server\">",
+                            "   <featureManager>",
+                            "      <feature>cdi-2.0</feature>",
+                            "      <feature>jaxrs-2.1</feature>",
+                            "      <feature>mpConfig-1.4</feature>",
+                            "   </featureManager>",
+                            "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\"",
+                            "      httpPort=\"${default.http.port}\"/>",
+                            "   <variable name=\"port\" value=\"9084\"/>",
+                            "   <webApplication id=\"displayCarTypes\"",
+                            "      location=\"displayCarTypes.war\" contextRoot=\"/\">",
+                            "",
+                            "",
+                            "",
+                            "   </webApplication>",
+                            "</server>"
+                        ],
+                        "readonly": [
+                            {
+                                "from": "1",
+                                "to": "12"
+                            },
+                            {
+                                "from": "16",
+                                "to": "17"
+                            }
+                          ],
+                          "writable": [
+                            {
+                                "from": "13",
+                                "to": "15"
+                            }
+                        ],
+                        "callback": "(function test(editor) {microprofileConfigCallBack.listenToEditorForappPropertiesElement(editor); })"
+                    }
+                  ]
+                }
+            ]
+        },
+
+
+        {
+            "name": "UpdateOrdinal",
+            "title": "Changing the ordinal of a ConfigSource",
+            "description": [
+                "You can override the default ordinal value of a ConfigSource by adding the <code>config_ordinal</code> property to your configuration source file. The configuration source with the highest ordinal value takes precedence.",
+                "",
+                "When updating the default config ordinal value in the server.xml config source, the value is added just like any other <code>variable</code> or <code>appProperties</code> element.   For example, <code>&lt;variable name=\"config_ordinal\" value=\"875\" /&gt;</code>. Otherwise, in the other ConfigSources, set <code>config_ordinal</code> as a property.",
+                "",
+                "Adding <code>config_ordinal</code> to <code>/META-INF/microprofile-config.properties</code> with a value of 700 increases its ordinal value. The port value from <code>/META-INF/microprofile-config.properties</code> now overrides the port value from the <code>appProperties</code> <code>property</code> element in the Liberty <code>server.xml</code> file, which has a default ordinal of 600."
+            ],
+            "instruction": [
+                "In <code>/META-INF/microprofile-config.properties</code> file, add the following on line 2.<br><codeblock>config_ordinal=700</codeblock><br>Alternatively, click <action title='Add config_ordinal to microprofile-config.properties' onclick=\"microprofileConfigCallBack.addConfigOrdinalToPropsButton(event, 'UpdateOrdinal')\">Add</action>.<br>Then, click <action title='Run' onclick=\"microprofileConfigCallBack.saveTabbedEditorButton(event, 'UpdateOrdinal')\">Run</action> on the editor menu pane.",
+                "Click <action title='Refresh' onclick=\"microprofileConfigCallBack.refreshBrowserButton(event, 'UpdateOrdinal')\">Refresh</action> in the browser to see that the port value in the <code>/META-INF/microprofile-config.properties</code> file is used instead of the one defined in the <code>server.xml</code> file as an <code>appProperties</code> <code>property</code> element. The Development port (9081) of the ObtainCarTypes microservice returns the values carA and carB."
+            ],
+            "content":[
+                {
+                    "displayType":"webBrowser",
+                    "url": "https://mycarvendor.openliberty.io/car-types",
+                    "browserContent": "/guides/iguide-microprofile-config-intro/html/download-from-appProperty-in-server-xml.html",
+                    "statusBarText": "Retrieved data for Production on port 9085.",
+                    "callback": "(function test(webBrowser) {microprofileConfigCallBack.listenToBrowserForPropFileConfig(webBrowser); })"
+                },
+              {
+                "displayType": "tabbedEditor",
+                "active": true,
+                "activeTab": "META-INF/microprofile-config.properties",
+                "editorList": [
+                  {
+                    "displayType":"fileEditor",
+                    "fileName": "InventoryConfig.java",
+                    "preload": [
+                        "package io.openliberty.guides.mpconfig;",
+                        "",
+                        "import javax.inject.Inject;",
+                        "import javax.enterprise.context.ApplicationScoped;",
+                        "import org.eclipse.microprofile.config.inject.ConfigProperty;",
+                        "",
+                        "@ApplicationScoped",
+                        "public class InventoryConfig {",
+                          "    @Inject",
+                          "    @ConfigProperty(name=\"port\", ",
+                          "                   defaultValue=\"9080\")",
+                          "    private int port;",
+                          "",
+                          "    public int getPort() {",
+                          "      return port;",
+                          "    }",
+                          "}"
+                    ],
+                    "readonly": true
+                  },
+                  {
+                    "displayType":"fileEditor",
+                    "fileName": "META-INF/microprofile-config.properties",
+                    "preload": [
+                        "port=9081",
+                        ""
+                    ],
+                    "readonly": [
+                      {
+                        "from": "1",
+                        "to": "1"
+                      }
+                    ],
+                    "writable": [
+                        {
+                            "from": "2",
+                            "to": "2"
+                        }
+                    ],
+                    "callback": "(function test(editor) {microprofileConfigCallBack.listenToEditorForOrdinalChange(editor); })"
+                  },
+                  {
+                    "displayType":"fileEditor",
+                    "fileName": "server.env",
+                    "preload": [
+                      "port=9082"
+                    ],
+                    "readonly": true
+                  },
+                  {
+                    "displayType":"fileEditor",
+                    "fileName": "bootstrap.properties",
+                    "preload": [
+                        "port=9083"
+                     ],
+                    "readonly": true
+                  },
+                  {
+                    "displayType": "fileEditor",
+                    "fileName": "server.xml",
+                    "preload": [
+                        "<?xml version=\"1.0\"?>",
+                        "<server description=\"Sample Liberty server\">",
+                        "   <featureManager>",
+                        "      <feature>cdi-2.0</feature>",
+                        "      <feature>jaxrs-2.1</feature>",
+                        "      <feature>mpConfig-1.4</feature>",
+                        "   </featureManager>",
+                        "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\"",
+                        "      httpPort=\"${default.http.port}\"/>",
+                        "   <variable name=\"port\" value=\"9084\"/>",
+                        "   <webApplication id=\"displayCarTypes\"",
+                        "      location=\"displayCarTypes.war\" contextRoot=\"/\">",
+                        "      <appProperties>",
+                        "         <property name=\"port\" value=\"9085\"/>",
+                        "      </appProperties>",
+                        "   </webApplication>",
+                        "</server>"
+                    ],
+                    "readonly": true
+                  }
+                ]
+              }
+            ]
+        },
+        {
+            "name": "DefaultPlayground",
+            "title": "Default ConfigSources playground",
+            "description": [
+                "Now that you've learned the various ways of defining configuration properties, you can see how they all work together.",
+                "To review, here are the six places to inject properties:",
+                "<ul>",
+                "<li>Java annotations <code>@Inject @ConfigProperty</code> with <code>defaultValue</code> in <code>InventoryConfig.java</code> (no ordinal)",
+                "<li>Properties file through <code>/META-INF/microprofile-config.properties</code> (default ordinal = 100)",
+                "<li>Environment variables through <code>server.env</code> (default ordinal = 300)",
+                "<li>System properties through <code>bootstrap.properties</code> (default ordinal = 400)",
+                "<li>As a <code>variable</code> element in the <code>server.xml</code> file (ordinal = 500)",
+                "<li>As a <code>appProperties</code> <code>property</code> element in the <code>server.xml</code> file (ordinal = 600)",
+                "</ul>",
+                "You can add new properties and override the default ordinal value of the ConfigSource files."
+            ],
+            "instruction": [
+                "Use the editor to inject new properties into the files. Use <code>@Inject @ConfigProperty (name=\"propertyName\");</code> to include the new properties in the <code>InventoryConfig.java</code> file. Use <code>propertyName=propertyValue</code> to add the new properties to any of the properties files or the <code>server.env</code> file. Use XML syntax to add the new properties to the <code>server.xml</code> file. <br><br>Add the <code>config_ordinal</code> property to override the default ordinal value in any of the ConfigSources. <br><br>Click <b>Run</b> to see the file ordinal priority and the property values being used."
+              ],
+            "content": [
+                {
+                    "displayType": "pod",
+                    "content": "/guides/iguide-microprofile-config-intro/html/playground.html",
+                    "callback": "(function(pod) {microprofileConfigCallBack.createPlayground(pod, 'DefaultPlayground')})"
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "editorList": [
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "InventoryConfig.java",
+                            "preload": [
+                                "package io.openliberty.guides.mpconfig;",
+                                "",
+                                "import javax.inject.Inject;",
+                                "import javax.enterprise.context.ApplicationScoped;",
+                                "import org.eclipse.microprofile.config.inject.ConfigProperty;",
+                                "",
+                                "@ApplicationScoped",
+                                "public class InventoryConfig {",
+                                  "    @Inject",
+                                  "    @ConfigProperty(name=\"port\", ",
+                                  "                   defaultValue=\"9080\")",
+                                  "    private int port;",
+                                  "",
+                                  "    public int getPort() {",
+                                  "      return port;",
+                                  "    }",
+                                  "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "8"
+                                },
+                                {
+                                    "from": "12",
+                                    "to": "17"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "9",
+                                    "to": "11"
+                                }
+                            ],
+                            "callback": "(function test(editor) {microprofileConfigCallBack.updatePlaygroundProperties(editor);})"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "/META-INF/microprofile-config.properties",
+                            "preload": [
+                                "port=9081"
+                            ],
+                            "writable": [
+                                {
+                                    "from": "1",
+                                    "to": "1"
+                                }
+                            ],
+                            "callback": "(function test(editor) {microprofileConfigCallBack.updatePlaygroundProperties(editor);})"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.env",
+                            "preload": [
+                                "port=9082"
+                            ],
+                            "writable": [
+                                {
+                                    "from": "1",
+                                    "to": "1"
+                                }
+                            ],
+                            "callback": "(function test(editor) {microprofileConfigCallBack.updatePlaygroundProperties(editor);})"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "bootstrap.properties",
+                            "preload": [
+                                "port=9083"
+                            ],
+                            "writable": [
+                                {
+                                    "from": "1",
+                                    "to": "1"
+                                }
+                            ],
+                            "callback": "(function test(editor) {microprofileConfigCallBack.updatePlaygroundProperties(editor);})"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>jaxrs-2.1</feature>",
+                                "      <feature>mpConfig-1.4</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpsPort=\"${default.https.port}\"",
+                                "      httpPort=\"${default.http.port}\"/>",
+                                "   <variable name=\"port\" value=\"9084\"/>",
+                                "   <webApplication id=\"displayCarTypes\"",
+                                "      location=\"displayCarTypes.war\" contextRoot=\"/\">",
+                                "      <appProperties>",
+                                "           <property name=\"port\" value=\"9085\"/>",
+                                "      </appProperties>",
+                                "   </webApplication>",
+                                "</server>"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "9"
+                                },
+                                {
+                                    "from": "11",
+                                    "to": "13"
+                                },
+                                {
+                                    "from": "15",
+                                    "to": "15"
+                                },
+                                {
+                                    "from": "17",
+                                    "to": "17"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "10",
+                                    "to": "10"
+                                },
+                                {
+                                    "from": "14",
+                                    "to": "14"
+                                }
+                            ],
+                            "callback": "(function test(editor) {microprofileConfigCallBack.updatePlaygroundProperties(editor);})"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "WhatNext",
+            "title": "Great work!  You're done!",
+            "description": ["You learned how to use MicroProfile Config to separate configuration from code by using injection and how to provide configuration values with properties files, environment variables, system properties, and the Liberty server.xml file. You also learned the default ordinals for each of these configuration sources and how to override them."
+                           ]
+        },
+        {
+            "name": "RelatedLinks",
+            "title": "Related links",
+            "description": ["Learn more about <b>MicroProfile</b>.",
+                            "<p> <a target='_blank' rel='noopener noreferrer' href='http://microprofile.io/' >See the MicroProfile specs.</a></p>",
+                            "<p> <a target='_blank' rel='noopener noreferrer' href='https://openliberty.io/docs/ref/microprofile/' >View MicroProfile API.</a></p>"
+                           ]
+        }
+
+    ]
+}

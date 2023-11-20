@@ -1,0 +1,2208 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Enabling distributed tracing in Java microservices using Eclipse MicroProfile OpenTracing and the Jaeger tracing system.
+    
+  </title>
+  <meta name="description" content="A getting started tutorial and an example on how to enable distributed tracing in Java microservices to easily trace request flows that span multiple resources by using MicroProfile OpenTracing and Jaeger tracing system.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/microprofile-opentracing-jaeger">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Enabling distributed tracing in Java microservices using Eclipse MicroProfile OpenTracing and the Jaeger tracing system." />
+  <meta name="twitter:description" content="A getting started tutorial and an example on how to enable distributed tracing in Java microservices to easily trace request flows that span multiple resources by using MicroProfile OpenTracing and Jaeger tracing system." />
+
+  <meta property='og:title' content="Enabling distributed tracing in Java microservices using Eclipse MicroProfile OpenTracing and the Jaeger tracing system." />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial and an example on how to enable distributed tracing in Java microservices to easily trace request flows that span multiple resources by using MicroProfile OpenTracing and Jaeger tracing system." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/microprofile-opentracing-jaeger" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li>
+<a href="#getting-started">Getting started</a>
+<ul class="sectlevel2">
+<li><a href="#try-what-youll-build">Try what you’ll build</a></li>
+</ul>
+</li>
+<li><a href="#building-the-application">Building the application</a></li>
+<li>
+<a href="#enabling-existing-tracer-implementation">Enabling existing Tracer implementation</a>
+<ul class="sectlevel2">
+<li><a href="#configuring-the-jaeger-client">Configuring the Jaeger client</a></li>
+</ul>
+</li>
+<li>
+<a href="#enabling-and-disabling-distributed-tracing">Enabling and disabling distributed tracing</a>
+<ul class="sectlevel2">
+<li><a href="#enabling-distributed-tracing-without-code-instrumentation">Enabling distributed tracing without code instrumentation</a></li>
+<li><a href="#enabling-explicit-distributed-tracing">Enabling explicit distributed tracing</a></li>
+<li><a href="#disable-automatic-distributed-tracing">Disable automatic distributed tracing</a></li>
+<li><a href="#injecting-a-custom-tracer-object">Injecting a custom Tracer object</a></li>
+</ul>
+</li>
+<li>
+<a href="#testing-the-services">Testing the services</a>
+<ul class="sectlevel2">
+<li><a href="#running-the-tests">Running the tests</a></li>
+</ul>
+</li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Enabling distributed tracing in microservices with Jaeger</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">20 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/microprofile-opentracing-jaeger.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Explore how to enable and customize tracing of JAX-RS and non-JAX-RS endpoint methods by using MicroProfile OpenTracing and Jaeger.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to enable automatic tracing for JAX-RS endpoint methods and create custom tracers for non-JAX-RS endpoint methods by using MicroProfile OpenTracing.</p>
+</div>
+<div class="paragraph">
+<p>OpenTracing is a standard API for instrumenting microservices for distributed tracing. Distributed tracing helps troubleshoot microservices by examining and logging requests as they propagate through a distributed system, allowing developers to tackle the otherwise difficult task of debugging these requests. Without a distributed tracing system in place, analyzing the workflows of operations becomes difficult, particularly in regard to pinpointing when and by whom a request is received or when a response is sent back.</p>
+</div>
+<div class="paragraph">
+<p><code>Tracer</code> and <code>Span</code> are two critical types in the OpenTracing specification. The <code>Span</code> type is the primary building block of a distributed trace, representing an individual unit of work done in a distributed system. The <code>Trace</code> type in OpenTracing can be thought of as a directed acyclic graph (DAG) of <code>Spans</code>, where the edges between <code>Spans</code> are called References. The <code>Tracer</code> interface creates <code>Spans</code> and <code>Traces</code> and understands how to serialize and deserialize their metadata across process boundaries.</p>
+</div>
+<div class="paragraph">
+<p>MicroProfile OpenTracing enables distributed tracing in microservices. The MicroProfile OpenTracing specification doesn’t address the problem of defining, implementing, or configuring the underlying distributed tracing system. Rather, the specification makes it easier to instrument services with distributed tracing given an existing distributed tracing system.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://www.jaegertracing.io/" target="_blank" rel="noopener noreferrer">Jaeger</a> is an open source distributed tracing system that is compatible with the OpenTracing specification. Jaeger also provides an implementation of <code>Tracer</code> in the client package that is compatible with MicroProfile OpenTracing.</p>
+</div>
+<div class="paragraph">
+<p>You’ll configure the provided <code>inventory</code> and <code>system</code> services to use Jaeger for distributed tracing with MicroProfile OpenTracing.
+You’ll run these services in two separate JVMs made of two server instances to demonstrate tracing in a distributed environment.
+If all the components were run on a single server, then any logging software would be sufficient.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before you begin, deploy the Jaeger all-in-one executable file to start the Jaeger tracing system. The Jaeger all-in-one executable file is configured for quick local testing. You can find information about the Jaeger server and instructions for starting the all-in-one executable file in the <a href="https://www.jaegertracing.io/docs/1.22/getting-started/#all-in-one" target="_blank" rel="noopener noreferrer">Jaeger documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>Before you proceed, make sure that your Jaeger server is up and running. Jaeger can be found at the
+<a href="http://localhost:16686" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:16686</a> URL.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-microprofile-opentracing-jaeger.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-microprofile-opentracing-jaeger.git
+cd guide-microprofile-opentracing-jaeger</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+<div class="sect2">
+<h3 id="try-what-youll-build">Try what you’ll build</h3>
+<div class="paragraph">
+<p>The <code>finish</code> directory in the root of this guide contains the finished application. Give it a try before you proceed.</p>
+</div>
+<div class="paragraph">
+<p>Open a command-line session and navigate to the <code>finish/inventory</code> directory. Run the following Maven goal to build the <code>inventory</code> service and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn liberty:run</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Open another command-line session and navigate to the <code>finish/system</code> directory. Run the following Maven goal to build the <code>system</code> service and deploy it to Open Liberty:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn liberty:run</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message in both command-line sessions, both of your services are ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>The defaultServer server is ready to run a smarter planet.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make sure that your Jaeger server is running and point your browser to the <a href="http://localhost:9081/inventory/systems/localhost" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9081/inventory/systems/localhost</a> URL. When you visit this endpoint, you make two GET HTTP requests, one to the <code>system</code> service and one to the <code>inventory</code> service. Both of these requests are configured to be traced, so a new trace is recorded in Jaeger.</p>
+</div>
+<div class="paragraph">
+<p>To view the traces, go to the <a href="http://localhost:16686" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:16686</a> URL. You can view the traces for the inventory or system services under the <strong>Search</strong> tab. Select the services in the <strong>Select a service</strong> menu and click the <strong>Find Traces</strong> button at the end of the section.</p>
+</div>
+<div class="paragraph">
+<p>If you only see the <strong>jaeger-query</strong> option listed in the dropdown, you might need to wait a little longer and refresh the page to see the application services.</p>
+</div>
+<div class="paragraph">
+<p>View the traces for <code>inventory</code>. You’ll see the following trace:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-opentracing-jaeger/tracelist.png" alt="Trace result">
+</div>
+</div>
+<div class="paragraph">
+<p><br></p>
+</div>
+<div class="paragraph">
+<p>The trace has four spans, three from inventory and one from system. Click the trace to view its details. Under <strong>Service &amp; Operation</strong>, you see the spans in this trace. You can inspect each span by clicking it to reveal more detailed information, such as the time at which a request was received and the time at which a response was sent back.</p>
+</div>
+<div class="paragraph">
+<p>Verify that there are three spans from <code>inventory</code> and one span from <code>system</code>:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-opentracing-jaeger/trace01.png" alt="Finished application’s trace">
+</div>
+</div>
+<div class="paragraph">
+<p><br></p>
+</div>
+<div class="paragraph">
+<p>After you’re finished reviewing the application, stop the Open Liberty servers by pressing <code>CTRL+C</code> in the command-line sessions where you ran the system and inventory services. Alternatively, you can run the following goals from the <code>finish</code> directory in another command-line session:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre> mvn -pl system liberty:stop
+ mvn -pl inventory liberty:stop</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-the-application">Building the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You need to start the services to see basic traces appear in Jaeger.</p>
+</div>
+<div class="paragraph">
+<p>When you run Open Liberty in <a href="https://openliberty.io/docs/latest/development-mode.html" target="_blank" rel="noopener">dev mode</a>, the server listens for file changes and automatically recompiles and deploys your updates whenever you save a new change.</p>
+</div>
+<div class="paragraph">
+<p>Open a command-line session and navigate to the <code>start/inventory</code> directory.
+Run the following Maven goal to start the <code>inventory</code> service in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn liberty:dev</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Open a command-line session and navigate to the <code>start/system</code> directory.
+Run the following Maven goal to start the <code>system</code> service in dev mode:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre>mvn liberty:dev</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After you see the following message, your application server in dev mode is ready:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre>**************************************************************
+*    Liberty is running in dev mode.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Dev mode holds your command-line session to listen for file changes. Open another command-line session to continue, or open the project in your editor.</p>
+</div>
+<div class="paragraph">
+<p>When the servers start, you can find the <code>system</code> and <code>inventory</code> services at the following URLs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://localhost:9080/system/properties" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9080/system/properties</a></p>
+</li>
+<li>
+<p><a href="http://localhost:9081/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9081/inventory/systems</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="enabling-existing-tracer-implementation">Enabling existing Tracer implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To collect traces across your systems, you need to implement the OpenTracing <code>Tracer</code> interface. Jaeger provides a <code>Tracer</code> implementation for the Jaeger server in the <code>jaeger-client</code> package.</p>
+</div>
+<div class="paragraph">
+<p>This package is already added as a dependency for you in your <code class="hotspot=jaeger">pom.xml</code> file. It’s downloaded and installed automatically into each service when you run a Maven build.</p>
+</div>
+<div class="sect2">
+<h3 id="configuring-the-jaeger-client">Configuring the Jaeger client</h3>
+<div class="paragraph">
+<p>In a development environment, it is important that every trace is sampled. When every trace is sampled, all spans are available in the Jaeger UI.</p>
+</div>
+<div class="paragraph">
+<p>The <code>JAEGER_SAMPLER_TYPE</code> and <code>JAEGER_SAMPLER_PARAM</code> environment variables are set as Open Liberty <code class="hotspot=jaegerClientConfig">configuration properties</code> to sample all traces.</p>
+</div>
+<div class="paragraph">
+<p>The <code>const</code> value for <code>JAEGER_SAMPLER_TYPE</code> environment variable configures the Jaeger client sampler to make the same sampling decision for each trace, based on the sampler parameter. If the sampler parameter is 1, it samples all traces. If the sampler parameter is 0, it doesn’t sample any traces.</p>
+</div>
+<div class="paragraph">
+<p>The <code>1</code> value for <code class="hotspot=samplerParamConfig">JAEGER_SAMPLER_PARAM</code> variable configures the Jaeger sampler to sample all traces.</p>
+</div>
+<div class="paragraph">
+<p>In a production environment, this configuration might cause a lot of overhead on the application and a lower sampling rate can be used. The different values for client sampling configuration can be found in the <a href="https://www.jaegertracing.io/docs/1.18/sampling/#client-sampling-configuration" target="_blank" rel="noopener noreferrer">sampling documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>Similarly, in a production environment, Jaeger might not be running in the same host as the application. In this case, set the hostname of the Jaeger server to the <code>JAEGER_AGENT_HOST</code> environment variable and set the port that communicates with the Jaeger host to the <code>JAEGER_AGENT_PORT</code> environment variable.</p>
+</div>
+<div class="paragraph">
+<p>You can view the configuration environment variables at the <a href="https://github.com/jaegertracing/jaeger-client-java/tree/master/jaeger-core#configuration-via-environment" target="_blank" rel="noopener noreferrer">Jaeger Java client documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>pom.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers">  1</span><span class="preprocessor">&lt;?xml version='1.0' encoding='utf-8'?&gt;</span>
+<span class="line-numbers">  2</span><span class="tag">&lt;project</span> <span class="attribute-name">xmlns</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0</span><span class="delimiter">"</span></span> <span class="attribute-name">xmlns:xsi</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://www.w3.org/2001/XMLSchema-instance</span><span class="delimiter">"</span></span> <span class="attribute-name">xsi:schemaLocation</span>=<span class="string"><span class="delimiter">"</span><span class="content">http://maven.apache.org/POM/4.0.0 </span></span>
+<span class="line-numbers">  3</span><span class="string"><span class="content">http://maven.apache.org/xsd/maven-4.0.0.xsd</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">  4</span>    <span class="tag">&lt;modelVersion&gt;</span>4.0.0<span class="tag">&lt;/modelVersion&gt;</span>
+<span class="line-numbers">  5</span>
+<span class="line-numbers">  6</span>    <span class="tag">&lt;groupId&gt;</span>io.openliberty.guides<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">  7</span>    <span class="tag">&lt;artifactId&gt;</span>guide-microprofile-opentracing-jaeger-inventory<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">  8</span>    <span class="tag">&lt;version&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">  9</span>    <span class="tag">&lt;packaging&gt;</span>war<span class="tag">&lt;/packaging&gt;</span>
+<span class="line-numbers"> 10</span>
+<span class="line-numbers"> 11</span>    <span class="tag">&lt;properties&gt;</span>
+<span class="line-numbers"> 12</span>        <span class="tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.build.sourceEncoding&gt;</span>
+<span class="line-numbers"> 13</span>        <span class="tag">&lt;project.reporting.outputEncoding&gt;</span>UTF-8<span class="tag">&lt;/project.reporting.outputEncoding&gt;</span>
+<span class="line-numbers"> 14</span>        <span class="tag">&lt;maven.compiler.source&gt;</span>1.8<span class="tag">&lt;/maven.compiler.source&gt;</span>
+<span class="line-numbers"> 15</span>        <span class="tag">&lt;maven.compiler.target&gt;</span>1.8<span class="tag">&lt;/maven.compiler.target&gt;</span>
+<span class="line-numbers"> 16</span>
+<span class="line-numbers"> 17</span>        <span class="comment">&lt;!-- OpenLiberty runtime --&gt;</span>
+<span class="line-numbers"> 18</span>        <span class="tag">&lt;liberty.var.system.http.port&gt;</span>9080<span class="tag">&lt;/liberty.var.system.http.port&gt;</span>
+<span class="line-numbers"> 19</span>        <span class="tag">&lt;liberty.var.default.http.port&gt;</span>9081<span class="tag">&lt;/liberty.var.default.http.port&gt;</span>
+<span class="line-numbers"> 20</span>        <span class="tag">&lt;liberty.var.default.https.port&gt;</span>9444<span class="tag">&lt;/liberty.var.default.https.port&gt;</span>
+<span class="line-numbers"> 21</span>
+<span class="line-numbers"> 22</span>        <span class="comment">&lt;!-- Jaeger configuration --&gt;</span>
+<span class="line-numbers"> 23</span>        <span class="comment">&lt;!-- tag::jaegerClientConfig[] --&gt;</span>
+<span class="line-numbers"> 24</span>        <span class="comment">&lt;!-- tag::samplerTypeConfig[] --&gt;</span>
+<span class="line-numbers"> 25</span>        <span class="tag">&lt;liberty.env.JAEGER_SAMPLER_TYPE&gt;</span>const<span class="tag">&lt;/liberty.env.JAEGER_SAMPLER_TYPE&gt;</span>
+<span class="line-numbers"> 26</span>        <span class="comment">&lt;!-- end::samplerTypeConfig[] --&gt;</span>
+<span class="line-numbers"> 27</span>        <span class="comment">&lt;!-- tag::samplerParamConfig[] --&gt;</span>
+<span class="line-numbers"> 28</span>        <span class="tag">&lt;liberty.env.JAEGER_SAMPLER_PARAM&gt;</span>1<span class="tag">&lt;/liberty.env.JAEGER_SAMPLER_PARAM&gt;</span>
+<span class="line-numbers"> 29</span>        <span class="comment">&lt;!-- end::samplerParamConfig[] --&gt;</span>
+<span class="line-numbers"> 30</span>        <span class="comment">&lt;!-- end::jaegerClientConfig[] --&gt;</span>
+<span class="line-numbers"> 31</span>    <span class="tag">&lt;/properties&gt;</span>
+<span class="line-numbers"> 32</span>
+<span class="line-numbers"> 33</span>    <span class="tag">&lt;dependencies&gt;</span>
+<span class="line-numbers"> 34</span>        <span class="comment">&lt;!-- Provided dependencies --&gt;</span>
+<span class="line-numbers"> 35</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 36</span>            <span class="tag">&lt;groupId&gt;</span>jakarta.platform<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 37</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.jakartaee-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 38</span>            <span class="tag">&lt;version&gt;</span>9.1.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 39</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 40</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 41</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 42</span>            <span class="tag">&lt;groupId&gt;</span>org.eclipse.microprofile<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 43</span>            <span class="tag">&lt;artifactId&gt;</span>microprofile<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 44</span>            <span class="tag">&lt;version&gt;</span>5.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 45</span>            <span class="tag">&lt;type&gt;</span>pom<span class="tag">&lt;/type&gt;</span>
+<span class="line-numbers"> 46</span>            <span class="tag">&lt;scope&gt;</span>provided<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 47</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 48</span>        <span class="comment">&lt;!-- For Jaeger --&gt;</span>
+<span class="line-numbers"> 49</span>        <span class="comment">&lt;!-- tag::jaeger[] --&gt;</span>
+<span class="line-numbers"> 50</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 51</span>            <span class="tag">&lt;groupId&gt;</span>io.jaegertracing<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 52</span>            <span class="tag">&lt;artifactId&gt;</span>jaeger-client<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 53</span>            <span class="tag">&lt;version&gt;</span>1.7.0<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 54</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 55</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 56</span>            <span class="tag">&lt;groupId&gt;</span>org.slf4j<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 57</span>            <span class="tag">&lt;artifactId&gt;</span>slf4j-api<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 58</span>            <span class="tag">&lt;version&gt;</span>1.7.33<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 59</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 60</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 61</span>            <span class="tag">&lt;groupId&gt;</span>org.slf4j<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 62</span>            <span class="tag">&lt;artifactId&gt;</span>slf4j-jdk14<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 63</span>            <span class="tag">&lt;version&gt;</span>1.7.33<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 64</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 65</span>        <span class="comment">&lt;!-- end::jaeger[] --&gt;</span>
+<span class="line-numbers"> 66</span>        <span class="comment">&lt;!-- For tests --&gt;</span>
+<span class="line-numbers"> 67</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 68</span>            <span class="tag">&lt;groupId&gt;</span>org.junit.jupiter<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 69</span>            <span class="tag">&lt;artifactId&gt;</span>junit-jupiter<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 70</span>            <span class="tag">&lt;version&gt;</span>5.8.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 71</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 72</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 73</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 74</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 75</span>            <span class="tag">&lt;artifactId&gt;</span>resteasy-client<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 76</span>            <span class="tag">&lt;version&gt;</span>6.0.0.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 77</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 78</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 79</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 80</span>            <span class="tag">&lt;groupId&gt;</span>org.jboss.resteasy<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 81</span>            <span class="tag">&lt;artifactId&gt;</span>resteasy-json-binding-provider<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 82</span>            <span class="tag">&lt;version&gt;</span>6.0.0.Final<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 83</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 84</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 85</span>        <span class="tag">&lt;dependency&gt;</span>
+<span class="line-numbers"> 86</span>            <span class="tag">&lt;groupId&gt;</span>org.glassfish<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 87</span>            <span class="tag">&lt;artifactId&gt;</span>jakarta.json<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 88</span>            <span class="tag">&lt;version&gt;</span>2.0.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers"> 89</span>            <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
+<span class="line-numbers"> 90</span>        <span class="tag">&lt;/dependency&gt;</span>
+<span class="line-numbers"> 91</span>    <span class="tag">&lt;/dependencies&gt;</span>
+<span class="line-numbers"> 92</span>
+<span class="line-numbers"> 93</span>    <span class="tag">&lt;build&gt;</span>
+<span class="line-numbers"> 94</span>        <span class="tag">&lt;finalName&gt;</span>${project.artifactId}<span class="tag">&lt;/finalName&gt;</span>
+<span class="line-numbers"> 95</span>        <span class="tag">&lt;plugins&gt;</span>
+<span class="line-numbers"> 96</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers"> 97</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers"> 98</span>                <span class="tag">&lt;artifactId&gt;</span>maven-war-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers"> 99</span>                <span class="tag">&lt;version&gt;</span>3.3.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">100</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">101</span>
+<span class="line-numbers">102</span>            <span class="comment">&lt;!-- Liberty plugin --&gt;</span>
+<span class="line-numbers">103</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">104</span>                <span class="tag">&lt;groupId&gt;</span>io.openliberty.tools<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">105</span>                <span class="tag">&lt;artifactId&gt;</span>liberty-maven-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">106</span>                <span class="tag">&lt;version&gt;</span>3.7.1<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">107</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">108</span>
+<span class="line-numbers">109</span>            <span class="comment">&lt;!-- Plugin to run unit tests --&gt;</span>
+<span class="line-numbers">110</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">111</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">112</span>                <span class="tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">113</span>                <span class="tag">&lt;version&gt;</span>2.22.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">114</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">115</span>
+<span class="line-numbers">116</span>            <span class="comment">&lt;!-- Plugin to run functional tests --&gt;</span>
+<span class="line-numbers">117</span>            <span class="tag">&lt;plugin&gt;</span>
+<span class="line-numbers">118</span>                <span class="tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/groupId&gt;</span>
+<span class="line-numbers">119</span>                <span class="tag">&lt;artifactId&gt;</span>maven-failsafe-plugin<span class="tag">&lt;/artifactId&gt;</span>
+<span class="line-numbers">120</span>                <span class="tag">&lt;version&gt;</span>2.22.2<span class="tag">&lt;/version&gt;</span>
+<span class="line-numbers">121</span>                <span class="tag">&lt;configuration&gt;</span>
+<span class="line-numbers">122</span>                    <span class="tag">&lt;systemPropertyVariables&gt;</span>
+<span class="line-numbers">123</span>                        <span class="tag">&lt;sys.http.port&gt;</span>${liberty.var.system.http.port}<span class="tag">&lt;/sys.http.port&gt;</span>
+<span class="line-numbers">124</span>                        <span class="tag">&lt;inv.http.port&gt;</span>${liberty.var.default.http.port}<span class="tag">&lt;/inv.http.port&gt;</span>
+<span class="line-numbers">125</span>                    <span class="tag">&lt;/systemPropertyVariables&gt;</span>
+<span class="line-numbers">126</span>                <span class="tag">&lt;/configuration&gt;</span>
+<span class="line-numbers">127</span>            <span class="tag">&lt;/plugin&gt;</span>
+<span class="line-numbers">128</span>        <span class="tag">&lt;/plugins&gt;</span>
+<span class="line-numbers">129</span>    <span class="tag">&lt;/build&gt;</span>
+<span class="line-numbers">130</span><span class="tag">&lt;/project&gt;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="enabling-and-disabling-distributed-tracing">Enabling and disabling distributed tracing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="https://github.com/eclipse/microprofile-opentracing" target="_blank" rel="noopener noreferrer">MicroProfile OpenTracing feature</a> enables tracing of all JAX-RS endpoint methods by default. To further control and customize these traces, use the <code>@Traced</code> annotation to enable and disable tracing of particular methods. You can also inject a custom <code>Tracer</code> object to create and customize spans.</p>
+</div>
+<div class="paragraph">
+<p>This feature is already enabled in the <code>inventory</code> and <code>system</code> configuration files.</p>
+</div>
+<div class="sect2">
+<h3 id="enabling-distributed-tracing-without-code-instrumentation">Enabling distributed tracing without code instrumentation</h3>
+<div class="paragraph">
+<p>Because tracing of all JAX-RS endpoint methods is enabled by default, you only need to enable the <code class="hotspot=mpOpenTracing file=0">MicroProfile OpenTracing</code> feature in the <code>server.xml</code> file to see some basic traces in Jaeger.</p>
+</div>
+<div class="paragraph">
+<p>The OpenTracing API is exposed as a third-party API in Open Liberty. To add the visibility of OpenTracing APIs to the application, add <code>third-party</code> to the types of API packages that this class loader supports. Instead of explicitly configuring a list of API packages that includes <code>third-party</code>, set the <code>+third-party</code> value to the <code class="hotspot=thirdParty">apiTypeVisibility</code> attribute in the <code class="hotspot=thirdParty">classLoader</code> configuration. This configuration adds <code>third-party</code> to the default list of API package types that are supported.</p>
+</div>
+<div class="paragraph">
+<p>server.xml</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="line-numbers"> 1</span><span class="tag">&lt;server</span> <span class="attribute-name">description</span>=<span class="string"><span class="delimiter">"</span><span class="content">Sample Liberty server</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers"> 2</span>
+<span class="line-numbers"> 3</span>    <span class="tag">&lt;featureManager&gt;</span>
+<span class="line-numbers"> 4</span>        <span class="tag">&lt;feature&gt;</span>restfulWS-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 5</span>        <span class="tag">&lt;feature&gt;</span>jsonb-2.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 6</span>        <span class="tag">&lt;feature&gt;</span>jsonp-2.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 7</span>        <span class="tag">&lt;feature&gt;</span>cdi-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 8</span>        <span class="tag">&lt;feature&gt;</span>mpConfig-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers"> 9</span>        <span class="comment">&lt;!-- tag::mpOpenTracing[] --&gt;</span>
+<span class="line-numbers">10</span>        <span class="tag">&lt;feature&gt;</span>mpOpenTracing-3.0<span class="tag">&lt;/feature&gt;</span>
+<span class="line-numbers">11</span>        <span class="comment">&lt;!-- end::mpOpenTracing[] --&gt;</span>
+<span class="line-numbers">12</span>    <span class="tag">&lt;/featureManager&gt;</span>
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span>    <span class="tag">&lt;httpEndpoint</span> <span class="attribute-name">httpPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.http.port}</span><span class="delimiter">"</span></span> <span class="attribute-name">httpsPort</span>=<span class="string"><span class="delimiter">"</span><span class="content">${default.https.port}</span><span class="delimiter">"</span></span>
+<span class="line-numbers">15</span>                  <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">"</span><span class="content">defaultHttpEndpoint</span><span class="delimiter">"</span></span> <span class="attribute-name">host</span>=<span class="string"><span class="delimiter">"</span><span class="content">*</span><span class="delimiter">"</span></span> <span class="tag">/&gt;</span>
+<span class="line-numbers">16</span>
+<span class="line-numbers">17</span>    <span class="tag">&lt;webApplication</span> <span class="attribute-name">location</span>=<span class="string"><span class="delimiter">"</span><span class="content">guide-microprofile-opentracing-jaeger-inventory.war</span><span class="delimiter">"</span></span> <span class="attribute-name">contextRoot</span>=<span class="string"><span class="delimiter">"</span><span class="content">/</span><span class="delimiter">"</span></span><span class="tag">&gt;</span>
+<span class="line-numbers">18</span>        <span class="comment">&lt;!-- enable visibility to third party apis --&gt;</span>
+<span class="line-numbers">19</span>        <span class="comment">&lt;!-- tag::thirdParty[] --&gt;</span>
+<span class="line-numbers">20</span>        <span class="tag">&lt;classloader</span> <span class="attribute-name">apiTypeVisibility</span>=<span class="string"><span class="delimiter">"</span><span class="content">+third-party</span><span class="delimiter">"</span></span><span class="tag">/&gt;</span>
+<span class="line-numbers">21</span>        <span class="comment">&lt;!-- end::thirdParty[] --&gt;</span>
+<span class="line-numbers">22</span>    <span class="tag">&lt;/webApplication&gt;</span>
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span><span class="tag">&lt;/server&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make sure that your services are running. Then, point your browser to any of the services' endpoints and check your Jaeger server for traces.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="enabling-explicit-distributed-tracing">Enabling explicit distributed tracing</h3>
+<div class="paragraph">
+<p>Use the <code class="hotspot=Traced file=0">@Traced</code> annotation to define explicit span creation for specific classes and methods. If you place the annotation on a class, then the annotation is automatically applied to all methods within that class. If you place the annotation on a method, then the annotation overrides the class annotation if one exists.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=Traced file=0">@Traced</code> annotation can be configured with the following two parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>value=[true|false]</code> parameter indicates whether a particular class or method is traced. For example, while all JAX-RS endpoint methods are traced by default, you can disable their tracing by using the <code>@Traced(false)</code> annotation. This parameter is set to <code>true</code> by default.</p>
+</li>
+<li>
+<p>The <code>operationName=&lt;Span name&gt;</code> parameter indicates the name of the span that is assigned to the method that is traced. If you omit this parameter, the span is named with the <code>&lt;package name&gt;.&lt;class name&gt;.&lt;method name&gt;</code> format. If you use this parameter at a class level, then all methods within that class have the same span name unless they are explicitly overridden by another <code>@Traced</code> annotation.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the <code>InventoryManager</code> class.</mark>
+<code>inventory/src/main/java/io/openliberty/guides/inventory/InventoryManager.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryManager.java</p>
+</div>
+<div class="listingblock code_column tags=addToInvList hide_tags=copyright,Add">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.ArrayList</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.SystemClient</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.SystemData</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">java.util.Collections</span>;
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.opentracing.Traced</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">io.opentracing.Scope</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">io.opentracing.Tracer</span>;
+<span class="line-numbers">28</span><span class="keyword">import</span> <span class="include">io.opentracing.Span</span>;
+<span class="line-numbers">29</span>
+<span class="line-numbers">30</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">31</span><span class="comment">// tag::InventoryManager[]</span>
+<span class="line-numbers">32</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryManager</span> {
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers">35</span>    <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">system.http.port</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">36</span>    <span class="type">int</span> SYSTEM_PORT;
+<span class="line-numbers">37</span>
+<span class="line-numbers">38</span>    <span class="directive">private</span> <span class="predefined-type">List</span>&lt;SystemData&gt; systems = <span class="predefined-type">Collections</span>.synchronizedList(<span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;&gt;());
+<span class="line-numbers">39</span>    <span class="directive">private</span> SystemClient systemClient = <span class="keyword">new</span> SystemClient();
+<span class="line-numbers">40</span>    <span class="comment">// tag::customTracer[]</span>
+<span class="line-numbers">41</span>    <span class="annotation">@Inject</span> Tracer tracer;
+<span class="line-numbers">42</span>    <span class="comment">// end::customTracer[]</span>
+<span class="line-numbers">43</span>
+<span class="line-numbers">44</span>    <span class="directive">public</span> <span class="predefined-type">Properties</span> get(<span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">45</span>        systemClient.init(hostname, SYSTEM_PORT);
+<span class="line-numbers">46</span>        <span class="predefined-type">Properties</span> properties = systemClient.getProperties();
+<span class="line-numbers">47</span>        <span class="keyword">return</span> properties;
+<span class="line-numbers">48</span>    }
+<span class="line-numbers">49</span>
+<span class="line-numbers">50</span>    <span class="directive">public</span> <span class="type">void</span> add(<span class="predefined-type">String</span> hostname, <span class="predefined-type">Properties</span> systemProps) {
+<span class="line-numbers">51</span>        <span class="predefined-type">Properties</span> props = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+<span class="line-numbers">52</span>        props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">53</span>        props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">54</span>
+<span class="line-numbers">55</span>        SystemData system = <span class="keyword">new</span> SystemData(hostname, props);
+<span class="line-numbers">56</span>        <span class="comment">// tag::Add[]</span>
+<span class="line-numbers">57</span>        <span class="keyword">if</span> (!systems.contains(system)) {
+<span class="line-numbers">58</span>            <span class="comment">// tag::addSpan[]</span>
+<span class="line-numbers">59</span>            Span span = tracer.buildSpan(<span class="string"><span class="delimiter">"</span><span class="content">add() Span</span><span class="delimiter">"</span></span>).start();
+<span class="line-numbers">60</span>            <span class="comment">// end::addSpan[]</span>
+<span class="line-numbers">61</span>            <span class="comment">// tag::Try[]</span>
+<span class="line-numbers">62</span>            <span class="keyword">try</span> (Scope childScope = tracer.activateSpan(span)) {
+<span class="line-numbers">63</span>                <span class="comment">// tag::addToInvList[]</span>
+<span class="line-numbers">64</span>                systems.add(system);
+<span class="line-numbers">65</span>                <span class="comment">// end::addToInvList[]</span>
+<span class="line-numbers">66</span>            } <span class="keyword">finally</span> {
+<span class="line-numbers">67</span>                span.finish();
+<span class="line-numbers">68</span>            }
+<span class="line-numbers">69</span>            <span class="comment">// end::Try[]</span>
+<span class="line-numbers">70</span>        }
+<span class="line-numbers">71</span>        <span class="comment">// end::Add[]</span>
+<span class="line-numbers">72</span>    }
+<span class="line-numbers">73</span>
+<span class="line-numbers">74</span>    <span class="comment">// tag::Traced[]</span>
+<span class="line-numbers">75</span>    <span class="annotation">@Traced</span>(operationName = <span class="string"><span class="delimiter">"</span><span class="content">InventoryManager.list</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">76</span>    <span class="comment">// end::Traced[]</span>
+<span class="line-numbers">77</span>    <span class="comment">// tag::list[]</span>
+<span class="line-numbers">78</span>    <span class="directive">public</span> InventoryList list() {
+<span class="line-numbers">79</span>        <span class="keyword">return</span> <span class="keyword">new</span> InventoryList(systems);
+<span class="line-numbers">80</span>    }
+<span class="line-numbers">81</span>    <span class="comment">// end::list[]</span>
+<span class="line-numbers">82</span>
+<span class="line-numbers">83</span>    <span class="type">int</span> clear() {
+<span class="line-numbers">84</span>        <span class="type">int</span> propertiesClearedCount = systems.size();
+<span class="line-numbers">85</span>        systems.clear();
+<span class="line-numbers">86</span>        <span class="keyword">return</span> propertiesClearedCount;
+<span class="line-numbers">87</span>    }
+<span class="line-numbers">88</span>}
+<span class="line-numbers">89</span><span class="comment">// end::InventoryManager[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>Enable tracing of the <code class="hotspot=list file=0">list()</code> non-JAX-RS endpoint method by updating <code class="hotspot=Traced file=0">@Traced</code> as shown.</p>
+</div>
+<div class="paragraph">
+<p>Go to the <a href="http://localhost:9081/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9081/inventory/systems</a> URL and check your Jaeger server at the <a href="http://localhost:16686" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:16686</a> URL. If you have the Jaeger UI open from a previous step, refresh the page. Select the <code>inventory</code> traces and click the <strong>Find Traces</strong> button.</p>
+</div>
+<div class="paragraph">
+<p>You see a new trace record that is two spans long. One span is for the <code class="hotspot=listContents file=1">listContents()</code> JAX-RS endpoint method in the <code class="hotspot file=1">InventoryResource</code> class, and the other span is for the <code class="hotspot=list file=0">list()</code> method in the <code class="hotspot file=0">InventoryManager</code> class.</p>
+</div>
+<div class="paragraph">
+<p>Verify that you see the following spans:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-opentracing-jaeger/trace02.png" alt="Explicit trace span">
+</div>
+</div>
+<div class="paragraph">
+<p><br></p>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright,Traced-false">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.opentracing.Traced</span>;
+<span class="line-numbers">17</span>
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.DELETE</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers">28</span>
+<span class="line-numbers">29</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers">30</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">31</span><span class="comment">// tag::InventoryResource[]</span>
+<span class="line-numbers">32</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="annotation">@Inject</span> InventoryManager manager;
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span>    <span class="annotation">@GET</span>
+<span class="line-numbers">37</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">38</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">39</span>    <span class="comment">// tag::getPropertiesForHost[]</span>
+<span class="line-numbers">40</span>    <span class="directive">public</span> Response getPropertiesForHost(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">41</span>        <span class="predefined-type">Properties</span> props = manager.get(hostname);
+<span class="line-numbers">42</span>        <span class="keyword">if</span> (props == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">43</span>            <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers">44</span>                           .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Unknown hostname or the system </span><span class="delimiter">"</span></span>
+<span class="line-numbers">45</span>                           + <span class="string"><span class="delimiter">"</span><span class="content">service may not be running on </span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">46</span>                           .build();
+<span class="line-numbers">47</span>        }
+<span class="line-numbers">48</span>        manager.add(hostname, props);
+<span class="line-numbers">49</span>        <span class="keyword">return</span> Response.ok(props).build();
+<span class="line-numbers">50</span>    }
+<span class="line-numbers">51</span>    <span class="comment">// end::getPropertiesForHost[]</span>
+<span class="line-numbers">52</span>
+<span class="line-numbers">53</span>    <span class="annotation">@GET</span>
+<span class="line-numbers">54</span>    <span class="comment">// tag::Traced-false[]</span>
+<span class="line-numbers">55</span>    <span class="annotation">@Traced</span>(<span class="predefined-constant">false</span>)
+<span class="line-numbers">56</span>    <span class="comment">// end::Traced-false[]</span>
+<span class="line-numbers">57</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">58</span>    <span class="comment">// tag::listContents[]</span>
+<span class="line-numbers">59</span>    <span class="directive">public</span> InventoryList listContents() {
+<span class="line-numbers">60</span>        <span class="keyword">return</span> manager.list();
+<span class="line-numbers">61</span>    }
+<span class="line-numbers">62</span>    <span class="comment">// end::listContents[]</span>
+<span class="line-numbers">63</span>
+<span class="line-numbers">64</span>    <span class="annotation">@DELETE</span>
+<span class="line-numbers">65</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">66</span>    <span class="directive">public</span> Response clearContents() {
+<span class="line-numbers">67</span>        <span class="type">int</span> cleared = manager.clear();
+<span class="line-numbers">68</span>
+<span class="line-numbers">69</span>        <span class="keyword">if</span> (cleared == <span class="integer">0</span>) {
+<span class="line-numbers">70</span>            <span class="keyword">return</span> Response.status(Response.Status.NOT_MODIFIED)
+<span class="line-numbers">71</span>                    .build();
+<span class="line-numbers">72</span>        }
+<span class="line-numbers">73</span>        <span class="keyword">return</span> Response.status(Response.Status.OK)
+<span class="line-numbers">74</span>                .build();
+<span class="line-numbers">75</span>    }
+<span class="line-numbers">76</span>}
+<span class="line-numbers">77</span><span class="comment">// end::InventoryResource[]</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="disable-automatic-distributed-tracing">Disable automatic distributed tracing</h3>
+<div class="paragraph">
+<p>You can use the <code>@Traced</code> annotation with a value of <code>false</code> to disable automatic distributed tracing of JAX-RS endpoint methods.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the <code>InventoryResource</code> class.</mark>
+<code>inventory/src/main/java/io/openliberty/guides/inventory/InventoryResource.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.opentracing.Traced</span>;
+<span class="line-numbers">17</span>
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.DELETE</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers">28</span>
+<span class="line-numbers">29</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers">30</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">31</span><span class="comment">// tag::InventoryResource[]</span>
+<span class="line-numbers">32</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="annotation">@Inject</span> InventoryManager manager;
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span>    <span class="annotation">@GET</span>
+<span class="line-numbers">37</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">38</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">39</span>    <span class="comment">// tag::getPropertiesForHost[]</span>
+<span class="line-numbers">40</span>    <span class="directive">public</span> Response getPropertiesForHost(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">41</span>        <span class="predefined-type">Properties</span> props = manager.get(hostname);
+<span class="line-numbers">42</span>        <span class="keyword">if</span> (props == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">43</span>            <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers">44</span>                           .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Unknown hostname or the system </span><span class="delimiter">"</span></span>
+<span class="line-numbers">45</span>                           + <span class="string"><span class="delimiter">"</span><span class="content">service may not be running on </span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">46</span>                           .build();
+<span class="line-numbers">47</span>        }
+<span class="line-numbers">48</span>        manager.add(hostname, props);
+<span class="line-numbers">49</span>        <span class="keyword">return</span> Response.ok(props).build();
+<span class="line-numbers">50</span>    }
+<span class="line-numbers">51</span>    <span class="comment">// end::getPropertiesForHost[]</span>
+<span class="line-numbers">52</span>
+<span class="line-numbers">53</span>    <span class="annotation">@GET</span>
+<span class="line-numbers">54</span>    <span class="comment">// tag::Traced-false[]</span>
+<span class="line-numbers">55</span>    <span class="annotation">@Traced</span>(<span class="predefined-constant">false</span>)
+<span class="line-numbers">56</span>    <span class="comment">// end::Traced-false[]</span>
+<span class="line-numbers">57</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">58</span>    <span class="comment">// tag::listContents[]</span>
+<span class="line-numbers">59</span>    <span class="directive">public</span> InventoryList listContents() {
+<span class="line-numbers">60</span>        <span class="keyword">return</span> manager.list();
+<span class="line-numbers">61</span>    }
+<span class="line-numbers">62</span>    <span class="comment">// end::listContents[]</span>
+<span class="line-numbers">63</span>
+<span class="line-numbers">64</span>    <span class="annotation">@DELETE</span>
+<span class="line-numbers">65</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">66</span>    <span class="directive">public</span> Response clearContents() {
+<span class="line-numbers">67</span>        <span class="type">int</span> cleared = manager.clear();
+<span class="line-numbers">68</span>
+<span class="line-numbers">69</span>        <span class="keyword">if</span> (cleared == <span class="integer">0</span>) {
+<span class="line-numbers">70</span>            <span class="keyword">return</span> Response.status(Response.Status.NOT_MODIFIED)
+<span class="line-numbers">71</span>                    .build();
+<span class="line-numbers">72</span>        }
+<span class="line-numbers">73</span>        <span class="keyword">return</span> Response.status(Response.Status.OK)
+<span class="line-numbers">74</span>                .build();
+<span class="line-numbers">75</span>    }
+<span class="line-numbers">76</span>}
+<span class="line-numbers">77</span><span class="comment">// end::InventoryResource[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph edit_command_text">
+<p>Disable tracing of the <code class="hotspot=listContents file=0">listContents()</code> JAX-RS endpoint method by setting <code class="hotspot=Traced-false file=0">@Traced(false)</code>.</p>
+</div>
+<div class="paragraph">
+<p>Go to the <a href="http://localhost:9081/inventory/systems" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9081/inventory/systems</a> URL and check your Jaeger server at the <a href="http://localhost:16686" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:16686</a> URL. If you have the Jaeger UI open from a previous step, refresh the page. Select the <code>inventory</code> traces and click the <strong>Find Traces</strong> button. You see a new trace record that is just one span long for the remaining <code class="hotspot=list file=1">list()</code> method in the <code>InventoryManager</code> class.</p>
+</div>
+<div class="paragraph">
+<p>Verify that you see the following span:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-opentracing-jaeger/trace03.png" alt="Disable trace span">
+</div>
+</div>
+<div class="paragraph">
+<p><br></p>
+</div>
+<div class="paragraph">
+<p>InventoryManager.java</p>
+</div>
+<div class="listingblock code_column tags=addToInvList hide_tags=copyright,addSpan,endTry">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.ArrayList</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.SystemClient</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.SystemData</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">java.util.Collections</span>;
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.opentracing.Traced</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">io.opentracing.Scope</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">io.opentracing.Tracer</span>;
+<span class="line-numbers">28</span><span class="keyword">import</span> <span class="include">io.opentracing.Span</span>;
+<span class="line-numbers">29</span>
+<span class="line-numbers">30</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">31</span><span class="comment">// tag::InventoryManager[]</span>
+<span class="line-numbers">32</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryManager</span> {
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers">35</span>    <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">system.http.port</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">36</span>    <span class="type">int</span> SYSTEM_PORT;
+<span class="line-numbers">37</span>
+<span class="line-numbers">38</span>    <span class="directive">private</span> <span class="predefined-type">List</span>&lt;SystemData&gt; systems = <span class="predefined-type">Collections</span>.synchronizedList(<span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;&gt;());
+<span class="line-numbers">39</span>    <span class="directive">private</span> SystemClient systemClient = <span class="keyword">new</span> SystemClient();
+<span class="line-numbers">40</span>    <span class="comment">// tag::customTracer[]</span>
+<span class="line-numbers">41</span>    <span class="annotation">@Inject</span> Tracer tracer;
+<span class="line-numbers">42</span>    <span class="comment">// end::customTracer[]</span>
+<span class="line-numbers">43</span>
+<span class="line-numbers">44</span>    <span class="directive">public</span> <span class="predefined-type">Properties</span> get(<span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">45</span>        systemClient.init(hostname, SYSTEM_PORT);
+<span class="line-numbers">46</span>        <span class="predefined-type">Properties</span> properties = systemClient.getProperties();
+<span class="line-numbers">47</span>        <span class="keyword">return</span> properties;
+<span class="line-numbers">48</span>    }
+<span class="line-numbers">49</span>
+<span class="line-numbers">50</span>    <span class="directive">public</span> <span class="type">void</span> add(<span class="predefined-type">String</span> hostname, <span class="predefined-type">Properties</span> systemProps) {
+<span class="line-numbers">51</span>        <span class="predefined-type">Properties</span> props = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+<span class="line-numbers">52</span>        props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">53</span>        props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">54</span>
+<span class="line-numbers">55</span>        SystemData system = <span class="keyword">new</span> SystemData(hostname, props);
+<span class="line-numbers">56</span>        <span class="comment">// tag::Add[]</span>
+<span class="line-numbers">57</span>        <span class="keyword">if</span> (!systems.contains(system)) {
+<span class="line-numbers">58</span>            <span class="comment">// tag::addSpan[]</span>
+<span class="line-numbers">59</span>            Span span = tracer.buildSpan(<span class="string"><span class="delimiter">"</span><span class="content">add() Span</span><span class="delimiter">"</span></span>).start();
+<span class="line-numbers">60</span>            <span class="comment">// end::addSpan[]</span>
+<span class="line-numbers">61</span>            <span class="comment">// tag::Try[]</span>
+<span class="line-numbers">62</span>            <span class="keyword">try</span> (Scope childScope = tracer.activateSpan(span)) {
+<span class="line-numbers">63</span>                <span class="comment">// tag::addToInvList[]</span>
+<span class="line-numbers">64</span>                systems.add(system);
+<span class="line-numbers">65</span>                <span class="comment">// end::addToInvList[]</span>
+<span class="line-numbers">66</span>            } <span class="keyword">finally</span> {
+<span class="line-numbers">67</span>                span.finish();
+<span class="line-numbers">68</span>            }
+<span class="line-numbers">69</span>            <span class="comment">// end::Try[]</span>
+<span class="line-numbers">70</span>        }
+<span class="line-numbers">71</span>        <span class="comment">// end::Add[]</span>
+<span class="line-numbers">72</span>    }
+<span class="line-numbers">73</span>
+<span class="line-numbers">74</span>    <span class="comment">// tag::Traced[]</span>
+<span class="line-numbers">75</span>    <span class="annotation">@Traced</span>(operationName = <span class="string"><span class="delimiter">"</span><span class="content">InventoryManager.list</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">76</span>    <span class="comment">// end::Traced[]</span>
+<span class="line-numbers">77</span>    <span class="comment">// tag::list[]</span>
+<span class="line-numbers">78</span>    <span class="directive">public</span> InventoryList list() {
+<span class="line-numbers">79</span>        <span class="keyword">return</span> <span class="keyword">new</span> InventoryList(systems);
+<span class="line-numbers">80</span>    }
+<span class="line-numbers">81</span>    <span class="comment">// end::list[]</span>
+<span class="line-numbers">82</span>
+<span class="line-numbers">83</span>    <span class="type">int</span> clear() {
+<span class="line-numbers">84</span>        <span class="type">int</span> propertiesClearedCount = systems.size();
+<span class="line-numbers">85</span>        systems.clear();
+<span class="line-numbers">86</span>        <span class="keyword">return</span> propertiesClearedCount;
+<span class="line-numbers">87</span>    }
+<span class="line-numbers">88</span>}
+<span class="line-numbers">89</span><span class="comment">// end::InventoryManager[]</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="injecting-a-custom-tracer-object">Injecting a custom Tracer object</h3>
+<div class="paragraph">
+<p>The MicroProfile OpenTracing specification also makes the underlying OpenTracing <code>Tracer</code> instance available for use. You can access the configured <code>Tracer</code> by injecting it into a bean by using the <code class="hotspot=customTracer file=0">@Inject</code> annotation from the Contexts and Dependency Injections API.</p>
+</div>
+<div class="paragraph">
+<p>Inject the <code>Tracer</code> object into the <code>inventory/src/main/java/io/openliberty/guides/inventory/InventoryManager.java</code> file. Then, use it to define a new child scope in the <code class="hotspot=addSpan file=0">add()</code> call.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the <code>InventoryManager</code> class.</mark>
+<code>inventory/src/main/java/io/openliberty/guides/inventory/InventoryManager.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryManager.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.ArrayList</span>;
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.client.SystemClient</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.SystemData</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">java.util.Collections</span>;
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.config.inject.ConfigProperty</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.opentracing.Traced</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">io.opentracing.Scope</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">io.opentracing.Tracer</span>;
+<span class="line-numbers">28</span><span class="keyword">import</span> <span class="include">io.opentracing.Span</span>;
+<span class="line-numbers">29</span>
+<span class="line-numbers">30</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">31</span><span class="comment">// tag::InventoryManager[]</span>
+<span class="line-numbers">32</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryManager</span> {
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers">35</span>    <span class="annotation">@ConfigProperty</span>(name = <span class="string"><span class="delimiter">"</span><span class="content">system.http.port</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">36</span>    <span class="type">int</span> SYSTEM_PORT;
+<span class="line-numbers">37</span>
+<span class="line-numbers">38</span>    <span class="directive">private</span> <span class="predefined-type">List</span>&lt;SystemData&gt; systems = <span class="predefined-type">Collections</span>.synchronizedList(<span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;&gt;());
+<span class="line-numbers">39</span>    <span class="directive">private</span> SystemClient systemClient = <span class="keyword">new</span> SystemClient();
+<span class="line-numbers">40</span>    <span class="comment">// tag::customTracer[]</span>
+<span class="line-numbers">41</span>    <span class="annotation">@Inject</span> Tracer tracer;
+<span class="line-numbers">42</span>    <span class="comment">// end::customTracer[]</span>
+<span class="line-numbers">43</span>
+<span class="line-numbers">44</span>    <span class="directive">public</span> <span class="predefined-type">Properties</span> get(<span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">45</span>        systemClient.init(hostname, SYSTEM_PORT);
+<span class="line-numbers">46</span>        <span class="predefined-type">Properties</span> properties = systemClient.getProperties();
+<span class="line-numbers">47</span>        <span class="keyword">return</span> properties;
+<span class="line-numbers">48</span>    }
+<span class="line-numbers">49</span>
+<span class="line-numbers">50</span>    <span class="directive">public</span> <span class="type">void</span> add(<span class="predefined-type">String</span> hostname, <span class="predefined-type">Properties</span> systemProps) {
+<span class="line-numbers">51</span>        <span class="predefined-type">Properties</span> props = <span class="keyword">new</span> <span class="predefined-type">Properties</span>();
+<span class="line-numbers">52</span>        props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">os.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">53</span>        props.setProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>, systemProps.getProperty(<span class="string"><span class="delimiter">"</span><span class="content">user.name</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">54</span>
+<span class="line-numbers">55</span>        SystemData system = <span class="keyword">new</span> SystemData(hostname, props);
+<span class="line-numbers">56</span>        <span class="comment">// tag::Add[]</span>
+<span class="line-numbers">57</span>        <span class="keyword">if</span> (!systems.contains(system)) {
+<span class="line-numbers">58</span>            <span class="comment">// tag::addSpan[]</span>
+<span class="line-numbers">59</span>            Span span = tracer.buildSpan(<span class="string"><span class="delimiter">"</span><span class="content">add() Span</span><span class="delimiter">"</span></span>).start();
+<span class="line-numbers">60</span>            <span class="comment">// end::addSpan[]</span>
+<span class="line-numbers">61</span>            <span class="comment">// tag::Try[]</span>
+<span class="line-numbers">62</span>            <span class="keyword">try</span> (Scope childScope = tracer.activateSpan(span)) {
+<span class="line-numbers">63</span>                <span class="comment">// tag::addToInvList[]</span>
+<span class="line-numbers">64</span>                systems.add(system);
+<span class="line-numbers">65</span>                <span class="comment">// end::addToInvList[]</span>
+<span class="line-numbers">66</span>            } <span class="keyword">finally</span> {
+<span class="line-numbers">67</span>                span.finish();
+<span class="line-numbers">68</span>            }
+<span class="line-numbers">69</span>            <span class="comment">// end::Try[]</span>
+<span class="line-numbers">70</span>        }
+<span class="line-numbers">71</span>        <span class="comment">// end::Add[]</span>
+<span class="line-numbers">72</span>    }
+<span class="line-numbers">73</span>
+<span class="line-numbers">74</span>    <span class="comment">// tag::Traced[]</span>
+<span class="line-numbers">75</span>    <span class="annotation">@Traced</span>(operationName = <span class="string"><span class="delimiter">"</span><span class="content">InventoryManager.list</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">76</span>    <span class="comment">// end::Traced[]</span>
+<span class="line-numbers">77</span>    <span class="comment">// tag::list[]</span>
+<span class="line-numbers">78</span>    <span class="directive">public</span> InventoryList list() {
+<span class="line-numbers">79</span>        <span class="keyword">return</span> <span class="keyword">new</span> InventoryList(systems);
+<span class="line-numbers">80</span>    }
+<span class="line-numbers">81</span>    <span class="comment">// end::list[]</span>
+<span class="line-numbers">82</span>
+<span class="line-numbers">83</span>    <span class="type">int</span> clear() {
+<span class="line-numbers">84</span>        <span class="type">int</span> propertiesClearedCount = systems.size();
+<span class="line-numbers">85</span>        systems.clear();
+<span class="line-numbers">86</span>        <span class="keyword">return</span> propertiesClearedCount;
+<span class="line-numbers">87</span>    }
+<span class="line-numbers">88</span>}
+<span class="line-numbers">89</span><span class="comment">// end::InventoryManager[]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This <code class="hotspot=Try file=0">try</code> block is called a <code>try-with-resources</code> statement, meaning that the <code>childScope</code> object is closed at the end of the statement. It’s good practice to define custom spans inside such statements. Otherwise, any exceptions that are thrown before the span closes will leak the active span.</p>
+</div>
+<div class="paragraph">
+<p>Go to the <a href="http://localhost:9081/inventory/systems/localhost" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:9081/inventory/systems/localhost</a> URL and check your Jaeger server at the <a href="http://localhost:16686" target="_blank" rel="noopener noreferrer" class="notranslate">http://localhost:16686</a>
+URL.
+If you have the Jaeger UI open from a previous step, refresh the page.
+Select the <code>inventory</code> traces and click the <strong>Find Traces</strong> button.</p>
+</div>
+<div class="paragraph">
+<p>Verify that there are three spans from <code>inventory</code> and one span from <code>system</code>:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-opentracing-jaeger/trace01.png" alt="Trace with custom span">
+</div>
+</div>
+<div class="paragraph">
+<p><br></p>
+</div>
+<div class="paragraph">
+<p>This simple example shows what you can do with the injected <code>Tracer</code> object. More configuration options are available to you, including setting a timestamp for when a span was created and destroyed. However, these options require an implementation of their own, which doesn’t come as a part of the Jaeger user feature that is provided. In a real-world scenario, implement all the OpenTracing interfaces that you deem necessary, which might include the <code>SpanBuilder</code> interface. You can use this interface for span creation and customization, including setting timestamps.</p>
+</div>
+<div class="paragraph">
+<p>SystemResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.system</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span><span class="comment">// CDI</span>
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers">19</span><span class="comment">// JAX-RS</span>
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers">25</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">properties</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">26</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemResource</span> {
+<span class="line-numbers">27</span>
+<span class="line-numbers">28</span>  <span class="annotation">@GET</span>
+<span class="line-numbers">29</span>  <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">30</span>  <span class="comment">// tag::Properties[]</span>
+<span class="line-numbers">31</span>  <span class="directive">public</span> <span class="predefined-type">Properties</span> getProperties() {
+<span class="line-numbers">32</span>    <span class="keyword">return</span> <span class="predefined-type">System</span>.getProperties();
+<span class="line-numbers">33</span>  }
+<span class="line-numbers">34</span>  <span class="comment">// end::Properties[]</span>
+<span class="line-numbers">35</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2017, 2023 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License 2.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-2.0/</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * SPDX-License-Identifier: EPL-2.0</span>
+<span class="line-numbers">10</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">11</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">12</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers">13</span>
+<span class="line-numbers">14</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers">15</span>
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.opentracing.Traced</span>;
+<span class="line-numbers">17</span>
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.inventory.model.InventoryList</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">jakarta.enterprise.context.RequestScoped</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="line-numbers">21</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.DELETE</span>;
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.GET</span>;
+<span class="line-numbers">23</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.PathParam</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.Produces</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.MediaType</span>;
+<span class="line-numbers">27</span><span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.Response</span>;
+<span class="line-numbers">28</span>
+<span class="line-numbers">29</span><span class="annotation">@RequestScoped</span>
+<span class="line-numbers">30</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">31</span><span class="comment">// tag::InventoryResource[]</span>
+<span class="line-numbers">32</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers">33</span>
+<span class="line-numbers">34</span>    <span class="annotation">@Inject</span> InventoryManager manager;
+<span class="line-numbers">35</span>
+<span class="line-numbers">36</span>    <span class="annotation">@GET</span>
+<span class="line-numbers">37</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">38</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">39</span>    <span class="comment">// tag::getPropertiesForHost[]</span>
+<span class="line-numbers">40</span>    <span class="directive">public</span> Response getPropertiesForHost(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers">41</span>        <span class="predefined-type">Properties</span> props = manager.get(hostname);
+<span class="line-numbers">42</span>        <span class="keyword">if</span> (props == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">43</span>            <span class="keyword">return</span> Response.status(Response.Status.NOT_FOUND)
+<span class="line-numbers">44</span>                           .entity(<span class="string"><span class="delimiter">"</span><span class="content">{ </span><span class="char">\"</span><span class="content">error</span><span class="char">\"</span><span class="content"> : </span><span class="char">\"</span><span class="content">Unknown hostname or the system </span><span class="delimiter">"</span></span>
+<span class="line-numbers">45</span>                           + <span class="string"><span class="delimiter">"</span><span class="content">service may not be running on </span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="char">\"</span><span class="content"> }</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">46</span>                           .build();
+<span class="line-numbers">47</span>        }
+<span class="line-numbers">48</span>        manager.add(hostname, props);
+<span class="line-numbers">49</span>        <span class="keyword">return</span> Response.ok(props).build();
+<span class="line-numbers">50</span>    }
+<span class="line-numbers">51</span>    <span class="comment">// end::getPropertiesForHost[]</span>
+<span class="line-numbers">52</span>
+<span class="line-numbers">53</span>    <span class="annotation">@GET</span>
+<span class="line-numbers">54</span>    <span class="comment">// tag::Traced-false[]</span>
+<span class="line-numbers">55</span>    <span class="annotation">@Traced</span>(<span class="predefined-constant">false</span>)
+<span class="line-numbers">56</span>    <span class="comment">// end::Traced-false[]</span>
+<span class="line-numbers">57</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">58</span>    <span class="comment">// tag::listContents[]</span>
+<span class="line-numbers">59</span>    <span class="directive">public</span> InventoryList listContents() {
+<span class="line-numbers">60</span>        <span class="keyword">return</span> manager.list();
+<span class="line-numbers">61</span>    }
+<span class="line-numbers">62</span>    <span class="comment">// end::listContents[]</span>
+<span class="line-numbers">63</span>
+<span class="line-numbers">64</span>    <span class="annotation">@DELETE</span>
+<span class="line-numbers">65</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">66</span>    <span class="directive">public</span> Response clearContents() {
+<span class="line-numbers">67</span>        <span class="type">int</span> cleared = manager.clear();
+<span class="line-numbers">68</span>
+<span class="line-numbers">69</span>        <span class="keyword">if</span> (cleared == <span class="integer">0</span>) {
+<span class="line-numbers">70</span>            <span class="keyword">return</span> Response.status(Response.Status.NOT_MODIFIED)
+<span class="line-numbers">71</span>                    .build();
+<span class="line-numbers">72</span>        }
+<span class="line-numbers">73</span>        <span class="keyword">return</span> Response.status(Response.Status.OK)
+<span class="line-numbers">74</span>                .build();
+<span class="line-numbers">75</span>    }
+<span class="line-numbers">76</span>}
+<span class="line-numbers">77</span><span class="comment">// end::InventoryResource[]</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-services">Testing the services</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>No automated tests are provided to verify the correctness of the traces. Manually verify these traces by viewing them on the Jaeger server.</p>
+</div>
+<div class="paragraph">
+<p>A few tests are included for you to test the basic functionality of the services. If a test failure occurs, then you might have introduced a bug into the code.</p>
+</div>
+<div class="sect2">
+<h3 id="running-the-tests">Running the tests</h3>
+<div class="paragraph">
+<p>Since you started Open Liberty in dev mode, run the tests for the system and inventory services by pressing the <code>enter/return</code> key in the command-line sessions where you started the services.</p>
+</div>
+<div class="paragraph">
+<p>When you are done checking out the services, exit dev mode by pressing <code>CTRL+C</code> in the shell sessions where you ran the <code>system</code> and <code>inventory</code> services,  or by typing <code>q</code> and then pressing the <code>enter/return key</code>.</p>
+</div>
+<div class="paragraph">
+<p>Finally, stop the <code>Jaeger</code> service that you started in the <strong>Additional prerequisites</strong> section.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You just used MicroProfile OpenTracing in Open Liberty to customize how and which traces are delivered to Jaeger.</p>
+</div>
+<div class="paragraph">
+<p>Try out one of the related MicroProfile guides. These guides demonstrate more technologies that you can learn to expand on what you built in this guide.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Enabling distributed tracing in microservices with Jaeger <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-microprofile-opentracing-jaeger/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-opentracing-jaeger/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-opentracing-jaeger/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/cdi-intro.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Injecting dependencies into microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">15 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-opentracing.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Enabling distributed tracing in microservices with Zipkin</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

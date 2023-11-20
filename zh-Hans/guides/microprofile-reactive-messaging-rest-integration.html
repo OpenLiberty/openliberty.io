@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Integrating RESTful services with a reactive system
+    
+  </title>
+  <meta name="description" content="A getting started tutorial with examples on how to integrate RESTful Java microservices with a reactive system or event streaming platform like Apache Kafka using Eclipse MicroProfile Reactive Messaging.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/toc-multipane-static.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/end-of-guide.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-card.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/tabs.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-common.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/guide-multipane-static.css">
+  
+
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/guides/microprofile-reactive-messaging-rest-integration">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Integrating RESTful services with a reactive system" />
+  <meta name="twitter:description" content="A getting started tutorial with examples on how to integrate RESTful Java microservices with a reactive system or event streaming platform like Apache Kafka using Eclipse MicroProfile Reactive Messaging." />
+
+  <meta property='og:title' content="Integrating RESTful services with a reactive system" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="A getting started tutorial with examples on how to integrate RESTful Java microservices with a reactive system or event streaming platform like Apache Kafka using Eclipse MicroProfile Reactive Messaging." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/guides/microprofile-reactive-messaging-rest-integration" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      <!-- Build a list of all the documents in the guides code base -->
+  
+ 
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+<!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+ 
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+<div id="background_container">
+  <div id="toc_hotspot"></div>
+  <!-- Guide's table of contents section -->
+  <div id="toc_column" class="collapse inline open">
+    <div id="toc_inner">
+       
+      <div id="close_container">
+        <img id="toc_close_white" src="/img/toc_close_white.svg" alt="Close the table of contents" tabindex="0">
+      </div>
+      <h3 id="toc_title">Contents</h3>
+      <div id="toc_container"><ul class="sectlevel1">
+<li><a href="#what-youll-learn">What you’ll learn</a></li>
+<li><a href="#additional-prerequisites">Additional prerequisites</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+<li><a href="#adding-a-rest-endpoint-that-produces-events">Adding a REST endpoint that produces events</a></li>
+<li><a href="#adding-an-event-processor-to-a-reactive-service">Adding an event processor to a reactive service</a></li>
+<li><a href="#configuring-the-microprofile-reactive-messaging-connectors-for-kafka">Configuring the MicroProfile Reactive Messaging connectors for Kafka</a></li>
+<li><a href="#building-and-running-the-application">Building and running the application</a></li>
+<li><a href="#testing-the-application">Testing the application</a></li>
+<li><a href="#tearing-down-the-environment">Tearing down the environment</a></li>
+<li><a href="#running-multiple-system-instances">Running multiple system instances</a></li>
+<li><a href="#great-work-youre-done">Great work! You’re done!</a></li>
+<li><a href="#guide-attribution">Guide Attribution</a></li>
+</ul></div>
+      <div id="toc_separator"></div>
+      
+      <h3 id="tag_title">标签</h3>
+      <div id="tags_container"></div>
+    </div>
+  </div>
+  <div id="toc_indicator" tabindex="0" aria-label="Open the table of contents" class="hidden">
+    <img src="/img/arrow_white.svg" alt="arrow">
+  </div>
+  <div id="toc_line" class="open"></div>
+  <!-- Entire guide section -->
+  <div id="guide_column" class="position_relative open">
+    <div id="guide_content">
+      <!-- Guide header section -->
+      <div id="guide_meta" class="sect1" tabindex="0">
+        <h1 id="guide_title">Integrating RESTful services with a reactive system</h1>
+        <div id="duration_container">
+          <img src="/img/guide_duration_clock_icon_large.svg" alt="duration">
+          <span id="guide_duration">25 minutes</span>
+
+          <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+          <!-- If new posts count is less than 4, use 4 most recent posts -->
+           
+          <!-- If new posts count is >= 4, use posts from last 30 days-->
+          
+          <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+          <!-- Count number of guides from past last 12 weeks that is 84 days-->
+          <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+          
+        </div>
+        <div id="mobile_prereqs_section">
+          <p id="mobile_prereqs_title">Prerequisites:</p>
+          <div class="prereqs_list"></div>
+          <div class="skills_network_container">
+            <div class="skills_network_description"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroller_anchor"></div>
+      <div id="mobile_toc_accordion_container" data-toggle="collapse" data-target="#toc_column" aria-expanded="false" aria-controls="toc_column" role="button">
+        <div role="menuitem" id="mobile_toc_accordion">
+          <button class="breadcrumb_hamburger toc-toggle collapsed" type="button" tabindex="0">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <img src="/img/toc_close_green.svg" class="TOC_Close_SVG hidden img-responsive" alt="Table of contents close button">
+          </button>
+          <span>Table of contents</span>
+        </div>
+      </div>
+
+      <!-- Guide content section -->
+      <div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note hidden">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This repository contains the guide documentation source. To view the guide in published form, view it on the <a href="https://openliberty.io/guides/microprofile-reactive-messaging-rest-integration.html">Open Liberty website</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Learn how to integrate RESTful Java microservices with a reactive system by using MicroProfile Reactive Messaging.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-youll-learn">What you’ll learn</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You will learn how to integrate RESTful Java microservices with a reactive system by using MicroProfile Reactive Messaging. RESTful Java microservices don’t use reactive concepts, so you will learn how to bridge the gap between the two using the RxJava library. In this guide, you will modify two microservices in an application so that when a user hits the RESTful endpoint, the microservice generates producer events.</p>
+</div>
+<div class="paragraph">
+<p>The application in this guide consists of two microservices, <code>system</code> and <code>inventory</code>. The following diagram illustrates the application:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="/img/guide/microprofile-reactive-messaging-rest-integration/reactive-messaging-system-inventory-rest.png" alt="Reactive system inventory">
+</div>
+</div>
+<div class="paragraph">
+<p>Every 15 seconds, the <code>system</code> microservice calculates and publishes events that contain its current average system load. The <code>inventory</code> microservice subscribes to that information so that it can keep an updated list of all the systems and their current system loads. The current inventory of systems can be accessed via the <code>/systems</code> REST endpoint.</p>
+</div>
+<div class="paragraph">
+<p>You will update the <code>inventory</code> microservice to subscribe to a <code>PUT</code> request response. This <code>PUT</code> request response accepts a specific system property in the request body, queries that system property on the <code>system</code> microservice, and provides the response. You will also update the <code>system</code> microservice to handle receiving and sending events that are produced by the new endpoint. You will configure new channels to handle the events that are sent and received by the new endpoint. To learn more about how the reactive Java services that are used in this guide work, check out the <a href="https://openliberty.io/guides/microprofile-reactive-messaging.html" target="_blank" rel="noopener">Creating reactive Java microservices</a> guide.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="additional-prerequisites">Additional prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You need to have Docker installed. For installation instructions, refer to the official <a href="https://docs.docker.com/get-docker/" target="_blank" rel="noopener noreferrer">Docker documentation</a>. You will build and run the microservices in Docker containers. An installation of Apache Kafka is provided in another Docker container.</p>
+</div>
+</div>
+</div>
+<div class="sect1 command">
+<h2 id="getting-started">Getting started</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The fastest way to work through this guide is to clone the <a href="https://github.com/openliberty/guide-microprofile-reactive-messaging-rest-integration.git" target="_blank" rel="noopener noreferrer">Git repository</a> and use the projects that are provided inside:</p>
+</div>
+<div id="git_clone" class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone https://github.com/openliberty/guide-microprofile-reactive-messaging-rest-integration.git
+cd guide-microprofile-reactive-messaging-rest-integration</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>start</code> directory contains the starting project that you will build upon.</p>
+</div>
+<div class="paragraph">
+<p>The <code>finish</code> directory contains the finished project that you will build.</p>
+</div>
+<div class="paragraph">
+<p>Before you begin, make sure you have all the necessary <span class="prerequisites">prerequisites</span>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-a-rest-endpoint-that-produces-events">Adding a REST endpoint that produces events</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Navigate to the <code>start</code> directory to begin.</p>
+</div>
+<div class="paragraph">
+<p>The <code>inventory</code> microservice records and stores the average system load information from all of the connected system microservices. However, the <code>inventory</code> microservice does not contain an accessible REST endpoint to control the sending or receiving of reactive messages. Add the <code>/data</code> RESTful endpoint to the <code>inventory</code> service by replacing the <code>InventoryResource</code> class with an updated version of the class.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the <code>InventoryResource</code> class.</mark>
+<code>inventory/src/main/java/io/openliberty/guides/inventory/InventoryResource.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>InventoryResource.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers">  1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers">  2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers">  3</span><span class="comment"> * Copyright (c) 2020 IBM Corporation and others.</span>
+<span class="line-numbers">  4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers">  5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers">  6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers">  7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers">  8</span><span class="comment"> *</span>
+<span class="line-numbers">  9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers"> 10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers"> 11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers"> 12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers"> 13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.inventory</span>;
+<span class="line-numbers"> 14</span>
+<span class="line-numbers"> 15</span><span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="line-numbers"> 16</span><span class="keyword">import</span> <span class="include">java.util.Optional</span>;
+<span class="line-numbers"> 17</span><span class="keyword">import</span> <span class="include">java.util.Properties</span>;
+<span class="line-numbers"> 18</span><span class="keyword">import</span> <span class="include">java.util.logging.Logger</span>;
+<span class="line-numbers"> 19</span><span class="keyword">import</span> <span class="include">java.util.stream.Collectors</span>;
+<span class="line-numbers"> 20</span>
+<span class="line-numbers"> 21</span><span class="keyword">import</span> <span class="include">javax.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers"> 22</span><span class="keyword">import</span> <span class="include">javax.inject.Inject</span>;
+<span class="line-numbers"> 23</span><span class="keyword">import</span> <span class="include">javax.ws.rs.Consumes</span>;
+<span class="line-numbers"> 24</span><span class="keyword">import</span> <span class="include">javax.ws.rs.DELETE</span>;
+<span class="line-numbers"> 25</span><span class="keyword">import</span> <span class="include">javax.ws.rs.GET</span>;
+<span class="line-numbers"> 26</span><span class="keyword">import</span> <span class="include">javax.ws.rs.PUT</span>;
+<span class="line-numbers"> 27</span><span class="keyword">import</span> <span class="include">javax.ws.rs.Path</span>;
+<span class="line-numbers"> 28</span><span class="keyword">import</span> <span class="include">javax.ws.rs.PathParam</span>;
+<span class="line-numbers"> 29</span><span class="keyword">import</span> <span class="include">javax.ws.rs.Produces</span>;
+<span class="line-numbers"> 30</span><span class="keyword">import</span> <span class="include">javax.ws.rs.core.MediaType</span>;
+<span class="line-numbers"> 31</span><span class="keyword">import</span> <span class="include">javax.ws.rs.core.Response</span>;
+<span class="line-numbers"> 32</span>
+<span class="line-numbers"> 33</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.reactive.messaging.Incoming</span>;
+<span class="line-numbers"> 34</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.reactive.messaging.Outgoing</span>;
+<span class="line-numbers"> 35</span><span class="keyword">import</span> <span class="include">org.reactivestreams.Publisher</span>;
+<span class="line-numbers"> 36</span>
+<span class="line-numbers"> 37</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.models.PropertyMessage</span>;
+<span class="line-numbers"> 38</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.models.SystemLoad</span>;
+<span class="line-numbers"> 39</span><span class="keyword">import</span> <span class="include">io.reactivex.rxjava3.core.BackpressureStrategy</span>;
+<span class="line-numbers"> 40</span><span class="keyword">import</span> <span class="include">io.reactivex.rxjava3.core.Flowable</span>;
+<span class="line-numbers"> 41</span><span class="keyword">import</span> <span class="include">io.reactivex.rxjava3.core.FlowableEmitter</span>;
+<span class="line-numbers"> 42</span>
+<span class="line-numbers"> 43</span>
+<span class="line-numbers"> 44</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers"> 45</span><span class="comment">//tag::inventoryEndPoint[]</span>
+<span class="line-numbers"> 46</span><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/inventory</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 47</span><span class="comment">//end::inventoryEndPoint[]</span>
+<span class="line-numbers"> 48</span><span class="directive">public</span> <span class="type">class</span> <span class="class">InventoryResource</span> {
+<span class="line-numbers"> 49</span>
+<span class="line-numbers"> 50</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">Logger</span> logger = <span class="predefined-type">Logger</span>.getLogger(InventoryResource.class.getName());
+<span class="line-numbers"> 51</span>    <span class="comment">// tag::flowableEmitterDecl[]</span>
+<span class="line-numbers"> 52</span>    <span class="directive">private</span> FlowableEmitter&lt;<span class="predefined-type">String</span>&gt; propertyNameEmitter;
+<span class="line-numbers"> 53</span>    <span class="comment">// end::flowableEmitterDecl[]</span>
+<span class="line-numbers"> 54</span>
+<span class="line-numbers"> 55</span>    <span class="annotation">@Inject</span>
+<span class="line-numbers"> 56</span>    <span class="directive">private</span> InventoryManager manager;
+<span class="line-numbers"> 57</span>    
+<span class="line-numbers"> 58</span>    <span class="annotation">@GET</span>
+<span class="line-numbers"> 59</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 60</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 61</span>    <span class="directive">public</span> Response getSystems() {
+<span class="line-numbers"> 62</span>        <span class="predefined-type">List</span>&lt;<span class="predefined-type">Properties</span>&gt; systems = manager.getSystems()
+<span class="line-numbers"> 63</span>                .values()
+<span class="line-numbers"> 64</span>                .stream()
+<span class="line-numbers"> 65</span>                .collect(Collectors.toList());
+<span class="line-numbers"> 66</span>        <span class="keyword">return</span> Response
+<span class="line-numbers"> 67</span>                .status(Response.Status.OK)
+<span class="line-numbers"> 68</span>                .entity(systems)
+<span class="line-numbers"> 69</span>                .build();
+<span class="line-numbers"> 70</span>    }
+<span class="line-numbers"> 71</span>
+<span class="line-numbers"> 72</span>    <span class="annotation">@GET</span>
+<span class="line-numbers"> 73</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/systems/{hostname}</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 74</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 75</span>    <span class="directive">public</span> Response getSystem(<span class="annotation">@PathParam</span>(<span class="string"><span class="delimiter">"</span><span class="content">hostname</span><span class="delimiter">"</span></span>) <span class="predefined-type">String</span> hostname) {
+<span class="line-numbers"> 76</span>        Optional&lt;<span class="predefined-type">Properties</span>&gt; system = manager.getSystem(hostname);
+<span class="line-numbers"> 77</span>        <span class="keyword">if</span> (system.isPresent()) {
+<span class="line-numbers"> 78</span>            <span class="keyword">return</span> Response
+<span class="line-numbers"> 79</span>                    .status(Response.Status.OK)
+<span class="line-numbers"> 80</span>                    .entity(system)
+<span class="line-numbers"> 81</span>                    .build();
+<span class="line-numbers"> 82</span>        }
+<span class="line-numbers"> 83</span>        <span class="keyword">return</span> Response
+<span class="line-numbers"> 84</span>                .status(Response.Status.NOT_FOUND)
+<span class="line-numbers"> 85</span>                .entity(<span class="string"><span class="delimiter">"</span><span class="content">hostname does not exist.</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 86</span>                .build();
+<span class="line-numbers"> 87</span>    }
+<span class="line-numbers"> 88</span>
+<span class="line-numbers"> 89</span>    <span class="comment">// tag::updateSystemProperty[]</span>
+<span class="line-numbers"> 90</span>    <span class="comment">// tag::annotatedPut[]</span>
+<span class="line-numbers"> 91</span>    <span class="annotation">@PUT</span>
+<span class="line-numbers"> 92</span>    <span class="comment">// end::annotatedPut[]</span>
+<span class="line-numbers"> 93</span>    <span class="comment">// tag::putPath[]</span>
+<span class="line-numbers"> 94</span>    <span class="annotation">@Path</span>(<span class="string"><span class="delimiter">"</span><span class="content">/data</span><span class="delimiter">"</span></span>)
+<span class="line-numbers"> 95</span>    <span class="comment">// end::putPath[]</span>
+<span class="line-numbers"> 96</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers"> 97</span>    <span class="annotation">@Consumes</span>(MediaType.TEXT_PLAIN)
+<span class="line-numbers"> 98</span>    <span class="directive">public</span> Response updateSystemProperty(<span class="predefined-type">String</span> propertyName) {
+<span class="line-numbers"> 99</span>        logger.info(<span class="string"><span class="delimiter">"</span><span class="content">updateSystemProperty: </span><span class="delimiter">"</span></span> + propertyName);
+<span class="line-numbers">100</span>        <span class="comment">// tag::flowableEmitter[]</span>
+<span class="line-numbers">101</span>        propertyNameEmitter.onNext(propertyName);
+<span class="line-numbers">102</span>        <span class="comment">// end::flowableEmitter[]</span>
+<span class="line-numbers">103</span>        <span class="keyword">return</span> Response
+<span class="line-numbers">104</span>                   .status(Response.Status.OK)
+<span class="line-numbers">105</span>                   .entity(<span class="string"><span class="delimiter">"</span><span class="content">Request successful for the </span><span class="delimiter">"</span></span> + propertyName + <span class="string"><span class="delimiter">"</span><span class="content"> property</span><span class="char">\n</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">106</span>                   .build();
+<span class="line-numbers">107</span>    }
+<span class="line-numbers">108</span>    <span class="comment">// end::updateSystemProperty[]</span>
+<span class="line-numbers">109</span>
+<span class="line-numbers">110</span>    <span class="annotation">@DELETE</span>
+<span class="line-numbers">111</span>    <span class="annotation">@Produces</span>(MediaType.APPLICATION_JSON)
+<span class="line-numbers">112</span>    <span class="directive">public</span> Response resetSystems() {
+<span class="line-numbers">113</span>        manager.resetSystems();
+<span class="line-numbers">114</span>        <span class="keyword">return</span> Response
+<span class="line-numbers">115</span>                .status(Response.Status.OK)
+<span class="line-numbers">116</span>                .build();
+<span class="line-numbers">117</span>    }
+<span class="line-numbers">118</span>
+<span class="line-numbers">119</span>    <span class="comment">// tag::updateStatus[]</span>
+<span class="line-numbers">120</span>    <span class="comment">// tag::systemLoad[]</span>
+<span class="line-numbers">121</span>    <span class="annotation">@Incoming</span>(<span class="string"><span class="delimiter">"</span><span class="content">systemLoad</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">122</span>    <span class="comment">// end::systemLoad[]</span>
+<span class="line-numbers">123</span>    <span class="directive">public</span> <span class="type">void</span> updateStatus(SystemLoad sl)  {
+<span class="line-numbers">124</span>        <span class="predefined-type">String</span> hostname = sl.hostname;
+<span class="line-numbers">125</span>        <span class="keyword">if</span> (manager.getSystem(hostname).isPresent()) {
+<span class="line-numbers">126</span>            manager.updateCpuStatus(hostname, sl.loadAverage);
+<span class="line-numbers">127</span>            logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Host </span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="content"> was updated: </span><span class="delimiter">"</span></span> + sl);
+<span class="line-numbers">128</span>        } <span class="keyword">else</span> {
+<span class="line-numbers">129</span>            manager.addSystem(hostname, sl.loadAverage);
+<span class="line-numbers">130</span>            logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Host </span><span class="delimiter">"</span></span> + hostname + <span class="string"><span class="delimiter">"</span><span class="content"> was added: </span><span class="delimiter">"</span></span> + sl);
+<span class="line-numbers">131</span>        }
+<span class="line-numbers">132</span>    }
+<span class="line-numbers">133</span>    <span class="comment">// end::updateStatus[]</span>
+<span class="line-numbers">134</span>    
+<span class="line-numbers">135</span>    <span class="comment">// tag::propertyMessage[]</span>
+<span class="line-numbers">136</span>    <span class="annotation">@Incoming</span>(<span class="string"><span class="delimiter">"</span><span class="content">addSystemProperty</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">137</span>    <span class="comment">// end::propertyMessage[]</span>
+<span class="line-numbers">138</span>    <span class="directive">public</span> <span class="type">void</span> getPropertyMessage(PropertyMessage pm)  {
+<span class="line-numbers">139</span>        logger.info(<span class="string"><span class="delimiter">"</span><span class="content">getPropertyMessage: </span><span class="delimiter">"</span></span> + pm);
+<span class="line-numbers">140</span>        <span class="predefined-type">String</span> hostId = pm.hostname;
+<span class="line-numbers">141</span>        <span class="keyword">if</span> (manager.getSystem(hostId).isPresent()) {
+<span class="line-numbers">142</span>            manager.updatePropertyMessage(hostId, pm.key, pm.value);
+<span class="line-numbers">143</span>            logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Host </span><span class="delimiter">"</span></span> + hostId + <span class="string"><span class="delimiter">"</span><span class="content"> was updated: </span><span class="delimiter">"</span></span> + pm);
+<span class="line-numbers">144</span>        } <span class="keyword">else</span> {
+<span class="line-numbers">145</span>            manager.addSystem(hostId, pm.key, pm.value);
+<span class="line-numbers">146</span>            logger.info(<span class="string"><span class="delimiter">"</span><span class="content">Host </span><span class="delimiter">"</span></span> + hostId + <span class="string"><span class="delimiter">"</span><span class="content"> was added: </span><span class="delimiter">"</span></span> + pm);
+<span class="line-numbers">147</span>        }
+<span class="line-numbers">148</span>    }
+<span class="line-numbers">149</span>
+<span class="line-numbers">150</span>    <span class="comment">// tag::sendPropertyName[]</span>
+<span class="line-numbers">151</span>    <span class="comment">// tag::OutgoingPropertyName[]</span>
+<span class="line-numbers">152</span>    <span class="annotation">@Outgoing</span>(<span class="string"><span class="delimiter">"</span><span class="content">requestSystemProperty</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">153</span>    <span class="comment">// end::OutgoingPropertyName[]</span>
+<span class="line-numbers">154</span>    <span class="directive">public</span> Publisher&lt;<span class="predefined-type">String</span>&gt; sendPropertyName() {
+<span class="line-numbers">155</span>        <span class="comment">// tag::flowableCreate[]</span>
+<span class="line-numbers">156</span>        Flowable&lt;<span class="predefined-type">String</span>&gt; flowable = Flowable.&lt;<span class="predefined-type">String</span>&gt;create(emitter -&gt; 
+<span class="line-numbers">157</span>            <span class="local-variable">this</span>.propertyNameEmitter = emitter, BackpressureStrategy.BUFFER);
+<span class="line-numbers">158</span>        <span class="comment">// end::flowableCreate[]</span>
+<span class="line-numbers">159</span>        <span class="keyword">return</span> flowable;
+<span class="line-numbers">160</span>    }
+<span class="line-numbers">161</span>    <span class="comment">// end::sendPropertyName[]</span>
+<span class="line-numbers">162</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=updateSystemProperty file=0">updateSystemProperty()</code> method creates the <code class="hotspot=putPath file=0">/data</code> endpoint that accepts <code class="hotspot=annotatedPut file=0">PUT</code> requests with a system property name in the request body. The <code>propertyNameEmitter</code> variable is an RxJava <code>Emitter</code> interface that sends the property name request to the event stream, which is Apache Kafka in this case.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=sendPropertyName file=0">sendPropertyName()</code> method contains the <code class="hotspot=flowableCreate file=0">Flowable.create()</code> RxJava method, which associates the emitter to a publisher that is responsible for publishing events to the event stream. The publisher in this example is then connected to the <code class="hotspot=OutgoingPropertyName file=0">@Outgoing("requestSystemProperty")</code> channel, which you will configure later in the guide. MicroProfile Reactive Messaging takes care of assigning the publisher to the channel.</p>
+</div>
+<div class="paragraph">
+<p>The <code class="hotspot=flowableCreate file=0">Flowable.create()</code> method also allows the configuration of a <code class="hotspot=flowableCreate file=0">BackpressureStrategy</code> object, which controls what the publisher does if the emitted events can’t be consumed by the subscriber. In this example, the publisher used the <code>BackpressureStrategy.BUFFER</code> strategy. With this strategy, the publisher can buffer events until the subscriber can consume them.</p>
+</div>
+<div class="paragraph">
+<p>When the <code>inventory</code> service receives a request, it adds the system property name from the request body to the <code class="hotspot=flowableEmitter file=0">propertyNameEmitter</code> <code class="hotspot=flowableEmitterDecl file=0">FlowableEmitter</code> interface. The property name sent to the emitter is then sent to the publisher. The publisher sends the event to the event channel by using the configured <code>BackpressureStrategy</code> object when necessary.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="adding-an-event-processor-to-a-reactive-service">Adding an event processor to a reactive service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>system</code> microservice is the producer of the messages that are published to the Kafka messaging system as a stream of events. Every 15 seconds, the <code>system</code> microservice publishes events that contain its calculation of the average system load, which is its CPU usage, for the last minute. Replace the <code>SystemService</code> class to add message processing of the system property request from the <code>inventory</code> microservice and publish it to the Kafka messaging system.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the <code>SystemService</code> class.</mark>
+<code>system/src/main/java/io/openliberty/guides/system/SystemService.java</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SystemService.java</p>
+</div>
+<div class="listingblock code_column hide_tags=copyright">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="line-numbers"> 1</span><span class="comment">// tag::copyright[]</span>
+<span class="line-numbers"> 2</span><span class="comment">/*******************************************************************************</span>
+<span class="line-numbers"> 3</span><span class="comment"> * Copyright (c) 2020 IBM Corporation and others.</span>
+<span class="line-numbers"> 4</span><span class="comment"> * All rights reserved. This program and the accompanying materials</span>
+<span class="line-numbers"> 5</span><span class="comment"> * are made available under the terms of the Eclipse Public License v1.0</span>
+<span class="line-numbers"> 6</span><span class="comment"> * which accompanies this distribution, and is available at</span>
+<span class="line-numbers"> 7</span><span class="comment"> * http://www.eclipse.org/legal/epl-v10.html</span>
+<span class="line-numbers"> 8</span><span class="comment"> *</span>
+<span class="line-numbers"> 9</span><span class="comment"> * Contributors:</span>
+<span class="line-numbers">10</span><span class="comment"> *     IBM Corporation - Initial implementation</span>
+<span class="line-numbers">11</span><span class="comment"> *******************************************************************************/</span>
+<span class="line-numbers">12</span><span class="comment">// end::copyright[]</span>
+<span class="line-numbers">13</span><span class="keyword">package</span> <span class="namespace">io.openliberty.guides.system</span>;
+<span class="line-numbers">14</span>
+<span class="line-numbers">15</span><span class="keyword">import</span> <span class="include">java.lang.management.ManagementFactory</span>;
+<span class="line-numbers">16</span><span class="keyword">import</span> <span class="include">java.lang.management.OperatingSystemMXBean</span>;
+<span class="line-numbers">17</span><span class="keyword">import</span> <span class="include">java.net.InetAddress</span>;
+<span class="line-numbers">18</span><span class="keyword">import</span> <span class="include">java.net.UnknownHostException</span>;
+<span class="line-numbers">19</span><span class="keyword">import</span> <span class="include">java.util.concurrent.TimeUnit</span>;
+<span class="line-numbers">20</span><span class="keyword">import</span> <span class="include">java.util.logging.Logger</span>;
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span><span class="keyword">import</span> <span class="include">javax.enterprise.context.ApplicationScoped</span>;
+<span class="line-numbers">23</span>
+<span class="line-numbers">24</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.reactive.messaging.Incoming</span>;
+<span class="line-numbers">25</span><span class="keyword">import</span> <span class="include">org.eclipse.microprofile.reactive.messaging.Outgoing</span>;
+<span class="line-numbers">26</span><span class="keyword">import</span> <span class="include">org.reactivestreams.Publisher</span>;
+<span class="line-numbers">27</span>
+<span class="line-numbers">28</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.models.PropertyMessage</span>;
+<span class="line-numbers">29</span><span class="keyword">import</span> <span class="include">io.openliberty.guides.models.SystemLoad</span>;
+<span class="line-numbers">30</span><span class="keyword">import</span> <span class="include">io.reactivex.rxjava3.core.Flowable</span>;
+<span class="line-numbers">31</span>
+<span class="line-numbers">32</span><span class="annotation">@ApplicationScoped</span>
+<span class="line-numbers">33</span><span class="directive">public</span> <span class="type">class</span> <span class="class">SystemService</span> {
+<span class="line-numbers">34</span>    
+<span class="line-numbers">35</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">Logger</span> logger = <span class="predefined-type">Logger</span>.getLogger(SystemService.class.getName());
+<span class="line-numbers">36</span>
+<span class="line-numbers">37</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">OperatingSystemMXBean</span> osMean = 
+<span class="line-numbers">38</span>            <span class="predefined-type">ManagementFactory</span>.getOperatingSystemMXBean();
+<span class="line-numbers">39</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> hostname = <span class="predefined-constant">null</span>;
+<span class="line-numbers">40</span>
+<span class="line-numbers">41</span>    <span class="directive">private</span> <span class="directive">static</span> <span class="predefined-type">String</span> getHostname() {
+<span class="line-numbers">42</span>        <span class="keyword">if</span> (hostname == <span class="predefined-constant">null</span>) {
+<span class="line-numbers">43</span>            <span class="keyword">try</span> {
+<span class="line-numbers">44</span>                <span class="keyword">return</span> <span class="predefined-type">InetAddress</span>.getLocalHost().getHostName();
+<span class="line-numbers">45</span>            } <span class="keyword">catch</span> (<span class="exception">UnknownHostException</span> e) {
+<span class="line-numbers">46</span>                <span class="keyword">return</span> <span class="predefined-type">System</span>.getenv(<span class="string"><span class="delimiter">"</span><span class="content">HOSTNAME</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">47</span>            }
+<span class="line-numbers">48</span>        }
+<span class="line-numbers">49</span>        <span class="keyword">return</span> hostname;
+<span class="line-numbers">50</span>    }
+<span class="line-numbers">51</span>
+<span class="line-numbers">52</span>    <span class="comment">// tag::publishSystemLoad[]</span>
+<span class="line-numbers">53</span>    <span class="annotation">@Outgoing</span>(<span class="string"><span class="delimiter">"</span><span class="content">systemLoad</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">54</span>    <span class="comment">// end::publishSystemLoad[]</span>
+<span class="line-numbers">55</span>    <span class="comment">// tag::sendSystemLoad[]</span>
+<span class="line-numbers">56</span>    <span class="directive">public</span> Publisher&lt;SystemLoad&gt; sendSystemLoad() {
+<span class="line-numbers">57</span>        <span class="comment">// tag::flowableInterval[]</span>
+<span class="line-numbers">58</span>        <span class="keyword">return</span> Flowable.interval(<span class="integer">15</span>, <span class="predefined-type">TimeUnit</span>.SECONDS)
+<span class="line-numbers">59</span>                .map((interval -&gt; <span class="keyword">new</span> SystemLoad(getHostname(),
+<span class="line-numbers">60</span>                        osMean.getSystemLoadAverage())));
+<span class="line-numbers">61</span>        <span class="comment">// end::flowableInterval[]</span>
+<span class="line-numbers">62</span>    }
+<span class="line-numbers">63</span>    <span class="comment">// end::sendSystemLoad[]</span>
+<span class="line-numbers">64</span>    
+<span class="line-numbers">65</span>    <span class="comment">// tag::propertyRequest[]</span>
+<span class="line-numbers">66</span>    <span class="annotation">@Incoming</span>(<span class="string"><span class="delimiter">"</span><span class="content">propertyRequest</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">67</span>    <span class="comment">// end::propertyRequest[]</span>
+<span class="line-numbers">68</span>    <span class="comment">// tag::propertyResponse[]</span>
+<span class="line-numbers">69</span>    <span class="annotation">@Outgoing</span>(<span class="string"><span class="delimiter">"</span><span class="content">propertyResponse</span><span class="delimiter">"</span></span>)
+<span class="line-numbers">70</span>    <span class="comment">// end::propertyResponse[]</span>
+<span class="line-numbers">71</span>    <span class="comment">// tag::sendProperty[]</span>
+<span class="line-numbers">72</span>    <span class="directive">public</span> PropertyMessage sendProperty(<span class="predefined-type">String</span> propertyName) {
+<span class="line-numbers">73</span>        logger.info(<span class="string"><span class="delimiter">"</span><span class="content">sendProperty: </span><span class="delimiter">"</span></span> + propertyName);
+<span class="line-numbers">74</span>        <span class="keyword">if</span> (propertyName == <span class="predefined-constant">null</span> || propertyName.isEmpty()) {
+<span class="line-numbers">75</span>            logger.warning(propertyName == <span class="predefined-constant">null</span> ? <span class="string"><span class="delimiter">"</span><span class="content">Null</span><span class="delimiter">"</span></span> : <span class="string"><span class="delimiter">"</span><span class="content">An empty string</span><span class="delimiter">"</span></span>
+<span class="line-numbers">76</span>                    + <span class="string"><span class="delimiter">"</span><span class="content"> is not System property.</span><span class="delimiter">"</span></span>);
+<span class="line-numbers">77</span>            <span class="keyword">return</span> <span class="predefined-constant">null</span>;
+<span class="line-numbers">78</span>        }
+<span class="line-numbers">79</span>        <span class="keyword">return</span> <span class="keyword">new</span> PropertyMessage(getHostname(),
+<span class="line-numbers">80</span>                propertyName,
+<span class="line-numbers">81</span>                <span class="predefined-type">System</span>.getProperty(propertyName, <span class="string"><span class="delimiter">"</span><span class="content">unknown</span><span class="delimiter">"</span></span>));
+<span class="line-numbers">82</span>    }
+<span class="line-numbers">83</span>    <span class="comment">// end::sendProperty[]</span>
+<span class="line-numbers">84</span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A new method that is named <code class="hotspot=sendProperty file=0">sendProperty()</code> receives a system property name from the <code>inventory</code> microservice over the <code class="hotspot=propertyRequest file=0">@Incoming("propertyRequest")</code> channel. The method calculates the requested property in real time and publishes it back to Kafka over the <code class="hotspot=propertyResponse file=0">@Outgoing("propertyResponse")</code> channel. In this scenario, the <code class="hotspot=sendProperty file=0">sendProperty()</code> method acts as a processor. Next, you’ll configure the channels that you need.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-the-microprofile-reactive-messaging-connectors-for-kafka">Configuring the MicroProfile Reactive Messaging connectors for Kafka</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>system</code> and <code>inventory</code> microservices each have a MicroProfile Config property file in which the properties of their incoming and outgoing channels are defined. These properties include the names of channels, the topics in the Kafka messaging system, and the associated message serializers and deserializers. To complete the message loop created in the previous sections, four channels must be added and configured.</p>
+</div>
+<div class="listingblock code_command hotspot file=0">
+<div class="content">
+<pre><mark>Replace the inventory/microprofile-config.properties file.</mark>
+<code>inventory/src/main/resources/META-INF/microprofile-config.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>inventory/microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties"><span class="line-numbers"> 1</span># Kafka connection details
+<span class="line-numbers"> 2</span># tag::kafkaConfig[]
+<span class="line-numbers"> 3</span>mp.messaging.connector.liberty-kafka.bootstrap.servers=localhost:9093
+<span class="line-numbers"> 4</span># end::kafkaConfig[]
+<span class="line-numbers"> 5</span>
+<span class="line-numbers"> 6</span># systemLoad stream
+<span class="line-numbers"> 7</span># tag::systemLoad[]
+<span class="line-numbers"> 8</span># tag::kafka1[]
+<span class="line-numbers"> 9</span>mp.messaging.incoming.systemLoad.connector=liberty-kafka
+<span class="line-numbers">10</span># end::kafka1[]
+<span class="line-numbers">11</span># tag::topic1[]
+<span class="line-numbers">12</span>mp.messaging.incoming.systemLoad.topic=system.load
+<span class="line-numbers">13</span># end::topic1[]
+<span class="line-numbers">14</span># tag::deserializer1[]
+<span class="line-numbers">15</span>mp.messaging.incoming.systemLoad.key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+<span class="line-numbers">16</span># end::deserializer1[]
+<span class="line-numbers">17</span># tag::deserializerVal1[]
+<span class="line-numbers">18</span>mp.messaging.incoming.systemLoad.value.deserializer=io.openliberty.guides.models.SystemLoad$SystemLoadDeserializer
+<span class="line-numbers">19</span># end::deserializerVal1[]
+<span class="line-numbers">20</span># tag::group1[]
+<span class="line-numbers">21</span>mp.messaging.incoming.systemLoad.group.id=system-load-status
+<span class="line-numbers">22</span># end::group1[]
+<span class="line-numbers">23</span># end::systemLoad[]
+<span class="line-numbers">24</span>
+<span class="line-numbers">25</span># addSystemProperty stream
+<span class="line-numbers">26</span># tag::addSystemProperty[]
+<span class="line-numbers">27</span># tag::kafka3[]
+<span class="line-numbers">28</span>mp.messaging.incoming.addSystemProperty.connector=liberty-kafka
+<span class="line-numbers">29</span># end::kafka3[]
+<span class="line-numbers">30</span># tag::topic3[]
+<span class="line-numbers">31</span>mp.messaging.incoming.addSystemProperty.topic=add.system.property
+<span class="line-numbers">32</span># end::topic3[]
+<span class="line-numbers">33</span># tag::deserializer3[]
+<span class="line-numbers">34</span>mp.messaging.incoming.addSystemProperty.key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+<span class="line-numbers">35</span># end::deserializer3[]
+<span class="line-numbers">36</span># tag::deserializerVal3[]
+<span class="line-numbers">37</span>mp.messaging.incoming.addSystemProperty.value.deserializer=io.openliberty.guides.models.PropertyMessage$PropertyMessageDeserializer
+<span class="line-numbers">38</span># end::deserializerVal3[]
+<span class="line-numbers">39</span># tag::group3[]
+<span class="line-numbers">40</span>mp.messaging.incoming.addSystemProperty.group.id=sys-property
+<span class="line-numbers">41</span># end::group3[]
+<span class="line-numbers">42</span># end::addSystemProperty[]
+<span class="line-numbers">43</span>
+<span class="line-numbers">44</span># requestSystemProperty stream
+<span class="line-numbers">45</span># tag::requestSystemProperty[]
+<span class="line-numbers">46</span># tag::kafka4[]
+<span class="line-numbers">47</span>mp.messaging.outgoing.requestSystemProperty.connector=liberty-kafka
+<span class="line-numbers">48</span># end::kafka4[]
+<span class="line-numbers">49</span># tag::topic4[]
+<span class="line-numbers">50</span>mp.messaging.outgoing.requestSystemProperty.topic=request.system.property
+<span class="line-numbers">51</span># end::topic4[]
+<span class="line-numbers">52</span># tag::serializer4[]
+<span class="line-numbers">53</span>mp.messaging.outgoing.requestSystemProperty.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+<span class="line-numbers">54</span># end::serializer4[]
+<span class="line-numbers">55</span># tag::serializerVal4[]
+<span class="line-numbers">56</span>mp.messaging.outgoing.requestSystemProperty.value.serializer=org.apache.kafka.common.serialization.StringSerializer
+<span class="line-numbers">57</span># end::serializerVal4[]
+<span class="line-numbers">58</span># end::requestSystemProperty[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The newly created RESTful endpoint requires two new channels that move the requested messages between the <code>system</code> and <code>inventory</code> microservices. The <code>inventory</code> microservice <code class="hotspot file=0">microprofile-config.properties</code> file now has two new channels, <code class="hotspot=requestSystemProperty file=0">requestSystemProperty</code> and <code class="hotspot=addSystemProperty file=0">addSystemProperty</code>. The <code class="hotspot=requestSystemProperty file=0">requestSystemProperty</code> channel handles sending the system property request, and the <code class="hotspot=addSystemProperty file=0">addSystemProperty</code> channel handles receiving the system property response.</p>
+</div>
+<div class="listingblock code_command hotspot file=1">
+<div class="content">
+<pre><mark>Replace the system/microprofile-config.properties file.</mark>
+<code>system/src/main/resources/META-INF/microprofile-config.properties</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>system/microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties"><span class="line-numbers"> 1</span># Kafka connection details
+<span class="line-numbers"> 2</span># tag::kafkaConfig[]
+<span class="line-numbers"> 3</span>mp.messaging.connector.liberty-kafka.bootstrap.servers=localhost:9093
+<span class="line-numbers"> 4</span># end::kafkaConfig[]
+<span class="line-numbers"> 5</span>
+<span class="line-numbers"> 6</span># systemLoad stream
+<span class="line-numbers"> 7</span># tag::systemLoad[]
+<span class="line-numbers"> 8</span># tag::kafka1[]
+<span class="line-numbers"> 9</span>mp.messaging.outgoing.systemLoad.connector=liberty-kafka
+<span class="line-numbers">10</span># end::kafka1[]
+<span class="line-numbers">11</span># tag::topic1[]
+<span class="line-numbers">12</span>mp.messaging.outgoing.systemLoad.topic=system.load
+<span class="line-numbers">13</span># end::topic1[]
+<span class="line-numbers">14</span># tag::serializer1[]
+<span class="line-numbers">15</span>mp.messaging.outgoing.systemLoad.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+<span class="line-numbers">16</span># end::serializer1[]
+<span class="line-numbers">17</span># tag::serializerVal1[]
+<span class="line-numbers">18</span>mp.messaging.outgoing.systemLoad.value.serializer=io.openliberty.guides.models.SystemLoad$SystemLoadSerializer
+<span class="line-numbers">19</span># end::serializerVal1[]
+<span class="line-numbers">20</span># end::systemLoad[]
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span># propertyResponse stream
+<span class="line-numbers">23</span># tag::propertyResponse[]
+<span class="line-numbers">24</span># tag::kafka3[]
+<span class="line-numbers">25</span>mp.messaging.outgoing.propertyResponse.connector=liberty-kafka
+<span class="line-numbers">26</span># end::kafka3[]
+<span class="line-numbers">27</span># tag::topic3[]
+<span class="line-numbers">28</span>mp.messaging.outgoing.propertyResponse.topic=add.system.property
+<span class="line-numbers">29</span># end::topic3[]
+<span class="line-numbers">30</span># tag::serializer3[]
+<span class="line-numbers">31</span>mp.messaging.outgoing.propertyResponse.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+<span class="line-numbers">32</span># end::serializer3[]
+<span class="line-numbers">33</span># tag::serializerVal3[]
+<span class="line-numbers">34</span>mp.messaging.outgoing.propertyResponse.value.serializer=io.openliberty.guides.models.PropertyMessage$PropertyMessageSerializer
+<span class="line-numbers">35</span># end::serializerVal3[]
+<span class="line-numbers">36</span># end::propertyResponse[]
+<span class="line-numbers">37</span>
+<span class="line-numbers">38</span># propertyRequest stream
+<span class="line-numbers">39</span># tag::propertyRequest[]
+<span class="line-numbers">40</span># tag::kafka4[]
+<span class="line-numbers">41</span>mp.messaging.incoming.propertyRequest.connector=liberty-kafka
+<span class="line-numbers">42</span># end::kafka4[]
+<span class="line-numbers">43</span># tag::topic4[]
+<span class="line-numbers">44</span>mp.messaging.incoming.propertyRequest.topic=request.system.property
+<span class="line-numbers">45</span># end::topic4[]
+<span class="line-numbers">46</span># tag::deserializer4[]
+<span class="line-numbers">47</span>mp.messaging.incoming.propertyRequest.key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+<span class="line-numbers">48</span># end::deserializer4[]
+<span class="line-numbers">49</span># tag::deserializerVal4[]
+<span class="line-numbers">50</span>mp.messaging.incoming.propertyRequest.value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+<span class="line-numbers">51</span># end::deserializerVal4[]
+<span class="line-numbers">52</span># tag::group4[]
+<span class="line-numbers">53</span>mp.messaging.incoming.propertyRequest.group.id=property-name
+<span class="line-numbers">54</span># end::group4[]
+<span class="line-numbers">55</span># end::propertyRequest[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Replace the <code>system</code> microservice <code class="hotspot file=1">microprofile-config.properties</code> file to add the two new <code class="hotspot=propertyRequest file=1">propertyRequest</code> and <code class="hotspot=propertyResponse file=1">propertyResponse</code> channels. The <code class="hotspot=propertyRequest file=1">propertyRequest</code> channel handles receiving the property request, and the <code class="hotspot=propertyResponse file=1">propertyResponse</code> channel handles sending the property response.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="building-and-running-the-application">Building and running the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Build the <code>system</code> and <code>inventory</code> microservices using Maven and then run them in Docker containers.</p>
+</div>
+<div class="paragraph">
+<p>Start your Docker environment. Dockerfiles are provided for you to use.</p>
+</div>
+<div class="paragraph">
+<p>To build the application, run the Maven <code>install</code> and <code>package</code> goals from the command line in the <code>start</code> directory:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>mvn -pl models install
+mvn package</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the following commands to containerize the microservices:</p>
+</div>
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker build -t system:1.0-SNAPSHOT system/.
+docker build -t inventory:1.0-SNAPSHOT inventory/.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, use the provided script to start the application in Docker containers. The script creates a network for the containers to communicate with each other. It also creates containers for Kafka, Zookeeper, and the microservices in the project. For simplicity, the script starts one instance of the <code>system</code> service.</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>.\scripts\startContainers.bat</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>./scripts/startContainers.sh</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="testing-the-application">Testing the application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The application might take some time to become available. After the application is up and running, you can access it by making a GET request to the <code>/systems</code> endpoint of the <code>inventory</code> service.</p>
+</div>
+<div class="paragraph">
+<p>Visit the <a href="http://localhost:9085/health" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9085/health</a> URL to confirm that the <code>inventory</code> microservice is up and running.</p>
+</div>
+<div class="paragraph">
+<p>When both the liveness and readiness health checks are up, go the <a href="http://localhost:9085/inventory/systems" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9085/inventory/systems</a> URL to access the <code>inventory</code> microservice. You see the CPU <code>systemLoad</code> property for all the systems:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+   "hostname":"30bec2b63a96",
+   "systemLoad":1.44
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can revisit the <a href="http://localhost:9085/inventory/systems" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9085/inventory/systems</a> URL after a while and the value of the <code>systemLoad</code> property for the systems is changed.</p>
+</div>
+<div class="paragraph">
+<p>Make a <code>PUT</code> request on the <code>http://localhost:9085/inventory/data</code> URL to add the value of a particular system property to the set of existing properties. For example, run the following <code>curl</code> command:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="paragraph">
+<p>If <code>curl</code> is unavailable on your computer, use another client such as <a href="https://www.getpostman.com/" target="_blank" rel="noopener noreferrer">Postman</a>, which allows requests to be made with a graphical interface.</p>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>curl -X PUT -d "os.name" http://localhost:9085/inventory/data --header "Content-Type:text/plain"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>In this example, the <code>PUT</code> request with the <code>os.name</code> system property in the request body on the <code>http://localhost:9085/inventory/data</code> URL adds the <code>os.name</code> system property for your system.</p>
+</div>
+<div class="paragraph">
+<p>You see the following output:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>Request successful for the os.name property</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>system</code> service is available so the request to the service is successful and returns a <code>200</code> response code.</p>
+</div>
+<div class="paragraph">
+<p>You can revisit the <a href="http://localhost:9085/inventory/systems" class="notranslate bare" target="_blank" rel="noopener noreferrer">http://localhost:9085/inventory/systems</a> URL and see the <code>os.name</code> system property value is now included with the previous values:</p>
+</div>
+<div class="listingblock no_copy">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+   "hostname":"30bec2b63a96",
+   "os.name":"Linux",
+   "systemLoad":1.44
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tearing-down-the-environment">Tearing down the environment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Run the following script to stop the application:</p>
+</div>
+<div class="paragraph tab_link windows_link">
+<p><code><strong>WINDOWS</strong></code></p>
+</div>
+<div class="paragraph tab_link mac_link">
+<p><code><strong>MAC</strong></code></p>
+</div>
+<div class="paragraph tab_link linux_link">
+<p><code><strong>LINUX</strong></code></p>
+</div>
+<div class="openblock tab_content windows_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>.\scripts\stopContainers.bat</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock tab_content mac_section linux_section">
+<div class="content">
+<div class="listingblock command">
+<div class="content">
+<pre class="CodeRay highlight"><code>./scripts/stopContainers.sh</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-multiple-system-instances">Running multiple system instances</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>system/microprofile-config.properties</p>
+</div>
+<div class="listingblock code_column">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="properties"><span class="line-numbers"> 1</span># Kafka connection details
+<span class="line-numbers"> 2</span># tag::kafkaConfig[]
+<span class="line-numbers"> 3</span>mp.messaging.connector.liberty-kafka.bootstrap.servers=localhost:9093
+<span class="line-numbers"> 4</span># end::kafkaConfig[]
+<span class="line-numbers"> 5</span>
+<span class="line-numbers"> 6</span># systemLoad stream
+<span class="line-numbers"> 7</span># tag::systemLoad[]
+<span class="line-numbers"> 8</span># tag::kafka1[]
+<span class="line-numbers"> 9</span>mp.messaging.outgoing.systemLoad.connector=liberty-kafka
+<span class="line-numbers">10</span># end::kafka1[]
+<span class="line-numbers">11</span># tag::topic1[]
+<span class="line-numbers">12</span>mp.messaging.outgoing.systemLoad.topic=system.load
+<span class="line-numbers">13</span># end::topic1[]
+<span class="line-numbers">14</span># tag::serializer1[]
+<span class="line-numbers">15</span>mp.messaging.outgoing.systemLoad.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+<span class="line-numbers">16</span># end::serializer1[]
+<span class="line-numbers">17</span># tag::serializerVal1[]
+<span class="line-numbers">18</span>mp.messaging.outgoing.systemLoad.value.serializer=io.openliberty.guides.models.SystemLoad$SystemLoadSerializer
+<span class="line-numbers">19</span># end::serializerVal1[]
+<span class="line-numbers">20</span># end::systemLoad[]
+<span class="line-numbers">21</span>
+<span class="line-numbers">22</span># propertyResponse stream
+<span class="line-numbers">23</span># tag::propertyResponse[]
+<span class="line-numbers">24</span># tag::kafka3[]
+<span class="line-numbers">25</span>mp.messaging.outgoing.propertyResponse.connector=liberty-kafka
+<span class="line-numbers">26</span># end::kafka3[]
+<span class="line-numbers">27</span># tag::topic3[]
+<span class="line-numbers">28</span>mp.messaging.outgoing.propertyResponse.topic=add.system.property
+<span class="line-numbers">29</span># end::topic3[]
+<span class="line-numbers">30</span># tag::serializer3[]
+<span class="line-numbers">31</span>mp.messaging.outgoing.propertyResponse.key.serializer=org.apache.kafka.common.serialization.StringSerializer
+<span class="line-numbers">32</span># end::serializer3[]
+<span class="line-numbers">33</span># tag::serializerVal3[]
+<span class="line-numbers">34</span>mp.messaging.outgoing.propertyResponse.value.serializer=io.openliberty.guides.models.PropertyMessage$PropertyMessageSerializer
+<span class="line-numbers">35</span># end::serializerVal3[]
+<span class="line-numbers">36</span># end::propertyResponse[]
+<span class="line-numbers">37</span>
+<span class="line-numbers">38</span># propertyRequest stream
+<span class="line-numbers">39</span># tag::propertyRequest[]
+<span class="line-numbers">40</span># tag::kafka4[]
+<span class="line-numbers">41</span>mp.messaging.incoming.propertyRequest.connector=liberty-kafka
+<span class="line-numbers">42</span># end::kafka4[]
+<span class="line-numbers">43</span># tag::topic4[]
+<span class="line-numbers">44</span>mp.messaging.incoming.propertyRequest.topic=request.system.property
+<span class="line-numbers">45</span># end::topic4[]
+<span class="line-numbers">46</span># tag::deserializer4[]
+<span class="line-numbers">47</span>mp.messaging.incoming.propertyRequest.key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+<span class="line-numbers">48</span># end::deserializer4[]
+<span class="line-numbers">49</span># tag::deserializerVal4[]
+<span class="line-numbers">50</span>mp.messaging.incoming.propertyRequest.value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+<span class="line-numbers">51</span># end::deserializerVal4[]
+<span class="line-numbers">52</span># tag::group4[]
+<span class="line-numbers">53</span>mp.messaging.incoming.propertyRequest.group.id=property-name
+<span class="line-numbers">54</span># end::group4[]
+<span class="line-numbers">55</span># end::propertyRequest[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This application has only one instance of the <code>system</code> service. The <code>inventory</code> service collects system properties of all <code>system</code> services in the application. As an exercise, start multiple <code>system</code> services to see how the application handles it. When you start the <code>system</code> instances, you must provide a unique <code class="hotspot=group4 file=0">group.id</code> through the <code>MP_MESSAGING_INCOMING_PROPERTYREQUEST_GROUP_ID</code> environment variable.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="great-work-youre-done">Great work! You’re done!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You successfully integrated a RESTful microservice with a reactive system by using MicroProfile Reactive Messaging.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="guide-attribution">Guide Attribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Integrating RESTful services with a reactive system <span class="licensedClass">by</span> Open Liberty <span class="licensedClass">is licensed under</span> CC BY-ND 4.0</p>
+</div>
+</div>
+</div>
+    </div>
+  </div>
+
+  <!-- Code section -->
+  <div id="code_column" class="position_relative" tabindex="0">
+    <div id="code_column_title_container">
+      <div id="code_column_tabs_container" class="dimmed">
+        <ul id="code_column_tabs" class="nav" role="tablist"></ul>
+      </div>
+      <div class="copyFileButton" tabindex="0">
+        <img src="/img/guides_copy_button.svg" alt="Copy file contents" title="Copy file contents">
+        <div id="code_section_copied_confirmation">Copied to clipboard </div>
+      </div>
+    </div>
+    <div id="code_column_content"></div>
+
+    <div id="prereqs_container">
+      <p id="prereqs_title">Prerequisites:</p>
+      <div class="prereqs_list"></div>
+      <div class="skills_network_container">
+        <div class="skills_network_description"></div>
+      </div>
+    </div>
+
+    <button id="dismiss_button" aria-label="Back to text" tabindex="0">
+      Back to text
+    </button>
+  </div>
+</div>
+
+<!-- Build a list of all the documents in the guides code base -->
+
+
+
+
+
+
+<!-- Remove any documents deemed private (archived, templates, etc) -->
+
+
+<!-- Count number of guides from past 30 days-->
+
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+    
+    
+    
+
+    <!-- 2592000 is 30 days in seconds (30 days * 24 hours * 60 minutes * 60 seconds) -->
+    
+
+
+<!-- Sort list of guides by date with most recent first -->
+
+
+
+
+
+<div id="end_of_guide">
+        <h2 tabindex="0">Nice work! Where to next?</h2>
+        <div id="end_of_guide_left_section">
+            <p id="guide_attribution"></p>
+            
+            <h3 id="feedback_rating_question">What did you think of this guide?</h3>
+            <div id="feedback_ratings">
+                <img class="guide_rating" id="extreme_dislike" src="/img/1_Extreme_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Extreme Dislike" data-guide-rating="1" tabindex="0" aria-label="Rate this guide as extreme dislike">
+                <img class="guide_rating" id="dislike" src="/img/2_Dislike.png" onclick="$('#dislike_popup').show(); $('.popup_content').focus();" alt="Dislike" data-guide-rating="2" tabindex="0" aria-label="Rate this guide as dislike">
+                <img class="guide_rating" id="like" src="/img/3_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Like" data-guide-rating="3" tabindex="0" aria-label="Rate this guide as like">
+                <img class="guide_rating" id="extreme_like" src="/img/4_Extreme_Like.png" onclick="$('#like_popup').show(); $('.popup_content').focus();" alt="Extreme Like" data-guide-rating="4" tabindex="0" aria-label="Rate this guide as extreme like">
+            </div>
+
+            <div id="like_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <button id="close_button" class="popup_button" onclick="$('#like_popup').hide();">Close</button>
+                </div>
+            </div>
+
+            <div id="dislike_popup" class="popup">
+                <div class="popup_content" tabindex="0">
+                    <p class="popup_title">Thank you for your feedback!</p>
+                    <p id="open_issue">Would you like to open an issue in GitHub?</p>
+                    
+                        <a href="https://github.com/OpenLiberty/guide-microprofile-reactive-messaging-rest-integration/issues/new" target="_blank" id="yes_button" class="popup_button" onclick="$('#dislike_popup').hide();" rel="noopener noreferrer">Yes</a>
+                    
+                    <button id="no_button" class="popup_button" onclick="$('#dislike_popup').hide();">No, thank you</button>
+                </div>
+            </div>
+
+            <h3 id="improve_guide_feedback">What could make this guide better?</h3>
+            
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-reactive-messaging-rest-integration/issues">Raise an issue</a> to share feedback</p>
+                <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/OpenLiberty/guide-microprofile-reactive-messaging-rest-integration/pulls">Create a pull request</a> to contribute to this guide</p>
+            
+
+            <h3 id="need_help">Need help?</h3>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://stackoverflow.com/questions/tagged/open-liberty">Ask a question on Stack Overflow</a></p>
+
+            <h3>Like Open Liberty? Star our repo on GitHub.</h3>
+            <a class="github-button" href="https://github.com/OpenLiberty/open-liberty" data-icon="octicon-star" aria-label="Star OpenLiberty/open-liberty on GitHub" target="_blank" rel="noopener noreferrer">Star</a>
+        </div>
+        <div id="end_of_guide_right_section">
+            <h3 id="where_to_next">Where to next?</h3>
+
+            
+            
+
+            <!-- Related guides section -->
+            
+            <div id="related-guides">
+                <div id="related-guides-cards" class="row">
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/reactive-service-testing.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Testing reactive Java microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                    
+                    
+                    
+                        <!-- Only create a card if we find the permalink -->
+                        
+                        <div class="col-sm-12 col-lg-6">
+                            <a href="/zh-Hans/guides/microprofile-reactive-messaging.html" class="small_guide_item">
+                                <div class="guide_title_container">
+                                    <h3 class="guide_title">Creating reactive Java microservices</h3>
+                                </div>
+                                <img class="duration_clock_icon" src="/img/guide_duration_clock_icon_small.svg" alt="Duration">
+                                <span class="guide_duration">20 minutes</span>
+
+                                <!-- Add New flag to guides from the past 30 days or 4 most recent posts. -->
+                                <!-- If new posts count is less than 4, use 4 most recent posts -->
+                                
+                                    
+                                <!-- If new posts count is >= 4, use posts from last 30 days-->
+                                
+                                <!-- Add Updated flag to guides if the last major update is within last 12 weeks. -->
+                                <!-- Count number of guides from past last 12 weeks that is 84 days-->
+                                <!-- 7257600 is 84 days in seconds (84 days * 24 hours * 60 minutes * 60 seconds) -->
+                                
+                                
+                            </a>
+                        </div>
+                    
+                
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha512-lzilC+JFd6YV8+vQRNRtU7DOqv5Sa9Ek53lXt/k91HZTJpytHS1L6l1mMKR9K6VVoDt4LiEXaa6XBrYk1YhGTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-common.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/toc.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/tabs.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-static.js"></script>
+
+  <script type="text/javascript" src="/zh-Hans/assets/guide-multipane-static.js"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

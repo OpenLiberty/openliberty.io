@@ -1,0 +1,29 @@
+plugins {
+    id 'war'
+    id 'io.openliberty.tools.gradle.Liberty' version '3.6.2'
+}
+
+version '1.0-SNAPSHOT'
+group 'io.openliberty.deepdive'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // provided dependencies
+    providedCompile 'jakarta.platform:jakarta.jakartaee-api:10.0.0'
+    providedCompile 'org.eclipse.microprofile:microprofile:6.0'
+}
+
+war {
+    archiveVersion = ''
+}
+
+clean.dependsOn 'libertyStop'

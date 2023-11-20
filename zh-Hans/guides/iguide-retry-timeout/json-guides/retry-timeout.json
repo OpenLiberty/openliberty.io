@@ -1,0 +1,839 @@
+{
+    "name": "RetryTimeout",
+    "title": "Failing fast and recovering from errors",
+    "description": "Use MicroProfile's Timeout and Retry policies to fail fast and recover when running into failures.",
+    "duration": "20 minutes",
+    "audience": "developer",
+    "repo": "https://github.com/OpenLiberty/iguide-retry-timeout",
+    "defaultWidgets": [
+        {
+            "displayType": "webBrowser",
+            "url": "https://global-ebank.openliberty.io/welcome",
+            "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+            "enable": false
+        },
+        {
+            "displayType": "tabbedEditor",
+            "enable": false,
+            "editorList": [
+             {
+                "displayType": "fileEditor",
+                "fileName": "server.xml",
+                "preload": [
+                    "<?xml version=\"1.0\"?>",
+                    "<server description=\"Sample Liberty server\">",
+                    "   <featureManager>",
+                    "      <feature>servlet-4.0</feature>",
+                    "      <feature>cdi-2.0</feature>",
+                    "      <feature>jaxrs-2.1</feature>",
+                    "   </featureManager>",
+                    "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpPort=\"${default.http.port}\"/>",
+                    "</server>"   ]
+             }
+            ]
+        }
+    ],
+    "configWidgets": [
+        {
+            "displayType": "webBrowser",
+            "height": "300px"
+        },
+        {
+            "displayType": "pod",
+            "height": "89px"
+        },
+        {
+            "displayType": "tabbedEditor",
+            "height": "400px"
+        }
+    ],
+    "steps": [
+        {
+            "name": "Intro",
+            "title": "What you'll learn",
+            "guide_duration" : "20 minutes",
+            "description": [
+                "Explore how to use <a href='https://microprofile.io/' target='_blank'>MicroProfile</a> Timeout and Retry policies from the <a href='https://github.com/eclipse/microprofile-fault-tolerance' target='_blank'>Fault Tolerance feature</a> to make your microservice more resilient to common failures like network problems or an <code>IOException</code>.",
+                "You'll start with a sample bank scenario and experience a network glitch. You'll then enable MicroProfile Fault Tolerance and use the Timeout policy to quickly fail requests that are hanging for too long. Finally, you'll explore the Retry policy and how it can help overcome temporary intermittent failures your application might experience.",
+                "When you arrive at the section about the Interactive timeout retry playground, you can modify the parameters of the MicroProfile Timeout and Retry policies in any combination. You can then run a sample scenario to see how the parameter values affect the results."
+            ],
+            "sections" : [
+                {
+                    "name": "backgroundConcepts",
+                    "title": "Background concepts",
+                    "description": [
+                        "Use the MicroProfile <b><i>Timeout</i></b> and <b><i>Retry</i></b> policies to fail quickly and recover from brief intermittent issues. An application might experience these <b><i>transient failures</i></b> when a microservice is undeployed, a database is overloaded by queries, the network connection becomes unstable, or the site host has a brief downtime. Use Timeout and Retry together to help overcome or alleviate these kinds of transient failures.",
+                        "<h4>Timeout</h4>",
+                        "You might encounter a page that never finishes loading. Timeout helps by ending requests that have taken too long and are unlikely to return successfully.",
+                        "<h4>Retry</h4>",
+                        "Sometimes the underlying issues might be short lived. In these cases, rather than failing quickly on these transient failures, the Retry policy provides another chance for the request to succeed. Simply retrying the request might be all you need to do to make it succeed."
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "BankScenario",
+            "title": "Example: bank scenario",
+            "description": [
+                "Imagine that you’re developing a microservice that allows bank clients to check their transaction history. Occasionally, when customers try to view their transaction history, an unforeseen problem might prevent the data from loading and result in an indefinite page load.",
+                "Begin by requesting an online transaction history."
+            ],
+            "instruction": [
+                "To retrieve the transaction history click <action title='Open page' onclick=\"retryTimeoutCallback.clickTransaction(event, 'BankScenario')\">Open page</action> or enter the following URL into the sample browser: https://global-ebank.openliberty.io/transactions",
+                "Click <action title='Refresh' onclick=\"retryTimeoutCallback.clickTransaction(event, 'BankScenario')\">Refresh</action> in the browser to see that the page loads indefinitely, unable to retrieve the transaction history."
+            ],
+            "content":[
+                {
+                    "displayType":"webBrowser",
+                    "active": true,
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "callback": "(function test(webBrowser) {retryTimeoutCallback.listenToBrowserForTransactionHistory(webBrowser); })"
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "enable": false,
+                    "editorList": [
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>servlet-4.0</feature>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>jaxrs-2.1</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AddLibertyMPFaultTolerance",
+            "title": "Enabling MicroProfile Fault Tolerance in Open Liberty",
+            "description": [
+                "Microprofile Fault Tolerance allows microservices to handle unavailable services. It uses different policies such as Timeout and Retry to guide the execution and result of some logic. The MicroProfile Fault Tolerance 1.0 feature provides an environment to support resilient microservices through patterns that include timeout and retry. Enable the MicroProfile Fault Tolerance 1.0 feature in the <code>server.xml</code> file of the Open Liberty server."
+            ],
+            "instruction": [
+                "In the editor, add the following element declaration to the <code>featureManager</code> element that is in the <code>server.xml</code> file.<br><codeblock>&lt;feature>mpFaultTolerance-3.0&lt;/feature&gt;</codeblock><br>Alternatively, click <action title='Add MicroProfile Fault Tolerance' onclick=\"retryTimeoutCallback.addMicroProfileFaultToleranceFeatureButton(event)\">Add</action>.<br>Then, click <action title='Run' onclick=\"retryTimeoutCallback.saveServerXMLButton(event)\">Run</action> on the editor menu pane."
+            ],
+            "content": [
+                {
+                    "displayType": "webBrowser",
+                    "enable": false,
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html"
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "editorList": [
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>servlet-4.0</feature>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>jaxrs-2.1</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "5"
+                                },
+                                {
+                                    "from": "7",
+                                    "to": "9"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "6",
+                                    "to": "6"
+                                }
+                            ],
+                            "callback": "(function test(editor) {retryTimeoutCallback.listenToEditorForFeatureInServerXML(editor); })"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "TimeoutAnnotation",
+            "title": "Adding the @Timeout annotation",
+            "description": [
+                "Now that you’ve seen the page load indefinitely due to a server-side problem, let's apply a Timeout policy to limit the time the request waits.",
+                "The <code>@Timeout</code> annotation specifies the time in milliseconds allowed for the request to finish. Optionally, you can configure the <code>@Timeout</code> annotation to change the default time unit from milliseconds. For example, <code>@Timeout(value = 2, unit = ChronoUnit.SECONDS)</code>.",
+                "<ul><li><b>value</b>: The time allowed for the request to finish. The integer value must be greater than or equal to 0. A value of 0 means that the Timeout policy is not applied. If the value is not specified, the default is <code>1000</code> ms.</li>",
+                "<li><b>unit</b>: The unit of time for the <code>value</code> parameter as described by the <code>java.time.temporal.ChronoUnit</code> class. The default is <code>ChronoUnit.MILLIS</code> for milliseconds.</li>The <code>java.time.temporal.ChronoUnit</code> class defines a standard set of date period units, including <code>NANOS</code>, <code>MICROS</code>, <code>MILLIS</code>, <code>SECONDS</code>, <code>MINUTES</code>, and <code>HOURS</code>.</ul>",
+                "With a Timeout policy, a <code>TimeoutException</code> occurs when the timeout value has elapsed.",
+                "After you modify your <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance-in-open-liberty'> include the Fault Tolerance feature</a>, add a Timeout policy to the transaction history microservice."
+            ],
+            "instruction": [
+                "Add the <code>@Timeout</code> annotation with a value of <code>2000</code> on line 7, before the <code>showTransactions</code> method.<br><codeblock>@Timeout(2000)</codeblock><br>Alternatively, click <action title='Add @Timeout' onclick=\"retryTimeoutCallback.addTimeoutButton(event, 'TimeoutAnnotation')\">Add</action>.<br>This annotation limits the allowed time for the transaction history request to 2000 ms before a <code>TimeoutException</code> occurs.<br>Then, click <action title='Run' onclick=\"retryTimeoutCallback.saveButtonEditor(event, 'TimeoutAnnotation')\">Run</action> on the editor menu pane. In the examples, a timeout of 2000 milliseconds is used for demonstration. However, a lower value might be more appropriate.",
+                "To retrieve the account transaction history click <action title='Open page' onclick=\"retryTimeoutCallback.clickTransaction(event, 'TimeoutAnnotation')\">Open page</action> or enter the following URL into the sample browser: https://global-ebank.openliberty.io/transactions <br>The initial request times out after 2 seconds."
+            ],
+            "content": [
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "callback": "(function test(webBrowser) {retryTimeoutCallback.listenToBrowserForTransactionHistory(webBrowser); })"
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "editorList": [
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.retrytimeout.global.eBank.microservices;",
+                                "import javax.enterprise.context.ApplicationScoped;",
+                                "import org.eclipse.microprofile.faulttolerance.Timeout;",
+                                "",
+                                "@ApplicationScoped",
+                                "public class BankService {",
+                                "",
+                                "    public Service showTransactions() throws Exception {",
+                                "        Service transactions = new Transactions();",
+                                "        transactions.getTransactions();",
+                                "        return transactions;",
+                                "    }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "6"
+                                },
+                                {
+                                    "from": "8",
+                                    "to": "13"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "7",
+                                    "to": "7"
+                                }
+                            ],
+                            "callback": "(function test(tabbedEditor) {retryTimeoutCallback.listenToEditorForTimeoutAnnotation(tabbedEditor); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>servlet-4.0</feature>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>jaxrs-2.1</feature>",
+                                "      <feature>mpFaultTolerance-3.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AddRetryOnRetry",
+            "title": "Adding the @Retry annotation",
+            "description": [
+                "A Retry policy helps an application recover from transient failures, like a temporary network glitch. The MicroProfile <code>@Retry</code> annotation defines when to reattempt an operation that has failed. The policy parameters include options that identify how many retry attempts are allowed, how long to continue to retry an operation, or how to set a retry or abort condition based on a specific exception.",
+                "A request to a service might fail for many different reasons. The default Retry policy initiates a retry for every <code>java.lang.Exception</code>.  However, you can base a Retry policy on a specific exception by using the <code>retryOn</code> parameter.",
+                "<ul><li><b>retryOn:</b> Specifies an exception class that triggers a retry. You can identify more than one exception as an array of values.  For example,<br><span style='margin-left: 10px;'><code>@Retry(retryOn = {RuntimeException.class, TimeoutException.class})</code>.</span><br>The default is <code>java.lang.Exception.class</code>.",
+                "</ul>",
+                "After modifying the <code>server.xml</code> file to <a href='#enabling-microprofile-fault-tolerance-in-open-liberty'> include the Fault Tolerance feature</a> and adding a Timeout policy to the sample application, the transaction history microservice fails with a <code>TimeoutException</code> if the request does not complete within 2000 ms.  Now, add a Retry policy to the code to retry the request to the transaction history microservice when a <code>TimeoutException</code> occurs."
+            ],
+            "instruction": [
+                "Add the <code>@Retry</code> annotation on line 12, before the <code>showTransactions</code> method, to retry the service request only when a <code>TimeoutException</code> occurs.<br><codeblock>@Retry(retryOn = TimeoutException.class)</codeblock><br>Alternatively, click <action title='Add @Retry with the retryOn parameter' onclick=\"retryTimeoutCallback.addRetryAnnotationButton(event, 'AddRetryOnRetry')\">Add</action>.<br>Then, click <action title='Run' onclick=\"retryTimeoutCallback.saveButtonEditor(event, 'AddRetryOnRetry')\">Run</action> on the editor menu pane.",
+                "With this Retry policy in place, the request to retrieve the account transaction history is automatically retried if a <code>TimeoutException</code> occurs. To demonstrate, click <action title='Open page' onclick=\"retryTimeoutCallback.clickTransaction(event, 'AddRetryOnRetry')\">Open page</action> or enter the following URL into the sample browser: https://global-ebank.openliberty.io/transactions <br>The initial request times out after 2 seconds. However, instead of posting an error message, the request is automatically retried, and you see the transaction history appear."
+            ],
+            "content": [
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "callback": "(function test(webBrowser) {retryTimeoutCallback.listenToBrowserForTransactionHistory(webBrowser); })"
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "editorList": [
+                        {
+                            "displayType": "tabbedEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.retrytimeout.global.eBank.microservices;",
+                                "",
+                                "import javax.enterprise.context.ApplicationScoped;",
+                                "import java.time.temporal.ChronoUnit;",
+                                "",
+                                "import org.eclipse.microprofile.faulttolerance.Retry;",
+                                "import org.eclipse.microprofile.faulttolerance.Timeout;",
+                                "import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;",
+                                "",
+                                "@ApplicationScoped",
+                                "public class BankService {",
+                                "",
+                                "    @Timeout(2000)",
+                                "    public Service showTransactions() throws Exception {",
+                                "       Service transactions = new Transactions();",
+                                "       transactions.getTransactions();",
+                                "       return transactions;",
+                                "   }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "11"
+                                },
+                                {
+                                    "from": "13",
+                                    "to": "19"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "12",
+                                    "to": "12"
+                                }
+                            ],
+                            "callback": "(function test(editor) {retryTimeoutCallback.listenToEditorForInitialRetryAnnotation(editor); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>servlet-4.0</feature>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>jaxrs-2.1</feature>",
+                                "      <feature>mpFaultTolerance-3.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AddLimitsRetry",
+            "title": "Adding retry limits",
+            "TOCIndent": 1,
+            "description": [
+                "You can set limits on the number of retry attempts to prevent a busy service from becoming overloaded with retry requests. Numerous requests tie up resources, and the service takes longer to recover from its failing condition. The <code>@Retry</code> annotation has parameters that limit the number of retry attempts and that limit the amount of time a service can spend retrying.",
+                "<ul><li><b>maxRetries:</b> The maximum number of retry requests. The integer value must be greater than or equal to -1.  A value of -1 indicates to continue retrying indefinitely. The default is <code>3</code> requests.",
+                "<li><b>maxDuration:</b> The maximum amount of time to perform all requests, including the initial request and all retry attempts. After the duration is reached, no more retry attempts are initiated.  This integer value must be greater than or equal to 0. The default is <code>180000</code> units, as defined by the <code>durationUnit</code> parameter.",
+                "<li><b>durationUnit:</b> The unit of time for the <code>maxDuration</code> parameter as described by the <code>java.time.temporal.ChronoUnit</code> class. The default is <code>ChronoUnit.MILLIS</code> for milliseconds.<p style='margin-top: inherit;'>The <code>java.time.temporal.ChronoUnit</code> class defines a standard set of date period units, including <code>NANOS</code>, <code>MICROS</code>, <code>MILLIS</code>, <code>SECONDS</code>, <code>MINUTES</code>, and <code>HOURS</code>.",
+                "</ul>"
+            ],
+            "instruction": [
+                "Update the <code>@Retry</code> annotation on line 13 to limit the number of retry attempts to 4 and the retry duration to 10 seconds.<br><codeblock>@Retry(retryOn = TimeoutException.class,\n       <span class='actionAddedText'>maxRetries = 4,\n       maxDuration = 10,\n       durationUnit = ChronoUnit.SECONDS</span>)</codeblock><br>Alternatively, click <action title='Update @Retry annotation with maxRetries and maxDuration' onclick=\"retryTimeoutCallback.addRetryAnnotationButton(event, 'AddLimitsRetry')\">Update</action>.<br>This Retry policy initiates a retry request for each <code>TimeoutException</code> that occurs but limits retry attempts to no more than 4 retries. The operation aborts if the total duration of all retries lasts more than 10 seconds.<br> Then, click <action title='Run' onclick=\"retryTimeoutCallback.saveButtonEditor(event, 'AddLimitsRetry')\">Run</action> on the editor menu pane.",
+                "To retrieve the transaction history click <action title='Open page' onclick=\"retryTimeoutCallback.clickTransaction(event, 'AddLimitsRetry')\">Open page</action> or enter the following URL into the sample browser: https://global-ebank.openliberty.io/transactions <br>The timeline shows that the initial request times out after 2 seconds.  The Retry policy attempts the request to the transaction history microservice up to 4 times. Watch as the timeline shows these automatic retry attempts that immediately follow any timeouts that occur within 10 seconds or until the transaction history appears."
+            ],
+            "content": [
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "callback": "(function test(webBrowser) {retryTimeoutCallback.listenToBrowserForTransactionHistory(webBrowser); })",
+                    "singleColumnOrder": "3"                },
+                {
+                    "displayType": "pod",
+                    "content": "/guides/iguide-retry-timeout/html/transaction-history-retry-dashboard.html",
+                    "singleColumnOrder": "2"
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "singleColumnOrder": "1",
+                    "editorList": [
+                        {
+                            "displayType": "tabbedEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.retrytimeout.global.eBank.microservices;",
+                                "",
+                                "import javax.enterprise.context.ApplicationScoped;",
+                                "import java.time.temporal.ChronoUnit;",
+                                "",
+                                "import org.eclipse.microprofile.faulttolerance.Retry;",
+                                "import org.eclipse.microprofile.faulttolerance.Timeout;",
+                                "import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;",
+                                "",
+                                "@ApplicationScoped",
+                                "public class BankService {",
+                                "",
+                                "    @Retry(retryOn = TimeoutException.class)",
+                                "    @Timeout(2000)",
+                                "    public Service showTransactions() throws Exception {",
+                                "       Service transactions = new Transactions();",
+                                "       transactions.getTransactions();",
+                                "       return transactions;",
+                                "   }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "12"
+                                },
+                                {
+                                    "from": "14",
+                                    "to": "20"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "13",
+                                    "to": "13"
+                                }
+                            ],
+                            "callback": "(function test(editor) {retryTimeoutCallback.listenToPlayground(editor); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>servlet-4.0</feature>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>jaxrs-2.1</feature>",
+                                "      <feature>mpFaultTolerance-3.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AddDelayRetry",
+            "title": "Configuring a delay",
+            "TOCIndent": 1,
+            "description": [
+                "Sometimes you might want an application to wait before it issues a retry request. For example, if the failure is caused by a sudden spike in requests or a loss of connectivity, waiting might decrease the chance that a previous failure occurs.  In these cases, you can define a delay in the Retry policy. ",
+                "<ul><li><b>delay:</b> The amount of time to wait before retrying a request.  The value must be an integer greater than or equal to 0 and be less than the value for <a href='#adding-retry-limits'>maxDuration</a>.  The default is <code>0</code>.",
+                "<li><b>delayUnit:</b> The unit of time for the <code>delay</code> parameter as described by the <code>java.time.temporal.ChronoUnit</code> class.  The default is <code>ChronoUnit.MILLIS</code>. <p style='margin-top: inherit;'>The <code>java.time.temporal.ChronoUnit</code> class defines a standard set of date period units, including <code>NANOS</code>, <code>MICROS</code>, <code>MILLIS</code>, <code>SECONDS</code>, <code>MINUTES</code>, and <code>HOURS</code>.",
+                "<ul>"
+            ],
+            "instruction": [
+                "Update the <code>@Retry</code> annotation on lines 13 - 16 to include a delay of 200 ms.<br><codeblock>@Retry(retryOn = TimeoutException.class,\n       maxRetries = 4,\n       maxDuration = 10,\n       durationUnit = ChronoUnit.SECONDS,\n       <span class='actionAddedText'>delay = 200, delayUnit = ChronoUnit.MILLIS</span>)</codeblock><br>Alternatively, click <action title='Update @Retry annotation with delay' onclick=\"retryTimeoutCallback.addRetryAnnotationButton(event, 'AddDelayRetry')\">Update</action>.<br> This Retry policy indicates that a delay of 200 ms follows each <code>TimeoutException</code> before the application retries another request. However, no more than 4 retries occur, and retry attempts stop after 10 seconds.<br> Then, click <action title='Run' onclick=\"retryTimeoutCallback.saveButtonEditor(event, 'AddDelayRetry')\">Run</action> on the editor menu pane.",
+                "To retrieve the transaction history click <action title='Open page' onclick=\"retryTimeoutCallback.clickTransaction(event, 'AddDelayRetry')\">Open page</action> or enter the following URL into the sample browser: https://global-ebank.openliberty.io/transactions <br>The timeline shows how the Retry policy automatically initiates another request with a delay of 200 ms after each timeout of 2000 ms that occurs until the transaction history is displayed."
+            ],
+            "content": [
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "callback": "(function test(webBrowser) {retryTimeoutCallback.listenToBrowserForTransactionHistory(webBrowser); })",
+                    "singleColumnOrder": "3"
+                },
+                {
+                    "displayType": "pod",
+                    "content": "/guides/iguide-retry-timeout/html/transaction-history-retry-dashboard.html",
+                    "singleColumnOrder": "2"
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "singleColumnOrder": "1",
+                    "editorList": [
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.retrytimeout.global.eBank.microservices;",
+                                "",
+                                "import javax.enterprise.context.ApplicationScoped;",
+                                "import java.time.temporal.ChronoUnit;",
+                                "",
+                                "import org.eclipse.microprofile.faulttolerance.Retry;",
+                                "import org.eclipse.microprofile.faulttolerance.Timeout;",
+                                "import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;",
+                                "",
+                                "@ApplicationScoped",
+                                "public class BankService {",
+                                "",
+                                "    @Retry(retryOn = TimeoutException.class,",
+                                "           maxRetries = 4,",
+                                "           maxDuration = 10,",
+                                "           durationUnit = ChronoUnit.SECONDS)",
+                                "    @Timeout(2000)",
+                                "    public Service showTransactions() throws Exception {",
+                                "       Service transactions = new Transactions();",
+                                "       transactions.getTransactions();",
+                                "       return transactions;",
+                                "   }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "12"
+                                },
+                                {
+                                    "from": "17",
+                                    "to": "23"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "13",
+                                    "to": "16"
+                                }
+                            ],
+                            "callback": "(function test(editor) {retryTimeoutCallback.listenToPlayground(editor); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>servlet-4.0</feature>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>jaxrs-2.1</feature>",
+                                "      <feature>mpFaultTolerance-3.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AddJitterRetry",
+            "title": "Adding jitter to the delay",
+            "TOCIndent": 1,
+            "description": [
+                "The Retry policy also provides a way to add jitter to the delay.  Jitter causes a slight variation in the delay time applied between retries.  For example, a jitter of 200 ms randomly adds between -200 to 200 ms to each retry delay interval.",
+                "<ul><li><b>jitter:</b> A random variation applied to the <a href='#configuring-a-delay'>delay</a> interval between retries. The integer value must be greater than or equal to 0. A value of 0 means that it is not set. If the specified jitter value is larger than the delay value, then the jitter is set to the delay value. The default is <code>200</code> units as defined by the <code>jitterDelayUnit</code> parameter.",
+                "<li><b>jitterDelayUnit:</b> The unit of time for the <code>jitter</code> parameter as described by the <code>java.time.temporal.ChronoUnit</code> class.  The default is <code>ChronoUnit.MILLIS</code>. <p style='margin-top: inherit;'>The <code>java.time.temporal.ChronoUnit</code> class defines a standard set of date period units, including <code>NANOS</code>, <code>MICROS</code>, <code>MILLIS</code>, <code>SECONDS</code>, <code>MINUTES</code>, and <code>HOURS</code>.",
+                "</ul>",
+                "Why would you want to add a jitter?  Suppose, for example, that multiple applications are making requests to your microservice and causing it to become overloaded.  By adding a jitter to the delay time, you allow the retry times of these requests to vary.  Therefore, the cluster of retry requests are spread out over time, reducing the chance that the busy service continues to be overloaded."            ],
+            "instruction": [
+                "Add a jitter of 100 ms to the delay in the <code>@Retry</code> annotation on lines 13 - 17.<br><codeblock>@Retry(retryOn = TimeoutException.class,\n       maxRetries = 4,\n       maxDuration = 10,\n       durationUnit = ChronoUnit.SECONDS,\n       delay = 200, delayUnit = ChronoUnit.MILLIS,\n       <span class='actionAddedText'>jitter = 100,\n       jitterDelayUnit = ChronoUnit.MILLIS</span>)</codeblock><br>Alternatively, click <action title='Add @Retry with jitter' onclick=\"retryTimeoutCallback.addRetryAnnotationButton(event, 'AddJitterRetry')\">Add</action>.<br> The delay between retries is now spread out between 100 and 300 ms.<br> Click <action title='Run' onclick=\"retryTimeoutCallback.saveButtonEditor(event, 'AddJitterRetry')\">Run</action> on the editor menu pane.",
+                "To retrieve the transaction history click <action title='Open page' onclick=\"retryTimeoutCallback.clickTransaction(event, 'AddJitterRetry')\">Open page</action> or enter the following URL into the sample browser: https://global-ebank.openliberty.io/transactions <br>The Retry policy now includes a jitter of 100 ms. The timeline shows that the retry attempts occur somewhere between 100 and 300 ms (200 ms delay &#177; 100 ms jitter) after any timeout of 2000 ms that occurs within 10 seconds. To see the randomness of the jitter values, click the <b>Refresh</b> button in the sample browser."
+            ],
+            "content": [
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "callback": "(function test(webBrowser) {retryTimeoutCallback.listenToBrowserForTransactionHistory(webBrowser); })",
+                    "singleColumnOrder": "3"
+                },
+                {
+                    "displayType": "pod",
+                    "content": "/guides/iguide-retry-timeout/html/transaction-history-retry-dashboard.html",
+                    "singleColumnOrder": "2"
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "singleColumnOrder": "1",
+                    "editorList": [
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.retrytimeout.global.eBank.microservices;",
+                                "",
+                                "import javax.enterprise.context.ApplicationScoped;",
+                                "import java.time.temporal.ChronoUnit;",
+                                "",
+                                "import org.eclipse.microprofile.faulttolerance.Retry;",
+                                "import org.eclipse.microprofile.faulttolerance.Timeout;",
+                                "import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;",
+                                "",
+                                "@ApplicationScoped",
+                                "public class BankService {",
+                                "",
+                                "    @Retry(retryOn = TimeoutException.class,",
+                                "           maxRetries = 4,",
+                                "           maxDuration = 10,",
+                                "           durationUnit = ChronoUnit.SECONDS,",
+                                "           delay = 200, delayUnit = ChronoUnit.MILLIS)",
+                                "    @Timeout(2000)",
+                                "    public Service showTransactions() throws Exception {",
+                                "       Service transactions = new Transactions();",
+                                "       transactions.getTransactions();",
+                                "       return transactions;",
+                                "   }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "12"
+                                },
+                                {
+                                    "from": "18",
+                                    "to": "24"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "13",
+                                    "to": "17"
+                                }
+                            ],
+                            "callback": "(function test(editor) {retryTimeoutCallback.listenToPlayground(editor); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>servlet-4.0</feature>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>jaxrs-2.1</feature>",
+                                "      <feature>mpFaultTolerance-3.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AddAbortOnRetry",
+            "title": "Specifying an abort failure condition",
+            "TOCIndent": 1,
+            "description": [
+                "You might decide that when certain failures occur, retry attempts should be aborted, and the service should fail immediately. For example, suppose this Retry policy was extended to include <code>IOException.class</code>.  However, you want to prevent the service from retrying for conditions that you know the service cannot recover from, such as a <code>FileNotFoundException</code>, a subclass of <code>IOException</code>. The Retry policy has a parameter to identify these exceptions.",
+                "<ul><li><b>abortOn:</b>  Specifies an exception class that stops retries and fails immediately. Use the <code>abortOn</code> parameter to identify subclasses of the <code>retryOn</code> value that you know would not be successful no matter how many times the service retried. You can identify more than one exception as an array of values, such as in <br><span style='margin-left: 10px;'><code>@Retry(abortOn = {FileNotFoundException.class, UTFDataFormatException})</code>.</span><br>There is no default value.",
+                "</ul>"
+            ],
+            "instruction": [
+                "The <code>retryOn</code> parameter has been updated in the editor to include <code>IOException.class</code> on line 14.  To stop all retry attempts when a <code>FileNotFoundException</code> occurs, add a condition to the <code>@Retry</code> annotation.<br><codeblock>@Retry(retryOn = {TimeoutException.class, IOException.class},\n       maxRetries = 4,\n       maxDuration = 10,\n       durationUnit = ChronoUnit.SECONDS,\n       delay = 200, delayUnit = ChronoUnit.MILLIS,\n       jitter = 100,\n       jitterDelayUnit = ChronoUnit.MILLIS,\n       <span class='actionAddedText'>abortOn = FileNotFoundException.class</span>)</codeblock><br>Alternatively, click <action title='Add @Retry with the abortOn parameter' onclick=\"retryTimeoutCallback.addRetryAnnotationButton(event, 'AddAbortOnRetry')\">Add</action>.<br> This Retry policy allows all timeouts and <code>IOExceptions</code> from the service to be retried up to 4 times within 10 seconds of the original timeout failure with a delay of 100 to 300 ms between retry attempts. However, it halts all retry attempts and immediately returns if a <code>FileNotFoundException</code> occurs.<br>Click <action title='Run' onclick=\"retryTimeoutCallback.saveButtonEditor(event, 'AddAbortOnRetry')\">Run</action> on the editor menu pane.",
+                "To retrieve the transaction history click <action title='Open page' onclick=\"retryTimeoutCallback.clickTransaction(event, 'AddAbortOnRetry')\">Open page</action> or enter the following URL into the sample browser: https://global-ebank.openliberty.io/transactions <br>This time the example simulates a <code>FileNotFoundException</code>, and the request to the transaction history microservice fails and displays an error message without any timeouts or retries."
+            ],
+            "content": [
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/welcome",
+                    "browserContent": "/guides/iguides-common/html/interactive-guides/bankApp-welcome.html",
+                    "callback": "(function test(webBrowser) {retryTimeoutCallback.listenToBrowserForTransactionHistory(webBrowser); })"
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "editorList": [
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.retrytimeout.global.eBank.microservices;",
+                                "",
+                                "import javax.enterprise.context.ApplicationScoped;",
+                                "import java.io.FileNotFoundException;",
+                                "import java.time.temporal.ChronoUnit;",
+                                "",
+                                "import org.eclipse.microprofile.faulttolerance.Retry;",
+                                "import org.eclipse.microprofile.faulttolerance.Timeout;",
+                                "import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;",
+                                "",
+                                "@ApplicationScoped",
+                                "public class BankService {",
+                                "",
+                                "    @Retry(retryOn = {TimeoutException.class, IOException.class},",
+                                "           maxRetries = 4,",
+                                "           maxDuration = 10,",
+                                "           durationUnit = ChronoUnit.SECONDS,",
+                                "           delay = 200, delayUnit = ChronoUnit.MILLIS,",
+                                "           jitter = 100,",
+                                "           jitterDelayUnit = ChronoUnit.MILLIS)",
+                                "    @Timeout(2000)",
+                                "    public Service showTransactions() throws Exception {",
+                                "       Service transactions = new Transactions();",
+                                "       transactions.getTransactions();",
+                                "       return transactions;",
+                                "   }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "13"
+                                },
+                                {
+                                    "from": "21",
+                                    "to": "27"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "14",
+                                    "to": "20"
+                                }
+                            ],
+                            "callback": "(function test(editor) {retryTimeoutCallback.listenToEditorForInitialRetryAnnotation(editor); })"
+                        },
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "server.xml",
+                            "preload": [
+                                "<?xml version=\"1.0\"?>",
+                                "<server description=\"Sample Liberty server\">",
+                                "   <featureManager>",
+                                "      <feature>servlet-4.0</feature>",
+                                "      <feature>cdi-2.0</feature>",
+                                "      <feature>jaxrs-2.1</feature>",
+                                "      <feature>mpFaultTolerance-3.0</feature>",
+                                "   </featureManager>",
+                                "   <httpEndpoint host=\"*\" id=\"defaultHttpEndpoint\" httpPort=\"${default.http.port}\"/>",
+                                "</server>"
+                            ],
+                            "readonly": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Playground",
+            "title": "Interactive timeout retry playground",
+            "description": [
+                "Now that you learned about Timeout and Retry, you can explore the parameters in the <code>@Timeout</code> and <code>@Retry</code> annotations and see how they all work together.",
+                "You can make changes to these parameters:",
+                "<code>@Timeout</code>",
+                "<ul><li><b>value</b>: The time allowed for the request to finish. The integer value must be greater than or equal to 0. A value of 0 means that the Timeout policy is not applied. If the value is not specified, the default is <code>1000</code> ms.</li>",
+                "</ul>",
+                "<code>@Retry</code>",
+                "<ul><li><b>maxRetries:</b> The maximum number of retry requests. The integer value must be greater than or equal to -1.  A value of -1 indicates to continue retrying indefinitely. The default is <code>3</code> requests.",
+                "<li><b>maxDuration:</b> The maximum amount of time to perform all requests, including the initial request and all retry attempts. Once the duration is reached, no more retry attempts are initiated. This integer value must be greater than or equal to 0. The default is <code>180000</code> ms.",
+                "<li><b>delay:</b> The amount of time to wait before retrying a request.  The value must be an integer greater than or equal to 0 and less than the value for <b>maxDuration</b>. The default is <code>0</code>.",
+                "<li><b>jitter:</b> A random variation applied to the <b>delay</b> interval between retries. The integer value must be greater than or equal to 0. A value of 0 means that the jitter parameter is not set. If the specified jitter value is larger than the delay value, the jitter is set to the delay value. The default is <code>200</code> ms.",
+                "</ul><br>"
+            ],
+            "instruction": [
+                "Modify the parameters for the <code>@Timeout</code> and the <code>@Retry</code> annotations. This simulation does not support the <code>retryOn</code>, <code>abortOn</code>, and units parameters. The <code>retryOn</code> parameter defaults to <code>java.lang.Exception.class</code> to include all exceptions and cannot be altered. The value for <code>@Timeout</code> must be greater than 0. All values for the <code>@Timeout</code> annotation and the <code>maxDuration</code>, <code>delay</code>, and <code>jitter</code> parameters for the <code>@Retry</code> annotation default to milliseconds. Repeat the process as many times as you like. <br><br> Click <b>Run</b> in the editor and observe the timeline. The simulation ends when the message \"Your recent transactions are unavailable at this time. Please try again later.\" is shown in the browser.</instruction>"
+            ],
+            "content": [
+                {
+                    "displayType": "webBrowser",
+                    "url": "https://global-ebank.openliberty.io/transactions",
+                    "callback": "(function test(webBrowser) {retryTimeoutCallback.listenToBrowserForRefresh(webBrowser); })",
+                    "singleColumnOrder": "3",
+                    "enableStatusBar": false
+                },
+                {
+                    "displayType": "pod",
+                    "content": "/guides/iguide-retry-timeout/html/playground-dashboard.html",
+                    "callback": "(function(pod) {retryTimeoutCallback.createPlayground(pod, 'Playground')})",
+                    "singleColumnOrder": "2"
+                },
+                {
+                    "displayType": "tabbedEditor",
+                    "active": true,
+                    "singleColumnOrder": "1",
+                    "editorList": [
+                        {
+                            "displayType": "fileEditor",
+                            "fileName": "BankService.java",
+                            "preload": [
+                                "package io.openliberty.guides.retrytimeout.global.eBank.microservices;",
+                                "",
+                                "import javax.enterprise.context.ApplicationScoped;",
+                                "import java.io.FileNotFoundException;",
+                                "import java.time.temporal.ChronoUnit;",
+                                "",
+                                "import org.eclipse.microprofile.faulttolerance.Retry;",
+                                "import org.eclipse.microprofile.faulttolerance.Timeout;",
+                                "import org.eclipse.microprofile.faulttolerance.exceptions.TimeoutException;",
+                                "",
+                                "@ApplicationScoped",
+                                "public class BankService {",
+                                "",
+                                "    @Retry(maxRetries = 4,",
+                                "           maxDuration = 10000,",
+                                "           delay = 200,",
+                                "           jitter = 100)",
+                                "    @Timeout(2000)",
+                                "    public Service showTransactions() throws Exception {",
+                                "       Service transactions = new Transactions();",
+                                "       transactions.getTransactions();",
+                                "       return transactions;",
+                                "   }",
+                                "}"
+                            ],
+                            "readonly": [
+                                {
+                                    "from": "1",
+                                    "to": "13"
+                                },
+                                {
+                                    "from": "19",
+                                    "to": "25"
+                                }
+                            ],
+                            "writable": [
+                                {
+                                    "from": "14",
+                                    "to": "18"
+                                }
+                            ],
+                            "height": "468px",
+                            "callback": "(function test(editor) {retryTimeoutCallback.listenToPlayground(editor); })"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "WhatNext",
+            "title": "Great work!  You're done!",
+            "description": [
+                "You learned about the benefits of the Microprofile Fault Tolerance feature Timeout and Retry policies and how to make your microservice more resilient to failures. You learned that the Timeout policy can be used to quickly fail requests that are hanging for too long. You learned to use the Retry policy to reattempt an operation that failed and to recover from the transient failures your application might experience."
+             ]
+        },
+        {
+            "name": "RelatedLinks",
+            "title": "Related links",
+            "description": ["Learn more about <b>MicroProfile</b>.",
+                            "<p> <a target='_blank' rel='noopener noreferrer' href='http://microprofile.io/' >See the MicroProfile specs.</a></p>",
+                            "<p> <a target='_blank' rel='noopener noreferrer' href='https://openliberty.io/docs/ref/microprofile/' >View MicroProfile API.</a></p>"
+                           ]
+        }
+    ]
+}

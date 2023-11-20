@@ -1,0 +1,25 @@
+<server description="Sample Liberty server">
+
+  <featureManager>
+    <feature>restfulWS-3.1</feature>
+    <feature>jsonb-3.0</feature>
+    <feature>jsonp-2.1</feature>
+    <feature>cdi-4.0</feature>
+    <feature>mpConfig-3.0</feature>
+  </featureManager>
+
+  <!-- tag::httpPort[] -->
+  <variable name="default.http.port" defaultValue="9081" />
+  <!-- end::httpPort[] -->
+  <variable name="default.https.port" defaultValue="9444" />
+
+  <!-- tag::httpEndpoint[] -->
+  <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
+      id="defaultHttpEndpoint" host="*" />
+  <!-- end::httpEndpoint[] -->
+
+  <webApplication location="guide-containerize-inventory.war" contextRoot="/">
+
+  </webApplication>
+
+</server>

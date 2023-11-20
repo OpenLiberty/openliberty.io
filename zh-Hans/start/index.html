@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+  
+
+
+
+
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      
+        Get Started - Open Liberty
+      
+    
+  </title>
+  <meta name="description" content="Use Maven or Gradle to create a starter application for developing cloud-native Java applications on Open Liberty that use Jakarta EE and MicroProfile APIs. Information about Open Liberty Docker images, Maven and Gradle coordinates, and release, beta, and development build downloads.">
+
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/openliberty.css">
+  <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/coderay-custom.css">
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header.css">
+  
+
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/header-dark.css">
+  
+    <link type="text/css" rel="stylesheet" href="/zh-Hans/assets/start.css">
+  
+
+  
+
+  <link rel="canonical" href="https://openliberty.io/zh-Hans/start/">
+  <link rel="alternate" type="application/rss+xml" title="Open Liberty" href="/zh-Hans/feed.xml">
+  <link href="https://fonts.googleapis.com/css?family=Asap:400,500" rel="stylesheet">
+    
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@OpenLibertyIO" />
+  <meta name="twitter:title" content="Open Liberty" />
+  <meta name="twitter:description" content="Use Maven or Gradle to create a starter application for developing cloud-native Java applications on Open Liberty that use Jakarta EE and MicroProfile APIs. Information about Open Liberty Docker images, Maven and Gradle coordinates, and release, beta, and development build downloads." />
+
+  <meta property='og:title' content="Open Liberty" />
+  <meta property='og:image' content="https://openliberty.io/img/twitter_card.jpg" />
+  <meta property='og:image:alt' content="Open Liberty Logo" />
+  <meta property='og:description' content="Use Maven or Gradle to create a starter application for developing cloud-native Java applications on Open Liberty that use Jakarta EE and MicroProfile APIs. Information about Open Liberty Docker images, Maven and Gradle coordinates, and release, beta, and development build downloads." />
+  <meta property='og:url' content="https://openliberty.io/zh-Hans/start/" />
+  <meta property='og:type' content="website" />
+  
+  <meta name="google-site-verification" content="h2P030H9b66CyL1nEmWfrZB8Fr14h9LmVMG7Ur0caBs" />
+
+  
+      <meta name="robots" content="noindex" />
+  
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+    
+    
+
+    
+
+
+<!--  -->
+
+<header>
+    <nav id="nav_bar">
+        <div id="nav_header">
+            <a id="home_link" href="/" aria-label="Open Liberty Home">
+                <img id="ol_logo" src="/img/docs_openliberty_logo.png" alt="Open Liberty Logo">
+            </a>
+            <button id="hamburger_toggle_button" onclick="$('#nav_bar').toggleClass('responsive');">
+                <span id="hamburger_toggle_icon"></span>
+            </button>
+        </div>
+        <div id="hamburger_menu">
+            <ul class="nav_list">
+                <li class="nav_link">
+                    <a href="/start/">入门</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/guides/">指南</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/docs/">文档</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/support/">支持</a>
+                </li>
+                <li class="nav_link">
+                    <a href="/blog/">博客</a>
+                </li>
+            </ul>
+            <div id="header_round_links_container"> 
+                <a id="header_twitter_link" class="header_round_button" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="header_stackoverflow_link" class="header_round_button" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="header_groupsio_link" class="header_round_button" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="header_gitter_link" class="header_round_button" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>
+
+    </nav>
+</header>
+
+
+    <main aria-label="Content">
+
+      
+
+
+<script>
+
+    var release_blog = 'Release blog';
+    
+</script>
+<!-- INTRO -->
+<div id="downloads_intro_background">
+    <img id="leftcloud" class="d-none d-lg-block" src="/img/home_cloud_1.png" alt="">
+    <img id="rightcloud" class="d-none d-lg-block" src="/img/home_cloud_1.png" alt="">
+    <img id="rightcloud2" class="d-none d-lg-block" src="/img/home_cloud_1.png" alt="">
+    <span id="star1" class="star d-none d-lg-block"></span>
+    <span id="star2" class="star d-none d-lg-block"></span>
+    <span id="star3" class="star d-none d-lg-block"></span>
+    <span id="star4" class="star d-none d-lg-block"></span>
+    <div class="container" id="downloads_intro_text">
+        <div class="row">
+            <div class="col">
+                <h1 id="get_started">Get started with Open Liberty</h1>
+                <p id="intro_text_1">
+                    Whether trying or updating Open Liberty, we've got you covered!
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- STARTER PROJECT -->
+<div id="starter_section" class="container">
+    <div class="row">
+        <div class="col">
+            <h2 id="_create_a_starter_application" class="section_title">
+<a class="anchor" href="#_create_a_starter_application"></a>Create a starter application</h2> 
+        </div>               
+    </div>   
+    <div class="row">
+        <div class="col">
+            <p id="starter_description">
+                Select the development tools that you prefer to use, then generate a package to start developing your application.
+                <br>
+                Find a bug? Need an enhancement?
+                <a href="https://github.com/OpenLiberty/start.openliberty.io/issues/new/choose" class="orange_link_light_background" target="_blank" rel="noopener noreferrer">Raise an issue.</a>
+            </p>
+        </div>        
+    </div> 
+    <div id="starter_form">
+        <div class="row-no-gutters">
+            <div id="base_package_section" class="starter_field" data-starter-field="g">
+                <label class="starter_field_label" for="Starter_Base_Package">Group</label>
+                <input type="text" class="starter_field_input" id="Starter_Base_Package">
+            </div>
+            <div id="app_name_section" class="starter_field" data-starter-field="a">
+                <label class="starter_field_label" for="Starter_App_Name">Artifact</label>
+                <input type="text" class="starter_field_input" id="Starter_App_Name">
+            </div>         
+        </div>
+        <div class="row">
+            <div class="col">
+                <div id="build_system_section" class="starter_field" data-starter-field="b">
+                    <span class="starter_field_label" id="build_system_section_description">Build Tool</span>
+                    <div class="radio_group" role="radiogroup" aria-labelledby="build_system_section_description"></div>
+                </div>
+            </div>            
+        </div>
+        <div class="row">
+            <div class="col">
+                <div id="java_version_section" class="starter_field" data-starter-field="j">
+                    <label class="starter_field_label" for="Starter_Java_Version">Java SE Version</label>
+                    <select class="starter_field_input starter_field_selector" id="Starter_Java_Version" aria-label="Java SE Version">
+                    </select>
+                </div>
+                <div id="jakarta_version_section" class="starter_field" data-starter-field="e">
+                    <label class="starter_field_label" for="Starter_Jakarta_Version">Java EE/Jakarta EE Version</label>
+                    <select class="starter_field_input starter_field_selector" id="Starter_Jakarta_Version" aria-label="Java EE/Jakarta EE Version">
+                    </select>
+                </div>
+                <div id="microprofile_version_section" class="starter_field" data-starter-field="m">
+                    <label class="starter_field_label" for="Starter_MicroProfile_Version">MicroProfile Version</label>
+                    <select class="starter_field_input starter_field_selector" id="Starter_MicroProfile_Version" aria-label="MicroProfile Version">
+                    </select>
+                </div>
+            </div>            
+        </div> 
+    </div>
+    <div class="row">
+        <div class="col">
+            <div id="starter_warnings"></div>
+            <a id="starter_submit" class="light_green_link_light_background disabled" tabindex="0" data-toggle="modal">Generate Project</a>
+        </div>        
+    </div>
+</div>
+
+<!-- Modal popup - Steps to follow when Generate Project Clicked -->
+<div class="modal fade" id="generate-project-modal" role="dialog" aria-labelledby="generate-project-modal-Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close generate-project-modal-close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <h3>Your zip file has been beamed to your computer!</h3>
+            <p>Unzip it and run this command, or refer to the included README.</p>
+            <div class="code_block_wrapper" title="Code block">
+                <div class="copied_confirmation">Copied to clipboard</div>
+                <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">
+                <pre id="cmd_to_run" class="cmd_to_run"></pre>
+            </div>
+            <p class="guide-link">For more help, visit our
+                <a href="/zh-Hans/guides/" class="orange_link_light_background" tabindex="0">guides</a>.
+            </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="gen_proj_popup_button" class="btn btn-primary" data-dismiss="modal">Got it!</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- MAVEN, GRADLE, DOCKER -->
+<div id="get_section" class="container">
+    <h2 id="getOL" class="section_title">
+<a class="anchor" href="#getOL"></a>Add to an existing application</h2>
+    <p>Get Open Liberty using these commands for Maven, Gradle, or Docker.</p>
+    <div class="row tabs_container">
+        <!-- TABS -->
+        <div class="col">
+            <ul class="nav nav-tabs" role="tablist" aria-labelledby="getOL">
+                <li class="nav-item" role="presentation">
+                    <a id="getOL-maven" class="nav-link active" aria-controls="maven" href="#maven" role="tab" data-toggle="tab" tabindex="0" aria-selected="true">Maven</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a id="getOL-gradle" class="nav-link" aria-controls="gradle" href="#gradle" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false">Gradle</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a id="getOL-docker" class="nav-link" aria-controls="docker" href="#docker" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false">Docker</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+        <!-- TAB CONTENT -->
+            <div class="tab-content">
+                <!-- MAVEN -->
+                <div id="maven" class="tab-pane fade show active" tabindex="0" role="tabpanel" aria-labelledby="getOL-maven">
+                    <div class="code_block_wrapper" title="Code block">
+                        <div class="copied_confirmation">Copied to clipboard</div>
+                        <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">
+                        <pre class="code_container">&lt;plugin&gt;<br>    &lt;groupId&gt;io.openliberty.tools&lt;/groupId&gt;<br>    &lt;artifactId&gt;liberty-maven-plugin&lt;/artifactId&gt;<br>    &lt;version&gt;<span class="latest_version">3.9</span>&lt;/version&gt;<br>&lt;/plugin&gt;</pre>
+                    </div>
+                    <p>Find out
+                        <a href="/zh-Hans/guides/maven-intro.html" class="blue_link_light_background_external">how to use Maven with Open Liberty.</a>
+                    </p>
+                </div>
+                <!-- GRADLE -->
+                <div id="gradle" class="tab-pane fade" tabindex="-1" role="tabpanel" aria-labelledby="getOL-gradle">
+                    <div class="code_block_wrapper" title="Code block">
+                        <div class="copied_confirmation">Copied to clipboard</div>
+                        <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">
+                        <pre class="code_container">buildscript { <br>  repositories { <br>     mavenCentral()<br>  }<br>   dependencies {<br>    classpath 'io.openliberty.tools:liberty-gradle-plugin:'<span class="latest_version">3.7</span>'<br>   }<br>}</pre>
+                    </div>
+                    <p>The plugin also needs to be applied in the build file in order to be utilized.</p>
+                    <div class="code_block_wrapper" title="Code block">
+                        <div class="copied_confirmation">Copied to clipboard</div>
+                        <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">
+                        <pre class="code_container">apply plugin: 'liberty'</pre>
+                    </div>
+                    <p>Find out
+                        <a href="/zh-Hans/guides/gradle-intro.html" class="blue_link_light_background_external">how to use Gradle with Open Liberty.</a>
+                    </p>
+                </div>
+                <!-- DOCKER -->
+                <div id="docker" class="tab-pane fade" tabindex="-1" role="tabpanel" aria-labelledby="getOL-docker">
+                    <p>This instruction pulls a container image with the latest release from the IBM Container Registry. Want to customize your image resources?
+                        <a href="/zh-Hans/docs/latest/container-images.html" class="blue_link_light_background_external">Check out our docs.</a>
+                    </p>
+                    <div class="code_block_wrapper" title="Code block">
+                        <div class="copied_confirmation">Copied to clipboard</div>
+                        <input type="image" class="copy_to_clipboard" src="/img/guides_copy_button.svg" alt="Copy code block" title="Copy code block">
+                        <pre class="code_container">FROM icr.io/appcafe/open-liberty</pre>
+                    </div>
+                    <p>Find out
+                        <a href="/zh-Hans/guides/containerize.html" class="blue_link_light_background_external">how to use Docker with Open Liberty.</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- IDE TOOLS -->
+<div id="ide_tools_section" class="container">
+    <h2 id="_develop_with_liberty_tools" class="section_title">
+<a class="anchor" href="#_develop_with_liberty_tools"></a>Develop with Liberty Tools</h2>
+    <p class="ide_tools_text1">
+        Liberty Tools is a set of intuitive developer tools for the Eclipse IDE, Visual Studio Code, and IntelliJ IDEA development environments. These tools adopt a Maven/Gradle-centric approach and enable fast, iterative cloud-native Java application development through Liberty dev mode. 
+    </p>
+    <p class="ide_tools_text">
+        Liberty Tools also provides helpful, time-saving features such as code completion, hover descriptions, and configuration diagnostics for Jakarta EE APIs, MicroProfile APIs, and Liberty configuration. For more information, 
+        <a href="/zh-Hans/docs/latest/develop-liberty-tools.html" class="blue_link_light_background_external">check out the Liberty Tools overview.</a>
+    </p>
+    <div id="ide_link_container" class="row">
+        <div class="column">
+            <a id="liberty_tools_for_eclipse_link" href="https://marketplace.eclipse.org/content/liberty-tools" target="_blank" rel="noopener noreferrer">
+                Eclipse IDE
+                <img src="/img/launch_white.svg" class="launch_icon">
+            </a>
+            <a id="liberty_tools_for_intellij_link" href="https://plugins.jetbrains.com/plugin/14856-liberty-tools" target="_blank" rel="noopener noreferrer">
+                IntelliJ IDEA 
+                <img src="/img/launch_white.svg" class="launch_icon">
+            </a>
+            <a id="liberty_tools_for_vs_code_link" href="https://marketplace.visualstudio.com/items?itemName=Open-Liberty.liberty-dev-vscode-ext" target="_blank" rel="noopener noreferrer">
+                Visual Studio Code
+                <img src="/img/launch_white.svg" class="launch_icon">
+            </a>
+        </div>
+    </div>
+    <p>
+        The classic Eclipse developer tools can be found in
+        <a class="orange_link_light_background" href="https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/tools/release/?C=N;O=D" target="_blank" rel="noopener noreferrer">this repository, </a>
+        and you can find 
+        <a href="https://github.com/OpenLiberty/open-liberty-tools" class="orange_link_light_background" target="_blank" rel="noopener noreferrer">instructions on how to install the classic tools here.</a>
+    </p>
+</div>
+
+
+
+<!-- DOWNLOADS TABLE TABS -->
+<div class="container">
+    <h2 id="downloads-pkg" class="section_title">
+<a class="anchor" href="#downloads-pkg"></a>Download package</h2>
+    <p>We recommend using the latest release, but beta and development builds are also available for use. Once downloaded, you're ready for lift-off.</p>
+    <div class="row tabs_container">
+        <ul class="nav nav-tabs" role="tablist" aria-labelledby="downloads-pkg">
+            <li class="nav-item" role="presentation">
+                <a id="downloads-releases" class="nav-link active" aria-controls="runtime_releases" href="#runtime_releases" role="tab" data-toggle="tab" tabindex="0" aria-selected="true">Releases</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a id="downloads-betas" class="nav-link" aria-controls="runtime_betas" href="#runtime_betas" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false">Betas</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a id="downloads-devbuilds" class="nav-link" aria-controls="development_builds" href="#development_builds" role="tab" data-toggle="tab" tabindex="-1" aria-selected="false">Nightly Builds</a>
+            </li>
+        </ul>
+    </div>
+    <!-- DOWNLOADS TABLE TAB CONTENT -->
+    <div>
+        <div class="tab-content">
+            <!-- RELEASES -->
+            <div id="runtime_releases" class="container builds_container tab-pane fade show active" role="tabpanel" aria-labelledby="downloads-releases">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p class="download_sentence">
+                            New releases will be announced on the Open Liberty
+                            <a href="/zh-Hans/blog/?search=release&amp;key=tag" class="blue_link_light_background_external">博客</a>
+                            and <a href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" class="orange_link_light_background">Twitter</a>.
+                            <br>
+                            <br>
+                            In version 22.0.0.1 and later, to verify the authenticity and integrity of an Open Liberty release package, use the provided signature file (SIG) and
+                            For more information, see 
+                            <a href="/zh-Hans/docs/latest/verifying-package-signatures.html" class="blue_link_light_background_external">Verifying Open Liberty release packages.</a>
+                        </p>
+                        <div id="runtime_releases_table_container" class="narrow_table_container">
+                            <table class="build_table releases_table white_table" data-builds-id="runtime_releases" id="runtime_releases_table">
+                                <thead>
+                                    <tr>
+                                        <th id="runtime_releases_version" class="version_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">Version</a></th>
+                                        <th id="runtime_releases_package" class="package_name_column">Package</th>
+                                        <th id="runtime_releases_download" class="download_button_column">Download</th>                                        
+                                        <th id="runtime_releases_verification" class="download_button_column" colspan="2">Verification</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="release_table_body">
+                                </tbody>
+                            </table>
+                            <p class="archive_sentence">
+                                You can find previous releases in
+                                <a href="https://public.dhe.ibm.com/ibmdl/export/pub/software/openliberty/runtime/release/" class="orange_link_light_background" target="_blank" rel="noopener noreferrer">this archive.</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- BETAS -->
+            <div id="runtime_betas" class="container builds_container tab-pane fade" role="tabpanel" aria-labelledby="downloads-betas">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p class="download_sentence">
+                            Try out new features in our betas and let us know
+                            <a href="/zh-Hans/contribute" class="blue_link_light_background_external">your feedback.</a>
+                            We publish beta releases to share and obtain early feedback on what the Open Liberty team is actively developing. Beta content is subject to change and inclusion in a beta does not guarantee inclusion in a GA release. For details about what each beta release includes, check out the
+                            <a href="/zh-Hans/blog/?search=beta&amp;key=tag" class="blue_link_light_background_external">beta blog posts.</a>
+                            <br>
+                            <br>
+                            To verify the authenticity and integrity of an Open Liberty release package, use the provided signature file (SIG) and
+                            For more information, see 
+                            <a href="/zh-Hans/docs/latest/verifying-package-signatures.html" class="blue_link_light_background_external">Verifying Open Liberty release packages.</a>
+                        </p>
+                        <div id="runtime_betas_table_container" class="narrow_table_container">
+                            <table class="build_table releases_table white_table" data-builds-id="runtime_betas" id="runtime_betas_table">
+                                <thead>
+                                    <tr>
+                                        <th id="runtime_betas_version" class="version_column"><a href="" data-key="version" data-descending="true" class="functional_link sort_link">Version</a></th>
+                                        <th id="runtime_betas_package" class="package_name_column">Package</th>
+                                        <th id="runtime_betas_download" class="download_button_column">Download</th>
+                                        <th id="runtime_betas_verification" class="download_button_column" colspan="2">Verification</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="release_table_body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- DEVELOPMENT BUILDS -->
+            <div id="development_builds" class="container builds_container tab-pane fade" role="tabpanel" aria-labelledby="downloads-devbuilds">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p class="download_sentence">
+                            Nightly builds contain in-development features, have not gone through the full release process and are potentially unstable.
+                        </p>
+                        <div id="runtime_development_builds_table_container" class="table_container">
+                            <table class="build_table development_builds_table white_table" data-builds-id="runtime_development_builds">
+                                <thead>
+                                    <tr>
+                                        <th id="runtime_development_builds_date" class="date_column"><a href="" data-key="date" data-descending="true" class="functional_link sort_link">Build Date</a></th>
+                                        <th id="runtime_development_builds_tests" class="tests_passed_column"><a href="" data-key="test_passed" data-descending="false" class="functional_link sort_link">Tests<span class="table_header_arrow" aria-hidden="true"></span></a></th>
+                                        <th id="runtime_development_builds_logs" class="view_logs_column">Logs</th>
+                                        <th id="runtime_development_builds_download" class="download_button_column">Download</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UFO IMAGES -->
+<div id="bottom_images_container" class="container">
+    <img id="ufo" src="/img/ufo.png" alt="ufo">
+    <img id="ufobeam" src="/img/ufo_beam.png" alt="ufo beam">
+    <img id="cow" class src="/img/cow.png" alt="cow">
+    <img id="cowshadow" src="/img/cow_shadow.png" alt="cow shadow">
+    <img id="outerbeam" src="/img/outer_beam.png" alt="outer beam">
+    <img id="bottomleftclouds" src="/img/bottom_left_clouds.png" alt="bottom left clouds">
+    <img id="bottomrightcloud" src="/img/bottom_right_cloud.png" alt="bottom right cloud">
+    <p id="cow_text">
+        Don't have a cow.
+    </p>
+    <p id="more_downloads_text">
+        More downloads are on the way.
+        <br>
+        Check back soon!
+    </p>
+</div>
+
+    </main>
+
+    
+
+
+
+<footer>
+    <div id="footer_gray_background">
+        <div id="footer_top_container" class="footer_container container-fluid">
+            <div id="footer_project_container">
+                <span id="footer_open_liberty"></span>
+                <p id="footer_project">IBM 开放式源代码项目</p>
+            </div>
+            <div id="footer_round_links_container">
+                <a id="footer_github_link" class="footer_round_btn" href="https://github.com/OpenLiberty/" target="_blank" rel="noopener noreferrer" aria-label="Github"></a>
+                <a id="footer_twitter_link" class="footer_round_btn" href="https://twitter.com/OpenLibertyIO" target="_blank" rel="noopener noreferrer" aria-label="Twitter"></a>
+                <a id="footer_stackoverflow_link" class="footer_round_btn" href="https://stackoverflow.com/questions/tagged/open-liberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty questions on Stack Overflow"></a>
+                <a id="footer_groupsio_link" class="footer_round_btn" href="https://groups.io/g/openliberty" target="_blank" rel="noopener noreferrer" aria-label="Open Liberty Groups.io"></a>
+                <a id="footer_gitter_link" class="footer_round_btn" href="https://app.gitter.im/#/room/#OpenLiberty_development:gitter.im" target="_blank" rel="noopener" aria-label="Open Liberty Gitter"></a>
+            </div>
+        </div>         
+    </div>
+
+    <div id="footer_bottom_container" class="footer_container container-fluid">
+        <div id="footer_bottom_left_section">
+            <p id="footer_copyright">© Copyright IBM Corp. 2017, 2023</p>
+            <p class="vertical_bar">|</p>
+            <a id="footer_privacy_policy_link" href="https://www.ibm.com/privacy/" target="_blank" rel="noopener noreferrer" class="left_footer_link">隐私策略</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_license_link" href="https://github.com/OpenLiberty/open-liberty/blob/release/LICENSE" target="_blank" rel="noopener noreferrer" class="left_footer_link">许可证</a>
+            <p class="vertical_bar">|</p>
+            <a id="footer_logos_link" href="https://github.com/OpenLiberty/logos" target="_blank" rel="noopener noreferrer" class="left_footer_link">洛戈斯</a>
+        </div>
+        <div id="footer_bottom_right_section">
+            <a id="footer_docs_link" href="/docs" aria-label="Open Liberty Docs" class="right_footer_link blue_link_light_background">文档</a>
+            <a id="footer_blog_link" href="/blog" aria-label="Open Liberty Blog" class="right_footer_link blue_link_light_background">博客</a>
+            <a id="footer_support_link" href="/support" aria-label="Open Liberty Support" class="right_footer_link blue_link_light_background">支持</a>
+        </div>
+    </div>
+</footer>
+
+<!-- PRE-LOADED IMAGES FOR ON HOVER BEHAVIOR -->
+<div class="d-none hidden">
+    <img src="/img/Footer_GitCat_Hover.svg" alt="OpenLiberty Github link">
+    <img src="/img/Footer_TwitterBird_Hover.svg" alt="OpenLibertyIO Twitter link">
+    <img src="/img/Footer_StackO_Hover.svg" alt="Open-liberty Stack Overflow link">
+    <img src="/img/Footer_GroupsIO_Hover.svg" alt="Openliberty Groups IO link">
+    <img src="/img/footer_gitter_hover.svg" alt="Openliberty Gitter link">
+</div>
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/zh-Hans/assets/devEnvironment.js"></script>
+
+
+  <script type="text/javascript" src="/zh-Hans/assets/builds.js"></script>
+
+
+
+
+<script type="text/javascript" src="/zh-Hans/assets/openliberty.js"></script>
+
+  </body>
+
+</html>

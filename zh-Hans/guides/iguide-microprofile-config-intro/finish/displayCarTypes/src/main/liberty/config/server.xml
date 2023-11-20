@@ -1,0 +1,104 @@
+<server description="Sample Servlet server">
+    <featureManager>
+        <feature>servlet-4.0</feature>
+        <feature>jaxrs-2.1</feature>
+        <feature>jsonp-1.1</feature>
+        <feature>cdi-2.0</feature>
+        <feature>mpConfig-1.4</feature>
+    </featureManager>
+
+    <variable name="port" value="9084" />
+
+    <httpEndpoint httpPort="${default.http.port+0}" id="defaultHttpEndpoint"  host="*" />
+    <httpEndpoint httpPort="${default.http.port+1}" id="devHttpEndpoint"  host="*" />
+    <httpEndpoint httpPort="${default.http.port+2}" id="testHttpEndpoint"  host="*" />
+    <httpEndpoint httpPort="${default.http.port+3}" id="qaHttpEndpoint"  host="*" />
+    <httpEndpoint httpPort="${default.http.port+4}" id="stagingHttpEndpoint"  host="*" />
+    <httpEndpoint httpPort="${default.http.port+5}" id="prodHttpEndpoint"  host="*" />
+
+    <virtualHost id="vh-dev">
+        <hostAlias>localhost::${default.http.port+1}</hostAlias>
+    </virtualHost>
+    <virtualHost id="vh-test">
+        <hostAlias>localhost::${default.http.port+2}</hostAlias>
+    </virtualHost>
+    <virtualHost id="vh-qa">
+        <hostAlias>localhost::${default.http.port+3}</hostAlias>
+    </virtualHost>
+    <virtualHost id="vh-staging">
+        <hostAlias>localhost::${default.http.port+4}</hostAlias>
+    </virtualHost>
+    <virtualHost id="vh-prod">
+        <hostAlias>localhost::${default.http.port+5}</hostAlias>
+    </virtualHost>
+
+    <webApplication id="displayCarTypes" location="displayCarTypes.war" contextRoot="/">
+        <appProperties>
+            <property name="port" value="9085" />
+        </appProperties>
+    </webApplication>
+
+    <webApplication id="obtainCarTypesPrototype" name="obtainCarTypesPrototype" location="obtainCarTypes.war" contextRoot="/carTypes" >
+        <classloader>
+            <commonLibrary>
+                <folder dir="${wlp.install.dir}/../../../../obtainCarTypes/db/prototype" />
+            </commonLibrary>
+        </classloader>
+    </webApplication>
+
+    <webApplication id="obtainCarTypesDev" name="obtainCarTypesDev" location="obtainCarTypes.war" contextRoot="/carTypes" >
+        <classloader>
+            <commonLibrary>
+                <folder dir="${wlp.install.dir}/../../../../obtainCarTypes/db/dev" />
+            </commonLibrary>
+        </classloader>
+        <web-bnd moduleName="obtainCarTypesDev">
+            <virtual-host name="vh-dev" />
+        </web-bnd>
+    </webApplication>
+
+    <webApplication id="obtainCarTypesTest" name="obtainCarTypesTest" location="obtainCarTypes.war" contextRoot="/carTypes" >
+        <classloader>
+            <commonLibrary>
+                <folder dir="${wlp.install.dir}/../../../../obtainCarTypes/db/test" />
+            </commonLibrary>
+        </classloader>
+        <web-bnd moduleName="obtainCarTypesTest">
+            <virtual-host name="vh-test" />
+        </web-bnd>
+    </webApplication>
+
+    <webApplication id="obtainCarTypesQA" name="obtainCarTypesQA" location="obtainCarTypes.war" contextRoot="/carTypes" >
+        <classloader>
+            <commonLibrary>
+                <folder dir="${wlp.install.dir}/../../../../obtainCarTypes/db/qa" />
+            </commonLibrary>
+        </classloader>
+        <web-bnd moduleName="obtainCarTypesQA">
+            <virtual-host name="vh-qa" />
+        </web-bnd>
+    </webApplication>
+
+    <webApplication id="obtainCarTypesStaging" name="obtainCarTypesStaging" location="obtainCarTypes.war" contextRoot="/carTypes" >
+        <classloader>
+            <commonLibrary>
+                <folder dir="${wlp.install.dir}/../../../../obtainCarTypes/db/staging" />
+            </commonLibrary>
+        </classloader>
+        <web-bnd moduleName="obtainCarTypesStaging">
+            <virtual-host name="vh-staging" />
+        </web-bnd>
+    </webApplication>
+
+    <webApplication id="obtainCarTypesProd" name="obtainCarTypesProd" location="obtainCarTypes.war" contextRoot="/carTypes" >
+        <classloader>
+            <commonLibrary>
+                <folder dir="${wlp.install.dir}/../../../../obtainCarTypes/db/prod" />
+            </commonLibrary>
+        </classloader>
+        <web-bnd moduleName="obtainCarTypesProd">
+            <virtual-host name="vh-prod" />
+        </web-bnd>
+    </webApplication>
+
+</server>

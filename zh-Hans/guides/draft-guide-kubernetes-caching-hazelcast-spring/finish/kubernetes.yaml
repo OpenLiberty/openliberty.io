@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hazelcast-caching-statefulset
+  labels:
+    app: hazelcast-caching
+spec:
+  replicas: 2
+  serviceName: hazelcast-caching-service
+  selector:
+    matchLabels:
+      app: hazelcast-caching
+  template:
+    metadata:
+      labels:
+        app: hazelcast-caching
+    spec:
+      containers:
+        - name: hazelcast-caching-container
+          image: hazelcast-caching:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: openliberty
+              containerPort: 9080
+          env:
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hazelcast-caching-service
+spec:
+  type: NodePort
+  selector:
+    app: hazelcast-caching
+  ports:
+    - protocol: TCP
+      port: 9080
+      targetPort: 9080
+      nodePort: 31000

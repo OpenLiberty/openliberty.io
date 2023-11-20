@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.openliberty.guides</groupId>
+
+    <artifactId>guide-microprofile-config-profile-system</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>10.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>6.0</version>
+            <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+       
+        <!-- For tests -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <version>6.2.3.Final</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-json-binding-provider</artifactId>
+            <version>6.2.3.Final</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+            </plugin>
+            <plugin>
+                <groupId>io.openliberty.tools</groupId>
+                <artifactId>liberty-maven-plugin</artifactId>
+                <version>3.8.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- tag::development[] -->
+        <profile>
+            <id>development</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <properties>
+                <system.service.root>localhost:9081</system.service.root>
+                <!-- tag::developmentProperties[] -->
+                <!-- tag::port[] -->
+                <liberty.var.default.http.port>9081</liberty.var.default.http.port>
+                <!-- end::port[] -->
+                <liberty.var.default.https.port>9444</liberty.var.default.https.port>
+                <!-- tag::username[] -->
+                <liberty.var.default.username>alice</liberty.var.default.username>
+                <!-- end::username[] -->
+                <!-- tag::password[] -->
+                <liberty.var.default.password>alicepwd</liberty.var.default.password>
+                <!-- end::password[] -->
+                <!-- tag::context.root[] -->
+                <liberty.var.context.root>system/dev</liberty.var.context.root>
+                <!-- end::context.root[] -->
+                <!-- end::developmentProperties[] -->
+            </properties>
+
+            <build>
+                <plugins>
+                    <!-- tag::maven-failsafe-plugin[] -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <system.service>${system.service.root}</system.service>
+                                <system.context>${liberty.var.context.root}</system.context>
+                                <system.user>${liberty.var.default.username}</system.user>
+                                <system.pwd>${liberty.var.default.password}</system.pwd>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                    <!-- end::maven-failsafe-plugin[] -->
+                </plugins>
+            </build>
+        </profile>
+        <!-- end::development[] -->
+
+        <!-- tag::testing[] -->
+        <profile>
+            <id>testing</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <!-- tag::testingProperties[] -->
+                <system.service.root>localhost:9082</system.service.root>
+                <!-- tag::test.port[] -->
+                <liberty.var.default.http.port>9082</liberty.var.default.http.port>
+                <!-- end::test.port[] -->
+                <liberty.var.default.https.port>9445</liberty.var.default.https.port>
+                <!-- tag::test.username[] -->
+                <liberty.var.default.username>bob</liberty.var.default.username>
+                <!-- end::test.username[] -->
+                <!-- tag::test.password[] -->
+                <liberty.var.default.password>bobpwd</liberty.var.default.password>
+                <!-- end::test.password[] -->
+                <!-- tag::test.context.root[] -->
+                <liberty.var.context.root>system/test</liberty.var.context.root>
+                <!-- end::test.context.root[] -->
+                <!-- end::testingProperties[] -->
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <system.service>${system.service.root}</system.service>
+                                <system.context>${liberty.var.context.root}</system.context>
+                                <system.user>${liberty.var.default.username}</system.user>
+                                <system.pwd>${liberty.var.default.password}</system.pwd>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- end::testing[] -->
+
+        <profile>
+            <id>production</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
+
+</project>
