@@ -9,11 +9,13 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-var preTags = document.querySelectorAll('pre');
-for (var i = 0; i < preTags.length; i++) {
-  var preTag = preTags[i];
-  preTag.setAttribute('tabindex', '0');
-}
+// var preTags = document.querySelectorAll('pre');
+// for (var i = 0; i < preTags.length; i++) {
+//   var preTag = preTags[i];
+//   preTag.setAttribute('tabindex', '0');
+// }
+
+$('pre').attr('tabindex', '0');
 
 // set up html for copy code block accessibility
 var code_blocks_with_copy_to_clipboard = 'pre:not(.no_copy pre)'; // CSS Selector
