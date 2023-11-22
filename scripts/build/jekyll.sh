@@ -5,7 +5,7 @@ set -e
 export BUILD_SCRIPTS_DIR=$(dirname $0)
 echo "BUILD_SCRIPTS_DIR: $BUILD_SCRIPTS_DIR"
 
-source $BUILD_SCRIPTS_DIR/ruby_install.sh
+# source $BUILD_SCRIPTS_DIR/ruby_install.sh
 
 # Guides that are ready to be published to openliberty.io
 echo "Cloning repositories with name starting with guide or iguide..."
@@ -96,6 +96,7 @@ mkdir -p target/jekyll-webapp/ja/
 mv ja/feed.xml target/jekyll-webapp/ja/
 mv ja/blog target/jekyll-webapp/ja/
 mv ja/assets target/jekyll-webapp/ja/
+mv ja/docs target/jekyll-webapp/ja/
 
 # Simplified Chinese
 rm -rf zh-Hans
