@@ -1119,6 +1119,8 @@ function displayMessage(message,javaMsg) {
     $('.' + classNameIs)
     .append(message);
 
+    $('#starter_warnings li:first-child').css("padding-top","20px");
+    $('#starter_warnings li:last-child').css("padding-bottom","10px");
     $('#starter_warnings').append(close_icon);  
 } 
 
