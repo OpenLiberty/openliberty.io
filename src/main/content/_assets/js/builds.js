@@ -21,7 +21,7 @@ var versArr = [];
 
 var builds_url = '/api/builds/data';
 var starter_domain = 
-    isNotProdSite() ? 'https://starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud' : 'https://start.openliberty.io';
+    isNotProdSite() ? 'https://starter-staging.rh9j6zz75er.us-east.codeengine.appdomain.cloud' : 'https://localhost:9443';
 var starter_info_url = starter_domain + '/api/start/info';
 var starter_submit_url = starter_domain + '/api/start';
 var failed_builds_request = false;
