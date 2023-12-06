@@ -15,6 +15,12 @@ var threeColumnBreakpoint = 1440;
 var dep = false;
 var dep_closed = false;
 
+const preTags = document.querySelectorAll('pre');
+preTags.forEach(preTag => {
+    preTag.setAttribute('tabindex', '0');
+    preTag.setAttribute('role', 'button');
+});
+
 // update twoColumnBreakpoint for the only single pane guide
 if (window.location.href.indexOf("cloud-ibm") > -1) {
     var twoColumnBreakpoint = 1440;
@@ -295,7 +301,7 @@ function createEndOfGuideContent() {
         .find("p")
         .clone();
     whatYouLearned.first().prepend("Nice work! "); // Start every what you learned statement with 'Nice work!'
-    whatYouLearned.attr("tabindex", "0");
+    whatYouLearned.attr("tabindex", "-1");
     leftSide.prepend(whatYouLearned);
     $("#great-work-you-re-done, #great-work-youre-done").parent().remove(); // Remove section from the main guide column.
     $(
