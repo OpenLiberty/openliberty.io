@@ -15,10 +15,9 @@ var threeColumnBreakpoint = 1440;
 var dep = false;
 var dep_closed = false;
 
-const preTags = document.querySelectorAll('pre');
-preTags.forEach(preTag => {
-    preTag.setAttribute('tabindex', '0');
-    preTag.setAttribute('role', 'button');
+$('pre').attr({
+  'tabindex': '0',
+  'role': 'button'
 });
 
 // update twoColumnBreakpoint for the only single pane guide
