@@ -199,14 +199,6 @@ function render_builds(builds, parent) {
 
     // update maven and gradle commands to use latest version
     if (parent.parent().data('builds-id') == 'runtime_releases') {
-        var latest_version = latest_releases.runtime.version.trim();
-
-        // check that latest version matches x.x.x.x before updating
-        var re = /^\d+\.\d\.\d\.\d+/;
-        if (re.test(latest_version)) {
-            $('.latest_version').html(latest_version);
-        }
-
         // get the newest release version
         // used to only add builds from the last two years to the runtime release table
         versArr = JSON.parse(JSON.stringify(builds));
@@ -317,7 +309,7 @@ function render_builds(builds, parent) {
                         var verification_column2 = $(
                             '<td headers="' + tableID + '_verification"' + 'rowspan="'+num_packages+'"' + '>' +
                             // Optional sig file download button
-                            (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener" target="_blank">' + download_arrow +'PEM</a>' : '' ) +
+                            (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'PEM</a>' : '' ) +
                             '</td>'
                         );     
 
@@ -1099,10 +1091,7 @@ function validate_starter_inputs(event) {
     }
 }
 
-function displayMessage(message,javaMsg) {
-    if(!javaMsg){
-        javaMsg = false;
-    }
+function displayMessage(message,javaMsg = false) {
     // Display a message when MP/Jakarta EE Version get changed.
     var close_icon = $(
         '<img src=\'/img/x_white.svg\' id=\'invalid_message_close_icon\' alt=\'Close\' tabindex=\'0\' />'
