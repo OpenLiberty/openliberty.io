@@ -1106,7 +1106,7 @@ function displayMessage(message,javaMsg) {
         classNameIs = 'ind_starter_warning';
     }
     close_icon.on('click', function () {
-        $('#starter_warnings').empty();
+        $('.' + classNameIs).empty();
     });
     close_icon.on('keydown', function (event) {
         if ( event.which === 13 || event.which === 32 ) { // Enter key or spacebar
