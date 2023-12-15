@@ -309,7 +309,7 @@ function render_builds(builds, parent) {
                         var verification_column2 = $(
                             '<td headers="' + tableID + '_verification"' + 'rowspan="'+num_packages+'"' + '>' +
                             // Optional sig file download button
-                            (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener">' + download_arrow +'PEM</a>' : '' ) +
+                            (sig_href ? '<a href="'+pem_href+'" class="'+analytics_class_name +'" rel="noopener" target="_blank">' + download_arrow +'PEM</a>' : '' ) +
                             '</td>'
                         );     
 
@@ -1091,7 +1091,10 @@ function validate_starter_inputs(event) {
     }
 }
 
-function displayMessage(message,javaMsg = false) {
+function displayMessage(message,javaMsg) {
+    if(!javaMsg){
+        javaMsg = false;
+    }
     // Display a message when MP/Jakarta EE Version get changed.
     var close_icon = $(
         '<img src=\'/img/x_white.svg\' id=\'invalid_message_close_icon\' alt=\'Close\' tabindex=\'0\' />'
@@ -1103,7 +1106,7 @@ function displayMessage(message,javaMsg = false) {
         classNameIs = 'ind_starter_warning';
     }
     close_icon.on('click', function () {
-        $('#starter_warnings').empty();
+        $('.' + classNameIs).empty();
     });
     close_icon.on('keydown', function (event) {
         if ( event.which === 13 || event.which === 32 ) { // Enter key or spacebar
@@ -1111,11 +1114,11 @@ function displayMessage(message,javaMsg = false) {
         }
     });
    
-    $('#starter_warnings').append("<li class='" + classNameIs +"'>");
+    $('#starter_warnings').append("<div class='" + classNameIs +"'>");
  
     $('.' + classNameIs)
-    .append(message);
-    $('#starter_warnings').append(close_icon);  
+    .append(message)
+    .append(close_icon);  
 } 
 
 
