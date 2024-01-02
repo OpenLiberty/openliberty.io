@@ -90,7 +90,7 @@ with open("src/main/content/blog.html", "r+", encoding='utf-8') as blog_html_fil
     featured_tags_element = data.find("div", id="featured_tags_list")
     featured_tags_element.clear()
     for t in featured_tags:
-        name = t.replace(" ", "-")
+        name = t.replace(" ", "_")
         ft_link = data.new_tag("p")
         comma = data.new_tag("span")
         comma.string = ","

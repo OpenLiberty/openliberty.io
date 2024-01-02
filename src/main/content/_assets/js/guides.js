@@ -518,7 +518,7 @@ $(document).ready(function () {
             }
             if (tag.visible == "true") {
               //add "RUN IN CLOUD" orange pill to applicable guides if the guide is not deprecated
-              if (tag_name.toLowerCase() == "run-in-cloud" && !dep) {
+              if (tag_name.toLowerCase() == "run in cloud" && !dep) {
                 //add to last child element in .guide_item element
                 if ($(this).children().last().hasClass("new_guide_container")) {
                   //add before "NEW" orange pill so "NEW" pill shows first because float: right; reverses element order
