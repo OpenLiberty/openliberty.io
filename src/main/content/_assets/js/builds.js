@@ -1115,10 +1115,10 @@ function displayMessage(message,javaMsg) {
     });
    
     $('#starter_warnings').append("<li class='" + classNameIs +"'>");
- 
+
     $('.' + classNameIs)
     .append(message);
-    $('#starter_warnings').append(close_icon);  
+    $('#starter_warnings').append(close_icon);   
 } 
 
 
