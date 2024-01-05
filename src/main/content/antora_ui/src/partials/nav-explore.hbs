@@ -1,36 +1,62 @@
 <div class="nav-panel-explore{{#unless page.navigation}} is-active{{/unless}}" data-panel="explore">
   {{#if page.component}}
-  <div class="context">
-    <span class="title">Version</span>
-    <a class="version" href="#">{{page.componentVersion.displayVersion}}</a>
-  </div>
-  {{/if}}
-  <ul class="components">
-    {{#each site.components}}
-    <li class="component{{#if (eq this @root.page.component)}} is-current{{/if}}">
-      <ul class="versions">
-        {{#each ( sort_component_versions ./versions )}}
-          <li class="version
-            {{~#if (and (eq ../this @root.page.component) (eq this @root.page.componentVersion))}} is-current{{/if~}}
-            {{~#if (eq this ../latestVersion)}} is-latest{{/if}}">
-            <span class="title">Version</span>
-            {{#if ../../page.versions }}
-              {{#each ( sort_component_versions ../../page.versions) }}
-                {{#if (eq ./version ../version)}}
-                    {{#if missing }}
-                      <a href="/docs/{{./version}}/noversion.html?ref={{ @root.page.url }}" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>
-                    {{else}}
-                      <a href="{{{ relativize ./url }}}" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>
+    <div class="doc_select version_select">
+      <div class="context">
+        <span class="title">Version</span>
+        <a class="version" href="#">{{page.componentVersion.displayVersion}}</a>
+        <img src="../../_/img/chevron.svg" class="version_select_chevron"/>
+      </div>
+      <ul class="components">
+        {{#each site.components}}
+        <li class="component{{#if (eq this @root.page.component)}} is-current{{/if}}">
+          <ul class="versions">
+            {{#each ( sort_component_versions ./versions )}}
+              <li class="version
+                {{~#if (and (eq ../this @root.page.component) (eq this @root.page.componentVersion))}} is-current{{/if~}}
+                {{~#if (eq this ../latestVersion)}} is-latest{{/if}}">
+                <span class="title">Version</span>
+                {{#if ../../page.versions }}
+                  {{#each ( sort_component_versions ../../page.versions) }}
+                    {{#if (eq ./version ../version)}}
+                        {{#if missing }}
+                          <a href="{{getlang ./url}}/docs/{{./version}}/noversion.html?ref={{ @root.page.url }}" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>
+                        {{else}}
+                          <a href="{{getlang ./url}}{{ @root.page.url }}" aria-label="Version {{./displayVersion}}">{{./displayVersion}}</a>
+                        {{/if}}
                     {{/if}}
+                  {{/each}}
+                {{else}}
+                  <a href="#">{{./displayVersion}}</a>
                 {{/if}}
-              {{/each}}
-            {{else}}
-              <a href="#">{{./displayVersion}}</a>
-            {{/if}}
-          </li>
+              </li>
+            {{/each}}
+          </ul>
+        </li>
         {{/each}}
       </ul>
-    </li>
-    {{/each}}
-  </ul>
+    </div>
+    <div class="doc_select language_select">
+      <div class="context lang_picker">
+        <span class="title">Lang</span>
+        <a class="version" href="#">
+        </a>
+        <img src="../../_/img/chevron.svg" class="version_select_chevron"/>
+      </div>
+        <ul class="components language_list">
+          <li class="component">
+            <ul class="versions">
+                <li class="version is-current">
+                  <span class="title">Lang</span>
+                  <a href="{{ @root.page.url }}">EN</a>
+                </li>
+                <li class="version">
+                  <span class="title">Lang</span>
+                  <a href="/ja{{ @root.page.url }}">JA</a>
+                </li>
+            </ul>
+          </li>
+        </ul>
+    </div>
+  {{/if}}
+    
 </div>

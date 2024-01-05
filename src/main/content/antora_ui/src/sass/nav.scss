@@ -323,22 +323,19 @@ html.is-clipped--nav {
 .nav-panel-explore {
   background: var(--nav-background);
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   right: 0;
   top: 0;
   left: 0;
   max-height: calc(50% + var(--drawer-height));
   padding-top: 20px;
   padding-bottom: 20px;
-}
-
-.hide-after:after {
-  display: none;
+  flex-wrap: wrap;
 }
 
 .nav-panel-explore .context {
   height: 32px;
-  width: 148px;
+  width: 155px;
   font-size: 11px;
   line-height: 11px;
   flex-shrink: 0;
@@ -365,23 +362,22 @@ html.is-clipped--nav {
     font-size: 11px;
     color: #5d6a8e;
     letter-spacing: 0;
+    margin-right: 5px;
+  }
 
-    &:after {
-      content: "";
-      float: right;
-      width: 20px;
-      height: 20px;
-      background-image: url(../img/chevron.svg);
-      background-repeat: no-repeat;
-      background-position: right 0.5rem top 0;
-      background-size: 12px;
-    }
+  &.lang_picker {
+    width: 90px;
   }
 }
 
-.nav-panel-explore .components {
+.version_select_chevron {
+  float: right;
+  width: 12px;
+  height: 12px;
+}
+
+.doc_select .components{
   line-height: 11px;
-  flex-grow: 1;
   box-shadow: inset 0 1px 5px var(--nav-panel-divider-color);
   background: var(--nav-secondary-background);
   padding: 0;
@@ -390,16 +386,25 @@ html.is-clipped--nav {
   display: block;
 
   position: absolute;
+  top: 50px;
   width: 148px;
   margin-left: 19px;
   border: 2px solid rgba(170, 211, 75, 0.56);
   border-radius: 7px;
   border-top: none;
   z-index: 2;
-  height: 75%;
 }
 
-.nav-panel-explore:not(.is-active) .components {
+.nav-panel-explore .components.language_list {
+  width: 90px;
+}
+
+.doc_select {
+  display: flex;
+  flex-direction: column;
+}
+
+.doc_select:not(.is-active) .components {
   display: none;
 }
 
@@ -413,9 +418,10 @@ html.is-clipped--nav {
 
 .nav-panel-explore .versions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   list-style: none;
   padding-left: 0;
+  flex-direction: column;
 }
 
 .nav-panel-explore .component {
@@ -431,7 +437,6 @@ html.is-clipped--nav {
     padding: 8px 0.25rem 8px 0.5rem;
     margin: 0;
     height: 32px;
-    width: 100%;
 
     &.is-current {
       background-color: rgba(170, 211, 75, 0.56);
