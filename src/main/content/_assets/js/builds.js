@@ -1106,7 +1106,7 @@ function displayMessage(message,javaMsg) {
         classNameIs = 'ind_starter_warning';
     }
     close_icon.on('click', function () {
-        $('.' + classNameIs).empty();
+        $('#starter_warnings').empty();
     });
     close_icon.on('keydown', function (event) {
         if ( event.which === 13 || event.which === 32 ) { // Enter key or spacebar
@@ -1114,11 +1114,11 @@ function displayMessage(message,javaMsg) {
         }
     });
    
-    $('#starter_warnings').append("<div class='" + classNameIs +"'>");
- 
+    $('#starter_warnings').append("<li class='" + classNameIs +"'>");
+
     $('.' + classNameIs)
-    .append(message)
-    .append(close_icon);  
+    .append(message);
+    $('#starter_warnings').append(close_icon);   
 } 
 
 
