@@ -30,6 +30,7 @@ gem install jekyll -v 3.8.6
 gem install jekyll-assets -v 2.4.0
 gem install jekyll-multiple-languages-plugin
 gem install bundler -v 2.4.22
+gem install faraday-net_http -v 2.8.1
 gem install jekyll-feed jekyll-asciidoc jekyll-include-cache coderay octokit
 
 timer_end=$(date +%s)
