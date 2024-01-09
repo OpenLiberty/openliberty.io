@@ -34,17 +34,9 @@ js: post
                     {% endfor %}
                     {% assign current = 1 %}
                     <div class="author_images_container">
-                        {% if page.author_picture %}
-                            <img src="{{ page.author_picture }}" class="author_image" alt="image of author">
-                        {% else %}
-                            <img src="https://avatars3.githubusercontent.com/u/28316667" class="author_image" alt="Open Liberty logo">
-                        {% endif %}
+                        <img src="{{ page.author_picture }}" class="author_image" alt="image of author">
                         {% for author in page.additional_authors %}
-                            {% if author.image %}
-                                <img src="{{ author.image }}" class="author_image" alt="image of author">
-                            {% else %}
-                                <img src="https://avatars3.githubusercontent.com/u/28316667" class="author_image" alt="Open Liberty logo">
-                            {% endif %}
+                            <img src="{{ author.image }}" class="author_image" alt="image of author">
                         {% endfor %}
                     </div>
                     <a class="author_name" href="{{ page.author_github }}" target="_blank" rel="noopener">{{ page.author }}</a>
